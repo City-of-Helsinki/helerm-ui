@@ -1,15 +1,21 @@
 import React from 'react';
-import DuckImage from '../assets/Duck.jpg';
-import './HomeView.scss';
 
-export const HomeView = () => (
-  <div>
-    <h4>Welcome!</h4>
-    <img
-      alt='This is a duck, because Redux!'
-      className='duck'
-      src={DuckImage} />
-  </div>
-);
+
+export class HomeView extends React.Component {
+
+  render() {
+    console.log(this.props.navigationMenuItems);
+    return(
+      <div>
+        <h4>Home!</h4>
+        <button className="btn btn-primary" onClick={this.props.getNavigationMenuItems} />
+      </div>
+    )
+  }
+};
+
+HomeView.propTypes = {
+  getNavigationMenuItems: React.PropTypes.func.isRequired
+};
 
 export default HomeView;
