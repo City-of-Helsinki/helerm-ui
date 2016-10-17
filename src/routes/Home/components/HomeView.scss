@@ -16,12 +16,12 @@
 }
 
 .nav-title {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   letter-spacing: 0.03rem;
   margin-bottom: 0.5rem;
   text-decoration: underline;
   margin: 0 0 0 35px;
-  line-height: 2.4rem;
+  line-height: 3.4rem;
 }
 
 .nav-title:after {
@@ -33,7 +33,7 @@
   border-radius: 50%;
   line-height: 20px;
   background: $black90;
-  margin-top: 0.8rem;
+ margin-top: 1.2rem;
 }
 
 .nav-title:before {
@@ -42,9 +42,9 @@
   content: '';
   border-left: 1px solid $black90;
   border-bottom: 1px solid $black90;
-  margin-top: -14px;
+  margin-top: -18px;
   width: 20px;
-  height: 27px;
+  height: 35px;
 }
 
 .nav-main-title {
