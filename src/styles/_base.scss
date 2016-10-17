@@ -10,3 +10,8 @@ For example:
 @import './variables/components';
 @import './themes/default';
 */
+$bootstrap-sass-asset-helper: true;
+
+@import './vendor/hel-components/variables';
+@import '../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap';
+@import './vendor/hel-components/bootswatch-flatly';
