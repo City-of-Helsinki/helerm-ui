@@ -1,16 +1,73 @@
+@import '../../../styles/vendor/hel-components/variables';
+
 .navigation-menu {
-  width: 80vw;
-  margin-left: 10vw;
+  padding: 15px;
+  background-color: white;
+  border: 1px solid $black50;
+  border-radius: $border-radius-base;
 }
+
 .navigation-menu-items {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+  position: relative;
 }
+
 .nav-title {
-  font-size: 1.4em;
-  letter-spacing: 0.03em;
-  margin-bottom: 0.5em;
-  border-bottom: 1px solid grey;
+  font-size: 1.6rem;
+  letter-spacing: 0.03rem;
+  margin-bottom: 0.5rem;
+  text-decoration: underline;
+  margin: 0 0 0 35px;
+  line-height: 2.4rem;
+}
+
+.nav-title:after {
+  content: '';
+  width: 9px;
+  height: 9px;
+  position: absolute;
+  left: 20px;
+  border-radius: 50%;
+  line-height: 20px;
+  background: $black90;
+  margin-top: 0.8rem;
+}
+
+.nav-title:before {
+  left: 0;
+  position: absolute;
+  content: '';
+  border-left: 1px solid $black90;
+  border-bottom: 1px solid $black90;
+  margin-top: -14px;
+  width: 20px;
+  height: 27px;
+}
+
+.nav-main-title {
+    padding: 0 0 0 10px;
+    position: relative;
+}
+
+.nav-main-title:before {
+  content: '';
+  left: 0;
+  top: 20px;
+  border-left: 1px solid $black90;
+  position: absolute;
+  height: 20px;
+}
+
+.nav-main-title:after {
+  width: 9px;
+  height: 9px;
+  position: absolute;
+  left: -4px;
+  top: 14px;
+  content: '';
+  border-radius: 50%;
+  background: $black90;
 }

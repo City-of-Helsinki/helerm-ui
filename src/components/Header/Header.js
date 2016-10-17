@@ -3,9 +3,9 @@ import { IndexLink, Link } from 'react-router';
 import './Header.scss';
 
 export const Header = () => (
-  <div>
-    <h1 className="brand-title">Tiedonohjausjärjestelmä</h1>
-  </div>
+  <nav className="navbar navbar-inverse container-fluid">
+    <a className="brand-title navbar-brand">Tiedonohjausjärjestelmä</a>
+  </nav>
 );
 
 export default Header;

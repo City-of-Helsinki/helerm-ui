@@ -96,6 +96,8 @@ $headings-color:          $brand-primary !default;
 //
 //## Specify custom location and filename of the included Glyphicons icon font. Useful for those including Bootstrap via Bower.
 
+$bootstrap-sass-asset-helper: false !default;
+
 //** Load fonts from this directory.
 
 // [converter] If $bootstrap-sass-asset-helper if used, provide path relative to the assets load path.
