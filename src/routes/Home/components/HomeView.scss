@@ -1,0 +1,16 @@
+.navigation-menu {
+  width: 80vw;
+  margin-left: 10vw;
+}
+.navigation-menu-items {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.nav-title {
+  font-size: 1.4em;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.5em;
+  border-bottom: 1px solid grey;
+}
