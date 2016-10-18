@@ -2,7 +2,6 @@
 // Constants
 // ------------------------------------
 export const GET_NAVIGATION_MENU_ITEMS = 'GET_NAVIGATION_MENU_ITEMS';
-export const TOGGLE_VISIBILITY = 'TOGGLE_VISIBILITY';
 // ------------------------------------
 // Actions
 // ------------------------------------
@@ -33,7 +32,7 @@ export function getNavigationMenuItems() {
       id: 5,
       number: '05',
       name: 'Sosiaalipalvelut',
-      isOpen: false,
+      isOpen: true,
       children: [{
         id: 1,
         number: '05 01',
@@ -73,16 +72,8 @@ export function getNavigationMenuItems() {
   };
 }
 
-export function toggleVisibility(items) {
-  return {
-    type: TOGGLE_VISIBILITY,
-    newItems: items
-  }
-}
-
 export const actions = {
-  getNavigationMenuItems,
-  toggleVisibility
+  getNavigationMenuItems
 };
 
 // ------------------------------------
@@ -91,9 +82,6 @@ export const actions = {
 const ACTION_HANDLERS = {
   [GET_NAVIGATION_MENU_ITEMS] : (state, action) => {
     return ({ ...state, navigationMenuItems: action.navigationMenuItems});
-  },
-  [TOGGLE_VISIBILITY] : (state, action) => {
-    return ({...state, navigationMenuItems: action.newItems});
   }
 };
 

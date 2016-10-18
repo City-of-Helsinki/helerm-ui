@@ -6,15 +6,22 @@ import "react-infinity-menu/src/infinity-menu.css";
 export class Navigation extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      tree: []
+    };
   }
   componentWillMount() {
     this.props.getNavigationMenuItems();
   }
-  componentWillReceiveProps(nextProps) {
-    console.log('h');
+  componentWillReceiveProps(nextProps){
+    this.setState({
+      tree: nextProps.navigationMenuItems
+    });
   }
   onNodeMouseClick(event, tree, node, level, keyPath) {
-    this.props.toggleVisibility(tree)
+    this.setState({
+      tree: tree
+    });
   }
   onLeafMouseClick(event, leaf) {
     console.log(leaf.id);
@@ -24,7 +31,7 @@ export class Navigation extends React.Component {
   render() {
     return (
       <InfinityMenu
-        tree = {this.props.navigationMenuItems}
+        tree = {this.state.tree}
         onNodeMouseClick = {this.onNodeMouseClick.bind(this)}
         onLeafMouseClick = {this.onLeafMouseClick.bind(this)}/>
     );
@@ -33,7 +40,6 @@ export class Navigation extends React.Component {
 
 Navigation.propTypes = {
   getNavigationMenuItems: React.PropTypes.func.isRequired,
-  toggleVisibility: React.PropTypes.func.isRequired,
   navigationMenuItems: React.PropTypes.array.isRequired
 }
 
