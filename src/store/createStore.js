@@ -8,8 +8,9 @@ export default (initialState = {}) => {
   // ======================================================
   // Middleware Configuration
   // ======================================================
-  const middleware = [thunk];
-
+  const middleware = process.env.NODE_ENV !== 'production' ?
+    [require('redux-immutable-state-invariant')(), thunk] :
+    [thunk];
   // ======================================================
   // Store Enhancers
   // ======================================================
