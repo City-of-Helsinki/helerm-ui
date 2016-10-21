@@ -2,6 +2,8 @@
 // Constants
 // ------------------------------------
 export const GET_NAVIGATION_MENU_ITEMS = 'GET_NAVIGATION_MENU_ITEMS';
+export const GET_SINGLE_TOS = 'GET_SINGLE_TOS';
+
 // ------------------------------------
 // Actions
 // ------------------------------------
@@ -72,8 +74,15 @@ export function getNavigationMenuItems() {
   };
 }
 
+export function getSingleTOS() {
+  return {
+    type: GET_SINGLE_TOS,
+    singleTOS: {}
+  };
+}
 export const actions = {
-  getNavigationMenuItems
+  getNavigationMenuItems,
+  getSingleTOS
 };
 
 // ------------------------------------
@@ -82,6 +91,9 @@ export const actions = {
 const ACTION_HANDLERS = {
   [GET_NAVIGATION_MENU_ITEMS] : (state, action) => {
     return ({ ...state, navigationMenuItems: action.navigationMenuItems});
+  },
+  [GET_SINGLE_TOS] : (state, action) => {
+    return ({ ...state, singleTOS: action.singleTOS});
   }
 };
 
@@ -89,10 +101,11 @@ const ACTION_HANDLERS = {
 // Reducer
 // ------------------------------------
 const initialState = {
-  navigationMenuItems: []
+  navigationMenuItems: [],
+  openTOS: {}
 };
 
-export default function navigationReducer (state = initialState, action) {
+export default function homeReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
   return handler ? handler(state, action) : state;
 }

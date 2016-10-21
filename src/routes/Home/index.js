@@ -8,16 +8,16 @@ export default (store) => ({
     require.ensure([], (require) => {
       /*  Webpack - use require callback to define
           dependencies for bundling   */
-      const Navigation = require('./containers/NavigationContainer').default;
-      const reducer = require('./modules/navigation').default;
+      const Home = require('./containers/HomeContainer').default;
+      const reducer = require('./modules/home').default;
 
       /*  Add the reducer to the store on key 'navigation'  */
-      injectReducer(store, { key: 'navigation', reducer });
+      injectReducer(store, { key: 'home', reducer });
 
       /*  Return getComponent   */
-      cb(null, Navigation);
+      cb(null, Home);
 
     /* Webpack named bundle   */
-  }, 'navigation');
+  }, 'home');
   }
 });
