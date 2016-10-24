@@ -28,10 +28,12 @@ export class Navigation extends React.Component {
   }
   render() {
     return (
-      <InfinityMenu
-        tree = {this.state.tree}
-        onNodeMouseClick = {this.onNodeMouseClick.bind(this)}
-        onLeafMouseClick = {this.onLeafMouseClick.bind(this)}/>
+      <div className="col-xs-12">
+        <InfinityMenu
+          tree = {this.state.tree}
+          onNodeMouseClick = {this.onNodeMouseClick.bind(this)}
+          onLeafMouseClick = {this.onLeafMouseClick.bind(this)}/>
+      </div>
     );
   }
 }

@@ -1,11 +1,14 @@
 import fetch from 'isomorphic-fetch';
+import update from 'immutability-helper';
 // ------------------------------------
 // Constants
 // ------------------------------------
 export const GET_NAVIGATION_MENU_ITEMS = 'GET_NAVIGATION_MENU_ITEMS';
 export const SELECT_TOS = 'SELECT_TOS';
-export const REQUEST_TOS = 'REQUEST_TOS'
-export const RECEIVE_TOS = 'RECEIVE_TOS'
+export const REQUEST_TOS = 'REQUEST_TOS';
+export const RECEIVE_TOS = 'RECEIVE_TOS';
+export const TOGGLE_PHASE_VISIBILITY = 'TOGGLE_PHASE_VISIBILITY';
+export const SET_PHASES_VISIBILITY = 'SET_PHASES_VISIBILITY';
 
 // ------------------------------------
 // Actions
@@ -117,8 +120,8 @@ export function receiveTOS(tos, json) {
             "SecurityReason": "SAsiakasL 14 §"
         },
         "parent": "fdf9230c0de34746bc314e8afd51d790",
-        "phases": [
-            {
+        "phases": {
+            0: {
                 "id": "bc1e0aa26b554746b4bf8b17f59d6a83",
                 "attributes": {
                     "RetentionPeriodStart": "Asian lopullinen ratkaisu",
@@ -251,9 +254,10 @@ export function receiveTOS(tos, json) {
                 "index": 0,
                 "name": "Neuvonta/Ohjaus",
                 "created_by": null,
-                "modified_by": null
+                "modified_by": null,
+                "is_open": true
             },
-            {
+            1: {
                 "id": "e041b533d7a042b1a0b87f0b48115631",
                 "attributes": {
                     "PersonalData": "Sisältää arkaluonteisia henkilötietoja",
@@ -412,9 +416,10 @@ export function receiveTOS(tos, json) {
                 "index": 1,
                 "name": "Vireillepano/-tulo ",
                 "created_by": null,
-                "modified_by": null
+                "modified_by": null,
+                "is_open": true
             },
-            {
+            2: {
                 "id": "693b48f38bb84a07a5952c72cecad346",
                 "attributes": {
                     "PersonalData": "Sisältää arkaluonteisia henkilötietoja",
@@ -974,9 +979,10 @@ export function receiveTOS(tos, json) {
                 "index": 2,
                 "name": "Valmistelu/Käsittely",
                 "created_by": null,
-                "modified_by": null
+                "modified_by": null,
+                "is_open": true
             },
-            {
+            3: {
                 "id": "0b174f2394b04905ae448746d97f866d",
                 "attributes": {
                     "PersonalData": "Sisältää arkaluonteisia henkilötietoja",
@@ -1374,9 +1380,10 @@ export function receiveTOS(tos, json) {
                 "index": 3,
                 "name": "Päätöksenteko",
                 "created_by": null,
-                "modified_by": null
+                "modified_by": null,
+                "is_open": true
             },
-            {
+            4: {
                 "id": "5247def0755b4ce3b6120c904a5dbe2c",
                 "attributes": {
                     "RetentionPeriodStart": "Asian lopullinen ratkaisu",
@@ -1662,9 +1669,10 @@ export function receiveTOS(tos, json) {
                 "index": 4,
                 "name": "Tiedoksianto",
                 "created_by": null,
-                "modified_by": null
+                "modified_by": null,
+                "is_open": true
             },
-            {
+            5: {
                 "id": "898a960454094a6d9cf3d27a83290f56",
                 "attributes": {
                     "RetentionPeriod": "6",
@@ -1721,9 +1729,10 @@ export function receiveTOS(tos, json) {
                 "index": 5,
                 "name": "Toimeenpano",
                 "created_by": null,
-                "modified_by": null
+                "modified_by": null,
+                "is_open": true
             },
-            {
+            6: {
                 "id": "02eab4e79b4a4d059fb5933f954e7224",
                 "attributes": {
                     "RetentionPeriodStart": "Asian lopullinen ratkaisu",
@@ -1983,9 +1992,10 @@ export function receiveTOS(tos, json) {
                 "index": 6,
                 "name": "Muutoksenhaku",
                 "created_by": null,
-                "modified_by": null
+                "modified_by": null,
+                "is_open": true
             },
-            {
+            7: {
                 "id": "4c209850b0b546b3869529d283d5c492",
                 "attributes": {},
                 "function": "6bf114abbd5e4f4f9bbc1aa4de749a74",
@@ -1995,9 +2005,10 @@ export function receiveTOS(tos, json) {
                 "index": 7,
                 "name": "Seuranta/Valvonta",
                 "created_by": null,
-                "modified_by": null
+                "modified_by": null,
+                "is_open": true
             },
-            {
+            8: {
                 "id": "96cc5eb06081479f888af7c0191feaba",
                 "attributes": {},
                 "function": "6bf114abbd5e4f4f9bbc1aa4de749a74",
@@ -2007,9 +2018,10 @@ export function receiveTOS(tos, json) {
                 "index": 8,
                 "name": "Prosessi päättyy",
                 "created_by": null,
-                "modified_by": null
+                "modified_by": null,
+                "is_open": true
             }
-        ],
+        },
         "created_at": "2016-10-13T13:11:42.791900Z",
         "modified_at": "2016-10-13T13:11:42.791937Z",
         "index": null,
@@ -2035,12 +2047,33 @@ export function fetchTOS(tos) {
   }
 }
 
+export function togglePhaseVisibility(phase, current) {
+  return {
+    type: TOGGLE_PHASE_VISIBILITY,
+    phase,
+    newOpen: !current
+  }
+}
+
+export function setPhasesVisibility(phases, value) {
+  console.log(phases);
+  const allPhasesOpen = phases.map(phase => {
+    return update(phase, {is_open: {$set: value}});
+  });
+  return {
+    type: SET_PHASES_VISIBILITY,
+    allPhasesOpen
+  }
+}
+
 export const actions = {
   getNavigationMenuItems,
   selectTOS,
   requestTOS,
   receiveTOS,
-  fetchTOS
+  fetchTOS,
+  togglePhaseVisibility,
+  setPhasesVisibility
 };
 
 // ------------------------------------
@@ -2051,21 +2084,37 @@ const ACTION_HANDLERS = {
     return ({ ...state, navigationMenuItems: action.navigationMenuItems });
   },
   [SELECT_TOS] : (state, action) => {
-    return ({ ...state, selectedTOSId: action.tos});
+    return update(state, {selectedTOSId: {$set: action.tos}});
   },
   [REQUEST_TOS] : (state, action) => {
-    return (Object.assign({}, state, {selectedTOSData: {
-      isFetching: true,
-      data: {},
-      lastUpdated: 0
-    }}));
+    return update(state, {selectedTOSData: {
+      isFetching: {$set: true},
+    }});
   },
   [RECEIVE_TOS]: (state, action) => {
-    return (Object.assign({}, state, {selectedTOSData: {
-            isFetching: false,
-            data: action.data,
-            lastUpdated: action.receivedAt
-          }}));
+    return update(state, {selectedTOSData: {
+            isFetching: {$set: false},
+            data: {$set: action.data},
+            lastUpdated: {$set: action.receivedAt}
+          }});
+  },
+  [TOGGLE_PHASE_VISIBILITY] : (state, action) => {
+    return update(state, {selectedTOSData: {
+      data: {
+        phases: {
+          [action.phase]: {
+            is_open: {$set: action.newOpen}
+          }
+        }
+      }
+    }});
+  },
+  [SET_PHASES_VISIBILITY] : (state, action) => {
+    return update(state, {selectedTOSData: {
+      data: {
+        phases: {$set: action.allPhasesOpen}
+      }
+    }});
   }
 };
 
