@@ -1,7 +1,6 @@
 import React from 'react';
 import './Navigation.scss';
 import InfinityMenu from "react-infinity-menu";
-import "react-infinity-menu/src/infinity-menu.css";
 
 export class Navigation extends React.Component {
   constructor(props) {
@@ -38,10 +37,20 @@ export class Navigation extends React.Component {
   }
 }
 
+
 Navigation.propTypes = {
   fetchTOS: React.PropTypes.func.isRequired,
   getNavigationMenuItems: React.PropTypes.func.isRequired,
   navigationMenuItems: React.PropTypes.array.isRequired
+}
+
+Navigation.headerProps = {
+  title: 'Luokat',
+  className: 'nav--empty-tree'
+}
+
+Navigation.emptyTreeComponentProps = {
+  className: 'nav--empty-tree'
 }
 
 export default Navigation;

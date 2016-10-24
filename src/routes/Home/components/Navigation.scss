@@ -1,11 +1,122 @@
 @import '../../../styles/vendor/hel-components/variables';
 
-.navigation-menu {
+.navigation-menu, .infinity-menu-container {
   padding: 15px;
   background-color: white;
   border: 1px solid $black50;
   border-radius: $border-radius-base;
 }
+
+.react-infinity-menu-default-search-input {
+  display: block;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: $input-height-base; // Make inputs at least the height of their button counterpart (base line-height + padding + border)
+  padding: $padding-base-vertical $padding-base-horizontal;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: $input-color;
+  background-color: $input-bg;
+  background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
+  border: 2px solid $input-border;
+  border-radius: $input-border-radius; // Note: This has no effect on <select>s in some browsers, due to the limited stylability of <select>s in CSS.
+
+
+  // Unstyle the caret on `<select>`s in IE10+.
+  &::-ms-expand {
+    border: 0;
+    background-color: transparent;
+  }
+
+  // Disabled and read-only inputs
+  //
+  // HTML5 says that controls under a fieldset > legend:first-child won't be
+  // disabled if the fieldset is disabled. Due to implementation difficulty, we
+  // don't honor that edge case; we style them as disabled anyway.
+  &[disabled],
+  &[readonly],
+  fieldset[disabled] & {
+    background-color: $input-bg-disabled;
+    opacity: 1; // iOS fix for unreadable disabled content; see https://github.com/twbs/bootstrap/issues/11655
+  }
+
+  &[disabled],
+  fieldset[disabled] & {
+    cursor: $cursor-disabled;
+  }
+
+  // [converter] extracted textarea& to textarea.form-control
+}
+
+.infinity-menu-node-container {
+  font-size: 1.8rem;
+  letter-spacing: 0.03rem;
+  margin-bottom: 0.5rem;
+  text-decoration: underline;
+  color: $link-color;
+  margin: 0 0 0 35px;
+  line-height: 3.4rem;
+  display: block;
+  position: relative;
+}
+
+.infinity-menu-node-container:hover {
+  color: $link-hover-color;
+}
+
+.infinity-menu-display-tree-container {
+  padding-top: 0.25rem;
+}
+
+
+.infinity-menu-display-tree-container ul {
+  padding: 0 0 0 24px;
+  -webkit-padding-before: 0;
+}
+
+
+.infinity-menu-node-container:after, .infinity-menu-leaf-container:after {
+  content: '';
+  width: 9px;
+  height: 9px;
+  position: absolute;
+  left: -15px;
+  border-radius: 50%;
+  background: $black90;
+  top: 50%;
+  margin-top: -5px;
+}
+
+.infinity-menu-node-container:before, .infinity-menu-leaf-container:before {
+  left: -35px;
+  position: absolute;
+  content: '';
+  border-left: 1px solid $black90;
+  border-bottom: 1px solid $black90;
+  top: -50%;
+  width: 20px;
+  height: 100%;
+}
+
+.infinity-menu-leaf-container {
+  font-size: 1.8rem;
+  letter-spacing: 0.03rem;
+  margin-bottom: 0.5rem;
+  font-weight: 400;
+  text-decoration: underline;
+  color: $link-color;
+  margin: 0 0 0 35px;
+  line-height: 3.4rem;
+  display: block;
+  position: relative;
+  cursor: pointer;
+}
+
+.infinity-menu-leaf-container:hover {
+  color: $link-hover-color;
+}
+
 
 .navigation-menu-items {
   display: flex;
@@ -22,6 +133,8 @@
   text-decoration: underline;
   margin: 0 0 0 35px;
   line-height: 3.4rem;
+  display: block;
+  position: relative;
 }
 
 .nav-title:after {
@@ -29,27 +142,26 @@
   width: 9px;
   height: 9px;
   position: absolute;
-  left: 20px;
+  left: -15px;
   border-radius: 50%;
-  line-height: 20px;
   background: $black90;
   margin-top: 1.2rem;
 }
 
 .nav-title:before {
-  left: 0;
+  left: -35px;
   position: absolute;
   content: '';
   border-left: 1px solid $black90;
   border-bottom: 1px solid $black90;
-  margin-top: -18px;
+  top: -50%;
   width: 20px;
-  height: 35px;
+  height: 100%;
 }
 
 .nav-main-title {
-    padding: 0 0 0 10px;
-    position: relative;
+  padding: 0 0 0 10px;
+  position: relative;
 }
 
 .nav-main-title:before {
@@ -70,4 +182,19 @@
   content: '';
   border-radius: 50%;
   background: $black90;
+}
+
+.nav-section {
+  margin: -1.7rem 0 -1.7rem 24px;
+  padding: 1.7rem 0;
+  position: relative;
+}
+
+.nav-section:after {
+  position: absolute;
+  left: -24px;
+  border-left: 1px solid $black90;
+  height: 100%;
+  content: '';
+  top: 0;
 }
