@@ -71,9 +71,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/davezuko/react-redux-starter-kit.git"
+    "url": "git+https://github.com/City-of-Helsinki/helerm-ui.git"
   },
-  "author": "David Zukowski <david@zuko.me> (http://zuko.me)",
+  "author": "Kalle Mäkynen",
   "license": "MIT",
   "dependencies": {
     "babel-loader": "^6.2.5",
@@ -96,6 +96,7 @@
     "json-loader": "^0.5.4",
     "node-sass": "^3.7.0",
     "normalize.css": "^4.1.1",
+    "occasion": "^1.0.0",
     "postcss-loader": "^0.13.0",
     "react": "^15.0.0",
     "react-dom": "^15.0.0",

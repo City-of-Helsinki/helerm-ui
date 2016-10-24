@@ -1,7 +1,6 @@
 import React from 'react';
 import './Navigation.scss';
 import InfinityMenu from "react-infinity-menu";
-import "react-infinity-menu/src/infinity-menu.css";
 
 export class Navigation extends React.Component {
   constructor(props) {
@@ -24,9 +23,7 @@ export class Navigation extends React.Component {
     });
   }
   onLeafMouseClick(event, leaf) {
-    console.log(leaf.id);
-    console.log(leaf.name);
-    // this.props.openERM();
+    this.props.fetchTOS();
   }
   render() {
     return (
@@ -38,7 +35,9 @@ export class Navigation extends React.Component {
   }
 }
 
+
 Navigation.propTypes = {
+  fetchTOS: React.PropTypes.func.isRequired,
   getNavigationMenuItems: React.PropTypes.func.isRequired,
   navigationMenuItems: React.PropTypes.array.isRequired
 }

@@ -4,11 +4,16 @@ import SingleTOS from './SingleTOS';
 
 export class HomeView extends React.Component {
   render() {
-    const { getNavigationMenuItems, navigationMenuItems } = this.props;
+    const {
+      getNavigationMenuItems,
+      navigationMenuItems,
+      fetchTOS,
+      selectedTOSData
+    } = this.props;
     return(
       <div>
-        <Navigation getNavigationMenuItems={getNavigationMenuItems} navigationMenuItems={navigationMenuItems}/>
-        <SingleTOS />
+        <Navigation fetchTOS={fetchTOS} getNavigationMenuItems={getNavigationMenuItems} navigationMenuItems={navigationMenuItems}/>
+        <SingleTOS selectedTOSData={selectedTOSData}/>
       </div>
     )
   }
