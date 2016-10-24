@@ -43,4 +43,13 @@ Navigation.propTypes = {
   navigationMenuItems: React.PropTypes.array.isRequired
 }
 
+Navigation.headerProps = {
+  title: 'Luokat',
+  className: 'nav--empty-tree'
+}
+
+Navigation.emptyTreeComponentProps = {
+  className: 'nav--empty-tree'
+}
+
 export default Navigation;
