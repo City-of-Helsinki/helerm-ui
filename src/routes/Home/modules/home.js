@@ -49,7 +49,7 @@ export function getNavigationMenuItems() {
       number: '05',
       name: '05 Sosiaalipalvelut',
       keyPath: "4",
-      isOpen: true,
+      isOpen: false,
       children: [{
         id: 1,
         number: '05 01',
@@ -2056,10 +2056,12 @@ export function togglePhaseVisibility(phase, current) {
 }
 
 export function setPhasesVisibility(phases, value) {
-  console.log(phases);
-  const allPhasesOpen = phases.map(phase => {
-    return update(phase, {is_open: {$set: value}});
-  });
+  const allPhasesOpen = [];
+  for(const key in phases) {
+    if (phases.hasOwnProperty(key)) {
+      allPhasesOpen.push(update(phases[key], {is_open: {$set: value}}));
+    }
+  };
   return {
     type: SET_PHASES_VISIBILITY,
     allPhasesOpen
