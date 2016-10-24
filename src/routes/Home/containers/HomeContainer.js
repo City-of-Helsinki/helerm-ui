@@ -1,14 +1,16 @@
 import { connect } from 'react-redux';
-import { getNavigationMenuItems } from '../modules/home';
+import { getNavigationMenuItems, fetchTOS } from '../modules/home';
 import HomeView from '../components/HomeView';
 
 const mapDispatchToProps = {
-  getNavigationMenuItems
+  getNavigationMenuItems,
+  fetchTOS
 };
 
 const mapStateToProps = (state) => {
   return {
-    navigationMenuItems : state.home.navigationMenuItems
+    navigationMenuItems : state.home.navigationMenuItems,
+    selectedTOSData : state.home.selectedTOSData.data
   }
 };
 
