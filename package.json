@@ -108,6 +108,7 @@
     "react-infinity-menu": "^2.4.1",
     "react-redux": "^4.4.5",
     "react-router": "^2.8.0",
+    "redbox-react": "^1.2.10",
     "redux": "^3.6.0",
     "redux-connect": "^4.0.1",
     "redux-thunk": "^2.0.0",
@@ -116,6 +117,7 @@
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.6",
     "webpack": "^1.12.14",
+    "webpack-hot-middleware": "^2.12.2",
     "yargs": "^5.0.0"
   },
   "devDependencies": {
@@ -146,11 +148,9 @@
     "nodemon": "^1.10.2",
     "phantomjs-prebuilt": "^2.1.12",
     "react-addons-test-utils": "^15.0.0",
-    "redbox-react": "^1.2.10",
     "redux-immutable-state-invariant": "^1.2.4",
     "sinon": "^1.17.5",
     "sinon-chai": "^2.8.0",
-    "webpack-dev-middleware": "^1.6.1",
-    "webpack-hot-middleware": "^2.12.2"
+    "webpack-dev-middleware": "^1.6.1"
   }
 }
