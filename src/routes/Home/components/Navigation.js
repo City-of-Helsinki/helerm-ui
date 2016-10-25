@@ -7,8 +7,10 @@ export class Navigation extends React.Component {
     super(props);
     this.onNodeMouseClick = this.onNodeMouseClick.bind(this);
     this.onLeafMouseClick = this.onLeafMouseClick.bind(this);
+    this.toggleNavigationVisibility = this.toggleNavigationVisibility.bind(this);
     this.state = {
-      tree: []
+      tree: [],
+      isNavigationOpen: true
     };
   }
   componentWillMount () {
@@ -18,6 +20,10 @@ export class Navigation extends React.Component {
     this.setState({
       tree: nextProps.navigationMenuItems
     });
+  }
+  toggleNavigationVisibility () {
+    const value = this.state.isNavigationOpen;
+    this.setState({ isNavigationOpen: !value });
   }
   onNodeMouseClick (event, tree, node, level, keyPath) {
     this.setState({
@@ -30,10 +36,19 @@ export class Navigation extends React.Component {
   render () {
     return (
       <div className='col-xs-12'>
-        <InfinityMenu
-          tree={this.state.tree}
-          onNodeMouseClick={this.onNodeMouseClick}
-          onLeafMouseClick={this.onLeafMouseClick} />
+        <button className='button pull-right' onClick={this.toggleNavigationVisibility}>
+          <span
+            className={'fa black-icon ' + (this.state.isNavigationOpen ? 'fa-minus' : 'fa-plus')}
+            aria-hidden='true'
+          />
+        </button>
+        {this.state.isNavigationOpen &&
+          <InfinityMenu
+            tree={this.state.tree}
+            onNodeMouseClick={this.onNodeMouseClick}
+            onLeafMouseClick={this.onLeafMouseClick}
+          />
+        }
       </div>
     );
   }
