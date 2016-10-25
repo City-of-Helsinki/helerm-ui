@@ -18,6 +18,6 @@ export default (store) => ({
       cb(null, Home);
 
     /* Webpack named bundle   */
-  }, 'home');
+    }, 'home');
   }
 });

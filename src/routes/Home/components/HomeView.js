@@ -4,9 +4,9 @@ import SingleTOS from './SingleTOS';
 import './Homeview.scss';
 
 export class HomeView extends React.Component {
-  render() {
+  render () {
     const {
-      getNavigationMenuItems,
+      fetchNavigation,
       navigationMenuItems,
       fetchTOS,
       selectedTOSData,
@@ -14,11 +14,11 @@ export class HomeView extends React.Component {
       isFetching,
       setPhasesVisibility
     } = this.props;
-    return(
-      <div className="row home-container">
+    return (
+      <div className='row home-container'>
         <Navigation
           fetchTOS={fetchTOS}
-          getNavigationMenuItems={getNavigationMenuItems}
+          fetchNavigation={fetchNavigation}
           navigationMenuItems={navigationMenuItems}
         />
         <SingleTOS
@@ -28,8 +28,16 @@ export class HomeView extends React.Component {
           setPhasesVisibility={setPhasesVisibility}
         />
       </div>
-    )
+    );
   }
 };
-
+HomeView.propTypes = {
+  fetchTOS: React.PropTypes.func.isRequired,
+  fetchNavigation: React.PropTypes.func.isRequired,
+  navigationMenuItems: React.PropTypes.array.isRequired,
+  selectedTOSData: React.PropTypes.object.isRequired,
+  togglePhaseVisibility: React.PropTypes.func.isRequired,
+  isFetching: React.PropTypes.bool.isRequired,
+  setPhasesVisibility: React.PropTypes.func.isRequired
+};
 export default HomeView;
