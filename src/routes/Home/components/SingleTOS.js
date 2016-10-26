@@ -40,8 +40,8 @@ export class SingleTOS extends React.Component {
           );
         });
         phaseElements.push(
-          <div key={key} className='col-xs-12 box'>
-            <div className='col-xs-12 space-between'>
+          <div key={key} className='box'>
+            <div className='space-between'>
               <span className='phase-title'>
                 <i className='fa fa-info-circle' aria-hidden='true' /> {phases[key].name}
               </span>
@@ -55,7 +55,7 @@ export class SingleTOS extends React.Component {
               }
             </div>
             { phases[key].is_open &&
-              <div className={'col-xs-12' + (phases[key].is_open ? 'show-actions' : 'hide-actions')}>
+              <div className={(phases[key].is_open ? 'show-actions' : 'hide-actions')}>
                 { actions }
               </div>
             }
@@ -69,9 +69,11 @@ export class SingleTOS extends React.Component {
     const { selectedTOS, isFetching } = this.props;
     if (isFetching) {
       return (
-        <div className='loader-container'>
-          <h4>Ladataan tietoja</h4>
-          <div className='loader' />
+        <div className='col-xs-12'>
+          <div className='loader-container'>
+            <h4>Ladataan tietoja</h4>
+            <div className='loader' />
+          </div>
         </div>
       );
     }
@@ -80,49 +82,53 @@ export class SingleTOS extends React.Component {
       const formattedDate = formatDate(modifiedDateTime.date, 'DD.MM.YYYY');
       const phases = this.generatePhases(selectedTOS.phases);
       return (
-        <div className='col-xs-12 single-tos-container'>
-          <h4>{selectedTOS.function_id} {selectedTOS.name}</h4>
-          <div className='general-info space-between'>
-            <div className='version-details'>
-              <span>Tila: Luonnos versio 1.2</span>
-              <span>Käytössä oleva TOS-versio: 1.0</span>
-              <span>Muokattu: { formattedDate } { modifiedDateTime.time }</span>
-            </div>
-            <button className='btn btn-primary' onClick={() => this.props.setDocumentState('edit')}>Muokkaa</button>
+        <div className='col-xs-12'>
+          <div className='single-tos-container'>
+            <h4>{selectedTOS.function_id} {selectedTOS.name}</h4>
+            <div className='general-info space-between'>
+              <div className='version-details'>
+                <span>Tila: Luonnos versio 1.2</span>
+                <span>Käytössä oleva TOS-versio: 1.0</span>
+                <span>Muokattu: { formattedDate } { modifiedDateTime.time }</span>
+              </div>
+              <button className='btn btn-primary' onClick={() => this.props.setDocumentState('edit')}>Muokkaa</button>
 
-            <div className='document-buttons'>
-              <button className='btn btn-primary'>Tallenna luonnos</button>
-              <button className='btn btn-default'>Lähetä tarkastettavaksi</button>
+              <div className='document-buttons'>
+                <button className='btn btn-primary'>Tallenna luonnos</button>
+                <button className='btn btn-default'>Lähetä tarkastettavaksi</button>
+              </div>
             </div>
-          </div>
-          <ul className='nav nav-tabs tos-nav'>
-            <li className='active'>
-              <a href='#' data-toggle='tab'>Muokkausnäkymä</a>
-            </li>
-            <li>
-              <a href='#' data-toggle='tab'>Viestit & Versiot</a>
-            </li>
-          </ul>
-          <div className='well'>
-            <h4 className='unlocated-title'>Sijoittamattomat toimenpiteet ja asiakirjat</h4>
-            <div className='box'>
-              <span>Neuvontapyynnöstä päättäminen</span>
-              <p>10 asiakirjaa | 3 liitettä</p>
+            <ul className='nav nav-tabs tos-nav'>
+              <li className='active'>
+                <a href='#' data-toggle='tab'>Muokkausnäkymä</a>
+              </li>
+              <li>
+                <a href='#' data-toggle='tab'>Viestit & Versiot</a>
+              </li>
+            </ul>
+            <div className='well'>
+              <h4 className='unlocated-title'>Sijoittamattomat toimenpiteet ja asiakirjat</h4>
+              <div className='box'>
+                <span>Neuvontapyynnöstä päättäminen</span>
+                <p>10 asiakirjaa | 3 liitettä</p>
+              </div>
             </div>
+            <div className='row'>
+              <div className='button-row col-xs-12'>
+                <button
+                  className='btn btn-default btn-sm pull-right'
+                  onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, true)}>
+                  Avaa kaikki
+                </button>
+                <button
+                  className='btn btn-default btn-sm pull-right'
+                  onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, false)}>
+                  Pienennä kaikki
+                </button>
+              </div>
+            </div>
+            { phases }
           </div>
-          <div className='button-row col-xs-12'>
-            <button
-              className='btn btn-default btn-sm pull-right'
-              onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, true)}>
-              Avaa kaikki
-            </button>
-            <button
-              className='btn btn-default btn-sm pull-right'
-              onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, false)}>
-              Pienennä kaikki
-            </button>
-          </div>
-          { phases }
         </div>
       );
     } else {
