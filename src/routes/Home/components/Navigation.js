@@ -31,7 +31,7 @@ export class Navigation extends React.Component {
     });
   }
   onLeafMouseClick (event, leaf) {
-    this.props.fetchTOS();
+    this.props.fetchTOS(leaf.id);
   }
   render () {
     return (

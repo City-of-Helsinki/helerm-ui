@@ -9,10 +9,12 @@ export class HomeView extends React.Component {
       fetchNavigation,
       navigationMenuItems,
       fetchTOS,
-      selectedTOSData,
+      selectedTOS,
       togglePhaseVisibility,
       isFetching,
-      setPhasesVisibility
+      setPhasesVisibility,
+      documentState,
+      setDocumentState
     } = this.props;
     return (
       <div className='row home-container'>
@@ -22,10 +24,12 @@ export class HomeView extends React.Component {
           navigationMenuItems={navigationMenuItems}
         />
         <SingleTOS
-          selectedTOSData={selectedTOSData}
+          selectedTOS={selectedTOS}
           togglePhaseVisibility={togglePhaseVisibility}
           isFetching={isFetching}
           setPhasesVisibility={setPhasesVisibility}
+          documentState={documentState}
+          setDocumentState={setDocumentState}
         />
       </div>
     );
@@ -35,9 +39,11 @@ HomeView.propTypes = {
   fetchTOS: React.PropTypes.func.isRequired,
   fetchNavigation: React.PropTypes.func.isRequired,
   navigationMenuItems: React.PropTypes.array.isRequired,
-  selectedTOSData: React.PropTypes.object.isRequired,
+  selectedTOS: React.PropTypes.object.isRequired,
   togglePhaseVisibility: React.PropTypes.func.isRequired,
   isFetching: React.PropTypes.bool.isRequired,
-  setPhasesVisibility: React.PropTypes.func.isRequired
+  setPhasesVisibility: React.PropTypes.func.isRequired,
+  documentState: React.PropTypes.string.isRequired,
+  setDocumentState: React.PropTypes.func.isRequired
 };
 export default HomeView;

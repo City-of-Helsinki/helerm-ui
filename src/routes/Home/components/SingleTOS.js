@@ -66,7 +66,7 @@ export class SingleTOS extends React.Component {
     return phaseElements;
   }
   render () {
-    const { selectedTOSData, isFetching } = this.props;
+    const { selectedTOS, isFetching } = this.props;
     if (isFetching) {
       return (
         <div className='loader-container'>
@@ -75,19 +75,21 @@ export class SingleTOS extends React.Component {
         </div>
       );
     }
-    if (selectedTOSData !== undefined && Object.keys(selectedTOSData).length !== 0) {
-      const modifiedDateTime = this.formatDateTime(selectedTOSData.modified_at);
+    if (selectedTOS !== undefined && Object.keys(selectedTOS).length !== 0) {
+      const modifiedDateTime = this.formatDateTime(selectedTOS.modified_at);
       const formattedDate = formatDate(modifiedDateTime.date, 'DD.MM.YYYY');
-      const phases = this.generatePhases(selectedTOSData.phases);
+      const phases = this.generatePhases(selectedTOS.phases);
       return (
         <div className='col-xs-12 single-tos-container'>
-          <h4>{selectedTOSData.function_id} {selectedTOSData.name}</h4>
+          <h4>{selectedTOS.function_id} {selectedTOS.name}</h4>
           <div className='general-info space-between'>
             <div className='version-details'>
               <span>Tila: Luonnos versio 1.2</span>
               <span>Käytössä oleva TOS-versio: 1.0</span>
               <span>Muokattu: { formattedDate } { modifiedDateTime.time }</span>
             </div>
+            <button className='btn btn-primary' onClick={() => this.props.setDocumentState('edit')}>Muokkaa</button>
+
             <div className='document-buttons'>
               <button className='btn btn-primary'>Tallenna luonnos</button>
               <button className='btn btn-default'>Lähetä tarkastettavaksi</button>
@@ -111,12 +113,12 @@ export class SingleTOS extends React.Component {
           <div className='button-row col-xs-12'>
             <button
               className='btn btn-default btn-sm pull-right'
-              onClick={() => this.props.setPhasesVisibility(selectedTOSData.phases, true)}>
+              onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, true)}>
               Avaa kaikki
             </button>
             <button
               className='btn btn-default btn-sm pull-right'
-              onClick={() => this.props.setPhasesVisibility(selectedTOSData.phases, false)}>
+              onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, false)}>
               Pienennä kaikki
             </button>
           </div>
@@ -130,10 +132,12 @@ export class SingleTOS extends React.Component {
 }
 
 SingleTOS.propTypes = {
-  selectedTOSData: React.PropTypes.object.isRequired,
-  isFetching: React.PropTypes.func.isRequired,
+  selectedTOS: React.PropTypes.object.isRequired,
+  isFetching: React.PropTypes.bool.isRequired,
   togglePhaseVisibility: React.PropTypes.func.isRequired,
-  setPhasesVisibility: React.PropTypes.func.isRequired
+  setPhasesVisibility: React.PropTypes.func.isRequired,
+  documentState: React.PropTypes.string.isRequired,
+  setDocumentState: React.PropTypes.func.isRequired
 };
 
 export default SingleTOS;
