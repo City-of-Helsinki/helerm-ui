@@ -4,7 +4,8 @@ import {
   fetchTOS,
   togglePhaseVisibility,
   setPhasesVisibility,
-  setDocumentState
+  setDocumentState,
+  fetchRecordTypes
 } from '../modules/home';
 import HomeView from '../components/HomeView';
 
@@ -13,12 +14,14 @@ const mapDispatchToProps = {
   fetchTOS,
   togglePhaseVisibility,
   setPhasesVisibility,
-  setDocumentState
+  setDocumentState,
+  fetchRecordTypes
 };
 
 const mapStateToProps = (state) => {
   return {
     navigationMenuItems: state.home.navigationMenuItems,
+    recordTypes: state.home.recordTypes,
     selectedTOS: state.home.selectedTOS.data,
     isFetching: state.home.selectedTOS.isFetching,
     documentState: state.home.selectedTOS.documentState

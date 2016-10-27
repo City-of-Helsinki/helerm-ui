@@ -14,7 +14,9 @@ export class HomeView extends React.Component {
       isFetching,
       setPhasesVisibility,
       documentState,
-      setDocumentState
+      setDocumentState,
+      fetchRecordTypes,
+      recordTypes
     } = this.props;
     return (
       <div className='row home-container'>
@@ -30,6 +32,8 @@ export class HomeView extends React.Component {
           setPhasesVisibility={setPhasesVisibility}
           documentState={documentState}
           setDocumentState={setDocumentState}
+          fetchRecordTypes={fetchRecordTypes}
+          recordTypes={recordTypes}
         />
       </div>
     );
@@ -44,6 +48,8 @@ HomeView.propTypes = {
   isFetching: React.PropTypes.bool.isRequired,
   setPhasesVisibility: React.PropTypes.func.isRequired,
   documentState: React.PropTypes.string.isRequired,
-  setDocumentState: React.PropTypes.func.isRequired
+  setDocumentState: React.PropTypes.func.isRequired,
+  fetchRecordTypes: React.PropTypes.func.isRequired,
+  recordTypes: React.PropTypes.object.isRequired
 };
 export default HomeView;

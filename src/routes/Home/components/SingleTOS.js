@@ -3,6 +3,10 @@ import './SingleTOS.scss';
 import formatDate from 'occasion';
 
 export class SingleTOS extends React.Component {
+  componentWillMount () {
+    this.props.fetchRecordTypes();
+  }
+
   formatDateTime (dateTime) {
     const date = dateTime.slice(0, 10);
     const time = dateTime.slice(11, 16);
@@ -18,7 +22,7 @@ export class SingleTOS extends React.Component {
             return (
               <tr key={index}>
                 <td className='col-xs-8'>{record.name}</td>
-                <td className='col-xs-4'>liite</td>
+                <td className='col-xs-4'>{this.props.recordTypes[record.type]}</td>
               </tr>
             );
           });
@@ -143,7 +147,9 @@ SingleTOS.propTypes = {
   togglePhaseVisibility: React.PropTypes.func.isRequired,
   setPhasesVisibility: React.PropTypes.func.isRequired,
   documentState: React.PropTypes.string.isRequired,
-  setDocumentState: React.PropTypes.func.isRequired
+  setDocumentState: React.PropTypes.func.isRequired,
+  fetchRecordTypes: React.PropTypes.func.isRequired,
+  recordTypes: React.PropTypes.object.isRequired
 };
 
 export default SingleTOS;

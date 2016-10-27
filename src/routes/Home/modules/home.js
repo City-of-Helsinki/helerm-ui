@@ -16,6 +16,8 @@ export const SET_PHASES_VISIBILITY = 'SET_PHASES_VISIBILITY';
 
 export const SET_DOCUMENT_STATE = 'SET_DOCUMENT_STATE';
 
+export const RECEIVE_RECORDTYPES = 'RECEIVE_RECORDTYPES';
+
 // ------------------------------------
 // Actions
 // ------------------------------------
@@ -76,6 +78,17 @@ export function receiveTOS (tos, json) {
   };
 }
 
+export function receiveRecordTypes (recordTypes) {
+  const recordTypeList = {};
+  recordTypes.results.map(result => {
+    const trimmedResult = result.id.replace(/-/g,'');
+    recordTypeList[trimmedResult] = result.value;
+  });
+  return {
+    type: RECEIVE_RECORDTYPES,
+    recordTypeList
+  }
+}
 export function fetchTOS (tos) {
   return function (dispatch) {
     dispatch(requestTOS());
@@ -101,6 +114,16 @@ export function fetchNavigation () {
   };
 }
 
+export function fetchRecordTypes () {
+  return function (dispatch) {
+    return fetch('https://api.hel.fi/helerm-test/v1/record_type/?page_size=2000')
+    // return fetch('https://www.reddit.com/r/reactjs.json')
+      .then(response => response.json())
+      .then(json =>
+      dispatch(receiveRecordTypes(json))
+    );
+  };
+}
 export function togglePhaseVisibility (phase, current) {
   return {
     type: TOGGLE_PHASE_VISIBILITY,
@@ -136,7 +159,8 @@ export const actions = {
   receiveTOS,
   fetchTOS,
   togglePhaseVisibility,
-  setPhasesVisibility
+  setPhasesVisibility,
+  fetchRecordTypes
 };
 
 // ------------------------------------
@@ -181,8 +205,13 @@ const ACTION_HANDLERS = {
   },
   [SET_DOCUMENT_STATE] : (state, action) => {
     return update(state, { selectedTOS: {
-      documentState: { $set: action.state}
+      documentState: { $set: action.state }
     } });
+  },
+  [RECEIVE_RECORDTYPES] : (state, action) => {
+    return update(state, {
+      recordTypes: { $set: action.recordTypeList }
+    });
   }
 };
 
@@ -196,7 +225,8 @@ const initialState = {
     data: {},
     documentState: 'view',
     lastUpdated: 0
-  }
+  },
+  recordTypes: {}
 };
 
 export default function homeReducer (state = initialState, action) {
