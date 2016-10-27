@@ -32,7 +32,7 @@ export class SingleTOS extends React.Component {
               <table className='table table-striped table-hover records'>
                 <thead>
                   <tr>
-                    <th>Kuvaus</th>
+                    <th>Asiakirjatyypin tarkenne</th>
                     <th>Tyyppi</th>
                   </tr>
                 </thead>
