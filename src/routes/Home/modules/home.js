@@ -8,7 +8,6 @@ import { orderBy } from 'lodash';
 export const REQUEST_NAVIGATION = 'REQUEST_NAVIGATION';
 export const RECEIVE_NAVIGATION = 'RECEIVE_NAVIGATION';
 
-export const SELECT_TOS = 'SELECT_TOS';
 export const REQUEST_TOS = 'REQUEST_TOS';
 export const RECEIVE_TOS = 'RECEIVE_TOS';
 
@@ -79,7 +78,7 @@ export function receiveTOS (tos, json) {
 
 export function fetchTOS (tos) {
   return function (dispatch) {
-    dispatch(requestTOS(tos));
+    dispatch(requestTOS());
     // placeholder fetch, will be changed
     const url = 'https://api.hel.fi/helerm-test/v1/function/'+tos;
     return fetch(url)
@@ -133,7 +132,6 @@ export const actions = {
   fetchNavigation,
   requestNavigation,
   receiveNavigation,
-  selectTOS,
   requestTOS,
   receiveTOS,
   fetchTOS,
@@ -150,9 +148,6 @@ const ACTION_HANDLERS = {
   },
   [REQUEST_NAVIGATION] : (state, action) => {
     return state;
-  },
-  [SELECT_TOS] : (state, action) => {
-    return update(state, { selectedTOSId: { $set: action.tos } });
   },
   [REQUEST_TOS] : (state, action) => {
     return update(state, { selectedTOS: {
