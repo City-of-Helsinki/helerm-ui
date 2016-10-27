@@ -1,5 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import update from 'immutability-helper';
+import LTT from 'list-to-tree';
+import { orderBy } from 'lodash';
 // ------------------------------------
 // Constants
 // ------------------------------------
@@ -25,78 +27,44 @@ export function requestNavigation () {
 }
 
 export function receiveNavigation (items) {
-  // const itemTree = [];
-  // items.results.map((item, index) => {
-  //   if( item.parent  && index < 5) {
-  //
-  //   } else {
-  //     itemTree[item.id] = {id: item.id, name: item.function_id+' '+item.name, children: []};
-  //   }
-  // });
-  // console.log(itemTree);
-  const tempItems = [{
-      id: "01235187312",
-      name: '01 Asuminen',
-      children: []
-    }, {
-      id: "0123518731asas123",
-      name: '02 Rakennettu ympäristö',
-      children: []
-    }, {
-      id: "sadlkasdlkj2123",
-      name: '03 Perheiden palvelut',
-      children: []
-    }, {
-      id: "askldhaskj2",
-      name: '04 Terveydenhuolto ja sairaanhoito',
-      children: []
-    }, {
-      id: "askldhaskj1",
-      name: '05 Sosiaalipalvelut',
-      children: [{
-        id: "saldk090ijkas",
-        name: '05 01 Lasten päivähoito',
-        children: [{
-          id: "a51dfd356cc447ec85f486f242c199a7",
-          name: '05 01 00 Varhaiskasvatuksen suunnittelu, ohjaus ja valvonta'
-        }, {
-          id: "aosdj98123",
-          name: '05 01 01 Varhaiskasvatukseen hakeminen ja ottaminen',
-          children: [{
-            id: "6bf114abbd5e4f4f9bbc1aa4de749a74",
-            name: '05 01 01 00 Päiväkoti- ja perhepäivähoitoon hakeminen ja ottaminen (ml. kesällä myös kehitysvammaiset ja autistiset koululaiset)'
-          }, {
-            id: "6f5baa3218784996b9dc078f59d65c1e",
-            name: '05 01 01 01 Esiopetukseen hakeminen ja ottaminen'
-          }]
-        }]
-      }, {
-        id: "askld8912",
-        name: '05 02 Testi',
-        children: [{
-          id: "askldj892",
-          name: '05 02 00 Testi 2'
-        }]
-      }]
-    }];
-  
+  // ------------------------------------
+  // Combine navigation number and names
+  // and
+  // Give each item in the navigation a level specific id for sorting
+  // ------------------------------------
+  items.results.map(item => {
+    item.name = item.function_id + ' ' + item.name;
+    item.sort_id = item.function_id.substring(item.function_id.length-2, item.function_id.length);
+  });
+  const ltt = new LTT(items.results, {
+    key_id: 'id',
+    key_parent: 'parent',
+    key_child: 'children'
+  });
+  const unOrderedTree = ltt.GetTree();
+  // ------------------------------------
+  // Sort the tree, as ltt doesnt automatically do it
+  // ------------------------------------
+  const sortTree = tree => {
+    tree = _.orderBy(tree, ['sort_id'], 'asc');
+    return tree.map(item => {
+      if(item.children !== undefined) {
+        item.children = _.orderBy(item.children, ['sort_id'], 'asc');
+        sortTree(item.children);
+      }
+      return item;
+    });
+  }
+  const orderedTree = sortTree(unOrderedTree);
   return {
     type: RECEIVE_NAVIGATION,
-    items: tempItems
+    items: orderedTree
   };
 }
 
-export function selectTOS (tos) {
+export function requestTOS () {
   return {
-    type: SELECT_TOS,
-    tos
-  };
-}
-
-export function requestTOS (tos) {
-  return {
-    type: REQUEST_TOS,
-    tos
+    type: REQUEST_TOS
   };
 }
 
@@ -125,7 +93,6 @@ export function fetchTOS (tos) {
 export function fetchNavigation () {
   return function (dispatch) {
     dispatch(requestNavigation());
-    // placeholder fetch, will be changed
     return fetch('https://api.hel.fi/helerm-test/v1/function/?page_size=2000')
     // return fetch('https://www.reddit.com/r/reactjs.json')
       .then(response => response.json())
