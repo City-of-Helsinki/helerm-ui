@@ -53,7 +53,8 @@ describe('(Redux Module) Home', () => {
           data: {},
           documentState: 'view',
           lastUpdated: 0
-        }
+        },
+        recordTypes: {}
       };
     });
     it('Should be a function.', () => {
