@@ -1,6 +1,7 @@
 import React from 'react';
 import Navigation from './Navigation';
-import SingleTOS from './SingleTOS';
+import ViewTOS from './ViewTOS';
+import EditTOS from './EditTOS';
 import './Homeview.scss';
 
 export class HomeView extends React.Component {
@@ -25,7 +26,8 @@ export class HomeView extends React.Component {
           fetchNavigation={fetchNavigation}
           navigationMenuItems={navigationMenuItems}
         />
-        <SingleTOS
+        {documentState==='view' &&
+        <ViewTOS
           selectedTOS={selectedTOS}
           togglePhaseVisibility={togglePhaseVisibility}
           isFetching={isFetching}
@@ -35,6 +37,19 @@ export class HomeView extends React.Component {
           fetchRecordTypes={fetchRecordTypes}
           recordTypes={recordTypes}
         />
+        }
+        {documentState==='edit' &&
+        <EditTOS
+          selectedTOS={selectedTOS}
+          togglePhaseVisibility={togglePhaseVisibility}
+          isFetching={isFetching}
+          setPhasesVisibility={setPhasesVisibility}
+          documentState={documentState}
+          setDocumentState={setDocumentState}
+          fetchRecordTypes={fetchRecordTypes}
+          recordTypes={recordTypes}
+        />
+      }
       </div>
     );
   }

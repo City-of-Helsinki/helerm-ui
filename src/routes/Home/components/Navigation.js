@@ -22,8 +22,8 @@ export class Navigation extends React.Component {
     });
   }
   toggleNavigationVisibility () {
-    const value = this.state.isNavigationOpen;
-    this.setState({ isNavigationOpen: !value });
+    const currentVisibility = this.state.isNavigationOpen;
+    this.setState({ isNavigationOpen: !currentVisibility });
   }
   onNodeMouseClick (event, tree, node, level, keyPath) {
     this.setState({

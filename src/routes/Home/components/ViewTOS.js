@@ -1,8 +1,8 @@
 import React from 'react';
-import './SingleTOS.scss';
+import './ViewTOS.scss';
 import formatDate from 'occasion';
 
-export class SingleTOS extends React.Component {
+export class ViewTOS extends React.Component {
   componentWillMount () {
     this.props.fetchRecordTypes();
   }
@@ -141,7 +141,7 @@ export class SingleTOS extends React.Component {
   }
 }
 
-SingleTOS.propTypes = {
+ViewTOS.propTypes = {
   selectedTOS: React.PropTypes.object.isRequired,
   isFetching: React.PropTypes.bool.isRequired,
   togglePhaseVisibility: React.PropTypes.func.isRequired,
@@ -152,4 +152,4 @@ SingleTOS.propTypes = {
   recordTypes: React.PropTypes.object.isRequired
 };
 
-export default SingleTOS;
+export default ViewTOS;
