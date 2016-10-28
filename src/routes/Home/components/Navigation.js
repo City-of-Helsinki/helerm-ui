@@ -9,8 +9,7 @@ export class Navigation extends React.Component {
     this.onLeafMouseClick = this.onLeafMouseClick.bind(this);
     this.toggleNavigationVisibility = this.toggleNavigationVisibility.bind(this);
     this.state = {
-      tree: [],
-      isNavigationOpen: true
+      tree: []
     };
   }
   componentWillMount () {
@@ -18,12 +17,12 @@ export class Navigation extends React.Component {
   }
   componentWillReceiveProps (nextProps) {
     this.setState({
-      tree: nextProps.navigationMenuItems
+      tree: nextProps.navigation.items
     });
   }
   toggleNavigationVisibility () {
-    const currentVisibility = this.state.isNavigationOpen;
-    this.setState({ isNavigationOpen: !currentVisibility });
+    const currentVisibility = this.props.navigation.is_open;
+    this.props.setNavigationVisibility(!currentVisibility);
   }
   onNodeMouseClick (event, tree, node, level, keyPath) {
     this.setState({
@@ -31,18 +30,27 @@ export class Navigation extends React.Component {
     });
   }
   onLeafMouseClick (event, leaf) {
-    this.props.fetchTOS(leaf.id);
+    this.props.fetchTOS(leaf);
   }
   render () {
+    let navigationTitle = 'Navigaatio';
+    if (!this.props.navigation.is_open && this.props.selectedTOSPath.length > 0) {
+      navigationTitle = this.props.selectedTOSPath.map((section, index) => {
+        return <div key={index}>{section}</div>;
+      });
+    }
     return (
       <div className='col-xs-12'>
+        {!this.props.navigation.is_open &&
+        <div>{navigationTitle}</div>
+      }
         <button className='button pull-right' onClick={this.toggleNavigationVisibility}>
           <span
-            className={'fa black-icon ' + (this.state.isNavigationOpen ? 'fa-minus' : 'fa-plus')}
+            className={'fa black-icon ' + (this.props.navigation.is_open ? 'fa-minus' : 'fa-plus')}
             aria-hidden='true'
           />
         </button>
-        {this.state.isNavigationOpen &&
+        {this.props.navigation.is_open &&
           <InfinityMenu
             tree={this.state.tree}
             onNodeMouseClick={this.onNodeMouseClick}
@@ -57,7 +65,9 @@ export class Navigation extends React.Component {
 Navigation.propTypes = {
   fetchTOS: React.PropTypes.func.isRequired,
   fetchNavigation: React.PropTypes.func.isRequired,
-  navigationMenuItems: React.PropTypes.array.isRequired
+  setNavigationVisibility: React.PropTypes.func.isRequired,
+  navigation: React.PropTypes.object.isRequired,
+  selectedTOSPath: React.PropTypes.array.isRequired
 };
 
 Navigation.headerProps = {

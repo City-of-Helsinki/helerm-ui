@@ -8,9 +8,11 @@ export class HomeView extends React.Component {
   render () {
     const {
       fetchNavigation,
-      navigationMenuItems,
+      setNavigationVisibility,
+      navigation,
       fetchTOS,
       selectedTOS,
+      selectedTOSPath,
       togglePhaseVisibility,
       isFetching,
       setPhasesVisibility,
@@ -24,9 +26,11 @@ export class HomeView extends React.Component {
         <Navigation
           fetchTOS={fetchTOS}
           fetchNavigation={fetchNavigation}
-          navigationMenuItems={navigationMenuItems}
+          navigation={navigation}
+          setNavigationVisibility={setNavigationVisibility}
+          selectedTOSPath={selectedTOSPath}
         />
-        {documentState==='view' &&
+        {documentState === 'view' &&
         <ViewTOS
           selectedTOS={selectedTOS}
           togglePhaseVisibility={togglePhaseVisibility}
@@ -38,7 +42,7 @@ export class HomeView extends React.Component {
           recordTypes={recordTypes}
         />
         }
-        {documentState==='edit' &&
+        {documentState === 'edit' &&
         <EditTOS
           selectedTOS={selectedTOS}
           togglePhaseVisibility={togglePhaseVisibility}
@@ -57,7 +61,8 @@ export class HomeView extends React.Component {
 HomeView.propTypes = {
   fetchTOS: React.PropTypes.func.isRequired,
   fetchNavigation: React.PropTypes.func.isRequired,
-  navigationMenuItems: React.PropTypes.array.isRequired,
+  navigation: React.PropTypes.object.isRequired,
+  setNavigationVisibility: React.PropTypes.func.isRequired,
   selectedTOS: React.PropTypes.object.isRequired,
   togglePhaseVisibility: React.PropTypes.func.isRequired,
   isFetching: React.PropTypes.bool.isRequired,

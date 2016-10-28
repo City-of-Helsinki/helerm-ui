@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import {
   fetchNavigation,
+  setNavigationVisibility,
   fetchTOS,
   togglePhaseVisibility,
   setPhasesVisibility,
@@ -11,6 +12,7 @@ import HomeView from '../components/HomeView';
 
 const mapDispatchToProps = {
   fetchNavigation,
+  setNavigationVisibility,
   fetchTOS,
   togglePhaseVisibility,
   setPhasesVisibility,
@@ -20,9 +22,10 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => {
   return {
-    navigationMenuItems: state.home.navigationMenuItems,
+    navigation: state.home.navigation,
     recordTypes: state.home.recordTypes,
     selectedTOS: state.home.selectedTOS.data,
+    selectedTOSPath: state.home.selectedTOS.path,
     isFetching: state.home.selectedTOS.isFetching,
     documentState: state.home.selectedTOS.documentState
   };

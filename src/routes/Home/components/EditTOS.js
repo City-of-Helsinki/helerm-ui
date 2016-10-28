@@ -28,7 +28,7 @@ export class EditTOS extends React.Component {
               <table className='table table-striped table-hover records'>
                 <thead>
                   <tr>
-                    <th>Asiakirjatyypdddin tarkenne</th>
+                    <th>Asiakirjatyypin tarkenne</th>
                     <th>Tyyppi</th>
                   </tr>
                 </thead>
@@ -81,11 +81,11 @@ export class EditTOS extends React.Component {
       const modifiedDateTime = this.formatDateTime(selectedTOS.modified_at);
       const formattedDate = formatDate(modifiedDateTime.date, 'DD.MM.YYYY');
       const phases = this.generatePhases(selectedTOS.phases);
-      const TOSName = selectedTOS.function_id+' '+selectedTOS.name;
+      const TOSName = selectedTOS.function_id + ' ' + selectedTOS.name;
       return (
         <div className='col-xs-12'>
           <div className='single-tos-container'>
-            <textarea type='text' rows='2' value={ TOSName } className="title-input"/>
+            <textarea type='text' rows='2' value={TOSName} className='title-input' />
             <div className='general-info space-between'>
               <div className='version-details'>
                 <span>Tila: Luonnos versio 1.2</span>
