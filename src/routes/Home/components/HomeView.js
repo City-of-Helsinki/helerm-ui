@@ -64,6 +64,7 @@ HomeView.propTypes = {
   navigation: React.PropTypes.object.isRequired,
   setNavigationVisibility: React.PropTypes.func.isRequired,
   selectedTOS: React.PropTypes.object.isRequired,
+  selectedTOSPath: React.PropTypes.array.isRequired,
   togglePhaseVisibility: React.PropTypes.func.isRequired,
   isFetching: React.PropTypes.bool.isRequired,
   setPhasesVisibility: React.PropTypes.func.isRequired,

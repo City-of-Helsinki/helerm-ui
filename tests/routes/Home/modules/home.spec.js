@@ -47,10 +47,14 @@ describe('(Redux Module) Home', () => {
     let _initialState;
     beforeEach(() => {
       _initialState = {
-        navigationMenuItems: [],
+        navigation: {
+          items: [],
+          is_open: true
+        },
         selectedTOS: {
           isFetching: false,
           data: {},
+          path: [],
           documentState: 'view',
           lastUpdated: 0
         },
@@ -61,7 +65,7 @@ describe('(Redux Module) Home', () => {
       expect(homeReducer).to.be.a('function');
     });
 
-    it('Should initialize with a state', () => {
+    it('Should initialize with a correct state', () => {
       expect(homeReducer(undefined, {})).to.deep.equal(_initialState);
     });
 
