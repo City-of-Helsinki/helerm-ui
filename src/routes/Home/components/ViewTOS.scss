@@ -2,7 +2,28 @@
   border: 1px solid grey;
   border-radius: 4px;
   background-color: white;
+  padding: 15px 0;
+}
+
+.single-tos-header {
+  padding: 10px 15px;
+  background: white;
+  z-index: 3;
+  transition: 0.3s ease-out all;
+}
+
+.single-tos-header.sticky {
+  border-bottom: 1px solid #eee;
+}
+
+.single-tos-content {
   padding: 15px;
+}
+
+
+.single-tos-header h4 {
+  margin: 0;
+  transition: 0.3s ease-out all;
 }
 
 .box {
@@ -31,6 +52,10 @@
 }
 .phase-title {
   font-size: 1.1em;
+  background: white;
+}
+.phase-title.sticky {
+  border-bottom: 1px solid #eee;
 }
 .action {
   // font-size: 1.4em;

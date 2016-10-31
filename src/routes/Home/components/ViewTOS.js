@@ -1,6 +1,7 @@
 import React from 'react';
 import './ViewTOS.scss';
 import formatDate from 'occasion';
+import { StickyContainer, Sticky } from 'react-sticky';
 
 export class ViewTOS extends React.Component {
   componentWillMount () {
@@ -44,11 +45,11 @@ export class ViewTOS extends React.Component {
           );
         });
         phaseElements.push(
-          <div key={key} className='box'>
+          <StickyContainer key={key} className='box'>
+            <Sticky className='phase-title'>
+              <i className='fa fa-info-circle' aria-hidden='true' /> {phases[key].name}
+            </Sticky>
             <div className='space-between'>
-              <span className='phase-title'>
-                <i className='fa fa-info-circle' aria-hidden='true' /> {phases[key].name}
-              </span>
               { phases[key].actions.length !== 0 &&
                 <button type='button' onClick={() => this.props.togglePhaseVisibility(key, phases[key].is_open)}>
                   <span
@@ -63,7 +64,7 @@ export class ViewTOS extends React.Component {
                 { actions }
               </div>
             }
-          </div>
+          </StickyContainer>
         );
       }
     }
@@ -87,52 +88,56 @@ export class ViewTOS extends React.Component {
       const phases = this.generatePhases(selectedTOS.phases);
       return (
         <div className='col-xs-12'>
-          <div className='single-tos-container'>
-            <h4>{selectedTOS.function_id} {selectedTOS.name}</h4>
-            <div className='general-info space-between'>
-              <div className='version-details'>
-                <span>Tila: Luonnos versio 1.2</span>
-                <span>Käytössä oleva TOS-versio: 1.0</span>
-                <span>Muokattu: { formattedDate } { modifiedDateTime.time }</span>
-              </div>
-              <button className='btn btn-primary' onClick={() => this.props.setDocumentState('edit')}>Muokkaa</button>
+          <StickyContainer className='single-tos-container'>
+            <Sticky className='single-tos-header'>
+              <h4>{selectedTOS.function_id} {selectedTOS.name}</h4>
+            </Sticky>
+            <div className="single-tos-content">
+              <div className='general-info space-between'>
+                <div className='version-details'>
+                  <span>Tila: Luonnos versio 1.2</span>
+                  <span>Käytössä oleva TOS-versio: 1.0</span>
+                  <span>Muokattu: { formattedDate } { modifiedDateTime.time }</span>
+                </div>
+                <button className='btn btn-primary' onClick={() => this.props.setDocumentState('edit')}>Muokkaa</button>
 
-              <div className='document-buttons'>
-                <button className='btn btn-primary'>Tallenna luonnos</button>
-                <button className='btn btn-default'>Lähetä tarkastettavaksi</button>
+                <div className='document-buttons'>
+                  <button className='btn btn-primary'>Tallenna luonnos</button>
+                  <button className='btn btn-default'>Lähetä tarkastettavaksi</button>
+                </div>
               </div>
-            </div>
-            <ul className='nav nav-tabs tos-nav'>
-              <li className='active'>
-                <a href='#' data-toggle='tab'>Muokkausnäkymä</a>
-              </li>
-              <li>
-                <a href='#' data-toggle='tab'>Viestit & Versiot</a>
-              </li>
-            </ul>
-            <div className='well'>
-              <h4 className='unlocated-title'>Sijoittamattomat toimenpiteet ja asiakirjat</h4>
-              <div className='box'>
-                <span>Neuvontapyynnöstä päättäminen</span>
-                <p>10 asiakirjaa | 3 liitettä</p>
+              <ul className='nav nav-tabs tos-nav'>
+                <li className='active'>
+                  <a href='#' data-toggle='tab'>Muokkausnäkymä</a>
+                </li>
+                <li>
+                  <a href='#' data-toggle='tab'>Viestit & Versiot</a>
+                </li>
+              </ul>
+              <div className='well'>
+                <h4 className='unlocated-title'>Sijoittamattomat toimenpiteet ja asiakirjat</h4>
+                <div className='box'>
+                  <span>Neuvontapyynnöstä päättäminen</span>
+                  <p>10 asiakirjaa | 3 liitettä</p>
+                </div>
               </div>
-            </div>
-            <div className='row'>
-              <div className='button-row col-xs-12'>
-                <button
-                  className='btn btn-default btn-sm pull-right'
-                  onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, true)}>
-                  Avaa kaikki
-                </button>
-                <button
-                  className='btn btn-default btn-sm pull-right'
-                  onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, false)}>
-                  Pienennä kaikki
-                </button>
+              <div className='row'>
+                <div className='button-row col-xs-12'>
+                  <button
+                    className='btn btn-default btn-sm pull-right'
+                    onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, true)}>
+                    Avaa kaikki
+                  </button>
+                  <button
+                    className='btn btn-default btn-sm pull-right'
+                    onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, false)}>
+                    Pienennä kaikki
+                  </button>
+                </div>
               </div>
+              { phases }
             </div>
-            { phases }
-          </div>
+          </StickyContainer>
         </div>
       );
     } else {
