@@ -12,12 +12,15 @@ export const SET_NAVIGATION_VISIBILITY = 'SET_NAVIGATION_VISIBILITY';
 export const REQUEST_TOS = 'REQUEST_TOS';
 export const RECEIVE_TOS = 'RECEIVE_TOS';
 
-export const TOGGLE_PHASE_VISIBILITY = 'TOGGLE_PHASE_VISIBILITY';
+export const SET_RECORD_VISIBILITY = 'SET_RECORD_VISIBILITY';
+
+export const SET_PHASE_VISIBILITY = 'SET_PHASE_VISIBILITY';
 export const SET_PHASES_VISIBILITY = 'SET_PHASES_VISIBILITY';
 
 export const SET_DOCUMENT_STATE = 'SET_DOCUMENT_STATE';
 
 export const RECEIVE_RECORDTYPES = 'RECEIVE_RECORDTYPES';
+export const RECEIVE_ATTRIBUTES = 'RECEIVE_ATTRIBUTES';
 
 // ------------------------------------
 // Actions
@@ -85,6 +88,13 @@ export function requestTOS() {
 }
 
 export function receiveTOS(tos, json) {
+  json.phases.map(phase => {
+    phase.actions.map(action => {
+      action.records.map(record => {
+        record.is_open = false;
+      });
+    });
+  });
   return {
     type: RECEIVE_TOS,
     path: tos.path,
@@ -104,6 +114,23 @@ export function receiveRecordTypes(recordTypes) {
     recordTypeList
   }
 }
+
+export function receiveAttributes(attributes) {
+  const attributeList = {};
+  attributes.results.map(result => {
+    if(result.values) {
+      attributeList[result.identifier] = {
+        name: result.name,
+        values: result.values
+      };
+    }
+  });
+  return {
+    type: RECEIVE_ATTRIBUTES,
+    attributeList
+  }
+}
+
 export function fetchTOS(tos) {
   return function(dispatch) {
     dispatch(requestTOS());
@@ -136,12 +163,29 @@ export function fetchRecordTypes() {
       );
   };
 }
-export function togglePhaseVisibility(phase, current) {
+
+export function fetchAttributes() {
+  return function(dispatch) {
+    return fetch('https://api.hel.fi/helerm-test/v1/attribute/')
+    .then(response => response.json())
+    .then(json =>
+    dispatch(receiveAttributes(json)))
+  }
+}
+export function setPhaseVisibility(phase, current) {
   return {
-    type: TOGGLE_PHASE_VISIBILITY,
+    type: SET_PHASE_VISIBILITY,
     phase,
     newOpen: !current
   };
+}
+export function setRecordVisibility(record, value) {
+
+  return {
+    type: SET_RECORD_VISIBILITY,
+    record,
+    value: !value
+  }
 }
 
 export function setPhasesVisibility(phases, value) {
@@ -174,9 +218,10 @@ export const actions = {
   requestTOS,
   receiveTOS,
   fetchTOS,
-  togglePhaseVisibility,
+  setPhaseVisibility,
   setPhasesVisibility,
-  fetchRecordTypes
+  fetchRecordTypes,
+  setRecordVisibility
 };
 
 // ------------------------------------
@@ -224,7 +269,7 @@ const ACTION_HANDLERS = {
       }
     });
   },
-  [TOGGLE_PHASE_VISIBILITY]: (state, action) => {
+  [SET_PHASE_VISIBILITY]: (state, action) => {
     return update(state, {
       selectedTOS: {
         data: {
@@ -257,6 +302,26 @@ const ACTION_HANDLERS = {
       }
     });
   },
+  // [SET_RECORD_VISIBILITY]: (state, action) => {
+  //   _.state.
+  //   return update(state, {
+  //     selectedTOS: {
+  //       data: {
+  //         phases: {
+  //           id: {
+  //             records: {
+  //               [action.record]: {
+  //                 is_open: {
+  //                   $set: action.value
+  //                 }
+  //               }
+  //             }
+  //           }
+  //         }
+  //       }
+  //     }
+  //   });
+  // },
   [SET_DOCUMENT_STATE]: (state, action) => {
     return update(state, {
       selectedTOS: {
@@ -271,6 +336,11 @@ const ACTION_HANDLERS = {
       recordTypes: {
         $set: action.recordTypeList
       }
+    });
+  },
+  [RECEIVE_ATTRIBUTES]: (state, action) => {
+    return update(state, {
+      attributes: {$set: action.attributeList}
     });
   }
 };
@@ -289,7 +359,8 @@ const initialState = {
     documentState: 'view',
     lastUpdated: 0
   },
-  recordTypes: {}
+  recordTypes: {},
+  attributes: {}
 };
 
 export default function homeReducer(state = initialState, action) {

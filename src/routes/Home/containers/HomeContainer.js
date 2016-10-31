@@ -3,10 +3,12 @@ import {
   fetchNavigation,
   setNavigationVisibility,
   fetchTOS,
-  togglePhaseVisibility,
+  setPhaseVisibility,
   setPhasesVisibility,
+  setRecordVisibility,
   setDocumentState,
-  fetchRecordTypes
+  fetchRecordTypes,
+  fetchAttributes
 } from '../modules/home';
 import HomeView from '../components/HomeView';
 
@@ -14,10 +16,12 @@ const mapDispatchToProps = {
   fetchNavigation,
   setNavigationVisibility,
   fetchTOS,
-  togglePhaseVisibility,
+  setPhaseVisibility,
+  setRecordVisibility,
   setPhasesVisibility,
   setDocumentState,
-  fetchRecordTypes
+  fetchRecordTypes,
+  fetchAttributes
 };
 
 const mapStateToProps = (state) => {
@@ -27,7 +31,8 @@ const mapStateToProps = (state) => {
     selectedTOS: state.home.selectedTOS.data,
     selectedTOSPath: state.home.selectedTOS.path,
     isFetching: state.home.selectedTOS.isFetching,
-    documentState: state.home.selectedTOS.documentState
+    documentState: state.home.selectedTOS.documentState,
+    attributes: state.home.attributes
   };
 };
 

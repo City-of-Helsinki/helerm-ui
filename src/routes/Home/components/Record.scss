@@ -1,0 +1,12 @@
+.record {
+  padding-top: 10px;
+}
+.record:nth-child(odd) {
+  margin-top: 20px;
+  background: #DDD;
+}
+
+.record-title:hover {
+  cursor: pointer;
+  background: #CCC;
+}

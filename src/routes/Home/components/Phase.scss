@@ -1,0 +1,8 @@
+.phase-title {
+  font-size: 1.1em;
+  background: white;
+}
+.phase-title.sticky {
+  border-bottom: 1px solid #eee;
+  z-index: 1;
+}

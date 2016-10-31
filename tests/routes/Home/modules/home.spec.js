@@ -3,7 +3,7 @@ import {
   RECEIVE_NAVIGATION,
   REQUEST_TOS,
   RECEIVE_TOS,
-  TOGGLE_PHASE_VISIBILITY,
+  SET_PHASE_VISIBILITY,
   SET_PHASES_VISIBILITY,
   SET_DOCUMENT_STATE,
   requestNavigation,
@@ -33,8 +33,8 @@ describe('(Redux Module) Home', () => {
   it('Should export a constant RECEIVE_TOS.', () => {
     expect(RECEIVE_TOS).to.equal('RECEIVE_TOS');
   });
-  it('Should export a constant TOGGLE_PHASE_VISIBILITY.', () => {
-    expect(TOGGLE_PHASE_VISIBILITY).to.equal('TOGGLE_PHASE_VISIBILITY');
+  it('Should export a constant SET_PHASE_VISIBILITY.', () => {
+    expect(SET_PHASE_VISIBILITY).to.equal('SET_PHASE_VISIBILITY');
   });
   it('Should export a constant SET_PHASES_VISIBILITY.', () => {
     expect(SET_PHASES_VISIBILITY).to.equal('SET_PHASES_VISIBILITY');
@@ -58,7 +58,8 @@ describe('(Redux Module) Home', () => {
           documentState: 'view',
           lastUpdated: 0
         },
-        recordTypes: {}
+        recordTypes: {},
+        attributes: {}
       };
     });
     it('Should be a function.', () => {

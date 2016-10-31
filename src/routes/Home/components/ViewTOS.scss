@@ -4,28 +4,22 @@
   background-color: white;
   padding: 15px 0;
 }
-
 .single-tos-header {
   padding: 10px 15px;
   background: white;
   z-index: 3;
   transition: 0.3s ease-out all;
 }
-
 .single-tos-header.sticky {
   border-bottom: 1px solid #eee;
 }
-
 .single-tos-content {
   padding: 15px;
 }
-
-
 .single-tos-header h4 {
   margin: 0;
   transition: 0.3s ease-out all;
 }
-
 .box {
   padding: 8px 10px 26px;
   border: 1px solid grey;
@@ -39,32 +33,14 @@
   margin: 0 -15px 40px -15px;
   padding: 0 15px;
 }
-
 .space-between {
   display: flex;
   justify-content: space-between;
 }
-
 .black-icon, .black-icon:hover {
   color: black;
   font-size: 1.2em;
   text-decoration: none;
-}
-.phase-title {
-  font-size: 1.1em;
-  background: white;
-}
-.phase-title.sticky {
-  border-bottom: 1px solid #eee;
-}
-.action {
-  // font-size: 1.4em;
-}
-.action-title {
-  font-size: 1.3em;
-}
-.records {
-  padding-left: 20px;
 }
 .button-row > .btn, .document-buttons > .btn {
   margin: 4px;
@@ -89,7 +65,6 @@
   background-color: transparent;
   animation: loader 1s linear infinite;
 }
-
 @keyframes loader{
   0% {
     transform: rotate(1deg);
