@@ -1,7 +1,6 @@
 import React from 'react';
 import Navigation from './Navigation';
 import ViewTOS from './ViewTOS';
-import EditTOS from './EditTOS';
 import './Homeview.scss';
 
 export class HomeView extends React.Component {
