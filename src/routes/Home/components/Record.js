@@ -21,7 +21,7 @@ export class Record extends React.Component {
   saveRecord () {
     this.setMode('view');
   }
-  cancelRecordEdit() {
+  cancelRecordEdit () {
     this.setMode('view');
   }
   toggleAttributeVisibility () {
@@ -33,15 +33,11 @@ export class Record extends React.Component {
     const options = [];
     for (const key in recordTypes) {
       if (recordTypes.hasOwnProperty(key)) {
-        if(recordTypes[key] === activeRecord) {
-          options.push(<option value={recordTypes[key]} selected='selected'>{recordTypes[key]}</option>);
-        } else {
-          options.push(<option value={recordTypes[key]}>{recordTypes[key]}</option>);
-        }
+        options.push(<option value={recordTypes[key]}>{recordTypes[key]}</option>);
       }
     }
     return (
-      <select className='col-xs-6'>
+      <select className='col-xs-6' defaultValue={activeRecord}>
         {options}
       </select>
     );

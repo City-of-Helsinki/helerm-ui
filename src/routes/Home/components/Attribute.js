@@ -5,19 +5,15 @@ export class Attribute extends React.Component {
   generateInput (attribute, currentAttribute) {
     if (attribute.values.length) {
       const options = attribute.values.map((option, index) => {
-        if(option === currentAttribute){
-          return <option key={index} value={option.value} selected='selected'>{option.value}</option>;
-        } else {
-          return <option key={index} value={option.value}>{option.value}</option>;
-        }
+        return <option key={index} value={option.value}>{option.value}</option>;
       });
       return (
-        <select className='col-xs-6'>
+        <select className='col-xs-6' defaultValue={currentAttribute}>
           { options }
         </select>
       );
-    } else if (attribute.values === undefined) {
-      return <input defaultValue={attribute.name} />;
+    } else if (attribute.values.length === 0) {
+      return <input className='col-xs-6' defaultValue={currentAttribute} />;
     } else {
       return null;
     }
