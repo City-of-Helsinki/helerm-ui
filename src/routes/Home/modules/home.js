@@ -27,7 +27,8 @@ export const RECEIVE_ATTRIBUTES = 'RECEIVE_ATTRIBUTES';
 // ------------------------------------
 export function requestNavigation() {
   return {
-    type: REQUEST_NAVIGATION
+    type: REQUEST_NAVIGATION,
+    isFetching: true
   };
 }
 
@@ -228,23 +229,28 @@ export const actions = {
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [RECEIVE_NAVIGATION]: (state, action) => {
-    return ({...state,
-      navigation: {
-        items: action.items,
-        is_open: true
+  [REQUEST_NAVIGATION]: (state, action) => {
+    return update(state, {
+      isFetching: {
+        $set: true
       }
     });
   },
-  [REQUEST_NAVIGATION]: (state, action) => {
-    return state;
+  [RECEIVE_NAVIGATION]: (state, action) => {
+    return  update(state, {
+      navigation: {
+        items: { $set: action.items },
+        is_open: { $set: true }
+      },
+      isFetching: {
+        $set: false
+      }
+    });
   },
   [REQUEST_TOS]: (state, action) => {
     return update(state, {
-      selectedTOS: {
-        isFetching: {
-          $set: true
-        }
+      isFetching: {
+        $set: true
       }
     });
   },
@@ -254,9 +260,6 @@ const ACTION_HANDLERS = {
         is_open: {$set: false}
       },
       selectedTOS: {
-        isFetching: {
-          $set: false
-        },
         data: {
           $set: action.data
         },
@@ -266,6 +269,9 @@ const ACTION_HANDLERS = {
         lastUpdated: {
           $set: action.receivedAt
         }
+      },
+      isFetching: {
+        $set: false
       }
     });
   },
@@ -353,12 +359,12 @@ const initialState = {
     is_open: true
   },
   selectedTOS: {
-    isFetching: false,
     data: {},
     path: [],
     documentState: 'view',
     lastUpdated: 0
   },
+  isFetching: false,
   recordTypes: {},
   attributes: {}
 };

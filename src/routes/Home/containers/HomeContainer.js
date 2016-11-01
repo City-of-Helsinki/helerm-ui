@@ -30,7 +30,7 @@ const mapStateToProps = (state) => {
     recordTypes: state.home.recordTypes,
     selectedTOS: state.home.selectedTOS.data,
     selectedTOSPath: state.home.selectedTOS.path,
-    isFetching: state.home.selectedTOS.isFetching,
+    isFetching: state.home.isFetching,
     documentState: state.home.selectedTOS.documentState,
     attributes: state.home.attributes
   };

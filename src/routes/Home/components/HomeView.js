@@ -1,5 +1,6 @@
 import React from 'react';
 import Navigation from './Navigation';
+import Loader from './Loader';
 import ViewTOS from './ViewTOS';
 import './Homeview.scss';
 
@@ -25,6 +26,11 @@ export class HomeView extends React.Component {
     } = this.props;
     return (
       <div>
+        { isFetching &&
+          <Loader
+            isFetching={isFetching}
+          />
+        }
         <Navigation
           fetchTOS={fetchTOS}
           fetchNavigation={fetchNavigation}

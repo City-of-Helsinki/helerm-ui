@@ -33,7 +33,7 @@ export class Record extends React.Component {
     const options = [];
     for (const key in recordTypes) {
       if (recordTypes.hasOwnProperty(key)) {
-        options.push(<option value={recordTypes[key]}>{recordTypes[key]}</option>);
+        options.push(<option key={key} value={recordTypes[key]}>{recordTypes[key]}</option>);
       }
     }
     return (

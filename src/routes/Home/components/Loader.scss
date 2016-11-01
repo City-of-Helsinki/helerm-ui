@@ -1,0 +1,25 @@
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 15px;
+  right: 10vw;
+  z-index: 2;
+}
+.loader {
+  font-size: 30px;
+  color: white;
+}
+@keyframes loader{
+  0% {
+    transform: rotate(1deg);
+  }
+  50% {
+    transform: rotate(160deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

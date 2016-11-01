@@ -36,15 +36,7 @@ export class ViewTOS extends React.Component {
     return phaseElements;
   }
   render () {
-    const { selectedTOS, isFetching } = this.props;
-    if (isFetching) {
-      return (
-        <div className='loader-container'>
-          <h4>Ladataan tietoja</h4>
-          <div className='loader' />
-        </div>
-      );
-    }
+    const { selectedTOS } = this.props;
     if (selectedTOS !== undefined && Object.keys(selectedTOS).length !== 0) {
       const modifiedDateTime = this.formatDateTime(selectedTOS.modified_at);
       const formattedDate = formatDate(modifiedDateTime.date, 'DD.MM.YYYY');
@@ -102,7 +94,6 @@ export class ViewTOS extends React.Component {
 
 ViewTOS.propTypes = {
   selectedTOS: React.PropTypes.object.isRequired,
-  isFetching: React.PropTypes.bool.isRequired,
   setPhaseVisibility: React.PropTypes.func.isRequired,
   setPhasesVisibility: React.PropTypes.func.isRequired,
   setRecordVisibility: React.PropTypes.func.isRequired,

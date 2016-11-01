@@ -52,30 +52,3 @@
 .unlocated-title {
   color: black;
 }
-.loader-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.loader {
-  height: 50px;
-  width: 50px;
-  border: 6px dashed #0072c6;
-  background-color: transparent;
-  animation: loader 1s linear infinite;
-}
-@keyframes loader{
-  0% {
-    transform: rotate(1deg);
-    border-radius: 0%;
-  }
-  50% {
-    transform: rotate(160deg);
-    border-radius: 50%;
-  }
-  100% {
-    transform: rotate(360deg);
-    border-radius: 00%;
-  }
-}
