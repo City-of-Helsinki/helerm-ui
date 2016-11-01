@@ -1,5 +1,6 @@
 .record {
   padding-top: 10px;
+  margin: 0;
 }
 .record:nth-child(odd) {
   margin-top: 20px;
@@ -8,11 +9,6 @@
 .record-entry {
   margin-bottom: 23px;
 }
-.record-title:hover {
-  cursor: pointer;
-  background: #CCC;
-}
-
 .table-key {
   font-weight: bold;
 }

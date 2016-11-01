@@ -11,22 +11,33 @@ export class Record extends React.Component {
       mode: 'view'
     };
   }
+  setMode (value) {
+    this.setState({ mode: value });
+  }
   editRecord () {
-    this.setState({ showAttributes: true, mode: 'edit' });
+    this.setMode('edit');
+    this.setState({ showAttributes: true });
   }
   saveRecord () {
-    this.setState({ mode: 'view' });
+    this.setMode('view');
+  }
+  cancelRecordEdit() {
+    this.setMode('view');
   }
   toggleAttributeVisibility () {
     const currentVisibility = this.state.showAttributes;
     const newVisibility = !currentVisibility;
     this.setState({ showAttributes: newVisibility });
   }
-  generateDropdown (recordTypes) {
+  generateDropdown (recordTypes, activeRecord) {
     const options = [];
     for (const key in recordTypes) {
       if (recordTypes.hasOwnProperty(key)) {
-        options.push(<option value={recordTypes[key]}>{recordTypes[key]}</option>);
+        if(recordTypes[key] === activeRecord) {
+          options.push(<option value={recordTypes[key]} selected='selected'>{recordTypes[key]}</option>);
+        } else {
+          options.push(<option value={recordTypes[key]}>{recordTypes[key]}</option>);
+        }
       }
     }
     return (
@@ -83,7 +94,7 @@ export class Record extends React.Component {
       );
     }
     if (this.state.mode === 'edit') {
-      const recordTypeDropdown = this.generateDropdown(this.props.recordTypes);
+      const recordTypeDropdown = this.generateDropdown(this.props.recordTypes, this.props.recordTypes[record.type]);
       return (
         <div className='record row'>
           <div className='col-xs-12 col-md-6 col-lg-4 record-entry'>
@@ -97,6 +108,7 @@ export class Record extends React.Component {
           { this.state.showAttributes && attributes }
           <div className='col-xs-12'>
             <button className='btn btn-primary pull-right' onClick={() => this.saveRecord()}>Tallenna</button>
+            <button className='btn btn-default pull-right' onClick={() => this.cancelRecordEdit()}>Peruuta</button>
           </div>
         </div>
       );

@@ -2,10 +2,14 @@ import React from 'react';
 import './Attribute.scss';
 
 export class Attribute extends React.Component {
-  generateInput (attribute) {
+  generateInput (attribute, currentAttribute) {
     if (attribute.values.length) {
       const options = attribute.values.map((option, index) => {
-        return <option key={index} value={option.value}>{option.value}</option>;
+        if(option === currentAttribute){
+          return <option key={index} value={option.value} selected='selected'>{option.value}</option>;
+        } else {
+          return <option key={index} value={option.value}>{option.value}</option>;
+        }
       });
       return (
         <select className='col-xs-6'>
@@ -33,7 +37,7 @@ export class Attribute extends React.Component {
       );
     }
     if (this.props.mode === 'edit') {
-      const inputField = this.generateInput(this.props.attributes[attributeIndex]);
+      const inputField = this.generateInput(this.props.attributes[attributeIndex], attribute);
       return (
         <div className='attribute col-xs-12 col-md-6 col-lg-4'>
           <span className='col-xs-6 table-key'>
