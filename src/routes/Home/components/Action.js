@@ -3,7 +3,18 @@ import './Action.scss';
 import Record from './Record';
 
 export class Action extends React.Component {
-
+  constructor (props) {
+    super(props);
+    this.state = {
+      mode: 'view'
+    };
+  }
+  editActionTitle () {
+    this.setState({ mode: 'edit' });
+  }
+  saveActionTitle () {
+    this.setState({ mode: 'view' });
+  }
   generateRecords (records) {
     return records.map((record, index) => {
       return (
@@ -21,9 +32,29 @@ export class Action extends React.Component {
   render () {
     const { action } = this.props;
     const records = this.generateRecords(action.records);
+    let actionTitle;
+    if (this.state.mode === 'view') {
+      actionTitle =
+        <span className='action-title'>
+          {action.name}
+          <button
+            className='button action-edit-button'
+            onClick={() => this.editActionTitle()}>
+            <span className='fa fa-edit' />
+          </button>
+        </span>
+      ;
+    }
+    if (this.state.mode === 'edit') {
+      actionTitle =
+        <div className='action-title-input'>
+          <input className='action-title col-xs-10' defaultValue={action.name} />
+          <button className='btn btn-primary col-xs-2' onClick={() => this.saveActionTitle()}>Tallenna</button>
+        </div>;
+    }
     return (
       <div className='action box'>
-        <span className='action-title'>{action.name}</span>
+        { actionTitle }
         { records }
       </div>
     );

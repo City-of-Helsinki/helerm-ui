@@ -22,14 +22,13 @@ export class Phase extends React.Component {
     const { phase, phaseIndex } = this.props;
     const actions = this.generateActions(phase.actions);
     return (
-      <StickyContainer className='box'>
+      <StickyContainer className='col-xs-12 box'>
         <Sticky className='phase-title'>
           <i className='fa fa-info-circle' aria-hidden='true' /> {phase.name}
-        </Sticky>
-        <div className='space-between'>
           { phase.actions.length !== 0 &&
             <button
               type='button'
+              className='pull-right'
               onClick={() => this.props.setPhaseVisibility(phaseIndex, phase.is_open)}>
               <span
                 className={'fa black-icon ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
@@ -37,7 +36,7 @@ export class Phase extends React.Component {
               />
             </button>
           }
-        </div>
+        </Sticky>
         { phase.is_open &&
           <div className={(phase.is_open ? 'show-actions' : 'hide-actions')}>
             { actions }

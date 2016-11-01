@@ -62,8 +62,6 @@ export class ViewTOS extends React.Component {
                   <span>Käytössä oleva TOS-versio: 1.0</span>
                   <span>Muokattu: { formattedDate } { modifiedDateTime.time }</span>
                 </div>
-                <button className='btn btn-primary' onClick={() => this.props.setDocumentState('edit')}>Muokkaa</button>
-
                 <div className='document-buttons'>
                   <button className='btn btn-primary'>Tallenna luonnos</button>
                   <button className='btn btn-default'>Lähetä tarkastettavaksi</button>

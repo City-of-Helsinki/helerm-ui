@@ -3,6 +3,38 @@ import './Record.scss';
 import Attribute from './Attribute';
 
 export class Record extends React.Component {
+  constructor (props) {
+    super(props);
+    this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
+    this.state = {
+      showAttributes: false,
+      mode: 'view'
+    };
+  }
+  editRecord () {
+    this.setState({ showAttributes: true, mode: 'edit' });
+  }
+  saveRecord () {
+    this.setState({ mode: 'view' });
+  }
+  toggleAttributeVisibility () {
+    const currentVisibility = this.state.showAttributes;
+    const newVisibility = !currentVisibility;
+    this.setState({ showAttributes: newVisibility });
+  }
+  generateDropdown (recordTypes) {
+    const options = [];
+    for (const key in recordTypes) {
+      if (recordTypes.hasOwnProperty(key)) {
+        options.push(<option value={recordTypes[key]}>{recordTypes[key]}</option>);
+      }
+    }
+    return (
+      <select className='col-xs-6'>
+        {options}
+      </select>
+    );
+  }
   generateAttributes (attributes) {
     const attributeElements = [];
     for (const key in attributes) {
@@ -14,6 +46,7 @@ export class Record extends React.Component {
             attribute={attributes[key]}
             documentState={this.props.documentState}
             attributes={this.props.attributes}
+            mode={this.state.mode}
           />);
       }
     };
@@ -23,23 +56,51 @@ export class Record extends React.Component {
   render () {
     const { record } = this.props;
     const attributes = this.generateAttributes(record.attributes);
-    return (
-      <div className='record row'>
-        {/*
-          <div
-            key={index}
-            className="record-title col-xs-12"
-            onClick={() => this.props.setRecordVisibility(record, record.is_open)}>
-        */}
-        <div className='col-xs-12'>
-          <div className='col-xs-6'>Asiakirjatyypin tarkenne</div>
-          <div className='col-xs-6'>{record.name}</div>
-          <div className='col-xs-6'>Tyyppi</div>
-          <div className='col-xs-6'>{this.props.recordTypes[record.type]}</div>
+    if (this.state.mode === 'view') {
+      return (
+        <div className='record row'>
+          <div className='col-xs-12'>
+            <button className='button pull-right' onClick={this.toggleAttributeVisibility}>
+              <span
+                className={'fa black-icon ' + (this.state.showAttributes ? 'fa-minus' : 'fa-plus')}
+                aria-hidden='true'
+              />
+            </button>
+            <button className='button pull-right' onClick={() => this.editRecord()}>
+              <span className='fa fa-edit' />
+            </button>
+          </div>
+          <div className='col-xs-12 col-md-6 col-lg-4 record-entry'>
+            <div className='col-xs-6 table-key'>Asiakirjatyypin tarkenne</div>
+            <div className='col-xs-6'>{record.name}</div>
+          </div>
+          <div className='col-xs-12 col-md-6 col-lg-4 record-entry'>
+            <div className='col-xs-6 table-key'>Tyyppi</div>
+            <div className='col-xs-6'>{this.props.recordTypes[record.type]}</div>
+          </div>
+          { this.state.showAttributes && attributes }
         </div>
-        { attributes }
-      </div>
-    );
+      );
+    }
+    if (this.state.mode === 'edit') {
+      const recordTypeDropdown = this.generateDropdown(this.props.recordTypes);
+      return (
+        <div className='record row'>
+          <div className='col-xs-12 col-md-6 col-lg-4 record-entry'>
+            <div className='col-xs-6 table-key'>Asiakirjatyypin tarkenne</div>
+            <input className='col-xs-6' defaultValue={record.name} />
+          </div>
+          <div className='col-xs-12 col-md-6 col-lg-4 record-entry'>
+            <div className='col-xs-6 table-key'>Tyyppi</div>
+            { recordTypeDropdown }
+          </div>
+          { this.state.showAttributes && attributes }
+          <div className='col-xs-12'>
+            <button className='btn btn-primary pull-right' onClick={() => this.saveRecord()}>Tallenna</button>
+          </div>
+        </div>
+      );
+    }
   }
 }
 

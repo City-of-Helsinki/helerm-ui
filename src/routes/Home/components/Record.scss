@@ -5,8 +5,14 @@
   margin-top: 20px;
   background: #DDD;
 }
-
+.record-entry {
+  margin-bottom: 23px;
+}
 .record-title:hover {
   cursor: pointer;
   background: #CCC;
+}
+
+.table-key {
+  font-weight: bold;
 }
