@@ -3,7 +3,6 @@ import './Loader.scss';
 
 export class Loader extends React.Component {
   render () {
-    const { isFetching } = this.props;
     return (
       <div className='loader-container'>
         <span className='fa fa-spinner fa-spin loader' />
@@ -11,9 +10,5 @@ export class Loader extends React.Component {
     );
   }
 }
-
-Loader.propTypes = {
-  isFetching: React.PropTypes.bool.isRequired,
-};
 
 export default Loader;

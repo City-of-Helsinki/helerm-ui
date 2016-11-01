@@ -52,12 +52,12 @@ describe('(Redux Module) Home', () => {
           is_open: true
         },
         selectedTOS: {
-          isFetching: false,
           data: {},
           path: [],
           documentState: 'view',
           lastUpdated: 0
         },
+        isFetching: false,
         recordTypes: {},
         attributes: {}
       };
@@ -78,11 +78,11 @@ describe('(Redux Module) Home', () => {
       });
       expect(state).to.deep.equal(_initialState);
       state = homeReducer(state, requestTOS());
-      expect(state.selectedTOS.isFetching).to.equal(true);
+      expect(state.isFetching).to.equal(true);
       state = homeReducer(state, {
         type: '@@@@@@@'
       });
-      expect(state.selectedTOS.isFetching).to.equal(true);
+      expect(state.isFetching).to.equal(true);
     });
   });
 
