@@ -41,7 +41,7 @@ export class Navigation extends React.Component {
     }
     return (
       <div className='col-xs-12'>
-        <div className="navigation-menu">
+        <div className='navigation-menu'>
           <button className='button pull-right' onClick={this.toggleNavigationVisibility}>
             <span
               className={'fa black-icon ' + (this.props.navigation.is_open ? 'fa-minus' : 'fa-plus')}
