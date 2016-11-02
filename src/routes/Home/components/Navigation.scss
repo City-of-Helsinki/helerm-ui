@@ -58,10 +58,17 @@
   line-height: 3.4rem;
   display: block;
   position: relative;
+  &:hover {
+    background: #f2f2f2;
+  }
 }
+
+
 
 .infinity-menu-node-container label {
   margin-bottom: 0;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .infinity-menu-node-container:hover {
@@ -120,6 +127,9 @@
   display: block;
   position: relative;
   cursor: pointer;
+  &:hover {
+    background: #f2f2f2;
+  }
 }
 
 .infinity-menu-leaf-container:hover {
