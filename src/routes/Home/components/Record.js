@@ -79,13 +79,15 @@ export class Record extends React.Component {
       <div className='row record'>
         { this.state.mode === 'view' &&
           <div className='col-xs-12'>
-            <button className='button pull-right' onClick={this.toggleAttributeVisibility}>
+            <button
+              className='btn btn-default btn-xs record-button pull-right'
+              onClick={this.toggleAttributeVisibility}>
               <span
-                className={'fa black-icon ' + (this.state.showAttributes ? 'fa-minus' : 'fa-plus')}
+                className={'fa ' + (this.state.showAttributes ? 'fa-minus' : 'fa-expand')}
                 aria-hidden='true'
               />
             </button>
-            <button className='button pull-right' onClick={() => this.editRecord()}>
+            <button className='btn btn-default btn-xs pull-right' onClick={() => this.editRecord()}>
               <span className='fa fa-edit' />
             </button>
           </div>

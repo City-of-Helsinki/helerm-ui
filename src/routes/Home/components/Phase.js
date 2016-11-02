@@ -4,19 +4,19 @@ import Action from './Action.js';
 import { StickyContainer, Sticky } from 'react-sticky';
 
 export class Phase extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.onChange = this.onChange.bind(this);
     this.state = {
       name: this.props.phase.name,
       mode: 'view'
-    }
+    };
   }
   editPhaseTitle () {
-    this.setState({mode: 'edit'});
+    this.setState({ mode: 'edit' });
   }
   savePhaseTitle () {
-    this.setState({mode: 'view'});
+    this.setState({ mode: 'view' });
   }
   onChange (event) {
     this.setState({ name: event.target.value });
@@ -34,7 +34,6 @@ export class Phase extends React.Component {
       );
     });
   }
-
   render () {
     const { phase, phaseIndex } = this.props;
     const actions = this.generateActions(phase.actions);
@@ -44,7 +43,7 @@ export class Phase extends React.Component {
         <span className='phase-title'>
           <i className='fa fa-info-circle' aria-hidden='true' /> {this.state.name}
           <button
-            className='button title-edit-button'
+            className='btn btn-default btn-sm title-edit-button'
             onClick={() => this.editPhaseTitle()}>
             <span className='fa fa-edit' />
           </button>
@@ -53,7 +52,7 @@ export class Phase extends React.Component {
     if (this.state.mode === 'edit') {
       phaseTitle =
         <div className='phase-title-input'>
-          <input className='action-title col-xs-10' value={this.state.name} onChange={this.onChange} />
+          <input className='input-title col-xs-10' value={this.state.name} onChange={this.onChange} />
           <button className='btn btn-primary col-xs-2' onClick={() => this.savePhaseTitle()}>Valmis</button>
         </div>;
     }
@@ -64,10 +63,10 @@ export class Phase extends React.Component {
           { phase.actions.length !== 0 &&
             <button
               type='button'
-              className='pull-right'
+              className='btn btn-default btn-sm pull-right'
               onClick={() => this.props.setPhaseVisibility(phaseIndex, phase.is_open)}>
               <span
-                className={'fa black-icon ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
+                className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-expand')}
                 aria-hidden='true'
               />
             </button>

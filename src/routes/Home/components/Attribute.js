@@ -39,29 +39,21 @@ export class Attribute extends React.Component {
   }
   render () {
     const { attribute, attributeIndex, showAttributes } = this.props;
+    let attributeValue;
     if (this.props.mode === 'view') {
-      return (
-        <div className={'attribute col-xs-12 col-md-6 col-lg-4 ' + (showAttributes ? 'visible' : 'hidden')}>
-          <span className='col-xs-6 table-key'>
-            {this.props.attributes[attributeIndex].name}
-          </span>
-          <span className='col-xs-6'>
-            {this.state.attribute}
-          </span>
-        </div>
-      );
+      attributeValue = <span className='col-xs-6'>{this.state.attribute}</span>;
     }
     if (this.props.mode === 'edit') {
-      const inputField = this.generateInput(this.props.attributes[attributeIndex], attribute);
-      return (
-        <div className={'attribute col-xs-12 col-md-6 col-lg-4 ' + (showAttributes ? 'visible' : 'hidden')}>
-          <span className='col-xs-6 table-key'>
-            {this.props.attributes[attributeIndex].name}
-          </span>
-          { inputField }
-        </div>
-      );
+      attributeValue = this.generateInput(this.props.attributes[attributeIndex], attribute);
     }
+    return (
+      <div className={'attribute col-xs-12 col-md-6 col-lg-4 ' + (showAttributes ? 'visible' : 'hidden')}>
+        <span className='col-xs-6 table-key'>
+          {this.props.attributes[attributeIndex].name}
+        </span>
+        { attributeValue }
+      </div>
+    );
   }
 }
 
