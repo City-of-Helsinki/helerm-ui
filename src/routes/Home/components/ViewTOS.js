@@ -15,7 +15,15 @@ export class ViewTOS extends React.Component {
     const time = dateTime.slice(11, 16);
     return { date, time };
   }
-
+  generateMetaData (attributeTypes, attributes) {
+    const attributeElements = [];
+    for (const key in attributes) {
+      if (attributes.hasOwnProperty(key)) {
+        attributeElements.push(<span>{attributeTypes[key].name}: {attributes[key]}</span>);
+      }
+    }
+    return attributeElements;
+  }
   generatePhases (phases) {
     const phaseElements = [];
     for (const key in phases) {
@@ -41,6 +49,7 @@ export class ViewTOS extends React.Component {
       const modifiedDateTime = this.formatDateTime(selectedTOS.modified_at);
       const formattedDate = formatDate(modifiedDateTime.date, 'DD.MM.YYYY');
       const phases = this.generatePhases(selectedTOS.phases);
+      const TOSMetaData = this.generateMetaData(this.props.attributes, selectedTOS.attributes);
       return (
         <div className='col-xs-12'>
           <StickyContainer className='col-xs-12 single-tos-container'>
@@ -50,23 +59,18 @@ export class ViewTOS extends React.Component {
             <div className='single-tos-content'>
               <div className='general-info space-between'>
                 <div className='version-details'>
-                  <span>Tila: Luonnos versio 1.2</span>
-                  <span>Käytössä oleva TOS-versio: 1.0</span>
-                  <span>Muokattu: { formattedDate } { modifiedDateTime.time }</span>
+                  <h5>Metadata</h5>
+                  <span>Versionumero: 1.0</span>
+                  <span>Tila: Luonnos</span>
+                  <span>Muokkaus ajankohta: { formattedDate } { modifiedDateTime.time }</span>
+                  <span>Muokkaaja: Matti Meikäläinen</span>
+                  { TOSMetaData }
                 </div>
                 <div className='document-buttons'>
                   <button className='btn btn-primary'>Tallenna luonnos</button>
                   <button className='btn btn-default'>Lähetä tarkastettavaksi</button>
                 </div>
               </div>
-              <ul className='nav nav-tabs tos-nav'>
-                <li className='active'>
-                  <a href='#' data-toggle='tab'>Muokkausnäkymä</a>
-                </li>
-                <li>
-                  <a href='#' data-toggle='tab'>Viestit & Versiot</a>
-                </li>
-              </ul>
               <div className='col-xs-12'>
                 <div className='button-row'>
                   <button
