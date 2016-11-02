@@ -1,6 +1,7 @@
 import React from 'react';
 import './Action.scss';
 import Record from './Record';
+import AddRecord from './AddRecord';
 
 export class Action extends React.Component {
   constructor (props) {
@@ -33,12 +34,20 @@ export class Action extends React.Component {
       );
     });
   }
-
+  createNewAction () {
+    this.setState({ mode: 'add' });
+  }
+  saveNewRecord () {
+    this.setState({ mode: 'view' });
+  }
+  cancelRecordCreation () {
+    this.setState({ mode: 'view' });
+  }
   render () {
     const { action } = this.props;
     const records = this.generateRecords(action.records);
     let actionTitle;
-    if (this.state.mode === 'view') {
+    if (this.state.mode === 'view' || this.state.mode === 'add') {
       actionTitle =
         <span className='action-title'>
           {this.state.name}
@@ -61,6 +70,20 @@ export class Action extends React.Component {
       <div className='action box'>
         { actionTitle }
         { records }
+        { this.state.mode !== 'add' &&
+          <button className='btn btn-primary btn-sm' onClick={() => this.createNewAction()}>
+            <i className='fa fa-plus' /> Uusi toimenpide
+          </button>
+        }
+        { this.state.mode === 'add' &&
+        <div className='action add-box row'>
+          <AddRecord attributes={this.props.attributes} recordTypes={this.props.recordTypes} mode={this.state.mode} />
+          <div className='col-xs-12'>
+            <button className='btn btn-primary pull-right' onClick={() => this.saveNewRecord()}>Valmis</button>
+            <button className='btn btn-default pull-right' onClick={() => this.cancelRecordCreation()}>Peruuta</button>
+          </div>
+        </div>
+        }
       </div>
     );
   }
