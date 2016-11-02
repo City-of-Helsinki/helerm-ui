@@ -5,8 +5,10 @@ import Record from './Record';
 export class Action extends React.Component {
   constructor (props) {
     super(props);
+    this.onChange = this.onChange.bind(this);
     this.state = {
-      mode: 'view'
+      mode: 'view',
+      name: this.props.action.name
     };
   }
   editActionTitle () {
@@ -14,6 +16,9 @@ export class Action extends React.Component {
   }
   saveActionTitle () {
     this.setState({ mode: 'view' });
+  }
+  onChange (event) {
+    this.setState({ name: event.target.value });
   }
   generateRecords (records) {
     return records.map((record, index) => {
@@ -36,7 +41,7 @@ export class Action extends React.Component {
     if (this.state.mode === 'view') {
       actionTitle =
         <span className='action-title'>
-          {action.name}
+          {this.state.name}
           <button
             className='button action-edit-button'
             onClick={() => this.editActionTitle()}>
@@ -48,8 +53,8 @@ export class Action extends React.Component {
     if (this.state.mode === 'edit') {
       actionTitle =
         <div className='action-title-input'>
-          <input className='action-title col-xs-10' defaultValue={action.name} />
-          <button className='btn btn-primary col-xs-2' onClick={() => this.saveActionTitle()}>Tallenna</button>
+          <input className='action-title col-xs-10' defaultValue={this.state.name} onChange={this.onChange} />
+          <button className='btn btn-primary col-xs-2' onClick={() => this.saveActionTitle()}>Valmis</button>
         </div>;
     }
     return (
