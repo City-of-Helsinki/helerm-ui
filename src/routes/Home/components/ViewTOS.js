@@ -59,29 +59,29 @@ export class ViewTOS extends React.Component {
                   <button className='btn btn-default'>Lähetä tarkastettavaksi</button>
                 </div>
               </div>
-            </div>
-            <ul className='nav nav-tabs tos-nav'>
-              <li className='active'>
-                <a href='#' data-toggle='tab'>Muokkausnäkymä</a>
-              </li>
-              <li>
-                <a href='#' data-toggle='tab'>Viestit & Versiot</a>
-              </li>
-            </ul>
-            <div className='col-xs-12'>
-              <div className='button-row'>
-                <button
-                  className='btn btn-default btn-sm pull-right'
-                  onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, true)}>
-                  Avaa kaikki
-                </button>
-                <button
-                  className='btn btn-default btn-sm pull-right'
-                  onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, false)}>
-                  Pienennä kaikki
-                </button>
+              <ul className='nav nav-tabs tos-nav'>
+                <li className='active'>
+                  <a href='#' data-toggle='tab'>Muokkausnäkymä</a>
+                </li>
+                <li>
+                  <a href='#' data-toggle='tab'>Viestit & Versiot</a>
+                </li>
+              </ul>
+              <div className='col-xs-12'>
+                <div className='button-row'>
+                  <button
+                    className='btn btn-default btn-sm pull-right'
+                    onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, true)}>
+                    Avaa kaikki
+                  </button>
+                  <button
+                    className='btn btn-default btn-sm pull-right'
+                    onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, false)}>
+                    Pienennä kaikki
+                  </button>
+                </div>
+                { phases }
               </div>
-              { phases }
             </div>
           </StickyContainer>
         </div>

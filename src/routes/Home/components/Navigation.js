@@ -41,22 +41,24 @@ export class Navigation extends React.Component {
     }
     return (
       <div className='col-xs-12'>
-        {!this.props.navigation.is_open &&
-        <div>{navigationTitle}</div>
-      }
-        <button className='button pull-right' onClick={this.toggleNavigationVisibility}>
-          <span
-            className={'fa black-icon ' + (this.props.navigation.is_open ? 'fa-minus' : 'fa-plus')}
-            aria-hidden='true'
-          />
-        </button>
-        {this.props.navigation.is_open &&
-          <InfinityMenu
-            tree={this.state.tree}
-            onNodeMouseClick={this.onNodeMouseClick}
-            onLeafMouseClick={this.onLeafMouseClick}
-          />
-        }
+        <div className="navigation-menu">
+          <button className='button pull-right' onClick={this.toggleNavigationVisibility}>
+            <span
+              className={'fa black-icon ' + (this.props.navigation.is_open ? 'fa-minus' : 'fa-plus')}
+              aria-hidden='true'
+            />
+          </button>
+          {!this.props.navigation.is_open &&
+            <div>{navigationTitle}</div>
+          }
+          {this.props.navigation.is_open &&
+            <InfinityMenu
+              tree={this.state.tree}
+              onNodeMouseClick={this.onNodeMouseClick}
+              onLeafMouseClick={this.onLeafMouseClick}
+            />
+          }
+        </div>
       </div>
     );
   }
