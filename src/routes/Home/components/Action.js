@@ -43,7 +43,7 @@ export class Action extends React.Component {
         <span className='action-title'>
           {this.state.name}
           <button
-            className='button action-edit-button'
+            className='button title-edit-button'
             onClick={() => this.editActionTitle()}>
             <span className='fa fa-edit' />
           </button>
@@ -53,7 +53,7 @@ export class Action extends React.Component {
     if (this.state.mode === 'edit') {
       actionTitle =
         <div className='action-title-input'>
-          <input className='action-title col-xs-10' defaultValue={this.state.name} onChange={this.onChange} />
+          <input className='action-title col-xs-10' value={this.state.name} onChange={this.onChange} />
           <button className='btn btn-primary col-xs-2' onClick={() => this.saveActionTitle()}>Valmis</button>
         </div>;
     }
