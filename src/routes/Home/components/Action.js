@@ -71,7 +71,7 @@ export class Action extends React.Component {
         { actionTitle }
         { records }
         { this.state.mode !== 'add' &&
-          <button className='btn btn-primary btn-sm' onClick={() => this.createNewAction()}>
+          <button className='btn btn-primary btn-sm btn-new-record' onClick={() => this.createNewAction()}>
             <i className='fa fa-plus' /> Uusi toimenpide
           </button>
         }

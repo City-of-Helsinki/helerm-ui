@@ -308,26 +308,6 @@ const ACTION_HANDLERS = {
       }
     });
   },
-  // [SET_RECORD_VISIBILITY]: (state, action) => {
-  //   _.state.
-  //   return update(state, {
-  //     selectedTOS: {
-  //       data: {
-  //         phases: {
-  //           id: {
-  //             records: {
-  //               [action.record]: {
-  //                 is_open: {
-  //                   $set: action.value
-  //                 }
-  //               }
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }
-  //   });
-  // },
   [SET_DOCUMENT_STATE]: (state, action) => {
     return update(state, {
       selectedTOS: {
