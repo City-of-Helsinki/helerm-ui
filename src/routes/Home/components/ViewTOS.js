@@ -1,10 +1,19 @@
 import React from 'react';
 import './ViewTOS.scss';
 import Phase from './Phase';
+import TOSMetadata from './TOSMetadata';
 import formatDate from 'occasion';
 import { StickyContainer, Sticky } from 'react-sticky';
 
 export class ViewTOS extends React.Component {
+  constructor(props) {
+    super(props);
+    this.editMetadata = this.editMetadata.bind(this);
+    this.saveMetadata = this.saveMetadata.bind(this);
+    this.state = {
+      metadataMode: 'view'
+    }
+  }
   componentWillMount () {
     this.props.fetchRecordTypes();
     this.props.fetchAttributes();
@@ -15,11 +24,48 @@ export class ViewTOS extends React.Component {
     const time = dateTime.slice(11, 16);
     return { date, time };
   }
+  editMetadata () {
+    this.setState({metadataMode: 'edit'});
+  }
+  saveMetadata () {
+    this.setState({metadataMode: 'view'});
+  }
   generateMetaData (attributeTypes, attributes) {
+    const modifiedDateTime = this.formatDateTime(this.props.selectedTOS.modified_at);
+    const formattedDate = formatDate(modifiedDateTime.date, 'DD.MM.YYYY');
+    const dateTime = formattedDate + ' ' + modifiedDateTime.time;
     const attributeElements = [];
+    const versionData = [
+      { type: 'Versionumero', name: '1.0' },
+      { type: 'Tila', name: 'Luonnos' },
+      { type: 'Muokkaus ajankohta', name: dateTime },
+      { type: 'Muokkaaja', name: 'Matti Meikäläinen' }
+    ];
+    versionData.map((metadata, index) => {
+      attributeElements.push(
+        <TOSMetadata
+          key={index}
+          typeIndex={index}
+          type={metadata.type}
+          name={metadata.name}
+          mode={this.state.metadataMode}
+          editable={false}
+        />
+      );
+    });
     for (const key in attributes) {
       if (attributes.hasOwnProperty(key)) {
-        attributeElements.push(<span>{attributeTypes[key].name}: {attributes[key]}</span>);
+        attributeElements.push(
+          <TOSMetadata
+            key={key}
+            typeIndex={key}
+            type={attributeTypes[key].name}
+            name={attributes[key]}
+            mode={this.state.metadataMode}
+            attributes={this.props.attributes}
+            editable
+          />
+        );
       }
     }
     return attributeElements;
@@ -46,8 +92,6 @@ export class ViewTOS extends React.Component {
   render () {
     const { selectedTOS } = this.props;
     if (selectedTOS !== undefined && Object.keys(selectedTOS).length !== 0) {
-      const modifiedDateTime = this.formatDateTime(selectedTOS.modified_at);
-      const formattedDate = formatDate(modifiedDateTime.date, 'DD.MM.YYYY');
       const phases = this.generatePhases(selectedTOS.phases);
       const TOSMetaData = this.generateMetaData(this.props.attributes, selectedTOS.attributes);
       return (
@@ -58,16 +102,46 @@ export class ViewTOS extends React.Component {
             </Sticky>
             <div className='single-tos-content'>
               <div className='general-info space-between'>
-                <div className='version-details'>
-                  <h5>Metadata</h5>
-                  <span>Versionumero: 1.0</span>
-                  <span>Tila: Luonnos</span>
-                  <span>Muokkaus ajankohta: { formattedDate } { modifiedDateTime.time }</span>
-                  <span>Muokkaaja: Matti Meikäläinen</span>
+                <div className='version-details col-xs-8'>
+                  <h5>Metadata
+                    { this.state.metadataMode !== 'edit' &&
+                      this.props.documentState === 'edit' &&
+                      <button
+                        className='btn btn-default btn-sm title-edit-button pull-right'
+                        onClick={this.editMetadata}>
+                        <span className='fa fa-edit' />
+                      </button>
+                    }
+                  </h5>
                   { TOSMetaData }
+                  { this.state.metadataMode === 'edit' &&
+                    <button
+                      className='btn btn-default btn-sm pull-right col-xs-3'
+                      onClick={this.saveMetadata}>
+                      <span className='fa fa-save' />
+                    </button>
+                  }
                 </div>
-                <div className='document-buttons'>
-                  <button className='btn btn-primary'>Tallenna luonnos</button>
+                <div className='document-buttons col-xs-4'>
+                  { this.props.documentState !== 'edit' &&
+                    <button
+                      className='btn btn-primary'
+                      onClick={() => this.props.setDocumentState('edit')}>
+                      Muokkaustila
+                    </button>
+                  }
+                  { this.props.documentState === 'edit' &&
+                    <button
+                      className='btn btn-danger'
+                      onClick={() => this.props.setDocumentState('view')}>
+                      Peruuta Muokkaus
+                    </button>
+                  }
+                  <button
+                    className='btn btn-primary'
+                    onClick={() => this.props.setDocumentState('view')}>
+                    Tallenna luonnos
+                  </button>
                   <button className='btn btn-default'>Lähetä tarkastettavaksi</button>
                 </div>
               </div>

@@ -51,11 +51,13 @@ export class Action extends React.Component {
       actionTitle =
         <span className='action-title'>
           {this.state.name}
-          <button
-            className='btn btn-default btn-sm title-edit-button'
-            onClick={() => this.editActionTitle()}>
-            <span className='fa fa-edit' />
-          </button>
+          { this.props.documentState === 'edit' &&
+            <button
+              className='btn btn-default btn-sm title-edit-button'
+              onClick={() => this.editActionTitle()}>
+              <span className='fa fa-edit' />
+            </button>
+          }
         </span>
       ;
     }
@@ -70,11 +72,11 @@ export class Action extends React.Component {
       <div className='action box'>
         { actionTitle }
         { records }
-        { this.state.mode !== 'add' &&
-          <button className='btn btn-primary btn-sm btn-new-record' onClick={() => this.createNewAction()}>
-            <i className='fa fa-plus' /> Uusi toimenpide
-          </button>
-        }
+        { this.props.documentState === 'edit' && this.state.mode !== 'add' &&
+        <button className='btn btn-primary btn-sm btn-new-record' onClick={() => this.createNewAction()}>
+          <i className='fa fa-plus' /> Uusi toimenpide
+        </button>
+          }
         { this.state.mode === 'add' &&
         <div className='action add-box row'>
           <AddRecord attributes={this.props.attributes} recordTypes={this.props.recordTypes} mode={this.state.mode} />

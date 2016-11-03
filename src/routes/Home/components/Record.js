@@ -87,9 +87,11 @@ export class Record extends React.Component {
                 aria-hidden='true'
               />
             </button>
-            <button className='btn btn-default btn-xs pull-right' onClick={() => this.editRecord()}>
-              <span className='fa fa-edit' />
-            </button>
+            { this.props.documentState === 'edit' &&
+              <button className='btn btn-default btn-xs pull-right' onClick={() => this.editRecord()}>
+                <span className='fa fa-edit' />
+              </button>
+            }
           </div>
         }
         { recordAttributes }

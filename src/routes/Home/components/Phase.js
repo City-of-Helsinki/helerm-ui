@@ -42,11 +42,13 @@ export class Phase extends React.Component {
       phaseTitle =
         <span className='phase-title'>
           <i className='fa fa-info-circle' aria-hidden='true' /> {this.state.name}
-          <button
-            className='btn btn-default btn-sm title-edit-button'
-            onClick={() => this.editPhaseTitle()}>
-            <span className='fa fa-edit' />
-          </button>
+          { this.props.documentState === 'edit' &&
+            <button
+              className='btn btn-default btn-sm title-edit-button'
+              onClick={() => this.editPhaseTitle()}>
+              <span className='fa fa-edit' />
+            </button>
+          }
         </span>;
     }
     if (this.state.mode === 'edit') {
