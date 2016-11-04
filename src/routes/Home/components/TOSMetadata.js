@@ -66,7 +66,7 @@ export class TOSMetadata extends React.Component {
 
 TOSMetadata.propTypes = {
   typeIndex: React.PropTypes.string,
-  attributes: React.PropTypes.object.isRequired,
+  attributes: React.PropTypes.object,
   type: React.PropTypes.string.isRequired,
   name: React.PropTypes.string.isRequired,
   mode: React.PropTypes.string.isRequired,

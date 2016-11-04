@@ -4,6 +4,9 @@ import './AddRecord.scss';
 export class AddRecord extends React.Component {
   constructor (props) {
     super(props);
+    this.addRecord = this.addRecord.bind(this);
+    this.generateAttributeElements = this.generateAttributeElements.bind(this);
+    this.cancelRecordCreation = this.cancelRecordCreation.bind(this);
     this.state = {
       mode: this.props.mode
     };
@@ -17,7 +20,7 @@ export class AddRecord extends React.Component {
             return <option key={index} value={option.value}>{option.value}</option>;
           });
           attributeElements.push(
-            <div className='col-xs-12 col-lg-6'>
+            <div key={key} className='col-xs-12 col-lg-8'>
               <label className='col-xs-2'>Käytössä <input type='checkbox' defaultChecked /></label>
               <label className='col-xs-4'>{attributes[key].name}</label>
               <select className='col-xs-6'>
@@ -27,7 +30,7 @@ export class AddRecord extends React.Component {
           );
         } else if (attributes[key].values.length === 0) {
           attributeElements.push(
-            <div className='col-xs-12 col-lg-6'>
+            <div key={key} className='col-xs-12 col-lg-8'>
               <label className='col-xs-2'>Käytössä <input type='checkbox' defaultChecked /></label>
               <label className='col-xs-4'>{attributes[key].name}</label>
               <input
@@ -54,6 +57,14 @@ export class AddRecord extends React.Component {
       </select>
     );
   }
+  addRecord(event) {
+    event.preventDefault();
+    // this.props.addAction(this.props.phaseIndex, this.props.actionIndex, this.state.newRecord);
+    this.setState({mode: 'view'});
+  }
+  cancelRecordCreation () {
+    this.setState({mode: 'view'});
+  }
   render () {
     const { attributes, recordTypes } = this.props;
     const attributeElements = this.generateAttributeElements(attributes);
@@ -62,17 +73,24 @@ export class AddRecord extends React.Component {
       return (
         <div>
           <h4>Uusi toimenpide</h4>
-          <div className='col-xs-12 col-lg-6'>
-            <label className='col-xs-2'>Käytössä <input type='checkbox' defaultChecked /></label>
-            <label className='col-xs-4'>Asiakirjatyypin tarkenne</label>
-            <input className='col-xs-6' placeholder='Tarkenne' />
+          <form onSubmit={this.addRecord}>
+            <div className='col-xs-12 col-lg-8'>
+              <label className='col-xs-2'>Käytössä <input type='checkbox' defaultChecked /></label>
+              <label className='col-xs-4'>Asiakirjatyypin tarkenne</label>
+              <input className='col-xs-6' placeholder='Tarkenne'  />
+            </div>
+            <div className='col-xs-12 col-lg-8'>
+              <label className='col-xs-2'>Käytössä <input type='checkbox' defaultChecked /></label>
+              <label className='col-xs-4'>Tyyppi</label>
+              { typeDropdown }
+            </div>
+            { attributeElements }
+            <div className='col-xs-12'>
+            <button className='btn btn-primary pull-right' type='submit'>Valmis</button>
+            <button className='btn btn-default pull-right' onClick={() => this.cancelRecordCreation()}>Peruuta</button>
           </div>
-          <div className='col-xs-12 col-lg-6'>
-            <label className='col-xs-2'>Käytössä <input type='checkbox' defaultChecked /></label>
-            <label className='col-xs-4'>Tyyppi</label>
-            { typeDropdown }
-          </div>
-          { attributeElements }
+
+          </form>
         </div>
       );
     } else if (this.state.mode === 'view') {
@@ -84,7 +102,10 @@ export class AddRecord extends React.Component {
 AddRecord.propTypes = {
   attributes: React.PropTypes.object.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
-  mode: React.PropTypes.string.isRequired
+  mode: React.PropTypes.string.isRequired,
+  addRecord: React.PropTypes.func.isRequired,
+  actionIndex: React.PropTypes.number.isRequired,
+  phaseIndex: React.PropTypes.string.isRequired
 };
 
 export default AddRecord;

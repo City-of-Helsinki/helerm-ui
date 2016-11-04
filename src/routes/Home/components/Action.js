@@ -34,7 +34,7 @@ export class Action extends React.Component {
       );
     });
   }
-  createNewAction () {
+  createNewRecord () {
     this.setState({ mode: 'add' });
   }
   saveNewRecord () {
@@ -73,17 +73,20 @@ export class Action extends React.Component {
         { actionTitle }
         { records }
         { this.props.documentState === 'edit' && this.state.mode !== 'add' &&
-        <button className='btn btn-primary btn-sm btn-new-record' onClick={() => this.createNewAction()}>
-          <i className='fa fa-plus' /> Uusi toimenpide
+        <button className='btn btn-primary btn-sm btn-new-record' onClick={() => this.createNewRecord()}>
+          <i className='fa fa-plus' /> Uusi asiakirja
         </button>
           }
         { this.state.mode === 'add' &&
         <div className='action add-box row'>
-          <AddRecord attributes={this.props.attributes} recordTypes={this.props.recordTypes} mode={this.state.mode} />
-          <div className='col-xs-12'>
-            <button className='btn btn-primary pull-right' onClick={() => this.saveNewRecord()}>Valmis</button>
-            <button className='btn btn-default pull-right' onClick={() => this.cancelRecordCreation()}>Peruuta</button>
-          </div>
+          <AddRecord
+            attributes={this.props.attributes}
+            recordTypes={this.props.recordTypes}
+            mode={this.state.mode}
+            phaseIndex={this.props.phaseIndex}
+            actionIndex={this.props.actionIndex}
+            addRecord={this.props.addRecord}
+          />
         </div>
         }
       </div>
@@ -95,7 +98,10 @@ Action.propTypes = {
   action: React.PropTypes.object.isRequired,
   attributes: React.PropTypes.object.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
-  documentState: React.PropTypes.string.isRequired
+  documentState: React.PropTypes.string.isRequired,
+  addRecord: React.PropTypes.func.isRequired,
+  actionIndex: React.PropTypes.number.isRequired,
+  phaseIndex: React.PropTypes.string.isRequired
 };
 
 export default Action;

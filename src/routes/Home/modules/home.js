@@ -22,6 +22,9 @@ export const SET_DOCUMENT_STATE = 'SET_DOCUMENT_STATE';
 export const RECEIVE_RECORDTYPES = 'RECEIVE_RECORDTYPES';
 export const RECEIVE_ATTRIBUTES = 'RECEIVE_ATTRIBUTES';
 
+export const ADD_ACTION = 'ADD_ACTION';
+export const ADD_RECORD = 'ADD_RECORD';
+
 // ------------------------------------
 // Actions
 // ------------------------------------
@@ -181,7 +184,6 @@ export function setPhaseVisibility(phase, current) {
   };
 }
 export function setRecordVisibility(record, value) {
-
   return {
     type: SET_RECORD_VISIBILITY,
     record,
@@ -212,6 +214,31 @@ export function setDocumentState(state) {
     state
   }
 }
+
+export function addAction(phaseIndex, name) {
+  const newAction = {
+    name: name,
+    records: []
+  }
+  return {
+    type: ADD_ACTION,
+    phaseIndex,
+    newAction: [newAction]
+  }
+}
+
+export function addRecord(phaseIndex, name) {
+  const newAction = {
+    name: name,
+    records: []
+  }
+  return {
+    type: ADD_ACTION,
+    phaseIndex,
+    newAction: [newAction]
+  }
+}
+
 export const actions = {
   fetchNavigation,
   requestNavigation,
@@ -222,7 +249,9 @@ export const actions = {
   setPhaseVisibility,
   setPhasesVisibility,
   fetchRecordTypes,
-  setRecordVisibility
+  setRecordVisibility,
+  addAction,
+  addRecord
 };
 
 // ------------------------------------
@@ -327,6 +356,36 @@ const ACTION_HANDLERS = {
   [RECEIVE_ATTRIBUTES]: (state, action) => {
     return update(state, {
       attributes: {$set: action.attributeList}
+    });
+  },
+  [ADD_ACTION]: (state, action) => {
+    return update(state, {
+      selectedTOS: {
+        data: {
+          phases: {
+            [action.phaseIndex]: {
+              actions: {$push: action.newAction}
+            }
+          }
+        }
+      }
+    });
+  },
+  [ADD_RECORD]: (state, action) => {
+    return update(state, {
+      selectedTOS: {
+        data: {
+          phases: {
+            [action.phaseIndex]: {
+              actions: {
+                [action.actionIndex]: {
+                  records: {$push: action.newRecord}
+                }
+              }
+            }
+          }
+        }
+      }
     });
   }
 };

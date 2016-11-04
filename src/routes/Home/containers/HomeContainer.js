@@ -8,7 +8,9 @@ import {
   setRecordVisibility,
   setDocumentState,
   fetchRecordTypes,
-  fetchAttributes
+  fetchAttributes,
+  addAction,
+  addRecord
 } from '../modules/home';
 import HomeView from '../components/HomeView';
 
@@ -21,7 +23,9 @@ const mapDispatchToProps = {
   setPhasesVisibility,
   setDocumentState,
   fetchRecordTypes,
-  fetchAttributes
+  fetchAttributes,
+  addAction,
+  addRecord
 };
 
 const mapStateToProps = (state) => {

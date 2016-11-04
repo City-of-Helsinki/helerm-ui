@@ -45,7 +45,6 @@ export class ViewTOS extends React.Component {
       attributeElements.push(
         <TOSMetadata
           key={index}
-          typeIndex={index}
           type={metadata.type}
           name={metadata.name}
           mode={this.state.metadataMode}
@@ -83,6 +82,8 @@ export class ViewTOS extends React.Component {
             recordTypes={this.props.recordTypes}
             documentState={this.props.documentState}
             attributes={this.props.attributes}
+            addAction={this.props.addAction}
+            addRecord={this.props.addRecord}
           />
         );
       }
@@ -180,7 +181,10 @@ ViewTOS.propTypes = {
   fetchRecordTypes: React.PropTypes.func.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
   fetchAttributes: React.PropTypes.func.isRequired,
-  attributes: React.PropTypes.object.isRequired
+  attributes: React.PropTypes.object.isRequired,
+  addAction: React.PropTypes.func.isRequired,
+  addRecord: React.PropTypes.func.isRequired
+
 };
 
 export default ViewTOS;
