@@ -8,11 +8,11 @@ export class TOSMetadata extends React.Component {
     this.generateInput = this.generateInput.bind(this);
     this.state = {
       name: this.props.name,
-      mode: ''
+      mode: this.props.mode
     };
   }
-  componentWillReceiveProps(nextProps) {
-    this.setState({mode: nextProps.mode});
+  componentWillReceiveProps (nextProps) {
+    this.setState({ mode: nextProps.mode });
   }
   onChange (event) {
     this.setState({ name: event.target.value });
@@ -40,7 +40,7 @@ export class TOSMetadata extends React.Component {
     }
   }
   render () {
-    const { name, type, typeIndex, editable, mode } = this.props;
+    const { name, type, typeIndex, editable } = this.props;
     if (editable === false) {
       return (
         <div className='metadata-row'>{type}: {this.state.name}</div>
@@ -51,7 +51,7 @@ export class TOSMetadata extends React.Component {
         <div className='metadata-row'>{type}: {this.state.name}</div>
       );
     } else if (this.state.mode === 'edit') {
-      const metadataInput = this.generateInput(this.props.attributes[typeIndex], name)
+      const metadataInput = this.generateInput(this.props.attributes[typeIndex], name);
       return (
         <div className='metadata-input-wrapper metadata-row'>
           <label className='metadata-input-label'>{type}: </label>

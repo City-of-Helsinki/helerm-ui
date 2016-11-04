@@ -6,13 +6,13 @@ import formatDate from 'occasion';
 import { StickyContainer, Sticky } from 'react-sticky';
 
 export class ViewTOS extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.editMetadata = this.editMetadata.bind(this);
     this.saveMetadata = this.saveMetadata.bind(this);
     this.state = {
       metadataMode: 'view'
-    }
+    };
   }
   componentWillMount () {
     this.props.fetchRecordTypes();
@@ -25,10 +25,10 @@ export class ViewTOS extends React.Component {
     return { date, time };
   }
   editMetadata () {
-    this.setState({metadataMode: 'edit'});
+    this.setState({ metadataMode: 'edit' });
   }
   saveMetadata () {
-    this.setState({metadataMode: 'view'});
+    this.setState({ metadataMode: 'view' });
   }
   generateMetaData (attributeTypes, attributes) {
     const modifiedDateTime = this.formatDateTime(this.props.selectedTOS.modified_at);

@@ -57,13 +57,13 @@ export class AddRecord extends React.Component {
       </select>
     );
   }
-  addRecord(event) {
+  addRecord (event) {
     event.preventDefault();
     // this.props.addAction(this.props.phaseIndex, this.props.actionIndex, this.state.newRecord);
-    this.setState({mode: 'view'});
+    this.setState({ mode: 'view' });
   }
   cancelRecordCreation () {
-    this.setState({mode: 'view'});
+    this.setState({ mode: 'view' });
   }
   render () {
     const { attributes, recordTypes } = this.props;
@@ -77,7 +77,7 @@ export class AddRecord extends React.Component {
             <div className='col-xs-12 col-lg-8'>
               <label className='col-xs-2'>Käytössä <input type='checkbox' defaultChecked /></label>
               <label className='col-xs-4'>Asiakirjatyypin tarkenne</label>
-              <input className='col-xs-6' placeholder='Tarkenne'  />
+              <input className='col-xs-6' placeholder='Tarkenne' />
             </div>
             <div className='col-xs-12 col-lg-8'>
               <label className='col-xs-2'>Käytössä <input type='checkbox' defaultChecked /></label>
@@ -86,9 +86,13 @@ export class AddRecord extends React.Component {
             </div>
             { attributeElements }
             <div className='col-xs-12'>
-            <button className='btn btn-primary pull-right' type='submit'>Valmis</button>
-            <button className='btn btn-default pull-right' onClick={() => this.cancelRecordCreation()}>Peruuta</button>
-          </div>
+              <button className='btn btn-primary pull-right' type='submit'>Valmis</button>
+              <button
+                className='btn btn-default pull-right'
+                onClick={() => this.cancelRecordCreation()}>
+                Peruuta
+              </button>
+            </div>
 
           </form>
         </div>

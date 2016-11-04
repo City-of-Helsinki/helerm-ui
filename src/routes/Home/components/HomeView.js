@@ -76,6 +76,7 @@ HomeView.propTypes = {
   recordTypes: React.PropTypes.object.isRequired,
   fetchAttributes: React.PropTypes.func.isRequired,
   attributes: React.PropTypes.object.isRequired,
-  addAction: React.PropTypes.func.isRequired
+  addAction: React.PropTypes.func.isRequired,
+  addRecord: React.PropTypes.func.isRequired
 };
 export default HomeView;

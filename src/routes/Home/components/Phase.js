@@ -46,15 +46,15 @@ export class Phase extends React.Component {
     });
   }
   createNewAction () {
-    this.setState({mode: 'add'});
+    this.setState({ mode: 'add' });
   }
-  addAction(event) {
+  addAction (event) {
     event.preventDefault();
     this.props.addAction(this.props.phaseIndex, this.state.newActionName);
-    this.setState({mode: 'view'});
+    this.setState({ mode: 'view' });
   }
-  cancelRecordCreation() {
-    this.setState({newActionName: '', mode: 'view'});
+  cancelRecordCreation () {
+    this.setState({ newActionName: '', mode: 'view' });
   }
   render () {
     const { phase, phaseIndex } = this.props;
@@ -108,7 +108,7 @@ export class Phase extends React.Component {
         }
         { this.state.mode === 'add' &&
           <form onSubmit={this.addAction} className='row'>
-            <input type='text' className='col-xs-8' value={this.state.newActionName} onChange={this.onNewChange}/>
+            <input type='text' className='col-xs-8' value={this.state.newActionName} onChange={this.onNewChange} />
             <div className='col-xs-4'>
               <button className='btn btn-primary pull-left' type='submit'>Lisää</button>
               <button className='btn btn-default pull-left' onClick={() => this.cancelRecordCreation()}>Peruuta</button>
