@@ -98,8 +98,10 @@ export class Record extends React.Component {
         { attributes }
         { this.state.mode === 'edit' &&
           <div className='col-xs-12'>
-            <button className='btn btn-primary pull-right' onClick={() => this.saveRecord()}>Valmis</button>
-            <button className='btn btn-default pull-right' onClick={() => this.cancelRecordEdit()}>Peruuta</button>
+            <button className='btn btn-primary pull-right edit-record__submit'
+              onClick={() => this.saveRecord()}>Valmis</button>
+            <button className='btn btn-default pull-right edit-record__cancel'
+              onClick={() => this.cancelRecordEdit()}>Peruuta</button>
           </div>
         }
       </div>

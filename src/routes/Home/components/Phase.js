@@ -75,9 +75,13 @@ export class Phase extends React.Component {
     }
     if (this.state.mode === 'edit') {
       phaseTitle =
-        <div className='phase-title-input'>
-          <input className='input-title col-xs-10' value={this.state.name} onChange={this.onChange} />
-          <button className='btn btn-primary btn-sm col-xs-2' onClick={() => this.savePhaseTitle()}>Valmis</button>
+        <div className='phase-title-input row'>
+          <div className='col-md-10 col-xs-12'>
+            <input className='input-title form-control' value={this.state.name} onChange={this.onChange} />
+          </div>
+          <div className='col-md-2 col-xs-12'>
+            <button className='btn btn-primary btn-sm' onClick={() => this.savePhaseTitle()}>Valmis</button>
+          </div>
         </div>;
     }
     return (
@@ -109,9 +113,11 @@ export class Phase extends React.Component {
         }
         { this.state.mode === 'add' &&
           <form onSubmit={this.addAction} className='row'>
-            <input type='text' className='form-control col-xs-8'
-              value={this.state.newActionName} onChange={this.onNewChange} />
-            <div className='col-xs-4'>
+            <div className='col-xs-12 col-md-8'>
+              <input type='text' className='form-control'
+                value={this.state.newActionName} onChange={this.onNewChange} />
+            </div>
+            <div className='col-xs-12 col-md-4'>
               <button className='btn btn-primary pull-left' type='submit'>Lisää</button>
               <button className='btn btn-default pull-left' onClick={() => this.cancelRecordCreation()}>Peruuta</button>
             </div>

@@ -10,6 +10,7 @@ export class ViewTOS extends React.Component {
     super(props);
     this.editMetadata = this.editMetadata.bind(this);
     this.saveMetadata = this.saveMetadata.bind(this);
+    this.cancelMetadata = this.cancelMetadata.bind(this);
     this.state = {
       metadataMode: 'view'
     };
@@ -23,6 +24,9 @@ export class ViewTOS extends React.Component {
     const date = dateTime.slice(0, 10);
     const time = dateTime.slice(11, 16);
     return { date, time };
+  }
+  cancelMetadata () {
+    this.setState({ medadataMode: 'view' });
   }
   editMetadata () {
     this.setState({ metadataMode: 'edit' });
@@ -144,9 +148,16 @@ export class ViewTOS extends React.Component {
                     { TOSMetaData }
                     { this.state.metadataMode === 'edit' &&
                       <button
-                        className='btn btn-primary btn-sm pull-right col-xs-3'
+                        className='btn btn-primary pull-right edit-record__submit'
                         onClick={this.saveMetadata}>
                         Valmis
+                      </button>
+                    }
+                    { this.state.metadataMode === 'edit' &&
+                      <button
+                        className='btn btn-default pull-right edit-record__cancel'
+                        onClick={this.saveMetadata}>
+                        Peruuta
                       </button>
                     }
                   </div>

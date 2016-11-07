@@ -40,7 +40,7 @@ export class AddRecord extends React.Component {
                   <label><input type='checkbox' defaultChecked /> Käytössä</label>
                 </div>
               </div>
-              <label className='col-lg-10' edit-record__label>{attributes[key].name}</label>
+              <label className='col-lg-10 edit-record__label'>{attributes[key].name}</label>
               <input
                 className='form-control edit-record__input'
                 placeholder={attributes[key].name}
