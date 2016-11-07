@@ -20,21 +20,21 @@ export class AddRecord extends React.Component {
             return <option key={index} value={option.value}>{option.value}</option>;
           });
           attributeElements.push(
-            <div key={key} className='col-xs-12 col-lg-8'>
-              <label className='col-xs-2'>Käytössä <input type='checkbox' defaultChecked /></label>
-              <label className='col-xs-4'>{attributes[key].name}</label>
-              <select className='col-xs-6'>
+            <div key={key} className='col-xs-12 col-lg-6 form-group'>
+              <div className='col-lg-2'><div className='checkbox edit-record__checkbox'><label><input type='checkbox' defaultChecked /> Käytössä</label></div></div>
+              <label className='col-lg-10 edit-record__label'>{attributes[key].name}</label>
+              <select className='form-control edit-record__select'>
                 { options }
               </select>
             </div>
           );
         } else if (attributes[key].values.length === 0) {
           attributeElements.push(
-            <div key={key} className='col-xs-12 col-lg-8'>
-              <label className='col-xs-2'>Käytössä <input type='checkbox' defaultChecked /></label>
-              <label className='col-xs-4'>{attributes[key].name}</label>
+            <div key={key} className='col-xs-12 col-lg-6 form-group'>
+              <div className='col-lg-2'><div className='checkbox edit-record__checkbox'><label><input type='checkbox' defaultChecked /> Käytössä</label></div></div>
+              <label className='col-lg-10' edit-record__label>{attributes[key].name}</label>
               <input
-                className='col-xs-6'
+                className='form-control edit-record__input'
                 placeholder={attributes[key].name}
               />
             </div>
@@ -52,7 +52,7 @@ export class AddRecord extends React.Component {
       }
     }
     return (
-      <select className='col-xs-6'>
+      <select className='form-control col-xs-6'>
         {options}
       </select>
     );
@@ -72,23 +72,23 @@ export class AddRecord extends React.Component {
     if (this.state.mode === 'add') {
       return (
         <div>
-          <h4>Uusi toimenpide</h4>
-          <form onSubmit={this.addRecord}>
-            <div className='col-xs-12 col-lg-8'>
-              <label className='col-xs-2'>Käytössä <input type='checkbox' defaultChecked /></label>
-              <label className='col-xs-4'>Asiakirjatyypin tarkenne</label>
-              <input className='col-xs-6' placeholder='Tarkenne' />
+          <h4>Uusi asiakirja</h4>
+          <form onSubmit={this.addRecord} class="edit-record">
+            <div className='col-xs-12 col-lg-6 form-group'>
+              <div className='col-lg-2'><div className='checkbox edit-record__checkbox'><label><input type='checkbox' defaultChecked /> Käytössä</label></div></div>
+              <label className='col-lg-10 edit-record__label'>Asiakirjatyypin tarkenne</label>
+              <input className='col-xs-6 form-control edit-record__input' placeholder='Tarkenne' />
             </div>
-            <div className='col-xs-12 col-lg-8'>
-              <label className='col-xs-2'>Käytössä <input type='checkbox' defaultChecked /></label>
-              <label className='col-xs-4'>Tyyppi</label>
+            <div className='col-xs-12 col-lg-6 form-group'>
+              <div className='col-lg-2'><div className='checkbox edit-record__checkbox'><label><input type='checkbox' defaultChecked /> Käytössä</label></div></div>
+              <label className='col-lg-10 edit-record__label'>Tyyppi</label>
               { typeDropdown }
             </div>
             { attributeElements }
             <div className='col-xs-12'>
-              <button className='btn btn-primary pull-right' type='submit'>Valmis</button>
+              <button className='btn btn-primary pull-right edit-record__submit' type='submit'>Valmis</button>
               <button
-                className='btn btn-default pull-right'
+                className='btn btn-default pull-right edit-record__cancel'
                 onClick={() => this.cancelRecordCreation()}>
                 Peruuta
               </button>

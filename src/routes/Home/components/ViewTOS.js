@@ -38,7 +38,7 @@ export class ViewTOS extends React.Component {
     const versionData = [
       { type: 'Versionumero', name: '1.0' },
       { type: 'Tila', name: 'Luonnos' },
-      { type: 'Muokkaus ajankohta', name: dateTime },
+      { type: 'Muokkausajankohta', name: dateTime },
       { type: 'Muokkaaja', name: 'Matti Meikäläinen' }
     ];
     versionData.map((metadata, index) => {
@@ -99,67 +99,73 @@ export class ViewTOS extends React.Component {
         <div className='col-xs-12'>
           <StickyContainer className='col-xs-12 single-tos-container'>
             <Sticky className='single-tos-header'>
-              <h4>{selectedTOS.function_id} {selectedTOS.name}</h4>
-            </Sticky>
-            <div className='single-tos-content'>
-              <div className='general-info space-between'>
-                <div className='version-details col-xs-8'>
-                  <h5>Metadata
-                    { this.state.metadataMode !== 'edit' &&
-                      this.props.documentState === 'edit' &&
-                      <button
-                        className='btn btn-default btn-sm title-edit-button pull-right'
-                        onClick={this.editMetadata}>
-                        <span className='fa fa-edit' />
-                      </button>
-                    }
-                  </h5>
-                  { TOSMetaData }
-                  { this.state.metadataMode === 'edit' &&
-                    <button
-                      className='btn btn-default btn-sm pull-right col-xs-3'
-                      onClick={this.saveMetadata}>
-                      <span className='fa fa-save' />
-                    </button>
-                  }
-                </div>
-                <div className='document-buttons col-xs-4'>
+              <div className='row'>
+                <h4 className="col-md-6 col-xs-12">{selectedTOS.function_id} {selectedTOS.name}</h4>
+                <div className='document-buttons col-xs-12 col-md-6'>
                   { this.props.documentState !== 'edit' &&
                     <button
-                      className='btn btn-primary'
+                      className='btn btn-primary btn-sm'
                       onClick={() => this.props.setDocumentState('edit')}>
                       Muokkaustila
                     </button>
                   }
                   { this.props.documentState === 'edit' &&
                     <button
-                      className='btn btn-danger'
+                      className='btn btn-danger btn-sm'
                       onClick={() => this.props.setDocumentState('view')}>
-                      Peruuta Muokkaus
+                      Peruuta muokkaus
                     </button>
                   }
-                  <button
-                    className='btn btn-primary'
-                    onClick={() => this.props.setDocumentState('view')}>
-                    Tallenna luonnos
-                  </button>
-                  <button className='btn btn-default'>Lähetä tarkastettavaksi</button>
+                  { this.props.documentState === 'edit' &&
+                    <button
+                      className='btn btn-primary btn-sm'
+                      onClick={() => this.props.setDocumentState('view')}>
+                      Tallenna luonnos
+                    </button>
+                  }
+                  <button className='btn btn-default btn-sm'>Lähetä tarkastettavaksi</button>
                 </div>
               </div>
-              <div className='col-xs-12'>
-                <div className='button-row'>
-                  <button
-                    className='btn btn-default btn-sm pull-right'
-                    onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, true)}>
-                    Avaa kaikki
-                  </button>
-                  <button
-                    className='btn btn-default btn-sm pull-right'
-                    onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, false)}>
-                    Pienennä kaikki
-                  </button>
+            </Sticky>
+            <div className='single-tos-content'>
+              <div className='row'>
+                <div className='general-info space-between'>
+                  <div className='version-details col-xs-12'>
+                    <h5>Metadata
+                      { this.state.metadataMode !== 'edit' &&
+                        this.props.documentState === 'edit' &&
+                        <button
+                          className='btn btn-default btn-sm title-edit-button'
+                          onClick={this.editMetadata} title='Muokkaa'>
+                          <span className='fa fa-edit' />
+                        </button>
+                      }
+                    </h5>
+                    { TOSMetaData }
+                    { this.state.metadataMode === 'edit' &&
+                      <button
+                        className='btn btn-primary btn-sm pull-right col-xs-3'
+                        onClick={this.saveMetadata}>
+                        Valmis
+                      </button>
+                    }
+                  </div>
                 </div>
-                { phases }
+                <div className='col-xs-12'>
+                  <div className='button-row'>
+                    <button
+                      className='btn btn-default btn-sm pull-right'
+                      onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, true)}>
+                      Avaa kaikki
+                    </button>
+                    <button
+                      className='btn btn-default btn-sm pull-right'
+                      onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, false)}>
+                      Pienennä kaikki
+                    </button>
+                  </div>
+                  { phases }
+                </div>
               </div>
             </div>
           </StickyContainer>

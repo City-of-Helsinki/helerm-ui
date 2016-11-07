@@ -68,7 +68,7 @@ export class Phase extends React.Component {
             <button
               className='btn btn-default btn-sm title-edit-button'
               onClick={() => this.editPhaseTitle()}>
-              <span className='fa fa-edit' />
+              <span className='fa fa-edit' title='Muokkaa' />
             </button>
           }
         </span>;
@@ -77,7 +77,7 @@ export class Phase extends React.Component {
       phaseTitle =
         <div className='phase-title-input'>
           <input className='input-title col-xs-10' value={this.state.name} onChange={this.onChange} />
-          <button className='btn btn-primary col-xs-2' onClick={() => this.savePhaseTitle()}>Valmis</button>
+          <button className='btn btn-primary btn-sm col-xs-2' onClick={() => this.savePhaseTitle()}>Valmis</button>
         </div>;
     }
     return (
@@ -88,9 +88,10 @@ export class Phase extends React.Component {
             <button
               type='button'
               className='btn btn-default btn-sm pull-right'
+              title={phase.is_open ? 'Pienennä' : 'Laajenna'}
               onClick={() => this.props.setPhaseVisibility(phaseIndex, phase.is_open)}>
               <span
-                className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-expand')}
+                className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
                 aria-hidden='true'
               />
             </button>
@@ -103,12 +104,12 @@ export class Phase extends React.Component {
         }
         { this.props.documentState === 'edit' && this.state.mode !== 'add' &&
           <button className='btn btn-primary btn-sm btn-new-record' onClick={() => this.createNewAction()}>
-            <i className='fa fa-plus' /> Uusi toimenpide
+            Uusi toimenpide
           </button>
         }
         { this.state.mode === 'add' &&
           <form onSubmit={this.addAction} className='row'>
-            <input type='text' className='col-xs-8' value={this.state.newActionName} onChange={this.onNewChange} />
+            <input type='text' className='form-control col-xs-8' value={this.state.newActionName} onChange={this.onNewChange} />
             <div className='col-xs-4'>
               <button className='btn btn-primary pull-left' type='submit'>Lisää</button>
               <button className='btn btn-default pull-left' onClick={() => this.cancelRecordCreation()}>Peruuta</button>

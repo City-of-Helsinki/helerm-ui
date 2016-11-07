@@ -17,7 +17,7 @@ export class RecordAttribute extends React.Component {
   }
   generateInput (name, type) {
     if (type === '') {
-      return <input className='col-xs-6' value={this.state.attribute} onChange={this.onChange} />;
+      return <input className='col-xs-6 form-control edit-record__input' value={this.state.attribute} onChange={this.onChange} />;
     } else {
       return this.generateDropdown(this.props.recordTypes, type);
     }
@@ -30,7 +30,7 @@ export class RecordAttribute extends React.Component {
       }
     }
     return (
-      <select className='col-xs-6' value={this.state.attribute} onChange={this.onChange}>
+      <select className='col-xs-6 form-control edit-record__select' value={this.state.attribute} onChange={this.onChange}>
         {options}
       </select>
     );
@@ -40,12 +40,12 @@ export class RecordAttribute extends React.Component {
     if (this.props.mode === 'view') {
       return (
         <div className='record-entry col-xs-12 col-md-6 col-lg-4'>
-          <span className='col-xs-6 table-key'>
+          <div className='table-key'>
             {recordKey}
-          </span>
-          <span className='col-xs-6'>
+          </div>
+          <div className=''>
             {this.state.attribute}
-          </span>
+          </div>
         </div>
       );
     }
@@ -53,7 +53,7 @@ export class RecordAttribute extends React.Component {
       const inputField = this.generateInput(recordName, recordType);
       return (
         <div className='col-xs-12 col-md-6 col-lg-4 record-entry'>
-          <div className='col-xs-6 table-key'>{recordKey}</div>
+          <div className='table-key'>{recordKey}</div>
           { inputField }
         </div>
       );

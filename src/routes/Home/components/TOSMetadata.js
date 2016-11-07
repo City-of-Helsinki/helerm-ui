@@ -23,14 +23,14 @@ export class TOSMetadata extends React.Component {
         return <option key={index} value={option.value}>{option.value}</option>;
       });
       return (
-        <select className='col-xs-6 metadata-input' value={this.state.name} onChange={this.onChange}>
+        <select className='col-xs-6 form-control metadata-input' value={this.state.name} onChange={this.onChange}>
           { options }
         </select>
       );
     } else if (input.values.length === 0) {
       return (
         <input
-          className='col-xs-6 metadata-input'
+          className='col-xs-6 form-control metadata-input'
           value={this.state.name}
           onChange={this.onChange}
         />
@@ -43,17 +43,17 @@ export class TOSMetadata extends React.Component {
     const { name, type, typeIndex, editable } = this.props;
     if (editable === false) {
       return (
-        <div className='metadata-row'>{type}: {this.state.name}</div>
+        <div className='metadata-row col-md-6 col-xs-12'><strong>{type}:</strong> <div>{this.state.name}</div></div>
       );
     }
     if (this.state.mode === 'view') {
       return (
-        <div className='metadata-row'>{type}: {this.state.name}</div>
+        <div className='metadata-row col-md-6 col-xs-12'><strong>{type}:</strong> <div>{this.state.name}</div></div>
       );
     } else if (this.state.mode === 'edit') {
       const metadataInput = this.generateInput(this.props.attributes[typeIndex], name);
       return (
-        <div className='metadata-input-wrapper metadata-row'>
+        <div className='metadata-input-wrapper metadata-row col-md-6 col-xs-12'>
           <label className='metadata-input-label'>{type}: </label>
           { metadataInput }
         </div>

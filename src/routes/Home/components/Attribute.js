@@ -21,14 +21,14 @@ export class Attribute extends React.Component {
         return <option key={index} value={option.value}>{option.value}</option>;
       });
       return (
-        <select className='col-xs-6' value={this.state.attribute} onChange={this.onChange}>
+        <select className='form-control' value={this.state.attribute} onChange={this.onChange}>
           { options }
         </select>
       );
     } else if (attribute.values.length === 0) {
       return (
         <input
-          className='col-xs-6'
+          className='form-control'
           value={this.state.attribute}
           onChange={this.onChange}
         />
@@ -41,14 +41,14 @@ export class Attribute extends React.Component {
     const { attribute, attributeIndex, showAttributes } = this.props;
     let attributeValue;
     if (this.props.mode === 'view') {
-      attributeValue = <span className='col-xs-6'>{this.state.attribute}</span>;
+      attributeValue = <div className=''>{this.state.attribute}</div>;
     }
     if (this.props.mode === 'edit') {
       attributeValue = this.generateInput(this.props.attributes[attributeIndex], attribute);
     }
     return (
       <div className={'attribute col-xs-12 col-md-6 col-lg-4 ' + (showAttributes ? 'visible' : 'hidden')}>
-        <span className='col-xs-6 table-key'>
+        <span className='table-key'>
           {this.props.attributes[attributeIndex].name}
         </span>
         { attributeValue }

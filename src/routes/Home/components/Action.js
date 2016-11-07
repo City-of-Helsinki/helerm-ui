@@ -49,23 +49,23 @@ export class Action extends React.Component {
     let actionTitle;
     if (this.state.mode === 'view' || this.state.mode === 'add') {
       actionTitle =
-        <span className='action-title'>
+        <div className='action-title'>
           {this.state.name}
           { this.props.documentState === 'edit' &&
             <button
               className='btn btn-default btn-sm title-edit-button'
-              onClick={() => this.editActionTitle()}>
-              <span className='fa fa-edit' />
+              onClick={() => this.editActionTitle()} title='Muokkaa'>
+              <span className='fa fa-edit'/>
             </button>
           }
-        </span>
+        </div>
       ;
     }
     if (this.state.mode === 'edit') {
       actionTitle =
         <div className='action-title-input'>
-          <input className='input-title col-xs-10' value={this.state.name} onChange={this.onChange} />
-          <button className='btn btn-primary col-xs-2' onClick={() => this.saveActionTitle()}>Valmis</button>
+          <input className='input-title form-control col-xs-10' value={this.state.name} onChange={this.onChange} />
+          <button className='btn btn-primary col-xs-2 btn-sm' onClick={() => this.saveActionTitle()}>Valmis</button>
         </div>;
     }
     return (
@@ -74,7 +74,7 @@ export class Action extends React.Component {
         { records }
         { this.props.documentState === 'edit' && this.state.mode !== 'add' &&
         <button className='btn btn-primary btn-sm btn-new-record' onClick={() => this.createNewRecord()}>
-          <i className='fa fa-plus' /> Uusi asiakirja
+          Uusi asiakirja
         </button>
           }
         { this.state.mode === 'add' &&

@@ -83,7 +83,7 @@ export class Record extends React.Component {
               className='btn btn-default btn-xs record-button pull-right'
               onClick={this.toggleAttributeVisibility}>
               <span
-                className={'fa ' + (this.state.showAttributes ? 'fa-minus' : 'fa-expand')}
+                className={'fa ' + (this.state.showAttributes ? 'fa-minus' : 'fa-plus')}
                 aria-hidden='true'
               />
             </button>

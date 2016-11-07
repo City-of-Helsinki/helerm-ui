@@ -46,8 +46,10 @@
   margin: 4px;
 }
 .version-details {
-  display:flex;
   flex-direction: column;
+  margin: 10px 15px;
+  padding:10px 15px;
+  border: 1px solid #ddd;
 }
 .unlocated-title {
   color: black;

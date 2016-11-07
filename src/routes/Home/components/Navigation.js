@@ -42,9 +42,9 @@ export class Navigation extends React.Component {
     return (
       <div className='col-xs-12'>
         <div className='navigation-menu'>
-          <button className='button pull-right' onClick={this.toggleNavigationVisibility}>
+          <button className='btn btn-default btn-sm pull-right' onClick={this.toggleNavigationVisibility}>
             <span
-              className={'fa black-icon ' + (this.props.navigation.is_open ? 'fa-minus' : 'fa-plus')}
+              className={'fa ' + (this.props.navigation.is_open ? 'fa-minus' : 'fa-plus')}
               aria-hidden='true'
             />
           </button>
@@ -70,15 +70,6 @@ Navigation.propTypes = {
   setNavigationVisibility: React.PropTypes.func.isRequired,
   navigation: React.PropTypes.object.isRequired,
   selectedTOSPath: React.PropTypes.array.isRequired
-};
-
-Navigation.headerProps = {
-  title: 'Luokat',
-  className: 'nav--empty-tree'
-};
-
-Navigation.emptyTreeComponentProps = {
-  className: 'nav--empty-tree'
 };
 
 export default Navigation;
