@@ -109,7 +109,8 @@ export class Phase extends React.Component {
         }
         { this.state.mode === 'add' &&
           <form onSubmit={this.addAction} className='row'>
-            <input type='text' className='form-control col-xs-8' value={this.state.newActionName} onChange={this.onNewChange} />
+            <input type='text' className='form-control col-xs-8'
+              value={this.state.newActionName} onChange={this.onNewChange} />
             <div className='col-xs-4'>
               <button className='btn btn-primary pull-left' type='submit'>Lisää</button>
               <button className='btn btn-default pull-left' onClick={() => this.cancelRecordCreation()}>Peruuta</button>

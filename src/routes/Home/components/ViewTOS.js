@@ -100,7 +100,7 @@ export class ViewTOS extends React.Component {
           <StickyContainer className='col-xs-12 single-tos-container'>
             <Sticky className='single-tos-header'>
               <div className='row'>
-                <h4 className="col-md-6 col-xs-12">{selectedTOS.function_id} {selectedTOS.name}</h4>
+                <h4 className='col-md-6 col-xs-12'>{selectedTOS.function_id} {selectedTOS.name}</h4>
                 <div className='document-buttons col-xs-12 col-md-6'>
                   { this.props.documentState !== 'edit' &&
                     <button

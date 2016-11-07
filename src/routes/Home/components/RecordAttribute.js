@@ -17,7 +17,8 @@ export class RecordAttribute extends React.Component {
   }
   generateInput (name, type) {
     if (type === '') {
-      return <input className='col-xs-6 form-control edit-record__input' value={this.state.attribute} onChange={this.onChange} />;
+      return <input className='col-xs-6 form-control edit-record__input'
+        value={this.state.attribute} onChange={this.onChange} />;
     } else {
       return this.generateDropdown(this.props.recordTypes, type);
     }
@@ -30,7 +31,8 @@ export class RecordAttribute extends React.Component {
       }
     }
     return (
-      <select className='col-xs-6 form-control edit-record__select' value={this.state.attribute} onChange={this.onChange}>
+      <select className='col-xs-6 form-control edit-record__select'
+        value={this.state.attribute} onChange={this.onChange}>
         {options}
       </select>
     );

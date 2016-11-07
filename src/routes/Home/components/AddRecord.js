@@ -21,7 +21,11 @@ export class AddRecord extends React.Component {
           });
           attributeElements.push(
             <div key={key} className='col-xs-12 col-lg-6 form-group'>
-              <div className='col-lg-2'><div className='checkbox edit-record__checkbox'><label><input type='checkbox' defaultChecked /> Käytössä</label></div></div>
+              <div className='col-lg-2'>
+                <div className='checkbox edit-record__checkbox'>
+                  <label><input type='checkbox' defaultChecked /> Käytössä</label>
+                </div>
+              </div>
               <label className='col-lg-10 edit-record__label'>{attributes[key].name}</label>
               <select className='form-control edit-record__select'>
                 { options }
@@ -31,7 +35,11 @@ export class AddRecord extends React.Component {
         } else if (attributes[key].values.length === 0) {
           attributeElements.push(
             <div key={key} className='col-xs-12 col-lg-6 form-group'>
-              <div className='col-lg-2'><div className='checkbox edit-record__checkbox'><label><input type='checkbox' defaultChecked /> Käytössä</label></div></div>
+              <div className='col-lg-2'>
+                <div className='checkbox edit-record__checkbox'>
+                  <label><input type='checkbox' defaultChecked /> Käytössä</label>
+                </div>
+              </div>
               <label className='col-lg-10' edit-record__label>{attributes[key].name}</label>
               <input
                 className='form-control edit-record__input'
@@ -73,14 +81,22 @@ export class AddRecord extends React.Component {
       return (
         <div>
           <h4>Uusi asiakirja</h4>
-          <form onSubmit={this.addRecord} class="edit-record">
+          <form onSubmit={this.addRecord} className='edit-record'>
             <div className='col-xs-12 col-lg-6 form-group'>
-              <div className='col-lg-2'><div className='checkbox edit-record__checkbox'><label><input type='checkbox' defaultChecked /> Käytössä</label></div></div>
+              <div className='col-lg-2'>
+                <div className='checkbox edit-record__checkbox'>
+                  <label><input type='checkbox' defaultChecked /> Käytössä</label>
+                </div>
+              </div>
               <label className='col-lg-10 edit-record__label'>Asiakirjatyypin tarkenne</label>
               <input className='col-xs-6 form-control edit-record__input' placeholder='Tarkenne' />
             </div>
             <div className='col-xs-12 col-lg-6 form-group'>
-              <div className='col-lg-2'><div className='checkbox edit-record__checkbox'><label><input type='checkbox' defaultChecked /> Käytössä</label></div></div>
+              <div className='col-lg-2'>
+                <div className='checkbox edit-record__checkbox'>
+                  <label><input type='checkbox' defaultChecked /> Käytössä</label>
+                </div>
+              </div>
               <label className='col-lg-10 edit-record__label'>Tyyppi</label>
               { typeDropdown }
             </div>

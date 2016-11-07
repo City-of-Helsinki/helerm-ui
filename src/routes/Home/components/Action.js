@@ -55,7 +55,7 @@ export class Action extends React.Component {
             <button
               className='btn btn-default btn-sm title-edit-button'
               onClick={() => this.editActionTitle()} title='Muokkaa'>
-              <span className='fa fa-edit'/>
+              <span className='fa fa-edit' />
             </button>
           }
         </div>
