@@ -24,7 +24,7 @@ export class TOSMetadata extends React.Component {
       });
       return (
         <select className='col-xs-6 form-control metadata-input' value={this.state.name} onChange={this.onChange}>
-          <option value={ null }>[ Tyhjä ]</option>
+          <option value={null}>[ Tyhjä ]</option>
           { options }
         </select>
       );
@@ -55,7 +55,11 @@ export class TOSMetadata extends React.Component {
       const metadataInput = this.generateInput(this.props.attributes[typeIndex], name);
       return (
         <div className='metadata-input-wrapper metadata-row col-md-6 col-xs-12'>
-          <label className='metadata-input-label'>{type}: </label>
+          <label className='metadata-input-label'>{type}:
+            { this.props.attributes[typeIndex].required &&
+              <span className='fa fa-asterisk required-asterisk' />
+            }
+          </label>
           { metadataInput }
         </div>
       );

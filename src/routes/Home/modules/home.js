@@ -120,13 +120,23 @@ export function receiveRecordTypes(recordTypes) {
   }
 }
 
-export function receiveAttributes(attributes) {
+export function receiveAttributes(attributes, validationRules) {
   const attributeList = {};
   attributes.results.map(result => {
     if(result.values) {
+      let required;
+      validationRules.record.required.map(rule => {
+        if (rule === result.identifier) {
+          required = true;
+        }
+      });
+      if (required !== true) {
+        required = false;
+      }
       attributeList[result.identifier] = {
         name: result.name,
-        values: result.values
+        values: result.values,
+        required
       };
     }
   });
@@ -169,14 +179,25 @@ export function fetchRecordTypes() {
   };
 }
 
-export function fetchAttributes() {
+export function fetchAttributes(validationRules) {
   return function(dispatch) {
     return fetch('https://api.hel.fi/helerm-test/v1/attribute/')
     .then(response => response.json())
     .then(json =>
-    dispatch(receiveAttributes(json)))
+    dispatch(receiveAttributes(json, validationRules)))
   }
 }
+
+export function fetchValidationRules() {
+  return function(dispatch) {
+    return fetch('https://api.hel.fi/helerm-test/v1/attribute/schemas/')
+    .then(response => response.json())
+    .then(json => {
+      dispatch(fetchAttributes(json));
+    })
+  }
+}
+
 export function setPhaseVisibility(phase, current) {
   return {
     type: SET_PHASE_VISIBILITY,
@@ -243,6 +264,7 @@ export const actions = {
   fetchNavigation,
   fetchRecordTypes,
   fetchAttributes,
+  fetchValidationRules,
   setPhaseVisibility,
   setPhasesVisibility,
   setDocumentState,

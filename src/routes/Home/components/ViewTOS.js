@@ -15,11 +15,6 @@ export class ViewTOS extends React.Component {
       metadataMode: 'view'
     };
   }
-  componentWillMount () {
-    this.props.fetchRecordTypes();
-    this.props.fetchAttributes();
-  }
-
   formatDateTime (dateTime) {
     const date = dateTime.slice(0, 10);
     const time = dateTime.slice(11, 16);
@@ -144,6 +139,10 @@ export class ViewTOS extends React.Component {
                           <span className='fa fa-edit' />
                         </button>
                       }
+                      { this.state.metadataMode === 'edit' &&
+                        <span className='fa fa-asterisk required-asterisk required-legend col-xs-12'> Pakollinen tieto
+                        </span>
+                      }
                     </h5>
                     { TOSMetaData }
                     { this.state.metadataMode === 'edit' &&
@@ -194,13 +193,10 @@ ViewTOS.propTypes = {
   setPhasesVisibility: React.PropTypes.func.isRequired,
   documentState: React.PropTypes.string.isRequired,
   setDocumentState: React.PropTypes.func.isRequired,
-  fetchRecordTypes: React.PropTypes.func.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
-  fetchAttributes: React.PropTypes.func.isRequired,
   attributes: React.PropTypes.object.isRequired,
   addAction: React.PropTypes.func.isRequired,
   addRecord: React.PropTypes.func.isRequired
-
 };
 
 export default ViewTOS;

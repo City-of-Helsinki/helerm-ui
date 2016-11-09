@@ -22,7 +22,7 @@ export class Attribute extends React.Component {
       });
       return (
         <select className='form-control' value={this.state.attribute} onChange={this.onChange}>
-          <option value={ null }>[ Tyhjä ]</option>
+          <option value={null}>[ Tyhjä ]</option>
           { options }
         </select>
       );
@@ -51,6 +51,9 @@ export class Attribute extends React.Component {
       <div className={'attribute col-xs-12 col-md-6 col-lg-4 ' + (showAttributes ? 'visible' : 'hidden')}>
         <span className='table-key'>
           {this.props.attributes[attributeIndex].name}
+          { mode === 'edit' && this.props.attributes[attributeIndex].required &&
+            <span className='fa fa-asterisk required-asterisk' />
+          }
         </span>
         { attributeValue }
       </div>

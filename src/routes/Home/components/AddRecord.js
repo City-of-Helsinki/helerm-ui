@@ -27,8 +27,11 @@ export class AddRecord extends React.Component {
                 </div>
               </div>
               <label className='col-lg-10 edit-record__label'>{attributes[key].name}</label>
+              { attributes[key].required &&
+                <span className='fa fa-asterisk required-asterisk' />
+              }
               <select className='form-control edit-record__select'>
-                <option value={ null }>[ Tyhjä ]</option>
+                <option value={null}>[ Tyhjä ]</option>
                 { options }
               </select>
             </div>
@@ -42,6 +45,9 @@ export class AddRecord extends React.Component {
                 </div>
               </div>
               <label className='col-lg-10 edit-record__label'>{attributes[key].name}</label>
+              { attributes[key].required &&
+                <span className='fa fa-asterisk required-asterisk' />
+              }
               <input
                 className='form-control edit-record__input'
                 placeholder={attributes[key].name}
@@ -62,7 +68,7 @@ export class AddRecord extends React.Component {
     }
     return (
       <select className='form-control col-xs-6'>
-        <option value={ null }>[ Tyhjä ]</option>
+        <option value={null}>[ Tyhjä ]</option>
         {options}
       </select>
     );
@@ -83,6 +89,7 @@ export class AddRecord extends React.Component {
       return (
         <div>
           <h4>Uusi asiakirja</h4>
+          <span className='fa fa-asterisk required-asterisk required-legend col-xs-12'> Pakollinen tieto</span>
           <form onSubmit={this.addRecord} className='edit-record'>
             <div className='col-xs-12 col-lg-6 form-group'>
               <div className='col-lg-2'>

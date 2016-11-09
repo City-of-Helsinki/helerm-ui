@@ -94,6 +94,9 @@ export class Record extends React.Component {
             }
           </div>
         }
+        { this.state.mode === 'edit' &&
+          <span className='fa fa-asterisk required-asterisk required-legend col-xs-12'> Pakollinen tieto</span>
+        }
         { recordAttributes }
         { attributes }
         { this.state.mode === 'edit' &&

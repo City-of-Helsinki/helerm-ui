@@ -5,6 +5,10 @@ import ViewTOS from './ViewTOS';
 import './Homeview.scss';
 
 export class HomeView extends React.Component {
+  componentWillMount () {
+    this.props.fetchValidationRules();
+    this.props.fetchRecordTypes();
+  }
   render () {
     const {
       fetchNavigation,
@@ -18,9 +22,7 @@ export class HomeView extends React.Component {
       setPhasesVisibility,
       documentState,
       setDocumentState,
-      fetchRecordTypes,
       recordTypes,
-      fetchAttributes,
       attributes,
       addAction,
       addRecord
@@ -46,9 +48,7 @@ export class HomeView extends React.Component {
           setPhasesVisibility={setPhasesVisibility}
           documentState={documentState}
           setDocumentState={setDocumentState}
-          fetchRecordTypes={fetchRecordTypes}
           recordTypes={recordTypes}
-          fetchAttributes={fetchAttributes}
           attributes={attributes}
           addAction={addAction}
           addRecord={addRecord}
@@ -71,9 +71,9 @@ HomeView.propTypes = {
   setDocumentState: React.PropTypes.func.isRequired,
   fetchRecordTypes: React.PropTypes.func.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
-  fetchAttributes: React.PropTypes.func.isRequired,
   attributes: React.PropTypes.object.isRequired,
   addAction: React.PropTypes.func.isRequired,
-  addRecord: React.PropTypes.func.isRequired
+  addRecord: React.PropTypes.func.isRequired,
+  fetchValidationRules: React.PropTypes.func.isRequired
 };
 export default HomeView;

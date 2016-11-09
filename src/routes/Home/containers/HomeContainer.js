@@ -8,6 +8,7 @@ import {
   setDocumentState,
   fetchRecordTypes,
   fetchAttributes,
+  fetchValidationRules,
   addAction,
   addRecord
 } from '../modules/home';
@@ -22,6 +23,7 @@ const mapDispatchToProps = {
   setDocumentState,
   fetchRecordTypes,
   fetchAttributes,
+  fetchValidationRules,
   addAction,
   addRecord
 };
