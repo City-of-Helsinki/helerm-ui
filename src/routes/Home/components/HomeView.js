@@ -14,7 +14,6 @@ export class HomeView extends React.Component {
       selectedTOS,
       selectedTOSPath,
       setPhaseVisibility,
-      setRecordVisibility,
       isFetching,
       setPhasesVisibility,
       documentState,
@@ -43,7 +42,6 @@ export class HomeView extends React.Component {
         <ViewTOS
           selectedTOS={selectedTOS}
           setPhaseVisibility={setPhaseVisibility}
-          setRecordVisibility={setRecordVisibility}
           isFetching={isFetching}
           setPhasesVisibility={setPhasesVisibility}
           documentState={documentState}
@@ -69,7 +67,6 @@ HomeView.propTypes = {
   setPhaseVisibility: React.PropTypes.func.isRequired,
   isFetching: React.PropTypes.bool.isRequired,
   setPhasesVisibility: React.PropTypes.func.isRequired,
-  setRecordVisibility: React.PropTypes.func.isRequired,
   documentState: React.PropTypes.string.isRequired,
   setDocumentState: React.PropTypes.func.isRequired,
   fetchRecordTypes: React.PropTypes.func.isRequired,

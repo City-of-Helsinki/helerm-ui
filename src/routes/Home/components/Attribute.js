@@ -39,12 +39,12 @@ export class Attribute extends React.Component {
     }
   }
   render () {
-    const { attribute, attributeIndex, showAttributes } = this.props;
+    const { attribute, attributeIndex, showAttributes, mode } = this.props;
     let attributeValue;
-    if (this.props.mode === 'view') {
+    if (mode === 'view') {
       attributeValue = <div className=''>{this.state.attribute}</div>;
     }
-    if (this.props.mode === 'edit') {
+    if (mode === 'edit') {
       attributeValue = this.generateInput(this.props.attributes[attributeIndex], attribute);
     }
     return (

@@ -85,6 +85,7 @@ export function setNavigationVisibility(value) {
     value
   }
 }
+
 export function requestTOS() {
   return {
     type: REQUEST_TOS
@@ -183,13 +184,6 @@ export function setPhaseVisibility(phase, current) {
     newOpen: !current
   };
 }
-export function setRecordVisibility(record, value) {
-  return {
-    type: SET_RECORD_VISIBILITY,
-    record,
-    value: !value
-  }
-}
 
 export function setPhasesVisibility(phases, value) {
   const allPhasesOpen = [];
@@ -240,16 +234,18 @@ export function addRecord(phaseIndex, name) {
 }
 
 export const actions = {
-  fetchNavigation,
   requestNavigation,
   receiveNavigation,
+  setNavigationVisibility,
   requestTOS,
   receiveTOS,
   fetchTOS,
+  fetchNavigation,
+  fetchRecordTypes,
+  fetchAttributes,
   setPhaseVisibility,
   setPhasesVisibility,
-  fetchRecordTypes,
-  setRecordVisibility,
+  setDocumentState,
   addAction,
   addRecord
 };

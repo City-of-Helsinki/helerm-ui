@@ -192,7 +192,6 @@ ViewTOS.propTypes = {
   selectedTOS: React.PropTypes.object.isRequired,
   setPhaseVisibility: React.PropTypes.func.isRequired,
   setPhasesVisibility: React.PropTypes.func.isRequired,
-  setRecordVisibility: React.PropTypes.func.isRequired,
   documentState: React.PropTypes.string.isRequired,
   setDocumentState: React.PropTypes.func.isRequired,
   fetchRecordTypes: React.PropTypes.func.isRequired,
