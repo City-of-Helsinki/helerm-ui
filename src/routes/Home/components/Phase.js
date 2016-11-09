@@ -115,7 +115,7 @@ export class Phase extends React.Component {
           <form onSubmit={this.addAction} className='row'>
             <div className='col-xs-12 col-md-8'>
               <input type='text' className='form-control'
-                value={this.state.newActionName} onChange={this.onNewChange} />
+                value={this.state.newActionName} onChange={this.onNewChange} placeholder='Nimi'/>
             </div>
             <div className='col-xs-12 col-md-4'>
               <button className='btn btn-primary pull-left' type='submit'>Lisää</button>

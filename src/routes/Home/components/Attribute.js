@@ -22,6 +22,7 @@ export class Attribute extends React.Component {
       });
       return (
         <select className='form-control' value={this.state.attribute} onChange={this.onChange}>
+          <option value={ null }>[ Tyhjä ]</option>
           { options }
         </select>
       );

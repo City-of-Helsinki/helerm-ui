@@ -33,6 +33,7 @@ export class RecordAttribute extends React.Component {
     return (
       <select className='col-xs-6 form-control edit-record__select'
         value={this.state.attribute} onChange={this.onChange}>
+        <option value={ null }>[ Tyhjä ]</option>
         {options}
       </select>
     );

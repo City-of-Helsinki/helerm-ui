@@ -24,6 +24,7 @@ export class TOSMetadata extends React.Component {
       });
       return (
         <select className='col-xs-6 form-control metadata-input' value={this.state.name} onChange={this.onChange}>
+          <option value={ null }>[ Tyhjä ]</option>
           { options }
         </select>
       );

@@ -28,6 +28,7 @@ export class AddRecord extends React.Component {
               </div>
               <label className='col-lg-10 edit-record__label'>{attributes[key].name}</label>
               <select className='form-control edit-record__select'>
+                <option value={ null }>[ Tyhjä ]</option>
                 { options }
               </select>
             </div>
@@ -61,6 +62,7 @@ export class AddRecord extends React.Component {
     }
     return (
       <select className='form-control col-xs-6'>
+        <option value={ null }>[ Tyhjä ]</option>
         {options}
       </select>
     );
