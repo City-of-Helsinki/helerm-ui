@@ -94,6 +94,7 @@ export function requestTOS() {
 
 export function receiveTOS(tos, json) {
   json.phases.map(phase => {
+    phase.is_open = false;
     phase.actions.map(action => {
       action.records.map(record => {
         record.is_open = false;

@@ -220,3 +220,13 @@
   content: '';
   top: 0;
 }
+
+.nav-path-list {
+  cursor: pointer;
+}
+
+.nav-path-list:hover {
+  div {
+    color: $link-hover-color;
+  }
+}

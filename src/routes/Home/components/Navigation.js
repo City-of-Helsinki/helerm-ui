@@ -49,7 +49,7 @@ export class Navigation extends React.Component {
             />
           </button>
           {!this.props.navigation.is_open &&
-            <div>{navigationTitle}</div>
+            <div className='nav-path-list' onClick={this.toggleNavigationVisibility}>{navigationTitle}</div>
           }
           {this.props.navigation.is_open &&
             <InfinityMenu
