@@ -12,7 +12,8 @@ export class ViewTOS extends React.Component {
     this.saveMetadata = this.saveMetadata.bind(this);
     this.cancelMetadata = this.cancelMetadata.bind(this);
     this.state = {
-      metadataMode: 'view'
+      metadataMode: 'view',
+      showMetadata: false
     };
   }
   formatDateTime (dateTime) {
@@ -24,10 +25,13 @@ export class ViewTOS extends React.Component {
     this.setState({ medadataMode: 'view' });
   }
   editMetadata () {
-    this.setState({ metadataMode: 'edit' });
+    this.setState({ showMetadata: true, metadataMode: 'edit' });
   }
   saveMetadata () {
     this.setState({ metadataMode: 'view' });
+  }
+  toggleMetadataVisibility (current) {
+    this.setState({ showMetadata: !current });
   }
   generateMetaData (attributeTypes, attributes) {
     const modifiedDateTime = this.formatDateTime(this.props.selectedTOS.modified_at);
@@ -66,7 +70,37 @@ export class ViewTOS extends React.Component {
         );
       }
     }
-    return attributeElements;
+    const metadataElement = (
+      <div>
+        <div className='metadata-data-row__primary'>
+          {attributeElements.slice(0, 2)}
+        </div>
+        <div className='metadata-buttons'>
+          { this.state.metadataMode !== 'edit' &&
+            this.props.documentState === 'edit' &&
+            <button
+              className='btn btn-default btn-sm title-edit-button'
+              onClick={this.editMetadata} title='Muokkaa'>
+              <span className='fa fa-edit' />
+            </button>
+          }
+          <button
+            type='button'
+            className='btn btn-default btn-sm'
+            title={this.state.showMetadata ? 'Pienennä' : 'Laajenna'}
+            onClick={() => this.toggleMetadataVisibility(this.state.showMetadata)}>
+            <span
+              className={'fa ' + (this.state.showMetadata ? 'fa-minus' : 'fa-plus')}
+              aria-hidden='true'
+            />
+          </button>
+        </div>
+        <div className={'metadata-data-row__secondary ' + (this.state.showMetadata ? '' : 'hidden')}>
+          {attributeElements.slice(2)}
+        </div>
+      </div>
+    );
+    return metadataElement;
   }
   generatePhases (phases) {
     const phaseElements = [];
@@ -130,20 +164,10 @@ export class ViewTOS extends React.Component {
               <div className='row'>
                 <div className='general-info space-between'>
                   <div className='version-details col-xs-12'>
-                    <h5>Metadata
-                      { this.state.metadataMode !== 'edit' &&
-                        this.props.documentState === 'edit' &&
-                        <button
-                          className='btn btn-default btn-sm title-edit-button'
-                          onClick={this.editMetadata} title='Muokkaa'>
-                          <span className='fa fa-edit' />
-                        </button>
-                      }
-                      { this.state.metadataMode === 'edit' &&
-                        <span className='fa fa-asterisk required-asterisk required-legend col-xs-12'> Pakollinen tieto
-                        </span>
-                      }
-                    </h5>
+                    { this.state.metadataMode === 'edit' &&
+                      <span className='fa fa-asterisk required-asterisk required-legend col-xs-12'> Pakollinen tieto
+                      </span>
+                    }
                     { TOSMetaData }
                     { this.state.metadataMode === 'edit' &&
                       <button
