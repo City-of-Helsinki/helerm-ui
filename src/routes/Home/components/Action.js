@@ -2,6 +2,7 @@ import React from 'react';
 import './Action.scss';
 import Record from './Record';
 import AddRecord from './AddRecord';
+import DeletePopup from './DeletePopup';
 
 export class Action extends React.Component {
   constructor (props) {
@@ -9,7 +10,9 @@ export class Action extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.state = {
       mode: 'view',
-      name: this.props.action.name
+      name: this.props.action.name,
+      deleting: false,
+      deleted: false
     };
   }
   editActionTitle () {
@@ -43,6 +46,12 @@ export class Action extends React.Component {
   cancelRecordCreation () {
     this.setState({ mode: 'view' });
   }
+  cancelDeletion () {
+    this.setState({ deleting: false });
+  }
+  delete () {
+    this.setState({ deleted: true, deleting: false });
+  }
   render () {
     const { action } = this.props;
     const records = this.generateRecords(action.records);
@@ -53,9 +62,17 @@ export class Action extends React.Component {
           {this.state.name}
           { this.props.documentState === 'edit' &&
             <button
-              className='btn btn-default btn-sm title-edit-button'
+              className='btn btn-info btn-xs title-edit-button'
               onClick={() => this.editActionTitle()} title='Muokkaa'>
               <span className='fa fa-edit' />
+            </button>
+          }
+          { this.props.documentState === 'edit' &&
+            <button
+              className='btn btn-delete btn-xs pull-right'
+              onClick={() => this.setState({ deleting: true })}
+              title='Poista'>
+              <span className='fa fa-trash-o' />
             </button>
           }
         </div>
@@ -69,26 +86,38 @@ export class Action extends React.Component {
         </div>;
     }
     return (
-      <div className='action box'>
-        { actionTitle }
-        { records }
-        { this.props.documentState === 'edit' && this.state.mode !== 'add' &&
-        <button className='btn btn-primary btn-sm btn-new-record' onClick={() => this.createNewRecord()}>
-          Uusi asiakirja
-        </button>
+      <div>
+        { !this.state.deleted &&
+        <div className='action box'>
+          { actionTitle }
+          { records }
+          { this.props.documentState === 'edit' && this.state.mode !== 'add' &&
+          <button className='btn btn-primary btn-sm btn-new-record' onClick={() => this.createNewRecord()}>
+            Uusi asiakirja
+          </button>
+            }
+          { this.state.mode === 'add' &&
+          <div className='action add-box row'>
+            <AddRecord
+              attributes={this.props.attributes}
+              recordTypes={this.props.recordTypes}
+              mode={this.state.mode}
+              phaseIndex={this.props.phaseIndex}
+              actionIndex={this.props.actionIndex}
+              addRecord={this.props.addRecord}
+            />
+          </div>
           }
-        { this.state.mode === 'add' &&
-        <div className='action add-box row'>
-          <AddRecord
-            attributes={this.props.attributes}
-            recordTypes={this.props.recordTypes}
-            mode={this.state.mode}
-            phaseIndex={this.props.phaseIndex}
-            actionIndex={this.props.actionIndex}
-            addRecord={this.props.addRecord}
-          />
+          { this.state.deleting &&
+            <DeletePopup
+              type='action'
+              target={this.state.name}
+              action={() => this.delete()}
+              cancel={() => this.cancelDeletion()}
+            />
+          }
         </div>
-        }
+      }
       </div>
     );
   }

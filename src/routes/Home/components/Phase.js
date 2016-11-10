@@ -1,6 +1,7 @@
 import React from 'react';
 import './Phase.scss';
 import Action from './Action.js';
+import DeletePopup from './DeletePopup';
 import { StickyContainer, Sticky } from 'react-sticky';
 
 export class Phase extends React.Component {
@@ -14,7 +15,9 @@ export class Phase extends React.Component {
     this.state = {
       name: this.props.phase.name,
       newActionName: '',
-      mode: 'view'
+      mode: 'view',
+      deleting: false,
+      deleted: false
     };
   }
   editPhaseTitle () {
@@ -56,6 +59,12 @@ export class Phase extends React.Component {
   cancelRecordCreation () {
     this.setState({ newActionName: '', mode: 'view' });
   }
+  cancelDeletion () {
+    this.setState({ deleting: false });
+  }
+  delete () {
+    this.setState({ deleted: true, deleting: false });
+  }
   render () {
     const { phase, phaseIndex } = this.props;
     const actions = this.generateActions(phase.actions);
@@ -66,7 +75,7 @@ export class Phase extends React.Component {
           <i className='fa fa-info-circle' aria-hidden='true' /> {this.state.name}
           { this.props.documentState === 'edit' &&
             <button
-              className='btn btn-default btn-sm title-edit-button'
+              className='btn btn-info btn-sm title-edit-button'
               onClick={() => this.editPhaseTitle()}>
               <span className='fa fa-edit' title='Muokkaa' />
             </button>
@@ -85,45 +94,71 @@ export class Phase extends React.Component {
         </div>;
     }
     return (
-      <StickyContainer className='col-xs-12 box'>
-        <Sticky className='phase-title'>
-          { phaseTitle }
-          { phase.actions.length !== 0 &&
-            <button
-              type='button'
-              className='btn btn-default btn-sm pull-right'
-              title={phase.is_open ? 'Pienennä' : 'Laajenna'}
-              onClick={() => this.props.setPhaseVisibility(phaseIndex, phase.is_open)}>
-              <span
-                className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
-                aria-hidden='true'
-              />
-            </button>
-          }
-        </Sticky>
-        { phase.is_open &&
-          <div className={(phase.is_open ? 'show-actions' : 'hide-actions')}>
-            { actions }
-          </div>
-        }
-        { this.props.documentState === 'edit' && this.state.mode !== 'add' &&
-          <button className='btn btn-primary btn-sm btn-new-record' onClick={() => this.createNewAction()}>
-            Uusi toimenpide
-          </button>
-        }
-        { this.state.mode === 'add' &&
-          <form onSubmit={this.addAction} className='row'>
-            <div className='col-xs-12 col-md-8'>
-              <input type='text' className='form-control'
-                value={this.state.newActionName} onChange={this.onNewChange} placeholder='Nimi' />
+      <div>
+        { !this.state.deleted &&
+          <StickyContainer className='col-xs-12 box'>
+            <Sticky className='phase-title'>
+              { phaseTitle }
+              { this.props.documentState === 'edit' &&
+                <button
+                  type='button'
+                  className='btn btn-delete btn-sm pull-right'
+                  title='Poista'
+                  onClick={() => this.setState({ deleting: true })} >
+                  <span
+                    className='fa fa-trash-o'
+                    aria-hidden='true'
+                  />
+                </button>
+              }
+              { phase.actions.length !== 0 &&
+                <button
+                  type='button'
+                  className='btn btn-info btn-sm pull-right'
+                  title={phase.is_open ? 'Pienennä' : 'Laajenna'}
+                  onClick={() => this.props.setPhaseVisibility(phaseIndex, phase.is_open)}>
+                  <span
+                    className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
+                    aria-hidden='true'
+                  />
+                </button>
+              }
+            </Sticky>
+            <div className={(phase.is_open ? '' : 'hidden')}>
+              { actions }
             </div>
-            <div className='col-xs-12 col-md-4'>
-              <button className='btn btn-primary pull-left' type='submit'>Lisää</button>
-              <button className='btn btn-default pull-left' onClick={() => this.cancelRecordCreation()}>Peruuta</button>
-            </div>
-          </form>
+            { this.props.documentState === 'edit' && this.state.mode !== 'add' &&
+              <button className='btn btn-primary btn-sm btn-new-record' onClick={() => this.createNewAction()}>
+                Uusi toimenpide
+              </button>
+            }
+            { this.state.mode === 'add' &&
+              <form onSubmit={this.addAction} className='row'>
+                <div className='col-xs-12 col-md-8'>
+                  <input type='text' className='form-control'
+                    value={this.state.newActionName} onChange={this.onNewChange} placeholder='Nimi' />
+                </div>
+                <div className='col-xs-12 col-md-4'>
+                  <button className='btn btn-primary pull-left' type='submit'>Lisää</button>
+                  <button
+                    className='btn btn-default pull-left'
+                    onClick={() => this.cancelRecordCreation()}>
+                    Peruuta
+                  </button>
+                </div>
+              </form>
+            }
+          </StickyContainer>
         }
-      </StickyContainer>
+        { this.state.deleting &&
+          <DeletePopup
+            type='phase'
+            target={this.state.name}
+            action={() => this.delete()}
+            cancel={() => this.cancelDeletion()}
+          />
+        }
+      </div>
     );
   }
 }

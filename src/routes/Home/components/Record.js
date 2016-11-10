@@ -2,6 +2,7 @@ import React from 'react';
 import './Record.scss';
 import Attribute from './Attribute';
 import RecordAttribute from './RecordAttribute';
+import DeletePopup from './DeletePopup';
 
 export class Record extends React.Component {
   constructor (props) {
@@ -9,7 +10,9 @@ export class Record extends React.Component {
     this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
     this.state = {
       showAttributes: false,
-      mode: 'view'
+      mode: 'view',
+      deleting: false,
+      deleted: false
     };
   }
   setMode (value) {
@@ -69,43 +72,71 @@ export class Record extends React.Component {
     };
     return attributeElements;
   }
-
+  cancelDeletion () {
+    this.setState({ deleting: false });
+  }
+  delete () {
+    this.setState({ deleted: true, deleting: false });
+  }
   render () {
     const { record } = this.props;
     const recordObjects = this.generateRecordObjects(record);
     const recordAttributes = this.generateRecordAttributes(recordObjects);
     const attributes = this.generateAttributes(record.attributes);
     return (
-      <div className='row record'>
-        { this.state.mode === 'view' &&
-          <div className='col-xs-12'>
-            <button
-              className='btn btn-default btn-xs record-button pull-right'
-              onClick={this.toggleAttributeVisibility}>
-              <span
-                className={'fa ' + (this.state.showAttributes ? 'fa-minus' : 'fa-plus')}
-                aria-hidden='true'
-              />
-            </button>
-            { this.props.documentState === 'edit' &&
-              <button className='btn btn-default btn-xs pull-right' onClick={() => this.editRecord()} title='Muokkaa'>
-                <span className='fa fa-edit' />
+      <div>
+        { !this.state.deleted &&
+          <div className='row record'>
+            { this.state.mode === 'view' &&
+            <div className='col-xs-12'>
+              { this.props.documentState === 'edit' &&
+                <button
+                  className='btn btn-delete btn-xs record-button pull-right'
+                  onClick={() => this.setState({ deleting: true })}
+                  title='Poista'>
+                  <span className='fa fa-trash-o' />
+                </button>
+              }
+              <button
+                className='btn btn-info btn-xs record-button pull-right'
+                onClick={this.toggleAttributeVisibility}>
+                <span
+                  className={'fa ' + (this.state.showAttributes ? 'fa-minus' : 'fa-plus')}
+                  aria-hidden='true'
+                />
               </button>
-            }
+              { this.props.documentState === 'edit' &&
+                <button
+                  className='btn btn-info btn-xs record-button pull-right'
+                  onClick={() => this.editRecord()}
+                  title='Muokkaa'>
+                  <span className='fa fa-edit' />
+                </button>
+              }
+            </div>
+          }
+            { this.state.mode === 'edit' &&
+            <span className='fa fa-asterisk required-asterisk required-legend col-xs-12'> Pakollinen tieto</span>
+          }
+            { recordAttributes }
+            { attributes }
+            { this.state.mode === 'edit' &&
+            <div className='col-xs-12'>
+              <button className='btn btn-primary pull-right edit-record__submit'
+                onClick={() => this.saveRecord()}>Valmis</button>
+              <button className='btn btn-default pull-right edit-record__cancel'
+                onClick={() => this.cancelRecordEdit()}>Peruuta</button>
+            </div>
+          }
           </div>
         }
-        { this.state.mode === 'edit' &&
-          <span className='fa fa-asterisk required-asterisk required-legend col-xs-12'> Pakollinen tieto</span>
-        }
-        { recordAttributes }
-        { attributes }
-        { this.state.mode === 'edit' &&
-          <div className='col-xs-12'>
-            <button className='btn btn-primary pull-right edit-record__submit'
-              onClick={() => this.saveRecord()}>Valmis</button>
-            <button className='btn btn-default pull-right edit-record__cancel'
-              onClick={() => this.cancelRecordEdit()}>Peruuta</button>
-          </div>
+        { this.state.deleting &&
+          <DeletePopup
+            type='record'
+            target={this.props.record.name}
+            action={() => this.delete()}
+            cancel={() => this.cancelDeletion()}
+          />
         }
       </div>
     );
