@@ -51,6 +51,7 @@ export class ViewTOS extends React.Component {
           type={metadata.type}
           name={metadata.name}
           mode={this.state.metadataMode}
+          documentState={this.props.documentState}
           editable={false}
         />
       );
@@ -65,6 +66,7 @@ export class ViewTOS extends React.Component {
             name={attributes[key]}
             mode={this.state.metadataMode}
             attributes={this.props.attributes}
+            documentState={this.props.documentState}
             editable
           />
         );
@@ -76,17 +78,9 @@ export class ViewTOS extends React.Component {
           {attributeElements.slice(0, 2)}
         </div>
         <div className='metadata-buttons'>
-          { this.state.metadataMode !== 'edit' &&
-            this.props.documentState === 'edit' &&
-            <button
-              className='btn btn-default btn-sm title-edit-button'
-              onClick={this.editMetadata} title='Muokkaa'>
-              <span className='fa fa-edit' />
-            </button>
-          }
           <button
             type='button'
-            className='btn btn-default btn-sm'
+            className='btn btn-info btn-sm'
             title={this.state.showMetadata ? 'Pienennä' : 'Laajenna'}
             onClick={() => this.toggleMetadataVisibility(this.state.showMetadata)}>
             <span
@@ -135,6 +129,9 @@ export class ViewTOS extends React.Component {
               <div className='row'>
                 <h4 className='col-md-6 col-xs-12'>{selectedTOS.function_id} {selectedTOS.name}</h4>
                 <div className='document-buttons col-xs-12 col-md-6'>
+                  { this.props.documentState === 'edit' &&
+                    <span className='fa fa-asterisk required-asterisk required-legend'> = Pakollinen tieto</span>
+                  }
                   { this.props.documentState !== 'edit' &&
                     <button
                       className='btn btn-primary btn-sm'
@@ -142,21 +139,21 @@ export class ViewTOS extends React.Component {
                       Muokkaustila
                     </button>
                   }
+                  <button className='btn btn-default btn-sm pull-right'>Lähetä tarkastettavaksi</button>
                   { this.props.documentState === 'edit' &&
                     <button
-                      className='btn btn-danger btn-sm'
-                      onClick={() => this.props.setDocumentState('view')}>
-                      Peruuta muokkaus
-                    </button>
-                  }
-                  { this.props.documentState === 'edit' &&
-                    <button
-                      className='btn btn-primary btn-sm'
+                      className='btn btn-primary btn-sm pull-right'
                       onClick={() => this.props.setDocumentState('view')}>
                       Tallenna luonnos
                     </button>
                   }
-                  <button className='btn btn-default btn-sm'>Lähetä tarkastettavaksi</button>
+                  { this.props.documentState === 'edit' &&
+                    <button
+                      className='btn btn-danger btn-sm pull-right'
+                      onClick={() => this.props.setDocumentState('view')}>
+                      Peruuta muokkaus
+                    </button>
+                  }
                 </div>
               </div>
             </Sticky>
@@ -164,10 +161,6 @@ export class ViewTOS extends React.Component {
               <div className='row'>
                 <div className='general-info space-between'>
                   <div className='version-details col-xs-12'>
-                    { this.state.metadataMode === 'edit' &&
-                      <span className='fa fa-asterisk required-asterisk required-legend col-xs-12'> Pakollinen tieto
-                      </span>
-                    }
                     { TOSMetaData }
                     { this.state.metadataMode === 'edit' &&
                       <button

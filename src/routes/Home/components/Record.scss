@@ -1,17 +1,17 @@
 .record {
-  border: 1px solid #f2f2f2;
-  margin: 0;
-  padding: 10px 0;
-}
-.record:nth-child(odd) {
-  background: #f2f2f2;
-}
-.record-entry {
+  position: relative;
   margin-bottom: 23px;
+  padding: 0px;
 }
 .record-button {
   margin: 0px 1px;
 }
 .table-key {
   font-weight: bold;
+}
+.record-button-group {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  z-index: 1;
 }

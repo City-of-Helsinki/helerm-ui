@@ -23,7 +23,12 @@ export class TOSMetadata extends React.Component {
         return <option key={index} value={option.value}>{option.value}</option>;
       });
       return (
-        <select className='col-xs-6 form-control metadata-input' value={this.state.name} onChange={this.onChange}>
+        <select
+          className='col-xs-6 form-control metadata-input'
+          value={this.state.name}
+          onChange={this.onChange}
+          onBlur={() => this.setState({ mode: 'view' })}
+          autoFocus>
           <option value={null}>[ Tyhjä ]</option>
           { options }
         </select>
@@ -40,28 +45,37 @@ export class TOSMetadata extends React.Component {
       return null;
     }
   }
+  changeState (newState) {
+    if (this.props.documentState === 'edit') {
+      this.setState({ mode: newState });
+    }
+  }
   render () {
     const { name, type, typeIndex, editable } = this.props;
     if (editable === false) {
       return (
-        <div className='metadata-row col-md-6 col-xs-12'><strong>{type}:</strong> <div>{this.state.name}</div></div>
+        <a className='list-group-item metadata-row col-md-6 col-xs-12'>
+          <strong>{type}:</strong> <div>{this.state.name}</div>
+        </a>
       );
     }
     if (this.state.mode === 'view') {
       return (
-        <div className='metadata-row col-md-6 col-xs-12'><strong>{type}:</strong> <div>{this.state.name}</div></div>
+        <a className='list-group-item metadata-row col-md-6 col-xs-12' onClick={() => this.changeState('edit')}>
+          <strong>{type}:</strong> <div>{this.state.name}</div>
+        </a>
       );
     } else if (this.state.mode === 'edit') {
       const metadataInput = this.generateInput(this.props.attributes[typeIndex], name);
       return (
-        <div className='metadata-input-wrapper metadata-row col-md-6 col-xs-12'>
+        <a className='list-group-item metadata-input-wrapper metadata-row col-md-6 col-xs-12'>
           <label className='metadata-input-label'>{type}:
             { this.props.attributes[typeIndex].required &&
               <span className='fa fa-asterisk required-asterisk' />
             }
           </label>
           { metadataInput }
-        </div>
+        </a>
       );
     } else {
       return null;
@@ -72,6 +86,7 @@ export class TOSMetadata extends React.Component {
 TOSMetadata.propTypes = {
   typeIndex: React.PropTypes.string,
   attributes: React.PropTypes.object,
+  documentState: React.PropTypes.string,
   type: React.PropTypes.string.isRequired,
   name: React.PropTypes.string.isRequired,
   mode: React.PropTypes.string.isRequired,

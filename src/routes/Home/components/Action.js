@@ -8,6 +8,7 @@ export class Action extends React.Component {
   constructor (props) {
     super(props);
     this.onChange = this.onChange.bind(this);
+    this.saveActionTitle = this.saveActionTitle.bind(this);
     this.state = {
       mode: 'view',
       name: this.props.action.name,
@@ -16,9 +17,12 @@ export class Action extends React.Component {
     };
   }
   editActionTitle () {
-    this.setState({ mode: 'edit' });
+    if (this.props.documentState === 'edit') {
+      this.setState({ mode: 'edit' });
+    }
   }
-  saveActionTitle () {
+  saveActionTitle (event) {
+    event.preventDefault();
     this.setState({ mode: 'view' });
   }
   onChange (event) {
@@ -58,15 +62,8 @@ export class Action extends React.Component {
     let actionTitle;
     if (this.state.mode === 'view' || this.state.mode === 'add') {
       actionTitle =
-        <div className='action-title'>
+        <div className='action-title' onClick={() => this.editActionTitle()}>
           {this.state.name}
-          { this.props.documentState === 'edit' &&
-            <button
-              className='btn btn-info btn-xs title-edit-button'
-              onClick={() => this.editActionTitle()} title='Muokkaa'>
-              <span className='fa fa-edit' />
-            </button>
-          }
           { this.props.documentState === 'edit' &&
             <button
               className='btn btn-delete btn-xs pull-right'
@@ -80,15 +77,23 @@ export class Action extends React.Component {
     }
     if (this.state.mode === 'edit') {
       actionTitle =
-        <div className='action-title-input'>
-          <input className='input-title form-control col-xs-10' value={this.state.name} onChange={this.onChange} />
-          <button className='btn btn-primary col-xs-2 btn-sm' onClick={() => this.saveActionTitle()}>Valmis</button>
-        </div>;
+        <form className='action-title-input' onSubmit={this.saveActionTitle}>
+          <input
+            className='input-title form-control col-xs-11'
+            value={this.state.name}
+            onChange={this.onChange}
+            onBlur={this.saveActionTitle}
+            autoFocus
+          />
+          <button type='submit' className='btn btn-primary col-xs-1 btn-sm'>
+            <span className='fa fa-check' />
+          </button>
+        </form>;
     }
     return (
       <div>
         { !this.state.deleted &&
-        <div className='action box'>
+        <div className='action box row'>
           { actionTitle }
           { records }
           { this.props.documentState === 'edit' && this.state.mode !== 'add' &&

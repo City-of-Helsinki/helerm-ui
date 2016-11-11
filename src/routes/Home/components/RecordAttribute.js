@@ -5,8 +5,10 @@ export class RecordAttribute extends React.Component {
   constructor (props) {
     super(props);
     this.onChange = this.onChange.bind(this);
+    this.submit = this.submit.bind(this);
     this.state = {
-      attribute: ''
+      attribute: '',
+      mode: this.props.mode
     };
   }
   componentWillMount () {
@@ -15,10 +17,28 @@ export class RecordAttribute extends React.Component {
   onChange (event) {
     this.setState({ attribute: event.target.value });
   }
+  changeState (newState) {
+    if (this.props.documentState === 'edit') {
+      this.setState({ mode: newState });
+    }
+  }
+  submit (event) {
+    event.preventDefault();
+    this.setState({ mode: 'view' });
+  }
   generateInput (name, type) {
     if (type === '') {
-      return <input className='col-xs-6 form-control edit-record__input'
-        value={this.state.attribute} onChange={this.onChange} />;
+      return (
+        <form onSubmit={this.submit}>
+          <input
+            className='col-xs-6 form-control edit-record__input'
+            value={this.state.attribute}
+            onChange={this.onChange}
+            onBlur={this.submit}
+            autoFocus
+          />
+        </form>
+      );
     } else {
       return this.generateDropdown(this.props.recordTypes, type);
     }
@@ -31,34 +51,40 @@ export class RecordAttribute extends React.Component {
       }
     }
     return (
-      <select className='col-xs-6 form-control edit-record__select'
-        value={this.state.attribute} onChange={this.onChange}>
-        <option value={null}>[ Tyhjä ]</option>
-        {options}
-      </select>
+      <form onSubmit={() => this.setState({ mode: 'view' })}>
+        <select
+          className='col-xs-6 form-control edit-record__select'
+          value={this.state.attribute}
+          onChange={this.onChange}
+          onBlur={() => this.setState({ mode: 'view' })}
+          autoFocus>
+          <option value={null}>[ Tyhjä ]</option>
+          {options}
+        </select>
+      </form>
     );
   }
   render () {
     const { recordName, recordKey, recordType } = this.props;
-    if (this.props.mode === 'view') {
+    if (this.state.mode === 'view') {
       return (
-        <div className='record-entry col-xs-12 col-md-6 col-lg-4'>
+        <a onClick={() => this.changeState('edit')} className='list-group-item col-xs-12 col-md-6 col-lg-4'>
           <div className='table-key'>
             {recordKey}
           </div>
           <div className=''>
             {this.state.attribute}
           </div>
-        </div>
+        </a>
       );
     }
-    if (this.props.mode === 'edit') {
+    if (this.state.mode === 'edit') {
       const inputField = this.generateInput(recordName, recordType);
       return (
-        <div className='col-xs-12 col-md-6 col-lg-4 record-entry'>
+        <a className='list-group-item col-xs-12 col-md-6 col-lg-4 record-entry'>
           <div className='table-key'>{recordKey}</div>
           { inputField }
-        </div>
+        </a>
       );
     }
   }

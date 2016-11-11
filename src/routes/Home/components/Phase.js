@@ -11,6 +11,7 @@ export class Phase extends React.Component {
     this.onNewChange = this.onNewChange.bind(this);
     this.createNewAction = this.createNewAction.bind(this);
     this.addAction = this.addAction.bind(this);
+    this.savePhaseTitle = this.savePhaseTitle.bind(this);
     this.cancelRecordCreation = this.cancelRecordCreation.bind(this);
     this.state = {
       name: this.props.phase.name,
@@ -21,9 +22,12 @@ export class Phase extends React.Component {
     };
   }
   editPhaseTitle () {
-    this.setState({ mode: 'edit' });
+    if (this.props.documentState === 'edit') {
+      this.setState({ mode: 'edit' });
+    }
   }
-  savePhaseTitle () {
+  savePhaseTitle (event) {
+    event.preventDefault();
     this.setState({ mode: 'view' });
   }
   onChange (event) {
@@ -71,25 +75,24 @@ export class Phase extends React.Component {
     let phaseTitle;
     if (this.state.mode !== 'edit') {
       phaseTitle =
-        <span className='phase-title'>
+        <span className='phase-title' onClick={() => this.editPhaseTitle()}>
           <i className='fa fa-info-circle' aria-hidden='true' /> {this.state.name}
-          { this.props.documentState === 'edit' &&
-            <button
-              className='btn btn-info btn-sm title-edit-button'
-              onClick={() => this.editPhaseTitle()}>
-              <span className='fa fa-edit' title='Muokkaa' />
-            </button>
-          }
         </span>;
     }
     if (this.state.mode === 'edit') {
       phaseTitle =
         <div className='phase-title-input row'>
-          <div className='col-md-10 col-xs-12'>
-            <input className='input-title form-control' value={this.state.name} onChange={this.onChange} />
-          </div>
+          <form className='col-md-10 col-xs-12' onSubmit={this.savePhaseTitle}>
+            <input
+              className='input-title form-control'
+              value={this.state.name}
+              onChange={this.onChange}
+              onBlur={this.savePhaseTitle}
+              autoFocus
+            />
+          </form>
           <div className='col-md-2 col-xs-12'>
-            <button className='btn btn-primary btn-sm' onClick={() => this.savePhaseTitle()}>Valmis</button>
+            <button className='btn btn-primary btn-sm' type='submit'>Valmis</button>
           </div>
         </div>;
     }

@@ -84,11 +84,11 @@ export class Record extends React.Component {
     const recordAttributes = this.generateRecordAttributes(recordObjects);
     const attributes = this.generateAttributes(record.attributes);
     return (
-      <div>
+      <div className='record col-xs-12'>
         { !this.state.deleted &&
-          <div className='row record'>
+          <div className='list-group'>
             { this.state.mode === 'view' &&
-            <div className='col-xs-12'>
+            <div className='record-button-group'>
               { this.props.documentState === 'edit' &&
                 <button
                   className='btn btn-delete btn-xs record-button pull-right'
@@ -98,26 +98,15 @@ export class Record extends React.Component {
                 </button>
               }
               <button
-                className='btn btn-info btn-xs record-button pull-right'
+                className='btn btn-info btn-xs record-button'
                 onClick={this.toggleAttributeVisibility}>
                 <span
                   className={'fa ' + (this.state.showAttributes ? 'fa-minus' : 'fa-plus')}
                   aria-hidden='true'
                 />
               </button>
-              { this.props.documentState === 'edit' &&
-                <button
-                  className='btn btn-info btn-xs record-button pull-right'
-                  onClick={() => this.editRecord()}
-                  title='Muokkaa'>
-                  <span className='fa fa-edit' />
-                </button>
-              }
             </div>
-          }
-            { this.state.mode === 'edit' &&
-            <span className='fa fa-asterisk required-asterisk required-legend col-xs-12'> Pakollinen tieto</span>
-          }
+            }
             { recordAttributes }
             { attributes }
             { this.state.mode === 'edit' &&
