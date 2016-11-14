@@ -2,6 +2,8 @@ import fetch from 'isomorphic-fetch';
 import update from 'immutability-helper';
 import LTT from 'list-to-tree';
 import { orderBy } from 'lodash';
+import { normalize, Schema, arrayOf } from 'normalizr';
+
 // ------------------------------------
 // Constants
 // ------------------------------------
@@ -101,6 +103,22 @@ export function receiveTOS(tos, json) {
       });
     });
   });
+
+  const tosSchema = new Schema('tos');
+  const phase = new Schema('phases');
+  const action = new Schema('actions');
+  const record = new Schema('records');
+
+  tosSchema.define({
+    phases: arrayOf(phase)
+  });
+  phase.define({
+    actions: arrayOf(action),
+  });
+  action.define({
+    records: arrayOf(record),
+  });
+  json = normalize(json, tosSchema);
   return {
     type: RECEIVE_TOS,
     path: tos.path,
@@ -208,14 +226,14 @@ export function setPhaseVisibility(phase, current) {
 }
 
 export function setPhasesVisibility(phases, value) {
-  const allPhasesOpen = [];
+  const allPhasesOpen = {};
   for (const key in phases) {
     if (phases.hasOwnProperty(key)) {
-      allPhasesOpen.push(update(phases[key], {
+      allPhasesOpen[key] = update(phases[key], {
         is_open: {
           $set: value
         }
-      }));
+      });
     }
   };
   return {
@@ -232,14 +250,16 @@ export function setDocumentState(state) {
 }
 
 export function addAction(phaseIndex, name) {
+  const actionId = Math.random().toString(36).replace(/[^a-z]+/g, '');
   const newAction = {
+    id: actionId,
     name: name,
+    phase: phaseIndex,
     records: []
   }
   return {
     type: ADD_ACTION,
-    phaseIndex,
-    newAction: [newAction]
+    newAction: newAction
   }
 }
 
@@ -308,8 +328,17 @@ const ACTION_HANDLERS = {
         is_open: {$set: false}
       },
       selectedTOS: {
-        data: {
-          $set: action.data
+        tos: {
+          $set: action.data.entities.tos[action.data.result]
+        },
+        actions: {
+          $set: action.data.entities.actions
+        },
+        phases: {
+          $set: action.data.entities.phases
+        },
+        records: {
+          $set: action.data.entities.records
         },
         path: {
           $set: action.path
@@ -326,12 +355,10 @@ const ACTION_HANDLERS = {
   [SET_PHASE_VISIBILITY]: (state, action) => {
     return update(state, {
       selectedTOS: {
-        data: {
-          phases: {
-            [action.phase]: {
-              is_open: {
-                $set: action.newOpen
-              }
+        phases: {
+          [action.phase]: {
+            is_open: {
+              $set: action.newOpen
             }
           }
         }
@@ -348,10 +375,8 @@ const ACTION_HANDLERS = {
   [SET_PHASES_VISIBILITY]: (state, action) => {
     return update(state, {
       selectedTOS: {
-        data: {
-          phases: {
-            $set: action.allPhasesOpen
-          }
+        phases: {
+          $set: action.allPhasesOpen
         }
       }
     });
@@ -374,17 +399,22 @@ const ACTION_HANDLERS = {
   },
   [RECEIVE_ATTRIBUTES]: (state, action) => {
     return update(state, {
-      attributes: {$set: action.attributeList}
+      attributeTypes: {$set: action.attributeList}
     });
   },
   [ADD_ACTION]: (state, action) => {
     return update(state, {
       selectedTOS: {
-        data: {
-          phases: {
-            [action.phaseIndex]: {
-              actions: {$push: action.newAction}
+        phases: {
+          [action.newAction.phase]: {
+            actions: {
+              $push: [action.newAction.actionId]
             }
+          }
+        },
+        actions: {
+          [action.newAction.actionId]: {
+            $set: action.newAction
           }
         }
       }
@@ -417,14 +447,18 @@ const initialState = {
     is_open: true
   },
   selectedTOS: {
-    data: {},
+    tos: {},
+    actions: {},
+    phases: {},
+    records: {},
+    attributes: {},
     path: [],
     documentState: 'view',
     lastUpdated: 0
   },
   isFetching: false,
   recordTypes: {},
-  attributes: {}
+  attributeTypes: {}
 };
 
 export default function homeReducer(state = initialState, action) {

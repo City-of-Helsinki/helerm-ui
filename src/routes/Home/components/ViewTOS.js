@@ -65,7 +65,7 @@ export class ViewTOS extends React.Component {
             type={attributeTypes[key].name}
             name={attributes[key]}
             mode={this.state.metadataMode}
-            attributes={this.props.attributes}
+            attributeTypes={this.props.attributeTypes}
             documentState={this.props.documentState}
             editable
           />
@@ -105,10 +105,12 @@ export class ViewTOS extends React.Component {
             key={key}
             phaseIndex={key}
             phase={phases[key]}
+            actions={this.props.actions}
+            records={this.props.records}
             setPhaseVisibility={this.props.setPhaseVisibility}
             recordTypes={this.props.recordTypes}
             documentState={this.props.documentState}
-            attributes={this.props.attributes}
+            attributeTypes={this.props.attributeTypes}
             addAction={this.props.addAction}
             addRecord={this.props.addRecord}
           />
@@ -118,10 +120,10 @@ export class ViewTOS extends React.Component {
     return phaseElements;
   }
   render () {
-    const { selectedTOS } = this.props;
+    const { selectedTOS, phases } = this.props;
     if (selectedTOS !== undefined && Object.keys(selectedTOS).length !== 0) {
-      const phases = this.generatePhases(selectedTOS.phases);
-      const TOSMetaData = this.generateMetaData(this.props.attributes, selectedTOS.attributes);
+      const phaseElements = this.generatePhases(phases);
+      const TOSMetaData = this.generateMetaData(this.props.attributeTypes, selectedTOS.attributes);
       return (
         <div className='col-xs-12'>
           <StickyContainer className='col-xs-12 single-tos-container'>
@@ -182,16 +184,16 @@ export class ViewTOS extends React.Component {
                   <div className='button-row'>
                     <button
                       className='btn btn-default btn-sm pull-right'
-                      onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, true)}>
+                      onClick={() => this.props.setPhasesVisibility(phases, true)}>
                       Avaa kaikki
                     </button>
                     <button
                       className='btn btn-default btn-sm pull-right'
-                      onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, false)}>
+                      onClick={() => this.props.setPhasesVisibility(phases, false)}>
                       Pienennä kaikki
                     </button>
                   </div>
-                  { phases }
+                  { phaseElements }
                 </div>
               </div>
             </div>
@@ -205,13 +207,16 @@ export class ViewTOS extends React.Component {
 }
 
 ViewTOS.propTypes = {
+  phases: React.PropTypes.object.isRequired,
+  actions: React.PropTypes.object.isRequired,
+  records: React.PropTypes.object.isRequired,
   selectedTOS: React.PropTypes.object.isRequired,
   setPhaseVisibility: React.PropTypes.func.isRequired,
   setPhasesVisibility: React.PropTypes.func.isRequired,
   documentState: React.PropTypes.string.isRequired,
   setDocumentState: React.PropTypes.func.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
-  attributes: React.PropTypes.object.isRequired,
+  attributeTypes: React.PropTypes.object.isRequired,
   addAction: React.PropTypes.func.isRequired,
   addRecord: React.PropTypes.func.isRequired
 };

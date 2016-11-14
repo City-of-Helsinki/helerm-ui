@@ -11,12 +11,12 @@ export class AddRecord extends React.Component {
       mode: this.props.mode
     };
   }
-  generateAttributeElements (attributes) {
+  generateAttributeElements (attributeTypes) {
     const attributeElements = [];
-    for (const key in attributes) {
-      if (attributes.hasOwnProperty(key)) {
-        if (attributes[key].values.length) {
-          const options = attributes[key].values.map((option, index) => {
+    for (const key in attributeTypes) {
+      if (attributeTypes.hasOwnProperty(key)) {
+        if (attributeTypes[key].values.length) {
+          const options = attributeTypes[key].values.map((option, index) => {
             return <option key={index} value={option.value}>{option.value}</option>;
           });
           attributeElements.push(
@@ -26,8 +26,8 @@ export class AddRecord extends React.Component {
                   <label><input type='checkbox' defaultChecked /> Käytössä</label>
                 </div>
               </div>
-              <label className='col-lg-10 edit-record__label'>{attributes[key].name}</label>
-              { attributes[key].required &&
+              <label className='col-lg-10 edit-record__label'>{attributeTypes[key].name}</label>
+              { attributeTypes[key].required &&
                 <span className='fa fa-asterisk required-asterisk' />
               }
               <select className='form-control edit-record__select'>
@@ -36,7 +36,7 @@ export class AddRecord extends React.Component {
               </select>
             </div>
           );
-        } else if (attributes[key].values.length === 0) {
+        } else if (attributeTypes[key].values.length === 0) {
           attributeElements.push(
             <div key={key} className='col-xs-12 col-lg-6 form-group'>
               <div className='col-lg-2'>
@@ -44,13 +44,13 @@ export class AddRecord extends React.Component {
                   <label><input type='checkbox' defaultChecked /> Käytössä</label>
                 </div>
               </div>
-              <label className='col-lg-10 edit-record__label'>{attributes[key].name}</label>
-              { attributes[key].required &&
+              <label className='col-lg-10 edit-record__label'>{attributeTypes[key].name}</label>
+              { attributeTypes[key].required &&
                 <span className='fa fa-asterisk required-asterisk' />
               }
               <input
                 className='form-control edit-record__input'
-                placeholder={attributes[key].name}
+                placeholder={attributeTypes[key].name}
               />
             </div>
           );
@@ -84,8 +84,8 @@ export class AddRecord extends React.Component {
     this.props.cancelRecordCreation();
   }
   render () {
-    const { attributes, recordTypes } = this.props;
-    const attributeElements = this.generateAttributeElements(attributes);
+    const { attributeTypes, recordTypes } = this.props;
+    const attributeElements = this.generateAttributeElements(attributeTypes);
     const typeDropdown = this.generateDropdown(recordTypes);
     if (this.state.mode === 'add') {
       return (
@@ -131,12 +131,12 @@ export class AddRecord extends React.Component {
 }
 
 AddRecord.propTypes = {
-  attributes: React.PropTypes.object.isRequired,
+  attributeTypes: React.PropTypes.object.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
   mode: React.PropTypes.string.isRequired,
   addRecord: React.PropTypes.func.isRequired,
   cancelRecordCreation: React.PropTypes.func.isRequired,
-  actionIndex: React.PropTypes.number.isRequired,
+  actionIndex: React.PropTypes.string.isRequired,
   phaseIndex: React.PropTypes.string.isRequired
 };
 

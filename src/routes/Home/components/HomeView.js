@@ -16,6 +16,9 @@ export class HomeView extends React.Component {
       navigation,
       fetchTOS,
       selectedTOS,
+      phases,
+      actions,
+      records,
       selectedTOSPath,
       setPhaseVisibility,
       isFetching,
@@ -23,7 +26,7 @@ export class HomeView extends React.Component {
       documentState,
       setDocumentState,
       recordTypes,
-      attributes,
+      attributeTypes,
       addAction,
       addRecord
     } = this.props;
@@ -43,13 +46,16 @@ export class HomeView extends React.Component {
         />
         <ViewTOS
           selectedTOS={selectedTOS}
+          phases={phases}
+          actions={actions}
+          records={records}
           setPhaseVisibility={setPhaseVisibility}
           isFetching={isFetching}
           setPhasesVisibility={setPhasesVisibility}
           documentState={documentState}
           setDocumentState={setDocumentState}
           recordTypes={recordTypes}
-          attributes={attributes}
+          attributeTypes={attributeTypes}
           addAction={addAction}
           addRecord={addRecord}
         />
@@ -58,6 +64,9 @@ export class HomeView extends React.Component {
   }
 };
 HomeView.propTypes = {
+  phases: React.PropTypes.object.isRequired,
+  actions: React.PropTypes.object.isRequired,
+  records: React.PropTypes.object.isRequired,
   fetchTOS: React.PropTypes.func.isRequired,
   fetchNavigation: React.PropTypes.func.isRequired,
   navigation: React.PropTypes.object.isRequired,
@@ -71,7 +80,7 @@ HomeView.propTypes = {
   setDocumentState: React.PropTypes.func.isRequired,
   fetchRecordTypes: React.PropTypes.func.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
-  attributes: React.PropTypes.object.isRequired,
+  attributeTypes: React.PropTypes.object.isRequired,
   addAction: React.PropTypes.func.isRequired,
   addRecord: React.PropTypes.func.isRequired,
   fetchValidationRules: React.PropTypes.func.isRequired

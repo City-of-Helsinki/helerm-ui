@@ -52,14 +52,18 @@ describe('(Redux Module) Home', () => {
           is_open: true
         },
         selectedTOS: {
-          data: {},
+          tos: {},
+          actions: {},
+          phases: {},
+          records: {},
+          attributes: {},
           path: [],
           documentState: 'view',
           lastUpdated: 0
         },
         isFetching: false,
         recordTypes: {},
-        attributes: {}
+        attributeTypes: {}
       };
     });
     it('Should be a function.', () => {

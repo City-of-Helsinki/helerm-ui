@@ -32,11 +32,14 @@ const mapStateToProps = (state) => {
   return {
     navigation: state.home.navigation,
     recordTypes: state.home.recordTypes,
-    selectedTOS: state.home.selectedTOS.data,
+    selectedTOS: state.home.selectedTOS.tos,
+    phases: state.home.selectedTOS.phases,
+    actions: state.home.selectedTOS.actions,
+    records: state.home.selectedTOS.records,
     selectedTOSPath: state.home.selectedTOS.path,
     isFetching: state.home.isFetching,
     documentState: state.home.selectedTOS.documentState,
-    attributes: state.home.attributes
+    attributeTypes: state.home.attributeTypes
   };
 };
 

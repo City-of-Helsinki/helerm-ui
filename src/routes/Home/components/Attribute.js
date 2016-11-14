@@ -68,15 +68,15 @@ export class Attribute extends React.Component {
       attributeValue = <div>{this.state.attribute}</div>;
     }
     if (this.state.mode === 'edit') {
-      attributeValue = this.generateInput(this.props.attributes[attributeIndex], attribute);
+      attributeValue = this.generateInput(this.props.attributeTypes[attributeIndex], attribute);
     }
     return (
       <a
         onClick={() => this.changeState('edit')}
         className={'list-group-item col-xs-12 col-md-6 col-lg-4 ' + (showAttributes ? 'visible' : 'hidden')}>
         <span className='table-key'>
-          {this.props.attributes[attributeIndex].name}
-          { this.state.mode === 'edit' && this.props.attributes[attributeIndex].required &&
+          {this.props.attributeTypes[attributeIndex].name}
+          { this.state.mode === 'edit' && this.props.attributeTypes[attributeIndex].required &&
             <span className='fa fa-asterisk required-asterisk' />
           }
         </span>
@@ -89,7 +89,7 @@ export class Attribute extends React.Component {
 Attribute.propTypes = {
   attribute: React.PropTypes.string.isRequired,
   attributeIndex: React.PropTypes.string.isRequired,
-  attributes: React.PropTypes.object.isRequired,
+  attributeTypes: React.PropTypes.object.isRequired,
   documentState: React.PropTypes.string.isRequired,
   showAttributes: React.PropTypes.bool.isRequired,
   mode: React.PropTypes.string.isRequired

@@ -31,17 +31,21 @@ export class Action extends React.Component {
     this.setState({ name: event.target.value });
   }
   generateRecords (records) {
-    return records.map((record, index) => {
-      return (
-        <Record
-          key={index}
-          record={record}
-          recordTypes={this.props.recordTypes}
-          documentState={this.props.documentState}
-          attributes={this.props.attributes}
-        />
-      );
-    });
+    const elements = [];
+    for (const key in records) {
+      if (records.hasOwnProperty(key)) {
+        elements.push(
+          <Record
+            key={key}
+            record={this.props.records[records[key]]}
+            recordTypes={this.props.recordTypes}
+            documentState={this.props.documentState}
+            attributeTypes={this.props.attributeTypes}
+          />
+        );
+      }
+    }
+    return elements;
   }
   createNewRecord () {
     this.setState({ mode: 'add' });
@@ -59,12 +63,12 @@ export class Action extends React.Component {
     this.setState({ deleted: true, deleting: false });
   }
   addRecord () {
-    this.setState({mode: 'view'});
+    this.setState({ mode: 'view' });
     this.props.addRecord();
   }
   render () {
     const { action } = this.props;
-    const records = this.generateRecords(action.records);
+    const recordElements = this.generateRecords(action.records);
     let actionTitle;
     if (this.state.mode === 'view' || this.state.mode === 'add') {
       actionTitle =
@@ -101,7 +105,7 @@ export class Action extends React.Component {
         { !this.state.deleted &&
         <div className='action box row'>
           { actionTitle }
-          { records }
+          { recordElements }
           { this.props.documentState === 'edit' && this.state.mode !== 'add' &&
           <button className='btn btn-primary btn-sm btn-new-record' onClick={() => this.createNewRecord()}>
             Uusi asiakirja
@@ -110,7 +114,7 @@ export class Action extends React.Component {
           { this.state.mode === 'add' &&
           <div className='action add-box col-xs-12'>
             <AddRecord
-              attributes={this.props.attributes}
+              attributeTypes={this.props.attributeTypes}
               recordTypes={this.props.recordTypes}
               mode={this.state.mode}
               phaseIndex={this.props.phaseIndex}
@@ -137,11 +141,12 @@ export class Action extends React.Component {
 
 Action.propTypes = {
   action: React.PropTypes.object.isRequired,
-  attributes: React.PropTypes.object.isRequired,
+  records: React.PropTypes.object.isRequired,
+  attributeTypes: React.PropTypes.object.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
   documentState: React.PropTypes.string.isRequired,
   addRecord: React.PropTypes.func.isRequired,
-  actionIndex: React.PropTypes.number.isRequired,
+  actionIndex: React.PropTypes.string.isRequired,
   phaseIndex: React.PropTypes.string.isRequired
 };
 

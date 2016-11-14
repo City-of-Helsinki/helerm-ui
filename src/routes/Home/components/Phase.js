@@ -37,20 +37,25 @@ export class Phase extends React.Component {
     this.setState({ newActionName: event.target.value });
   }
   generateActions (actions) {
-    return actions.map((action, index) => {
-      return (
-        <Action
-          key={index}
-          action={action}
-          actionIndex={index}
-          recordTypes={this.props.recordTypes}
-          documentState={this.props.documentState}
-          attributes={this.props.attributes}
-          phaseIndex={this.props.phaseIndex}
-          addRecord={this.props.addRecord}
-        />
-      );
-    });
+    const elements = [];
+    for (const key in actions) {
+      if (actions.hasOwnProperty(key)) {
+        elements.push(
+          <Action
+            key={key}
+            action={this.props.actions[actions[key]]}
+            actionIndex={key}
+            records={this.props.records}
+            recordTypes={this.props.recordTypes}
+            documentState={this.props.documentState}
+            attributeTypes={this.props.attributeTypes}
+            phaseIndex={this.props.phaseIndex}
+            addRecord={this.props.addRecord}
+          />
+        );
+      };
+    }
+    return elements;
   }
   createNewAction () {
     this.setState({ mode: 'add' });
@@ -71,8 +76,8 @@ export class Phase extends React.Component {
     this.setState({ deleted: true, deleting: false });
   }
   render () {
-    const { phase, phaseIndex } = this.props;
-    const actions = this.generateActions(phase.actions);
+    const { phase, phaseIndex, actions } = this.props;
+    const actionElements = this.generateActions(phase.actions);
     let phaseTitle;
     if (this.state.mode !== 'edit') {
       phaseTitle =
@@ -115,7 +120,7 @@ export class Phase extends React.Component {
                   />
                 </button>
               }
-              { phase.actions.length !== 0 &&
+              { actions.length !== 0 &&
                 <button
                   type='button'
                   className='btn btn-info btn-sm pull-right'
@@ -129,7 +134,7 @@ export class Phase extends React.Component {
               }
             </Sticky>
             <div className={(phase.is_open ? '' : 'hidden')}>
-              { actions }
+              { actionElements }
             </div>
             { this.props.documentState === 'edit' && this.state.mode !== 'add' &&
               <button className='btn btn-primary btn-sm btn-new-record' onClick={() => this.createNewAction()}>
@@ -169,8 +174,10 @@ export class Phase extends React.Component {
 
 Phase.propTypes = {
   phase: React.PropTypes.object.isRequired,
+  actions: React.PropTypes.object.isRequired,
+  records: React.PropTypes.object.isRequired,
   phaseIndex: React.PropTypes.string.isRequired,
-  attributes: React.PropTypes.object.isRequired,
+  attributeTypes: React.PropTypes.object.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
   documentState: React.PropTypes.string.isRequired,
   setPhaseVisibility: React.PropTypes.func.isRequired,

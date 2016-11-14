@@ -66,11 +66,11 @@ export class TOSMetadata extends React.Component {
         </a>
       );
     } else if (this.state.mode === 'edit') {
-      const metadataInput = this.generateInput(this.props.attributes[typeIndex], name);
+      const metadataInput = this.generateInput(this.props.attributeTypes[typeIndex], name);
       return (
         <a className='list-group-item metadata-input-wrapper metadata-row col-md-6 col-xs-12'>
           <label className='metadata-input-label'>{type}:
-            { this.props.attributes[typeIndex].required &&
+            { this.props.attributeTypes[typeIndex].required &&
               <span className='fa fa-asterisk required-asterisk' />
             }
           </label>
@@ -85,7 +85,7 @@ export class TOSMetadata extends React.Component {
 
 TOSMetadata.propTypes = {
   typeIndex: React.PropTypes.string,
-  attributes: React.PropTypes.object,
+  attributeTypes: React.PropTypes.object,
   documentState: React.PropTypes.string,
   type: React.PropTypes.string.isRequired,
   name: React.PropTypes.string.isRequired,

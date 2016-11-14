@@ -64,7 +64,7 @@ export class Record extends React.Component {
             attributeIndex={key}
             attribute={attributes[key]}
             documentState={this.props.documentState}
-            attributes={this.props.attributes}
+            attributeTypes={this.props.attributeTypes}
             mode={this.state.mode}
             showAttributes={this.state.showAttributes}
           />);
@@ -134,7 +134,7 @@ export class Record extends React.Component {
 
 Record.propTypes = {
   record: React.PropTypes.object.isRequired,
-  attributes: React.PropTypes.object.isRequired,
+  attributeTypes: React.PropTypes.object.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
   documentState: React.PropTypes.string.isRequired
 };
