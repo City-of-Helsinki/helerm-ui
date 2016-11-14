@@ -12,7 +12,7 @@ export class Phase extends React.Component {
     this.createNewAction = this.createNewAction.bind(this);
     this.addAction = this.addAction.bind(this);
     this.savePhaseTitle = this.savePhaseTitle.bind(this);
-    this.cancelRecordCreation = this.cancelRecordCreation.bind(this);
+    this.cancelActionCreation = this.cancelActionCreation.bind(this);
     this.state = {
       name: this.props.phase.name,
       newActionName: '',
@@ -60,7 +60,8 @@ export class Phase extends React.Component {
     this.props.addAction(this.props.phaseIndex, this.state.newActionName);
     this.setState({ mode: 'view' });
   }
-  cancelRecordCreation () {
+  cancelActionCreation (event) {
+    event.preventDefault();
     this.setState({ newActionName: '', mode: 'view' });
   }
   cancelDeletion () {
@@ -145,7 +146,7 @@ export class Phase extends React.Component {
                   <button className='btn btn-primary pull-left' type='submit'>Lisää</button>
                   <button
                     className='btn btn-default pull-left'
-                    onClick={() => this.cancelRecordCreation()}>
+                    onClick={this.cancelActionCreation}>
                     Peruuta
                   </button>
                 </div>

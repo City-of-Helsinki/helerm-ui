@@ -78,8 +78,10 @@ export class AddRecord extends React.Component {
     // this.props.addAction(this.props.phaseIndex, this.props.actionIndex, this.state.newRecord);
     this.setState({ mode: 'view' });
   }
-  cancelRecordCreation () {
+  cancelRecordCreation (event) {
+    event.preventDefault();
     this.setState({ mode: 'view' });
+    this.props.cancelRecordCreation();
   }
   render () {
     const { attributes, recordTypes } = this.props;
@@ -114,7 +116,7 @@ export class AddRecord extends React.Component {
               <button className='btn btn-primary pull-right edit-record__submit' type='submit'>Valmis</button>
               <button
                 className='btn btn-default pull-right edit-record__cancel'
-                onClick={() => this.cancelRecordCreation()}>
+                onClick={this.cancelRecordCreation}>
                 Peruuta
               </button>
             </div>
@@ -133,6 +135,7 @@ AddRecord.propTypes = {
   recordTypes: React.PropTypes.object.isRequired,
   mode: React.PropTypes.string.isRequired,
   addRecord: React.PropTypes.func.isRequired,
+  cancelRecordCreation: React.PropTypes.func.isRequired,
   actionIndex: React.PropTypes.number.isRequired,
   phaseIndex: React.PropTypes.string.isRequired
 };

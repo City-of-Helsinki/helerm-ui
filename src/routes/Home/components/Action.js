@@ -9,6 +9,8 @@ export class Action extends React.Component {
     super(props);
     this.onChange = this.onChange.bind(this);
     this.saveActionTitle = this.saveActionTitle.bind(this);
+    this.addRecord = this.addRecord.bind(this);
+    this.cancelRecordCreation = this.cancelRecordCreation.bind(this);
     this.state = {
       mode: 'view',
       name: this.props.action.name,
@@ -56,6 +58,10 @@ export class Action extends React.Component {
   delete () {
     this.setState({ deleted: true, deleting: false });
   }
+  addRecord () {
+    this.setState({mode: 'view'});
+    this.props.addRecord();
+  }
   render () {
     const { action } = this.props;
     const records = this.generateRecords(action.records);
@@ -102,14 +108,15 @@ export class Action extends React.Component {
           </button>
             }
           { this.state.mode === 'add' &&
-          <div className='action add-box row'>
+          <div className='action add-box col-xs-12'>
             <AddRecord
               attributes={this.props.attributes}
               recordTypes={this.props.recordTypes}
               mode={this.state.mode}
               phaseIndex={this.props.phaseIndex}
               actionIndex={this.props.actionIndex}
-              addRecord={this.props.addRecord}
+              cancelRecordCreation={this.cancelRecordCreation}
+              addRecord={this.addRecord}
             />
           </div>
           }
