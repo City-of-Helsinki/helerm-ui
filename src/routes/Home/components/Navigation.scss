@@ -107,6 +107,20 @@
   margin-top: -5px;
 }
 
+.infinity-menu-container:after {
+  content: 'Haku';
+  pointer-events: none;
+  position: absolute;
+  color: $gray;
+  top: 60px;
+  left: 42px;
+  z-index: 1;
+}
+
+.react-infinity-menu-default-search-input:focus {
+  z-index: 2;
+}
+
 .infinity-menu-node-container:before, .infinity-menu-leaf-container:before {
   left: -35px;
   position: absolute;
