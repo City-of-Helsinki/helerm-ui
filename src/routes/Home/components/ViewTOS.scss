@@ -42,6 +42,9 @@
   font-size: 1.2em;
   text-decoration: none;
 }
+.button-row {
+  padding: 0px;
+}
 .button-row > .btn, .document-buttons > .btn {
   margin: 4px;
 }
@@ -71,4 +74,10 @@
   color: #fff;
   background-color: #ff4e1e;
   border-color: #ff4e1e;
+}
+.phase-form {
+  padding: 0px;
+}
+.phase-form  > div {
+  padding: 0px;
 }

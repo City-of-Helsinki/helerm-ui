@@ -143,7 +143,8 @@ export class Phase extends React.Component {
             }
             { this.state.mode === 'add' &&
               <form onSubmit={this.addAction} className='row'>
-                <div className='col-xs-12 col-md-8'>
+                <h5 className='col-xs-12'>Uusi toimenpide</h5>
+                <div className='col-xs-12 col-md-6'>
                   <input type='text' className='form-control'
                     value={this.state.newActionName} onChange={this.onNewChange} placeholder='Toimenpiteen nimi' />
                 </div>

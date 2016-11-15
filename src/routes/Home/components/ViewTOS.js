@@ -147,9 +147,6 @@ export class ViewTOS extends React.Component {
               <div className='row'>
                 <h4 className='col-md-6 col-xs-12'>{selectedTOS.function_id} {selectedTOS.name}</h4>
                 <div className='document-buttons col-xs-12 col-md-6'>
-                  { this.props.documentState === 'edit' &&
-                    <span className='fa fa-asterisk required-asterisk required-legend'> = Pakollinen tieto</span>
-                  }
                   { this.props.documentState !== 'edit' &&
                     <button
                       className='btn btn-primary btn-sm'
@@ -173,6 +170,11 @@ export class ViewTOS extends React.Component {
                     </button>
                   }
                 </div>
+                { this.props.documentState === 'edit' &&
+                  <span
+                    className='fa fa-asterisk required-asterisk required-legend col-xs-12'> = Pakollinen tieto
+                  </span>
+                }
               </div>
             </Sticky>
             <div className='single-tos-content'>
@@ -183,8 +185,9 @@ export class ViewTOS extends React.Component {
                   </div>
                 </div>
                 <div className='col-xs-12'>
-                  <div className='button-row'>
+                  <div className='button-row col-xs-12'>
                     { this.props.documentState === 'edit' &&
+                      !this.state.createPhaseMode &&
                       <button
                         className='btn btn-primary btn-sm pull-left'
                         onClick={() => this.addPhase()}>
@@ -203,8 +206,9 @@ export class ViewTOS extends React.Component {
                     </button>
                   </div>
                   { this.state.createPhaseMode &&
-                    <form onSubmit={this.createNewPhase} className='row'>
-                      <div className='col-xs-12 col-md-8'>
+                    <form onSubmit={this.createNewPhase} className='col-xs-12 phase-form'>
+                      <h5>Uusi käsittelyvaihe</h5>
+                      <div className='col-xs-12 col-md-6'>
                         <input
                           type='text'
                           className='form-control'

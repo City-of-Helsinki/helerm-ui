@@ -45,7 +45,7 @@ export class Attribute extends React.Component {
           className='form-control'
           value={this.state.attribute}
           onChange={this.onChange}
-          onBlur={() => this.setState({ mode: 'view' })}
+          onBlur={this.submit}
           autoFocus>
           <option value={null}>[ Tyhjä ]</option>
           { options }
@@ -53,13 +53,15 @@ export class Attribute extends React.Component {
       );
     } else if (attribute.values.length === 0 || attribute.type) {
       return (
-        <input
-          className='col-xs-6 form-control edit-record__input'
-          value={this.state.attribute}
-          onChange={this.onChange}
-          onBlur={this.submit}
-          autoFocus
-        />
+        <form onSubmit={this.submit}>
+          <input
+            className='col-xs-6 form-control edit-record__input'
+            value={this.state.attribute}
+            onChange={this.onChange}
+            onBlur={this.submit}
+            autoFocus
+          />
+        </form>
       );
     } else {
       return null;
