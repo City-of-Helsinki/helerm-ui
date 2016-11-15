@@ -127,7 +127,7 @@ export class Attribute extends React.Component {
     return (
       <a
         onClick={() => this.activateEditMode()}
-        className={'list-group-item col-xs-12 col-md-6 col-lg-4 ' + (showAttributes ? 'visible' : 'hidden')}>
+        className={'list-group-item col-xs-12 col-md-6 ' + (showAttributes ? 'visible' : 'hidden')}>
         <span className='table-key'>
           { attributeKey }
           { this.props.type === 'attribute' &&
