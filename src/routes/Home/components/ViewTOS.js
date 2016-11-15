@@ -8,12 +8,13 @@ import { StickyContainer, Sticky } from 'react-sticky';
 export class ViewTOS extends React.Component {
   constructor (props) {
     super(props);
-    this.editMetadata = this.editMetadata.bind(this);
-    this.saveMetadata = this.saveMetadata.bind(this);
-    this.cancelMetadata = this.cancelMetadata.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.createNewPhase = this.createNewPhase.bind(this);
+    this.cancelPhaseCreation = this.cancelPhaseCreation.bind(this);
     this.state = {
-      metadataMode: 'view',
-      showMetadata: false
+      showMetadata: false,
+      createPhaseMode: false,
+      newPhaseName: ''
     };
   }
   formatDateTime (dateTime) {
@@ -21,17 +22,25 @@ export class ViewTOS extends React.Component {
     const time = dateTime.slice(11, 16);
     return { date, time };
   }
-  cancelMetadata () {
-    this.setState({ medadataMode: 'view' });
-  }
-  editMetadata () {
-    this.setState({ showMetadata: true, metadataMode: 'edit' });
-  }
-  saveMetadata () {
-    this.setState({ metadataMode: 'view' });
-  }
   toggleMetadataVisibility (current) {
     this.setState({ showMetadata: !current });
+  }
+  addPhase () {
+    this.setState({ createPhaseMode: true });
+  }
+  createNewPhase (event) {
+    event.preventDefault();
+    if (this.state.newPhaseName.length > 0) {
+      this.props.addPhase(this.state.newPhaseName);
+      this.setState({ createPhaseMode: false, newPhaseName: '' });
+    }
+  }
+  cancelPhaseCreation (event) {
+    event.preventDefault();
+    this.setState({ newPhaseName: '', createPhaseMode: false });
+  }
+  onChange (event) {
+    this.setState({ newPhaseName: event.target.value });
   }
   generateMetaData (attributeTypes, attributes) {
     const modifiedDateTime = this.formatDateTime(this.props.selectedTOS.modified_at);
@@ -64,7 +73,7 @@ export class ViewTOS extends React.Component {
             typeIndex={key}
             type={attributeTypes[key].name}
             name={attributes[key]}
-            mode={this.state.metadataMode}
+            mode='view'
             attributeTypes={this.props.attributeTypes}
             documentState={this.props.documentState}
             editable
@@ -164,24 +173,17 @@ export class ViewTOS extends React.Component {
                 <div className='general-info space-between'>
                   <div className='version-details col-xs-12'>
                     { TOSMetaData }
-                    { this.state.metadataMode === 'edit' &&
-                      <button
-                        className='btn btn-primary pull-right edit-record__submit'
-                        onClick={this.saveMetadata}>
-                        Valmis
-                      </button>
-                    }
-                    { this.state.metadataMode === 'edit' &&
-                      <button
-                        className='btn btn-default pull-right edit-record__cancel'
-                        onClick={this.saveMetadata}>
-                        Peruuta
-                      </button>
-                    }
                   </div>
                 </div>
                 <div className='col-xs-12'>
                   <div className='button-row'>
+                    { this.props.documentState === 'edit' &&
+                      <button
+                        className='btn btn-primary btn-sm pull-left'
+                        onClick={() => this.addPhase()}>
+                        Uusi käsittelyvaihe
+                      </button>
+                    }
                     <button
                       className='btn btn-default btn-sm pull-right'
                       onClick={() => this.props.setPhasesVisibility(phases, true)}>
@@ -193,6 +195,27 @@ export class ViewTOS extends React.Component {
                       Pienennä kaikki
                     </button>
                   </div>
+                  { this.state.createPhaseMode &&
+                    <form onSubmit={this.createNewPhase} className='row'>
+                      <div className='col-xs-12 col-md-8'>
+                        <input
+                          type='text'
+                          className='form-control'
+                          value={this.state.newPhaseName}
+                          onChange={this.onChange}
+                          placeholder='Käsittelyvaiheen nimi'
+                        />
+                      </div>
+                      <div className='col-xs-12 col-md-4'>
+                        <button className='btn btn-primary pull-left' type='submit'>Lisää</button>
+                        <button
+                          className='btn btn-default pull-left'
+                          onClick={this.cancelPhaseCreation}>
+                          Peruuta
+                        </button>
+                      </div>
+                    </form>
+                  }
                   { phaseElements }
                 </div>
               </div>
@@ -218,7 +241,8 @@ ViewTOS.propTypes = {
   recordTypes: React.PropTypes.object.isRequired,
   attributeTypes: React.PropTypes.object.isRequired,
   addAction: React.PropTypes.func.isRequired,
-  addRecord: React.PropTypes.func.isRequired
+  addRecord: React.PropTypes.func.isRequired,
+  addPhase: React.PropTypes.func.isRequired
 };
 
 export default ViewTOS;

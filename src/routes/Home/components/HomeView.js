@@ -28,7 +28,8 @@ export class HomeView extends React.Component {
       recordTypes,
       attributeTypes,
       addAction,
-      addRecord
+      addRecord,
+      addPhase
     } = this.props;
     return (
       <div>
@@ -58,6 +59,7 @@ export class HomeView extends React.Component {
           attributeTypes={attributeTypes}
           addAction={addAction}
           addRecord={addRecord}
+          addPhase={addPhase}
         />
       </div>
     );
@@ -83,6 +85,7 @@ HomeView.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
   addAction: React.PropTypes.func.isRequired,
   addRecord: React.PropTypes.func.isRequired,
+  addPhase: React.PropTypes.func.isRequired,
   fetchValidationRules: React.PropTypes.func.isRequired
 };
 export default HomeView;

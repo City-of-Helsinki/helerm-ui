@@ -26,6 +26,7 @@ export const RECEIVE_ATTRIBUTES = 'RECEIVE_ATTRIBUTES';
 
 export const ADD_ACTION = 'ADD_ACTION';
 export const ADD_RECORD = 'ADD_RECORD';
+export const ADD_PHASE = 'ADD_PHASE';
 
 // ------------------------------------
 // Actions
@@ -217,11 +218,11 @@ export function fetchValidationRules() {
   }
 }
 
-export function setPhaseVisibility(phase, current) {
+export function setPhaseVisibility(phase, visibility) {
   return {
     type: SET_PHASE_VISIBILITY,
     phase,
-    newOpen: !current
+    visibility
   };
 }
 
@@ -259,19 +260,31 @@ export function addAction(phaseIndex, name) {
   }
   return {
     type: ADD_ACTION,
-    newAction: newAction
+    newAction
   }
 }
 
 export function addRecord(phaseIndex, name) {
-  const newAction = {
+  const newRecord = {
     name: name,
-    records: []
+    attributes: []
   }
   return {
     type: ADD_ACTION,
     phaseIndex,
-    newAction: [newAction]
+    newAction: [newRecord]
+  }
+}
+
+export function addPhase(name) {
+  const phaseId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+  const newPhase = {
+    name: name,
+    id: phaseId
+  }
+  return {
+    type: ADD_PHASE,
+    newPhase
   }
 }
 
@@ -358,7 +371,7 @@ const ACTION_HANDLERS = {
         phases: {
           [action.phase]: {
             is_open: {
-              $set: action.newOpen
+              $set: action.visibility
             }
           }
         }
@@ -432,6 +445,17 @@ const ACTION_HANDLERS = {
                 }
               }
             }
+          }
+        }
+      }
+    });
+  },
+  [ADD_PHASE]: (state, action) => {
+    return update(state, {
+      selectedTOS: {
+        phases: {
+          [action.newPhase.id]: {
+            $set: action.newPhase
           }
         }
       }

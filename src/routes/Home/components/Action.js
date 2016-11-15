@@ -25,7 +25,7 @@ export class Action extends React.Component {
   }
   saveActionTitle (event) {
     event.preventDefault();
-    if(this.state.name.length > 0) {
+    if (this.state.name.length > 0) {
       this.setState({ mode: 'view' });
     }
   }
