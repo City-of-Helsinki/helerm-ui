@@ -25,7 +25,9 @@ export class Action extends React.Component {
   }
   saveActionTitle (event) {
     event.preventDefault();
-    this.setState({ mode: 'view' });
+    if(this.state.name.length > 0) {
+      this.setState({ mode: 'view' });
+    }
   }
   onChange (event) {
     this.setState({ name: event.target.value });
@@ -95,9 +97,6 @@ export class Action extends React.Component {
             onBlur={this.saveActionTitle}
             autoFocus
           />
-          <button type='submit' className='btn btn-primary col-xs-1 btn-sm'>
-            <span className='fa fa-check' />
-          </button>
         </form>;
     }
     return (

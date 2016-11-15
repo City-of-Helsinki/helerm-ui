@@ -28,7 +28,9 @@ export class Phase extends React.Component {
   }
   savePhaseTitle (event) {
     event.preventDefault();
-    this.setState({ mode: 'view' });
+    if(this.state.name.length > 0) {
+      this.setState({ mode: 'view' });
+    }
   }
   onChange (event) {
     this.setState({ name: event.target.value });
@@ -62,8 +64,9 @@ export class Phase extends React.Component {
   }
   addAction (event) {
     event.preventDefault();
+    this.props.setPhaseVisibility(this.props.phaseIndex, true);
     this.props.addAction(this.props.phaseIndex, this.state.newActionName);
-    this.setState({ mode: 'view' });
+    this.setState({ mode: 'view', newActionName: '' });
   }
   cancelActionCreation (event) {
     event.preventDefault();
@@ -97,9 +100,6 @@ export class Phase extends React.Component {
               autoFocus
             />
           </form>
-          <div className='col-md-2 col-xs-12'>
-            <button className='btn btn-primary btn-sm' type='submit'>Valmis</button>
-          </div>
         </div>;
     }
     return (
@@ -125,7 +125,7 @@ export class Phase extends React.Component {
                   type='button'
                   className='btn btn-info btn-sm pull-right'
                   title={phase.is_open ? 'Pienennä' : 'Laajenna'}
-                  onClick={() => this.props.setPhaseVisibility(phaseIndex, phase.is_open)}>
+                  onClick={() => this.props.setPhaseVisibility(phaseIndex, !phase.is_open)}>
                   <span
                     className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
                     aria-hidden='true'
@@ -145,7 +145,7 @@ export class Phase extends React.Component {
               <form onSubmit={this.addAction} className='row'>
                 <div className='col-xs-12 col-md-8'>
                   <input type='text' className='form-control'
-                    value={this.state.newActionName} onChange={this.onNewChange} placeholder='Nimi' />
+                    value={this.state.newActionName} onChange={this.onNewChange} placeholder='Toimenpiteen nimi' />
                 </div>
                 <div className='col-xs-12 col-md-4'>
                   <button className='btn btn-primary pull-left' type='submit'>Lisää</button>
