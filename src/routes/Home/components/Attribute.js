@@ -7,16 +7,18 @@ export class Attribute extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.submit = this.submit.bind(this);
     this.state = {
-      attribute: '',
+      attribute: this.props.attribute,
       mode: this.props.mode
     };
-  }
-  componentWillMount () {
-    this.setState({ attribute: this.props.attribute });
   }
   componentWillReceiveProps (nextProps) {
     if (nextProps.mode) {
       this.setState({ mode: nextProps.mode });
+    }
+  }
+  activateEditMode () {
+    if (this.state.mode !== 'edit') {
+      this.changeState('edit');
     }
   }
   onChange (event) {
@@ -29,10 +31,12 @@ export class Attribute extends React.Component {
   }
   submit (event) {
     event.preventDefault();
-    this.changeState('view');
+    setTimeout(() => this.changeState('view'),
+      150
+    );
   }
-  generateInput (attribute, currentAttribute) {
-    if (attribute.values.length) {
+  generateAttributeInput (attribute, currentAttribute) {
+    if (attribute.values && attribute.values.length) {
       const options = attribute.values.map((option, index) => {
         return <option key={index} value={option.value}>{option.value}</option>;
       });
@@ -47,10 +51,10 @@ export class Attribute extends React.Component {
           { options }
         </select>
       );
-    } else if (attribute.values.length === 0) {
+    } else if (attribute.values.length === 0 || attribute.type) {
       return (
         <input
-          className='form-control'
+          className='col-xs-6 form-control edit-record__input'
           value={this.state.attribute}
           onChange={this.onChange}
           onBlur={this.submit}
@@ -61,22 +65,72 @@ export class Attribute extends React.Component {
       return null;
     }
   }
+  generateRecordInput (type, name) {
+    if (type === '') {
+      return (
+        <form onSubmit={this.submit}>
+          <input
+            className='col-xs-6 form-control edit-record__input'
+            value={this.state.attribute}
+            onChange={this.onChange}
+            onBlur={this.submit}
+            autoFocus
+          />
+        </form>
+      );
+    } else {
+      return this.generateRecordDropdown(this.props.attributeTypes, type);
+    }
+  }
+  generateRecordDropdown (recordTypes, activeRecord) {
+    const options = [];
+    for (const key in recordTypes) {
+      if (recordTypes.hasOwnProperty(key)) {
+        options.push(<option key={key} value={recordTypes[key]}>{recordTypes[key]}</option>);
+      }
+    }
+    return (
+      <form onSubmit={this.submit}>
+        <select
+          className='col-xs-6 form-control edit-record__select'
+          value={this.state.attribute}
+          onChange={this.onChange}
+          onBlur={this.submit}
+          autoFocus>
+          <option value={null}>[ Tyhjä ]</option>
+          {options}
+        </select>
+      </form>
+    );
+  }
   render () {
-    const { attribute, attributeIndex, showAttributes } = this.props;
+    const { attribute, attributeIndex, showAttributes, attributeKey } = this.props;
     let attributeValue;
+    if (this.props.editable === false) {
+      return (
+        <a className='list-group-item col-xs-12 col-md-6'>
+          <strong>{attributeIndex}:</strong> <div>{attribute}</div>
+        </a>
+      );
+    }
     if (this.state.mode === 'view') {
       attributeValue = <div>{this.state.attribute}</div>;
     }
     if (this.state.mode === 'edit') {
-      attributeValue = this.generateInput(this.props.attributeTypes[attributeIndex], attribute);
+      if (this.props.type === 'attribute') {
+        attributeValue = this.generateAttributeInput(this.props.attributeTypes[attributeIndex], attribute);
+      }
+      if (this.props.type === 'record') {
+        attributeValue = this.generateRecordInput(attributeIndex, attribute);
+      }
     }
     return (
       <a
-        onClick={() => this.changeState('edit')}
+        onClick={() => this.activateEditMode()}
         className={'list-group-item col-xs-12 col-md-6 col-lg-4 ' + (showAttributes ? 'visible' : 'hidden')}>
         <span className='table-key'>
-          {this.props.attributeTypes[attributeIndex].name}
-          { this.state.mode === 'edit' && this.props.attributeTypes[attributeIndex].required &&
+          { attributeKey }
+          { this.props.type === 'attribute' && this.state.mode === 'edit' && this.props.attributeTypes[attributeIndex].required &&
             <span className='fa fa-asterisk required-asterisk' />
           }
         </span>
@@ -92,7 +146,9 @@ Attribute.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
   documentState: React.PropTypes.string.isRequired,
   showAttributes: React.PropTypes.bool.isRequired,
-  mode: React.PropTypes.string.isRequired
+  mode: React.PropTypes.string.isRequired,
+  editable: React.PropTypes.bool.isRequired,
+  type: React.PropTypes.string.isRequired
 };
 
 export default Attribute;

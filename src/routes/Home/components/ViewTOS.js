@@ -1,7 +1,7 @@
 import React from 'react';
 import './ViewTOS.scss';
 import Phase from './Phase';
-import TOSMetadata from './TOSMetadata';
+import Attribute from './Attribute';
 import formatDate from 'occasion';
 import { StickyContainer, Sticky } from 'react-sticky';
 
@@ -55,27 +55,34 @@ export class ViewTOS extends React.Component {
     ];
     versionData.map((metadata, index) => {
       attributeElements.push(
-        <TOSMetadata
+        <Attribute
           key={index}
-          type={metadata.type}
-          name={metadata.name}
-          mode={this.state.metadataMode}
+          attributeIndex={metadata.type}
+          attributeKey={metadata.type}
+          attribute={metadata.name}
           documentState={this.props.documentState}
+          attributeTypes={this.props.attributeTypes}
+          mode='view'
+          type='attribute'
           editable={false}
+          showAttributes={true}
+
         />
       );
     });
     for (const key in attributes) {
       if (attributes.hasOwnProperty(key)) {
         attributeElements.push(
-          <TOSMetadata
+          <Attribute
             key={key}
-            typeIndex={key}
-            type={attributeTypes[key].name}
-            name={attributes[key]}
+            attributeIndex={key}
+            attributeKey={this.props.attributeTypes[key].name}
+            attribute={attributes[key]}
             mode='view'
+            type='attribute'
             attributeTypes={this.props.attributeTypes}
             documentState={this.props.documentState}
+            showAttributes={this.state.showMetadata}
             editable
           />
         );

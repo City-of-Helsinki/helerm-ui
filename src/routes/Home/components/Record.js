@@ -1,7 +1,6 @@
 import React from 'react';
 import './Record.scss';
 import Attribute from './Attribute';
-import RecordAttribute from './RecordAttribute';
 import DeletePopup from './DeletePopup';
 
 export class Record extends React.Component {
@@ -42,14 +41,17 @@ export class Record extends React.Component {
   generateRecordAttributes (records) {
     return records.map((record, index) => {
       return (
-        <RecordAttribute
+        <Attribute
           key={index}
-          recordKey={record.recordKey}
-          recordName={record.name}
-          recordType={record.type}
-          recordTypes={this.props.recordTypes}
+          attributeIndex={record.type}
+          attributeKey={record.recordKey}
+          attribute={record.name}
           documentState={this.props.documentState}
+          attributeTypes={this.props.recordTypes}
           mode={this.state.mode}
+          type='record'
+          editable
+          showAttributes={true}
         />
       );
     });
@@ -62,10 +64,13 @@ export class Record extends React.Component {
           <Attribute
             key={key}
             attributeIndex={key}
+            attributeKey={this.props.attributeTypes[key].name}
             attribute={attributes[key]}
             documentState={this.props.documentState}
             attributeTypes={this.props.attributeTypes}
             mode={this.state.mode}
+            type='attribute'
+            editable
             showAttributes={this.state.showAttributes}
           />);
       }
