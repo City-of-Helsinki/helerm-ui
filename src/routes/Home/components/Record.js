@@ -51,7 +51,7 @@ export class Record extends React.Component {
           mode={this.state.mode}
           type='record'
           editable
-          showAttributes={true}
+          showAttributes
         />
       );
     });

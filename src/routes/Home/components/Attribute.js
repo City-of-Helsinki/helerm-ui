@@ -130,7 +130,9 @@ export class Attribute extends React.Component {
         className={'list-group-item col-xs-12 col-md-6 col-lg-4 ' + (showAttributes ? 'visible' : 'hidden')}>
         <span className='table-key'>
           { attributeKey }
-          { this.props.type === 'attribute' && this.state.mode === 'edit' && this.props.attributeTypes[attributeIndex].required &&
+          { this.props.type === 'attribute' &&
+            this.state.mode === 'edit' &&
+            this.props.attributeTypes[attributeIndex].required &&
             <span className='fa fa-asterisk required-asterisk' />
           }
         </span>
@@ -143,6 +145,7 @@ export class Attribute extends React.Component {
 Attribute.propTypes = {
   attribute: React.PropTypes.string.isRequired,
   attributeIndex: React.PropTypes.string.isRequired,
+  attributeKey: React.PropTypes.string.isRequired,
   attributeTypes: React.PropTypes.object.isRequired,
   documentState: React.PropTypes.string.isRequired,
   showAttributes: React.PropTypes.bool.isRequired,

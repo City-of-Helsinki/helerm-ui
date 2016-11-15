@@ -65,7 +65,7 @@ export class ViewTOS extends React.Component {
           mode='view'
           type='attribute'
           editable={false}
-          showAttributes={true}
+          showAttributes
 
         />
       );
