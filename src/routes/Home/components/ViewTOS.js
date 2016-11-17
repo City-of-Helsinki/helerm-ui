@@ -11,10 +11,12 @@ export class ViewTOS extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.createNewPhase = this.createNewPhase.bind(this);
     this.cancelPhaseCreation = this.cancelPhaseCreation.bind(this);
+    this.setPhaseVisibility = this.setPhaseVisibility.bind(this);
     this.state = {
       showMetadata: false,
       createPhaseMode: false,
-      newPhaseName: ''
+      newPhaseName: '',
+      update: ''
     };
   }
   formatDateTime (dateTime) {
@@ -41,6 +43,15 @@ export class ViewTOS extends React.Component {
   }
   onChange (event) {
     this.setState({ newPhaseName: event.target.value });
+  }
+  /*
+    setPhaseVisibility is a hack to fix firefox specific issue of re-rendering phases
+    remove once firefox issue is fixed
+  */
+  setPhaseVisibility (x, y) {
+    const newString = Math.random().toString(36).replace(/[^a-z]+/g, '');
+    this.setState({ update: newString });
+    this.props.setPhaseVisibility(x, y);
   }
   generateMetaData (attributeTypes, attributes) {
     const modifiedDateTime = this.formatDateTime(this.props.selectedTOS.modified_at);
@@ -123,12 +134,13 @@ export class ViewTOS extends React.Component {
             phase={phases[key]}
             actions={this.props.actions}
             records={this.props.records}
-            setPhaseVisibility={this.props.setPhaseVisibility}
+            setPhaseVisibility={this.setPhaseVisibility}
             recordTypes={this.props.recordTypes}
             documentState={this.props.documentState}
             attributeTypes={this.props.attributeTypes}
             addAction={this.props.addAction}
             addRecord={this.props.addRecord}
+            update={this.state.update}
           />
         );
       }

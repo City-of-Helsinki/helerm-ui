@@ -79,7 +79,7 @@ export class Phase extends React.Component {
     this.setState({ deleted: true, deleting: false });
   }
   render () {
-    const { phase, phaseIndex, actions } = this.props;
+    const { phase, phaseIndex, actions, update } = this.props;
     const actionElements = this.generateActions(phase.actions);
     let phaseTitle;
     if (this.state.mode !== 'edit') {
@@ -107,6 +107,11 @@ export class Phase extends React.Component {
         { !this.state.deleted &&
           <StickyContainer className='col-xs-12 box'>
             <Sticky className='phase-title'>
+              {/*
+                { update } is a hack to fix firefox specific issue of re-rendering phases
+                remove once firefox issue is fixed
+              */}
+              <div className='update'>{ update }</div>
               { phaseTitle }
               { this.props.documentState === 'edit' &&
                 <button
@@ -183,7 +188,8 @@ Phase.propTypes = {
   documentState: React.PropTypes.string.isRequired,
   setPhaseVisibility: React.PropTypes.func.isRequired,
   addAction: React.PropTypes.func.isRequired,
-  addRecord: React.PropTypes.func.isRequired
+  addRecord: React.PropTypes.func.isRequired,
+  update: React.PropTypes.string.isRequired
 };
 
 export default Phase;

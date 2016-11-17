@@ -12,3 +12,10 @@
 .input-title {
   font-size: 1.1em;
 }
+// this is a hack to fix firefox specific issue of re-rendering phases
+// remove once firefox issue is fixed
+.update {
+  position: absolute;
+  z-index: -999999;
+  color: transparent;
+}
