@@ -44,7 +44,7 @@ export class Record extends React.Component {
         <Attribute
           key={index}
           attributeIndex={record.type}
-          attributeKey={record.recordKey}
+          attributeKey=''
           attribute={record.name}
           documentState={this.props.documentState}
           attributeTypes={this.props.recordTypes}
@@ -89,7 +89,7 @@ export class Record extends React.Component {
     const recordAttributes = this.generateRecordAttributes(recordObjects);
     const attributes = this.generateAttributes(record.attributes);
     return (
-      <div className='record col-xs-12'>
+      <div className={'record col-xs-12 ' + (this.state.showAttributes ? 'record-open' : '')}>
         { !this.state.deleted &&
           <div className='list-group'>
             { this.state.mode === 'view' &&

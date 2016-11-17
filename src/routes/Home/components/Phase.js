@@ -142,7 +142,9 @@ export class Phase extends React.Component {
               { actionElements }
             </div>
             { this.props.documentState === 'edit' && this.state.mode !== 'add' &&
-              <button className='btn btn-primary btn-sm btn-new-record' onClick={() => this.createNewAction()}>
+              <button
+                className='btn btn-primary btn-sm btn-new-record pull-left'
+                onClick={() => this.createNewAction()}>
                 Uusi toimenpide
               </button>
             }

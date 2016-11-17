@@ -104,9 +104,17 @@ export class Action extends React.Component {
         { !this.state.deleted &&
         <div className='action box row'>
           { actionTitle }
-          { recordElements }
+          <strong className='col-xs-6'>
+            Asiakirjatyypin tarkenne
+          </strong>
+          <strong className='col-xs-6'>
+            Tyyppi
+          </strong>
+          <div className='records'>
+            { recordElements }
+          </div>
           { this.props.documentState === 'edit' && this.state.mode !== 'add' &&
-          <button className='btn btn-primary btn-sm btn-new-record' onClick={() => this.createNewRecord()}>
+          <button className='btn btn-primary btn-sm btn-new-record pull-left' onClick={() => this.createNewRecord()}>
             Uusi asiakirja
           </button>
             }

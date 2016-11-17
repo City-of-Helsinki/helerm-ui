@@ -110,13 +110,13 @@ export class Attribute extends React.Component {
     let attributeValue;
     if (this.props.editable === false) {
       return (
-        <a className='list-group-item col-xs-12 col-md-6'>
+        <a className='list-group-item col-xs-6'>
           <strong>{attributeIndex}:</strong> <div>{attribute}</div>
         </a>
       );
     }
     if (this.state.mode === 'view') {
-      attributeValue = <div>{this.state.attribute}</div>;
+      attributeValue = <div className='table-value'>{this.state.attribute}</div>;
     }
     if (this.state.mode === 'edit') {
       if (this.props.type === 'attribute') {
@@ -129,7 +129,7 @@ export class Attribute extends React.Component {
     return (
       <a
         onClick={() => this.activateEditMode()}
-        className={'list-group-item col-xs-12 col-md-6 ' + (showAttributes ? 'visible' : 'hidden')}>
+        className={'list-group-item col-xs-6 attribute ' + (showAttributes ? 'visible' : 'hidden')}>
         <span className='table-key'>
           { attributeKey }
           { this.props.type === 'attribute' &&
