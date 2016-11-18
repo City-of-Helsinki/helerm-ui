@@ -113,6 +113,7 @@ export class Phase extends React.Component {
               */}
               <div className='update'>{ update }</div>
               { phaseTitle }
+              <span className='label label-default label-phase'>Käsittelyvaihe</span>
               { this.props.documentState === 'edit' &&
                 <button
                   type='button'

@@ -76,6 +76,7 @@ export class Action extends React.Component {
       actionTitle =
         <div className='action-title' onClick={() => this.editActionTitle()}>
           {this.state.name}
+          <span className='label label-default label-action'>Toimenpide</span>
           { this.props.documentState === 'edit' &&
             <button
               className='btn btn-delete btn-xs pull-right'
