@@ -11,7 +11,8 @@ import {
   fetchValidationRules,
   addAction,
   addRecord,
-  addPhase
+  addPhase,
+  commitOrderChanges
 } from '../modules/home';
 import HomeView from '../components/HomeView';
 
@@ -27,7 +28,8 @@ const mapDispatchToProps = {
   fetchValidationRules,
   addAction,
   addRecord,
-  addPhase
+  addPhase,
+  commitOrderChanges
 };
 
 const mapStateToProps = (state) => {

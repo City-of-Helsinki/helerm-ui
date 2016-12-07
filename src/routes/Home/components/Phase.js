@@ -3,6 +3,7 @@ import './Phase.scss';
 import Action from './Action.js';
 import DeletePopup from './DeletePopup';
 import { StickyContainer, Sticky } from 'react-sticky';
+import ReorderView from './ReorderView';
 
 export class Phase extends React.Component {
   constructor (props) {
@@ -18,7 +19,8 @@ export class Phase extends React.Component {
       newActionName: '',
       mode: 'view',
       deleting: false,
-      deleted: false
+      deleted: false,
+      showReorderView: false
     };
   }
 
@@ -44,6 +46,10 @@ export class Phase extends React.Component {
   onNewChange (event) {
     this.setState({ newActionName: event.target.value });
   }
+  toggleReorderView () {
+    const current = this.state.showReorderView
+    this.setState({showReorderView: !current});
+  }
   generateActions (actions) {
     const elements = [];
     for (const key in actions) {
@@ -59,6 +65,7 @@ export class Phase extends React.Component {
             attributeTypes={this.props.attributeTypes}
             phaseIndex={this.props.phaseIndex}
             addRecord={this.props.addRecord}
+            commitOrderChanges={this.props.commitOrderChanges}
           />
         );
       };
@@ -144,6 +151,12 @@ export class Phase extends React.Component {
                   />
                 </button>
               }
+              { this.props.documentState === 'edit' &&
+                !this.state.createPhaseMode &&
+                <button className='btn btn-primary btn-sm pull-right' onClick={() => this.toggleReorderView()}>
+                  Järjestä toimenpiteitä
+                </button>
+              }
             </Sticky>
             <div className={(phase.is_open ? '' : 'hidden')}>
               { actionElements }
@@ -180,6 +193,17 @@ export class Phase extends React.Component {
             target={this.state.name}
             action={() => this.delete()}
             cancel={() => this.cancelDeletion()}
+          />
+        }
+        { this.state.showReorderView &&
+          <ReorderView
+            target='action'
+            toggleReorderView={() => this.toggleReorderView()}
+            keys={this.props.phase.actions}
+            values={this.props.actions}
+            commitOrderChanges={this.props.commitOrderChanges}
+            parent={phaseIndex}
+            parentName={this.state.name}
           />
         }
       </div>

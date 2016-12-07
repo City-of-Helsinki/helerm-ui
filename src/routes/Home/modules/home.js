@@ -28,6 +28,8 @@ export const ADD_ACTION = 'ADD_ACTION';
 export const ADD_RECORD = 'ADD_RECORD';
 export const ADD_PHASE = 'ADD_PHASE';
 
+export const COMMIT_ORDER_CHANGE = 'COMMIT_ORDER_CHANGE';
+
 // ------------------------------------
 // Actions
 // ------------------------------------
@@ -104,7 +106,6 @@ export function receiveTOS(tos, json) {
       });
     });
   });
-
   const tosSchema = new Schema('tos');
   const phase = new Schema('phases');
   const action = new Schema('actions');
@@ -288,6 +289,15 @@ export function addPhase(name) {
   }
 }
 
+export function commitOrderChanges(newOrder, itemType, itemParent) {
+  return {
+    type: COMMIT_ORDER_CHANGE,
+    newOrder,
+    itemType,
+    itemParent
+  }
+}
+
 export const actions = {
   requestNavigation,
   receiveNavigation,
@@ -305,7 +315,9 @@ export const actions = {
   setPhasesVisibility,
   setDocumentState,
   addAction,
-  addRecord
+  addRecord,
+  addPhase,
+  commitOrderChanges
 };
 
 // ------------------------------------
@@ -445,6 +457,73 @@ const ACTION_HANDLERS = {
         }
       }
     });
+  },
+  [COMMIT_ORDER_CHANGE]: (state, action) => {
+    let parentLevel;
+    let itemLevel;
+    const affectedItems = action.newOrder;
+    switch(action.itemType) {
+      case 'action':
+        parentLevel = 'phases';
+        itemLevel = 'actions';
+        break;
+      case 'phase':
+        parentLevel = 'tos';
+        itemLevel = 'phases';
+        break;
+      case 'record':
+        parentLevel = 'actions';
+        itemLevel = 'records';
+        break;
+    }
+    const newOrder = [];
+    affectedItems.map(item => {
+      newOrder.push(state.selectedTOS[itemLevel][item]);
+    });
+    const parentList = [];
+    newOrder.map((item, index) => {
+      item.index = index+1;
+      parentList.push(item.id);
+    });
+    const itemList = Object.assign({}, state.selectedTOS[itemLevel]);
+    for(const key in itemList) {
+      if(itemList.hasOwnProperty(key)) {
+        newOrder.map(item => {
+          if(itemList[key].id === item.id) {
+            itemList[key] = item;
+          }
+        });
+      }
+    }
+    if(action.itemType === 'phase'){
+      return update(state, {
+        selectedTOS: {
+          [parentLevel]: {
+            [itemLevel]: {
+              $set: parentList
+            }
+          },
+          [itemLevel]: {
+            $set: itemList
+          }
+        }
+      });
+    } else {
+      return update(state, {
+        selectedTOS: {
+          [parentLevel]: {
+            [action.itemParent]: {
+              [itemLevel]: {
+                $set: parentList
+              }
+            }
+          },
+          [itemLevel]: {
+            $set: itemList
+          }
+        }
+      });
+    }
   }
 };
 // ------------------------------------

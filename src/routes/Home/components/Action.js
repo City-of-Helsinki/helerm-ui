@@ -3,6 +3,7 @@ import './Action.scss';
 import Record from './Record';
 import AddRecord from './AddRecord';
 import DeletePopup from './DeletePopup';
+import ReorderView from './ReorderView';
 
 export class Action extends React.Component {
   constructor (props) {
@@ -14,7 +15,8 @@ export class Action extends React.Component {
       mode: 'view',
       name: this.props.action.name,
       deleting: false,
-      deleted: false
+      deleted: false,
+      showReorderView: false
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -72,6 +74,10 @@ export class Action extends React.Component {
     this.setState({ mode: 'view' });
     this.props.addRecord();
   }
+  toggleReorderView () {
+    const current = this.state.showReorderView
+    this.setState({showReorderView: !current});
+  }
   render () {
     const { action } = this.props;
     const recordElements = this.generateRecords(action.records);
@@ -109,6 +115,11 @@ export class Action extends React.Component {
         { !this.state.deleted &&
         <div className='action box row'>
           { actionTitle }
+          { this.props.documentState === 'edit' &&
+            <button className='btn btn-primary btn-sm pull-right' onClick={() => this.toggleReorderView()}>
+              Järjestä asiakirjoja
+            </button>
+          }
           <strong className='col-xs-6'>
             Asiakirjatyypin tarkenne
           </strong>
@@ -144,6 +155,17 @@ export class Action extends React.Component {
               cancel={() => this.cancelDeletion()}
             />
           }
+          { this.state.showReorderView &&
+            <ReorderView
+              target='record'
+              toggleReorderView={() => this.toggleReorderView()}
+              keys={this.props.action.records}
+              values={this.props.records}
+              commitOrderChanges={this.props.commitOrderChanges}
+              parent={this.props.action.id}
+              parentName={this.state.name}
+            />
+          }
         </div>
       }
       </div>
@@ -159,7 +181,8 @@ Action.propTypes = {
   documentState: React.PropTypes.string.isRequired,
   addRecord: React.PropTypes.func.isRequired,
   actionIndex: React.PropTypes.string.isRequired,
-  phaseIndex: React.PropTypes.string.isRequired
+  phaseIndex: React.PropTypes.string.isRequired,
+  commitOrderChanges: React.PropTypes.func.isRequired
 };
 
 export default Action;

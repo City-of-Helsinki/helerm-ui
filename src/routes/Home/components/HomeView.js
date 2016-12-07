@@ -29,7 +29,8 @@ export class HomeView extends React.Component {
       attributeTypes,
       addAction,
       addRecord,
-      addPhase
+      addPhase,
+      commitOrderChanges
     } = this.props;
     return (
       <div>
@@ -60,6 +61,7 @@ export class HomeView extends React.Component {
           addAction={addAction}
           addRecord={addRecord}
           addPhase={addPhase}
+          commitOrderChanges={commitOrderChanges}
         />
       </div>
     );

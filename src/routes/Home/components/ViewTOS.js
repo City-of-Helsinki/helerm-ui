@@ -2,6 +2,7 @@ import React from 'react';
 import './ViewTOS.scss';
 import Phase from './Phase';
 import Attribute from './Attribute';
+import ReorderView from './ReorderView';
 import formatDate from 'occasion';
 import { StickyContainer, Sticky } from 'react-sticky';
 
@@ -16,7 +17,8 @@ export class ViewTOS extends React.Component {
       showMetadata: false,
       createPhaseMode: false,
       newPhaseName: '',
-      update: ''
+      update: '',
+      showReorderView: false
     };
   }
   formatDateTime (dateTime) {
@@ -52,6 +54,10 @@ export class ViewTOS extends React.Component {
     const newString = Math.random().toString(36).replace(/[^a-z]+/g, '');
     this.setState({ update: newString });
     this.props.setPhaseVisibility(x, y);
+  }
+  toggleReorderView () {
+    const current = this.state.showReorderView
+    this.setState({showReorderView: !current});
   }
   generateMetaData (attributeTypes, attributes) {
     const modifiedDateTime = this.formatDateTime(this.props.selectedTOS.modified_at);
@@ -130,8 +136,8 @@ export class ViewTOS extends React.Component {
         phaseElements.push(
           <Phase
             key={key}
-            phaseIndex={key}
-            phase={phases[key]}
+            phaseIndex={phases[key]}
+            phase={this.props.phases[phases[key]]}
             actions={this.props.actions}
             records={this.props.records}
             setPhaseVisibility={this.setPhaseVisibility}
@@ -140,6 +146,7 @@ export class ViewTOS extends React.Component {
             attributeTypes={this.props.attributeTypes}
             addAction={this.props.addAction}
             addRecord={this.props.addRecord}
+            commitOrderChanges={this.props.commitOrderChanges}
             update={this.state.update}
           />
         );
@@ -150,7 +157,7 @@ export class ViewTOS extends React.Component {
   render () {
     const { selectedTOS, phases } = this.props;
     if (selectedTOS !== undefined && Object.keys(selectedTOS).length !== 0) {
-      const phaseElements = this.generatePhases(phases);
+      const phaseElements = this.generatePhases(selectedTOS.phases);
       const TOSMetaData = this.generateMetaData(this.props.attributeTypes, selectedTOS.attributes);
       return (
         <div className='col-xs-12'>
@@ -160,33 +167,33 @@ export class ViewTOS extends React.Component {
                 <h4 className='col-md-6 col-xs-12'>{selectedTOS.function_id} {selectedTOS.name}</h4>
                 <div className='document-buttons col-xs-12 col-md-6'>
                   { this.props.documentState !== 'edit' &&
-                    <button
-                      className='btn btn-primary btn-sm'
-                      onClick={() => this.props.setDocumentState('edit')}>
-                      Muokkaustila
-                    </button>
-                  }
-                  <button className='btn btn-default btn-sm pull-right'>Lähetä tarkastettavaksi</button>
-                  { this.props.documentState === 'edit' &&
-                    <button
-                      className='btn btn-primary btn-sm pull-right'
-                      onClick={() => this.props.setDocumentState('view')}>
-                      Tallenna luonnos
-                    </button>
+                    <span className='button-row'>
+                      <button className='btn btn-default btn-sm pull-right'>Lähetä tarkastettavaksi</button>
+                      <button
+                        className='btn btn-primary btn-sm pull-right'
+                        onClick={() => this.props.setDocumentState('edit')}>
+                        Muokkaustila
+                      </button>
+                    </span>
                   }
                   { this.props.documentState === 'edit' &&
-                    <button
-                      className='btn btn-danger btn-sm pull-right'
-                      onClick={() => this.props.setDocumentState('view')}>
-                      Peruuta muokkaus
-                    </button>
+                    <span className='button-row'>
+                      <button
+                        className='btn btn-primary btn-sm pull-right'
+                        onClick={() => this.props.setDocumentState('view')}>
+                        Tallenna luonnos
+                      </button>
+                      <button
+                        className='btn btn-danger btn-sm pull-right'
+                        onClick={() => this.props.setDocumentState('view')}>
+                        Peruuta muokkaus
+                      </button>
+                      <span
+                        className='fa fa-asterisk required-asterisk required-legend col-xs-12'> = Pakollinen tieto
+                      </span>
+                    </span>
                   }
                 </div>
-                { this.props.documentState === 'edit' &&
-                  <span
-                    className='fa fa-asterisk required-asterisk required-legend col-xs-12'> = Pakollinen tieto
-                  </span>
-                }
               </div>
             </Sticky>
             <div className='single-tos-content'>
@@ -204,6 +211,12 @@ export class ViewTOS extends React.Component {
                         className='btn btn-primary btn-sm pull-left'
                         onClick={() => this.addPhase()}>
                         Uusi käsittelyvaihe
+                      </button>
+                    }
+                    { this.props.documentState === 'edit' &&
+                      !this.state.createPhaseMode &&
+                      <button className='btn btn-primary btn-sm pull-left' onClick={() => this.toggleReorderView()}>
+                        Järjestä käsittelyvaiheita
                       </button>
                     }
                     <button
@@ -240,6 +253,17 @@ export class ViewTOS extends React.Component {
                     </form>
                   }
                   { phaseElements }
+                  { this.state.showReorderView &&
+                    <ReorderView
+                      target='phase'
+                      toggleReorderView={() => this.toggleReorderView()}
+                      keys={this.props.selectedTOS.phases}
+                      values={this.props.phases}
+                      commitOrderChanges={this.props.commitOrderChanges}
+                      parent={null}
+                      parentName={selectedTOS.function_id + ' ' + selectedTOS.name}
+                    />
+                  }
                 </div>
               </div>
             </div>
