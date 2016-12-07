@@ -294,6 +294,8 @@ export const actions = {
   setNavigationVisibility,
   requestTOS,
   receiveTOS,
+  receiveRecordTypes,
+  receiveAttributes,
   fetchTOS,
   fetchNavigation,
   fetchRecordTypes,
@@ -428,23 +430,6 @@ const ACTION_HANDLERS = {
         actions: {
           [action.newAction.actionId]: {
             $set: action.newAction
-          }
-        }
-      }
-    });
-  },
-  [ADD_RECORD]: (state, action) => {
-    return update(state, {
-      selectedTOS: {
-        data: {
-          phases: {
-            [action.phaseIndex]: {
-              actions: {
-                [action.actionIndex]: {
-                  records: {$push: action.newRecord}
-                }
-              }
-            }
           }
         }
       }

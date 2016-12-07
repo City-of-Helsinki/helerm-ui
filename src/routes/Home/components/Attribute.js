@@ -15,6 +15,9 @@ export class Attribute extends React.Component {
     if (nextProps.mode) {
       this.setState({ mode: nextProps.mode });
     }
+    if (nextProps.attribute) {
+      this.setState({ attribute: nextProps.attribute });
+    }
   }
   activateEditMode () {
     if (this.state.mode !== 'edit') {
@@ -106,9 +109,9 @@ export class Attribute extends React.Component {
     );
   }
   render () {
-    const { attribute, attributeIndex, showAttributes, attributeKey } = this.props;
+    const { attribute, attributeIndex, showAttributes, attributeKey, attributeTypes, editable, type } = this.props;
     let attributeValue;
-    if (this.props.editable === false) {
+    if (editable === false) {
       return (
         <a className='list-group-item col-xs-6'>
           <strong>{attributeIndex}:</strong> <div>{attribute}</div>
@@ -119,10 +122,10 @@ export class Attribute extends React.Component {
       attributeValue = <div className='table-value'>{this.state.attribute}</div>;
     }
     if (this.state.mode === 'edit') {
-      if (this.props.type === 'attribute') {
-        attributeValue = this.generateAttributeInput(this.props.attributeTypes[attributeIndex], attribute);
+      if (type === 'attribute') {
+        attributeValue = this.generateAttributeInput(attributeTypes[attributeIndex], attribute);
       }
-      if (this.props.type === 'record') {
+      if (type === 'record') {
         attributeValue = this.generateRecordInput(attributeIndex, attribute);
       }
     }
@@ -132,9 +135,8 @@ export class Attribute extends React.Component {
         className={'list-group-item col-xs-6 attribute ' + (showAttributes ? 'visible' : 'hidden')}>
         <span className='table-key'>
           { attributeKey }
-          { this.props.type === 'attribute' &&
-            this.state.mode === 'edit' &&
-            this.props.attributeTypes[attributeIndex].required &&
+          { type === 'attribute' &&
+            attributeTypes[attributeIndex].required &&
             <span className='fa fa-asterisk required-asterisk' />
           }
         </span>

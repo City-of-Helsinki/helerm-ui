@@ -7,7 +7,6 @@ import DeletePopup from './DeletePopup';
 export class Action extends React.Component {
   constructor (props) {
     super(props);
-    this.onChange = this.onChange.bind(this);
     this.saveActionTitle = this.saveActionTitle.bind(this);
     this.addRecord = this.addRecord.bind(this);
     this.cancelRecordCreation = this.cancelRecordCreation.bind(this);
@@ -17,6 +16,11 @@ export class Action extends React.Component {
       deleting: false,
       deleted: false
     };
+  }
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.action.name) {
+      this.setState({name: nextProps.action.name})
+    }
   }
   editActionTitle () {
     if (this.props.documentState === 'edit') {
@@ -29,8 +33,8 @@ export class Action extends React.Component {
       this.setState({ mode: 'view' });
     }
   }
-  onChange (event) {
-    this.setState({ name: event.target.value });
+  onChange (e) {
+    this.setState({ name: e.target.value });
   }
   generateRecords (records) {
     const elements = [];
@@ -94,7 +98,7 @@ export class Action extends React.Component {
           <input
             className='input-title form-control col-xs-11'
             value={this.state.name}
-            onChange={this.onChange}
+            onChange={(e) => this.onChange(e)}
             onBlur={this.saveActionTitle}
             autoFocus
           />

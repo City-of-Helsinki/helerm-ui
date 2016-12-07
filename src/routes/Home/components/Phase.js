@@ -21,6 +21,12 @@ export class Phase extends React.Component {
       deleted: false
     };
   }
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.phase.name) {
+      this.setState({name: nextProps.phase.name})
+    }
+  }
   editPhaseTitle () {
     if (this.props.documentState === 'edit') {
       this.setState({ mode: 'edit' });
