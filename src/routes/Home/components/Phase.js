@@ -24,9 +24,9 @@ export class Phase extends React.Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.phase.name) {
-      this.setState({name: nextProps.phase.name})
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.phase.name) {
+      this.setState({ name: nextProps.phase.name });
     }
   }
   editPhaseTitle () {
@@ -47,8 +47,8 @@ export class Phase extends React.Component {
     this.setState({ newActionName: event.target.value });
   }
   toggleReorderView () {
-    const current = this.state.showReorderView
-    this.setState({showReorderView: !current});
+    const current = this.state.showReorderView;
+    this.setState({ showReorderView: !current });
   }
   generateActions (actions) {
     const elements = [];
@@ -222,7 +222,8 @@ Phase.propTypes = {
   setPhaseVisibility: React.PropTypes.func.isRequired,
   addAction: React.PropTypes.func.isRequired,
   addRecord: React.PropTypes.func.isRequired,
-  update: React.PropTypes.string.isRequired
+  update: React.PropTypes.string.isRequired,
+  commitOrderChanges: React.PropTypes.func.isRequired
 };
 
 export default Phase;

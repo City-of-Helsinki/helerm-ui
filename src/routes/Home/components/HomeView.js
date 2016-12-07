@@ -88,6 +88,7 @@ HomeView.propTypes = {
   addAction: React.PropTypes.func.isRequired,
   addRecord: React.PropTypes.func.isRequired,
   addPhase: React.PropTypes.func.isRequired,
-  fetchValidationRules: React.PropTypes.func.isRequired
+  fetchValidationRules: React.PropTypes.func.isRequired,
+  commitOrderChanges: React.PropTypes.func.isRequired
 };
 export default HomeView;

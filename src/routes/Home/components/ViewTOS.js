@@ -56,8 +56,8 @@ export class ViewTOS extends React.Component {
     this.props.setPhaseVisibility(x, y);
   }
   toggleReorderView () {
-    const current = this.state.showReorderView
-    this.setState({showReorderView: !current});
+    const current = this.state.showReorderView;
+    this.setState({ showReorderView: !current });
   }
   generateMetaData (attributeTypes, attributes) {
     const modifiedDateTime = this.formatDateTime(this.props.selectedTOS.modified_at);
@@ -289,7 +289,8 @@ ViewTOS.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
   addAction: React.PropTypes.func.isRequired,
   addRecord: React.PropTypes.func.isRequired,
-  addPhase: React.PropTypes.func.isRequired
+  addPhase: React.PropTypes.func.isRequired,
+  commitOrderChanges: React.PropTypes.func.isRequired
 };
 
 export default ViewTOS;

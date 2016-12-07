@@ -16,16 +16,16 @@ export class ReorderView extends React.Component {
       keys: this.props.keys
     };
   }
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.keys) {
-      this.setState({keys: nextProps.keys});
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.keys) {
+      this.setState({ keys: nextProps.keys });
     }
   }
-  commitOrderChanges(keys) {
+  commitOrderChanges (keys) {
     this.props.commitOrderChanges(keys, this.props.target, this.props.parent);
     this.props.toggleReorderView();
   }
-  moveItem(dragIndex, hoverIndex) {
+  moveItem (dragIndex, hoverIndex) {
     const { keys } = this.state;
     const dragItem = keys[dragIndex];
 
@@ -43,7 +43,7 @@ export class ReorderView extends React.Component {
   }
   render () {
     const { keys } = this.state;
-    const {target, values, toggleReorderView, parentName} = this.props;
+    const { target, values, toggleReorderView, parentName } = this.props;
     return (
       <div className='popup-outer-background' onClick={toggleReorderView}>
         <div className='popup-inner-background' onClick={(e) => this.stop(e)}>
@@ -67,7 +67,11 @@ export class ReorderView extends React.Component {
             )) }
           </div>
           <div className='col-sm-8 col-sm-offset-2'>
-            <button onClick={() => this.commitOrderChanges(this.state.keys)} className='btn btn-primary pull-right'>Tallenna</button>
+            <button
+              onClick={() => this.commitOrderChanges(this.state.keys)}
+              className='btn btn-primary pull-right'>
+              Tallenna
+            </button>
             <button onClick={toggleReorderView} className='btn btn-default pull-right'>Peruuta</button>
           </div>
         </div>
@@ -81,7 +85,9 @@ ReorderView.propTypes = {
   toggleReorderView: React.PropTypes.func.isRequired,
   keys: React.PropTypes.array.isRequired,
   values: React.PropTypes.object.isRequired,
-  parent: React.PropTypes.string
+  parent: React.PropTypes.string,
+  commitOrderChanges: React.PropTypes.func.isRequired,
+  parentName: React.PropTypes.string.isRequired
 };
 
 export default ReorderView;

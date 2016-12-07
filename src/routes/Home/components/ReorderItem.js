@@ -11,7 +11,7 @@ const style = {
 };
 
 const itemSource = {
-  beginDrag(props) {
+  beginDrag (props) {
     return {
       id: props.id,
       index: props.index
@@ -20,7 +20,7 @@ const itemSource = {
 };
 
 const itemTarget = {
-  hover(props, monitor, component) {
+  hover (props, monitor, component) {
     const dragIndex = monitor.getItem().index;
     const hoverIndex = props.index;
 
@@ -79,7 +79,7 @@ export class ReorderItem extends React.Component {
     const { name, isDragging, connectDragSource, connectDropTarget, target } = this.props;
     const opacity = isDragging ? 0 : 1;
     let border;
-    switch(target) {
+    switch (target) {
       case 'action':
         border = '2px dashed #658fcd';
         break;
@@ -87,7 +87,7 @@ export class ReorderItem extends React.Component {
         border = '2px dashed salmon';
         break;
       default:
-        border = '2px dashed gray'
+        border = '2px dashed gray';
     }
     return connectDragSource(connectDropTarget(
       <div style={{ ...style, opacity, border }}>
@@ -104,6 +104,7 @@ ReorderItem.propTypes = {
   index: React.PropTypes.string.isRequired,
   id: React.PropTypes.number.isRequired,
   name: React.PropTypes.string.isRequired,
+  target: React.PropTypes.string.isRequired,
   moveItem: React.PropTypes.func.isRequired
 };
 

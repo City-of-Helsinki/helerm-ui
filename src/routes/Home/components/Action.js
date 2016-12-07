@@ -19,9 +19,9 @@ export class Action extends React.Component {
       showReorderView: false
     };
   }
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.action.name) {
-      this.setState({name: nextProps.action.name})
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.action.name) {
+      this.setState({ name: nextProps.action.name });
     }
   }
   editActionTitle () {
@@ -75,8 +75,8 @@ export class Action extends React.Component {
     this.props.addRecord();
   }
   toggleReorderView () {
-    const current = this.state.showReorderView
-    this.setState({showReorderView: !current});
+    const current = this.state.showReorderView;
+    this.setState({ showReorderView: !current });
   }
   render () {
     const { action } = this.props;
