@@ -97,9 +97,35 @@ export class Phase extends React.Component {
     let phaseTitle;
     if (this.state.mode !== 'edit') {
       phaseTitle =
-        <span className='phase-title' onClick={() => this.editPhaseTitle()}>
-          <i className='fa fa-info-circle' aria-hidden='true' /> {this.state.name}
-        </span>;
+        <span>
+          <span className='phase-title' onClick={() => this.editPhaseTitle()}>
+            <i className='fa fa-info-circle' aria-hidden='true' /> {this.state.name}
+          </span>
+          { this.props.documentState === 'edit' &&
+            <button
+              type='button'
+              className='btn btn-delete btn-sm pull-right'
+              title='Poista'
+              onClick={() => this.setState({ deleting: true })} >
+              <span
+                className='fa fa-trash-o'
+                aria-hidden='true'
+              />
+            </button>
+          }
+          { actions.length !== 0 &&
+            <button
+              type='button'
+              className='btn btn-info btn-sm pull-right'
+              title={phase.is_open ? 'Pienennä' : 'Laajenna'}
+              onClick={() => this.props.setPhaseVisibility(phaseIndex, !phase.is_open)}>
+              <span
+                className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
+                aria-hidden='true'
+              />
+            </button>
+          }
+        </span>
     }
     if (this.state.mode === 'edit') {
       phaseTitle =
@@ -118,7 +144,7 @@ export class Phase extends React.Component {
     return (
       <div>
         { !this.state.deleted &&
-          <StickyContainer className='col-xs-12 box'>
+          <StickyContainer className='col-xs-12 box phase'>
             <Sticky className='phase-title'>
               {/*
                 { update } is a hack to fix firefox specific issue of re-rendering phases
@@ -126,31 +152,6 @@ export class Phase extends React.Component {
               */}
               <div className='update'>{ update }</div>
               { phaseTitle }
-              <span className='label label-default label-phase'>Käsittelyvaihe</span>
-              { this.props.documentState === 'edit' &&
-                <button
-                  type='button'
-                  className='btn btn-delete btn-sm pull-right'
-                  title='Poista'
-                  onClick={() => this.setState({ deleting: true })} >
-                  <span
-                    className='fa fa-trash-o'
-                    aria-hidden='true'
-                  />
-                </button>
-              }
-              { actions.length !== 0 &&
-                <button
-                  type='button'
-                  className='btn btn-info btn-sm pull-right'
-                  title={phase.is_open ? 'Pienennä' : 'Laajenna'}
-                  onClick={() => this.props.setPhaseVisibility(phaseIndex, !phase.is_open)}>
-                  <span
-                    className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
-                    aria-hidden='true'
-                  />
-                </button>
-              }
               { this.props.documentState === 'edit' &&
                 !this.state.createPhaseMode &&
                 <button className='btn btn-primary btn-sm pull-right' onClick={() => this.toggleReorderView()}>
@@ -158,12 +159,12 @@ export class Phase extends React.Component {
                 </button>
               }
             </Sticky>
-            <div className={(phase.is_open ? '' : 'hidden')}>
+            <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>
               { actionElements }
             </div>
             { this.props.documentState === 'edit' && this.state.mode !== 'add' &&
               <button
-                className='btn btn-primary btn-sm btn-new-record pull-left'
+                className='btn btn-primary btn-sm btn-new-action pull-left'
                 onClick={() => this.createNewAction()}>
                 Uusi toimenpide
               </button>
@@ -175,13 +176,13 @@ export class Phase extends React.Component {
                   <input type='text' className='form-control'
                     value={this.state.newActionName} onChange={this.onNewChange} placeholder='Toimenpiteen nimi' />
                 </div>
-                <div className='col-xs-12 col-md-4'>
-                  <button className='btn btn-primary pull-left' type='submit'>Lisää</button>
+                <div className='col-xs-12 col-md-4 add-action-buttons'>
                   <button
-                    className='btn btn-default pull-left'
+                    className='btn btn-danger col-xs-6'
                     onClick={this.cancelActionCreation}>
                     Peruuta
                   </button>
+                  <button className='btn btn-primary col-xs-6' type='submit'>Lisää</button>
                 </div>
               </form>
             }

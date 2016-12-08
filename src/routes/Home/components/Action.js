@@ -86,14 +86,18 @@ export class Action extends React.Component {
       actionTitle =
         <div className='action-title' onClick={() => this.editActionTitle()}>
           {this.state.name}
-          <span className='label label-default label-action'>Toimenpide</span>
           { this.props.documentState === 'edit' &&
-            <button
-              className='btn btn-delete btn-xs pull-right'
-              onClick={() => this.setState({ deleting: true })}
-              title='Poista'>
-              <span className='fa fa-trash-o' />
-            </button>
+            <span className='action-buttons'>
+              <button
+                className='btn btn-delete btn-xs pull-right'
+                onClick={() => this.setState({ deleting: true })}
+                title='Poista'>
+                <span className='fa fa-trash-o' />
+              </button>
+              <button className='btn btn-primary btn-xs pull-right' onClick={() => this.toggleReorderView()}>
+                Järjestä asiakirjoja
+              </button>
+            </span>
           }
         </div>
       ;
@@ -113,20 +117,15 @@ export class Action extends React.Component {
     return (
       <div>
         { !this.state.deleted &&
-        <div className='action box row'>
+        <div className='row box action'>
           { actionTitle }
-          { this.props.documentState === 'edit' &&
-            <button className='btn btn-primary btn-sm pull-right' onClick={() => this.toggleReorderView()}>
-              Järjestä asiakirjoja
-            </button>
-          }
           <strong className='col-xs-6'>
             Asiakirjatyypin tarkenne
           </strong>
           <strong className='col-xs-6'>
             Tyyppi
           </strong>
-          <div className='records'>
+          <div className={'col-xs-12 records ' + (this.props.documentState === 'edit' ? 'records-editing' : '')}>
             { recordElements }
           </div>
           { this.props.documentState === 'edit' && this.state.mode !== 'add' &&

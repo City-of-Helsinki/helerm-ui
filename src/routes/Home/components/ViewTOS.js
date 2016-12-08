@@ -189,7 +189,7 @@ export class ViewTOS extends React.Component {
                         Peruuta muokkaus
                       </button>
                       <span
-                        className='fa fa-asterisk required-asterisk required-legend col-xs-12'> = Pakollinen tieto
+                        className='fa fa-asterisk required-asterisk required-legend'> = Pakollinen tieto
                       </span>
                     </span>
                   }

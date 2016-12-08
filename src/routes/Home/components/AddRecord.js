@@ -113,9 +113,9 @@ export class AddRecord extends React.Component {
             </div>
             { attributeElements }
             <div className='col-xs-12'>
-              <button className='btn btn-primary pull-right edit-record__submit' type='submit'>Valmis</button>
+            <button className='btn btn-primary pull-right edit-record__submit' type='submit'>Valmis</button>
               <button
-                className='btn btn-default pull-right edit-record__cancel'
+                className='btn btn-danger pull-right edit-record__cancel'
                 onClick={this.cancelRecordCreation}>
                 Peruuta
               </button>

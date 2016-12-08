@@ -49,12 +49,16 @@ export class ReorderView extends React.Component {
         <div className='popup-inner-background' onClick={(e) => this.stop(e)}>
           <h3>Järjestä</h3>
           { target === 'phase' &&
-            <h4>Järjestä TOS:n <strong>{parentName}</strong> käsittelyvaiheita</h4>
+            <span className='popup-subtext'>
+              Järjestä TOS:n <strong className='popup-subtext-highlight'>{parentName}</strong> käsittelyvaiheita
+            </span>
           }
           { target === 'action' &&
-            <h4>Järjestä käsittelyvaiheen <strong>{parentName}</strong> toimenpiteet</h4>
+            <span className='popup-subtext'>
+              Järjestä käsittelyvaiheen <strong className='popup-subtext-highlight'>{parentName}</strong> toimenpiteet
+            </span>
           }
-          <div>
+          <div className='reorder-list'>
             { keys.map((key, index) => (
               <ReorderItem
                 key={values[key].index}
@@ -66,13 +70,13 @@ export class ReorderView extends React.Component {
               />
             )) }
           </div>
-          <div className='col-sm-8 col-sm-offset-2'>
+          <div className='col-xs-12 button-row'>
             <button
               onClick={() => this.commitOrderChanges(this.state.keys)}
               className='btn btn-primary pull-right'>
               Tallenna
             </button>
-            <button onClick={toggleReorderView} className='btn btn-default pull-right'>Peruuta</button>
+            <button onClick={toggleReorderView} className='btn btn-danger pull-right'>Peruuta</button>
           </div>
         </div>
       </div>

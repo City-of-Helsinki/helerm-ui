@@ -1,7 +1,20 @@
+.action {
+  border-top-color: #658fcd;
+  border-top-width: 4px;
+}
 .action-title, .action-title-input {
   margin-bottom: 10px;
 }
 .label-action {
   background-color: #658fcd;
   margin-left: 5px;
+}
+.records {
+  padding: 1px 0px 0px 0px;
+}
+.records-editing {
+  margin-bottom: 25px;
+}
+.action-buttons > button {
+  margin: 0px 1px;
 }
