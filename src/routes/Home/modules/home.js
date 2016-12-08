@@ -277,11 +277,15 @@ export function addRecord(phaseIndex, name) {
   }
 }
 
-export function addPhase(name) {
+export function addPhase(name, parent) {
   const phaseId = Math.random().toString(36).replace(/[^a-z]+/g, '');
   const newPhase = {
     name: name,
-    id: phaseId
+    id: phaseId,
+    function: parent,
+    actions: [],
+    attributes: {},
+    is_open: false
   }
   return {
     type: ADD_PHASE,
@@ -435,12 +439,12 @@ const ACTION_HANDLERS = {
         phases: {
           [action.newAction.phase]: {
             actions: {
-              $push: [action.newAction.actionId]
+              $push: [action.newAction.id]
             }
           }
         },
         actions: {
-          [action.newAction.actionId]: {
+          [action.newAction.id]: {
             $set: action.newAction
           }
         }
@@ -450,6 +454,11 @@ const ACTION_HANDLERS = {
   [ADD_PHASE]: (state, action) => {
     return update(state, {
       selectedTOS: {
+        tos: {
+          phases: {
+            $push : [action.newPhase.id]
+          }
+        },
         phases: {
           [action.newPhase.id]: {
             $set: action.newPhase

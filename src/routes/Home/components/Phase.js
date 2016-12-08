@@ -113,17 +113,25 @@ export class Phase extends React.Component {
               />
             </button>
           }
-          { actions.length !== 0 &&
-            <button
-              type='button'
-              className='btn btn-info btn-sm pull-right'
-              title={phase.is_open ? 'Pienennä' : 'Laajenna'}
-              onClick={() => this.props.setPhaseVisibility(phaseIndex, !phase.is_open)}>
-              <span
-                className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
-                aria-hidden='true'
-              />
-            </button>
+          { phase.actions.length !== 0 &&
+            <span>
+              <button
+                type='button'
+                className='btn btn-info btn-sm pull-right'
+                title={phase.is_open ? 'Pienennä' : 'Laajenna'}
+                onClick={() => this.props.setPhaseVisibility(phaseIndex, !phase.is_open)}>
+                <span
+                  className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
+                  aria-hidden='true'
+                />
+              </button>
+              { this.props.documentState === 'edit' &&
+                phase.actions.length > 1 &&
+                <button className='btn btn-primary btn-sm pull-right' onClick={() => this.toggleReorderView()}>
+                  Järjestä toimenpiteitä
+                </button>
+              }
+            </span>
           }
         </span>);
     }
@@ -152,12 +160,6 @@ export class Phase extends React.Component {
               */}
               <div className='update'>{ update }</div>
               { phaseTitle }
-              { this.props.documentState === 'edit' &&
-                !this.state.createPhaseMode &&
-                <button className='btn btn-primary btn-sm pull-right' onClick={() => this.toggleReorderView()}>
-                  Järjestä toimenpiteitä
-                </button>
-              }
             </Sticky>
             <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>
               { actionElements }

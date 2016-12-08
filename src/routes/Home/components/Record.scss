@@ -1,6 +1,10 @@
 .record {
   position: relative;
   padding: 0px;
+
+  .attribute:nth-child(3) {
+      width: 41.66667%;
+  }
 }
 .record:nth-child(even), .record:nth-child(even) .list-group-item {
   background-color: #f6f6f6;

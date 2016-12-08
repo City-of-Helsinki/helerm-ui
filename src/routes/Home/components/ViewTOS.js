@@ -35,7 +35,7 @@ export class ViewTOS extends React.Component {
   createNewPhase (event) {
     event.preventDefault();
     if (this.state.newPhaseName.length > 0) {
-      this.props.addPhase(this.state.newPhaseName);
+      this.props.addPhase(this.state.newPhaseName, this.props.selectedTOS.id);
       this.setState({ createPhaseMode: false, newPhaseName: '' });
     }
   }
