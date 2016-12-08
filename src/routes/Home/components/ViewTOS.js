@@ -204,32 +204,29 @@ export class ViewTOS extends React.Component {
                   </div>
                 </div>
                 <div className='col-xs-12'>
-                  <div className='button-row col-xs-12'>
-                    { this.props.documentState === 'edit' &&
-                      !this.state.createPhaseMode &&
+                  { this.props.documentState === 'edit' &&
+                    !this.state.createPhaseMode &&
+                    <div className='button-row col-xs-12'>
                       <button
                         className='btn btn-primary btn-sm pull-left'
                         onClick={() => this.addPhase()}>
                         Uusi käsittelyvaihe
                       </button>
-                    }
-                    { this.props.documentState === 'edit' &&
-                      !this.state.createPhaseMode &&
                       <button className='btn btn-primary btn-sm pull-left' onClick={() => this.toggleReorderView()}>
                         Järjestä käsittelyvaiheita
                       </button>
-                    }
-                    <button
-                      className='btn btn-default btn-sm pull-right'
-                      onClick={() => this.props.setPhasesVisibility(phases, true)}>
-                      Avaa kaikki
-                    </button>
-                    <button
-                      className='btn btn-default btn-sm pull-right'
-                      onClick={() => this.props.setPhasesVisibility(phases, false)}>
-                      Pienennä kaikki
-                    </button>
-                  </div>
+                      <button
+                        className='btn btn-default btn-sm pull-right'
+                        onClick={() => this.props.setPhasesVisibility(phases, true)}>
+                        Avaa kaikki
+                      </button>
+                      <button
+                        className='btn btn-default btn-sm pull-right'
+                        onClick={() => this.props.setPhasesVisibility(phases, false)}>
+                        Pienennä kaikki
+                      </button>
+                    </div>
+                  }
                   { this.state.createPhaseMode &&
                     <form onSubmit={this.createNewPhase} className='col-xs-12 phase-form'>
                       <h5>Uusi käsittelyvaihe</h5>
@@ -243,12 +240,12 @@ export class ViewTOS extends React.Component {
                         />
                       </div>
                       <div className='col-xs-12 col-md-4'>
-                        <button className='btn btn-primary pull-left' type='submit'>Lisää</button>
                         <button
-                          className='btn btn-default pull-left'
+                          className='btn btn-danger pull-left'
                           onClick={this.cancelPhaseCreation}>
                           Peruuta
                         </button>
+                        <button className='btn btn-primary pull-left' type='submit'>Lisää</button>
                       </div>
                     </form>
                   }

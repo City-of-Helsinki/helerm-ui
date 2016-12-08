@@ -4,6 +4,7 @@
 }
 .action-title, .action-title-input {
   margin-bottom: 10px;
+  position: relative;
 }
 .label-action {
   background-color: #658fcd;
@@ -15,6 +16,6 @@
 .records-editing {
   margin-bottom: 25px;
 }
-.action-buttons > button {
+.action-buttons button {
   margin: 0px 1px;
 }

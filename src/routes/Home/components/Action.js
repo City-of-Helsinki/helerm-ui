@@ -84,23 +84,26 @@ export class Action extends React.Component {
     let actionTitle;
     if (this.state.mode === 'view' || this.state.mode === 'add') {
       actionTitle =
-        <div className='action-title' onClick={() => this.editActionTitle()}>
+      (<div className='action-title'>
+        <span onClick={() => this.editActionTitle()}>
           {this.state.name}
-          { this.props.documentState === 'edit' &&
-            <span className='action-buttons'>
-              <button
-                className='btn btn-delete btn-xs pull-right'
-                onClick={() => this.setState({ deleting: true })}
-                title='Poista'>
-                <span className='fa fa-trash-o' />
-              </button>
+        </span>
+        { this.props.documentState === 'edit' &&
+          <span className='action-buttons'>
+            <button
+              className='btn btn-delete btn-xs pull-right'
+              onClick={() => this.setState({ deleting: true })}
+              title='Poista'>
+              <span className='fa fa-trash-o' />
+            </button>
+            { action.records.length > 1 &&
               <button className='btn btn-primary btn-xs pull-right' onClick={() => this.toggleReorderView()}>
                 Järjestä asiakirjoja
               </button>
-            </span>
-          }
-        </div>
-      ;
+            }
+          </span>
+        }
+      </div>);
     }
     if (this.state.mode === 'edit') {
       actionTitle =

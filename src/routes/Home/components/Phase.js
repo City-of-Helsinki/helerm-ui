@@ -97,7 +97,7 @@ export class Phase extends React.Component {
     let phaseTitle;
     if (this.state.mode !== 'edit') {
       phaseTitle =
-        <span>
+        (<span>
           <span className='phase-title' onClick={() => this.editPhaseTitle()}>
             <i className='fa fa-info-circle' aria-hidden='true' /> {this.state.name}
           </span>
@@ -125,7 +125,7 @@ export class Phase extends React.Component {
               />
             </button>
           }
-        </span>
+        </span>);
     }
     if (this.state.mode === 'edit') {
       phaseTitle =
