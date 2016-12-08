@@ -28,6 +28,8 @@ export const ADD_ACTION = 'ADD_ACTION';
 export const ADD_RECORD = 'ADD_RECORD';
 export const ADD_PHASE = 'ADD_PHASE';
 
+export const IMPORT_ITEMS = 'IMPORT_ITEMS';
+
 export const COMMIT_ORDER_CHANGE = 'COMMIT_ORDER_CHANGE';
 
 // ------------------------------------
@@ -293,6 +295,14 @@ export function addPhase(name, parent) {
   }
 }
 
+export function importItems(newItem, level) {
+  return {
+    type: IMPORT_ITEMS,
+    newItem,
+    level
+  }
+}
+
 export function commitOrderChanges(newOrder, itemType, itemParent) {
   return {
     type: COMMIT_ORDER_CHANGE,
@@ -321,7 +331,8 @@ export const actions = {
   addAction,
   addRecord,
   addPhase,
-  commitOrderChanges
+  commitOrderChanges,
+  importItems
 };
 
 // ------------------------------------
@@ -533,6 +544,32 @@ const ACTION_HANDLERS = {
         }
       });
     }
+  },
+  [IMPORT_ITEMS]: (state, action) => {
+    const phaseId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+    const phases = Object.assign({}, state.selectedTOS.phases);
+    let indexes = []
+    for (const key in phases) {
+      if(phases.hasOwnProperty(key)) {
+        indexes.push(phases[key].index);
+      };
+    }
+    const newIndex = indexes.length > 0 ? Math.max.apply(null, indexes)+1 : 1
+    const newName = phases[action.newItem].name+'(KOPIO)';
+    const newCopy = Object.assign({}, phases[action.newItem], {id: phaseId}, {index: newIndex}, {name: newName});
+    const newPhases = Object.assign({}, phases, {[phaseId]: newCopy});
+    return update(state, {
+      selectedTOS: {
+        tos: {
+          phases: {
+            $push: [phaseId]
+          }
+        },
+        phases: {
+          $set: newPhases
+        }
+      }
+    });
   }
 };
 // ------------------------------------

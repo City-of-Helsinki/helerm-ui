@@ -3,6 +3,7 @@ import './ViewTOS.scss';
 import Phase from './Phase';
 import Attribute from './Attribute';
 import ReorderView from './ReorderView';
+import ImportView from './ImportView';
 import formatDate from 'occasion';
 import { StickyContainer, Sticky } from 'react-sticky';
 
@@ -18,7 +19,8 @@ export class ViewTOS extends React.Component {
       createPhaseMode: false,
       newPhaseName: '',
       update: '',
-      showReorderView: false
+      showReorderView: false,
+      showImportView: false
     };
   }
   formatDateTime (dateTime) {
@@ -58,6 +60,10 @@ export class ViewTOS extends React.Component {
   toggleReorderView () {
     const current = this.state.showReorderView;
     this.setState({ showReorderView: !current });
+  }
+  toggleImportView () {
+    const current = this.state.showImportView;
+    this.setState({ showImportView: !current});
   }
   generateMetaData (attributeTypes, attributes) {
     const modifiedDateTime = this.formatDateTime(this.props.selectedTOS.modified_at);
@@ -212,6 +218,9 @@ export class ViewTOS extends React.Component {
                         onClick={() => this.addPhase()}>
                         Uusi käsittelyvaihe
                       </button>
+                      <button className='btn btn-primary btn-sm pull-left' onClick={() => this.toggleImportView()}>
+                        Tuo käsittelyvaihe
+                      </button>
                       <button className='btn btn-primary btn-sm pull-left' onClick={() => this.toggleReorderView()}>
                         Järjestä käsittelyvaiheita
                       </button>
@@ -259,6 +268,17 @@ export class ViewTOS extends React.Component {
                       commitOrderChanges={this.props.commitOrderChanges}
                       parent={null}
                       parentName={selectedTOS.function_id + ' ' + selectedTOS.name}
+                    />
+                  }
+                  { this.state.showImportView &&
+                    <ImportView
+                      target='phase'
+                      toggleImportView={() => this.toggleImportView()}
+                      // keys={this.props.selectedTOS.phases}
+                      values={this.props.phases}
+                      importItems={this.props.importItems}
+                      // parent={null}
+                      // parentName={selectedTOS.function_id + ' ' + selectedTOS.name}
                     />
                   }
                 </div>
