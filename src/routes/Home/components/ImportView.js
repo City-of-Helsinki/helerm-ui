@@ -1,33 +1,33 @@
 import React from 'react';
 import './ImportView.scss';
-import { omit } from 'lodash';
+import _ from 'lodash';
 import update from 'immutability-helper';
 
 export class ImportView extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       possibleElements: this.props.values,
       selectedElements: []
-    }
+    };
   }
-  generateImportableElements(elements) {
+  generateImportableElements (elements) {
     let importableElements = [];
-    for(const key in elements) {
-      if(elements.hasOwnProperty(key)){
+    for (const key in elements) {
+      if (elements.hasOwnProperty(key)) {
         importableElements.push(
           <div className='col-xs-12'>
-            <a href="" onClick={(e) => this.selectForImport(e, elements[key].id)}>{elements[key].name}</a>
+            <a key={key} href='' onClick={(e) => this.selectForImport(e, elements[key].id)}>{elements[key].name}</a>
           </div>
         );
       }
     }
     return importableElements;
   }
-  selectForImport(e, element) {
+  selectForImport (e, element) {
     e.preventDefault();
-    let newPossibleElements = Object.assign({}, this.state.possibleElements)
-    newPossibleElements = _.omit(newPossibleElements, element)
+    let newPossibleElements = Object.assign({}, this.state.possibleElements);
+    newPossibleElements = _.omit(newPossibleElements, element);
     this.setState(update(this.state, {
       selectedElements: {
         $push: [element]
@@ -37,10 +37,12 @@ export class ImportView extends React.Component {
       }
     }));
   }
-  removeFromImport(e, elementIndex) {
+  removeFromImport (e, elementIndex) {
     e.preventDefault();
-    let newPossibleElements = Object.assign({}, this.state.possibleElements)
-    newPossibleElements[this.state.selectedElements[elementIndex]] = this.props.values[this.state.selectedElements[elementIndex]];
+    const { values } = this.props;
+    const element = this.state.selectedElements[elementIndex];
+    let newPossibleElements = Object.assign({}, this.state.possibleElements);
+    newPossibleElements[element] = values[element];
     this.setState(update(this.state, {
       selectedElements: {
         $splice: [[elementIndex, 1]]
@@ -51,18 +53,18 @@ export class ImportView extends React.Component {
 
     }));
   }
-  importItems() {
+  importItems () {
     const newElements = this.state.selectedElements;
     newElements.map(element => {
       this.props.importItems(element);
-    })
+    });
     this.props.toggleImportView();
   }
   stop (e) {
     e.stopPropagation();
   }
   render () {
-    const {toggleImportView} = this.props;
+    const { toggleImportView } = this.props;
     const importableElements = this.generateImportableElements(this.state.possibleElements);
     return (
       <div className='popup-outer-background' onClick={toggleImportView}>
@@ -72,12 +74,18 @@ export class ImportView extends React.Component {
             <h5>Valitse listalta tuotavat käsittelyvaiheet</h5>
             {importableElements}
           </div>
-          <div className="col-xs-12">
+          <div className='col-xs-12'>
             { this.state.selectedElements.length > 0 &&
               <div>
                 <h5>Tuotavat käsittelyvaiheet</h5>
                 {this.state.selectedElements.map((element, index) => (
-                  <a href="" onClick={(e) => this.removeFromImport(e, index)}className="col-xs-12">{this.props.values[element].name}</a>
+                  <a
+                    key={index}
+                    href=''
+                    onClick={(e) => this.removeFromImport(e, index)}
+                    className='col-xs-12'>
+                    {this.props.values[element].name}
+                  </a>
                 ))}
               </div>
             }
@@ -95,5 +103,11 @@ export class ImportView extends React.Component {
     );
   }
 }
+
+ImportView.propTypes = {
+  values: React.PropTypes.object.isRequired,
+  toggleImportView: React.PropTypes.func.isRequired,
+  importItems: React.PropTypes.func.isRequired
+};
 
 export default ImportView;

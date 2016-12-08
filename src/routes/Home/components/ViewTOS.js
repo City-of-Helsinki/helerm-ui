@@ -63,7 +63,7 @@ export class ViewTOS extends React.Component {
   }
   toggleImportView () {
     const current = this.state.showImportView;
-    this.setState({ showImportView: !current});
+    this.setState({ showImportView: !current });
   }
   generateMetaData (attributeTypes, attributes) {
     const modifiedDateTime = this.formatDateTime(this.props.selectedTOS.modified_at);
@@ -307,7 +307,8 @@ ViewTOS.propTypes = {
   addAction: React.PropTypes.func.isRequired,
   addRecord: React.PropTypes.func.isRequired,
   addPhase: React.PropTypes.func.isRequired,
-  commitOrderChanges: React.PropTypes.func.isRequired
+  commitOrderChanges: React.PropTypes.func.isRequired,
+  importItems: React.PropTypes.func.isRequired
 };
 
 export default ViewTOS;
