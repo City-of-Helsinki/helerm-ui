@@ -92,7 +92,7 @@ export class Phase extends React.Component {
     this.setState({ deleted: true, deleting: false });
   }
   render () {
-    const { phase, phaseIndex, actions, update } = this.props;
+    const { phase, phaseIndex, update } = this.props;
     const actionElements = this.generateActions(phase.actions);
     let phaseTitle;
     if (this.state.mode !== 'edit') {
