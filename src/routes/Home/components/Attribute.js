@@ -136,6 +136,7 @@ export class Attribute extends React.Component {
         <span className='table-key'>
           { attributeKey }
           { type === 'attribute' &&
+            this.props.documentState === 'edit' &&
             attributeTypes[attributeIndex].required &&
             <span className='fa fa-asterisk required-asterisk' />
           }
