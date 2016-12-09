@@ -19,6 +19,7 @@ class AppContainer extends Component {
       <Provider store={store}>
         <div style={{ height: '100%' }}>
           <Router history={browserHistory} children={routes} />
+          <div style={{ display: 'none' }}>{"git revision " + COMMIT_HASH}</div>
         </div>
       </Provider>
     );

@@ -2,7 +2,7 @@ import React from 'react';
 import Navigation from './Navigation';
 import Loader from './Loader';
 import ViewTOS from './ViewTOS';
-import './Homeview.scss';
+import './HomeView.scss';
 
 export class HomeView extends React.Component {
   componentWillMount () {

@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const cssnano = require('cssnano');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const GitRevisionPlugin = require('git-revision-webpack-plugin');
 const config = require('../config');
 const debug = require('debug')('app:webpack:config');
 
@@ -45,6 +46,10 @@ webpackConfig.output = {
 // ------------------------------------
 // Plugins
 // ------------------------------------
+
+const gitRevisionPlugin = new GitRevisionPlugin();
+config.globals.COMMIT_HASH = JSON.stringify(gitRevisionPlugin.commithash());
+
 webpackConfig.plugins = [
   new webpack.DefinePlugin(config.globals),
   new HtmlWebpackPlugin({
