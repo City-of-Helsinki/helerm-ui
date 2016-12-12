@@ -153,6 +153,7 @@ export class ViewTOS extends React.Component {
             addAction={this.props.addAction}
             addRecord={this.props.addRecord}
             commitOrderChanges={this.props.commitOrderChanges}
+            importItems={this.props.importItems}
             update={this.state.update}
           />
         );
@@ -245,6 +246,7 @@ export class ViewTOS extends React.Component {
                           className='form-control'
                           value={this.state.newPhaseName}
                           onChange={this.onChange}
+                          onSubmit={this.createNewPhase}
                           placeholder='Käsittelyvaiheen nimi'
                         />
                       </div>
@@ -272,13 +274,13 @@ export class ViewTOS extends React.Component {
                   }
                   { this.state.showImportView &&
                     <ImportView
-                      target='phase'
+                      level='phase'
                       toggleImportView={() => this.toggleImportView()}
-                      // keys={this.props.selectedTOS.phases}
                       values={this.props.phases}
                       importItems={this.props.importItems}
-                      // parent={null}
-                      // parentName={selectedTOS.function_id + ' ' + selectedTOS.name}
+                      title="käsittelyvaiheita"
+                      targetText={'TOS-kuvaukseen ' + selectedTOS.name}
+                      itemsToImportText="käsittelyvaiheet"
                     />
                   }
                 </div>

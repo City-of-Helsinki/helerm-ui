@@ -4,6 +4,7 @@ import Record from './Record';
 import AddRecord from './AddRecord';
 import DeletePopup from './DeletePopup';
 import ReorderView from './ReorderView';
+import ImportView from './ImportView';
 
 export class Action extends React.Component {
   constructor (props) {
@@ -16,7 +17,8 @@ export class Action extends React.Component {
       name: this.props.action.name,
       deleting: false,
       deleted: false,
-      showReorderView: false
+      showReorderView: false,
+      showImportView: false
     };
   }
   componentWillReceiveProps (nextProps) {
@@ -78,6 +80,10 @@ export class Action extends React.Component {
     const current = this.state.showReorderView;
     this.setState({ showReorderView: !current });
   }
+  toggleImportView () {
+    const current = this.state.showImportView;
+    this.setState({ showImportView: !current });
+  }
   render () {
     const { action } = this.props;
     const recordElements = this.generateRecords(action.records);
@@ -100,6 +106,15 @@ export class Action extends React.Component {
               <button className='btn btn-primary btn-xs pull-right' onClick={() => this.toggleReorderView()}>
                 Järjestä asiakirjoja
               </button>
+            }
+            { this.props.documentState === 'edit' &&
+              <button
+                type='button'
+                className='btn btn-primary btn-xs pull-right'
+                title='Poista'
+                onClick={() => this.toggleImportView()}>
+                Tuo asiakirjoja
+                </button>
             }
           </span>
         }
@@ -166,6 +181,21 @@ export class Action extends React.Component {
               commitOrderChanges={this.props.commitOrderChanges}
               parent={this.props.action.id}
               parentName={this.state.name}
+            />
+          }
+          { this.state.showImportView &&
+            <ImportView
+              level='record'
+              toggleImportView={() => this.toggleImportView()}
+              // keys={this.props.selectedTOS.phases}
+              title="asiakirjoja"
+              targetText={'toimenpiteeseen ' + action.name}
+              itemsToImportText="asiakirjat"
+              values={this.props.records}
+              importItems={this.props.importItems}
+              parent={action.id}
+              parentName={action.name}
+              // parentName={selectedTOS.function_id + ' ' + selectedTOS.name}
             />
           }
         </div>

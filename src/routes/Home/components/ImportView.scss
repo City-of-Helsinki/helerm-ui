@@ -11,7 +11,9 @@
 .popup-inner-background {
   background-color: white;
   width: 80vw;
-  max-width: 800px;
+  max-width: 1150px;
+  max-height: 75vh;
+  overflow: scroll;
   padding: 35px;
 }
 

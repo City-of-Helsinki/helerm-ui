@@ -4,6 +4,7 @@ import Action from './Action.js';
 import DeletePopup from './DeletePopup';
 import { StickyContainer, Sticky } from 'react-sticky';
 import ReorderView from './ReorderView';
+import ImportView from './ImportView';
 
 export class Phase extends React.Component {
   constructor (props) {
@@ -20,7 +21,8 @@ export class Phase extends React.Component {
       mode: 'view',
       deleting: false,
       deleted: false,
-      showReorderView: false
+      showReorderView: false,
+      showImportView: false
     };
   }
 
@@ -50,6 +52,10 @@ export class Phase extends React.Component {
     const current = this.state.showReorderView;
     this.setState({ showReorderView: !current });
   }
+  toggleImportView () {
+    const current = this.state.showImportView;
+    this.setState({ showImportView: !current });
+  }
   generateActions (actions) {
     const elements = [];
     for (const key in actions) {
@@ -66,6 +72,7 @@ export class Phase extends React.Component {
             phaseIndex={this.props.phaseIndex}
             addRecord={this.props.addRecord}
             commitOrderChanges={this.props.commitOrderChanges}
+            importItems={this.props.importItems}
           />
         );
       };
@@ -132,6 +139,16 @@ export class Phase extends React.Component {
                 </button>
               }
             </span>
+          }
+          { this.props.documentState === 'edit' &&
+            <button
+              type='button'
+              className='btn btn-primary btn-sm pull-right'
+              title='Poista'
+              onClick={() => this.toggleImportView()}>
+              Tuo toimenpiteitä
+              </button>
+
           }
         </span>);
     }
@@ -207,6 +224,19 @@ export class Phase extends React.Component {
             commitOrderChanges={this.props.commitOrderChanges}
             parent={phaseIndex}
             parentName={this.state.name}
+          />
+        }
+        { this.state.showImportView &&
+          <ImportView
+            level='action'
+            toggleImportView={() => this.toggleImportView()}
+            title="toimenpiteitä"
+            targetText={'käsittelyvaiheeseen "' + phase.name + '"'}
+            itemsToImportText="toimenpiteet"
+            values={this.props.actions}
+            importItems={this.props.importItems}
+            parent={phaseIndex}
+            showItems={() => this.props.setPhaseVisibility(phaseIndex, true)}
           />
         }
       </div>

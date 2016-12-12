@@ -54,37 +54,41 @@ export class ImportView extends React.Component {
     }));
   }
   importItems () {
+    const { level, parent, importItems, toggleImportView, showItems} = this.props;
     const newElements = this.state.selectedElements;
     newElements.map(element => {
-      this.props.importItems(element);
+      importItems(element, level, parent);
     });
-    this.props.toggleImportView();
+    if(typeof showItems === 'function') {
+      showItems()
+    }
+    toggleImportView();
   }
   stop (e) {
     e.stopPropagation();
   }
   render () {
-    const { toggleImportView } = this.props;
+    const { toggleImportView, values, title, itemsToImportText, targetText } = this.props;
     const importableElements = this.generateImportableElements(this.state.possibleElements);
     return (
       <div className='popup-outer-background' onClick={toggleImportView}>
         <div className='popup-inner-background' onClick={(e) => this.stop(e)}>
-          <h3>Tuo käsittelyvaihe</h3>
+          <h3>Tuo {title} {targetText}</h3>
           <div className='col-xs-12 importable-elements'>
-            <h5>Valitse listalta tuotavat käsittelyvaiheet</h5>
+            <h5>Valitse listalta tuotavat {itemsToImportText}</h5>
             {importableElements}
           </div>
           <div className='col-xs-12'>
             { this.state.selectedElements.length > 0 &&
               <div>
-                <h5>Tuotavat käsittelyvaiheet</h5>
+                <h5>Tuotavat {itemsToImportText}</h5>
                 {this.state.selectedElements.map((element, index) => (
                   <a
                     key={index}
                     href=''
                     onClick={(e) => this.removeFromImport(e, index)}
                     className='col-xs-12'>
-                    {this.props.values[element].name}
+                    {values[element].name}
                   </a>
                 ))}
               </div>
