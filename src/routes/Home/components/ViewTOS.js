@@ -280,9 +280,9 @@ export class ViewTOS extends React.Component {
                       toggleImportView={() => this.toggleImportView()}
                       values={this.props.phases}
                       importItems={this.props.importItems}
-                      title="käsittelyvaiheita"
+                      title='käsittelyvaiheita'
                       targetText={'TOS-kuvaukseen ' + selectedTOS.name}
-                      itemsToImportText="käsittelyvaiheet"
+                      itemsToImportText='käsittelyvaiheet'
                     />
                   }
                 </div>

@@ -230,9 +230,9 @@ export class Phase extends React.Component {
           <ImportView
             level='action'
             toggleImportView={() => this.toggleImportView()}
-            title="toimenpiteitä"
+            title='toimenpiteitä'
             targetText={'käsittelyvaiheeseen "' + phase.name + '"'}
-            itemsToImportText="toimenpiteet"
+            itemsToImportText='toimenpiteet'
             values={this.props.actions}
             importItems={this.props.importItems}
             parent={phaseIndex}
@@ -256,7 +256,8 @@ Phase.propTypes = {
   addAction: React.PropTypes.func.isRequired,
   addRecord: React.PropTypes.func.isRequired,
   update: React.PropTypes.string.isRequired,
-  commitOrderChanges: React.PropTypes.func.isRequired
+  commitOrderChanges: React.PropTypes.func.isRequired,
+  importItems: React.PropTypes.func.isRequired
 };
 
 export default Phase;

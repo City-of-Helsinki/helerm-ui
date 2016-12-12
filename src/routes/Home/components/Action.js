@@ -188,9 +188,9 @@ export class Action extends React.Component {
               level='record'
               toggleImportView={() => this.toggleImportView()}
               // keys={this.props.selectedTOS.phases}
-              title="asiakirjoja"
+              title='asiakirjoja'
               targetText={'toimenpiteeseen ' + action.name}
-              itemsToImportText="asiakirjat"
+              itemsToImportText='asiakirjat'
               values={this.props.records}
               importItems={this.props.importItems}
               parent={action.id}
@@ -214,7 +214,8 @@ Action.propTypes = {
   addRecord: React.PropTypes.func.isRequired,
   actionIndex: React.PropTypes.string.isRequired,
   phaseIndex: React.PropTypes.string.isRequired,
-  commitOrderChanges: React.PropTypes.func.isRequired
+  commitOrderChanges: React.PropTypes.func.isRequired,
+  importItems: React.PropTypes.func.isRequired
 };
 
 export default Action;

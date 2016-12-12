@@ -54,13 +54,13 @@ export class ImportView extends React.Component {
     }));
   }
   importItems () {
-    const { level, parent, importItems, toggleImportView, showItems} = this.props;
+    const { level, parent, importItems, toggleImportView, showItems } = this.props;
     const newElements = this.state.selectedElements;
     newElements.map(element => {
       importItems(element, level, parent);
     });
-    if(typeof showItems === 'function') {
-      showItems()
+    if (typeof showItems === 'function') {
+      showItems();
     }
     toggleImportView();
   }
@@ -110,8 +110,14 @@ export class ImportView extends React.Component {
 
 ImportView.propTypes = {
   values: React.PropTypes.object.isRequired,
+  level: React.PropTypes.string.isRequired,
+  parent: React.PropTypes.string.isRequired,
+  title: React.PropTypes.string.isRequired,
+  itemsToImportText: React.PropTypes.string.isRequired,
+  targetText: React.PropTypes.string.isRequired,
   toggleImportView: React.PropTypes.func.isRequired,
-  importItems: React.PropTypes.func.isRequired
+  importItems: React.PropTypes.func.isRequired,
+  showItems: React.PropTypes.func.isRequired
 };
 
 export default ImportView;
