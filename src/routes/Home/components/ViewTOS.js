@@ -211,32 +211,34 @@ export class ViewTOS extends React.Component {
                   </div>
                 </div>
                 <div className='col-xs-12'>
-                  { this.props.documentState === 'edit' &&
-                    !this.state.createPhaseMode &&
-                    <div className='button-row col-xs-12'>
-                      <button
-                        className='btn btn-primary btn-sm pull-left'
-                        onClick={() => this.addPhase()}>
-                        Uusi käsittelyvaihe
-                      </button>
-                      <button className='btn btn-primary btn-sm pull-left' onClick={() => this.toggleImportView()}>
-                        Tuo käsittelyvaihe
-                      </button>
-                      <button className='btn btn-primary btn-sm pull-left' onClick={() => this.toggleReorderView()}>
-                        Järjestä käsittelyvaiheita
-                      </button>
-                      <button
-                        className='btn btn-default btn-sm pull-right'
-                        onClick={() => this.props.setPhasesVisibility(phases, true)}>
-                        Avaa kaikki
-                      </button>
-                      <button
-                        className='btn btn-default btn-sm pull-right'
-                        onClick={() => this.props.setPhasesVisibility(phases, false)}>
-                        Pienennä kaikki
-                      </button>
-                    </div>
-                  }
+                  <div className='button-row'>
+                    { this.props.documentState === 'edit' &&
+                      !this.state.createPhaseMode &&
+                      <span>
+                        <button
+                          className='btn btn-primary btn-sm pull-left'
+                          onClick={() => this.addPhase()}>
+                          Uusi käsittelyvaihe
+                        </button>
+                        <button className='btn btn-primary btn-sm pull-left' onClick={() => this.toggleImportView()}>
+                          Tuo käsittelyvaihe
+                        </button>
+                        <button className='btn btn-primary btn-sm pull-left' onClick={() => this.toggleReorderView()}>
+                          Järjestä käsittelyvaiheita
+                        </button>
+                      </span>
+                    }
+                    <button
+                      className='btn btn-default btn-sm pull-right'
+                      onClick={() => this.props.setPhasesVisibility(phases, true)}>
+                      Avaa kaikki
+                    </button>
+                    <button
+                      className='btn btn-default btn-sm pull-right'
+                      onClick={() => this.props.setPhasesVisibility(phases, false)}>
+                      Pienennä kaikki
+                    </button>
+                  </div>
                   { this.state.createPhaseMode &&
                     <form onSubmit={this.createNewPhase} className='col-xs-12 phase-form'>
                       <h5>Uusi käsittelyvaihe</h5>

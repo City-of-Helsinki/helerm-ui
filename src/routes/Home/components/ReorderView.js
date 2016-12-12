@@ -62,7 +62,7 @@ export class ReorderView extends React.Component {
             { keys.map((key, index) => (
               <ReorderItem
                 key={values[key].index}
-                index={index}
+                index={index.toString()}
                 id={values[key].index}
                 name={values[key].name}
                 moveItem={this.moveItem}

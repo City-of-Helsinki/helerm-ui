@@ -137,12 +137,12 @@ export class Action extends React.Component {
         { !this.state.deleted &&
         <div className='row box action'>
           { actionTitle }
-          <strong className='col-xs-6'>
+          <span className='col-xs-6 attribute-label'>
             Asiakirjatyypin tarkenne
-          </strong>
-          <strong className='col-xs-6'>
+          </span>
+          <span className='col-xs-6 attribute-label'>
             Tyyppi
-          </strong>
+          </span>
           <div className={'col-xs-12 records ' + (this.props.documentState === 'edit' ? 'records-editing' : '')}>
             { recordElements }
           </div>

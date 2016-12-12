@@ -3,12 +3,9 @@
   border-top-width: 4px;
 }
 .action-title, .action-title-input {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   position: relative;
-}
-.label-action {
-  background-color: #658fcd;
-  margin-left: 5px;
+  font-weight: 600;
 }
 .records {
   padding: 1px 0px 0px 0px;
@@ -18,4 +15,8 @@
 }
 .action-buttons button {
   margin: 0px 1px;
+}
+.attribute-label {
+  text-transform: uppercase;
+  font-size: 0.8em;
 }

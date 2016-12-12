@@ -24,7 +24,7 @@
   padding: 8px 10px 26px;
   border: 1px solid grey;
   border-radius: 4px;
-  margin: 25px 0px;
+  margin: 15px 0px;
 }
 .general-info {
   margin-bottom: 40px;
@@ -45,7 +45,7 @@
 .button-row {
   padding: 0px;
 }
-.button-row > .btn, .document-buttons > .btn {
+.button-row .btn, .document-buttons > .btn {
   margin: 4px;
 }
 .version-details {
