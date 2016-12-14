@@ -63,8 +63,11 @@ export class Phase extends React.Component {
         elements.push(
           <Action
             key={key}
-            action={this.props.actions[actions[key]]}
             actionIndex={key}
+            action={this.props.actions[actions[key]]}
+            phases={this.props.phases}
+            phasesOrder={this.props.phasesOrder}
+            actions={this.props.actions}
             records={this.props.records}
             recordTypes={this.props.recordTypes}
             documentState={this.props.documentState}
@@ -233,7 +236,10 @@ export class Phase extends React.Component {
             title='toimenpiteitä'
             targetText={'käsittelyvaiheeseen "' + phase.name + '"'}
             itemsToImportText='toimenpiteet'
-            values={this.props.actions}
+            phasesOrder={this.props.phasesOrder}
+            phases={this.props.phases}
+            actions={this.props.actions}
+            records={this.props.records}
             importItems={this.props.importItems}
             parent={phaseIndex}
             showItems={() => this.props.setPhaseVisibility(phaseIndex, true)}
@@ -246,6 +252,8 @@ export class Phase extends React.Component {
 
 Phase.propTypes = {
   phase: React.PropTypes.object.isRequired,
+  phasesOrder: React.PropTypes.array.isRequired,
+  phases: React.PropTypes.object.isRequired,
   actions: React.PropTypes.object.isRequired,
   records: React.PropTypes.object.isRequired,
   phaseIndex: React.PropTypes.string.isRequired,

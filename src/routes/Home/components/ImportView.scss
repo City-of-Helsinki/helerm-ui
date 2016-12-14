@@ -1,38 +1,25 @@
-.popup-outer-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  z-index: 999;
-  width: 100vw;
-  background-color: rgba(0,0,0,0.8);
+.importable-elements {
+  height: 100%;
+  max-height: 65vh;
+  overflow-y: scroll;
 }
-
-.popup-inner-background {
-  background-color: white;
-  width: 80vw;
-  max-width: 1150px;
-  max-height: 75vh;
-  overflow: scroll;
-  padding: 35px;
+.import-wrapper {
+    display: inline-block;
+    margin-bottom: 9px;
 }
-
-.popup-subtext {
-  margin-bottom: 35px;
-  color: black;
-  font-size: 1.1em;
+.import-row-title {
+  display: inline-block;
+  border-left-width: 3px;
+  border-left-style: solid;
+  padding: 4px 7px;
 }
-.reorder-list {
-  margin-bottom: 35px;
-  min-width: 300px;
+.import-phase-title {
+  border-left-color: salmon;
 }
-.has-children-text {
-  color: red;
-  margin: 30px 0px;
+.import-action-title {
+  border-left-color: #658fcd;
 }
-
-.popup-buttons {
-  button {
-    margin: 0px 7px 10px 7px;
-  }
+.import-action-record-wrapper {
+  display: inline-block;
+  margin-left: 11px;
 }

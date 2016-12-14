@@ -144,6 +144,8 @@ export class ViewTOS extends React.Component {
             key={key}
             phaseIndex={phases[key]}
             phase={this.props.phases[phases[key]]}
+            phasesOrder={this.props.selectedTOS.phases}
+            phases={this.props.phases}
             actions={this.props.actions}
             records={this.props.records}
             setPhaseVisibility={this.setPhaseVisibility}
@@ -278,7 +280,10 @@ export class ViewTOS extends React.Component {
                     <ImportView
                       level='phase'
                       toggleImportView={() => this.toggleImportView()}
-                      values={this.props.phases}
+                      phases={this.props.phases}
+                      possibleElements={this.props.selectedTOS.phases}
+                      actions={this.props.actions}
+                      records={this.props.records}
                       importItems={this.props.importItems}
                       title='käsittelyvaiheita'
                       targetText={'TOS-kuvaukseen ' + selectedTOS.name}

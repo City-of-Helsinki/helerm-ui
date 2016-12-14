@@ -191,7 +191,10 @@ export class Action extends React.Component {
               title='asiakirjoja'
               targetText={'toimenpiteeseen ' + action.name}
               itemsToImportText='asiakirjat'
-              values={this.props.records}
+              phasesOrder={this.props.phasesOrder}
+              phases={this.props.phases}
+              actions={this.props.actions}
+              records={this.props.records}
               importItems={this.props.importItems}
               parent={action.id}
               parentName={action.name}
@@ -207,6 +210,9 @@ export class Action extends React.Component {
 
 Action.propTypes = {
   action: React.PropTypes.object.isRequired,
+  phases: React.PropTypes.object.isRequired,
+  phasesOrder: React.PropTypes.array.isRequired,
+  actions: React.PropTypes.object.isRequired,
   records: React.PropTypes.object.isRequired,
   attributeTypes: React.PropTypes.object.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
