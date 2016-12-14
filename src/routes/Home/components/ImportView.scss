@@ -1,11 +1,14 @@
 .importable-elements {
   height: 100%;
-  max-height: 65vh;
+  height: 65vh;
   overflow-y: scroll;
+  overflow-x: hidden;
+  border: 1px 0px 1px 1px solid #ededed;
+  padding-top: 10px
 }
 .import-wrapper {
-    display: inline-block;
-    margin-bottom: 9px;
+  display: inline-block;
+  margin-bottom: 9px;
 }
 .import-row-title {
   display: inline-block;
