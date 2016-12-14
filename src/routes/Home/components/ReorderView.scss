@@ -1,36 +1,12 @@
-.popup-outer-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  z-index: 999;
-  width: 100vw;
-  background-color: rgba(0,0,0,0.8);
-}
-
-.popup-inner-background {
-  background-color: white;
-  margin: 10vh 0 0 6vw;
-  width: 88vw;
-  padding: 35px;
-}
-
-.popup-subtext {
-  margin-bottom: 35px;
-  color: black;
-  font-size: 1.1em;
-}
 .reorder-list {
+  max-height: 65vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
   margin-bottom: 35px;
   min-width: 300px;
 }
-.has-children-text {
-  color: red;
-  margin: 30px 0px;
-}
-
-.popup-buttons {
-  button {
-    margin: 0px 7px 10px 7px;
-  }
+.reorder-subtext {
+  margin-bottom: 35px;
+  color: black;
+  font-size: 1.1em;
 }

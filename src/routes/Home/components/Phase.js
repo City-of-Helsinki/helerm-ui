@@ -3,6 +3,7 @@ import './Phase.scss';
 import Action from './Action.js';
 import DeletePopup from './DeletePopup';
 import { StickyContainer, Sticky } from 'react-sticky';
+import Popup from './Popup';
 import ReorderView from './ReorderView';
 import ImportView from './ImportView';
 
@@ -211,38 +212,53 @@ export class Phase extends React.Component {
           </StickyContainer>
         }
         { this.state.deleting &&
-          <DeletePopup
-            type='phase'
-            target={this.state.name}
-            action={() => this.delete()}
-            cancel={() => this.cancelDeletion()}
+          <Popup
+            content={
+              <DeletePopup
+                type='phase'
+                target={this.state.name}
+                action={() => this.delete()}
+                cancel={() => this.cancelDeletion()}
+              />
+            }
+            closePopup={() => this.cancelDeletion()}
           />
         }
         { this.state.showReorderView &&
-          <ReorderView
-            target='action'
-            toggleReorderView={() => this.toggleReorderView()}
-            keys={this.props.phase.actions}
-            values={this.props.actions}
-            commitOrderChanges={this.props.commitOrderChanges}
-            parent={phaseIndex}
-            parentName={this.state.name}
+          <Popup
+            content={
+              <ReorderView
+                target='action'
+                toggleReorderView={() => this.toggleReorderView()}
+                keys={this.props.phase.actions}
+                values={this.props.actions}
+                commitOrderChanges={this.props.commitOrderChanges}
+                parent={phaseIndex}
+                parentName={this.state.name}
+              />
+            }
+            closePopup={() => this.toggleReorderView()}
           />
         }
         { this.state.showImportView &&
-          <ImportView
-            level='action'
-            toggleImportView={() => this.toggleImportView()}
-            title='toimenpiteitä'
-            targetText={'käsittelyvaiheeseen "' + phase.name + '"'}
-            itemsToImportText='toimenpiteet'
-            phasesOrder={this.props.phasesOrder}
-            phases={this.props.phases}
-            actions={this.props.actions}
-            records={this.props.records}
-            importItems={this.props.importItems}
-            parent={phaseIndex}
-            showItems={() => this.props.setPhaseVisibility(phaseIndex, true)}
+          <Popup
+            content={
+              <ImportView
+                level='action'
+                toggleImportView={() => this.toggleImportView()}
+                title='toimenpiteitä'
+                targetText={'käsittelyvaiheeseen "' + phase.name + '"'}
+                itemsToImportText='toimenpiteet'
+                phasesOrder={this.props.phasesOrder}
+                phases={this.props.phases}
+                actions={this.props.actions}
+                records={this.props.records}
+                importItems={this.props.importItems}
+                parent={phaseIndex}
+                showItems={() => this.props.setPhaseVisibility(phaseIndex, true)}
+              />
+            }
+            closePopup={() => this.toggleImportView()}
           />
         }
       </div>

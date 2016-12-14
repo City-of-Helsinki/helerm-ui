@@ -2,6 +2,7 @@ import React from 'react';
 import './Action.scss';
 import Record from './Record';
 import AddRecord from './AddRecord';
+import Popup from './Popup';
 import DeletePopup from './DeletePopup';
 import ReorderView from './ReorderView';
 import ImportView from './ImportView';
@@ -165,40 +166,53 @@ export class Action extends React.Component {
           </div>
           }
           { this.state.deleting &&
-            <DeletePopup
-              type='action'
-              target={this.state.name}
-              action={() => this.delete()}
-              cancel={() => this.cancelDeletion()}
+            <Popup
+              content={
+                <DeletePopup
+                  type='action'
+                  target={this.state.name}
+                  action={() => this.delete()}
+                  cancel={() => this.cancelDeletion()}
+                />
+              }
+              closePopup={() => this.cancelDeletion()}
             />
           }
           { this.state.showReorderView &&
-            <ReorderView
-              target='record'
-              toggleReorderView={() => this.toggleReorderView()}
-              keys={this.props.action.records}
-              values={this.props.records}
-              commitOrderChanges={this.props.commitOrderChanges}
-              parent={this.props.action.id}
-              parentName={this.state.name}
+            <Popup
+              content={
+                <ReorderView
+                  target='record'
+                  toggleReorderView={() => this.toggleReorderView()}
+                  keys={this.props.action.records}
+                  values={this.props.records}
+                  commitOrderChanges={this.props.commitOrderChanges}
+                  parent={this.props.action.id}
+                  parentName={this.state.name}
+                />
+              }
+              closePopup={() => this.toggleReorderView()}
             />
           }
           { this.state.showImportView &&
-            <ImportView
-              level='record'
-              toggleImportView={() => this.toggleImportView()}
-              // keys={this.props.selectedTOS.phases}
-              title='asiakirjoja'
-              targetText={'toimenpiteeseen ' + action.name}
-              itemsToImportText='asiakirjat'
-              phasesOrder={this.props.phasesOrder}
-              phases={this.props.phases}
-              actions={this.props.actions}
-              records={this.props.records}
-              importItems={this.props.importItems}
-              parent={action.id}
-              parentName={action.name}
-              // parentName={selectedTOS.function_id + ' ' + selectedTOS.name}
+            <Popup
+              content={
+                <ImportView
+                  level='record'
+                  toggleImportView={() => this.toggleImportView()}
+                  title='asiakirjoja'
+                  targetText={'toimenpiteeseen ' + action.name}
+                  itemsToImportText='asiakirjat'
+                  phasesOrder={this.props.phasesOrder}
+                  phases={this.props.phases}
+                  actions={this.props.actions}
+                  records={this.props.records}
+                  importItems={this.props.importItems}
+                  parent={action.id}
+                  parentName={action.name}
+                />
+              }
+              closePopup={() => this.toggleImportView()}
             />
           }
         </div>

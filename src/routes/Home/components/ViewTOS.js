@@ -4,6 +4,7 @@ import Phase from './Phase';
 import Attribute from './Attribute';
 import ReorderView from './ReorderView';
 import ImportView from './ImportView';
+import Popup from './Popup';
 import formatDate from 'occasion';
 import { StickyContainer, Sticky } from 'react-sticky';
 
@@ -266,28 +267,38 @@ export class ViewTOS extends React.Component {
                   }
                   { phaseElements }
                   { this.state.showReorderView &&
-                    <ReorderView
-                      target='phase'
-                      toggleReorderView={() => this.toggleReorderView()}
-                      keys={this.props.selectedTOS.phases}
-                      values={this.props.phases}
-                      commitOrderChanges={this.props.commitOrderChanges}
-                      parent={null}
-                      parentName={selectedTOS.function_id + ' ' + selectedTOS.name}
+                    <Popup
+                      content={
+                        <ReorderView
+                          target='phase'
+                          toggleReorderView={() => this.toggleReorderView()}
+                          keys={this.props.selectedTOS.phases}
+                          values={this.props.phases}
+                          commitOrderChanges={this.props.commitOrderChanges}
+                          parent={null}
+                          parentName={selectedTOS.function_id + ' ' + selectedTOS.name}
+                        />
+                      }
+                      closePopup={() => this.toggleReorderView()}
                     />
                   }
                   { this.state.showImportView &&
-                    <ImportView
-                      level='phase'
-                      toggleImportView={() => this.toggleImportView()}
-                      phases={this.props.phases}
-                      possibleElements={this.props.selectedTOS.phases}
-                      actions={this.props.actions}
-                      records={this.props.records}
-                      importItems={this.props.importItems}
-                      title='käsittelyvaiheita'
-                      targetText={'TOS-kuvaukseen ' + selectedTOS.name}
-                      itemsToImportText='käsittelyvaiheet'
+                    <Popup
+                      content={
+                        <ImportView
+                          level='phase'
+                          toggleImportView={() => this.toggleImportView()}
+                          phases={this.props.phases}
+                          phasesOrder={this.props.selectedTOS.phases}
+                          actions={this.props.actions}
+                          records={this.props.records}
+                          importItems={this.props.importItems}
+                          title='käsittelyvaiheita'
+                          targetText={'TOS-kuvaukseen ' + selectedTOS.name}
+                          itemsToImportText='käsittelyvaiheet'
+                        />
+                      }
+                      closePopup={() => this.toggleImportView()}
                     />
                   }
                 </div>

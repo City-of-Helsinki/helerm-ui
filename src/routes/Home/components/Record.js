@@ -2,6 +2,7 @@ import React from 'react';
 import './Record.scss';
 import Attribute from './Attribute';
 import DeletePopup from './DeletePopup';
+import Popup from './Popup';
 
 export class Record extends React.Component {
   constructor (props) {
@@ -125,11 +126,16 @@ export class Record extends React.Component {
           </div>
         }
         { this.state.deleting &&
-          <DeletePopup
-            type='record'
-            target={this.props.record.name}
-            action={() => this.delete()}
-            cancel={() => this.cancelDeletion()}
+          <Popup
+            content={
+              <DeletePopup
+                type='record'
+                target={this.props.record.name}
+                action={() => this.delete()}
+                cancel={() => this.cancelDeletion()}
+              />
+            }
+            closePopup={() => this.cancelDeletion()}
           />
         }
       </div>

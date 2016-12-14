@@ -25,19 +25,17 @@ export class DeletePopup extends React.Component {
   }
   render () {
     return (
-      <div className='popup-outer-background'>
-        <div className='popup-inner-background'>
-          <h3>Olet poistamassa {this.state.type[this.props.type].name} "{this.props.target}"</h3>
-          { this.state.type[this.props.type].children &&
-            <span className='has-children-text'>
-              Huomioi, että myös kaikki {this.state.type[this.props.type].childrenText} sisältämät tiedot poistetaan
-            </span>
-          }
-          <h4>Vahvista poisto</h4>
-          <div className='popup-buttons'>
-            <button onClick={this.props.cancel} className='btn btn-default'>Peruuta</button>
-            <button onClick={this.props.action} className='btn btn-delete'>Poista</button>
-          </div>
+      <div className="row">
+        <h3>Olet poistamassa {this.state.type[this.props.type].name} "{this.props.target}"</h3>
+        { this.state.type[this.props.type].children &&
+          <span className='has-children-text'>
+            Huomioi, että myös kaikki {this.state.type[this.props.type].childrenText} sisältämät tiedot poistetaan
+          </span>
+        }
+        <h4>Vahvista poisto</h4>
+        <div className='popup-buttons'>
+          <button onClick={this.props.cancel} className='btn btn-default'>Peruuta</button>
+          <button onClick={this.props.action} className='btn btn-delete'>Poista</button>
         </div>
       </div>
     );

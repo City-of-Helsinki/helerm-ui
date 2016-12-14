@@ -45,39 +45,37 @@ export class ReorderView extends React.Component {
     const { keys } = this.state;
     const { target, values, toggleReorderView, parentName } = this.props;
     return (
-      <div className='popup-outer-background' onClick={toggleReorderView}>
-        <div className='popup-inner-background' onClick={(e) => this.stop(e)}>
-          <h3>Järjestä</h3>
-          { target === 'phase' &&
-            <span className='popup-subtext'>
-              Järjestä TOS:n <strong className='popup-subtext-highlight'>{parentName}</strong> käsittelyvaiheita
-            </span>
-          }
-          { target === 'action' &&
-            <span className='popup-subtext'>
-              Järjestä käsittelyvaiheen <strong className='popup-subtext-highlight'>{parentName}</strong> toimenpiteet
-            </span>
-          }
-          <div className='reorder-list'>
-            { keys.map((key, index) => (
-              <ReorderItem
-                key={values[key].index}
-                index={index.toString()}
-                id={values[key].index}
-                name={values[key].name}
-                moveItem={this.moveItem}
-                target={target}
-              />
-            )) }
-          </div>
-          <div className='col-xs-12 button-row'>
-            <button
-              onClick={() => this.commitOrderChanges(this.state.keys)}
-              className='btn btn-primary pull-right'>
-              Tallenna
-            </button>
-            <button onClick={toggleReorderView} className='btn btn-danger pull-right'>Peruuta</button>
-          </div>
+      <div className='row'>
+        <h3 className='col-xs-12'>Järjestä</h3>
+        { target === 'phase' &&
+          <span className='col-xs-12 reorder-subtext'>
+            Järjestä TOS:n <strong className='reorder-subtext-highlight'>{parentName}</strong> käsittelyvaiheita
+          </span>
+        }
+        { target === 'action' &&
+          <span className='col-xs-12 reorder-subtext'>
+            Järjestä käsittelyvaiheen <strong className='reorder-subtext-highlight'>{parentName}</strong> toimenpiteet
+          </span>
+        }
+        <div className='col-xs-12 reorder-list'>
+          { keys.map((key, index) => (
+            <ReorderItem
+              key={values[key].index}
+              index={index.toString()}
+              id={values[key].index}
+              name={values[key].name}
+              moveItem={this.moveItem}
+              target={target}
+            />
+          )) }
+        </div>
+        <div className='col-xs-12 button-row'>
+          <button
+            onClick={() => this.commitOrderChanges(this.state.keys)}
+            className='btn btn-primary pull-right'>
+            Tallenna
+          </button>
+          <button onClick={toggleReorderView} className='btn btn-danger pull-right'>Peruuta</button>
         </div>
       </div>
     );
