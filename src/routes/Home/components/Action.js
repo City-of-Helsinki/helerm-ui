@@ -107,18 +107,17 @@ export class Action extends React.Component {
               <button
                 className='btn btn-primary btn-xs pull-right'
                 onClick={() => this.toggleReorderView()}
-                title="Järjestä asiakirjoja">
-                <span className="fa fa-arrows" aria-hidden="true"></span>
+                title='Järjestä asiakirjoja'>
+                <span className='fa fa-arrows' aria-hidden='true' />
               </button>
             }
             { this.props.documentState === 'edit' &&
               <button
                 type='button'
                 className='btn btn-primary btn-xs pull-right'
-                title='Poista'
                 onClick={() => this.toggleImportView()}
-                title="Tuo asiakirjoja">
-                <span className="fa fa-download" aria-hidden="true" style={{transform: 'rotate(90deg)'}}></span>
+                title='Tuo asiakirjoja'>
+                <span className='fa fa-download' aria-hidden='true' style={{ transform: 'rotate(90deg)' }} />
               </button>
             }
           </span>

@@ -223,11 +223,25 @@ export class ViewTOS extends React.Component {
                           onClick={() => this.addPhase()}>
                           Uusi käsittelyvaihe
                         </button>
-                        <button className='btn btn-primary btn-sm pull-left' onClick={() => this.toggleImportView()} title="Tuo käsittelyvaihe">
-                          <span className="fa fa-download" aria-hidden="true" style={{transform: 'rotate(90deg)'}}></span>
+                        <button
+                          className='btn btn-primary btn-sm pull-left'
+                          onClick={() => this.toggleImportView()}
+                          title='Tuo käsittelyvaihe'>
+                          <span
+                            className='fa fa-download'
+                            aria-hidden='true'
+                            style={{ transform: 'rotate(90deg)' }}
+                          />
                         </button>
-                        <button className='btn btn-primary btn-sm pull-left' onClick={() => this.toggleReorderView()} title="Järjestä käsittelyvaiheita">
-                          <span className="fa fa-arrows" aria-hidden="true" style={{transform: 'rotate(90deg)'}}></span>
+                        <button
+                          className='btn btn-primary btn-sm pull-left'
+                          onClick={() => this.toggleReorderView()}
+                          title='Järjestä käsittelyvaiheita'>
+                          <span
+                            className='fa fa-arrows'
+                            aria-hidden='true'
+                            style={{ transform: 'rotate(90deg)' }}
+                          />
                         </button>
                       </span>
                     }

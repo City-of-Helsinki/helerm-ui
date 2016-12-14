@@ -112,7 +112,7 @@ export class Phase extends React.Component {
           <span className='phase-title' onClick={() => this.editPhaseTitle()}>
             <i className='fa fa-info-circle' aria-hidden='true' /> {this.state.name}
           </span>
-          <span className="action-buttons">
+          <span className='action-buttons'>
             { this.props.documentState === 'edit' &&
               <button
                 type='button'
@@ -139,8 +139,11 @@ export class Phase extends React.Component {
                 </button>
                 { this.props.documentState === 'edit' &&
                   phase.actions.length > 1 &&
-                  <button className='btn btn-primary btn-sm pull-right' onClick={() => this.toggleReorderView()} title="Järjestä toimenpiteitä">
-                    <span className="fa fa-arrows" aria-hidden="true"></span>
+                  <button
+                    className='btn btn-primary btn-sm pull-right'
+                    onClick={() => this.toggleReorderView()}
+                    title='Järjestä toimenpiteitä'>
+                    <span className='fa fa-arrows' aria-hidden='true' />
                   </button>
                 }
               </span>
@@ -149,10 +152,9 @@ export class Phase extends React.Component {
               <button
                 type='button'
                 className='btn btn-primary btn-sm pull-right'
-                title='Poista'
                 onClick={() => this.toggleImportView()}
-                title="Tuo toimenpiteitä">
-                <span className="fa fa-download" aria-hidden="true" style={{transform: 'rotate(90deg)'}}></span>
+                title='Tuo toimenpiteitä'>
+                <span className='fa fa-download' aria-hidden='true' style={{ transform: 'rotate(90deg)' }} />
               </button>
             }
           </span>

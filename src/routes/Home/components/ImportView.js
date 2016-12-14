@@ -121,7 +121,7 @@ export class ImportView extends React.Component {
     const { level, toggleImportView, title, itemsToImportText, targetText } = this.props;
     const importableElements = this.generateImportableElements(level);
     return (
-      <div className="row">
+      <div className='row'>
         <h3>Tuo {title} {targetText}</h3>
         <h5 className='col-xs-6'>Valitse listalta tuotavat {itemsToImportText}</h5>
         <h5 className='col-xs-6'>Tuotavat {itemsToImportText}</h5>
