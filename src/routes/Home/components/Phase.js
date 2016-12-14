@@ -112,48 +112,50 @@ export class Phase extends React.Component {
           <span className='phase-title' onClick={() => this.editPhaseTitle()}>
             <i className='fa fa-info-circle' aria-hidden='true' /> {this.state.name}
           </span>
-          { this.props.documentState === 'edit' &&
-            <button
-              type='button'
-              className='btn btn-delete btn-sm pull-right'
-              title='Poista'
-              onClick={() => this.setState({ deleting: true })} >
-              <span
-                className='fa fa-trash-o'
-                aria-hidden='true'
-              />
-            </button>
-          }
-          { phase.actions.length !== 0 &&
-            <span>
+          <span className="action-buttons">
+            { this.props.documentState === 'edit' &&
               <button
                 type='button'
-                className='btn btn-info btn-sm pull-right'
-                title={phase.is_open ? 'Pienennä' : 'Laajenna'}
-                onClick={() => this.props.setPhaseVisibility(phaseIndex, !phase.is_open)}>
+                className='btn btn-delete btn-sm pull-right'
+                title='Poista'
+                onClick={() => this.setState({ deleting: true })} >
                 <span
-                  className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
+                  className='fa fa-trash-o'
                   aria-hidden='true'
                 />
               </button>
-              { this.props.documentState === 'edit' &&
-                phase.actions.length > 1 &&
-                <button className='btn btn-primary btn-sm pull-right' onClick={() => this.toggleReorderView()}>
-                  Järjestä toimenpiteitä
+            }
+            { phase.actions.length !== 0 &&
+              <span>
+                <button
+                  type='button'
+                  className='btn btn-info btn-sm pull-right'
+                  title={phase.is_open ? 'Pienennä' : 'Laajenna'}
+                  onClick={() => this.props.setPhaseVisibility(phaseIndex, !phase.is_open)}>
+                  <span
+                    className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
+                    aria-hidden='true'
+                  />
                 </button>
-              }
-            </span>
-          }
-          { this.props.documentState === 'edit' &&
-            <button
-              type='button'
-              className='btn btn-primary btn-sm pull-right'
-              title='Poista'
-              onClick={() => this.toggleImportView()}>
-              Tuo toimenpiteitä
+                { this.props.documentState === 'edit' &&
+                  phase.actions.length > 1 &&
+                  <button className='btn btn-primary btn-sm pull-right' onClick={() => this.toggleReorderView()} title="Järjestä toimenpiteitä">
+                    <span className="fa fa-arrows" aria-hidden="true"></span>
+                  </button>
+                }
+              </span>
+            }
+            { this.props.documentState === 'edit' &&
+              <button
+                type='button'
+                className='btn btn-primary btn-sm pull-right'
+                title='Poista'
+                onClick={() => this.toggleImportView()}
+                title="Tuo toimenpiteitä">
+                <span className="fa fa-download" aria-hidden="true" style={{transform: 'rotate(90deg)'}}></span>
               </button>
-
-          }
+            }
+          </span>
         </span>);
     }
     if (this.state.mode === 'edit') {

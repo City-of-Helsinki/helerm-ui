@@ -104,8 +104,11 @@ export class Action extends React.Component {
               <span className='fa fa-trash-o' />
             </button>
             { action.records.length > 1 &&
-              <button className='btn btn-primary btn-xs pull-right' onClick={() => this.toggleReorderView()}>
-                Järjestä asiakirjoja
+              <button
+                className='btn btn-primary btn-xs pull-right'
+                onClick={() => this.toggleReorderView()}
+                title="Järjestä asiakirjoja">
+                <span className="fa fa-arrows" aria-hidden="true"></span>
               </button>
             }
             { this.props.documentState === 'edit' &&
@@ -113,9 +116,10 @@ export class Action extends React.Component {
                 type='button'
                 className='btn btn-primary btn-xs pull-right'
                 title='Poista'
-                onClick={() => this.toggleImportView()}>
-                Tuo asiakirjoja
-                </button>
+                onClick={() => this.toggleImportView()}
+                title="Tuo asiakirjoja">
+                <span className="fa fa-download" aria-hidden="true" style={{transform: 'rotate(90deg)'}}></span>
+              </button>
             }
           </span>
         }
