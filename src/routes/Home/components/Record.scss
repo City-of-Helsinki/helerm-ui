@@ -6,10 +6,10 @@
       width: 41.66667%;
   }
 }
-.record:nth-child(even), .record:nth-child(even) .list-group-item {
+.record:nth-child(odd), .record:nth-child(odd) .list-group-item {
   background-color: #f6f6f6;
 }
-.records .record:nth-child(even) .list-group-item:hover {
+.records .record:nth-child(odd) .list-group-item:hover {
   background-color: #f2f2f2;
 }
 .record-button {

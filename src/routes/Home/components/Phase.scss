@@ -1,14 +1,15 @@
 .phase {
   border-top-color: salmon;
   border-top-width: 4px;
+  background-color: #f6f6f6;
 }
 .phase-title {
   font-size: 1.1em;
-  background: white;
 }
 .phase-title.sticky {
   border-bottom: 1px solid #eee;
   border-top: 6px solid salmon;
+  background-color: white;
   z-index: 2;
 }
 .title-edit-button {
