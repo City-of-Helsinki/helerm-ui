@@ -74,8 +74,10 @@
 }
 .infinity-menu-node-container label {
   margin-bottom: 0;
-  text-transform: uppercase;
   cursor: pointer;
+}
+.infinity-menu-display-tree-container > .infinity-menu-node-container {
+  text-transform: uppercase;
 }
 
 .infinity-menu-node-container:hover {
@@ -182,12 +184,10 @@ ul:last-child {
 .infinity-menu-leaf-container {
   font-size: 1.5rem;
   letter-spacing: 0.03rem;
-  padding-bottom: .5rem;
+  padding: 2px 0px 0px 35px;
   font-weight: 400;
-  text-decoration: underline;
   color: $link-color;
   background: white;
-  padding-left: 35px;
   line-height: 3.4rem;
   display: block;
   position: relative;
