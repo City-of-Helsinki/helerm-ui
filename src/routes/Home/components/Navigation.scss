@@ -106,6 +106,7 @@
     left: 17px;
     top: -23px;
     z-index: 2;
+    pointer-events: none;
   }
 }
 .infinity-menu-node-container:hover + ul:before {
@@ -133,6 +134,7 @@ ul:last-child {
   background: $black90;
   top: 50%;
   margin-top: -5px;
+  pointer-events: none;
 }
 
 .infinity-menu-node-container:after {
@@ -147,6 +149,7 @@ ul:last-child {
   left: 15px;
   top: 2px;
   z-index: 2;
+  pointer-events: none;
 }
 
 .infinity-menu-container:after {
@@ -173,6 +176,7 @@ ul:last-child {
   width: 20px;
   height: 100%;
   z-index: 1;
+  pointer-events: none;
 }
 
 .infinity-menu-leaf-container {
