@@ -1,0 +1,25 @@
+.dropdown-wrapper {
+  position: relative;
+}
+.right {
+  right: -2px;
+}
+.left {
+  left: 2px;
+}
+.dropdown-items {
+    position: absolute;
+    z-index: 3;
+    border: 2px solid white;
+    color: white;
+    width: 250px;
+    background-color: #0072c6;
+    top: 25px;
+    .dropdown-row {
+      margin: 0;
+    }
+}
+.dropdown-row {
+  text-align: left;
+  width: 100%;
+}

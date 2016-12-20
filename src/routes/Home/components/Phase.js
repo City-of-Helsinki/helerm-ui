@@ -4,6 +4,7 @@ import Action from './Action.js';
 import DeletePopup from './DeletePopup';
 import { StickyContainer, Sticky } from 'react-sticky';
 import Popup from './Popup';
+import Dropdown from '../../../components/Dropdown';
 import ReorderView from './ReorderView';
 import ImportView from './ImportView';
 
@@ -83,6 +84,27 @@ export class Phase extends React.Component {
     }
     return elements;
   }
+  generateDropdownItems (phase) {
+    return [
+      {
+        text: 'Poista',
+        style: 'btn-delete',
+        action: () => this.setState({ deleting: true })
+      }, {
+        text: 'Järjestä toimenpiteitä',
+        style: 'btn-primary',
+        action: () => this.toggleReorderView()
+      }, {
+        text: 'Tuo toimenpiteitä',
+        style: 'btn-primary',
+        action: () => this.toggleImportView()
+      }, {
+        text: 'Uusi toimenpide',
+        style: 'btn-primary',
+        action: () => this.createNewAction()
+      }
+    ];
+  }
   createNewAction () {
     this.setState({ mode: 'add' });
   }
@@ -105,60 +127,14 @@ export class Phase extends React.Component {
   render () {
     const { phase, phaseIndex, update } = this.props;
     const actionElements = this.generateActions(phase.actions);
+    const phaseDropdownItems = this.generateDropdownItems();
     let phaseTitle;
     if (this.state.mode !== 'edit') {
       phaseTitle =
-        (<span>
-          <span className='phase-title' onClick={() => this.editPhaseTitle()}>
-            <i className='fa fa-info-circle' aria-hidden='true' /> {this.state.name}
-          </span>
-          <span className='action-buttons'>
-            { this.props.documentState === 'edit' &&
-              <button
-                type='button'
-                className='btn btn-delete btn-sm pull-right'
-                title='Poista'
-                onClick={() => this.setState({ deleting: true })} >
-                <span
-                  className='fa fa-trash-o'
-                  aria-hidden='true'
-                />
-              </button>
-            }
-            { phase.actions.length !== 0 &&
-              <span>
-                <button
-                  type='button'
-                  className='btn btn-info btn-sm pull-right'
-                  title={phase.is_open ? 'Pienennä' : 'Laajenna'}
-                  onClick={() => this.props.setPhaseVisibility(phaseIndex, !phase.is_open)}>
-                  <span
-                    className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
-                    aria-hidden='true'
-                  />
-                </button>
-                { this.props.documentState === 'edit' &&
-                  phase.actions.length > 1 &&
-                  <button
-                    className='btn btn-primary btn-sm pull-right'
-                    onClick={() => this.toggleReorderView()}
-                    title='Järjestä toimenpiteitä'>
-                    <span className='fa fa-arrows' aria-hidden='true' />
-                  </button>
-                }
-              </span>
-            }
-            { this.props.documentState === 'edit' &&
-              <button
-                type='button'
-                className='btn btn-primary btn-sm pull-right'
-                onClick={() => this.toggleImportView()}
-                title='Tuo toimenpiteitä'>
-                <span className='fa fa-download' aria-hidden='true' style={{ transform: 'rotate(90deg)' }} />
-              </button>
-            }
-          </span>
-        </span>);
+        (<span className='phase-title' onClick={() => this.editPhaseTitle()}>
+          <i className='fa fa-info-circle' aria-hidden='true' /> {this.state.name}
+        </span>
+        );
     }
     if (this.state.mode === 'edit') {
       phaseTitle =
@@ -175,27 +151,43 @@ export class Phase extends React.Component {
         </div>;
     }
     return (
-      <div>
+      <span className='col-xs-12 box phase'>
         { !this.state.deleted &&
-          <StickyContainer className='col-xs-12 box phase'>
-            <Sticky className='phase-title'>
-              {/*
-                { update } is a hack to fix firefox specific issue of re-rendering phases
-                remove once firefox issue is fixed
-              */}
-              <div className='update'>{ update }</div>
-              { phaseTitle }
-            </Sticky>
+          <div>
+            <StickyContainer>
+              <Sticky className='phase-title'>
+                {/*
+                  { update } is a hack to fix firefox specific issue of re-rendering phases
+                  remove once firefox issue is fixed
+                */}
+                <div className='update'>{ update }</div>
+                { phaseTitle }
+              </Sticky>
+            </StickyContainer>
+            <span className='action-buttons'>
+              { phase.actions.length !== 0 &&
+                <span>
+                  <button
+                    type='button'
+                    className='btn btn-info btn-sm pull-right'
+                    title={phase.is_open ? 'Pienennä' : 'Laajenna'}
+                    onClick={() => this.props.setPhaseVisibility(phaseIndex, !phase.is_open)}>
+                    <span
+                      className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
+                      aria-hidden='true'
+                    />
+                  </button>
+                  {this.props.documentState === 'edit' &&
+                    <span className='pull-right'>
+                      <Dropdown children={phaseDropdownItems} small right />
+                    </span>
+                  }
+                </span>
+              }
+            </span>
             <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>
               { actionElements }
             </div>
-            { this.props.documentState === 'edit' && this.state.mode !== 'add' &&
-              <button
-                className='btn btn-primary btn-sm btn-new-action pull-left'
-                onClick={() => this.createNewAction()}>
-                Uusi toimenpide
-              </button>
-            }
             { this.state.mode === 'add' &&
               <form onSubmit={this.addAction} className='row'>
                 <h5 className='col-xs-12'>Uusi toimenpide</h5>
@@ -213,7 +205,7 @@ export class Phase extends React.Component {
                 </div>
               </form>
             }
-          </StickyContainer>
+          </div>
         }
         { this.state.deleting &&
           <Popup
@@ -265,7 +257,7 @@ export class Phase extends React.Component {
             closePopup={() => this.toggleImportView()}
           />
         }
-      </div>
+      </span>
     );
   }
 }

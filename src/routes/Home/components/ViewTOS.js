@@ -5,6 +5,7 @@ import Attribute from './Attribute';
 import ReorderView from './ReorderView';
 import ImportView from './ImportView';
 import Popup from './Popup';
+import Dropdown from '../../../components/Dropdown';
 import formatDate from 'occasion';
 import { StickyContainer, Sticky } from 'react-sticky';
 
@@ -215,36 +216,6 @@ export class ViewTOS extends React.Component {
                 </div>
                 <div className='col-xs-12'>
                   <div className='button-row'>
-                    { this.props.documentState === 'edit' &&
-                      !this.state.createPhaseMode &&
-                      <span>
-                        <button
-                          className='btn btn-primary btn-sm pull-left'
-                          onClick={() => this.addPhase()}>
-                          Uusi käsittelyvaihe
-                        </button>
-                        <button
-                          className='btn btn-primary btn-sm pull-left'
-                          onClick={() => this.toggleImportView()}
-                          title='Tuo käsittelyvaihe'>
-                          <span
-                            className='fa fa-download'
-                            aria-hidden='true'
-                            style={{ transform: 'rotate(90deg)' }}
-                          />
-                        </button>
-                        <button
-                          className='btn btn-primary btn-sm pull-left'
-                          onClick={() => this.toggleReorderView()}
-                          title='Järjestä käsittelyvaiheita'>
-                          <span
-                            className='fa fa-arrows'
-                            aria-hidden='true'
-                            style={{ transform: 'rotate(90deg)' }}
-                          />
-                        </button>
-                      </span>
-                    }
                     <button
                       className='btn btn-default btn-sm pull-right'
                       onClick={() => this.props.setPhasesVisibility(phases, true)}>
@@ -255,6 +226,28 @@ export class ViewTOS extends React.Component {
                       onClick={() => this.props.setPhasesVisibility(phases, false)}>
                       Pienennä kaikki
                     </button>
+                    { this.props.documentState === 'edit' &&
+                        !this.state.createPhaseMode &&
+                        <span className='pull-right'>
+                          <Dropdown
+                            children={[
+                              { text: 'Uusi käsittelyvaihe',
+                                style: 'btn-primary',
+                                action: () => this.addPhase()
+                              }, {
+                                text: 'Tuo käsittelyvaihe',
+                                style: 'btn-primary',
+                                action: () => this.toggleImportView()
+                              }, {
+                                text: 'Järjestä käsittelyvaiheita',
+                                style: 'btn-primary',
+                                action: () => this.toggleReorderView()
+                              }
+                            ]}
+                            small
+                          />
+                        </span>
+                      }
                   </div>
                   { this.state.createPhaseMode &&
                     <form onSubmit={this.createNewPhase} className='col-xs-12 phase-form'>
