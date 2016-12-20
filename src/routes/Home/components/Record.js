@@ -1,7 +1,7 @@
 import React from 'react';
 import './Record.scss';
 import Attribute from './Attribute';
-import DeletePopup from './DeletePopup';
+import DeleteView from './DeleteView';
 import Dropdown from '../../../components/Dropdown';
 import Popup from './Popup';
 
@@ -131,7 +131,7 @@ export class Record extends React.Component {
         { this.state.deleting &&
           <Popup
             content={
-              <DeletePopup
+              <DeleteView
                 type='record'
                 target={this.props.record.name}
                 action={() => this.delete()}

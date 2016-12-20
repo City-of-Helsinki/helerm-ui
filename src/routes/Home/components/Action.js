@@ -3,8 +3,8 @@ import './Action.scss';
 import Record from './Record';
 import AddRecord from './AddRecord';
 import Popup from './Popup';
-import DeletePopup from './DeletePopup';
 import Dropdown from '../../../components/Dropdown';
+import DeleteView from './DeleteView';
 import ReorderView from './ReorderView';
 import ImportView from './ImportView';
 
@@ -170,7 +170,7 @@ export class Action extends React.Component {
           { this.state.deleting &&
             <Popup
               content={
-                <DeletePopup
+                <DeleteView
                   type='action'
                   target={this.state.name}
                   action={() => this.delete()}

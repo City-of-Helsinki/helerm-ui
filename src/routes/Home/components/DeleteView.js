@@ -1,7 +1,7 @@
 import React from 'react';
-import './DeletePopup.scss';
+import './DeleteView.scss';
 
-export class DeletePopup extends React.Component {
+export class DeleteView extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -42,11 +42,11 @@ export class DeletePopup extends React.Component {
   }
 }
 
-DeletePopup.propTypes = {
+DeleteView.propTypes = {
   type: React.PropTypes.string.isRequired,
   target: React.PropTypes.string.isRequired,
   action: React.PropTypes.func.isRequired,
   cancel: React.PropTypes.func.isRequired
 };
 
-export default DeletePopup;
+export default DeleteView;

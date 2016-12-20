@@ -1,7 +1,7 @@
 import React from 'react';
 import './Phase.scss';
 import Action from './Action.js';
-import DeletePopup from './DeletePopup';
+import DeleteView from './DeleteView';
 import { StickyContainer, Sticky } from 'react-sticky';
 import Popup from './Popup';
 import Dropdown from '../../../components/Dropdown';
@@ -210,7 +210,7 @@ export class Phase extends React.Component {
         { this.state.deleting &&
           <Popup
             content={
-              <DeletePopup
+              <DeleteView
                 type='phase'
                 target={this.state.name}
                 action={() => this.delete()}
