@@ -4,6 +4,7 @@ import Record from './Record';
 import AddRecord from './AddRecord';
 import Popup from './Popup';
 import DeletePopup from './DeletePopup';
+import Dropdown from '../../../components/Dropdown';
 import ReorderView from './ReorderView';
 import ImportView from './ImportView';
 
@@ -58,6 +59,32 @@ export class Action extends React.Component {
     }
     return elements;
   }
+  generateDropdownItems (recordCount) {
+    return [
+      {
+        text: 'Poista toimenpide',
+        icon: 'fa-trash',
+        style: 'btn-delete',
+        action: () => this.setState({ deleting: true })
+      }, {
+        text: 'Järjestä asiakirjoja',
+        icon: 'fa-th-list',
+        style: 'btn-primary',
+        action: () => this.toggleReorderView()
+      }, {
+        text: 'Tuo asiakirjoja',
+        icon: 'fa-download',
+        style: 'btn-primary',
+        action: () => this.toggleImportView()
+      }, {
+        text: 'Uusi asiakirja',
+        icon: 'fa-file-text',
+        style: 'btn-primary',
+        action: () => this.createNewRecord()
+      }
+    ];
+  }
+
   createNewRecord () {
     this.setState({ mode: 'add' });
   }
@@ -88,6 +115,7 @@ export class Action extends React.Component {
   render () {
     const { action } = this.props;
     const recordElements = this.generateRecords(action.records);
+    const dropdownItems = this.generateDropdownItems(action.records.length);
     let actionTitle;
     if (this.state.mode === 'view' || this.state.mode === 'add') {
       actionTitle =
@@ -96,30 +124,8 @@ export class Action extends React.Component {
           {this.state.name}
         </span>
         { this.props.documentState === 'edit' &&
-          <span className='action-buttons'>
-            <button
-              className='btn btn-delete btn-xs pull-right'
-              onClick={() => this.setState({ deleting: true })}
-              title='Poista'>
-              <span className='fa fa-trash-o' />
-            </button>
-            { action.records.length > 1 &&
-              <button
-                className='btn btn-primary btn-xs pull-right'
-                onClick={() => this.toggleReorderView()}
-                title='Järjestä asiakirjoja'>
-                <span className='fa fa-arrows' aria-hidden='true' />
-              </button>
-            }
-            { this.props.documentState === 'edit' &&
-              <button
-                type='button'
-                className='btn btn-primary btn-xs pull-right'
-                onClick={() => this.toggleImportView()}
-                title='Tuo asiakirjoja'>
-                <span className='fa fa-download' aria-hidden='true' style={{ transform: 'rotate(90deg)' }} />
-              </button>
-            }
+          <span className='action-dropdown-button'>
+            <Dropdown children={dropdownItems} extraSmall />
           </span>
         }
       </div>);
@@ -150,13 +156,7 @@ export class Action extends React.Component {
           <div className={'col-xs-12 records ' + (this.props.documentState === 'edit' ? 'records-editing' : '')}>
             { recordElements }
           </div>
-          { this.props.documentState === 'edit' && this.state.mode !== 'add' &&
-          <button className='btn btn-primary btn-sm btn-new-record pull-left' onClick={() => this.createNewRecord()}>
-            Uusi asiakirja
-          </button>
-            }
           { this.state.mode === 'add' &&
-          <div className='action add-box col-xs-12'>
             <AddRecord
               attributeTypes={this.props.attributeTypes}
               recordTypes={this.props.recordTypes}
@@ -166,7 +166,6 @@ export class Action extends React.Component {
               cancelRecordCreation={this.cancelRecordCreation}
               addRecord={this.addRecord}
             />
-          </div>
           }
           { this.state.deleting &&
             <Popup

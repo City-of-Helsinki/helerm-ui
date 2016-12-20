@@ -178,7 +178,7 @@ export class ViewTOS extends React.Component {
                 <h4 className='col-md-6 col-xs-12'>{selectedTOS.function_id} {selectedTOS.name}</h4>
                 <div className='document-buttons col-xs-12 col-md-6'>
                   { this.props.documentState !== 'edit' &&
-                    <span className='button-row'>
+                    <span>
                       <button className='btn btn-default btn-sm pull-right'>Lähetä tarkastettavaksi</button>
                       <button
                         className='btn btn-primary btn-sm pull-right'
@@ -188,7 +188,7 @@ export class ViewTOS extends React.Component {
                     </span>
                   }
                   { this.props.documentState === 'edit' &&
-                    <span className='button-row'>
+                    <span>
                       <button
                         className='btn btn-primary btn-sm pull-right'
                         onClick={() => this.props.setDocumentState('view')}>
@@ -214,41 +214,43 @@ export class ViewTOS extends React.Component {
                     { TOSMetaData }
                   </div>
                 </div>
+                <div className='col-xs-12 button-row'>
+                  { this.props.documentState === 'edit' &&
+                    !this.state.createPhaseMode &&
+                    <span className='pull-right'>
+                      <Dropdown
+                        children={[
+                          { text: 'Uusi käsittelyvaihe',
+                            icon: 'fa-file-text',
+                            style: 'btn-primary',
+                            action: () => this.addPhase()
+                          }, {
+                            text: 'Tuo käsittelyvaihe',
+                            icon: 'fa-download',
+                            style: 'btn-primary',
+                            action: () => this.toggleImportView()
+                          }, {
+                            text: 'Järjestä käsittelyvaiheita',
+                            icon: 'fa-th-list',
+                            style: 'btn-primary',
+                            action: () => this.toggleReorderView()
+                          }
+                        ]}
+                        small />
+                    </span>
+                  }
+                  <button
+                    className='btn btn-default btn-sm pull-right'
+                    onClick={() => this.props.setPhasesVisibility(phases, true)}>
+                    Avaa kaikki
+                  </button>
+                  <button
+                    className='btn btn-default btn-sm pull-right'
+                    onClick={() => this.props.setPhasesVisibility(phases, false)}>
+                    Pienennä kaikki
+                  </button>
+                </div>
                 <div className='col-xs-12'>
-                  <div className='button-row'>
-                    <button
-                      className='btn btn-default btn-sm pull-right'
-                      onClick={() => this.props.setPhasesVisibility(phases, true)}>
-                      Avaa kaikki
-                    </button>
-                    <button
-                      className='btn btn-default btn-sm pull-right'
-                      onClick={() => this.props.setPhasesVisibility(phases, false)}>
-                      Pienennä kaikki
-                    </button>
-                    { this.props.documentState === 'edit' &&
-                        !this.state.createPhaseMode &&
-                        <span className='pull-right'>
-                          <Dropdown
-                            children={[
-                              { text: 'Uusi käsittelyvaihe',
-                                style: 'btn-primary',
-                                action: () => this.addPhase()
-                              }, {
-                                text: 'Tuo käsittelyvaihe',
-                                style: 'btn-primary',
-                                action: () => this.toggleImportView()
-                              }, {
-                                text: 'Järjestä käsittelyvaiheita',
-                                style: 'btn-primary',
-                                action: () => this.toggleReorderView()
-                              }
-                            ]}
-                            small
-                          />
-                        </span>
-                      }
-                  </div>
                   { this.state.createPhaseMode &&
                     <form onSubmit={this.createNewPhase} className='col-xs-12 phase-form'>
                       <h5>Uusi käsittelyvaihe</h5>

@@ -2,6 +2,7 @@ import React from 'react';
 import './Record.scss';
 import Attribute from './Attribute';
 import DeletePopup from './DeletePopup';
+import Dropdown from '../../../components/Dropdown';
 import Popup from './Popup';
 
 export class Record extends React.Component {
@@ -96,15 +97,17 @@ export class Record extends React.Component {
             { this.state.mode === 'view' &&
             <div className='record-button-group'>
               { this.props.documentState === 'edit' &&
-                <button
-                  className='btn btn-delete btn-xs record-button pull-right'
-                  onClick={() => this.setState({ deleting: true })}
-                  title='Poista'>
-                  <span className='fa fa-trash-o' />
-                </button>
+              <Dropdown
+                children={[{
+                  text: 'Poista asiakirja',
+                  icon: 'fa-trash',
+                  style: 'btn-delete',
+                  action: () => this.setState({ deleting: true })
+                }]}
+                extraSmall />
               }
               <button
-                className='btn btn-info btn-xs record-button'
+                className='btn btn-info btn-xs record-button pull-right'
                 onClick={this.toggleAttributeVisibility}>
                 <span
                   className={'fa ' + (this.state.showAttributes ? 'fa-minus' : 'fa-plus')}

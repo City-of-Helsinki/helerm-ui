@@ -89,7 +89,7 @@ export class AddRecord extends React.Component {
     const typeDropdown = this.generateDropdown(recordTypes);
     if (this.state.mode === 'add') {
       return (
-        <div>
+        <div className='action add-box col-xs-12'>
           <h4>Uusi asiakirja</h4>
           <span className='fa fa-asterisk required-asterisk required-legend col-xs-12'> Pakollinen tieto</span>
           <form onSubmit={this.addRecord} className='edit-record'>

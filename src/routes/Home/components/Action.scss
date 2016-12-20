@@ -14,15 +14,12 @@
 .records-editing {
   margin-bottom: 25px;
 }
-.action-buttons {
-  position: absolute;
-  right: 4px;
-  top: 5px;
-}
-.action-buttons button {
-  margin: 0px 1px;
-}
 .attribute-label {
   text-transform: uppercase;
   font-size: 0.8em;
+}
+.action-dropdown-button {
+  position: absolute;
+  right: 5px;
+  top: 4px;
 }

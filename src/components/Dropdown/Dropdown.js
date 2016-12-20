@@ -18,7 +18,9 @@ export class Dropdown extends React.Component {
         <button
           key={index}
           className={'btn btn-sm dropdown-row ' + item.style}
-          onClick={() => this.handleClick(index)}>{item.text}
+          onClick={() => this.handleClick(index)}
+          <span className={'fa dropdown-icon ' + item.icon}></span>
+          {item.text}
         </button>
       );
     });
@@ -27,18 +29,19 @@ export class Dropdown extends React.Component {
     const { children, small, extraSmall, right } = this.props;
     const dropdownRows = this.generateRows(children);
     return (
-      <span className='dropdown-wrapper'>
+      <span className='dropdown-wrapper' onBlur={() => setTimeout(() => this.setState({ open: false }), 180)}>
         <button
           className={
             'btn btn-primary ' +
             (small ? 'btn-sm' : '') +
             (extraSmall ? 'btn-xs' : '')
           }
-          onClick={() => this.setState({ open: !this.state.open })}>
+          onClick={() => this.setState({ open: !this.state.open })}
+          >
           <span className='fa fa-bars' />
         </button>
         { this.state.open &&
-          <div className={'dropdown-items ' + (right ? 'right' : 'left')}>
+          <div className={'dropdown-items ' + (extraSmall ? 'items-xs' : '')}>
             {dropdownRows}
           </div>
         }

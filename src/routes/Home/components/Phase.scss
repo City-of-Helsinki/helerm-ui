@@ -9,7 +9,7 @@
 .phase-title.sticky {
   border-bottom: 1px solid #eee;
   border-top: 6px solid salmon;
-  background-color: white;
+  background-color: #f6f6f6;
   z-index: 2;
 }
 .title-edit-button {
@@ -27,6 +27,14 @@
 }
 .btn-new-action {
   margin-top: 15px;
+}
+.phase-buttons {
+  position: absolute;
+  right: 23px;
+  top: 5px;
+}
+.phase-buttons button {
+  margin: 0px 1px;
 }
 .add-action-buttons {
   padding: 0px;

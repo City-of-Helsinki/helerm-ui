@@ -87,19 +87,23 @@ export class Phase extends React.Component {
   generateDropdownItems (phase) {
     return [
       {
-        text: 'Poista',
+        text: 'Poista käsittelyvaihe',
+        icon: 'fa-trash',
         style: 'btn-delete',
         action: () => this.setState({ deleting: true })
       }, {
         text: 'Järjestä toimenpiteitä',
+        icon: 'fa-th-list',
         style: 'btn-primary',
         action: () => this.toggleReorderView()
       }, {
         text: 'Tuo toimenpiteitä',
+        icon: 'fa-download',
         style: 'btn-primary',
         action: () => this.toggleImportView()
       }, {
         text: 'Uusi toimenpide',
+        icon: 'fa-file-text',
         style: 'btn-primary',
         action: () => this.createNewAction()
       }
@@ -153,59 +157,55 @@ export class Phase extends React.Component {
     return (
       <span className='col-xs-12 box phase'>
         { !this.state.deleted &&
-          <div>
-            <StickyContainer>
-              <Sticky className='phase-title'>
-                {/*
-                  { update } is a hack to fix firefox specific issue of re-rendering phases
-                  remove once firefox issue is fixed
-                */}
-                <div className='update'>{ update }</div>
-                { phaseTitle }
-              </Sticky>
-            </StickyContainer>
-            <span className='action-buttons'>
-              { phase.actions.length !== 0 &&
-                <span>
-                  <button
-                    type='button'
-                    className='btn btn-info btn-sm pull-right'
-                    title={phase.is_open ? 'Pienennä' : 'Laajenna'}
-                    onClick={() => this.props.setPhaseVisibility(phaseIndex, !phase.is_open)}>
-                    <span
-                      className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
-                      aria-hidden='true'
+        <StickyContainer>
+          <Sticky className='phase-title'>
+            { phaseTitle }
+          </Sticky>
+          {/*
+              { update } is a hack to fix firefox specific issue of re-rendering phases
+              remove once firefox issue is fixed
+            */}
+          <div className='update'>{ update }</div>
+          { phase.actions.length !== 0 &&
+            <span className='phase-buttons'>
+              <button
+                type='button'
+                className='btn btn-info btn-sm pull-right'
+                title={phase.is_open ? 'Pienennä' : 'Laajenna'}
+                onClick={() => this.props.setPhaseVisibility(phaseIndex, !phase.is_open)}>
+                <span
+                  className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
+                  aria-hidden='true'
                     />
-                  </button>
-                  {this.props.documentState === 'edit' &&
-                    <span className='pull-right'>
-                      <Dropdown children={phaseDropdownItems} small right />
-                    </span>
-                  }
+              </button>
+              { this.props.documentState === 'edit' &&
+                <span className='pull-right'>
+                  <Dropdown children={phaseDropdownItems} small />
                 </span>
               }
             </span>
-            <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>
-              { actionElements }
+          }
+          <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>
+            { actionElements }
+          </div>
+          { this.state.mode === 'add' &&
+          <form onSubmit={this.addAction} className='row'>
+            <h5 className='col-xs-12'>Uusi toimenpide</h5>
+            <div className='col-xs-12 col-md-6'>
+              <input type='text' className='form-control'
+                value={this.state.newActionName} onChange={this.onNewChange} placeholder='Toimenpiteen nimi' />
             </div>
-            { this.state.mode === 'add' &&
-              <form onSubmit={this.addAction} className='row'>
-                <h5 className='col-xs-12'>Uusi toimenpide</h5>
-                <div className='col-xs-12 col-md-6'>
-                  <input type='text' className='form-control'
-                    value={this.state.newActionName} onChange={this.onNewChange} placeholder='Toimenpiteen nimi' />
-                </div>
-                <div className='col-xs-12 col-md-4 add-action-buttons'>
-                  <button
-                    className='btn btn-danger col-xs-6'
-                    onClick={this.cancelActionCreation}>
+            <div className='col-xs-12 col-md-4 add-action-buttons'>
+              <button
+                className='btn btn-danger col-xs-6'
+                onClick={this.cancelActionCreation}>
                     Peruuta
                   </button>
-                  <button className='btn btn-primary col-xs-6' type='submit'>Lisää</button>
-                </div>
-              </form>
+              <button className='btn btn-primary col-xs-6' type='submit'>Lisää</button>
+            </div>
+          </form>
             }
-          </div>
+        </StickyContainer>
         }
         { this.state.deleting &&
           <Popup
