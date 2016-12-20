@@ -2,8 +2,7 @@
 
 # TEAM
 
-    <name> -- <role> -- <twitter>
-
-# THANKS
-
-    <name>
+    Kalle Mäkynen -- Front-end Developer -- https://github.com/kallemakynen
+    Emilia Pesonen -- UI/UX Designer
+    Tomi Sjöblom -- UI/UX Designer
+    Ari Koli -- Scrum master

@@ -18,15 +18,15 @@ export class Dropdown extends React.Component {
         <button
           key={index}
           className={'btn btn-sm dropdown-row ' + item.style}
-          onClick={() => this.handleClick(index)}
-          <span className={'fa dropdown-icon ' + item.icon}></span>
+          onClick={() => this.handleClick(index)}>
+          <span className={'fa dropdown-icon ' + item.icon} />
           {item.text}
         </button>
       );
     });
   }
   render () {
-    const { children, small, extraSmall, right } = this.props;
+    const { children, small, extraSmall } = this.props;
     const dropdownRows = this.generateRows(children);
     return (
       <span className='dropdown-wrapper' onBlur={() => setTimeout(() => this.setState({ open: false }), 180)}>
@@ -53,8 +53,7 @@ export class Dropdown extends React.Component {
 Dropdown.propTypes = {
   children: React.PropTypes.array.isRequired,
   small: React.PropTypes.boolean,
-  extraSmall: React.PropTypes.boolean,
-  right: React.PropTypes.boolean
+  extraSmall: React.PropTypes.boolean
 };
 
 export default Dropdown;
