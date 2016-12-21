@@ -267,15 +267,27 @@ export function addAction(phaseIndex, name) {
   }
 }
 
-export function addRecord(phaseIndex, name) {
-  const newRecord = {
-    name: name,
-    attributes: []
+export function addRecord(actionIndex, recordName, recordType, attributes) {
+  const recordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+  let newAttributes = {};
+  for(const key in attributes) {
+    if(attributes.hasOwnProperty(key)) {
+      newAttributes = Object.assign({}, newAttributes, {[key]: attributes[key].name});
+    }
   }
+  const newRecord = Object.assign({}, {
+    id: recordId,
+    action: actionIndex,
+    attributes: newAttributes,
+    name: recordName,
+    type: recordType,
+    is_open: false
+  });
   return {
-    type: ADD_ACTION,
-    phaseIndex,
-    newAction: [newRecord]
+    type: ADD_RECORD,
+    actionIndex,
+    recordId,
+    newRecord
   }
 }
 
@@ -445,6 +457,22 @@ const ACTION_HANDLERS = {
       attributeTypes: {$set: action.attributeList}
     });
   },
+  [ADD_PHASE]: (state, action) => {
+    return update(state, {
+      selectedTOS: {
+        tos: {
+          phases: {
+            $push : [action.newPhase.id]
+          }
+        },
+        phases: {
+          [action.newPhase.id]: {
+            $set: action.newPhase
+          }
+        }
+      }
+    });
+  },
   [ADD_ACTION]: (state, action) => {
     return update(state, {
       selectedTOS: {
@@ -463,17 +491,19 @@ const ACTION_HANDLERS = {
       }
     });
   },
-  [ADD_PHASE]: (state, action) => {
+  [ADD_RECORD]: (state, action) => {
     return update(state, {
       selectedTOS: {
-        tos: {
-          phases: {
-            $push : [action.newPhase.id]
+        actions: {
+          [action.actionIndex]: {
+            records: {
+              $push: [action.recordId]
+            }
           }
         },
-        phases: {
-          [action.newPhase.id]: {
-            $set: action.newPhase
+        records: {
+          [action.recordId]: {
+            $set: action.newRecord
           }
         }
       }

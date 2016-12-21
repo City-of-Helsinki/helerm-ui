@@ -1,36 +1,85 @@
 import React from 'react';
 import './AddRecord.scss';
+import update from 'immutability-helper';
 
 export class AddRecord extends React.Component {
   constructor (props) {
     super(props);
-    this.addRecord = this.addRecord.bind(this);
     this.generateAttributeElements = this.generateAttributeElements.bind(this);
     this.cancelRecordCreation = this.cancelRecordCreation.bind(this);
     this.state = {
-      mode: this.props.mode
+      mode: this.props.mode,
+      newAttributes: this.initializeState(this.props.attributeTypes),
+      recordName: {
+        name: '',
+        checked: true
+      },
+      recordType: {
+        name: '',
+        checked: true
+      }
     };
+  }
+  initializeState (attributeTypes) {
+    let initialState = {};
+    for (const key in attributeTypes) {
+      if (attributeTypes.hasOwnProperty(key)) {
+        initialState = Object.assign({}, initialState, {
+          [key]: {
+            name: null,
+            checked: true
+          }
+        });
+      }
+    };
+    return initialState;
+  }
+  onChange (e, key, field) {
+    const newValue = e;
+    this.setState(update(this.state, {
+      newAttributes: {
+        [key]: {
+          [field]: {
+            $set: newValue
+          }
+        }
+      }
+    }));
+  }
+  onBaseAttributeChange (e, key, field) {
+    const newValue = e;
+    this.setState(update(this.state, {
+      [key]: {
+        [field]: {
+          $set: newValue
+        }
+      }
+    }));
   }
   generateAttributeElements (attributeTypes) {
     const attributeElements = [];
     for (const key in attributeTypes) {
       if (attributeTypes.hasOwnProperty(key)) {
         if (attributeTypes[key].values.length) {
-          const options = attributeTypes[key].values.map((option, index) => {
-            return <option key={index} value={option.value}>{option.value}</option>;
-          });
+          const options = attributeTypes[key].values.map((option, index) => (
+            <option key={index} value={option.value}>{option.value}</option>
+          ));
           attributeElements.push(
             <div key={key} className='col-xs-12 col-lg-6 form-group'>
-              <div className='col-lg-2'>
-                <div className='checkbox edit-record__checkbox'>
-                  <label><input type='checkbox' defaultChecked /> Käytössä</label>
-                </div>
-              </div>
-              <label className='col-lg-10 edit-record__label'>{attributeTypes[key].name}</label>
-              { attributeTypes[key].required &&
-                <span className='fa fa-asterisk required-asterisk' />
-              }
-              <select className='form-control edit-record__select'>
+              <input
+                type='checkbox'
+                checked={this.state.newAttributes[key].checked}
+                value={this.state.newAttributes[key].checked}
+                onChange={(e) => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')} />
+              <label className='edit-record__label'>
+                {attributeTypes[key].name}
+                { attributeTypes[key].required &&
+                  <span className='fa fa-asterisk required-asterisk' />
+                }
+              </label>
+              <select
+                className='form-control edit-record__select'
+                onChange={(e) => this.onChange(e.target.value, key, 'name')}>
                 <option value={null}>[ Tyhjä ]</option>
                 { options }
               </select>
@@ -39,18 +88,22 @@ export class AddRecord extends React.Component {
         } else if (attributeTypes[key].values.length === 0) {
           attributeElements.push(
             <div key={key} className='col-xs-12 col-lg-6 form-group'>
-              <div className='col-lg-2'>
-                <div className='checkbox edit-record__checkbox'>
-                  <label><input type='checkbox' defaultChecked /> Käytössä</label>
-                </div>
-              </div>
-              <label className='col-lg-10 edit-record__label'>{attributeTypes[key].name}</label>
-              { attributeTypes[key].required &&
-                <span className='fa fa-asterisk required-asterisk' />
-              }
+              <input
+                type='checkbox'
+                checked={this.state.newAttributes[key].checked}
+                value={this.state.newAttributes[key].checked}
+                onChange={(e) => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}
+              />
+              <label className='edit-record__label'>
+                {attributeTypes[key].name}
+                { attributeTypes[key].required &&
+                  <span className='fa fa-asterisk required-asterisk' />
+                }
+              </label>
               <input
                 className='form-control edit-record__input'
                 placeholder={attributeTypes[key].name}
+                onChange={(e) => this.onChange(e.target.value, key, 'name')}
               />
             </div>
           );
@@ -63,52 +116,62 @@ export class AddRecord extends React.Component {
     const options = [];
     for (const key in recordTypes) {
       if (recordTypes.hasOwnProperty(key)) {
-        options.push(<option key={key} value={recordTypes[key]}>{recordTypes[key]}</option>);
+        options.push(<option key={key} value={key}>{recordTypes[key]}</option>);
       }
     }
     return (
-      <select className='form-control col-xs-6'>
+      <select
+        className='form-control col-xs-6'
+        onChange={(e) => this.onBaseAttributeChange(e.target.value, 'recordType', 'name')}>
         <option value={null}>[ Tyhjä ]</option>
         {options}
       </select>
     );
   }
-  addRecord (event) {
-    event.preventDefault();
-    // this.props.addAction(this.props.phaseIndex, this.props.actionIndex, this.state.newRecord);
-    this.setState({ mode: 'view' });
+  addRecord (e, actionId) {
+    e.preventDefault();
+    const { recordName, recordType, newAttributes } = this.state;
+    console.log(newAttributes);
+    this.props.createRecord(actionId, recordName.name, recordType.name, newAttributes);
   }
-  cancelRecordCreation (event) {
-    event.preventDefault();
+  cancelRecordCreation (e) {
+    e.preventDefault();
     this.setState({ mode: 'view' });
     this.props.cancelRecordCreation();
   }
   render () {
-    const { attributeTypes, recordTypes } = this.props;
+    const { attributeTypes, recordTypes, actionId } = this.props;
     const attributeElements = this.generateAttributeElements(attributeTypes);
     const typeDropdown = this.generateDropdown(recordTypes);
     if (this.state.mode === 'add') {
       return (
         <div className='action add-box col-xs-12'>
           <h4>Uusi asiakirja</h4>
-          <span className='fa fa-asterisk required-asterisk required-legend col-xs-12'> Pakollinen tieto</span>
-          <form onSubmit={this.addRecord} className='edit-record'>
+          <form onSubmit={(e) => this.addRecord(e, actionId)} className='edit-record'>
             <div className='col-xs-12 col-lg-6 form-group'>
-              <div className='col-lg-2'>
-                <div className='checkbox edit-record__checkbox'>
-                  <label><input type='checkbox' defaultChecked /> Käytössä</label>
-                </div>
-              </div>
-              <label className='col-lg-10 edit-record__label'>Asiakirjatyypin tarkenne</label>
-              <input className='col-xs-6 form-control edit-record__input' placeholder='Tarkenne' />
+              <input
+                type='checkbox'
+                checked={this.state.recordName.checked}
+                value={this.state.recordName.checked}
+                onChange={(e) => this.onBaseAttributeChange(!e.target.value, 'recordName', 'checked')}
+              />
+              <label className='edit-record__label'>Asiakirjatyypin tarkenne</label>
+              <span className='fa fa-asterisk required-asterisk' />
+              <input
+                className='col-xs-6 form-control edit-record__input'
+                placeholder='Tarkenne'
+                value={this.state.recordName.name}
+                onChange={(e) => this.onBaseAttributeChange(e.target.value, 'recordName', 'name')} />
             </div>
             <div className='col-xs-12 col-lg-6 form-group'>
-              <div className='col-lg-2'>
-                <div className='checkbox edit-record__checkbox'>
-                  <label><input type='checkbox' defaultChecked /> Käytössä</label>
-                </div>
-              </div>
-              <label className='col-lg-10 edit-record__label'>Tyyppi</label>
+              <input
+                type='checkbox'
+                checked={this.state.recordType.checked}
+                value={this.state.recordType.checked}
+                onChange={(e) => this.onBaseAttributeChange(!this.state.recordType.checked, 'recordType', 'checked')}
+              />
+              <label className='edit-record__label'>Tyyppi</label>
+              <span className='fa fa-asterisk required-asterisk' />
               { typeDropdown }
             </div>
             { attributeElements }
@@ -116,7 +179,7 @@ export class AddRecord extends React.Component {
               <button className='btn btn-primary pull-right edit-record__submit' type='submit'>Valmis</button>
               <button
                 className='btn btn-danger pull-right edit-record__cancel'
-                onClick={this.cancelRecordCreation}>
+                onClick={(e) => this.cancelRecordCreation(e)}>
                 Peruuta
               </button>
             </div>
@@ -134,10 +197,9 @@ AddRecord.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
   mode: React.PropTypes.string.isRequired,
-  addRecord: React.PropTypes.func.isRequired,
+  createRecord: React.PropTypes.func.isRequired,
   cancelRecordCreation: React.PropTypes.func.isRequired,
-  actionIndex: React.PropTypes.string.isRequired,
-  phaseIndex: React.PropTypes.string.isRequired
+  actionId: React.PropTypes.string.isRequired
 };
 
 export default AddRecord;

@@ -11,8 +11,8 @@ import ImportView from './ImportView';
 export class Action extends React.Component {
   constructor (props) {
     super(props);
+    this.createRecord = this.createRecord.bind(this);
     this.saveActionTitle = this.saveActionTitle.bind(this);
-    this.addRecord = this.addRecord.bind(this);
     this.cancelRecordCreation = this.cancelRecordCreation.bind(this);
     this.state = {
       mode: 'view',
@@ -84,12 +84,8 @@ export class Action extends React.Component {
       }
     ];
   }
-
   createNewRecord () {
     this.setState({ mode: 'add' });
-  }
-  saveNewRecord () {
-    this.setState({ mode: 'view' });
   }
   cancelRecordCreation () {
     this.setState({ mode: 'view' });
@@ -100,9 +96,9 @@ export class Action extends React.Component {
   delete () {
     this.setState({ deleted: true, deleting: false });
   }
-  addRecord () {
+  createRecord (actionId, name, type, attributes) {
     this.setState({ mode: 'view' });
-    this.props.addRecord();
+    this.props.addRecord(actionId, name, type, attributes);
   }
   toggleReorderView () {
     const current = this.state.showReorderView;
@@ -161,10 +157,9 @@ export class Action extends React.Component {
               attributeTypes={this.props.attributeTypes}
               recordTypes={this.props.recordTypes}
               mode={this.state.mode}
-              phaseIndex={this.props.phaseIndex}
-              actionIndex={this.props.actionIndex}
+              actionId={this.props.action.id}
               cancelRecordCreation={this.cancelRecordCreation}
-              addRecord={this.addRecord}
+              createRecord={this.createRecord}
             />
           }
           { this.state.deleting &&
