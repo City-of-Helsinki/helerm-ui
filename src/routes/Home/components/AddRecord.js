@@ -79,7 +79,8 @@ export class AddRecord extends React.Component {
               </label>
               <select
                 className='form-control edit-record__select'
-                onChange={(e) => this.onChange(e.target.value, key, 'name')}>
+                onChange={(e) => this.onChange(e.target.value, key, 'name')}
+                disabled={(this.state.newAttributes[key].checked ? false : true)}>
                 <option value={null}>[ Tyhjä ]</option>
                 { options }
               </select>
@@ -104,6 +105,7 @@ export class AddRecord extends React.Component {
                 className='form-control edit-record__input'
                 placeholder={attributeTypes[key].name}
                 onChange={(e) => this.onChange(e.target.value, key, 'name')}
+                disabled={(this.state.newAttributes[key].checked ? false : true)}
               />
             </div>
           );
@@ -149,12 +151,6 @@ export class AddRecord extends React.Component {
           <h4>Uusi asiakirja</h4>
           <form onSubmit={(e) => this.addRecord(e, actionId)} className='edit-record'>
             <div className='col-xs-12 col-lg-6 form-group'>
-              <input
-                type='checkbox'
-                checked={this.state.recordName.checked}
-                value={this.state.recordName.checked}
-                onChange={(e) => this.onBaseAttributeChange(!e.target.value, 'recordName', 'checked')}
-              />
               <label className='edit-record__label'>Asiakirjatyypin tarkenne</label>
               <span className='fa fa-asterisk required-asterisk' />
               <input
@@ -164,12 +160,6 @@ export class AddRecord extends React.Component {
                 onChange={(e) => this.onBaseAttributeChange(e.target.value, 'recordName', 'name')} />
             </div>
             <div className='col-xs-12 col-lg-6 form-group'>
-              <input
-                type='checkbox'
-                checked={this.state.recordType.checked}
-                value={this.state.recordType.checked}
-                onChange={(e) => this.onBaseAttributeChange(!this.state.recordType.checked, 'recordType', 'checked')}
-              />
               <label className='edit-record__label'>Tyyppi</label>
               <span className='fa fa-asterisk required-asterisk' />
               { typeDropdown }

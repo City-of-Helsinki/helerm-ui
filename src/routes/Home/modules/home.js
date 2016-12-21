@@ -269,10 +269,12 @@ export function addAction(phaseIndex, name) {
 
 export function addRecord(actionIndex, recordName, recordType, attributes) {
   const recordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
-  let newAttributes = {};
+  let newAttributes = [];
   for(const key in attributes) {
     if(attributes.hasOwnProperty(key)) {
-      newAttributes = Object.assign({}, newAttributes, {[key]: attributes[key].name});
+      if (attributes[key].checked === true) {
+        newAttributes = Object.assign({}, newAttributes, {[key]: attributes[key].name});
+      }
     }
   }
   const newRecord = Object.assign({}, {
