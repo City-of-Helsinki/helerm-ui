@@ -17,6 +17,7 @@ export class Action extends React.Component {
     this.state = {
       mode: 'view',
       name: this.props.action.name,
+      creating: false,
       deleting: false,
       deleted: false,
       showReorderView: false,
@@ -85,10 +86,10 @@ export class Action extends React.Component {
     ];
   }
   createNewRecord () {
-    this.setState({ mode: 'add' });
+    this.setState({ creating: true });
   }
   cancelRecordCreation () {
-    this.setState({ mode: 'view' });
+    this.setState({ creating: false });
   }
   cancelDeletion () {
     this.setState({ deleting: false });
@@ -97,7 +98,7 @@ export class Action extends React.Component {
     this.setState({ deleted: true, deleting: false });
   }
   createRecord (actionId, name, type, attributes) {
-    this.setState({ mode: 'view' });
+    this.setState({ creating: false });
     this.props.addRecord(actionId, name, type, attributes);
   }
   toggleReorderView () {
@@ -113,7 +114,7 @@ export class Action extends React.Component {
     const recordElements = this.generateRecords(action.records);
     const dropdownItems = this.generateDropdownItems(action.records.length);
     let actionTitle;
-    if (this.state.mode === 'view' || this.state.mode === 'add') {
+    if (this.state.mode === 'view') {
       actionTitle =
       (<div className='action-title'>
         <span onClick={() => this.editActionTitle()}>
@@ -143,16 +144,7 @@ export class Action extends React.Component {
         { !this.state.deleted &&
         <div className='row box action'>
           { actionTitle }
-          <span className='col-xs-6 attribute-label'>
-            Asiakirjatyypin tarkenne
-          </span>
-          <span className='col-xs-6 attribute-label'>
-            Tyyppi
-          </span>
-          <div className={'col-xs-12 records ' + (this.props.documentState === 'edit' ? 'records-editing' : '')}>
-            { recordElements }
-          </div>
-          { this.state.mode === 'add' &&
+          { this.state.creating &&
             <AddRecord
               attributeTypes={this.props.attributeTypes}
               recordTypes={this.props.recordTypes}
@@ -162,6 +154,16 @@ export class Action extends React.Component {
               createRecord={this.createRecord}
             />
           }
+          <span className='col-xs-6 attribute-label'>
+            Asiakirjatyypin tarkenne
+          </span>
+          <span className='col-xs-6 attribute-label'>
+            Tyyppi
+          </span>
+          <div className={'col-xs-12 records ' + (this.props.documentState === 'edit' ? 'records-editing' : '')}>
+            { recordElements }
+          </div>
+
           { this.state.deleting &&
             <Popup
               content={

@@ -8,7 +8,6 @@ export class AddRecord extends React.Component {
     this.generateAttributeElements = this.generateAttributeElements.bind(this);
     this.cancelRecordCreation = this.cancelRecordCreation.bind(this);
     this.state = {
-      mode: this.props.mode,
       newAttributes: this.initializeState(this.props.attributeTypes),
       recordName: {
         name: '',
@@ -80,7 +79,7 @@ export class AddRecord extends React.Component {
               <select
                 className='form-control edit-record__select'
                 onChange={(e) => this.onChange(e.target.value, key, 'name')}
-                disabled={(this.state.newAttributes[key].checked ? false : true)}>
+                disabled={!this.state.newAttributes[key].checked}>
                 <option value={null}>[ Tyhjä ]</option>
                 { options }
               </select>
@@ -105,7 +104,7 @@ export class AddRecord extends React.Component {
                 className='form-control edit-record__input'
                 placeholder={attributeTypes[key].name}
                 onChange={(e) => this.onChange(e.target.value, key, 'name')}
-                disabled={(this.state.newAttributes[key].checked ? false : true)}
+                disabled={!this.state.newAttributes[key].checked}
               />
             </div>
           );
@@ -138,55 +137,48 @@ export class AddRecord extends React.Component {
   }
   cancelRecordCreation (e) {
     e.preventDefault();
-    this.setState({ mode: 'view' });
     this.props.cancelRecordCreation();
   }
   render () {
     const { attributeTypes, recordTypes, actionId } = this.props;
     const attributeElements = this.generateAttributeElements(attributeTypes);
     const typeDropdown = this.generateDropdown(recordTypes);
-    if (this.state.mode === 'add') {
-      return (
-        <div className='action add-box col-xs-12'>
-          <h4>Uusi asiakirja</h4>
-          <form onSubmit={(e) => this.addRecord(e, actionId)} className='edit-record'>
-            <div className='col-xs-12 col-lg-6 form-group'>
-              <label className='edit-record__label'>Asiakirjatyypin tarkenne</label>
-              <span className='fa fa-asterisk required-asterisk' />
-              <input
-                className='col-xs-6 form-control edit-record__input'
-                placeholder='Tarkenne'
-                value={this.state.recordName.name}
-                onChange={(e) => this.onBaseAttributeChange(e.target.value, 'recordName', 'name')} />
-            </div>
-            <div className='col-xs-12 col-lg-6 form-group'>
-              <label className='edit-record__label'>Tyyppi</label>
-              <span className='fa fa-asterisk required-asterisk' />
-              { typeDropdown }
-            </div>
-            { attributeElements }
-            <div className='col-xs-12'>
-              <button className='btn btn-primary pull-right edit-record__submit' type='submit'>Valmis</button>
-              <button
-                className='btn btn-danger pull-right edit-record__cancel'
-                onClick={(e) => this.cancelRecordCreation(e)}>
-                Peruuta
-              </button>
-            </div>
-
-          </form>
-        </div>
-      );
-    } else if (this.state.mode === 'view') {
-      return null;
-    }
+    return (
+      <div className='action add-box col-xs-12'>
+        <h4>Uusi asiakirja</h4>
+        <form onSubmit={(e) => this.addRecord(e, actionId)} className='edit-record'>
+          <div className='col-xs-12 col-lg-6 form-group'>
+            <label className='edit-record__label'>Asiakirjatyypin tarkenne</label>
+            <span className='fa fa-asterisk required-asterisk' />
+            <input
+              className='col-xs-6 form-control edit-record__input'
+              placeholder='Tarkenne'
+              value={this.state.recordName.name}
+              onChange={(e) => this.onBaseAttributeChange(e.target.value, 'recordName', 'name')} />
+          </div>
+          <div className='col-xs-12 col-lg-6 form-group'>
+            <label className='edit-record__label'>Tyyppi</label>
+            <span className='fa fa-asterisk required-asterisk' />
+            { typeDropdown }
+          </div>
+          { attributeElements }
+          <div className='col-xs-12'>
+            <button className='btn btn-primary pull-right edit-record__submit' type='submit'>Valmis</button>
+            <button
+              className='btn btn-danger pull-right edit-record__cancel'
+              onClick={(e) => this.cancelRecordCreation(e)}>
+              Peruuta
+            </button>
+          </div>
+        </form>
+      </div>
+    );
   }
 }
 
 AddRecord.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
-  mode: React.PropTypes.string.isRequired,
   createRecord: React.PropTypes.func.isRequired,
   cancelRecordCreation: React.PropTypes.func.isRequired,
   actionId: React.PropTypes.string.isRequired
