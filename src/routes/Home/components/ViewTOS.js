@@ -171,7 +171,7 @@ export class ViewTOS extends React.Component {
       const phaseElements = this.generatePhases(selectedTOS.phases);
       const TOSMetaData = this.generateMetaData(this.props.attributeTypes, selectedTOS.attributes);
       return (
-        <div className='col-xs-12'>
+        <div>
           <StickyContainer className='col-xs-12 single-tos-container'>
             <Sticky className='single-tos-header'>
               <div className='row'>

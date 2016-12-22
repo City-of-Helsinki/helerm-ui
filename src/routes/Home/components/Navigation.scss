@@ -1,6 +1,7 @@
 @import '../../../styles/vendor/hel-components/variables';
 
 .navigation-menu {
+  position: relative;
   padding: 15px;
   background-color: white;
   border: 1px solid $black50;
@@ -160,7 +161,7 @@ ul:last-child {
   position: absolute;
   color: $gray;
   top: 60px;
-  left: 42px;
+  left: 30px;
   z-index: 1;
 }
 
