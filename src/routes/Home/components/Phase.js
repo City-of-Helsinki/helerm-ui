@@ -135,7 +135,7 @@ export class Phase extends React.Component {
     let phaseTitle;
     if (this.state.mode !== 'edit') {
       phaseTitle =
-        (<span className='phase-title' onClick={() => this.editPhaseTitle()}>
+        (<span onClick={() => this.editPhaseTitle()}>
           <i className='fa fa-info-circle' aria-hidden='true' /> {this.state.name}
         </span>
         );
@@ -158,33 +158,28 @@ export class Phase extends React.Component {
       <span className='col-xs-12 box phase'>
         { !this.state.deleted &&
         <StickyContainer>
-          <Sticky className='phase-title'>
+          <Sticky className={'phase-title ' + (this.props.phase.is_open ? 'open' : 'closed')}>
             { phaseTitle }
+            { phase.actions.length !== 0 &&
+              <span className='phase-buttons'>
+                <button
+                  type='button'
+                  className='btn btn-info btn-sm pull-right'
+                  title={phase.is_open ? 'Pienennä' : 'Laajenna'}
+                  onClick={() => this.props.setPhaseVisibility(phaseIndex, !phase.is_open)}>
+                  <span
+                    className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
+                    aria-hidden='true'
+                      />
+                </button>
+                { this.props.documentState === 'edit' &&
+                  <span className='pull-right'>
+                    <Dropdown children={phaseDropdownItems} small />
+                  </span>
+                }
+              </span>
+            }
           </Sticky>
-          {/*
-              { update } is a hack to fix firefox specific issue of re-rendering phases
-              remove once firefox issue is fixed
-            */}
-          <div className='update'>{ update }</div>
-          { phase.actions.length !== 0 &&
-            <span className='phase-buttons'>
-              <button
-                type='button'
-                className='btn btn-info btn-sm pull-right'
-                title={phase.is_open ? 'Pienennä' : 'Laajenna'}
-                onClick={() => this.props.setPhaseVisibility(phaseIndex, !phase.is_open)}>
-                <span
-                  className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
-                  aria-hidden='true'
-                    />
-              </button>
-              { this.props.documentState === 'edit' &&
-                <span className='pull-right'>
-                  <Dropdown children={phaseDropdownItems} small />
-                </span>
-              }
-            </span>
-          }
           <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>
             { actionElements }
           </div>
@@ -257,6 +252,11 @@ export class Phase extends React.Component {
             closePopup={() => this.toggleImportView()}
           />
         }
+        {/*
+            { update } is a hack to fix firefox specific issue of re-rendering phases
+            remove once firefox issue is fixed
+          */}
+        <div className='update'>{ update }</div>
       </span>
     );
   }

@@ -8,11 +8,13 @@
 .single-tos-header {
   padding: 10px 15px;
   background: white;
-  z-index: 3;
-  transition: 0.3s ease-out all;
+  z-index: 4;
 }
 .single-tos-header.sticky {
+  padding: 10px 31px;
   border-bottom: 1px solid #eee;
+  left: 0px !important;
+  width: 100% !important;
 }
 .single-tos-content {
   padding: 15px;

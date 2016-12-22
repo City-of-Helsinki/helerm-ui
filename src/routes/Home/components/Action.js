@@ -8,6 +8,8 @@ import DeleteView from './DeleteView';
 import ReorderView from './ReorderView';
 import ImportView from './ImportView';
 
+import { StickyContainer, Sticky } from 'react-sticky';
+
 export class Action extends React.Component {
   constructor (props) {
     super(props);
@@ -116,7 +118,7 @@ export class Action extends React.Component {
     let actionTitle;
     if (this.state.mode === 'view') {
       actionTitle =
-      (<div className='action-title'>
+      (<span>
         <span onClick={() => this.editActionTitle()}>
           {this.state.name}
         </span>
@@ -125,11 +127,11 @@ export class Action extends React.Component {
             <Dropdown children={dropdownItems} extraSmall />
           </span>
         }
-      </div>);
+      </span>);
     }
     if (this.state.mode === 'edit') {
       actionTitle =
-        <form className='action-title-input' onSubmit={this.saveActionTitle}>
+        <form onSubmit={this.saveActionTitle}>
           <input
             className='input-title form-control col-xs-11'
             value={this.state.name}
@@ -142,8 +144,10 @@ export class Action extends React.Component {
     return (
       <div>
         { !this.state.deleted &&
-        <div className='row box action'>
-          { actionTitle }
+        <StickyContainer className='row box action'>
+          <Sticky className='action-title'>
+            { actionTitle }
+          </Sticky>
           { this.state.creating &&
             <AddRecord
               attributeTypes={this.props.attributeTypes}
@@ -214,7 +218,7 @@ export class Action extends React.Component {
               closePopup={() => this.toggleImportView()}
             />
           }
-        </div>
+        </StickyContainer>
       }
       </div>
     );
