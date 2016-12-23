@@ -12,6 +12,10 @@
   padding: 8px 5px 0px;
   position: relative;
   z-index: 2;
+  pointer-events: none;
+  * {
+    pointer-events:all;
+  }
 }
 .phase-title.sticky {
   background-color: #f2f2f2;
