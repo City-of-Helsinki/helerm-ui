@@ -162,16 +162,16 @@ export class Phase extends React.Component {
             { phaseTitle }
             <span className='phase-buttons'>
               { phase.actions.length !== 0 &&
-                  <button
-                    type='button'
-                    className='btn btn-info btn-sm pull-right'
-                    title={phase.is_open ? 'Pienennä' : 'Laajenna'}
-                    onClick={() => this.props.setPhaseVisibility(phaseIndex, !phase.is_open)}>
-                    <span
-                      className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
-                      aria-hidden='true'
+              <button
+                type='button'
+                className='btn btn-info btn-sm pull-right'
+                title={phase.is_open ? 'Pienennä' : 'Laajenna'}
+                onClick={() => this.props.setPhaseVisibility(phaseIndex, !phase.is_open)}>
+                <span
+                  className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
+                  aria-hidden='true'
                         />
-                  </button>
+              </button>
               }
               { this.props.documentState === 'edit' &&
                 <span className='pull-right'>
