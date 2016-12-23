@@ -148,7 +148,7 @@ export class Attribute extends React.Component {
 }
 
 Attribute.propTypes = {
-  attribute: React.PropTypes.string.isRequired,
+  attribute: React.PropTypes.string,
   attributeIndex: React.PropTypes.string.isRequired,
   attributeKey: React.PropTypes.string.isRequired,
   attributeTypes: React.PropTypes.object.isRequired,

@@ -32,6 +32,8 @@ export const IMPORT_ITEMS = 'IMPORT_ITEMS';
 
 export const COMMIT_ORDER_CHANGE = 'COMMIT_ORDER_CHANGE';
 
+export const CLOSE_MESSAGE = 'CLOSE_MESSAGE';
+
 // ------------------------------------
 // Actions
 // ------------------------------------
@@ -289,7 +291,12 @@ export function addRecord(actionIndex, recordName, recordType, attributes) {
     type: ADD_RECORD,
     actionIndex,
     recordId,
-    newRecord
+    newRecord,
+    message: {
+      active: true,
+      success: true,
+      text: 'Lisäys onnistui'
+    }
   }
 }
 
@@ -324,6 +331,12 @@ export function commitOrderChanges(newOrder, itemType, itemParent) {
     newOrder,
     itemType,
     itemParent
+  }
+}
+
+export function closeMessage() {
+  return {
+    type: CLOSE_MESSAGE
   }
 }
 
@@ -508,7 +521,8 @@ const ACTION_HANDLERS = {
             $set: action.newRecord
           }
         }
-      }
+      },
+      message: { $set: action.message }
     });
   },
   [COMMIT_ORDER_CHANGE]: (state, action) => {
@@ -644,6 +658,15 @@ const ACTION_HANDLERS = {
         }
       });
     }
+  },
+  [CLOSE_MESSAGE]: (state, action) => {
+    return update(state, {
+      message: {
+        active: {$set: false},
+        text: {$set: ''},
+        success: {$set: false}
+      }
+    });
   }
 };
 // ------------------------------------
@@ -666,7 +689,12 @@ const initialState = {
   },
   isFetching: false,
   recordTypes: {},
-  attributeTypes: {}
+  attributeTypes: {},
+  message: {
+    active: false,
+    text: '',
+    success: false
+  }
 };
 
 export default function homeReducer(state = initialState, action) {

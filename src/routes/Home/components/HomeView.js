@@ -1,13 +1,27 @@
 import React from 'react';
 import Navigation from './Navigation';
 import Loader from './Loader';
+import Alert from '../../../components/Alert';
 import ViewTOS from './ViewTOS';
 import './Homeview.scss';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 export class HomeView extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showAlert: this.props.message.active
+    }
+  }
   componentWillMount () {
     this.props.fetchValidationRules();
     this.props.fetchRecordTypes();
+  }
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+    if(nextProps.message) {
+      this.setState({showAlert: nextProps.message.active});
+    }
   }
   render () {
     const {
@@ -31,8 +45,15 @@ export class HomeView extends React.Component {
       addRecord,
       addPhase,
       commitOrderChanges,
-      importItems
+      importItems,
+      message
     } = this.props;
+    let alertMessage = null;
+    console.log(this.state.showAlert);
+    if(this.state.showAlert === true) {
+      alertMessage = <Alert message={message.text} style={(message.success ? 'alert-success' : 'alert-danger')} close={this.props.closeMessage}/>
+      setTimeout(this.props.closeMessage, 6000);
+    }
     return (
       <div>
         { isFetching &&
@@ -65,6 +86,14 @@ export class HomeView extends React.Component {
           commitOrderChanges={commitOrderChanges}
           importItems={importItems}
         />
+        <ReactCSSTransitionGroup
+          transitionName={"alert-position"}
+          transitionEnterTimeout={1000}
+          transitionLeaveTimeout={600}>
+          { this.state.showAlert &&
+            alertMessage
+          }
+        </ReactCSSTransitionGroup>
       </div>
     );
   }
