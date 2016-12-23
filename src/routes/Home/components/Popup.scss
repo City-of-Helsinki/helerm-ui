@@ -1,25 +1,18 @@
 .popup-outer-background {
-  display:flex;
-  justify-content: center;
-  align-items: center;
   position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
   z-index: 999;
   width: 100vw;
-  background-color: rgba(0,0,0,0.9);
+  background-color: rgba(0,0,0,0.8);
 }
-
 .popup-inner-background {
   background-color: white;
-  display:flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+  margin: 10vh 0 0 6vw;
+  width: 88vw;
   padding: 35px;
 }
-
 .has-children-text {
   color: red;
   margin: 30px 0px;

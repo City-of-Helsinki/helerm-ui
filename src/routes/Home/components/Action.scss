@@ -1,21 +1,39 @@
 .action {
   border-top-color: #658fcd;
   border-top-width: 4px;
+  background-color: white;
+  padding: 8px 0px 0px;
 }
-.action-title, .action-title-input {
-  margin-bottom: 10px;
+.action-title {
+  margin-left: 10px;
   position: relative;
+  z-index: 1;
+  font-weight: 600;
+  width: 100%;
+  padding: 1px 0 7px;
+
 }
-.label-action {
-  background-color: #658fcd;
-  margin-left: 5px;
+.action-title.sticky {
+  z-index: 1;
+  background-color: #f2f2f2;
+  padding-left: 48px;
+  left: 0px !important;
+  margin-left: 0;
+  width: 100% !important;
+  border-bottom: 1px solid #cfcfcf;
+  .action-dropdown-button {
+    right: 53px;
+  }
 }
 .records {
-  padding: 1px 0px 0px 0px;
+  padding: 1px 10px 26px;
 }
-.records-editing {
-  margin-bottom: 25px;
+.attribute-label {
+  text-transform: uppercase;
+  font-size: 0.8em;
 }
-.action-buttons button {
-  margin: 0px 1px;
+.action-dropdown-button {
+  position: absolute;
+  right: 25px;
+  top: 4px;
 }

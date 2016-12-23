@@ -1,0 +1,27 @@
+.dropdown-wrapper {
+  position: relative;
+}
+.dropdown-items {
+    position: absolute;
+    z-index: 3;
+    border: 2px solid white;
+    color: white;
+    width: 250px;
+    background-color: #0072c6;
+    top: -10px;
+    right: 32px;
+    .dropdown-row {
+      margin: 0;
+    }
+}
+.dropdown-row {
+  text-align: left;
+  width: 100%;
+}
+.items-xs {
+  top: -5px;
+  right: 23px;
+}
+.dropdown-icon {
+  padding-right: 8px;
+}

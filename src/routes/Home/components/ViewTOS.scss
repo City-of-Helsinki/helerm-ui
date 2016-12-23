@@ -3,28 +3,31 @@
   border-radius: 4px;
   background-color: white;
   padding: 15px 0;
+  margin-bottom: 50px;
 }
 .single-tos-header {
   padding: 10px 15px;
   background: white;
-  z-index: 3;
-  transition: 0.3s ease-out all;
+  z-index: 4;
 }
 .single-tos-header.sticky {
+  padding: 10px 31px;
   border-bottom: 1px solid #eee;
+  left: 0px !important;
+  width: 100% !important;
 }
 .single-tos-content {
   padding: 15px;
 }
 .single-tos-header h4 {
-  margin: 0;
+  margin: 0 0 10px;
   transition: 0.3s ease-out all;
 }
 .box {
   padding: 8px 10px 26px;
   border: 1px solid grey;
   border-radius: 4px;
-  margin: 25px 0px;
+  margin: 10px 0px;
 }
 .general-info {
   margin-bottom: 40px;
@@ -42,11 +45,14 @@
   font-size: 1.2em;
   text-decoration: none;
 }
-.button-row {
-  padding: 0px;
-}
-.button-row > .btn, .document-buttons > .btn {
+.document-buttons > .btn {
   margin: 4px;
+}
+.button-row {
+  padding: 0px 39px 0px 0px ;
+}
+.button-row .btn {
+  margin: 0 1px;
 }
 .version-details {
   flex-direction: column;
@@ -63,7 +69,7 @@
 }
 .required-legend {
   position: absolute;
-  top: 18px;
+  top: 10px;
   left: 15px;
 }
 .metadata-buttons {
@@ -76,6 +82,11 @@
   color: #fff;
   background-color: #ff4e1e;
   border-color: #ff4e1e;
+}
+.btn-delete:hover {
+  color: #fff;
+  background-color: #c4340d;
+  border-color: #c4340d;
 }
 .phase-form {
   padding: 0px;

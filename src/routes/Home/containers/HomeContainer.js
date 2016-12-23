@@ -12,7 +12,8 @@ import {
   addAction,
   addRecord,
   addPhase,
-  commitOrderChanges
+  commitOrderChanges,
+  importItems
 } from '../modules/home';
 import HomeView from '../components/HomeView';
 
@@ -29,7 +30,8 @@ const mapDispatchToProps = {
   addAction,
   addRecord,
   addPhase,
-  commitOrderChanges
+  commitOrderChanges,
+  importItems
 };
 
 const mapStateToProps = (state) => {

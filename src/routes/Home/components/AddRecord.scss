@@ -7,11 +7,12 @@
 
 .edit-record {
   &__checkbox {
-    padding: 0 5px;
-    margin: 0 -15px;
+    position: absolute;
+    left: 0;
+    top: 0;
   }
   &__label {
-    padding-right: 0px;
+    padding-left: 10px;
   }
   &__submit, &__cancel {
     margin-left: 10px;

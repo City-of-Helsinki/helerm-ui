@@ -4,7 +4,7 @@ import { DragSource, DropTarget } from 'react-dnd';
 
 const style = {
   border: '2px dashed #658fcd',
-  padding: '0.5rem 1rem',
+  padding: '0.2rem 1rem',
   marginBottom: '.5rem',
   backgroundColor: 'white',
   cursor: 'move'
@@ -98,9 +98,9 @@ export class ReorderItem extends React.Component {
 }
 
 ReorderItem.propTypes = {
-  connectDragSource: React.PropTypes.func.isRequired,
-  connectDropTarget: React.PropTypes.func.isRequired,
-  isDragging: React.PropTypes.bool.isRequired,
+  connectDragSource: React.PropTypes.func,
+  connectDropTarget: React.PropTypes.func,
+  isDragging: React.PropTypes.bool,
   index: React.PropTypes.string.isRequired,
   id: React.PropTypes.number.isRequired,
   name: React.PropTypes.string.isRequired,

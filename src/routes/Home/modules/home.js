@@ -28,6 +28,8 @@ export const ADD_ACTION = 'ADD_ACTION';
 export const ADD_RECORD = 'ADD_RECORD';
 export const ADD_PHASE = 'ADD_PHASE';
 
+export const IMPORT_ITEMS = 'IMPORT_ITEMS';
+
 export const COMMIT_ORDER_CHANGE = 'COMMIT_ORDER_CHANGE';
 
 // ------------------------------------
@@ -265,15 +267,29 @@ export function addAction(phaseIndex, name) {
   }
 }
 
-export function addRecord(phaseIndex, name) {
-  const newRecord = {
-    name: name,
-    attributes: []
+export function addRecord(actionIndex, recordName, recordType, attributes) {
+  const recordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+  let newAttributes = [];
+  for(const key in attributes) {
+    if(attributes.hasOwnProperty(key)) {
+      if (attributes[key].checked === true) {
+        newAttributes = Object.assign({}, newAttributes, {[key]: attributes[key].name});
+      }
+    }
   }
+  const newRecord = Object.assign({}, {
+    id: recordId,
+    action: actionIndex,
+    attributes: newAttributes,
+    name: recordName,
+    type: recordType,
+    is_open: false
+  });
   return {
-    type: ADD_ACTION,
-    phaseIndex,
-    newAction: [newRecord]
+    type: ADD_RECORD,
+    actionIndex,
+    recordId,
+    newRecord
   }
 }
 
@@ -290,6 +306,15 @@ export function addPhase(name, parent) {
   return {
     type: ADD_PHASE,
     newPhase
+  }
+}
+
+export function importItems(newItem, level, itemParent) {
+  return {
+    type: IMPORT_ITEMS,
+    newItem,
+    level,
+    itemParent
   }
 }
 
@@ -321,7 +346,8 @@ export const actions = {
   addAction,
   addRecord,
   addPhase,
-  commitOrderChanges
+  commitOrderChanges,
+  importItems
 };
 
 // ------------------------------------
@@ -433,6 +459,22 @@ const ACTION_HANDLERS = {
       attributeTypes: {$set: action.attributeList}
     });
   },
+  [ADD_PHASE]: (state, action) => {
+    return update(state, {
+      selectedTOS: {
+        tos: {
+          phases: {
+            $push : [action.newPhase.id]
+          }
+        },
+        phases: {
+          [action.newPhase.id]: {
+            $set: action.newPhase
+          }
+        }
+      }
+    });
+  },
   [ADD_ACTION]: (state, action) => {
     return update(state, {
       selectedTOS: {
@@ -451,17 +493,19 @@ const ACTION_HANDLERS = {
       }
     });
   },
-  [ADD_PHASE]: (state, action) => {
+  [ADD_RECORD]: (state, action) => {
     return update(state, {
       selectedTOS: {
-        tos: {
-          phases: {
-            $push : [action.newPhase.id]
+        actions: {
+          [action.actionIndex]: {
+            records: {
+              $push: [action.recordId]
+            }
           }
         },
-        phases: {
-          [action.newPhase.id]: {
-            $set: action.newPhase
+        records: {
+          [action.recordId]: {
+            $set: action.newRecord
           }
         }
       }
@@ -472,18 +516,20 @@ const ACTION_HANDLERS = {
     let itemLevel;
     const affectedItems = action.newOrder;
     switch(action.itemType) {
-      case 'action':
-        parentLevel = 'phases';
-        itemLevel = 'actions';
-        break;
       case 'phase':
         parentLevel = 'tos';
         itemLevel = 'phases';
+        break;
+      case 'action':
+        parentLevel = 'phases';
+        itemLevel = 'actions';
         break;
       case 'record':
         parentLevel = 'actions';
         itemLevel = 'records';
         break;
+      default:
+      return state;
     }
     const newOrder = [];
     affectedItems.map(item => {
@@ -529,6 +575,71 @@ const ACTION_HANDLERS = {
           },
           [itemLevel]: {
             $set: itemList
+          }
+        }
+      });
+    }
+  },
+  [IMPORT_ITEMS]: (state, action) => {
+    const newId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+    let currentItems;
+    let parentLevel;
+    let itemLevel;
+    switch(action.level) {
+      case 'phase':
+        currentItems = Object.assign({}, state.selectedTOS.phases);
+        parentLevel = 'tos';
+        itemLevel = 'phases';
+        break;
+      case 'action':
+        currentItems = Object.assign({}, state.selectedTOS.actions);
+        parentLevel = 'phases';
+        itemLevel = 'actions';
+        break;
+      case 'record':
+        currentItems = Object.assign({}, state.selectedTOS.records);
+        parentLevel = 'actions';
+        itemLevel = 'records';
+        break;
+      default:
+        return state;
+    }
+    let indexes = []
+    for (const key in currentItems) {
+      if(currentItems.hasOwnProperty(key)) {
+        indexes.push(currentItems[key].index);
+      };
+    }
+    const newIndex = indexes.length > 0 ? Math.max.apply(null, indexes)+1 : 1
+    const newName = currentItems[action.newItem].name+' (KOPIO)';
+    const newCopy = Object.assign({}, currentItems[action.newItem], {id: newId}, {index: newIndex}, {name: newName});
+    const newItems = Object.assign({}, currentItems, {[newId]: newCopy});
+
+    if(action.level === 'phase'){
+      return update(state, {
+        selectedTOS: {
+          [parentLevel]: {
+            [itemLevel]: {
+              $push: [newId]
+            }
+          },
+          [itemLevel]: {
+            $set: newItems
+          }
+        }
+      });
+    } else {
+      return update(state, {
+        selectedTOS: {
+          [parentLevel]: {
+            [action.itemParent]: {
+              [itemLevel]: {
+                $push: [newId]
+              }
+            }
+          },
+          [itemLevel]: {
+            $set: newItems
           }
         }
       });

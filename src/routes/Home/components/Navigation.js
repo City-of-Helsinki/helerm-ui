@@ -40,25 +40,23 @@ export class Navigation extends React.Component {
       });
     }
     return (
-      <div className='col-xs-12'>
-        <div className='navigation-menu'>
-          <button className='btn btn-default btn-sm pull-right' onClick={this.toggleNavigationVisibility}>
-            <span
-              className={'fa ' + (this.props.navigation.is_open ? 'fa-minus' : 'fa-plus')}
-              aria-hidden='true'
-            />
-          </button>
-          {!this.props.navigation.is_open &&
-            <div className='nav-path-list' onClick={this.toggleNavigationVisibility}>{navigationTitle}</div>
-          }
-          {this.props.navigation.is_open &&
-            <InfinityMenu
-              tree={this.state.tree}
-              onNodeMouseClick={this.onNodeMouseClick}
-              onLeafMouseClick={this.onLeafMouseClick}
-            />
-          }
-        </div>
+      <div className='navigation-menu'>
+        <button className='btn btn-default btn-sm pull-right' onClick={this.toggleNavigationVisibility}>
+          <span
+            className={'fa ' + (this.props.navigation.is_open ? 'fa-minus' : 'fa-plus')}
+            aria-hidden='true'
+          />
+        </button>
+        {!this.props.navigation.is_open &&
+          <div className='nav-path-list' onClick={this.toggleNavigationVisibility}>{navigationTitle}</div>
+        }
+        {this.props.navigation.is_open &&
+          <InfinityMenu
+            tree={this.state.tree}
+            onNodeMouseClick={this.onNodeMouseClick}
+            onLeafMouseClick={this.onLeafMouseClick}
+          />
+        }
       </div>
     );
   }

@@ -30,7 +30,8 @@ export class HomeView extends React.Component {
       addAction,
       addRecord,
       addPhase,
-      commitOrderChanges
+      commitOrderChanges,
+      importItems
     } = this.props;
     return (
       <div>
@@ -62,6 +63,7 @@ export class HomeView extends React.Component {
           addRecord={addRecord}
           addPhase={addPhase}
           commitOrderChanges={commitOrderChanges}
+          importItems={importItems}
         />
       </div>
     );
@@ -89,6 +91,7 @@ HomeView.propTypes = {
   addRecord: React.PropTypes.func.isRequired,
   addPhase: React.PropTypes.func.isRequired,
   fetchValidationRules: React.PropTypes.func.isRequired,
-  commitOrderChanges: React.PropTypes.func.isRequired
+  commitOrderChanges: React.PropTypes.func.isRequired,
+  importItems: React.PropTypes.func.isRequired
 };
 export default HomeView;

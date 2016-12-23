@@ -1,14 +1,36 @@
 .phase {
-  border-top-color: salmon;
-  border-top-width: 4px;
+  border-top: 0px;
+  background-color: #f2f2f2;
+  padding: 0px 0px 10px 0px;
+}
+.phase > div:first-child {
+  border-top: 4px solid salmon;
+  border-radius: 4px;
 }
 .phase-title {
   font-size: 1.1em;
-  background: white;
+  padding: 8px 5px 0px;
+  position: relative;
+  z-index: 2;
 }
 .phase-title.sticky {
-  border-bottom: 1px solid #eee;
-  z-index: 2;
+  background-color: #f2f2f2;
+  z-index: 3;
+}
+.phase-title.closed.sticky {
+  padding: 7px 21px 2px;
+  margin-left: 0px;
+}
+.phase-title.open.sticky {
+  padding: 7px 37px 2px;
+  left: 0px !important;
+  width: 100% !important;
+  .phase-buttons {
+    right: 52px;
+    button {
+      padding: 2px 6px;
+    }
+  }
 }
 .title-edit-button {
   margin-left: 8px;
@@ -23,8 +45,16 @@
   z-index: -999999;
   color: transparent;
 }
-.btn-new-action {
-  margin-top: 15px;
+.actions {
+  padding: 0px 5px;
+}
+.phase-buttons {
+  position: absolute;
+  right: 17px;
+  top: 5px;
+}
+.phase-buttons button {
+  margin: 0px 1px;
 }
 .add-action-buttons {
   padding: 0px;
