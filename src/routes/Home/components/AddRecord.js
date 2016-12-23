@@ -132,7 +132,6 @@ export class AddRecord extends React.Component {
   addRecord (e, actionId) {
     e.preventDefault();
     const { recordName, recordType, newAttributes } = this.state;
-    console.log(newAttributes);
     this.props.createRecord(actionId, recordName.name, recordType.name, newAttributes);
   }
   cancelRecordCreation (e) {

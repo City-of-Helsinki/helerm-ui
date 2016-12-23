@@ -160,25 +160,25 @@ export class Phase extends React.Component {
         <StickyContainer>
           <Sticky className={'phase-title ' + (this.props.phase.is_open ? 'open' : 'closed')}>
             { phaseTitle }
-            { phase.actions.length !== 0 &&
-              <span className='phase-buttons'>
-                <button
-                  type='button'
-                  className='btn btn-info btn-sm pull-right'
-                  title={phase.is_open ? 'Pienennä' : 'Laajenna'}
-                  onClick={() => this.props.setPhaseVisibility(phaseIndex, !phase.is_open)}>
-                  <span
-                    className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
-                    aria-hidden='true'
-                      />
-                </button>
-                { this.props.documentState === 'edit' &&
-                  <span className='pull-right'>
-                    <Dropdown children={phaseDropdownItems} small />
-                  </span>
-                }
-              </span>
-            }
+            <span className='phase-buttons'>
+              { phase.actions.length !== 0 &&
+                  <button
+                    type='button'
+                    className='btn btn-info btn-sm pull-right'
+                    title={phase.is_open ? 'Pienennä' : 'Laajenna'}
+                    onClick={() => this.props.setPhaseVisibility(phaseIndex, !phase.is_open)}>
+                    <span
+                      className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
+                      aria-hidden='true'
+                        />
+                  </button>
+              }
+              { this.props.documentState === 'edit' &&
+                <span className='pull-right'>
+                  <Dropdown children={phaseDropdownItems} small />
+                </span>
+              }
+            </span>
           </Sticky>
           <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>
             { actionElements }
