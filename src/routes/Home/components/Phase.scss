@@ -3,11 +3,13 @@
   background-color: #f2f2f2;
   padding: 0px 0px 10px 0px;
 }
+.phase > div:first-child {
+  border-top: 4px solid salmon;
+  border-radius: 4px;
+}
 .phase-title {
   font-size: 1.1em;
   padding: 8px 5px 0px;
-  border-top: 4px solid salmon;
-  border-radius: 4px;
   position: relative;
   z-index: 2;
 }
