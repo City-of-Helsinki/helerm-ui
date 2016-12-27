@@ -7,20 +7,20 @@ import './Homeview.scss';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 export class HomeView extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       showAlert: this.props.message.active
-    }
+    };
   }
   componentWillMount () {
     this.props.fetchValidationRules();
     this.props.fetchRecordTypes();
   }
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     console.log(nextProps);
-    if(nextProps.message) {
-      this.setState({showAlert: nextProps.message.active});
+    if (nextProps.message) {
+      this.setState({ showAlert: nextProps.message.active });
     }
   }
   render () {
@@ -50,8 +50,13 @@ export class HomeView extends React.Component {
     } = this.props;
     let alertMessage = null;
     console.log(this.state.showAlert);
-    if(this.state.showAlert === true) {
-      alertMessage = <Alert message={message.text} style={(message.success ? 'alert-success' : 'alert-danger')} close={this.props.closeMessage}/>
+    if (this.state.showAlert === true) {
+      alertMessage =
+        <Alert
+          message={message.text}
+          style={(message.success ? 'alert-success' : 'alert-danger')}
+          close={this.props.closeMessage}
+        />;
       setTimeout(this.props.closeMessage, 6000);
     }
     return (
@@ -87,7 +92,7 @@ export class HomeView extends React.Component {
           importItems={importItems}
         />
         <ReactCSSTransitionGroup
-          transitionName={"alert-position"}
+          transitionName={'alert-position'}
           transitionEnterTimeout={1000}
           transitionLeaveTimeout={600}>
           { this.state.showAlert &&
@@ -121,6 +126,8 @@ HomeView.propTypes = {
   addPhase: React.PropTypes.func.isRequired,
   fetchValidationRules: React.PropTypes.func.isRequired,
   commitOrderChanges: React.PropTypes.func.isRequired,
-  importItems: React.PropTypes.func.isRequired
+  importItems: React.PropTypes.func.isRequired,
+  message: React.PropTypes.object.isRequired,
+  closeMessage: React.PropTypes.func.isRequired
 };
 export default HomeView;
