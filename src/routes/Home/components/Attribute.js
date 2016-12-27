@@ -45,7 +45,7 @@ export class Attribute extends React.Component {
       });
       return (
         <select
-          className='form-control'
+          className='form-control edit-record__input'
           value={this.state.attribute}
           onChange={this.onChange}
           onBlur={this.submit}
@@ -97,7 +97,7 @@ export class Attribute extends React.Component {
     return (
       <form onSubmit={this.submit}>
         <select
-          className='col-xs-6 form-control edit-record__select'
+          className='col-xs-6 form-control edit-record__input'
           value={this.state.attribute}
           onChange={this.onChange}
           onBlur={this.submit}
