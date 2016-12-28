@@ -76,7 +76,7 @@ export class Phase extends React.Component {
             attributeTypes={this.props.attributeTypes}
             phaseIndex={this.props.phaseIndex}
             addRecord={this.props.addRecord}
-            commitOrderChanges={this.props.commitOrderChanges}
+            changeOrder={this.props.changeOrder}
             importItems={this.props.importItems}
           />
         );
@@ -223,7 +223,7 @@ export class Phase extends React.Component {
                 toggleReorderView={() => this.toggleReorderView()}
                 keys={this.props.phase.actions}
                 values={this.props.actions}
-                commitOrderChanges={this.props.commitOrderChanges}
+                changeOrder={this.props.changeOrder}
                 parent={phaseIndex}
                 parentName={this.state.name}
               />
@@ -276,7 +276,7 @@ Phase.propTypes = {
   addAction: React.PropTypes.func.isRequired,
   addRecord: React.PropTypes.func.isRequired,
   update: React.PropTypes.string.isRequired,
-  commitOrderChanges: React.PropTypes.func.isRequired,
+  changeOrder: React.PropTypes.func.isRequired,
   importItems: React.PropTypes.func.isRequired
 };
 

@@ -156,7 +156,7 @@ export class ViewTOS extends React.Component {
             attributeTypes={this.props.attributeTypes}
             addAction={this.props.addAction}
             addRecord={this.props.addRecord}
-            commitOrderChanges={this.props.commitOrderChanges}
+            changeOrder={this.props.changeOrder}
             importItems={this.props.importItems}
             update={this.state.update}
           />
@@ -283,7 +283,7 @@ export class ViewTOS extends React.Component {
                           toggleReorderView={() => this.toggleReorderView()}
                           keys={this.props.selectedTOS.phases}
                           values={this.props.phases}
-                          commitOrderChanges={this.props.commitOrderChanges}
+                          changeOrder={this.props.changeOrder}
                           parent={null}
                           parentName={selectedTOS.function_id + ' ' + selectedTOS.name}
                         />
@@ -336,7 +336,7 @@ ViewTOS.propTypes = {
   addAction: React.PropTypes.func.isRequired,
   addRecord: React.PropTypes.func.isRequired,
   addPhase: React.PropTypes.func.isRequired,
-  commitOrderChanges: React.PropTypes.func.isRequired,
+  changeOrder: React.PropTypes.func.isRequired,
   importItems: React.PropTypes.func.isRequired
 };
 

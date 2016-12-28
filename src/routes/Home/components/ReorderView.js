@@ -21,8 +21,8 @@ export class ReorderView extends React.Component {
       this.setState({ keys: nextProps.keys });
     }
   }
-  commitOrderChanges (keys) {
-    this.props.commitOrderChanges(keys, this.props.target, this.props.parent);
+  changeOrder (keys) {
+    this.props.changeOrder(keys, this.props.target, this.props.parent);
     this.props.toggleReorderView();
   }
   moveItem (dragIndex, hoverIndex) {
@@ -71,7 +71,7 @@ export class ReorderView extends React.Component {
         </div>
         <div className='col-xs-12 button-row'>
           <button
-            onClick={() => this.commitOrderChanges(this.state.keys)}
+            onClick={() => this.changeOrder(this.state.keys)}
             className='btn btn-primary pull-right'>
             Tallenna
           </button>
@@ -88,7 +88,7 @@ ReorderView.propTypes = {
   keys: React.PropTypes.array.isRequired,
   values: React.PropTypes.object.isRequired,
   parent: React.PropTypes.string,
-  commitOrderChanges: React.PropTypes.func.isRequired,
+  changeOrder: React.PropTypes.func.isRequired,
   parentName: React.PropTypes.string.isRequired
 };
 

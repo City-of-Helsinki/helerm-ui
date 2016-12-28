@@ -34,7 +34,7 @@ export class ImportView extends React.Component {
     return phasesOrder.map(phase => {
       const actionElements = this.generateLinks(this.props.actions, phases[phase].actions);
       return (
-        <div className='col-xs-12'>
+        <div key={phases[phase].id} className='col-xs-12'>
           <span>{phases[phase].name}</span>
           { actionElements }
         </div>
@@ -50,7 +50,7 @@ export class ImportView extends React.Component {
           if (_.keys(actions[action].records).length > 0) {
             const recordElements = this.generateLinks(this.props.records, actions[action].records);
             return (
-              <div className='import-action-record-wrapper'>
+              <div key={actions[action].id} className='import-action-record-wrapper'>
                 <span className='import-row-title import-action-title'>{actions[action].name}</span>
                 { recordElements }
               </div>
@@ -63,7 +63,7 @@ export class ImportView extends React.Component {
         phaseTitle = <span className='import-row-title import-phase-title'>{phases[phase].name}</span>;
       }
       return (
-        <div className='import-wrapper'>
+        <div key={phases[phase].id} className='import-wrapper'>
           { phaseTitle }
           { actionElements }
         </div>
@@ -75,7 +75,7 @@ export class ImportView extends React.Component {
     for (const key in items) {
       if (items.hasOwnProperty(key)) {
         links.push(
-          <div className='col-xs-12'>
+          <div key={key} className='col-xs-12'>
             <a
               key={key}
               href=''

@@ -43,7 +43,7 @@ export class HomeView extends React.Component {
       addAction,
       addRecord,
       addPhase,
-      commitOrderChanges,
+      changeOrder,
       importItems,
       message
     } = this.props;
@@ -86,7 +86,7 @@ export class HomeView extends React.Component {
           addAction={addAction}
           addRecord={addRecord}
           addPhase={addPhase}
-          commitOrderChanges={commitOrderChanges}
+          changeOrder={changeOrder}
           importItems={importItems}
         />
         <ReactCSSTransitionGroup
@@ -123,7 +123,7 @@ HomeView.propTypes = {
   addRecord: React.PropTypes.func.isRequired,
   addPhase: React.PropTypes.func.isRequired,
   fetchValidationRules: React.PropTypes.func.isRequired,
-  commitOrderChanges: React.PropTypes.func.isRequired,
+  changeOrder: React.PropTypes.func.isRequired,
   importItems: React.PropTypes.func.isRequired,
   message: React.PropTypes.object.isRequired,
   closeMessage: React.PropTypes.func.isRequired

@@ -12,7 +12,7 @@ import {
   addAction,
   addRecord,
   addPhase,
-  commitOrderChanges,
+  changeOrder,
   importItems,
   closeMessage
 } from '../modules/home';
@@ -31,7 +31,7 @@ const mapDispatchToProps = {
   addAction,
   addRecord,
   addPhase,
-  commitOrderChanges,
+  changeOrder,
   importItems,
   closeMessage
 };

@@ -29,7 +29,7 @@ export const SET_DOCUMENT_STATE = 'SET_DOCUMENT_STATE';
 export const CLOSE_MESSAGE = 'CLOSE_MESSAGE';
 
 export const IMPORT_ITEMS = 'IMPORT_ITEMS';
-export const COMMIT_ORDER_CHANGE = 'COMMIT_ORDER_CHANGE';
+export const EXECUTE_ORDER_CHANGE = 'EXECUTE_ORDER_CHANGE';
 
 
 // ------------------------------------
@@ -145,6 +145,18 @@ export function fetchTOS(tos) {
   };
 }
 
+export function importItems(newItem, level, itemParent) {
+    return function(dispatch, getState) {
+      dispatch(executeImport(newItem, level, itemParent, getState().home))
+    }
+}
+
+export function changeOrder(newOrder, itemType, itemParent) {
+    return function(dispatch, getState) {
+      dispatch(executeOrderChange(newOrder, itemType, itemParent, getState().home))
+    }
+}
+
 export function fetchNavigation() {
   return function(dispatch) {
     dispatch(requestNavigation());
@@ -210,10 +222,10 @@ export function setPhasesVisibility(phases, value) {
   };
 }
 
-export function setDocumentState(state) {
+export function setDocumentState(newState) {
   return {
     type: SET_DOCUMENT_STATE,
-    state
+    newState
   }
 }
 
@@ -278,21 +290,102 @@ export function addPhase(name, parent) {
   }
 }
 
-export function importItems(newItem, level, itemParent) {
+export function executeImport(newItem, level, itemParent, currentState) {
+  const newId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+  let currentItems;
+  let parentLevel;
+  let itemLevel;
+  switch(level) {
+    case 'phase':
+      currentItems = Object.assign({}, currentState.selectedTOS.phases);
+      parentLevel = 'tos';
+      itemLevel = 'phases';
+      break;
+    case 'action':
+      currentItems = Object.assign({}, currentState.selectedTOS.actions);
+      parentLevel = 'phases';
+      itemLevel = 'actions';
+      break;
+    case 'record':
+      currentItems = Object.assign({}, currentState.selectedTOS.records);
+      parentLevel = 'actions';
+      itemLevel = 'records';
+      break;
+    default:
+      return currentState;
+  }
+  let indexes = []
+  for (const key in currentItems) {
+    if(currentItems.hasOwnProperty(key)) {
+      indexes.push(currentItems[key].index);
+    };
+  }
+  const newIndex = indexes.length > 0 ? Math.max.apply(null, indexes)+1 : 1
+  const newName = currentItems[newItem].name+' (KOPIO)';
+  const newCopy = Object.assign({}, currentItems[newItem], {id: newId}, {index: newIndex}, {name: newName});
+  const newItems = Object.assign({}, currentItems, {[newId]: newCopy});
+
   return {
     type: IMPORT_ITEMS,
-    newItem,
     level,
-    itemParent
+    itemParent,
+    parentLevel,
+    itemLevel,
+    newId,
+    newItems
   }
 }
 
-export function commitOrderChanges(newOrder, itemType, itemParent) {
+export function executeOrderChange(newOrder, itemType, itemParent, currentState) {
+  let parentLevel;
+  let itemLevel;
+  const affectedItems = newOrder;
+  switch(itemType) {
+    case 'phase':
+      parentLevel = 'tos';
+      itemLevel = 'phases';
+      break;
+    case 'action':
+      parentLevel = 'phases';
+      itemLevel = 'actions';
+      break;
+    case 'record':
+      parentLevel = 'actions';
+      itemLevel = 'records';
+      break;
+    default:
+    return currentState;
+  }
+  const reorderedList = [];
+  affectedItems.map(item => {
+    reorderedList.push(currentState.selectedTOS[itemLevel][item]);
+  });
+  const parentList = [];
+  reorderedList.map((item, index) => {
+    item.index = index+1;
+    parentList.push(item.id);
+  });
+  const itemList = Object.assign({}, currentState.selectedTOS[itemLevel]);
+  for(const key in itemList) {
+    if(itemList.hasOwnProperty(key)) {
+      reorderedList.map(item => {
+        if(itemList[key].id === item.id) {
+          console.log('match!');
+          console.log(itemList[key]);
+          console.log(item);
+          itemList[key] = item;
+        }
+      });
+    }
+  }
   return {
-    type: COMMIT_ORDER_CHANGE,
-    newOrder,
+    type: EXECUTE_ORDER_CHANGE,
+    itemList,
     itemType,
-    itemParent
+    itemParent,
+    parentLevel,
+    itemLevel,
+    parentList
   }
 }
 
@@ -321,8 +414,10 @@ export const actions = {
   addAction,
   addRecord,
   addPhase,
-  commitOrderChanges,
-  importItems
+  changeOrder,
+  executeOrderChange,
+  importItems,
+  executeImport
 };
 
 // ------------------------------------
@@ -417,7 +512,7 @@ const ACTION_HANDLERS = {
     return update(state, {
       selectedTOS: {
         documentState: {
-          $set: action.state
+          $set: action.newState
         }
       }
     });
@@ -487,135 +582,64 @@ const ACTION_HANDLERS = {
       message: { $set: action.message }
     });
   },
-  [COMMIT_ORDER_CHANGE]: (state, action) => {
-    let parentLevel;
-    let itemLevel;
-    const affectedItems = action.newOrder;
-    switch(action.itemType) {
-      case 'phase':
-        parentLevel = 'tos';
-        itemLevel = 'phases';
-        break;
-      case 'action':
-        parentLevel = 'phases';
-        itemLevel = 'actions';
-        break;
-      case 'record':
-        parentLevel = 'actions';
-        itemLevel = 'records';
-        break;
-      default:
-      return state;
-    }
-    const newOrder = [];
-    affectedItems.map(item => {
-      newOrder.push(state.selectedTOS[itemLevel][item]);
-    });
-    const parentList = [];
-    newOrder.map((item, index) => {
-      item.index = index+1;
-      parentList.push(item.id);
-    });
-    const itemList = Object.assign({}, state.selectedTOS[itemLevel]);
-    for(const key in itemList) {
-      if(itemList.hasOwnProperty(key)) {
-        newOrder.map(item => {
-          if(itemList[key].id === item.id) {
-            itemList[key] = item;
-          }
-        });
-      }
-    }
+  [EXECUTE_ORDER_CHANGE]: (state, action) => {
+    console.log(action);
     if(action.itemType === 'phase'){
       return update(state, {
         selectedTOS: {
-          [parentLevel]: {
-            [itemLevel]: {
-              $set: parentList
+          [action.parentLevel]: {
+            [action.itemLevel]: {
+              $set: action.parentList
             }
           },
-          [itemLevel]: {
-            $set: itemList
+          [action.itemLevel]: {
+            $set: action.itemList
           }
         }
       });
     } else {
       return update(state, {
         selectedTOS: {
-          [parentLevel]: {
+          [action.parentLevel]: {
             [action.itemParent]: {
-              [itemLevel]: {
-                $set: parentList
+              [action.itemLevel]: {
+                $set: action.parentList
               }
             }
           },
-          [itemLevel]: {
-            $set: itemList
+          [action.itemLevel]: {
+            $set: action.itemList
           }
         }
       });
     }
   },
   [IMPORT_ITEMS]: (state, action) => {
-    const newId = Math.random().toString(36).replace(/[^a-z]+/g, '');
-    let currentItems;
-    let parentLevel;
-    let itemLevel;
-    switch(action.level) {
-      case 'phase':
-        currentItems = Object.assign({}, state.selectedTOS.phases);
-        parentLevel = 'tos';
-        itemLevel = 'phases';
-        break;
-      case 'action':
-        currentItems = Object.assign({}, state.selectedTOS.actions);
-        parentLevel = 'phases';
-        itemLevel = 'actions';
-        break;
-      case 'record':
-        currentItems = Object.assign({}, state.selectedTOS.records);
-        parentLevel = 'actions';
-        itemLevel = 'records';
-        break;
-      default:
-        return state;
-    }
-    let indexes = []
-    for (const key in currentItems) {
-      if(currentItems.hasOwnProperty(key)) {
-        indexes.push(currentItems[key].index);
-      };
-    }
-    const newIndex = indexes.length > 0 ? Math.max.apply(null, indexes)+1 : 1
-    const newName = currentItems[action.newItem].name+' (KOPIO)';
-    const newCopy = Object.assign({}, currentItems[action.newItem], {id: newId}, {index: newIndex}, {name: newName});
-    const newItems = Object.assign({}, currentItems, {[newId]: newCopy});
-
     if(action.level === 'phase'){
       return update(state, {
         selectedTOS: {
-          [parentLevel]: {
-            [itemLevel]: {
-              $push: [newId]
+          [action.parentLevel]: {
+            [action.itemLevel]: {
+              $push: [action.newId]
             }
           },
-          [itemLevel]: {
-            $set: newItems
+          [action.itemLevel]: {
+            $set: action.newItems
           }
         }
       });
     } else {
       return update(state, {
         selectedTOS: {
-          [parentLevel]: {
+          [action.parentLevel]: {
             [action.itemParent]: {
-              [itemLevel]: {
-                $push: [newId]
+              [action.itemLevel]: {
+                $push: [action.newId]
               }
             }
           },
-          [itemLevel]: {
-            $set: newItems
+          [action.itemLevel]: {
+            $set: action.newItems
           }
         }
       });

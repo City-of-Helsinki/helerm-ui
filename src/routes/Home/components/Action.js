@@ -189,7 +189,7 @@ export class Action extends React.Component {
                   toggleReorderView={() => this.toggleReorderView()}
                   keys={this.props.action.records}
                   values={this.props.records}
-                  commitOrderChanges={this.props.commitOrderChanges}
+                  changeOrder={this.props.changeOrder}
                   parent={this.props.action.id}
                   parentName={this.state.name}
                 />
@@ -237,7 +237,7 @@ Action.propTypes = {
   addRecord: React.PropTypes.func.isRequired,
   actionIndex: React.PropTypes.string.isRequired,
   phaseIndex: React.PropTypes.string.isRequired,
-  commitOrderChanges: React.PropTypes.func.isRequired,
+  changeOrder: React.PropTypes.func.isRequired,
   importItems: React.PropTypes.func.isRequired
 };
 
