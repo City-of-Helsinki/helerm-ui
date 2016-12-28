@@ -18,7 +18,6 @@ export class HomeView extends React.Component {
     this.props.fetchRecordTypes();
   }
   componentWillReceiveProps (nextProps) {
-    console.log(nextProps);
     if (nextProps.message) {
       this.setState({ showAlert: nextProps.message.active });
     }
@@ -49,7 +48,6 @@ export class HomeView extends React.Component {
       message
     } = this.props;
     let alertMessage = null;
-    console.log(this.state.showAlert);
     if (this.state.showAlert === true) {
       alertMessage =
         <Alert
