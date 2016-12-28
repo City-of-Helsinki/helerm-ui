@@ -63,7 +63,12 @@ describe('(Redux Module) Home', () => {
         },
         isFetching: false,
         recordTypes: {},
-        attributeTypes: {}
+        attributeTypes: {},
+        message: {
+          active: false,
+          text: '',
+          success: false
+        }
       };
     });
     it('Should be a function.', () => {

@@ -1,0 +1,31 @@
+.alert-position {
+  position: fixed;
+  z-index: 999;
+  left: 42%;
+  top: 0px;
+}
+.alert-position-enter {
+  top: -175px;
+}
+.alert-position-enter.alert-position-enter-active {
+  animation: moveDown 1s forwards;
+}
+
+.alert-position-leave {
+  top: 0px;
+}
+
+.alert-position-leave.alert-position-leave-active {
+  animation: moveDown 0.6s forwards reverse;
+}
+
+@keyframes moveDown {
+  from {top: -175px;}
+  to {top: 0px;}
+}
+
+.alert-close-button {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+}

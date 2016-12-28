@@ -13,7 +13,8 @@ import {
   addRecord,
   addPhase,
   commitOrderChanges,
-  importItems
+  importItems,
+  closeMessage
 } from '../modules/home';
 import HomeView from '../components/HomeView';
 
@@ -31,7 +32,8 @@ const mapDispatchToProps = {
   addRecord,
   addPhase,
   commitOrderChanges,
-  importItems
+  importItems,
+  closeMessage
 };
 
 const mapStateToProps = (state) => {
@@ -45,7 +47,8 @@ const mapStateToProps = (state) => {
     selectedTOSPath: state.home.selectedTOS.path,
     isFetching: state.home.isFetching,
     documentState: state.home.selectedTOS.documentState,
-    attributeTypes: state.home.attributeTypes
+    attributeTypes: state.home.attributeTypes,
+    message: state.home.message
   };
 };
 

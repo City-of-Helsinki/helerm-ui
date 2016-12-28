@@ -25,7 +25,7 @@ export class DeleteView extends React.Component {
   }
   render () {
     return (
-      <div className='row'>
+      <div className='delete-view row'>
         <h3>Olet poistamassa {this.state.type[this.props.type].name} "{this.props.target}"</h3>
         { this.state.type[this.props.type].children &&
           <span className='has-children-text'>
