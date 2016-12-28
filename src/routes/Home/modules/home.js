@@ -1,38 +1,36 @@
 import fetch from 'isomorphic-fetch';
 import update from 'immutability-helper';
-import LTT from 'list-to-tree';
-import { orderBy } from 'lodash';
 import { normalize, Schema, arrayOf } from 'normalizr';
+
+import { convertToTree } from '../../../utils/helpers.js';
 
 // ------------------------------------
 // Constants
 // ------------------------------------
 export const REQUEST_NAVIGATION = 'REQUEST_NAVIGATION';
 export const RECEIVE_NAVIGATION = 'RECEIVE_NAVIGATION';
-export const SET_NAVIGATION_VISIBILITY = 'SET_NAVIGATION_VISIBILITY';
 
 export const REQUEST_TOS = 'REQUEST_TOS';
 export const RECEIVE_TOS = 'RECEIVE_TOS';
 
+export const SET_NAVIGATION_VISIBILITY = 'SET_NAVIGATION_VISIBILITY';
 export const SET_RECORD_VISIBILITY = 'SET_RECORD_VISIBILITY';
-
 export const SET_PHASE_VISIBILITY = 'SET_PHASE_VISIBILITY';
 export const SET_PHASES_VISIBILITY = 'SET_PHASES_VISIBILITY';
-
-export const SET_DOCUMENT_STATE = 'SET_DOCUMENT_STATE';
-
-export const RECEIVE_RECORDTYPES = 'RECEIVE_RECORDTYPES';
-export const RECEIVE_ATTRIBUTES = 'RECEIVE_ATTRIBUTES';
 
 export const ADD_ACTION = 'ADD_ACTION';
 export const ADD_RECORD = 'ADD_RECORD';
 export const ADD_PHASE = 'ADD_PHASE';
 
-export const IMPORT_ITEMS = 'IMPORT_ITEMS';
+export const RECEIVE_RECORDTYPES = 'RECEIVE_RECORDTYPES';
+export const RECEIVE_ATTRIBUTES = 'RECEIVE_ATTRIBUTES';
 
+export const SET_DOCUMENT_STATE = 'SET_DOCUMENT_STATE';
+export const CLOSE_MESSAGE = 'CLOSE_MESSAGE';
+
+export const IMPORT_ITEMS = 'IMPORT_ITEMS';
 export const COMMIT_ORDER_CHANGE = 'COMMIT_ORDER_CHANGE';
 
-export const CLOSE_MESSAGE = 'CLOSE_MESSAGE';
 
 // ------------------------------------
 // Actions
@@ -45,43 +43,7 @@ export function requestNavigation() {
 }
 
 export function receiveNavigation(items) {
-  // ------------------------------------
-  // Combine navigation number and names
-  // and
-  // Give each item in the navigation a level specific id for sorting
-  // ------------------------------------
-  items.results.map(item => {
-    item.name = item.function_id + ' ' + item.name;
-    item.sort_id = item.function_id.substring(item.function_id.length - 2, item.function_id.length);
-    item.path = [];
-  });
-  const ltt = new LTT(items.results, {
-    key_id: 'id',
-    key_parent: 'parent',
-    key_child: 'children'
-  });
-  const unOrderedTree = ltt.GetTree();
-  // ------------------------------------
-  // Sort the tree, as ltt doesnt automatically do it
-  // ------------------------------------
-  const sortTree = tree => {
-    tree = _.orderBy(tree, ['sort_id'], 'asc');
-    return tree.map(item => {
-      if (item.children !== undefined) {
-        // ------------------------------------
-        // Generate path to show when navigation is minimized and TOS is shown
-        // ------------------------------------
-        item.path.push(item.name);
-        item.children.map(child => {
-          item.path.map(path => child.path.push(path));
-        });
-        item.children = _.orderBy(item.children, ['sort_id'], 'asc');
-        sortTree(item.children);
-      }
-      return item;
-    });
-  }
-  const orderedTree = sortTree(unOrderedTree);
+  const orderedTree = convertToTree(items);
   return {
     type: RECEIVE_NAVIGATION,
     items: orderedTree
