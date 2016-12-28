@@ -65,10 +65,10 @@ export class Action extends React.Component {
   generateDropdownItems (recordCount) {
     return [
       {
-        text: 'Poista toimenpide',
-        icon: 'fa-trash',
-        style: 'btn-delete',
-        action: () => this.setState({ deleting: true })
+        text: 'Uusi asiakirja',
+        icon: 'fa-file-text',
+        style: 'btn-primary',
+        action: () => this.createNewRecord()
       }, {
         text: 'Järjestä asiakirjoja',
         icon: 'fa-th-list',
@@ -80,10 +80,10 @@ export class Action extends React.Component {
         style: 'btn-primary',
         action: () => this.toggleImportView()
       }, {
-        text: 'Uusi asiakirja',
-        icon: 'fa-file-text',
-        style: 'btn-primary',
-        action: () => this.createNewRecord()
+        text: 'Poista toimenpide',
+        icon: 'fa-trash',
+        style: 'btn-delete',
+        action: () => this.setState({ deleting: true })
       }
     ];
   }

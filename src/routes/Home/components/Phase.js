@@ -87,10 +87,10 @@ export class Phase extends React.Component {
   generateDropdownItems (phase) {
     return [
       {
-        text: 'Poista käsittelyvaihe',
-        icon: 'fa-trash',
-        style: 'btn-delete',
-        action: () => this.setState({ deleting: true })
+        text: 'Uusi toimenpide',
+        icon: 'fa-file-text',
+        style: 'btn-primary',
+        action: () => this.createNewAction()
       }, {
         text: 'Järjestä toimenpiteitä',
         icon: 'fa-th-list',
@@ -102,10 +102,10 @@ export class Phase extends React.Component {
         style: 'btn-primary',
         action: () => this.toggleImportView()
       }, {
-        text: 'Uusi toimenpide',
-        icon: 'fa-file-text',
-        style: 'btn-primary',
-        action: () => this.createNewAction()
+        text: 'Poista käsittelyvaihe',
+        icon: 'fa-trash',
+        style: 'btn-delete',
+        action: () => this.setState({ deleting: true })
       }
     ];
   }
