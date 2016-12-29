@@ -14,7 +14,6 @@ export const REQUEST_TOS = 'REQUEST_TOS';
 export const RECEIVE_TOS = 'RECEIVE_TOS';
 
 export const SET_NAVIGATION_VISIBILITY = 'SET_NAVIGATION_VISIBILITY';
-export const SET_RECORD_VISIBILITY = 'SET_RECORD_VISIBILITY';
 export const SET_PHASE_VISIBILITY = 'SET_PHASE_VISIBILITY';
 export const SET_PHASES_VISIBILITY = 'SET_PHASES_VISIBILITY';
 
@@ -28,7 +27,7 @@ export const RECEIVE_ATTRIBUTES = 'RECEIVE_ATTRIBUTES';
 export const SET_DOCUMENT_STATE = 'SET_DOCUMENT_STATE';
 export const CLOSE_MESSAGE = 'CLOSE_MESSAGE';
 
-export const IMPORT_ITEMS = 'IMPORT_ITEMS';
+export const EXECUTE_IMPORT = 'EXECUTE_IMPORT';
 export const EXECUTE_ORDER_CHANGE = 'EXECUTE_ORDER_CHANGE';
 
 
@@ -48,13 +47,6 @@ export function receiveNavigation(items) {
     type: RECEIVE_NAVIGATION,
     items: orderedTree
   };
-}
-
-export function setNavigationVisibility(value) {
-  return {
-    type: SET_NAVIGATION_VISIBILITY,
-    value
-  }
 }
 
 export function requestTOS() {
@@ -95,105 +87,10 @@ export function receiveTOS(tos, json) {
   };
 }
 
-export function receiveRecordTypes(recordTypes) {
-  const recordTypeList = {};
-  recordTypes.results.map(result => {
-    const trimmedResult = result.id.replace(/-/g, '');
-    recordTypeList[trimmedResult] = result.value;
-  });
+export function setNavigationVisibility(value) {
   return {
-    type: RECEIVE_RECORDTYPES,
-    recordTypeList
-  }
-}
-
-export function receiveAttributes(attributes, validationRules) {
-  const attributeList = {};
-  attributes.results.map(result => {
-    if(result.values) {
-      let required;
-      validationRules.record.required.map(rule => {
-        if (rule === result.identifier) {
-          required = true;
-        }
-      });
-      if (required !== true) {
-        required = false;
-      }
-      attributeList[result.identifier] = {
-        name: result.name,
-        values: result.values,
-        required
-      };
-    }
-  });
-  return {
-    type: RECEIVE_ATTRIBUTES,
-    attributeList
-  }
-}
-
-export function fetchTOS(tos) {
-  return function(dispatch) {
-    dispatch(requestTOS());
-    const url = 'https://api.hel.fi/helerm-test/v1/function/' + tos.id;
-    return fetch(url)
-      .then(response => response.json())
-      .then(json =>
-        dispatch(receiveTOS(tos, json))
-      );
-  };
-}
-
-export function importItems(newItem, level, itemParent) {
-    return function(dispatch, getState) {
-      dispatch(executeImport(newItem, level, itemParent, getState().home))
-    }
-}
-
-export function changeOrder(newOrder, itemType, itemParent) {
-    return function(dispatch, getState) {
-      dispatch(executeOrderChange(newOrder, itemType, itemParent, getState().home))
-    }
-}
-
-export function fetchNavigation() {
-  return function(dispatch) {
-    dispatch(requestNavigation());
-    return fetch('https://api.hel.fi/helerm-test/v1/function/?page_size=2000')
-      .then(response => response.json())
-      .then(json =>
-        dispatch(receiveNavigation(json))
-      );
-  };
-}
-
-export function fetchRecordTypes() {
-  return function(dispatch) {
-    return fetch('https://api.hel.fi/helerm-test/v1/record_type/?page_size=2000')
-      .then(response => response.json())
-      .then(json =>
-        dispatch(receiveRecordTypes(json))
-      );
-  };
-}
-
-export function fetchAttributes(validationRules) {
-  return function(dispatch) {
-    return fetch('https://api.hel.fi/helerm-test/v1/attribute/')
-    .then(response => response.json())
-    .then(json =>
-    dispatch(receiveAttributes(json, validationRules)))
-  }
-}
-
-export function fetchValidationRules() {
-  return function(dispatch) {
-    return fetch('https://api.hel.fi/helerm-test/v1/attribute/schemas/')
-    .then(response => response.json())
-    .then(json => {
-      dispatch(fetchAttributes(json));
-    })
+    type: SET_NAVIGATION_VISIBILITY,
+    value
   }
 }
 
@@ -220,13 +117,6 @@ export function setPhasesVisibility(phases, value) {
     type: SET_PHASES_VISIBILITY,
     allPhasesOpen
   };
-}
-
-export function setDocumentState(newState) {
-  return {
-    type: SET_DOCUMENT_STATE,
-    newState
-  }
 }
 
 export function addAction(phaseIndex, name) {
@@ -290,6 +180,57 @@ export function addPhase(name, parent) {
   }
 }
 
+export function receiveRecordTypes(recordTypes) {
+  const recordTypeList = {};
+  recordTypes.results.map(result => {
+    const trimmedResult = result.id.replace(/-/g, '');
+    recordTypeList[trimmedResult] = result.value;
+  });
+  return {
+    type: RECEIVE_RECORDTYPES,
+    recordTypeList
+  }
+}
+
+export function receiveAttributes(attributes, validationRules) {
+  const attributeList = {};
+  attributes.results.map(result => {
+    if(result.values) {
+      let required;
+      validationRules.record.required.map(rule => {
+        if (rule === result.identifier) {
+          required = true;
+        }
+      });
+      if (required !== true) {
+        required = false;
+      }
+      attributeList[result.identifier] = {
+        name: result.name,
+        values: result.values,
+        required
+      };
+    }
+  });
+  return {
+    type: RECEIVE_ATTRIBUTES,
+    attributeList
+  }
+}
+
+export function setDocumentState(newState) {
+  return {
+    type: SET_DOCUMENT_STATE,
+    newState
+  }
+}
+
+export function closeMessage() {
+  return {
+    type: CLOSE_MESSAGE
+  }
+}
+
 export function executeImport(newItem, level, itemParent, currentState) {
   const newId = Math.random().toString(36).replace(/[^a-z]+/g, '');
   let currentItems;
@@ -326,7 +267,7 @@ export function executeImport(newItem, level, itemParent, currentState) {
   const newItems = Object.assign({}, currentItems, {[newId]: newCopy});
 
   return {
-    type: IMPORT_ITEMS,
+    type: EXECUTE_IMPORT,
     level,
     itemParent,
     parentLevel,
@@ -389,35 +330,94 @@ export function executeOrderChange(newOrder, itemType, itemParent, currentState)
   }
 }
 
-export function closeMessage() {
-  return {
-    type: CLOSE_MESSAGE
+export function fetchTOS(tos) {
+  return function(dispatch) {
+    dispatch(requestTOS());
+    const url = 'https://api.hel.fi/helerm-test/v1/function/' + tos.id;
+    return fetch(url)
+      .then(response => response.json())
+      .then(json =>
+        dispatch(receiveTOS(tos, json))
+      );
+  };
+}
+
+export function fetchNavigation() {
+  return function(dispatch) {
+    dispatch(requestNavigation());
+    return fetch('https://api.hel.fi/helerm-test/v1/function/?page_size=2000')
+      .then(response => response.json())
+      .then(json =>
+        dispatch(receiveNavigation(json))
+      );
+  };
+}
+
+export function fetchRecordTypes() {
+  return function(dispatch) {
+    return fetch('https://api.hel.fi/helerm-test/v1/record_type/?page_size=2000')
+      .then(response => response.json())
+      .then(json =>
+        dispatch(receiveRecordTypes(json))
+      );
+  };
+}
+
+export function fetchAttributes(validationRules) {
+  return function(dispatch) {
+    return fetch('https://api.hel.fi/helerm-test/v1/attribute/')
+    .then(response => response.json())
+    .then(json =>
+    dispatch(receiveAttributes(json, validationRules)))
   }
+}
+
+export function fetchValidationRules() {
+  return function(dispatch) {
+    return fetch('https://api.hel.fi/helerm-test/v1/attribute/schemas/')
+    .then(response => response.json())
+    .then(json => {
+      dispatch(fetchAttributes(json));
+    })
+  }
+}
+
+export function importItems(newItem, level, itemParent) {
+  return function(dispatch, getState) {
+    dispatch(executeImport(newItem, level, itemParent, getState().home))
+  }
+}
+
+export function changeOrder(newOrder, itemType, itemParent) {
+    return function(dispatch, getState) {
+      dispatch(executeOrderChange(newOrder, itemType, itemParent, getState().home))
+    }
 }
 
 export const actions = {
   requestNavigation,
   receiveNavigation,
-  setNavigationVisibility,
   requestTOS,
   receiveTOS,
+  setNavigationVisibility,
+  setPhaseVisibility,
+  setPhasesVisibility,
+  addAction,
+  addRecord,
+  addPhase,
   receiveRecordTypes,
   receiveAttributes,
+  setDocumentState,
+  closeMessage,
+  executeImport,
+  executeOrderChange,
   fetchTOS,
   fetchNavigation,
   fetchRecordTypes,
   fetchAttributes,
   fetchValidationRules,
-  setPhaseVisibility,
-  setPhasesVisibility,
-  setDocumentState,
-  addAction,
-  addRecord,
-  addPhase,
-  changeOrder,
-  executeOrderChange,
   importItems,
-  executeImport
+  changeOrder
 };
 
 // ------------------------------------
@@ -614,7 +614,7 @@ const ACTION_HANDLERS = {
       });
     }
   },
-  [IMPORT_ITEMS]: (state, action) => {
+  [EXECUTE_IMPORT]: (state, action) => {
     if(action.level === 'phase'){
       return update(state, {
         selectedTOS: {
@@ -655,6 +655,7 @@ const ACTION_HANDLERS = {
     });
   }
 };
+
 // ------------------------------------
 // Reducer
 // ------------------------------------
