@@ -1,21 +1,12 @@
 import {
-  REQUEST_NAVIGATION,
-  RECEIVE_NAVIGATION,
-  REQUEST_TOS,
-  RECEIVE_TOS,
-  SET_PHASE_VISIBILITY,
-  SET_PHASES_VISIBILITY,
-  SET_DOCUMENT_STATE,
   fetchNavigation,
-  requestNavigation,
-  receiveNavigation,
   fetchTOS,
   requestTOS,
-  receiveTOS,
   fetchRecordTypes,
   fetchAttributeTypes,
   default as homeReducer
 } from 'routes/Home/modules/home';
+import _ from 'lodash';
 
 describe('(Redux Module) Home', () => {
   describe('(Reducer) HomeReducer', () => {
@@ -84,7 +75,7 @@ describe('(Redux Module) Home', () => {
           home: homeReducer(_globalState.home, action)
         };
       });
-    })
+    });
 
     it('Should fetch navigation', () => {
       expect(_globalState.home.navigation.items.length).to.equal(0);
@@ -94,9 +85,7 @@ describe('(Redux Module) Home', () => {
           expect(_globalState.home.navigation.items.length).to.be.greaterThan(0);
         });
     });
-
   });
-
 
   describe('(Action Creator) fetchTOS', () => {
     let _dispatchSpy;
@@ -121,7 +110,11 @@ describe('(Redux Module) Home', () => {
       expect(_.keys(_globalState.home.selectedTOS.records).length).to.equal(0);
       expect(_.keys(_globalState.home.selectedTOS.attributes).length).to.equal(0);
       return fetchTOS(
-          "136adca92b054ff79b990dae4ce78d47", ["05 Sosiaalitoimi", "05 01 Lasten päivähoito", "05 01 01 Yksilöhuollon muutoksenhaku (lasten päivähoito)"]
+          '136adca92b054ff79b990dae4ce78d47',
+        [ '05 Sosiaalitoimi',
+          '05 01 Lasten päivähoito',
+          '05 01 01 Yksilöhuollon muutoksenhaku (lasten päivähoito)'
+        ]
         )(_dispatchSpy)
         .then(() => {
           _dispatchSpy.should.have.been.calledTwice;
@@ -131,9 +124,7 @@ describe('(Redux Module) Home', () => {
           expect(_.keys(_globalState.home.selectedTOS.records).length).to.be.greaterThan(0);
         });
     });
-
   });
-
 
   describe('(Action Creator) fetchRecordTypes', () => {
     let _dispatchSpy;
@@ -149,7 +140,7 @@ describe('(Redux Module) Home', () => {
           home: homeReducer(_globalState.home, action)
         };
       });
-    })
+    });
 
     it('Should fetch record types', () => {
       expect(_.keys(_globalState.home.recordTypes).length).to.equal(0);
@@ -159,7 +150,6 @@ describe('(Redux Module) Home', () => {
           expect(_.keys(_globalState.home.recordTypes).length).to.be.greaterThan(0);
         });
     });
-
   });
 
   describe('(Action Creator) fetchAttributeTypes', () => {
@@ -176,7 +166,7 @@ describe('(Redux Module) Home', () => {
           home: homeReducer(_globalState.home, action)
         };
       });
-    })
+    });
 
     it('Should fetch validation rules and attribute types', () => {
       expect(_.keys(_globalState.home.attributeTypes).length).to.equal(0);
@@ -186,7 +176,6 @@ describe('(Redux Module) Home', () => {
           expect(_.keys(_globalState.home.attributeTypes).length).to.be.greaterThan(0);
         });
     });
-
   });
 
   // describe('(Action Handler) COUNTER_INCREMENT', () => {

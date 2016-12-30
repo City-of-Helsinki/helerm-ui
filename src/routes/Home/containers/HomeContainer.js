@@ -7,7 +7,6 @@ import {
   setPhasesVisibility,
   setDocumentState,
   fetchRecordTypes,
-  fetchAttributes,
   fetchAttributeTypes,
   addAction,
   addRecord,
