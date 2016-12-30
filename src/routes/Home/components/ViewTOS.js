@@ -4,8 +4,8 @@ import Phase from './Phase';
 import Attribute from './Attribute';
 import ReorderView from './ReorderView';
 import ImportView from './ImportView';
-import Popup from './Popup';
-import Dropdown from '../../../components/Dropdown';
+import Popup from 'components/Popup';
+import Dropdown from 'components/Dropdown';
 import formatDate from 'occasion';
 import { StickyContainer, Sticky } from 'react-sticky';
 

@@ -2,8 +2,8 @@ import React from 'react';
 import './Record.scss';
 import Attribute from './Attribute';
 import DeleteView from './DeleteView';
-import Dropdown from '../../../components/Dropdown';
-import Popup from './Popup';
+import Dropdown from 'components/Dropdown';
+import Popup from 'components/Popup';
 
 export class Record extends React.Component {
   constructor (props) {

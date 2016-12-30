@@ -18,4 +18,5 @@ Popup.propTypes = {
   content: React.PropTypes.object.isRequired,
   closePopup: React.PropTypes.func.isRequired
 };
+
 export default Popup;

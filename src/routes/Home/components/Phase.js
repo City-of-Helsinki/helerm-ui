@@ -3,8 +3,8 @@ import './Phase.scss';
 import Action from './Action.js';
 import DeleteView from './DeleteView';
 import { StickyContainer, Sticky } from 'react-sticky';
-import Popup from './Popup';
-import Dropdown from '../../../components/Dropdown';
+import Popup from 'components/Popup';
+import Dropdown from 'components/Dropdown';
 import ReorderView from './ReorderView';
 import ImportView from './ImportView';
 

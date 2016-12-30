@@ -1,7 +1,7 @@
 import React from 'react';
 import Navigation from './Navigation';
-import Loader from './Loader';
-import Alert from '../../../components/Alert';
+import Loader from 'components/Loader';
+import Alert from 'components/Alert';
 import ViewTOS from './ViewTOS';
 import './Homeview.scss';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
