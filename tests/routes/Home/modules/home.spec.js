@@ -6,44 +6,19 @@ import {
   SET_PHASE_VISIBILITY,
   SET_PHASES_VISIBILITY,
   SET_DOCUMENT_STATE,
+  fetchNavigation,
   requestNavigation,
-  // receiveNavigation,
-  // selectTOS,
+  receiveNavigation,
+  fetchTOS,
   requestTOS,
-  // receiveTOS,
-  // fetchTOS,
-  // fetchNavigation,
-  // togglePhaseVisibility,
-  // setPhasesVisibility,
-  // setDocumentState,
-
+  receiveTOS,
+  fetchRecordTypes,
+  fetchAttributeTypes,
   default as homeReducer
 } from 'routes/Home/modules/home';
 
 describe('(Redux Module) Home', () => {
-  it('Should export a constant REQUEST_NAVIGATION.', () => {
-    expect(REQUEST_NAVIGATION).to.equal('REQUEST_NAVIGATION');
-  });
-  it('Should export a constant RECEIVE_NAVIGATION.', () => {
-    expect(RECEIVE_NAVIGATION).to.equal('RECEIVE_NAVIGATION');
-  });
-  it('Should export a constant REQUEST_TOS.', () => {
-    expect(REQUEST_TOS).to.equal('REQUEST_TOS');
-  });
-  it('Should export a constant RECEIVE_TOS.', () => {
-    expect(RECEIVE_TOS).to.equal('RECEIVE_TOS');
-  });
-  it('Should export a constant SET_PHASE_VISIBILITY.', () => {
-    expect(SET_PHASE_VISIBILITY).to.equal('SET_PHASE_VISIBILITY');
-  });
-  it('Should export a constant SET_PHASES_VISIBILITY.', () => {
-    expect(SET_PHASES_VISIBILITY).to.equal('SET_PHASES_VISIBILITY');
-  });
-  it('Should export a constant SET_DOCUMENT_STATE.', () => {
-    expect(SET_DOCUMENT_STATE).to.equal('SET_DOCUMENT_STATE');
-  });
-
-  describe('(Reducer)', () => {
+  describe('(Reducer) HomeReducer', () => {
     let _initialState;
     beforeEach(() => {
       _initialState = {
@@ -95,79 +70,125 @@ describe('(Redux Module) Home', () => {
     });
   });
 
-  describe('(Action Creator) requestNavigation', () => {
-    it('Should be exported as a function.', () => {
-      expect(requestNavigation).to.be.a('function');
+  describe('(Action Creator) fetchNavigation', () => {
+    let _dispatchSpy;
+    let _globalState;
+
+    beforeEach(() => {
+      _globalState = {
+        home: homeReducer(undefined, {})
+      };
+      _dispatchSpy = sinon.spy((action) => {
+        _globalState = {
+          ..._globalState,
+          home: homeReducer(_globalState.home, action)
+        };
+      });
+    })
+
+    it('Should fetch navigation', () => {
+      expect(_globalState.home.navigation.items.length).to.equal(0);
+      return fetchNavigation()(_dispatchSpy)
+        .then(() => {
+          _dispatchSpy.should.have.been.calledTwice;
+          expect(_globalState.home.navigation.items.length).to.be.greaterThan(0);
+        });
     });
 
-    it('Should return an action with type "REQUEST_NAVIGATION".', () => {
-      expect(requestNavigation()).to.have.property('type', REQUEST_NAVIGATION);
-    });
   });
 
-  // describe('(Action Creator) receiveNavigation', () => {
-  //   let _globalState;
-  //   let _dispatchSpy;
-  //   let _getStateSpy;
-  //
-  //   beforeEach(() => {
-  //     _globalState = {
-  //       counter: counterReducer(undefined, {})
-  //     };
-  //     _dispatchSpy = sinon.spy((action) => {
-  //       _globalState = {
-  //         ..._globalState,
-  //         counter: counterReducer(_globalState.counter, action)
-  //       };
-  //     });
-  //     _getStateSpy = sinon.spy(() => {
-  //       return _globalState;
-  //     });
-  //   });
-  //
-  //   it('Should be exported as a function.', () => {
-  //     expect(doubleAsync).to.be.a('function');
-  //   });
-  //
-  //   it('Should return a function (is a thunk).', () => {
-  //     expect(doubleAsync()).to.be.a('function');
-  //   });
-  //
-  //   it('Should return a promise from that thunk that gets fulfilled.', () => {
-  //     return doubleAsync()(_dispatchSpy, _getStateSpy).should.eventually.be.fulfilled;
-  //   });
-  //
-  //   it('Should call dispatch and getState exactly once.', () => {
-  //     return doubleAsync()(_dispatchSpy, _getStateSpy)
-  //       .then(() => {
-  //         _dispatchSpy.should.have.been.calledOnce;
-  //         _getStateSpy.should.have.been.calledOnce;
-  //       });
-  //   });
-  //
-  //   it('Should produce a state that is double the previous state.', () => {
-  //     _globalState = {
-  //       counter: 2
-  //     };
-  //
-  //     return doubleAsync()(_dispatchSpy, _getStateSpy)
-  //       .then(() => {
-  //         _dispatchSpy.should.have.been.calledOnce;
-  //         _getStateSpy.should.have.been.calledOnce;
-  //         expect(_globalState.counter).to.equal(4);
-  //         return doubleAsync()(_dispatchSpy, _getStateSpy);
-  //       })
-  //       .then(() => {
-  //         _dispatchSpy.should.have.been.calledTwice;
-  //         _getStateSpy.should.have.been.calledTwice;
-  //         expect(_globalState.counter).to.equal(8);
-  //       });
-  //   });
-  // });
-  //
-  // // NOTE: if you have a more complex state, you will probably want to verify
-  // // that you did not mutate the state. In this case our state is just a number
-  // // (which cannot be mutated).
+
+  describe('(Action Creator) fetchTOS', () => {
+    let _dispatchSpy;
+    let _globalState;
+
+    beforeEach(() => {
+      _globalState = {
+        home: homeReducer(undefined, {})
+      };
+      _dispatchSpy = sinon.spy((action) => {
+        _globalState = {
+          ..._globalState,
+          home: homeReducer(_globalState.home, action)
+        };
+      });
+    });
+
+    it('Should fetch TOS', () => {
+      expect(_.keys(_globalState.home.selectedTOS.tos).length).to.equal(0);
+      expect(_.keys(_globalState.home.selectedTOS.phases).length).to.equal(0);
+      expect(_.keys(_globalState.home.selectedTOS.actions).length).to.equal(0);
+      expect(_.keys(_globalState.home.selectedTOS.records).length).to.equal(0);
+      expect(_.keys(_globalState.home.selectedTOS.attributes).length).to.equal(0);
+      return fetchTOS(
+          "136adca92b054ff79b990dae4ce78d47", ["05 Sosiaalitoimi", "05 01 Lasten päivähoito", "05 01 01 Yksilöhuollon muutoksenhaku (lasten päivähoito)"]
+        )(_dispatchSpy)
+        .then(() => {
+          _dispatchSpy.should.have.been.calledTwice;
+          expect(_.keys(_globalState.home.selectedTOS.tos).length).to.be.greaterThan(0);
+          expect(_.keys(_globalState.home.selectedTOS.phases).length).to.be.greaterThan(0);
+          expect(_.keys(_globalState.home.selectedTOS.actions).length).to.be.greaterThan(0);
+          expect(_.keys(_globalState.home.selectedTOS.records).length).to.be.greaterThan(0);
+        });
+    });
+
+  });
+
+
+  describe('(Action Creator) fetchRecordTypes', () => {
+    let _dispatchSpy;
+    let _globalState;
+
+    beforeEach(() => {
+      _globalState = {
+        home: homeReducer(undefined, {})
+      };
+      _dispatchSpy = sinon.spy((action) => {
+        _globalState = {
+          ..._globalState,
+          home: homeReducer(_globalState.home, action)
+        };
+      });
+    })
+
+    it('Should fetch record types', () => {
+      expect(_.keys(_globalState.home.recordTypes).length).to.equal(0);
+      return fetchRecordTypes()(_dispatchSpy)
+        .then(() => {
+          _dispatchSpy.should.have.been.calledOnce;
+          expect(_.keys(_globalState.home.recordTypes).length).to.be.greaterThan(0);
+        });
+    });
+
+  });
+
+  describe('(Action Creator) fetchAttributeTypes', () => {
+    let _dispatchSpy;
+    let _globalState;
+
+    beforeEach(() => {
+      _globalState = {
+        home: homeReducer(undefined, {})
+      };
+      _dispatchSpy = sinon.spy((action) => {
+        _globalState = {
+          ..._globalState,
+          home: homeReducer(_globalState.home, action)
+        };
+      });
+    })
+
+    it('Should fetch validation rules and attribute types', () => {
+      expect(_.keys(_globalState.home.attributeTypes).length).to.equal(0);
+      return fetchAttributeTypes()(_dispatchSpy)
+        .then(() => {
+          _dispatchSpy.should.have.been.calledOnce;
+          expect(_.keys(_globalState.home.attributeTypes).length).to.be.greaterThan(0);
+        });
+    });
+
+  });
+
   // describe('(Action Handler) COUNTER_INCREMENT', () => {
   //   it('Should increment the state by the action payload\'s "value" property.', () => {
   //     let state = counterReducer(undefined, {});
