@@ -180,26 +180,26 @@ export class Phase extends React.Component {
               }
             </span>
           </Sticky>
+          { this.state.mode === 'add' &&
+            <form onSubmit={this.addAction} className='row add-action'>
+              <h5 className='col-xs-12'>Uusi toimenpide</h5>
+              <div className='col-xs-12 col-md-6'>
+                <input type='text' className='form-control'
+                  value={this.state.newActionName} onChange={this.onNewChange} placeholder='Toimenpiteen nimi' />
+              </div>
+              <div className='col-xs-12 col-md-4 add-action-buttons'>
+                <button
+                  className='btn btn-danger col-xs-6'
+                  onClick={this.cancelActionCreation}>
+                      Peruuta
+                    </button>
+                <button className='btn btn-primary col-xs-6' type='submit'>Lisää</button>
+              </div>
+            </form>
+          }
           <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>
             { actionElements }
           </div>
-          { this.state.mode === 'add' &&
-          <form onSubmit={this.addAction} className='row'>
-            <h5 className='col-xs-12'>Uusi toimenpide</h5>
-            <div className='col-xs-12 col-md-6'>
-              <input type='text' className='form-control'
-                value={this.state.newActionName} onChange={this.onNewChange} placeholder='Toimenpiteen nimi' />
-            </div>
-            <div className='col-xs-12 col-md-4 add-action-buttons'>
-              <button
-                className='btn btn-danger col-xs-6'
-                onClick={this.cancelActionCreation}>
-                    Peruuta
-                  </button>
-              <button className='btn btn-primary col-xs-6' type='submit'>Lisää</button>
-            </div>
-          </form>
-            }
         </StickyContainer>
         }
         { this.state.deleting &&
