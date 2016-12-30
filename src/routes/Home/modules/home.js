@@ -22,7 +22,7 @@ export const ADD_RECORD = 'ADD_RECORD';
 export const ADD_PHASE = 'ADD_PHASE';
 
 export const RECEIVE_RECORDTYPES = 'RECEIVE_RECORDTYPES';
-export const RECEIVE_ATTRIBUTES = 'RECEIVE_ATTRIBUTES';
+export const RECEIVE_ATTRIBUTE_TYPES = 'RECEIVE_ATTRIBUTE_TYPES';
 
 export const SET_DOCUMENT_STATE = 'SET_DOCUMENT_STATE';
 export const CLOSE_MESSAGE = 'CLOSE_MESSAGE';
@@ -55,7 +55,7 @@ export function requestTOS() {
   };
 }
 
-export function receiveTOS(tos, json) {
+export function receiveTOS(tosPath, json) {
   json.phases.map(phase => {
     phase.is_open = false;
     phase.actions.map(action => {
@@ -81,7 +81,7 @@ export function receiveTOS(tos, json) {
   json = normalize(json, tosSchema);
   return {
     type: RECEIVE_TOS,
-    path: tos.path,
+    path: tosPath,
     data: json,
     receivedAt: Date.now()
   };
@@ -192,8 +192,8 @@ export function receiveRecordTypes(recordTypes) {
   }
 }
 
-export function receiveAttributes(attributes, validationRules) {
-  const attributeList = {};
+export function receiveAttributeTypes(attributes, validationRules) {
+  const attributeTypeList = {};
   attributes.results.map(result => {
     if(result.values) {
       let required;
@@ -205,7 +205,7 @@ export function receiveAttributes(attributes, validationRules) {
       if (required !== true) {
         required = false;
       }
-      attributeList[result.identifier] = {
+      attributeTypeList[result.identifier] = {
         name: result.name,
         values: result.values,
         required
@@ -213,8 +213,8 @@ export function receiveAttributes(attributes, validationRules) {
     }
   });
   return {
-    type: RECEIVE_ATTRIBUTES,
-    attributeList
+    type: RECEIVE_ATTRIBUTE_TYPES,
+    attributeTypeList
   }
 }
 
@@ -311,9 +311,6 @@ export function executeOrderChange(newOrder, itemType, itemParent, currentState)
     if(itemList.hasOwnProperty(key)) {
       reorderedList.map(item => {
         if(itemList[key].id === item.id) {
-          console.log('match!');
-          console.log(itemList[key]);
-          console.log(item);
           itemList[key] = item;
         }
       });
@@ -330,14 +327,14 @@ export function executeOrderChange(newOrder, itemType, itemParent, currentState)
   }
 }
 
-export function fetchTOS(tos) {
+export function fetchTOS(tosId, tosPath) {
   return function(dispatch) {
     dispatch(requestTOS());
-    const url = 'https://api.hel.fi/helerm-test/v1/function/' + tos.id;
+    const url = 'https://api.hel.fi/helerm-test/v1/function/' + tosId;
     return fetch(url)
       .then(response => response.json())
       .then(json =>
-        dispatch(receiveTOS(tos, json))
+        dispatch(receiveTOS(tosPath, json))
       );
   };
 }
@@ -363,22 +360,16 @@ export function fetchRecordTypes() {
   };
 }
 
-export function fetchAttributes(validationRules) {
-  return function(dispatch) {
-    return fetch('https://api.hel.fi/helerm-test/v1/attribute/')
-    .then(response => response.json())
-    .then(json =>
-    dispatch(receiveAttributes(json, validationRules)))
-  }
-}
-
-export function fetchValidationRules() {
+export function fetchAttributeTypes() {
   return function(dispatch) {
     return fetch('https://api.hel.fi/helerm-test/v1/attribute/schemas/')
     .then(response => response.json())
-    .then(json => {
-      dispatch(fetchAttributes(json));
-    })
+    .then(validationRules => {
+        return fetch('https://api.hel.fi/helerm-test/v1/attribute/')
+          .then(response => response.json())
+          .then(json =>
+          dispatch(receiveAttributeTypes(json, validationRules)))
+      })
   }
 }
 
@@ -406,7 +397,7 @@ export const actions = {
   addRecord,
   addPhase,
   receiveRecordTypes,
-  receiveAttributes,
+  receiveAttributeTypes,
   setDocumentState,
   closeMessage,
   executeImport,
@@ -414,8 +405,7 @@ export const actions = {
   fetchTOS,
   fetchNavigation,
   fetchRecordTypes,
-  fetchAttributes,
-  fetchValidationRules,
+  fetchAttributeTypes,
   importItems,
   changeOrder
 };
@@ -524,9 +514,9 @@ const ACTION_HANDLERS = {
       }
     });
   },
-  [RECEIVE_ATTRIBUTES]: (state, action) => {
+  [RECEIVE_ATTRIBUTE_TYPES]: (state, action) => {
     return update(state, {
-      attributeTypes: {$set: action.attributeList}
+      attributeTypes: {$set: action.attributeTypeList}
     });
   },
   [ADD_PHASE]: (state, action) => {
@@ -583,7 +573,6 @@ const ACTION_HANDLERS = {
     });
   },
   [EXECUTE_ORDER_CHANGE]: (state, action) => {
-    console.log(action);
     if(action.itemType === 'phase'){
       return update(state, {
         selectedTOS: {

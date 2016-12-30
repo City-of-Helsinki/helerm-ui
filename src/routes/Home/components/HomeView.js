@@ -14,7 +14,7 @@ export class HomeView extends React.Component {
     };
   }
   componentWillMount () {
-    this.props.fetchValidationRules();
+    this.props.fetchAttributeTypes();
     this.props.fetchRecordTypes();
   }
   componentWillReceiveProps (nextProps) {
@@ -122,7 +122,7 @@ HomeView.propTypes = {
   addAction: React.PropTypes.func.isRequired,
   addRecord: React.PropTypes.func.isRequired,
   addPhase: React.PropTypes.func.isRequired,
-  fetchValidationRules: React.PropTypes.func.isRequired,
+  fetchAttributeTypes: React.PropTypes.func.isRequired,
   changeOrder: React.PropTypes.func.isRequired,
   importItems: React.PropTypes.func.isRequired,
   message: React.PropTypes.object.isRequired,
