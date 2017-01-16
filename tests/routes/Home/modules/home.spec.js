@@ -64,7 +64,6 @@ describe('(Redux Module) Home', () => {
   describe('(Action Creator) fetchNavigation', () => {
     let _dispatchSpy;
     let _globalState;
-    this.timeout(15000);
 
     beforeEach(() => {
       _globalState = {
@@ -91,7 +90,6 @@ describe('(Redux Module) Home', () => {
   describe('(Action Creator) fetchTOS', () => {
     let _dispatchSpy;
     let _globalState;
-    this.timeout(15000);
 
     beforeEach(() => {
       _globalState = {
@@ -131,7 +129,6 @@ describe('(Redux Module) Home', () => {
   describe('(Action Creator) fetchRecordTypes', () => {
     let _dispatchSpy;
     let _globalState;
-    this.timeout(15000);
 
     beforeEach(() => {
       _globalState = {
@@ -158,7 +155,6 @@ describe('(Redux Module) Home', () => {
   describe('(Action Creator) fetchAttributeTypes', () => {
     let _dispatchSpy;
     let _globalState;
-    this.timeout(15000);
 
     beforeEach(() => {
       _globalState = {
@@ -181,4 +177,17 @@ describe('(Redux Module) Home', () => {
         });
     });
   });
+
+  // describe('(Action Handler) COUNTER_INCREMENT', () => {
+  //   it('Should increment the state by the action payload\'s "value" property.', () => {
+  //     let state = counterReducer(undefined, {});
+  //     expect(state).to.equal(0);
+  //     state = counterReducer(state, increment(1));
+  //     expect(state).to.equal(1);
+  //     state = counterReducer(state, increment(2));
+  //     expect(state).to.equal(3);
+  //     state = counterReducer(state, increment(-3));
+  //     expect(state).to.equal(0);
+  //   });
+  // });
 });
