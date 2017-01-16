@@ -3,7 +3,7 @@ import Navigation from './Navigation';
 import Loader from 'components/Loader';
 import Alert from 'components/Alert';
 import ViewTOS from './ViewTOS';
-import './Homeview.scss';
+import './HomeView.scss';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 export class HomeView extends React.Component {
