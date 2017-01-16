@@ -12,7 +12,8 @@ const karmaConfig = {
       watched  : false,
       served   : true,
       included : true
-    }
+    },
+    'node_modules/babel-polyfill/dist/polyfill.js',
   ],
   singleRun     : !argv.watch,
   frameworks    : ['mocha'],
@@ -20,7 +21,7 @@ const karmaConfig = {
   preprocessors : {
     [`${config.dir_test}/test-bundler.js`] : ['webpack']
   },
-  browsers : ['Chrome'],
+  browsers : ['PhantomJS'],
   webpack  : {
     devtool : 'cheap-module-source-map',
     resolve : Object.assign({}, webpackConfig.resolve, {
