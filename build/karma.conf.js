@@ -13,7 +13,7 @@ const karmaConfig = {
       served   : true,
       included : true
     },
-    'node_modules/babel-polyfill/dist/polyfill.js',
+    'node_modules/babel-polyfill/dist/polyfill.js'
   ],
   singleRun     : !argv.watch,
   frameworks    : ['mocha'],
