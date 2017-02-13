@@ -10,16 +10,20 @@ The project structure is based on React Redux Starter Kit (https://github.com/da
 
 ### Install from source
 
-First, clone the project:
+Make sure you have [Yarn](https://yarnpkg.com/en/docs/install) installed globally.
+
+1. Clone the project:
 
 ```bash
 $ git clone https://github.com/City-of-Helsinki/helerm-ui.git
 $ cd helerm-ui
 ```
 
-Then install dependencies and check to see it works
+2. Install depencies:
 
 ```bash
-$ npm install                   # Install project dependencies
-$ npm start                     # Compile and launch
+$ yarn        # Install project dependencies
+$ yarn start  # Compile and launch
 ```
+
+3. Navigate to [http://localhost:3000](http://localhost:3000)
