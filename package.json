@@ -12,6 +12,7 @@
     "compile": "better-npm-run compile",
     "lint": "eslint bin build config server src tests",
     "lint:fix": "npm run lint -- --fix",
+    "prestart": "better-npm-run deploy:prod",
     "start": "better-npm-run start",
     "dev": "webpack-dashboard -c gray -- better-npm-run dev",
     "test": "better-npm-run test",
@@ -58,6 +59,7 @@
     "start": {
       "command": "node bin/server",
       "env": {
+        "NODE_ENV": "production",
         "DEBUG": "app:*"
       }
     },
