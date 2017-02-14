@@ -1,5 +1,6 @@
 import LTT from 'list-to-tree';
-import { orderBy } from 'lodash';
+import orderBy from 'lodash/orderBy';
+import forEach from 'lodash/forEach';
 
 export function convertToTree (itemList) {
   // ------------------------------------
@@ -39,4 +40,30 @@ export function convertToTree (itemList) {
     });
   };
   return sortTree(unOrderedTree);
+}
+
+/**
+ *
+ * @param url
+ * @param query
+ * @returns {string}
+ */
+export function getApiUrl (url, query = {}) {
+  const queryString = buildQueryString(query);
+  return [API_URL, API_VERSION, url, queryString].join('/');
+}
+
+/**
+ *
+ * @param query
+ * @returns {string}
+ */
+export function buildQueryString (query) {
+  const pairs = [];
+
+  forEach(query, (value, key) => {
+    pairs.push([key, value].join('='));
+  });
+
+  return pairs.length ? '?' + pairs.join('&') : '';
 }

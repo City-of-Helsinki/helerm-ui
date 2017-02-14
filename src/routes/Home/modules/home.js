@@ -2,7 +2,7 @@ import fetch from 'isomorphic-fetch';
 import update from 'immutability-helper';
 import { normalize, Schema, arrayOf } from 'normalizr';
 
-import { convertToTree } from '../../../utils/helpers.js';
+import { convertToTree, getApiUrl } from '../../../utils/helpers.js';
 
 // ------------------------------------
 // Constants
@@ -30,18 +30,17 @@ export const CLOSE_MESSAGE = 'CLOSE_MESSAGE';
 export const EXECUTE_IMPORT = 'EXECUTE_IMPORT';
 export const EXECUTE_ORDER_CHANGE = 'EXECUTE_ORDER_CHANGE';
 
-
 // ------------------------------------
 // Actions
 // ------------------------------------
-export function requestNavigation() {
+export function requestNavigation () {
   return {
     type: REQUEST_NAVIGATION,
     isFetching: true
   };
 }
 
-export function receiveNavigation(items) {
+export function receiveNavigation (items) {
   const orderedTree = convertToTree(items);
   return {
     type: RECEIVE_NAVIGATION,
@@ -49,13 +48,13 @@ export function receiveNavigation(items) {
   };
 }
 
-export function requestTOS() {
+export function requestTOS () {
   return {
     type: REQUEST_TOS
   };
 }
 
-export function receiveTOS(tosPath, json) {
+export function receiveTOS (tosPath, json) {
   json.phases.map(phase => {
     phase.is_open = false;
     phase.actions.map(action => {
@@ -73,10 +72,10 @@ export function receiveTOS(tosPath, json) {
     phases: arrayOf(phase)
   });
   phase.define({
-    actions: arrayOf(action),
+    actions: arrayOf(action)
   });
   action.define({
-    records: arrayOf(record),
+    records: arrayOf(record)
   });
   json = normalize(json, tosSchema);
   return {
@@ -87,14 +86,14 @@ export function receiveTOS(tosPath, json) {
   };
 }
 
-export function setNavigationVisibility(value) {
+export function setNavigationVisibility (value) {
   return {
     type: SET_NAVIGATION_VISIBILITY,
     value
-  }
+  };
 }
 
-export function setPhaseVisibility(phase, visibility) {
+export function setPhaseVisibility (phase, visibility) {
   return {
     type: SET_PHASE_VISIBILITY,
     phase,
@@ -102,7 +101,7 @@ export function setPhaseVisibility(phase, visibility) {
   };
 }
 
-export function setPhasesVisibility(phases, value) {
+export function setPhasesVisibility (phases, value) {
   const allPhasesOpen = {};
   for (const key in phases) {
     if (phases.hasOwnProperty(key)) {
@@ -112,34 +111,34 @@ export function setPhasesVisibility(phases, value) {
         }
       });
     }
-  };
+  }
   return {
     type: SET_PHASES_VISIBILITY,
     allPhasesOpen
   };
 }
 
-export function addAction(phaseIndex, name) {
+export function addAction (phaseIndex, name) {
   const actionId = Math.random().toString(36).replace(/[^a-z]+/g, '');
   const newAction = {
     id: actionId,
     name: name,
     phase: phaseIndex,
     records: []
-  }
+  };
   return {
     type: ADD_ACTION,
     newAction
-  }
+  };
 }
 
-export function addRecord(actionIndex, recordName, recordType, attributes) {
+export function addRecord (actionIndex, recordName, recordType, attributes) {
   const recordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
   let newAttributes = [];
-  for(const key in attributes) {
-    if(attributes.hasOwnProperty(key)) {
+  for (const key in attributes) {
+    if (attributes.hasOwnProperty(key)) {
       if (attributes[key].checked === true) {
-        newAttributes = Object.assign({}, newAttributes, {[key]: attributes[key].name});
+        newAttributes = Object.assign({}, newAttributes, { [key]: attributes[key].name });
       }
     }
   }
@@ -161,10 +160,10 @@ export function addRecord(actionIndex, recordName, recordType, attributes) {
       success: true,
       text: 'Lisäys onnistui'
     }
-  }
+  };
 }
 
-export function addPhase(name, parent) {
+export function addPhase (name, parent) {
   const phaseId = Math.random().toString(36).replace(/[^a-z]+/g, '');
   const newPhase = {
     name: name,
@@ -173,14 +172,14 @@ export function addPhase(name, parent) {
     actions: [],
     attributes: {},
     is_open: false
-  }
+  };
   return {
     type: ADD_PHASE,
     newPhase
-  }
+  };
 }
 
-export function receiveRecordTypes(recordTypes) {
+export function receiveRecordTypes (recordTypes) {
   const recordTypeList = {};
   recordTypes.results.map(result => {
     const trimmedResult = result.id.replace(/-/g, '');
@@ -189,13 +188,13 @@ export function receiveRecordTypes(recordTypes) {
   return {
     type: RECEIVE_RECORDTYPES,
     recordTypeList
-  }
+  };
 }
 
-export function receiveAttributeTypes(attributes, validationRules) {
+export function receiveAttributeTypes (attributes, validationRules) {
   const attributeTypeList = {};
   attributes.results.map(result => {
-    if(result.values) {
+    if (result.values) {
       let required;
       validationRules.record.required.map(rule => {
         if (rule === result.identifier) {
@@ -215,28 +214,28 @@ export function receiveAttributeTypes(attributes, validationRules) {
   return {
     type: RECEIVE_ATTRIBUTE_TYPES,
     attributeTypeList
-  }
+  };
 }
 
-export function setDocumentState(newState) {
+export function setDocumentState (newState) {
   return {
     type: SET_DOCUMENT_STATE,
     newState
-  }
+  };
 }
 
-export function closeMessage() {
+export function closeMessage () {
   return {
     type: CLOSE_MESSAGE
-  }
+  };
 }
 
-export function executeImport(newItem, level, itemParent, currentState) {
+export function executeImport (newItem, level, itemParent, currentState) {
   const newId = Math.random().toString(36).replace(/[^a-z]+/g, '');
   let currentItems;
   let parentLevel;
   let itemLevel;
-  switch(level) {
+  switch (level) {
     case 'phase':
       currentItems = Object.assign({}, currentState.selectedTOS.phases);
       parentLevel = 'tos';
@@ -255,16 +254,16 @@ export function executeImport(newItem, level, itemParent, currentState) {
     default:
       return currentState;
   }
-  let indexes = []
+  let indexes = [];
   for (const key in currentItems) {
-    if(currentItems.hasOwnProperty(key)) {
+    if (currentItems.hasOwnProperty(key)) {
       indexes.push(currentItems[key].index);
-    };
+    }
   }
-  const newIndex = indexes.length > 0 ? Math.max.apply(null, indexes)+1 : 1
-  const newName = currentItems[newItem].name+' (KOPIO)';
-  const newCopy = Object.assign({}, currentItems[newItem], {id: newId}, {index: newIndex}, {name: newName});
-  const newItems = Object.assign({}, currentItems, {[newId]: newCopy});
+  const newIndex = indexes.length > 0 ? Math.max.apply(null, indexes) + 1 : 1;
+  const newName = currentItems[newItem].name + ' (KOPIO)';
+  const newCopy = Object.assign({}, currentItems[newItem], { id: newId }, { index: newIndex }, { name: newName });
+  const newItems = Object.assign({}, currentItems, { [newId]: newCopy });
 
   return {
     type: EXECUTE_IMPORT,
@@ -274,14 +273,14 @@ export function executeImport(newItem, level, itemParent, currentState) {
     itemLevel,
     newId,
     newItems
-  }
+  };
 }
 
-export function executeOrderChange(newOrder, itemType, itemParent, currentState) {
+export function executeOrderChange (newOrder, itemType, itemParent, currentState) {
   let parentLevel;
   let itemLevel;
   const affectedItems = newOrder;
-  switch(itemType) {
+  switch (itemType) {
     case 'phase':
       parentLevel = 'tos';
       itemLevel = 'phases';
@@ -295,7 +294,7 @@ export function executeOrderChange(newOrder, itemType, itemParent, currentState)
       itemLevel = 'records';
       break;
     default:
-    return currentState;
+      return currentState;
   }
   const reorderedList = [];
   affectedItems.map(item => {
@@ -303,14 +302,14 @@ export function executeOrderChange(newOrder, itemType, itemParent, currentState)
   });
   const parentList = [];
   reorderedList.map((item, index) => {
-    item.index = index+1;
+    item.index = index + 1;
     parentList.push(item.id);
   });
   const itemList = Object.assign({}, currentState.selectedTOS[itemLevel]);
-  for(const key in itemList) {
-    if(itemList.hasOwnProperty(key)) {
+  for (const key in itemList) {
+    if (itemList.hasOwnProperty(key)) {
       reorderedList.map(item => {
-        if(itemList[key].id === item.id) {
+        if (itemList[key].id === item.id) {
           itemList[key] = item;
         }
       });
@@ -324,14 +323,14 @@ export function executeOrderChange(newOrder, itemType, itemParent, currentState)
     parentLevel,
     itemLevel,
     parentList
-  }
+  };
 }
 
-export function fetchTOS(tosId, tosPath) {
-  return function(dispatch) {
+export function fetchTOS (tosId, tosPath) {
+  return function (dispatch) {
     dispatch(requestTOS());
-    const url = 'https://api.hel.fi/helerm-test/v1/function/' + tosId;
-    return fetch(url)
+    const endpoint = getApiUrl(`function/${tosId}`);
+    return fetch(endpoint)
       .then(response => response.json())
       .then(json =>
         dispatch(receiveTOS(tosPath, json))
@@ -339,10 +338,11 @@ export function fetchTOS(tosId, tosPath) {
   };
 }
 
-export function fetchNavigation() {
-  return function(dispatch) {
+export function fetchNavigation () {
+  return function (dispatch) {
     dispatch(requestNavigation());
-    return fetch('https://api.hel.fi/helerm-test/v1/function/?page_size=2000')
+    const endpoint = getApiUrl('function', { page_size: RESULTS_PER_PAGE });
+    return fetch(endpoint)
       .then(response => response.json())
       .then(json =>
         dispatch(receiveNavigation(json))
@@ -350,9 +350,10 @@ export function fetchNavigation() {
   };
 }
 
-export function fetchRecordTypes() {
-  return function(dispatch) {
-    return fetch('https://api.hel.fi/helerm-test/v1/record_type/?page_size=2000')
+export function fetchRecordTypes () {
+  return function (dispatch) {
+    const endpoint = getApiUrl('record_type', { page_size: RESULTS_PER_PAGE });
+    return fetch(endpoint)
       .then(response => response.json())
       .then(json =>
         dispatch(receiveRecordTypes(json))
@@ -360,29 +361,30 @@ export function fetchRecordTypes() {
   };
 }
 
-export function fetchAttributeTypes() {
-  return function(dispatch) {
-    return fetch('https://api.hel.fi/helerm-test/v1/attribute/schemas/')
-    .then(response => response.json())
-    .then(validationRules => {
-        return fetch('https://api.hel.fi/helerm-test/v1/attribute/')
+export function fetchAttributeTypes () {
+  return function (dispatch) {
+    const endpoint = getApiUrl('attribute/schemas');
+    return fetch(endpoint)
+      .then(response => response.json())
+      .then(validationRules => {
+        return fetch(getApiUrl('attribute'))
           .then(response => response.json())
           .then(json =>
-          dispatch(receiveAttributeTypes(json, validationRules)))
-      })
-  }
+            dispatch(receiveAttributeTypes(json, validationRules)));
+      });
+  };
 }
 
-export function importItems(newItem, level, itemParent) {
-  return function(dispatch, getState) {
-    dispatch(executeImport(newItem, level, itemParent, getState().home))
-  }
+export function importItems (newItem, level, itemParent) {
+  return function (dispatch, getState) {
+    dispatch(executeImport(newItem, level, itemParent, getState().home));
+  };
 }
 
-export function changeOrder(newOrder, itemType, itemParent) {
-    return function(dispatch, getState) {
-      dispatch(executeOrderChange(newOrder, itemType, itemParent, getState().home))
-    }
+export function changeOrder (newOrder, itemType, itemParent) {
+  return function (dispatch, getState) {
+    dispatch(executeOrderChange(newOrder, itemType, itemParent, getState().home));
+  };
 }
 
 export const actions = {
@@ -422,7 +424,7 @@ const ACTION_HANDLERS = {
     });
   },
   [RECEIVE_NAVIGATION]: (state, action) => {
-    return  update(state, {
+    return update(state, {
       navigation: {
         items: { $set: action.items },
         is_open: { $set: true }
@@ -442,7 +444,7 @@ const ACTION_HANDLERS = {
   [RECEIVE_TOS]: (state, action) => {
     return update(state, {
       navigation: {
-        is_open: {$set: false}
+        is_open: { $set: false }
       },
       selectedTOS: {
         tos: {
@@ -516,7 +518,7 @@ const ACTION_HANDLERS = {
   },
   [RECEIVE_ATTRIBUTE_TYPES]: (state, action) => {
     return update(state, {
-      attributeTypes: {$set: action.attributeTypeList}
+      attributeTypes: { $set: action.attributeTypeList }
     });
   },
   [ADD_PHASE]: (state, action) => {
@@ -524,7 +526,7 @@ const ACTION_HANDLERS = {
       selectedTOS: {
         tos: {
           phases: {
-            $push : [action.newPhase.id]
+            $push: [action.newPhase.id]
           }
         },
         phases: {
@@ -573,7 +575,7 @@ const ACTION_HANDLERS = {
     });
   },
   [EXECUTE_ORDER_CHANGE]: (state, action) => {
-    if(action.itemType === 'phase'){
+    if (action.itemType === 'phase') {
       return update(state, {
         selectedTOS: {
           [action.parentLevel]: {
@@ -604,7 +606,7 @@ const ACTION_HANDLERS = {
     }
   },
   [EXECUTE_IMPORT]: (state, action) => {
-    if(action.level === 'phase'){
+    if (action.level === 'phase') {
       return update(state, {
         selectedTOS: {
           [action.parentLevel]: {
@@ -637,9 +639,9 @@ const ACTION_HANDLERS = {
   [CLOSE_MESSAGE]: (state, action) => {
     return update(state, {
       message: {
-        active: {$set: false},
-        text: {$set: ''},
-        success: {$set: false}
+        active: { $set: false },
+        text: { $set: '' },
+        success: { $set: false }
       }
     });
   }
@@ -673,7 +675,7 @@ const initialState = {
   }
 };
 
-export default function homeReducer(state = initialState, action) {
+export default function homeReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
   return handler ? handler(state, action) : state;
 }

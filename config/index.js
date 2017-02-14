@@ -4,6 +4,8 @@ const debug = require('debug')('app:config');
 const argv = require('yargs').argv;
 const ip = require('ip');
 
+const constants = require('./constants');
+
 debug('Creating default configuration.');
 // ========================================================
 // Default Configuration
@@ -77,12 +79,15 @@ config.globals = {
   'process.env'  : {
     'NODE_ENV' : JSON.stringify(config.env)
   },
-  'NODE_ENV'     : config.env,
-  '__DEV__'      : config.env === 'development',
-  '__PROD__'     : config.env === 'production',
-  '__TEST__'     : config.env === 'test',
-  '__COVERAGE__' : !argv.watch && config.env === 'test',
-  '__BASENAME__' : JSON.stringify(process.env.BASENAME || '')
+  'NODE_ENV'        : config.env,
+  '__DEV__'         : config.env === 'development',
+  '__PROD__'        : config.env === 'production',
+  '__TEST__'        : config.env === 'test',
+  '__COVERAGE__'    : !argv.watch && config.env === 'test',
+  '__BASENAME__'    : JSON.stringify(process.env.BASENAME || ''),
+  'API_URL'         : JSON.stringify(process.env.API_URL || constants.API_URL),
+  'API_VERSION'     : JSON.stringify(process.env.API_VERSION || constants.API_VERSION),
+  'RESULTS_PER_PAGE': JSON.stringify(process.env.RESULTS_PER_PAGE || constants.RESULTS_PER_PAGE)
 };
 
 // ------------------------------------

@@ -13,7 +13,7 @@
     "lint": "eslint bin build config server src tests",
     "lint:fix": "npm run lint -- --fix",
     "start": "better-npm-run start",
-    "dev": "webpack-dashboard -c gray -- better-npm-run dev",
+    "dev": "webpack-dashboard -- better-npm-run dev",
     "test": "better-npm-run test",
     "test:dev": "npm run test -- --watch",
     "deploy": "better-npm-run deploy",
@@ -145,6 +145,7 @@
     "eslint-plugin-promise": "^3.3.0",
     "eslint-plugin-react": "^6.0.0",
     "eslint-plugin-standard": "^2.0.0",
+    "isomorphic-fetch": "^2.2.1",
     "karma": "^1.0.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-coverage": "^1.0.0",
@@ -160,6 +161,6 @@
     "redux-immutable-state-invariant": "^1.2.4",
     "sinon": "^1.17.5",
     "sinon-chai": "^2.8.0",
-    "webpack-dashboard": "^0.2.0"
+    "webpack-dashboard": "^0.3.0"
   }
 }

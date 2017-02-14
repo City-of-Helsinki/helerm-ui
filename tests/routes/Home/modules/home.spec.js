@@ -8,6 +8,8 @@ import {
 } from 'routes/Home/modules/home';
 import _ from 'lodash';
 
+const globalTimeout = 15000;
+
 describe('(Redux Module) Home', () => {
   describe('(Reducer) HomeReducer', () => {
     let _initialState;
@@ -83,7 +85,7 @@ describe('(Redux Module) Home', () => {
         .then(() => {
           _dispatchSpy.should.have.been.calledTwice;
           expect(_globalState.home.navigation.items.length).to.be.greaterThan(0);
-        }), 15000);
+        }), globalTimeout);
     });
   });
 
@@ -109,20 +111,20 @@ describe('(Redux Module) Home', () => {
       expect(_.keys(_globalState.home.selectedTOS.actions).length).to.equal(0);
       expect(_.keys(_globalState.home.selectedTOS.records).length).to.equal(0);
       expect(_.keys(_globalState.home.selectedTOS.attributes).length).to.equal(0);
-      return fetchTOS(
-          '136adca92b054ff79b990dae4ce78d47',
+      return setTimeout(fetchTOS(
+        '136adca92b054ff79b990dae4ce78d47',
         [ '05 Sosiaalitoimi',
           '05 01 Lasten päivähoito',
           '05 01 01 Yksilöhuollon muutoksenhaku (lasten päivähoito)'
         ]
-        )(_dispatchSpy)
+      )(_dispatchSpy)
         .then(() => {
           _dispatchSpy.should.have.been.calledTwice;
           expect(_.keys(_globalState.home.selectedTOS.tos).length).to.be.greaterThan(0);
           expect(_.keys(_globalState.home.selectedTOS.phases).length).to.be.greaterThan(0);
           expect(_.keys(_globalState.home.selectedTOS.actions).length).to.be.greaterThan(0);
           expect(_.keys(_globalState.home.selectedTOS.records).length).to.be.greaterThan(0);
-        });
+        }), globalTimeout);
     });
   });
 
@@ -144,11 +146,11 @@ describe('(Redux Module) Home', () => {
 
     it('Should fetch record types', () => {
       expect(_.keys(_globalState.home.recordTypes).length).to.equal(0);
-      return fetchRecordTypes()(_dispatchSpy)
+      return setTimeout(fetchRecordTypes()(_dispatchSpy)
         .then(() => {
           _dispatchSpy.should.have.been.calledOnce;
           expect(_.keys(_globalState.home.recordTypes).length).to.be.greaterThan(0);
-        });
+        }), globalTimeout);
     });
   });
 
@@ -170,11 +172,11 @@ describe('(Redux Module) Home', () => {
 
     it('Should fetch validation rules and attribute types', () => {
       expect(_.keys(_globalState.home.attributeTypes).length).to.equal(0);
-      return fetchAttributeTypes()(_dispatchSpy)
+      return setTimeout(fetchAttributeTypes()(_dispatchSpy)
         .then(() => {
           _dispatchSpy.should.have.been.calledOnce;
           expect(_.keys(_globalState.home.attributeTypes).length).to.be.greaterThan(0);
-        });
+        }), globalTimeout);
     });
   });
 
