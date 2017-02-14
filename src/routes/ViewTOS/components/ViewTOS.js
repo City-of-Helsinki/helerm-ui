@@ -1,9 +1,9 @@
 import React from 'react';
 import './ViewTOS.scss';
-import Phase from './Phase';
-import Attribute from './Attribute';
-import ReorderView from './ReorderView';
-import ImportView from './ImportView';
+import Phase from '../../Home/components/Phase';
+import Attribute from '../../Home/components/Attribute';
+import ReorderView from '../../Home/components/ReorderView';
+import ImportView from '../../Home/components/ImportView';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
 import formatDate from 'occasion';
@@ -170,6 +170,7 @@ export class ViewTOS extends React.Component {
     if (selectedTOS !== undefined && Object.keys(selectedTOS).length !== 0) {
       const phaseElements = this.generatePhases(selectedTOS.phases);
       const TOSMetaData = this.generateMetaData(this.props.attributeTypes, selectedTOS.attributes);
+
       return (
         <div>
           <StickyContainer className='col-xs-12 single-tos-container'>
