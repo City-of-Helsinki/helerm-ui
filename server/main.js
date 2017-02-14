@@ -1,28 +1,44 @@
-const express = require('express');
-const debug = require('debug')('app:server');
-const webpack = require('webpack');
-const webpackConfig = require('../build/webpack.config');
-const config = require('../config');
+import express from 'express';
+import _debug from 'debug';
+import webpack from 'webpack';
+import webpackConfig from '../build/webpack.config';
+import config from '../config';
+import { getPassport, addAuth } from './auth';
 
+// import authRoutes from './routes/auth';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import cookieSession from 'cookie-session';
+
+const debug = _debug('app:server');
 const app = express();
 const paths = config.utils_paths;
+
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieSession({ name: 's', secret: config.globals.JWT_TOKEN, maxAge: 86400 * 1000 }));
+
+const passport = getPassport();
+
+addAuth(app, passport);
+
+// app.use('/auth', authRoutes);
 
 // ------------------------------------
 // Apply Webpack HMR Middleware
 // ------------------------------------
 if (config.env === 'development') {
-
   const compiler = webpack(webpackConfig);
 
   debug('Enable webpack dev and HMR middleware');
   app.use(require('webpack-dev-middleware')(compiler, {
-    publicPath  : webpackConfig.output.publicPath,
-    contentBase : paths.client(),
-    hot         : true,
-    quiet       : config.compiler_quiet,
-    noInfo      : config.compiler_quiet,
-    lazy        : false,
-    stats       : config.compiler_stats
+    publicPath: webpackConfig.output.publicPath,
+    contentBase: paths.client(),
+    hot: true,
+    quiet: config.compiler_quiet,
+    noInfo: config.compiler_quiet,
+    lazy: false,
+    stats: config.compiler_stats
   }));
 
   app.use(require('webpack-hot-middleware')(compiler));
@@ -37,7 +53,6 @@ if (config.env === 'development') {
   // of development since this directory will be copied into ~/dist
   // when the application is compiled.
   app.use(express.static(paths.client('static')));
-
 } else {
   debug(
     'Server is being run outside of live development mode, meaning it will ' +
@@ -53,4 +68,4 @@ if (config.env === 'development') {
   app.use(express.static(paths.dist()));
 }
 
-module.exports = app;
+export default app;
