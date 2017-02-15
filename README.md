@@ -23,7 +23,10 @@ $ cd helerm-ui
 
 ```bash
 $ yarn        # Install project dependencies
-$ yarn start  # Compile and launch
+$ yarn dev    # Compile and launch on local environment
 ```
 
-#### 3. Navigate to [http://localhost:3000](http://localhost:3000)
+#### 3. Add needed environmental variables
+Add these by copying the `.env.example` to `.env` and adding the values to the file, or directly through process.env.
+
+#### 4. Navigate to [http://localhost:3000](http://localhost:3000)
