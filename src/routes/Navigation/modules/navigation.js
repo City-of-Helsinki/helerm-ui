@@ -295,7 +295,7 @@ export function executeOrderChange(newOrder, itemType, itemParent, currentState)
       itemLevel = 'records';
       break;
     default:
-      return currentState;
+    return currentState;
   }
   const reorderedList = [];
   affectedItems.map(item => {
@@ -363,12 +363,12 @@ export function fetchRecordTypes() {
 export function fetchAttributeTypes() {
   return function(dispatch) {
     return fetch('https://api.hel.fi/helerm-test/v1/attribute/schemas/')
-      .then(response => response.json())
-      .then(validationRules => {
+    .then(response => response.json())
+    .then(validationRules => {
         return fetch('https://api.hel.fi/helerm-test/v1/attribute/')
           .then(response => response.json())
           .then(json =>
-            dispatch(receiveAttributeTypes(json, validationRules)))
+          dispatch(receiveAttributeTypes(json, validationRules)))
       })
   }
 }
@@ -380,9 +380,9 @@ export function importItems(newItem, level, itemParent) {
 }
 
 export function changeOrder(newOrder, itemType, itemParent) {
-  return function(dispatch, getState) {
-    dispatch(executeOrderChange(newOrder, itemType, itemParent, getState().home))
-  }
+    return function(dispatch, getState) {
+      dispatch(executeOrderChange(newOrder, itemType, itemParent, getState().home))
+    }
 }
 
 export const actions = {
@@ -422,7 +422,7 @@ const ACTION_HANDLERS = {
     });
   },
   [RECEIVE_NAVIGATION]: (state, action) => {
-    return  update(state, {
+    return update(state, {
       navigation: {
         items: { $set: action.items },
         is_open: { $set: true }
@@ -649,17 +649,11 @@ const ACTION_HANDLERS = {
 // Reducer
 // ------------------------------------
 const initialState = {
-  tos: {},
-  actions: {},
-  phases: {},
-  records: {},
-  attributes: {},
-  path: [],
-  documentState: 'view',
-  lastUpdated: 0
+  items: [],
+  is_open: true
 };
 
-export default function tosReducer(state = initialState, action) {
+export default function navigationReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
   return handler ? handler(state, action) : state;
 }
