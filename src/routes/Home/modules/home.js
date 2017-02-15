@@ -7,10 +7,10 @@ import { convertToTree } from '../../../utils/helpers.js';
 // ------------------------------------
 // Constants
 // ------------------------------------
-export const RECEIVE_RECORDTYPES = 'RECEIVE_RECORDTYPES';
-export const RECEIVE_ATTRIBUTE_TYPES = 'RECEIVE_ATTRIBUTE_TYPES';
+export const RECEIVE_RECORDTYPES = 'home/RECEIVE_RECORDTYPES';
+export const RECEIVE_ATTRIBUTE_TYPES = 'home/RECEIVE_ATTRIBUTE_TYPES';
 
-export const CLOSE_MESSAGE = 'CLOSE_MESSAGE';
+export const CLOSE_MESSAGE = 'home/CLOSE_MESSAGE';
 
 // ------------------------------------
 // Actions

@@ -5,20 +5,20 @@ import { normalize, Schema, arrayOf } from 'normalizr';
 // ------------------------------------
 // Constants
 // ------------------------------------
-export const REQUEST_TOS = 'REQUEST_TOS';
-export const RECEIVE_TOS = 'RECEIVE_TOS';
+export const REQUEST_TOS = 'tos/REQUEST_TOS';
+export const RECEIVE_TOS = 'tos/RECEIVE_TOS';
 
-export const SET_PHASE_VISIBILITY = 'SET_PHASE_VISIBILITY';
-export const SET_PHASES_VISIBILITY = 'SET_PHASES_VISIBILITY';
+export const SET_PHASE_VISIBILITY = 'tos/SET_PHASE_VISIBILITY';
+export const SET_PHASES_VISIBILITY = 'tos/SET_PHASES_VISIBILITY';
 
-export const ADD_ACTION = 'ADD_ACTION';
-export const ADD_RECORD = 'ADD_RECORD';
-export const ADD_PHASE = 'ADD_PHASE';
+export const ADD_ACTION = 'tos/ADD_ACTION';
+export const ADD_RECORD = 'tos/ADD_RECORD';
+export const ADD_PHASE = 'tos/ADD_PHASE';
 
-export const SET_DOCUMENT_STATE = 'SET_DOCUMENT_STATE';
+export const SET_DOCUMENT_STATE = 'tos/SET_DOCUMENT_STATE';
 
-export const EXECUTE_IMPORT = 'EXECUTE_IMPORT';
-export const EXECUTE_ORDER_CHANGE = 'EXECUTE_ORDER_CHANGE';
+export const EXECUTE_IMPORT = 'tos/EXECUTE_IMPORT';
+export const EXECUTE_ORDER_CHANGE = 'tos/EXECUTE_ORDER_CHANGE';
 
 
 // ------------------------------------
