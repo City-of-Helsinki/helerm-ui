@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { browserHistory } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux';
 import createStore from './store/createStore';
 import AppContainer from './containers/AppContainer';
 
@@ -8,6 +10,7 @@ import AppContainer from './containers/AppContainer';
 // ========================================================
 const initialState = window.___INITIAL_STATE__;
 const store = createStore(initialState);
+const history = syncHistoryWithStore(browserHistory, store);
 
 // ========================================================
 // Render Setup
@@ -18,7 +21,7 @@ let render = () => {
   const routes = require('./routes/index').default(store);
 
   ReactDOM.render(
-    <AppContainer store={store} routes={routes} />,
+    <AppContainer history={history} store={store} routes={routes}/>,
     MOUNT_NODE
   );
 };
@@ -31,7 +34,7 @@ if (__DEV__) {
     const renderError = (error) => {
       const RedBox = require('redbox-react').default;
 
-      ReactDOM.render(<RedBox error={error} />, MOUNT_NODE);
+      ReactDOM.render(<RedBox error={error}/>, MOUNT_NODE);
     };
 
     // Wrap render in try/catch
