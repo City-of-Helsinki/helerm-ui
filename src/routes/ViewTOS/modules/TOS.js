@@ -2,18 +2,12 @@ import fetch from 'isomorphic-fetch';
 import update from 'immutability-helper';
 import { normalize, Schema, arrayOf } from 'normalizr';
 
-import { convertToTree } from '../../../utils/helpers.js';
-
 // ------------------------------------
 // Constants
 // ------------------------------------
-export const REQUEST_NAVIGATION = 'REQUEST_NAVIGATION';
-export const RECEIVE_NAVIGATION = 'RECEIVE_NAVIGATION';
-
 export const REQUEST_TOS = 'REQUEST_TOS';
 export const RECEIVE_TOS = 'RECEIVE_TOS';
 
-export const SET_NAVIGATION_VISIBILITY = 'SET_NAVIGATION_VISIBILITY';
 export const SET_PHASE_VISIBILITY = 'SET_PHASE_VISIBILITY';
 export const SET_PHASES_VISIBILITY = 'SET_PHASES_VISIBILITY';
 
@@ -21,11 +15,7 @@ export const ADD_ACTION = 'ADD_ACTION';
 export const ADD_RECORD = 'ADD_RECORD';
 export const ADD_PHASE = 'ADD_PHASE';
 
-export const RECEIVE_RECORDTYPES = 'RECEIVE_RECORDTYPES';
-export const RECEIVE_ATTRIBUTE_TYPES = 'RECEIVE_ATTRIBUTE_TYPES';
-
 export const SET_DOCUMENT_STATE = 'SET_DOCUMENT_STATE';
-export const CLOSE_MESSAGE = 'CLOSE_MESSAGE';
 
 export const EXECUTE_IMPORT = 'EXECUTE_IMPORT';
 export const EXECUTE_ORDER_CHANGE = 'EXECUTE_ORDER_CHANGE';
@@ -34,20 +24,6 @@ export const EXECUTE_ORDER_CHANGE = 'EXECUTE_ORDER_CHANGE';
 // ------------------------------------
 // Actions
 // ------------------------------------
-export function requestNavigation() {
-  return {
-    type: REQUEST_NAVIGATION,
-    isFetching: true
-  };
-}
-
-export function receiveNavigation(items) {
-  const orderedTree = convertToTree(items);
-  return {
-    type: RECEIVE_NAVIGATION,
-    items: orderedTree
-  };
-}
 
 export function requestTOS() {
   return {
@@ -85,13 +61,6 @@ export function receiveTOS(tosPath, json) {
     data: json,
     receivedAt: Date.now()
   };
-}
-
-export function setNavigationVisibility(value) {
-  return {
-    type: SET_NAVIGATION_VISIBILITY,
-    value
-  }
 }
 
 export function setPhaseVisibility(phase, visibility) {
@@ -180,54 +149,10 @@ export function addPhase(name, parent) {
   }
 }
 
-export function receiveRecordTypes(recordTypes) {
-  const recordTypeList = {};
-  recordTypes.results.map(result => {
-    const trimmedResult = result.id.replace(/-/g, '');
-    recordTypeList[trimmedResult] = result.value;
-  });
-  return {
-    type: RECEIVE_RECORDTYPES,
-    recordTypeList
-  }
-}
-
-export function receiveAttributeTypes(attributes, validationRules) {
-  const attributeTypeList = {};
-  attributes.results.map(result => {
-    if(result.values) {
-      let required;
-      validationRules.record.required.map(rule => {
-        if (rule === result.identifier) {
-          required = true;
-        }
-      });
-      if (required !== true) {
-        required = false;
-      }
-      attributeTypeList[result.identifier] = {
-        name: result.name,
-        values: result.values,
-        required
-      };
-    }
-  });
-  return {
-    type: RECEIVE_ATTRIBUTE_TYPES,
-    attributeTypeList
-  }
-}
-
 export function setDocumentState(newState) {
   return {
     type: SET_DOCUMENT_STATE,
     newState
-  }
-}
-
-export function closeMessage() {
-  return {
-    type: CLOSE_MESSAGE
   }
 }
 
@@ -339,40 +264,6 @@ export function fetchTOS(tosId, tosPath) {
   };
 }
 
-export function fetchNavigation() {
-  return function(dispatch) {
-    dispatch(requestNavigation());
-    return fetch('https://api.hel.fi/helerm-test/v1/function/?page_size=2000')
-      .then(response => response.json())
-      .then(json =>
-        dispatch(receiveNavigation(json))
-      );
-  };
-}
-
-export function fetchRecordTypes() {
-  return function(dispatch) {
-    return fetch('https://api.hel.fi/helerm-test/v1/record_type/?page_size=2000')
-      .then(response => response.json())
-      .then(json =>
-        dispatch(receiveRecordTypes(json))
-      );
-  };
-}
-
-export function fetchAttributeTypes() {
-  return function(dispatch) {
-    return fetch('https://api.hel.fi/helerm-test/v1/attribute/schemas/')
-      .then(response => response.json())
-      .then(validationRules => {
-        return fetch('https://api.hel.fi/helerm-test/v1/attribute/')
-          .then(response => response.json())
-          .then(json =>
-            dispatch(receiveAttributeTypes(json, validationRules)))
-      })
-  }
-}
-
 export function importItems(newItem, level, itemParent) {
   return function(dispatch, getState) {
     dispatch(executeImport(newItem, level, itemParent, getState().home))
@@ -386,26 +277,17 @@ export function changeOrder(newOrder, itemType, itemParent) {
 }
 
 export const actions = {
-  requestNavigation,
-  receiveNavigation,
   requestTOS,
   receiveTOS,
-  setNavigationVisibility,
   setPhaseVisibility,
   setPhasesVisibility,
   addAction,
   addRecord,
   addPhase,
-  receiveRecordTypes,
-  receiveAttributeTypes,
   setDocumentState,
-  closeMessage,
   executeImport,
   executeOrderChange,
   fetchTOS,
-  fetchNavigation,
-  fetchRecordTypes,
-  fetchAttributeTypes,
   importItems,
   changeOrder
 };
@@ -414,24 +296,6 @@ export const actions = {
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [REQUEST_NAVIGATION]: (state, action) => {
-    return update(state, {
-      isFetching: {
-        $set: true
-      }
-    });
-  },
-  [RECEIVE_NAVIGATION]: (state, action) => {
-    return  update(state, {
-      navigation: {
-        items: { $set: action.items },
-        is_open: { $set: true }
-      },
-      isFetching: {
-        $set: false
-      }
-    });
-  },
   [REQUEST_TOS]: (state, action) => {
     return update(state, {
       isFetching: {
@@ -482,13 +346,6 @@ const ACTION_HANDLERS = {
       }
     });
   },
-  [SET_NAVIGATION_VISIBILITY]: (state, action) => {
-    return update(state, {
-      navigation: {
-        is_open: { $set: action.value }
-      }
-    });
-  },
   [SET_PHASES_VISIBILITY]: (state, action) => {
     return update(state, {
       selectedTOS: {
@@ -505,18 +362,6 @@ const ACTION_HANDLERS = {
           $set: action.newState
         }
       }
-    });
-  },
-  [RECEIVE_RECORDTYPES]: (state, action) => {
-    return update(state, {
-      recordTypes: {
-        $set: action.recordTypeList
-      }
-    });
-  },
-  [RECEIVE_ATTRIBUTE_TYPES]: (state, action) => {
-    return update(state, {
-      attributeTypes: {$set: action.attributeTypeList}
     });
   },
   [ADD_PHASE]: (state, action) => {
@@ -633,15 +478,6 @@ const ACTION_HANDLERS = {
         }
       });
     }
-  },
-  [CLOSE_MESSAGE]: (state, action) => {
-    return update(state, {
-      message: {
-        active: {$set: false},
-        text: {$set: ''},
-        success: {$set: false}
-      }
-    });
   }
 };
 
