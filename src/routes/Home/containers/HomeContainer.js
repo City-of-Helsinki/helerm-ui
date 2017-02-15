@@ -36,15 +36,15 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => {
   return {
-    navigation: state.home.navigation,
+    navigation: state.navigation,
     recordTypes: state.home.recordTypes,
-    selectedTOS: state.home.selectedTOS.tos,
-    phases: state.home.selectedTOS.phases,
-    actions: state.home.selectedTOS.actions,
-    records: state.home.selectedTOS.records,
-    selectedTOSPath: state.home.selectedTOS.path,
+    selectedTOS: state.tos,
+    phases: state.tos.phases,
+    actions: state.tos.actions,
+    records: state.tos.records,
+    selectedTOSPath: state.tos.path,
     isFetching: state.home.isFetching,
-    documentState: state.home.selectedTOS.documentState,
+    documentState: state.tos.documentState,
     attributeTypes: state.home.attributeTypes,
     message: state.home.message
   };
