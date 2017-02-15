@@ -35,6 +35,7 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => {
+  console.log('🍍 navigation', state.home.navigation);
   return {
     navigation: state.home.navigation,
     recordTypes: state.home.recordTypes,
