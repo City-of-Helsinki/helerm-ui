@@ -1,14 +1,14 @@
 import express from 'express';
 import _debug from 'debug';
 import webpack from 'webpack';
-import webpackConfig from '../build/webpack.config';
-import config from '../config';
-import { getPassport, addAuth } from './auth';
-
-// import authRoutes from './routes/auth';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cookieSession from 'cookie-session';
+
+import webpackConfig from '../build/webpack.config';
+import config from '../config';
+import authRoutes from './routes/auth';
+import { passport } from './controllers/authController';
 
 const debug = _debug('app:server');
 const app = express();
@@ -17,12 +17,13 @@ const paths = config.utils_paths;
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieSession({ name: 's', secret: config.globals.JWT_TOKEN, maxAge: 86400 * 1000 }));
+app.use(passport.initialize());
+app.use(passport.session());
 
-const passport = getPassport();
-
-addAuth(app, passport);
-
-// app.use('/auth', authRoutes);
+/**
+ * Add authorization routes
+ */
+app.use('/auth', authRoutes);
 
 // ------------------------------------
 // Apply Webpack HMR Middleware
