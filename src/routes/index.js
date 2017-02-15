@@ -7,6 +7,6 @@ import ViewTOS from './ViewTOS/components/ViewTOS';
 export default () => (
   <Route path='/' component={CoreLayout}>
     <IndexRoute component={Home} />
-    <Route path='viewtos' component={ViewTOS} />
+    <Route path='view-tos/:id' component={ViewTOS} />
   </Route>
 );
