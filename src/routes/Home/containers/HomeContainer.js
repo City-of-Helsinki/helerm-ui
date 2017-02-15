@@ -10,15 +10,19 @@ import {
   setPhaseVisibility,
   setPhasesVisibility,
   setDocumentState,
-  fetchRecordTypes,
-  fetchAttributeTypes,
   addAction,
   addRecord,
   addPhase,
   changeOrder,
-  importItems,
+  importItems
+} from '../../ViewTOS/modules/tos';
+
+import {
+  fetchRecordTypes,
+  fetchAttributeTypes,
   closeMessage
 } from '../modules/home';
+
 import HomeView from '../components/HomeView';
 
 const mapDispatchToProps = {
@@ -42,14 +46,13 @@ const mapStateToProps = (state) => {
   return {
     navigation: state.navigation,
     recordTypes: state.home.recordTypes,
-    selectedTOS: state.tos,
-    phases: state.tos.phases,
-    actions: state.tos.actions,
-    records: state.tos.records,
-    selectedTOSPath: state.tos.path,
-    isFetching: state.home.isFetching,
-    documentState: state.tos.documentState,
+    selectedTOS: state.selectedTOS.tos,
+    phases: state.selectedTOS.phases,
+    actions: state.selectedTOS.actions,
+    records: state.selectedTOS.records,
+    selectedTOSPath: state.selectedTOS.path,
     isFetching: state.home.isFetching || state.navigation.isFetching,
+    documentState: state.selectedTOS.documentState,
     attributeTypes: state.home.attributeTypes,
     message: state.home.message
   };

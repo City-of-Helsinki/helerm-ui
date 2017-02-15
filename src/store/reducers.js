@@ -1,14 +1,14 @@
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 import homeReducer from '../routes/Home/modules/home';
-import tosReducer from '../routes/ViewTOS/modules/TOS';
+import tosReducer from '../routes/ViewTOS/modules/tos';
 import navigationReducer from '../routes/Navigation/modules/navigation';
 
 export const makeRootReducer = (asyncReducers) => {
   return combineReducers({
     routing: routerReducer,
     home: homeReducer,
-    tos: tosReducer,
+    selectedTOS: tosReducer,
     navigation: navigationReducer,
     ...asyncReducers
   });

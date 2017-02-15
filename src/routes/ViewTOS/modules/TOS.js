@@ -20,18 +20,17 @@ export const SET_DOCUMENT_STATE = 'tos/SET_DOCUMENT_STATE';
 export const EXECUTE_IMPORT = 'tos/EXECUTE_IMPORT';
 export const EXECUTE_ORDER_CHANGE = 'tos/EXECUTE_ORDER_CHANGE';
 
-
 // ------------------------------------
 // Actions
 // ------------------------------------
 
-export function requestTOS() {
+export function requestTOS () {
   return {
     type: REQUEST_TOS
   };
 }
 
-export function receiveTOS(tosPath, json) {
+export function receiveTOS (tosPath, json) {
   json.phases.map(phase => {
     phase.is_open = false;
     phase.actions.map(action => {
@@ -49,10 +48,10 @@ export function receiveTOS(tosPath, json) {
     phases: arrayOf(phase)
   });
   phase.define({
-    actions: arrayOf(action),
+    actions: arrayOf(action)
   });
   action.define({
-    records: arrayOf(record),
+    records: arrayOf(record)
   });
   json = normalize(json, tosSchema);
   return {
@@ -63,7 +62,7 @@ export function receiveTOS(tosPath, json) {
   };
 }
 
-export function setPhaseVisibility(phase, visibility) {
+export function setPhaseVisibility (phase, visibility) {
   return {
     type: SET_PHASE_VISIBILITY,
     phase,
@@ -71,7 +70,7 @@ export function setPhaseVisibility(phase, visibility) {
   };
 }
 
-export function setPhasesVisibility(phases, value) {
+export function setPhasesVisibility (phases, value) {
   const allPhasesOpen = {};
   for (const key in phases) {
     if (phases.hasOwnProperty(key)) {
@@ -81,34 +80,34 @@ export function setPhasesVisibility(phases, value) {
         }
       });
     }
-  };
+  }
   return {
     type: SET_PHASES_VISIBILITY,
     allPhasesOpen
   };
 }
 
-export function addAction(phaseIndex, name) {
+export function addAction (phaseIndex, name) {
   const actionId = Math.random().toString(36).replace(/[^a-z]+/g, '');
   const newAction = {
     id: actionId,
     name: name,
     phase: phaseIndex,
     records: []
-  }
+  };
   return {
     type: ADD_ACTION,
     newAction
-  }
+  };
 }
 
-export function addRecord(actionIndex, recordName, recordType, attributes) {
+export function addRecord (actionIndex, recordName, recordType, attributes) {
   const recordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
   let newAttributes = [];
-  for(const key in attributes) {
-    if(attributes.hasOwnProperty(key)) {
+  for (const key in attributes) {
+    if (attributes.hasOwnProperty(key)) {
       if (attributes[key].checked === true) {
-        newAttributes = Object.assign({}, newAttributes, {[key]: attributes[key].name});
+        newAttributes = Object.assign({}, newAttributes, { [key]: attributes[key].name });
       }
     }
   }
@@ -130,10 +129,10 @@ export function addRecord(actionIndex, recordName, recordType, attributes) {
       success: true,
       text: 'Lisäys onnistui'
     }
-  }
+  };
 }
 
-export function addPhase(name, parent) {
+export function addPhase (name, parent) {
   const phaseId = Math.random().toString(36).replace(/[^a-z]+/g, '');
   const newPhase = {
     name: name,
@@ -142,26 +141,26 @@ export function addPhase(name, parent) {
     actions: [],
     attributes: {},
     is_open: false
-  }
+  };
   return {
     type: ADD_PHASE,
     newPhase
-  }
+  };
 }
 
-export function setDocumentState(newState) {
+export function setDocumentState (newState) {
   return {
     type: SET_DOCUMENT_STATE,
     newState
-  }
+  };
 }
 
-export function executeImport(newItem, level, itemParent, currentState) {
+export function executeImport (newItem, level, itemParent, currentState) {
   const newId = Math.random().toString(36).replace(/[^a-z]+/g, '');
   let currentItems;
   let parentLevel;
   let itemLevel;
-  switch(level) {
+  switch (level) {
     case 'phase':
       currentItems = Object.assign({}, currentState.selectedTOS.phases);
       parentLevel = 'tos';
@@ -180,16 +179,16 @@ export function executeImport(newItem, level, itemParent, currentState) {
     default:
       return currentState;
   }
-  let indexes = []
+  let indexes = [];
   for (const key in currentItems) {
-    if(currentItems.hasOwnProperty(key)) {
+    if (currentItems.hasOwnProperty(key)) {
       indexes.push(currentItems[key].index);
-    };
+    }
   }
-  const newIndex = indexes.length > 0 ? Math.max.apply(null, indexes)+1 : 1
-  const newName = currentItems[newItem].name+' (KOPIO)';
-  const newCopy = Object.assign({}, currentItems[newItem], {id: newId}, {index: newIndex}, {name: newName});
-  const newItems = Object.assign({}, currentItems, {[newId]: newCopy});
+  const newIndex = indexes.length > 0 ? Math.max.apply(null, indexes) + 1 : 1;
+  const newName = currentItems[newItem].name + ' (KOPIO)';
+  const newCopy = Object.assign({}, currentItems[newItem], { id: newId }, { index: newIndex }, { name: newName });
+  const newItems = Object.assign({}, currentItems, { [newId]: newCopy });
 
   return {
     type: EXECUTE_IMPORT,
@@ -199,14 +198,14 @@ export function executeImport(newItem, level, itemParent, currentState) {
     itemLevel,
     newId,
     newItems
-  }
+  };
 }
 
-export function executeOrderChange(newOrder, itemType, itemParent, currentState) {
+export function executeOrderChange (newOrder, itemType, itemParent, currentState) {
   let parentLevel;
   let itemLevel;
   const affectedItems = newOrder;
-  switch(itemType) {
+  switch (itemType) {
     case 'phase':
       parentLevel = 'tos';
       itemLevel = 'phases';
@@ -228,14 +227,14 @@ export function executeOrderChange(newOrder, itemType, itemParent, currentState)
   });
   const parentList = [];
   reorderedList.map((item, index) => {
-    item.index = index+1;
+    item.index = index + 1;
     parentList.push(item.id);
   });
   const itemList = Object.assign({}, currentState.selectedTOS[itemLevel]);
-  for(const key in itemList) {
-    if(itemList.hasOwnProperty(key)) {
+  for (const key in itemList) {
+    if (itemList.hasOwnProperty(key)) {
       reorderedList.map(item => {
-        if(itemList[key].id === item.id) {
+        if (itemList[key].id === item.id) {
           itemList[key] = item;
         }
       });
@@ -249,11 +248,11 @@ export function executeOrderChange(newOrder, itemType, itemParent, currentState)
     parentLevel,
     itemLevel,
     parentList
-  }
+  };
 }
 
-export function fetchTOS(tosId, tosPath) {
-  return function(dispatch) {
+export function fetchTOS (tosId, tosPath) {
+  return function (dispatch) {
     dispatch(requestTOS());
     const url = 'https://api.hel.fi/helerm-test/v1/function/' + tosId;
     return fetch(url)
@@ -264,16 +263,16 @@ export function fetchTOS(tosId, tosPath) {
   };
 }
 
-export function importItems(newItem, level, itemParent) {
-  return function(dispatch, getState) {
-    dispatch(executeImport(newItem, level, itemParent, getState().home))
-  }
+export function importItems (newItem, level, itemParent) {
+  return function (dispatch, getState) {
+    dispatch(executeImport(newItem, level, itemParent, getState().selectedTOS));
+  };
 }
 
-export function changeOrder(newOrder, itemType, itemParent) {
-  return function(dispatch, getState) {
-    dispatch(executeOrderChange(newOrder, itemType, itemParent, getState().home))
-  }
+export function changeOrder (newOrder, itemType, itemParent) {
+  return function (dispatch, getState) {
+    dispatch(executeOrderChange(newOrder, itemType, itemParent, getState().selectedTOS));
+  };
 }
 
 export const actions = {
@@ -305,28 +304,23 @@ const ACTION_HANDLERS = {
   },
   [RECEIVE_TOS]: (state, action) => {
     return update(state, {
-      navigation: {
-        is_open: {$set: false}
+      tos: {
+        $set: action.data.entities.tos[action.data.result]
       },
-      selectedTOS: {
-        tos: {
-          $set: action.data.entities.tos[action.data.result]
-        },
-        actions: {
-          $set: action.data.entities.actions
-        },
-        phases: {
-          $set: action.data.entities.phases
-        },
-        records: {
-          $set: action.data.entities.records
-        },
-        path: {
-          $set: action.path
-        },
-        lastUpdated: {
-          $set: action.receivedAt
-        }
+      actions: {
+        $set: action.data.entities.actions
+      },
+      phases: {
+        $set: action.data.entities.phases
+      },
+      records: {
+        $set: action.data.entities.records
+      },
+      path: {
+        $set: action.path
+      },
+      lastUpdated: {
+        $set: action.receivedAt
       },
       isFetching: {
         $set: false
@@ -335,12 +329,10 @@ const ACTION_HANDLERS = {
   },
   [SET_PHASE_VISIBILITY]: (state, action) => {
     return update(state, {
-      selectedTOS: {
-        phases: {
-          [action.phase]: {
-            is_open: {
-              $set: action.visibility
-            }
+      phases: {
+        [action.phase]: {
+          is_open: {
+            $set: action.visibility
           }
         }
       }
@@ -348,133 +340,114 @@ const ACTION_HANDLERS = {
   },
   [SET_PHASES_VISIBILITY]: (state, action) => {
     return update(state, {
-      selectedTOS: {
-        phases: {
-          $set: action.allPhasesOpen
-        }
+      phases: {
+        $set: action.allPhasesOpen
       }
     });
   },
   [SET_DOCUMENT_STATE]: (state, action) => {
     return update(state, {
-      selectedTOS: {
-        documentState: {
-          $set: action.newState
-        }
+      documentState: {
+        $set: action.newState
       }
     });
   },
   [ADD_PHASE]: (state, action) => {
     return update(state, {
-      selectedTOS: {
-        tos: {
-          phases: {
-            $push : [action.newPhase.id]
-          }
-        },
+      tos: {
         phases: {
-          [action.newPhase.id]: {
-            $set: action.newPhase
-          }
+          $push: [action.newPhase.id]
+        }
+      },
+      phases: {
+        [action.newPhase.id]: {
+          $set: action.newPhase
         }
       }
     });
   },
   [ADD_ACTION]: (state, action) => {
     return update(state, {
-      selectedTOS: {
-        phases: {
-          [action.newAction.phase]: {
-            actions: {
-              $push: [action.newAction.id]
-            }
+      phases: {
+        [action.newAction.phase]: {
+          actions: {
+            $push: [action.newAction.id]
           }
-        },
-        actions: {
-          [action.newAction.id]: {
-            $set: action.newAction
-          }
+        }
+      },
+      actions: {
+        [action.newAction.id]: {
+          $set: action.newAction
         }
       }
     });
   },
   [ADD_RECORD]: (state, action) => {
     return update(state, {
-      selectedTOS: {
-        actions: {
-          [action.actionIndex]: {
-            records: {
-              $push: [action.recordId]
-            }
-          }
-        },
-        records: {
-          [action.recordId]: {
-            $set: action.newRecord
+      actions: {
+        [action.actionIndex]: {
+          records: {
+            $push: [action.recordId]
           }
         }
       },
-      message: { $set: action.message }
+      records: {
+        [action.recordId]: {
+          $set: action.newRecord
+        }
+      }
     });
   },
   [EXECUTE_ORDER_CHANGE]: (state, action) => {
-    if(action.itemType === 'phase'){
+    if (action.itemType === 'phase') {
       return update(state, {
-        selectedTOS: {
-          [action.parentLevel]: {
-            [action.itemLevel]: {
-              $set: action.parentList
-            }
-          },
+        [action.parentLevel]: {
           [action.itemLevel]: {
-            $set: action.itemList
+            $set: action.parentList
           }
+        },
+        [action.itemLevel]: {
+          $set: action.itemList
         }
       });
     } else {
       return update(state, {
-        selectedTOS: {
-          [action.parentLevel]: {
-            [action.itemParent]: {
-              [action.itemLevel]: {
-                $set: action.parentList
-              }
+        [action.parentLevel]: {
+          [action.itemParent]: {
+            [action.itemLevel]: {
+              $set: action.parentList
             }
-          },
-          [action.itemLevel]: {
-            $set: action.itemList
           }
+        },
+        [action.itemLevel]: {
+          $set: action.itemList
         }
       });
     }
   },
   [EXECUTE_IMPORT]: (state, action) => {
-    if(action.level === 'phase'){
+    if (action.level === 'phase') {
       return update(state, {
-        selectedTOS: {
-          [action.parentLevel]: {
-            [action.itemLevel]: {
-              $push: [action.newId]
-            }
-          },
+        [action.parentLevel]: {
           [action.itemLevel]: {
-            $set: action.newItems
+            $push: [action.newId]
           }
+        },
+        [action.itemLevel]: {
+          $set: action.newItems
         }
       });
     } else {
       return update(state, {
-        selectedTOS: {
-          [action.parentLevel]: {
-            [action.itemParent]: {
-              [action.itemLevel]: {
-                $push: [action.newId]
-              }
+        [action.parentLevel]: {
+          [action.itemParent]: {
+            [action.itemLevel]: {
+              $push: [action.newId]
             }
-          },
-          [action.itemLevel]: {
-            $set: action.newItems
           }
+        },
+        [action.itemLevel]: {
+          $set: action.newItems
         }
       });
     }
@@ -495,7 +468,7 @@ const initialState = {
   lastUpdated: 0
 };
 
-export default function tosReducer(state = initialState, action) {
+export default function tosReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
   return handler ? handler(state, action) : state;
 }

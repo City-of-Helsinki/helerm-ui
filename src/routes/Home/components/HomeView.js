@@ -64,6 +64,7 @@ export class HomeView extends React.Component {
             isFetching={isFetching}
           />
         }
+
         <Navigation
           fetchTOS={fetchTOS}
           fetchNavigation={fetchNavigation}
@@ -71,6 +72,7 @@ export class HomeView extends React.Component {
           setNavigationVisibility={setNavigationVisibility}
           selectedTOSPath={selectedTOSPath}
         />
+
         <ViewTOS
           selectedTOS={selectedTOS}
           phases={phases}
@@ -89,6 +91,7 @@ export class HomeView extends React.Component {
           changeOrder={changeOrder}
           importItems={importItems}
         />
+
         <ReactCSSTransitionGroup
           transitionName={'alert-position'}
           transitionEnterTimeout={1000}
@@ -100,7 +103,8 @@ export class HomeView extends React.Component {
       </div>
     );
   }
-};
+}
+
 HomeView.propTypes = {
   phases: React.PropTypes.object.isRequired,
   actions: React.PropTypes.object.isRequired,

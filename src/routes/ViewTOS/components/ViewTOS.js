@@ -25,17 +25,26 @@ export class ViewTOS extends React.Component {
       showImportView: false
     };
   }
+
+  componentWillMount() {
+
+  }
+
   formatDateTime (dateTime) {
+    console.log('datetime', dateTime);
     const date = dateTime.slice(0, 10);
     const time = dateTime.slice(11, 16);
     return { date, time };
   }
+
   toggleMetadataVisibility (current) {
     this.setState({ showMetadata: !current });
   }
+
   addPhase () {
     this.setState({ createPhaseMode: true });
   }
+
   createNewPhase (event) {
     event.preventDefault();
     if (this.state.newPhaseName.length > 0) {
@@ -43,30 +52,36 @@ export class ViewTOS extends React.Component {
       this.setState({ createPhaseMode: false, newPhaseName: '' });
     }
   }
+
   cancelPhaseCreation (event) {
     event.preventDefault();
     this.setState({ newPhaseName: '', createPhaseMode: false });
   }
+
   onChange (event) {
     this.setState({ newPhaseName: event.target.value });
   }
+
   /*
-    setPhaseVisibility is a hack to fix firefox specific issue of re-rendering phases
-    remove once firefox issue is fixed
-  */
+   setPhaseVisibility is a hack to fix firefox specific issue of re-rendering phases
+   remove once firefox issue is fixed
+   */
   setPhaseVisibility (x, y) {
     const newString = Math.random().toString(36).replace(/[^a-z]+/g, '');
     this.setState({ update: newString });
     this.props.setPhaseVisibility(x, y);
   }
+
   toggleReorderView () {
     const current = this.state.showReorderView;
     this.setState({ showReorderView: !current });
   }
+
   toggleImportView () {
     const current = this.state.showImportView;
     this.setState({ showImportView: !current });
   }
+
   generateMetaData (attributeTypes, attributes) {
     const modifiedDateTime = this.formatDateTime(this.props.selectedTOS.modified_at);
     const formattedDate = formatDate(modifiedDateTime.date, 'DD.MM.YYYY');
@@ -137,6 +152,7 @@ export class ViewTOS extends React.Component {
     );
     return metadataElement;
   }
+
   generatePhases (phases) {
     const phaseElements = [];
     for (const key in phases) {
@@ -165,6 +181,7 @@ export class ViewTOS extends React.Component {
     }
     return phaseElements;
   }
+
   render () {
     const { selectedTOS, phases } = this.props;
     if (selectedTOS !== undefined && Object.keys(selectedTOS).length !== 0) {
@@ -179,7 +196,7 @@ export class ViewTOS extends React.Component {
                 <h4 className='col-md-6 col-xs-12'>{selectedTOS.function_id} {selectedTOS.name}</h4>
                 <div className='document-buttons col-xs-12 col-md-6'>
                   { this.props.documentState !== 'edit' &&
-                    <span>
+                  <span>
                       <button className='btn btn-default btn-sm pull-right'>Lähetä tarkastettavaksi</button>
                       <button
                         className='btn btn-primary btn-sm pull-right'
@@ -189,7 +206,7 @@ export class ViewTOS extends React.Component {
                     </span>
                   }
                   { this.props.documentState === 'edit' &&
-                    <span>
+                  <span>
                       <button
                         className='btn btn-primary btn-sm pull-right'
                         onClick={() => this.props.setDocumentState('view')}>
@@ -216,12 +233,12 @@ export class ViewTOS extends React.Component {
                   </div>
                 </div>
                 <div className='col-xs-12 button-row'>
-                  { this.props.documentState === 'edit' &&
-                    !this.state.createPhaseMode &&
-                    <span className='pull-right'>
+                  { this.props.documentState === 'edit' && !this.state.createPhaseMode &&
+                  <span className='pull-right'>
                       <Dropdown
                         children={[
-                          { text: 'Uusi käsittelyvaihe',
+                          {
+                            text: 'Uusi käsittelyvaihe',
                             icon: 'fa-file-text',
                             style: 'btn-primary',
                             action: () => this.addPhase()
@@ -237,7 +254,7 @@ export class ViewTOS extends React.Component {
                             action: () => this.toggleReorderView()
                           }
                         ]}
-                        small />
+                        small/>
                     </span>
                   }
                   <button
@@ -253,63 +270,63 @@ export class ViewTOS extends React.Component {
                 </div>
                 <div className='col-xs-12'>
                   { this.state.createPhaseMode &&
-                    <form onSubmit={this.createNewPhase} className='col-xs-12 phase-form'>
-                      <h5>Uusi käsittelyvaihe</h5>
-                      <div className='col-xs-12 col-md-6'>
-                        <input
-                          type='text'
-                          className='form-control'
-                          value={this.state.newPhaseName}
-                          onChange={this.onChange}
-                          onSubmit={this.createNewPhase}
-                          placeholder='Käsittelyvaiheen nimi'
-                        />
-                      </div>
-                      <div className='col-xs-12 col-md-4'>
-                        <button
-                          className='btn btn-danger pull-left'
-                          onClick={this.cancelPhaseCreation}>
-                          Peruuta
-                        </button>
-                        <button className='btn btn-primary pull-left' type='submit'>Lisää</button>
-                      </div>
-                    </form>
+                  <form onSubmit={this.createNewPhase} className='col-xs-12 phase-form'>
+                    <h5>Uusi käsittelyvaihe</h5>
+                    <div className='col-xs-12 col-md-6'>
+                      <input
+                        type='text'
+                        className='form-control'
+                        value={this.state.newPhaseName}
+                        onChange={this.onChange}
+                        onSubmit={this.createNewPhase}
+                        placeholder='Käsittelyvaiheen nimi'
+                      />
+                    </div>
+                    <div className='col-xs-12 col-md-4'>
+                      <button
+                        className='btn btn-danger pull-left'
+                        onClick={this.cancelPhaseCreation}>
+                        Peruuta
+                      </button>
+                      <button className='btn btn-primary pull-left' type='submit'>Lisää</button>
+                    </div>
+                  </form>
                   }
                   { phaseElements }
                   { this.state.showReorderView &&
-                    <Popup
-                      content={
-                        <ReorderView
-                          target='phase'
-                          toggleReorderView={() => this.toggleReorderView()}
-                          keys={this.props.selectedTOS.phases}
-                          values={this.props.phases}
-                          changeOrder={this.props.changeOrder}
-                          parent={null}
-                          parentName={selectedTOS.function_id + ' ' + selectedTOS.name}
-                        />
-                      }
-                      closePopup={() => this.toggleReorderView()}
-                    />
+                  <Popup
+                    content={
+                      <ReorderView
+                        target='phase'
+                        toggleReorderView={() => this.toggleReorderView()}
+                        keys={this.props.selectedTOS.phases}
+                        values={this.props.phases}
+                        changeOrder={this.props.changeOrder}
+                        parent={null}
+                        parentName={selectedTOS.function_id + ' ' + selectedTOS.name}
+                      />
+                    }
+                    closePopup={() => this.toggleReorderView()}
+                  />
                   }
                   { this.state.showImportView &&
-                    <Popup
-                      content={
-                        <ImportView
-                          level='phase'
-                          toggleImportView={() => this.toggleImportView()}
-                          phases={this.props.phases}
-                          phasesOrder={this.props.selectedTOS.phases}
-                          actions={this.props.actions}
-                          records={this.props.records}
-                          importItems={this.props.importItems}
-                          title='käsittelyvaiheita'
-                          targetText={'TOS-kuvaukseen ' + selectedTOS.name}
-                          itemsToImportText='käsittelyvaiheet'
-                        />
-                      }
-                      closePopup={() => this.toggleImportView()}
-                    />
+                  <Popup
+                    content={
+                      <ImportView
+                        level='phase'
+                        toggleImportView={() => this.toggleImportView()}
+                        phases={this.props.phases}
+                        phasesOrder={this.props.selectedTOS.phases}
+                        actions={this.props.actions}
+                        records={this.props.records}
+                        importItems={this.props.importItems}
+                        title='käsittelyvaiheita'
+                        targetText={'TOS-kuvaukseen ' + selectedTOS.name}
+                        itemsToImportText='käsittelyvaiheet'
+                      />
+                    }
+                    closePopup={() => this.toggleImportView()}
+                  />
                   }
                 </div>
               </div>
