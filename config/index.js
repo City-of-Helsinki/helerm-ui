@@ -7,8 +7,6 @@ const dotenv = require('dotenv');
 
 dotenv.load();
 
-const constants = require('./constants');
-
 debug('Creating default configuration.');
 // ========================================================
 // Default Configuration
@@ -88,10 +86,10 @@ config.globals = {
   '__TEST__': config.env === 'test',
   '__COVERAGE__': !argv.watch && config.env === 'test',
   '__BASENAME__': JSON.stringify(process.env.BASENAME || ''),
-  'CLIENT_ID': JSON.stringify(process.env.CLIENT_ID),
-  'CLIENT_SECRET': JSON.stringify(process.env.CLIENT_SECRET),
-  'JWT_TOKEN': JSON.stringify(process.env.JWT_TOKEN),
-  'APP_URL': JSON.stringify(process.env.APP_URL),
+  'CLIENT_ID': process.env.CLIENT_ID,
+  'CLIENT_SECRET': process.env.CLIENT_SECRET,
+  'JWT_TOKEN': process.env.JWT_TOKEN,
+  'APP_URL': process.env.APP_URL,
   'API_URL': JSON.stringify(process.env.API_URL),
   'API_VERSION': JSON.stringify(process.env.API_VERSION),
   'RESULTS_PER_PAGE': JSON.stringify(process.env.RESULTS_PER_PAGE)
