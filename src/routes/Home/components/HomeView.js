@@ -1,5 +1,5 @@
 import React from 'react';
-import Navigation from './Navigation';
+import Navigation from '../../Navigation/components/Navigation';
 import Loader from 'components/Loader';
 import Alert from 'components/Alert';
 import ViewTOS from '../../ViewTOS/components/ViewTOS';

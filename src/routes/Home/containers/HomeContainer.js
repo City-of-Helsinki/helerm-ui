@@ -1,7 +1,11 @@
 import { connect } from 'react-redux';
+
 import {
   fetchNavigation,
-  setNavigationVisibility,
+  setNavigationVisibility
+} from '../../Navigation/modules/navigation';
+
+import {
   fetchTOS,
   setPhaseVisibility,
   setPhasesVisibility,
@@ -45,6 +49,7 @@ const mapStateToProps = (state) => {
     selectedTOSPath: state.tos.path,
     isFetching: state.home.isFetching,
     documentState: state.tos.documentState,
+    isFetching: state.home.isFetching || state.navigation.isFetching,
     attributeTypes: state.home.attributeTypes,
     message: state.home.message
   };
