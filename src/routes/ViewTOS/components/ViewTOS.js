@@ -31,7 +31,6 @@ export class ViewTOS extends React.Component {
   }
 
   formatDateTime (dateTime) {
-    console.log('datetime', dateTime);
     const date = dateTime.slice(0, 10);
     const time = dateTime.slice(11, 16);
     return { date, time };
