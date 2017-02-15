@@ -649,28 +649,14 @@ const ACTION_HANDLERS = {
 // Reducer
 // ------------------------------------
 const initialState = {
-  navigation: {
-    items: [],
-    is_open: true
-  },
-  selectedTOS: {
-    tos: {},
-    actions: {},
-    phases: {},
-    records: {},
-    attributes: {},
-    path: [],
-    documentState: 'view',
-    lastUpdated: 0
-  },
-  isFetching: false,
-  recordTypes: {},
-  attributeTypes: {},
-  message: {
-    active: false,
-    text: '',
-    success: false
-  }
+  tos: {},
+  actions: {},
+  phases: {},
+  records: {},
+  attributes: {},
+  path: [],
+  documentState: 'view',
+  lastUpdated: 0
 };
 
 export default function tosReducer(state = initialState, action) {
