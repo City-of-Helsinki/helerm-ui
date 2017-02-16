@@ -13,20 +13,6 @@ describe('(Redux Module) Home', () => {
     let _initialState;
     beforeEach(() => {
       _initialState = {
-        navigation: {
-          items: [],
-          is_open: true
-        },
-        selectedTOS: {
-          tos: {},
-          actions: {},
-          phases: {},
-          records: {},
-          attributes: {},
-          path: [],
-          documentState: 'view',
-          lastUpdated: 0
-        },
         isFetching: false,
         recordTypes: {},
         attributeTypes: {},
