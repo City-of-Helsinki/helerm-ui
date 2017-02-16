@@ -14,7 +14,7 @@ const mapStateToProps = (state) => {
     is_open: state.navigation.is_open,
     isFetching: state.navigation.isFetching,
     items: state.navigation.items,
-    selectedTOS: state.selectedTOS.tos
+    selectedTOS: state.selectedTOS
   };
 };
 
