@@ -1,5 +1,5 @@
 import {
-  requestTOS,
+  closeMessage,
   fetchRecordTypes,
   fetchAttributeTypes,
   default as homeReducer
@@ -33,15 +33,17 @@ describe('(Redux Module) Home', () => {
       let state = homeReducer(undefined, {});
       expect(state).to.deep.equal(_initialState);
       state = homeReducer(state, {
-        type: '@@@@@@@'
+        type: 'DOESNOTACTUALLYEXISTLOL'
       });
       expect(state).to.deep.equal(_initialState);
-      state = homeReducer(state, requestTOS());
-      expect(state.isFetching).to.equal(true);
+      state.message.active = true;                  // TODO: Improve this
+      expect(state.message.active).to.equal(true);
+      state = homeReducer(state, closeMessage());
+      expect(state.message.active).to.equal(false);
       state = homeReducer(state, {
-        type: '@@@@@@@'
+        type: 'DOESNOTACTUALLYEXISTLOL'
       });
-      expect(state.isFetching).to.equal(true);
+      expect(state.message.active).to.equal(false);
     });
   });
 
