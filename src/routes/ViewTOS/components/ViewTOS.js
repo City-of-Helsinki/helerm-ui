@@ -1,13 +1,16 @@
 import React from 'react';
-import './ViewTOS.scss';
+import { StickyContainer, Sticky } from 'react-sticky';
+import formatDate from 'occasion';
+
 import Phase from '../../Home/components/Phase';
 import Attribute from '../../Home/components/Attribute';
 import ReorderView from '../../Home/components/ReorderView';
 import ImportView from '../../Home/components/ImportView';
+
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
-import formatDate from 'occasion';
-import { StickyContainer, Sticky } from 'react-sticky';
+
+import './ViewTOS.scss';
 
 export class ViewTOS extends React.Component {
   constructor (props) {
@@ -26,7 +29,7 @@ export class ViewTOS extends React.Component {
     };
   }
 
-  componentWillMount () {
+  componentDidMount () {
     const { id } = this.props.params;
     // TODO: Add path for nav
     this.props.fetchTOS(id, []);
