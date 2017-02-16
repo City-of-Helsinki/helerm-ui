@@ -9,9 +9,11 @@ import {
 
 class AppContainer extends Component {
   static propTypes = {
+    fetchAttributeTypes: PropTypes.func.isRequired,
+    fetchRecordTypes: PropTypes.func.isRequired,
+    history: PropTypes.object.isRequired,
     routes: PropTypes.object.isRequired,
-    store: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired
+    store: PropTypes.object.isRequired
   };
 
   componentWillMount () {

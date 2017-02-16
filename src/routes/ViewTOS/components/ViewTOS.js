@@ -106,8 +106,7 @@ export class ViewTOS extends React.Component {
           mode='view'
           type='attribute'
           editable={false}
-          showAttributes
-
+          showAttributes={true}
         />
       );
     });
@@ -124,7 +123,7 @@ export class ViewTOS extends React.Component {
             attributeTypes={this.props.attributeTypes}
             documentState={this.props.documentState}
             showAttributes={this.state.showMetadata}
-            editable
+            editable={true}
           />
         );
       }
@@ -198,30 +197,30 @@ export class ViewTOS extends React.Component {
                 <div className='document-buttons col-xs-12 col-md-6'>
                   { this.props.documentState !== 'edit' &&
                   <span>
-                      <button className='btn btn-default btn-sm pull-right'>Lähetä tarkastettavaksi</button>
-                      <button
-                        className='btn btn-primary btn-sm pull-right'
-                        onClick={() => this.props.setDocumentState('edit')}>
-                        Muokkaustila
-                      </button>
-                    </span>
+                    <button className='btn btn-default btn-sm pull-right'>Lähetä tarkastettavaksi</button>
+                    <button
+                      className='btn btn-primary btn-sm pull-right'
+                      onClick={() => this.props.setDocumentState('edit')}>
+                      Muokkaustila
+                    </button>
+                  </span>
                   }
                   { this.props.documentState === 'edit' &&
                   <span>
-                      <button
-                        className='btn btn-primary btn-sm pull-right'
-                        onClick={() => this.props.setDocumentState('view')}>
-                        Tallenna luonnos
-                      </button>
-                      <button
-                        className='btn btn-danger btn-sm pull-right'
-                        onClick={() => this.props.setDocumentState('view')}>
-                        Peruuta muokkaus
-                      </button>
-                      <span
-                        className='fa fa-asterisk required-asterisk required-legend'> = Pakollinen tieto
-                      </span>
+                    <button
+                      className='btn btn-primary btn-sm pull-right'
+                      onClick={() => this.props.setDocumentState('view')}>
+                      Tallenna luonnos
+                    </button>
+                    <button
+                      className='btn btn-danger btn-sm pull-right'
+                      onClick={() => this.props.setDocumentState('view')}>
+                      Peruuta muokkaus
+                    </button>
+                    <span
+                      className='fa fa-asterisk required-asterisk required-legend'> = Pakollinen tieto
                     </span>
+                  </span>
                   }
                 </div>
               </div>
@@ -236,26 +235,27 @@ export class ViewTOS extends React.Component {
                 <div className='col-xs-12 button-row'>
                   { this.props.documentState === 'edit' && !this.state.createPhaseMode &&
                   <span className='pull-right'>
-                      <Dropdown
-                        children={[
-                          {
-                            text: 'Uusi käsittelyvaihe',
-                            icon: 'fa-file-text',
-                            style: 'btn-primary',
-                            action: () => this.addPhase()
-                          }, {
-                            text: 'Tuo käsittelyvaihe',
-                            icon: 'fa-download',
-                            style: 'btn-primary',
-                            action: () => this.toggleImportView()
-                          }, {
-                            text: 'Järjestä käsittelyvaiheita',
-                            icon: 'fa-th-list',
-                            style: 'btn-primary',
-                            action: () => this.toggleReorderView()
-                          }
-                        ]}
-                        small/>
+                    <Dropdown
+                      children={[
+                        {
+                          text: 'Uusi käsittelyvaihe',
+                          icon: 'fa-file-text',
+                          style: 'btn-primary',
+                          action: () => this.addPhase()
+                        }, {
+                          text: 'Tuo käsittelyvaihe',
+                          icon: 'fa-download',
+                          style: 'btn-primary',
+                          action: () => this.toggleImportView()
+                        }, {
+                          text: 'Järjestä käsittelyvaiheita',
+                          icon: 'fa-th-list',
+                          style: 'btn-primary',
+                          action: () => this.toggleReorderView()
+                        }
+                      ]}
+                      small={true}
+                    />
                     </span>
                   }
                   <button
@@ -342,21 +342,24 @@ export class ViewTOS extends React.Component {
 }
 
 ViewTOS.propTypes = {
-  phases: React.PropTypes.object.isRequired,
   actions: React.PropTypes.object.isRequired,
+  addAction: React.PropTypes.func.isRequired,
+  addPhase: React.PropTypes.func.isRequired,
+  addRecord: React.PropTypes.func.isRequired,
+  attributeTypes: React.PropTypes.object.isRequired,
+  changeOrder: React.PropTypes.func.isRequired,
+  documentState: React.PropTypes.string.isRequired,
+  fetchTOS: React.PropTypes.func.isRequired,
+  importItems: React.PropTypes.func.isRequired,
+  isFetching: React.PropTypes.bool.isRequired,
+  params: React.PropTypes.object.isRequired,
+  phases: React.PropTypes.object.isRequired,
+  recordTypes: React.PropTypes.object.isRequired,
   records: React.PropTypes.object.isRequired,
   selectedTOS: React.PropTypes.object.isRequired,
-  setPhaseVisibility: React.PropTypes.func.isRequired,
-  setPhasesVisibility: React.PropTypes.func.isRequired,
-  documentState: React.PropTypes.string.isRequired,
   setDocumentState: React.PropTypes.func.isRequired,
-  recordTypes: React.PropTypes.object.isRequired,
-  attributeTypes: React.PropTypes.object.isRequired,
-  addAction: React.PropTypes.func.isRequired,
-  addRecord: React.PropTypes.func.isRequired,
-  addPhase: React.PropTypes.func.isRequired,
-  changeOrder: React.PropTypes.func.isRequired,
-  importItems: React.PropTypes.func.isRequired
+  setPhaseVisibility: React.PropTypes.func.isRequired,
+  setPhasesVisibility: React.PropTypes.func.isRequired
 };
 
 export default ViewTOS;

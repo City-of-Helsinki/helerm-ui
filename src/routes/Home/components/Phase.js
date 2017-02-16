@@ -33,31 +33,38 @@ export class Phase extends React.Component {
       this.setState({ name: nextProps.phase.name });
     }
   }
+
   editPhaseTitle () {
     if (this.props.documentState === 'edit') {
       this.setState({ mode: 'edit' });
     }
   }
+
   savePhaseTitle (event) {
     event.preventDefault();
     if (this.state.name.length > 0) {
       this.setState({ mode: 'view' });
     }
   }
+
   onChange (event) {
     this.setState({ name: event.target.value });
   }
+
   onNewChange (event) {
     this.setState({ newActionName: event.target.value });
   }
+
   toggleReorderView () {
     const current = this.state.showReorderView;
     this.setState({ showReorderView: !current });
   }
+
   toggleImportView () {
     const current = this.state.showImportView;
     this.setState({ showImportView: !current });
   }
+
   generateActions (actions) {
     const elements = [];
     for (const key in actions) {
@@ -80,10 +87,12 @@ export class Phase extends React.Component {
             importItems={this.props.importItems}
           />
         );
-      };
+      }
+      ;
     }
     return elements;
   }
+
   generateDropdownItems (phase) {
     return [
       {
@@ -109,25 +118,31 @@ export class Phase extends React.Component {
       }
     ];
   }
+
   createNewAction () {
     this.setState({ mode: 'add' });
   }
+
   addAction (event) {
     event.preventDefault();
     this.props.setPhaseVisibility(this.props.phaseIndex, true);
     this.props.addAction(this.props.phaseIndex, this.state.newActionName);
     this.setState({ mode: 'view', newActionName: '' });
   }
+
   cancelActionCreation (event) {
     event.preventDefault();
     this.setState({ newActionName: '', mode: 'view' });
   }
+
   cancelDeletion () {
     this.setState({ deleting: false });
   }
+
   delete () {
     this.setState({ deleted: true, deleting: false });
   }
+
   render () {
     const { phase, phaseIndex, update } = this.props;
     const actionElements = this.generateActions(phase.actions);
@@ -136,12 +151,12 @@ export class Phase extends React.Component {
     if (this.state.mode !== 'edit') {
       phaseTitle =
         (<span onClick={() => this.editPhaseTitle()}>
-          <i className='fa fa-info-circle' aria-hidden='true' /> {this.state.name}
+          <i className='fa fa-info-circle' aria-hidden='true'/> {this.state.name}
         </span>
         );
     }
     if (this.state.mode === 'edit') {
-      phaseTitle =
+      phaseTitle = (
         <div className='phase-title-input row'>
           <form className='col-md-10 col-xs-12' onSubmit={this.savePhaseTitle}>
             <input
@@ -149,10 +164,11 @@ export class Phase extends React.Component {
               value={this.state.name}
               onChange={this.onChange}
               onBlur={this.savePhaseTitle}
-              autoFocus
+              autoFocus={true}
             />
           </form>
-        </div>;
+        </div>
+      );
     }
     return (
       <span className='col-xs-12 box phase'>
@@ -170,32 +186,35 @@ export class Phase extends React.Component {
                 <span
                   className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
                   aria-hidden='true'
-                        />
+                />
               </button>
               }
               { this.props.documentState === 'edit' &&
-                <span className='pull-right'>
-                  <Dropdown children={phaseDropdownItems} small />
-                </span>
+              <span className='pull-right'>
+                <Dropdown children={phaseDropdownItems} small={true}/>
+              </span>
               }
             </span>
           </Sticky>
           { this.state.mode === 'add' &&
-            <form onSubmit={this.addAction} className='row add-action'>
-              <h5 className='col-xs-12'>Uusi toimenpide</h5>
-              <div className='col-xs-12 col-md-6'>
-                <input type='text' className='form-control'
-                  value={this.state.newActionName} onChange={this.onNewChange} placeholder='Toimenpiteen nimi' />
-              </div>
-              <div className='col-xs-12 col-md-4 add-action-buttons'>
-                <button
-                  className='btn btn-danger col-xs-6'
-                  onClick={this.cancelActionCreation}>
-                      Peruuta
-                    </button>
-                <button className='btn btn-primary col-xs-6' type='submit'>Lisää</button>
-              </div>
-            </form>
+          <form onSubmit={this.addAction} className='row add-action'>
+            <h5 className='col-xs-12'>Uusi toimenpide</h5>
+            <div className='col-xs-12 col-md-6'>
+              <input type='text'
+                     className='form-control'
+                     value={this.state.newActionName}
+                     onChange={this.onNewChange}
+                     placeholder='Toimenpiteen nimi'/>
+            </div>
+            <div className='col-xs-12 col-md-4 add-action-buttons'>
+              <button
+                className='btn btn-danger col-xs-6'
+                onClick={this.cancelActionCreation}>
+                Peruuta
+              </button>
+              <button className='btn btn-primary col-xs-6' type='submit'>Lisää</button>
+            </div>
+          </form>
           }
           <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>
             { actionElements }
@@ -203,59 +222,59 @@ export class Phase extends React.Component {
         </StickyContainer>
         }
         { this.state.deleting &&
-          <Popup
-            content={
-              <DeleteView
-                type='phase'
-                target={this.state.name}
-                action={() => this.delete()}
-                cancel={() => this.cancelDeletion()}
-              />
-            }
-            closePopup={() => this.cancelDeletion()}
-          />
+        <Popup
+          content={
+            <DeleteView
+              type='phase'
+              target={this.state.name}
+              action={() => this.delete()}
+              cancel={() => this.cancelDeletion()}
+            />
+          }
+          closePopup={() => this.cancelDeletion()}
+        />
         }
         { this.state.showReorderView &&
-          <Popup
-            content={
-              <ReorderView
-                target='action'
-                toggleReorderView={() => this.toggleReorderView()}
-                keys={this.props.phase.actions}
-                values={this.props.actions}
-                changeOrder={this.props.changeOrder}
-                parent={phaseIndex}
-                parentName={this.state.name}
-              />
-            }
-            closePopup={() => this.toggleReorderView()}
-          />
+        <Popup
+          content={
+            <ReorderView
+              target='action'
+              toggleReorderView={() => this.toggleReorderView()}
+              keys={this.props.phase.actions}
+              values={this.props.actions}
+              changeOrder={this.props.changeOrder}
+              parent={phaseIndex}
+              parentName={this.state.name}
+            />
+          }
+          closePopup={() => this.toggleReorderView()}
+        />
         }
         { this.state.showImportView &&
-          <Popup
-            content={
-              <ImportView
-                level='action'
-                toggleImportView={() => this.toggleImportView()}
-                title='toimenpiteitä'
-                targetText={'käsittelyvaiheeseen "' + phase.name + '"'}
-                itemsToImportText='toimenpiteet'
-                phasesOrder={this.props.phasesOrder}
-                phases={this.props.phases}
-                actions={this.props.actions}
-                records={this.props.records}
-                importItems={this.props.importItems}
-                parent={phaseIndex}
-                showItems={() => this.props.setPhaseVisibility(phaseIndex, true)}
-              />
-            }
-            closePopup={() => this.toggleImportView()}
-          />
+        <Popup
+          content={
+            <ImportView
+              level='action'
+              toggleImportView={() => this.toggleImportView()}
+              title='toimenpiteitä'
+              targetText={'käsittelyvaiheeseen "' + phase.name + '"'}
+              itemsToImportText='toimenpiteet'
+              phasesOrder={this.props.phasesOrder}
+              phases={this.props.phases}
+              actions={this.props.actions}
+              records={this.props.records}
+              importItems={this.props.importItems}
+              parent={phaseIndex}
+              showItems={() => this.props.setPhaseVisibility(phaseIndex, true)}
+            />
+          }
+          closePopup={() => this.toggleImportView()}
+        />
         }
         {/*
-            { update } is a hack to fix firefox specific issue of re-rendering phases
-            remove once firefox issue is fixed
-          */}
+         { update } is a hack to fix firefox specific issue of re-rendering phases
+         remove once firefox issue is fixed
+         */}
         <div className='update'>{ update }</div>
       </span>
     );
@@ -263,21 +282,21 @@ export class Phase extends React.Component {
 }
 
 Phase.propTypes = {
-  phase: React.PropTypes.object.isRequired,
-  phasesOrder: React.PropTypes.array.isRequired,
-  phases: React.PropTypes.object.isRequired,
   actions: React.PropTypes.object.isRequired,
-  records: React.PropTypes.object.isRequired,
-  phaseIndex: React.PropTypes.string.isRequired,
-  attributeTypes: React.PropTypes.object.isRequired,
-  recordTypes: React.PropTypes.object.isRequired,
-  documentState: React.PropTypes.string.isRequired,
-  setPhaseVisibility: React.PropTypes.func.isRequired,
   addAction: React.PropTypes.func.isRequired,
   addRecord: React.PropTypes.func.isRequired,
-  update: React.PropTypes.string.isRequired,
+  attributeTypes: React.PropTypes.object.isRequired,
   changeOrder: React.PropTypes.func.isRequired,
-  importItems: React.PropTypes.func.isRequired
+  documentState: React.PropTypes.string.isRequired,
+  importItems: React.PropTypes.func.isRequired,
+  phase: React.PropTypes.object.isRequired,
+  phaseIndex: React.PropTypes.string.isRequired,
+  phases: React.PropTypes.object.isRequired,
+  phasesOrder: React.PropTypes.array.isRequired,
+  recordTypes: React.PropTypes.object.isRequired,
+  records: React.PropTypes.object.isRequired,
+  setPhaseVisibility: React.PropTypes.func.isRequired,
+  update: React.PropTypes.string.isRequired
 };
 
 export default Phase;

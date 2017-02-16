@@ -101,11 +101,8 @@ ReorderItem.propTypes = {
   connectDragSource: React.PropTypes.func,
   connectDropTarget: React.PropTypes.func,
   isDragging: React.PropTypes.bool,
-  index: React.PropTypes.string.isRequired,
-  id: React.PropTypes.number.isRequired,
   name: React.PropTypes.string.isRequired,
-  target: React.PropTypes.string.isRequired,
-  moveItem: React.PropTypes.func.isRequired
+  target: React.PropTypes.string.isRequired
 };
 
 export default ReorderItem;

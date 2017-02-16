@@ -83,13 +83,13 @@ export class ReorderView extends React.Component {
 }
 
 ReorderView.propTypes = {
+  changeOrder: React.PropTypes.func.isRequired,
+  keys: React.PropTypes.array.isRequired,
+  parent: React.PropTypes.string,
+  parentName: React.PropTypes.string.isRequired,
   target: React.PropTypes.string.isRequired,
   toggleReorderView: React.PropTypes.func.isRequired,
-  keys: React.PropTypes.array.isRequired,
-  values: React.PropTypes.object.isRequired,
-  parent: React.PropTypes.string,
-  changeOrder: React.PropTypes.func.isRequired,
-  parentName: React.PropTypes.string.isRequired
+  values: React.PropTypes.object.isRequired
 };
 
 export default ReorderView;

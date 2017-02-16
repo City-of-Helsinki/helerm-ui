@@ -11,6 +11,7 @@ export class Attribute extends React.Component {
       mode: this.props.mode
     };
   }
+
   componentWillReceiveProps (nextProps) {
     if (nextProps.mode) {
       this.setState({ mode: nextProps.mode });
@@ -19,25 +20,30 @@ export class Attribute extends React.Component {
       this.setState({ attribute: nextProps.attribute });
     }
   }
+
   activateEditMode () {
     if (this.state.mode !== 'edit') {
       this.changeState('edit');
     }
   }
+
   onChange (event) {
     this.setState({ attribute: event.target.value });
   }
+
   changeState (newState) {
     if (this.props.documentState === 'edit') {
       this.setState({ mode: newState });
     }
   }
+
   submit (event) {
     event.preventDefault();
     setTimeout(() => this.changeState('view'),
       150
     );
   }
+
   generateAttributeInput (attribute, currentAttribute) {
     if (attribute.values && attribute.values.length) {
       const options = attribute.values.map((option, index) => {
@@ -49,7 +55,8 @@ export class Attribute extends React.Component {
           value={this.state.attribute}
           onChange={this.onChange}
           onBlur={this.submit}
-          autoFocus>
+          autoFocus={true}
+        >
           <option value={null}>[ Tyhjä ]</option>
           { options }
         </select>
@@ -62,7 +69,7 @@ export class Attribute extends React.Component {
             value={this.state.attribute}
             onChange={this.onChange}
             onBlur={this.submit}
-            autoFocus
+            autoFocus={true}
           />
         </form>
       );
@@ -70,6 +77,7 @@ export class Attribute extends React.Component {
       return null;
     }
   }
+
   generateRecordInput (type, name) {
     if (type === '') {
       return (
@@ -79,7 +87,7 @@ export class Attribute extends React.Component {
             value={this.state.attribute}
             onChange={this.onChange}
             onBlur={this.submit}
-            autoFocus
+            autoFocus={true}
           />
         </form>
       );
@@ -87,6 +95,7 @@ export class Attribute extends React.Component {
       return this.generateRecordDropdown(this.props.attributeTypes, type);
     }
   }
+
   generateRecordDropdown (recordTypes, activeRecord) {
     const options = [];
     for (const key in recordTypes) {
@@ -101,20 +110,23 @@ export class Attribute extends React.Component {
           value={this.state.attribute}
           onChange={this.onChange}
           onBlur={this.submit}
-          autoFocus>
+          autoFocus={true}
+        >
           <option value={null}>[ Tyhjä ]</option>
           {options}
         </select>
       </form>
     );
   }
+
   render () {
     const { attribute, attributeIndex, showAttributes, attributeKey, attributeTypes, editable, type } = this.props;
     let attributeValue;
     if (editable === false) {
       return (
         <a className='list-group-item col-xs-6'>
-          <strong>{attributeIndex}:</strong> <div>{attribute}</div>
+          <strong>{attributeIndex}:</strong>
+          <div>{attribute}</div>
         </a>
       );
     }
@@ -136,9 +148,9 @@ export class Attribute extends React.Component {
         <span className='table-key'>
           { attributeKey }
           { type === 'attribute' &&
-            this.props.documentState === 'edit' &&
-            attributeTypes[attributeIndex].required &&
-            <span className='fa fa-asterisk required-asterisk' />
+          this.props.documentState === 'edit' &&
+          attributeTypes[attributeIndex].required &&
+          <span className='fa fa-asterisk required-asterisk'/>
           }
         </span>
         { attributeValue }
@@ -153,9 +165,9 @@ Attribute.propTypes = {
   attributeKey: React.PropTypes.string.isRequired,
   attributeTypes: React.PropTypes.object.isRequired,
   documentState: React.PropTypes.string.isRequired,
-  showAttributes: React.PropTypes.bool.isRequired,
-  mode: React.PropTypes.string.isRequired,
   editable: React.PropTypes.bool.isRequired,
+  mode: React.PropTypes.string.isRequired,
+  showAttributes: React.PropTypes.bool.isRequired,
   type: React.PropTypes.string.isRequired
 };
 

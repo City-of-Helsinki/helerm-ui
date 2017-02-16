@@ -19,6 +19,7 @@ export class AddRecord extends React.Component {
       }
     };
   }
+
   initializeState (attributeTypes) {
     let initialState = {};
     for (const key in attributeTypes) {
@@ -30,9 +31,11 @@ export class AddRecord extends React.Component {
           }
         });
       }
-    };
+    }
+    ;
     return initialState;
   }
+
   onChange (e, key, field) {
     const newValue = e;
     this.setState(update(this.state, {
@@ -45,6 +48,7 @@ export class AddRecord extends React.Component {
       }
     }));
   }
+
   onBaseAttributeChange (e, key, field) {
     const newValue = e;
     this.setState(update(this.state, {
@@ -55,6 +59,7 @@ export class AddRecord extends React.Component {
       }
     }));
   }
+
   generateAttributeElements (attributeTypes) {
     const attributeElements = [];
     for (const key in attributeTypes) {
@@ -69,11 +74,11 @@ export class AddRecord extends React.Component {
                 type='checkbox'
                 checked={this.state.newAttributes[key].checked}
                 value={this.state.newAttributes[key].checked}
-                onChange={(e) => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')} />
+                onChange={(e) => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}/>
               <label className='edit-record__label'>
                 {attributeTypes[key].name}
                 { attributeTypes[key].required &&
-                  <span className='fa fa-asterisk required-asterisk' />
+                <span className='fa fa-asterisk required-asterisk'/>
                 }
               </label>
               <select
@@ -97,7 +102,7 @@ export class AddRecord extends React.Component {
               <label className='edit-record__label'>
                 {attributeTypes[key].name}
                 { attributeTypes[key].required &&
-                  <span className='fa fa-asterisk required-asterisk' />
+                <span className='fa fa-asterisk required-asterisk'/>
                 }
               </label>
               <input
@@ -113,6 +118,7 @@ export class AddRecord extends React.Component {
     }
     return attributeElements;
   }
+
   generateDropdown (recordTypes) {
     const options = [];
     for (const key in recordTypes) {
@@ -129,15 +135,18 @@ export class AddRecord extends React.Component {
       </select>
     );
   }
+
   addRecord (e, actionId) {
     e.preventDefault();
     const { recordName, recordType, newAttributes } = this.state;
     this.props.createRecord(actionId, recordName.name, recordType.name, newAttributes);
   }
+
   cancelRecordCreation (e) {
     e.preventDefault();
     this.props.cancelRecordCreation();
   }
+
   render () {
     const { attributeTypes, recordTypes, actionId } = this.props;
     const attributeElements = this.generateAttributeElements(attributeTypes);
@@ -148,16 +157,16 @@ export class AddRecord extends React.Component {
         <form onSubmit={(e) => this.addRecord(e, actionId)} className='edit-record'>
           <div className='col-xs-12 col-lg-6 form-group'>
             <label className='edit-record__label'>Asiakirjatyypin tarkenne</label>
-            <span className='fa fa-asterisk required-asterisk' />
+            <span className='fa fa-asterisk required-asterisk'/>
             <input
               className='col-xs-6 form-control edit-record__input'
               placeholder='Tarkenne'
               value={this.state.recordName.name}
-              onChange={(e) => this.onBaseAttributeChange(e.target.value, 'recordName', 'name')} />
+              onChange={(e) => this.onBaseAttributeChange(e.target.value, 'recordName', 'name')}/>
           </div>
           <div className='col-xs-12 col-lg-6 form-group'>
             <label className='edit-record__label'>Tyyppi</label>
-            <span className='fa fa-asterisk required-asterisk' />
+            <span className='fa fa-asterisk required-asterisk'/>
             { typeDropdown }
           </div>
           { attributeElements }
@@ -176,11 +185,11 @@ export class AddRecord extends React.Component {
 }
 
 AddRecord.propTypes = {
+  actionId: React.PropTypes.string.isRequired,
   attributeTypes: React.PropTypes.object.isRequired,
-  recordTypes: React.PropTypes.object.isRequired,
-  createRecord: React.PropTypes.func.isRequired,
   cancelRecordCreation: React.PropTypes.func.isRequired,
-  actionId: React.PropTypes.string.isRequired
+  createRecord: React.PropTypes.func.isRequired,
+  recordTypes: React.PropTypes.object.isRequired
 };
 
 export default AddRecord;

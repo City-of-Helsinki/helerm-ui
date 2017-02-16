@@ -8,10 +8,12 @@ export class Dropdown extends React.Component {
       open: false
     };
   }
+
   handleClick (index) {
     this.setState({ open: false });
     this.props.children[index].action();
   }
+
   generateRows (dropdownItems) {
     return dropdownItems.map((item, index) => {
       return (
@@ -19,12 +21,13 @@ export class Dropdown extends React.Component {
           key={index}
           className={'btn btn-sm dropdown-row ' + item.style}
           onClick={() => this.handleClick(index)}>
-          <span className={'fa dropdown-icon ' + item.icon} />
+          <span className={'fa dropdown-icon ' + item.icon}/>
           {item.text}
         </button>
       );
     });
   }
+
   render () {
     const { children, small, extraSmall } = this.props;
     const dropdownRows = this.generateRows(children);
@@ -37,23 +40,23 @@ export class Dropdown extends React.Component {
             (extraSmall ? 'btn-xs' : '')
           }
           onClick={() => this.setState({ open: !this.state.open })}
-          >
-          <span className='fa fa-bars' />
+        >
+          <span className='fa fa-bars'/>
         </button>
         { this.state.open &&
-          <div className={'dropdown-items ' + (extraSmall ? 'items-xs' : '')}>
-            {dropdownRows}
-          </div>
+        <div className={'dropdown-items ' + (extraSmall ? 'items-xs' : '')}>
+          {dropdownRows}
+        </div>
         }
       </span>
     );
   }
-};
+}
 
 Dropdown.propTypes = {
   children: React.PropTypes.array.isRequired,
-  small: React.PropTypes.bool,
-  extraSmall: React.PropTypes.bool
+  extraSmall: React.PropTypes.bool,
+  small: React.PropTypes.bool
 };
 
 export default Dropdown;

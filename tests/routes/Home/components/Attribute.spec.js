@@ -12,9 +12,9 @@ describe('(Component) Attribute', () => {
       attributeKey='Salassapitoaika'
       attributeTypes={{}}
       documentState='view'
-      showAttributes
+      showAttributes={true}
       mode='view'
-      editable
+      editable={true}
       type='attribute' />);
   });
 

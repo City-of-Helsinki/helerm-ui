@@ -1,18 +1,23 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import Loader from '../Loader';
 import './Header.scss';
 
 export const Header = ({ isFetching }) => (
   <div>
     <nav className='navbar navbar-inverse container-fluid'>
-      <a href='' className='brand-title navbar-brand'>Tiedonohjausjärjestelmä Alpha v0.1.4</a>
+      <Link to='/' className='brand-title navbar-brand'>Tiedonohjausjärjestelmä Alpha v0.1.4</Link>
     </nav>
     {isFetching &&
-      <Loader />
+    <Loader />
     }
   </div>
 );
+
+Header.propTypes = {
+  isFetching: React.PropTypes.bool.isRequired
+};
 
 const mapStateToProps = (state) => {
   return {

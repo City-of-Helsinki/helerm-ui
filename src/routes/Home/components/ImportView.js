@@ -12,6 +12,7 @@ export class ImportView extends React.Component {
       values: this.props[this.props.level + 's']
     };
   }
+
   generateImportableElements (level) {
     let elements;
     switch (level) {
@@ -29,6 +30,7 @@ export class ImportView extends React.Component {
     }
     return elements;
   }
+
   generateActionItems () {
     const { phases, phasesOrder } = this.props;
     return phasesOrder.map(phase => {
@@ -41,6 +43,7 @@ export class ImportView extends React.Component {
       );
     });
   }
+
   generateRecordItems () {
     const { phases, phasesOrder, actions } = this.props;
     return phasesOrder.map(phase => {
@@ -70,6 +73,7 @@ export class ImportView extends React.Component {
       );
     });
   }
+
   generateLinks (values, items) {
     let links = [];
     for (const key in items) {
@@ -87,6 +91,7 @@ export class ImportView extends React.Component {
     }
     return links;
   }
+
   selectForImport (e, element) {
     e.preventDefault();
     this.setState(update(this.state, {
@@ -95,6 +100,7 @@ export class ImportView extends React.Component {
       }
     }));
   }
+
   removeFromImport (e, elementIndex) {
     e.preventDefault();
     this.setState(update(this.state, {
@@ -103,6 +109,7 @@ export class ImportView extends React.Component {
       }
     }));
   }
+
   importItems () {
     const { level, parent, importItems, toggleImportView, showItems } = this.props;
     const newElements = this.state.selectedElements;
@@ -114,9 +121,11 @@ export class ImportView extends React.Component {
     }
     toggleImportView();
   }
+
   stop (e) {
     e.stopPropagation();
   }
+
   render () {
     const { level, toggleImportView, title, itemsToImportText, targetText } = this.props;
     const importableElements = this.generateImportableElements(level);
@@ -131,17 +140,17 @@ export class ImportView extends React.Component {
           </div>
           <div className='col-xs-6 importable-elements '>
             { this.state.selectedElements.length > 0 &&
-              <div>
-                {this.state.selectedElements.map((element, index) => (
-                  <a
-                    key={index}
-                    href=''
-                    onClick={(e) => this.removeFromImport(e, index)}
-                    className='col-xs-12'>
-                    {this.state.values[element].name}
-                  </a>
-                ))}
-              </div>
+            <div>
+              {this.state.selectedElements.map((element, index) => (
+                <a
+                  key={index}
+                  href=''
+                  onClick={(e) => this.removeFromImport(e, index)}
+                  className='col-xs-12'>
+                  {this.state.values[element].name}
+                </a>
+              ))}
+            </div>
             }
           </div>
         </div>
@@ -159,18 +168,18 @@ export class ImportView extends React.Component {
 }
 
 ImportView.propTypes = {
-  phasesOrder: React.PropTypes.array.isRequired,
-  phases: React.PropTypes.object.isRequired,
   actions: React.PropTypes.object.isRequired,
-  records: React.PropTypes.object.isRequired,
+  importItems: React.PropTypes.func.isRequired,
+  itemsToImportText: React.PropTypes.string.isRequired,
   level: React.PropTypes.string.isRequired,
   parent: React.PropTypes.string,
-  title: React.PropTypes.string.isRequired,
-  itemsToImportText: React.PropTypes.string.isRequired,
+  phases: React.PropTypes.object.isRequired,
+  phasesOrder: React.PropTypes.array.isRequired,
+  records: React.PropTypes.object.isRequired,
+  showItems: React.PropTypes.func,
   targetText: React.PropTypes.string.isRequired,
-  toggleImportView: React.PropTypes.func.isRequired,
-  importItems: React.PropTypes.func.isRequired,
-  showItems: React.PropTypes.func
+  title: React.PropTypes.string.isRequired,
+  toggleImportView: React.PropTypes.func.isRequired
 };
 
 export default ImportView;

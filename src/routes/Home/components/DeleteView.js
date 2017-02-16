@@ -23,12 +23,13 @@ export class DeleteView extends React.Component {
       }
     };
   }
+
   render () {
     return (
       <div className='delete-view row'>
-        <h3>Olet poistamassa {this.state.type[this.props.type].name} "{this.props.target}"</h3>
+        <h3>Olet poistamassa {this.state.type[this.props.type].name} &quot;{this.props.target}&quot;</h3>
         { this.state.type[this.props.type].children &&
-          <span className='has-children-text'>
+        <span className='has-children-text'>
             Huomioi, että myös kaikki {this.state.type[this.props.type].childrenText} sisältämät tiedot poistetaan
           </span>
         }
@@ -43,10 +44,10 @@ export class DeleteView extends React.Component {
 }
 
 DeleteView.propTypes = {
-  type: React.PropTypes.string.isRequired,
-  target: React.PropTypes.string.isRequired,
   action: React.PropTypes.func.isRequired,
-  cancel: React.PropTypes.func.isRequired
+  cancel: React.PropTypes.func.isRequired,
+  target: React.PropTypes.string.isRequired,
+  type: React.PropTypes.string.isRequired
 };
 
 export default DeleteView;

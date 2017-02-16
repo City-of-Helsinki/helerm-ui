@@ -72,11 +72,11 @@ export class Navigation extends React.Component {
 }
 
 Navigation.propTypes = {
-  fetchTOS: React.PropTypes.func.isRequired,
   fetchNavigation: React.PropTypes.func.isRequired,
-  setNavigationVisibility: React.PropTypes.func.isRequired,
   navigation: React.PropTypes.object.isRequired,
-  selectedTOSPath: React.PropTypes.array.isRequired
+  router: React.PropTypes.object.isRequired,
+  selectedTOSPath: React.PropTypes.array.isRequired,
+  setNavigationVisibility: React.PropTypes.func.isRequired
 };
 
 export default withRouter(Navigation);
