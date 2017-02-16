@@ -265,13 +265,13 @@ export function fetchTOS (tosId, tosPath) {
 
 export function importItems (newItem, level, itemParent) {
   return function (dispatch, getState) {
-    dispatch(executeImport(newItem, level, itemParent, getState().selectedTOS));
+    dispatch(executeImport(newItem, level, itemParent, getState()));
   };
 }
 
 export function changeOrder (newOrder, itemType, itemParent) {
   return function (dispatch, getState) {
-    dispatch(executeOrderChange(newOrder, itemType, itemParent, getState().selectedTOS));
+    dispatch(executeOrderChange(newOrder, itemType, itemParent, getState()));
   };
 }
 
