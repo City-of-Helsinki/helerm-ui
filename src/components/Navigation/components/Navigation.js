@@ -20,12 +20,12 @@ export class Navigation extends React.Component {
 
   componentWillReceiveProps (nextProps) {
     this.setState({
-      tree: nextProps.navigation.items
+      tree: nextProps.items
     });
   }
 
   toggleNavigationVisibility () {
-    const currentVisibility = this.props.navigation.is_open;
+    const currentVisibility = this.props.is_open;
     this.props.setNavigationVisibility(!currentVisibility);
   }
 
@@ -37,12 +37,11 @@ export class Navigation extends React.Component {
 
   onLeafMouseClick (event, leaf) {
     this.props.router.push(`/view-tos/${leaf.id}`);
-    // this.props.fetchTOS(leaf.id, leaf.path);
   }
 
   render () {
     let navigationTitle = 'Navigaatio';
-    if (!this.props.navigation.is_open && this.props.selectedTOSPath.length > 0) {
+    if (!this.props.is_open && this.props.selectedTOSPath.length > 0) {
       navigationTitle = this.props.selectedTOSPath.map((section, index) => {
         return <div key={index}>{section}</div>;
       });
@@ -52,14 +51,14 @@ export class Navigation extends React.Component {
       <div className='navigation-menu'>
         <button className='btn btn-default btn-sm pull-right' onClick={this.toggleNavigationVisibility}>
           <span
-            className={'fa ' + (this.props.navigation.is_open ? 'fa-minus' : 'fa-plus')}
+            className={'fa ' + (this.props.is_open ? 'fa-minus' : 'fa-plus')}
             aria-hidden='true'
           />
         </button>
-        {!this.props.navigation.is_open &&
+        {!this.props.is_open &&
         <div className='nav-path-list' onClick={this.toggleNavigationVisibility}>{navigationTitle}</div>
         }
-        {this.props.navigation.is_open &&
+        {this.props.is_open &&
         <InfinityMenu
           tree={this.state.tree}
           onNodeMouseClick={this.onNodeMouseClick}
@@ -73,7 +72,6 @@ export class Navigation extends React.Component {
 
 Navigation.propTypes = {
   fetchNavigation: React.PropTypes.func.isRequired,
-  navigation: React.PropTypes.object.isRequired,
   router: React.PropTypes.object.isRequired,
   selectedTOSPath: React.PropTypes.array.isRequired,
   setNavigationVisibility: React.PropTypes.func.isRequired
