@@ -1,5 +1,5 @@
 import LTT from 'list-to-tree';
-import { orderBy } from 'lodash';
+import { orderBy, filter } from 'lodash';
 
 export function convertToTree (itemList) {
   // ------------------------------------
@@ -39,4 +39,8 @@ export function convertToTree (itemList) {
     });
   };
   return sortTree(unOrderedTree);
+}
+
+export function itemById (items, id) {
+  return filter(items, (item) => (item.id === id));
 }
