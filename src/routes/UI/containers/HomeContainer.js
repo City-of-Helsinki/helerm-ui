@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {
   fetchNavigation,
   setNavigationVisibility
-} from '../../../components/Navigation/modules/navigation';
+} from '../../../components/Navigation/navigationReducer';
 
 import {
   fetchTOS,

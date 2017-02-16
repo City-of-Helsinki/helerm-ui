@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import update from 'immutability-helper';
 
-import { convertToTree } from '../../../utils/helpers.js';
+import { convertToTree } from '../../utils/helpers.js';
 
 // ------------------------------------
 // Constants
