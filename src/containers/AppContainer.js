@@ -1,13 +1,23 @@
 import React, { Component, PropTypes } from 'react';
+import { Provider, connect } from 'react-redux';
 import { Router } from 'react-router';
-import { Provider } from 'react-redux';
+
+import {
+  fetchRecordTypes,
+  fetchAttributeTypes
+} from '../routes/Home/modules/home';
 
 class AppContainer extends Component {
   static propTypes = {
-    routes : PropTypes.object.isRequired,
-    store  : PropTypes.object.isRequired,
-    history  : PropTypes.object.isRequired
+    routes: PropTypes.object.isRequired,
+    store: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
   };
+
+  componentWillMount () {
+    this.props.fetchAttributeTypes();
+    this.props.fetchRecordTypes();
+  }
 
   shouldComponentUpdate () {
     return false;
@@ -27,4 +37,9 @@ class AppContainer extends Component {
   }
 }
 
-export default AppContainer;
+const mapDispatchToProps = {
+  fetchRecordTypes,
+  fetchAttributeTypes
+};
+
+export default connect(null, mapDispatchToProps)(AppContainer);
