@@ -73,45 +73,6 @@ describe('(Redux Module) Home', () => {
     });
   });
 
-  describe('(Action Creator) fetchTOS', () => {
-    let _dispatchSpy;
-    let _globalState;
-
-    beforeEach(() => {
-      _globalState = {
-        home: homeReducer(undefined, {})
-      };
-      _dispatchSpy = sinon.spy((action) => {
-        _globalState = {
-          ..._globalState,
-          home: homeReducer(_globalState.home, action)
-        };
-      });
-    });
-
-    it('Should fetch TOS', () => {
-      expect(_.keys(_globalState.home.selectedTOS.tos).length).to.equal(0);
-      expect(_.keys(_globalState.home.selectedTOS.phases).length).to.equal(0);
-      expect(_.keys(_globalState.home.selectedTOS.actions).length).to.equal(0);
-      expect(_.keys(_globalState.home.selectedTOS.records).length).to.equal(0);
-      expect(_.keys(_globalState.home.selectedTOS.attributes).length).to.equal(0);
-      return fetchTOS(
-          '136adca92b054ff79b990dae4ce78d47',
-        [ '05 Sosiaalitoimi',
-          '05 01 Lasten päivähoito',
-          '05 01 01 Yksilöhuollon muutoksenhaku (lasten päivähoito)'
-        ]
-        )(_dispatchSpy)
-        .then(() => {
-          _dispatchSpy.should.have.been.calledTwice;
-          expect(_.keys(_globalState.home.selectedTOS.tos).length).to.be.greaterThan(0);
-          expect(_.keys(_globalState.home.selectedTOS.phases).length).to.be.greaterThan(0);
-          expect(_.keys(_globalState.home.selectedTOS.actions).length).to.be.greaterThan(0);
-          expect(_.keys(_globalState.home.selectedTOS.records).length).to.be.greaterThan(0);
-        });
-    });
-  });
-
   describe('(Action Creator) fetchRecordTypes', () => {
     let _dispatchSpy;
     let _globalState;
