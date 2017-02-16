@@ -16,7 +16,7 @@ export const Header = ({ isFetching }) => (
 );
 
 Header.propTypes = {
-  isFetching: React.PropTypes.bool.isRequired
+  isFetching: React.PropTypes.bool
 };
 
 const mapStateToProps = (state) => {
