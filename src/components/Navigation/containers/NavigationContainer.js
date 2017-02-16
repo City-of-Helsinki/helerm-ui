@@ -1,18 +1,20 @@
 import { connect } from 'react-redux';
 
-import { fetchNavigation } from '../modules/navigation';
+import { fetchNavigation, setNavigationVisibility } from '../modules/navigation';
 
 import Navigation from '../components/Navigation';
 
 const mapDispatchToProps = {
-  fetchNavigation
+  fetchNavigation,
+  setNavigationVisibility
 };
 
 const mapStateToProps = (state) => {
   return {
+    is_open: state.navigation.is_open,
     isFetching: state.navigation.isFetching,
     items: state.navigation.items,
-    is_open: state.navigation.is_open
+    selectedTOS: state.selectedTOS.tos
   };
 };
 

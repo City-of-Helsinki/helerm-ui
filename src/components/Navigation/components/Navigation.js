@@ -41,11 +41,11 @@ export class Navigation extends React.Component {
 
   render () {
     let navigationTitle = 'Navigaatio';
-    if (!this.props.is_open && this.props.selectedTOSPath.length > 0) {
-      navigationTitle = this.props.selectedTOSPath.map((section, index) => {
-        return <div key={index}>{section}</div>;
-      });
-    }
+    // if (!this.props.is_open && this.props.selectedTOSPath.length > 0) {
+    //   navigationTitle = this.props.selectedTOSPath.map((section, index) => {
+    //     return <div key={index}>{section}</div>;
+    //   });
+    // }
 
     return (
       <div className='navigation-menu'>
