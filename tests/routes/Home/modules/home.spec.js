@@ -1,6 +1,4 @@
 import {
-  fetchNavigation,
-  fetchTOS,
   requestTOS,
   fetchRecordTypes,
   fetchAttributeTypes,
@@ -44,32 +42,6 @@ describe('(Redux Module) Home', () => {
         type: '@@@@@@@'
       });
       expect(state.isFetching).to.equal(true);
-    });
-  });
-
-  describe('(Action Creator) fetchNavigation', () => {
-    let _dispatchSpy;
-    let _globalState;
-
-    beforeEach(() => {
-      _globalState = {
-        home: homeReducer(undefined, {})
-      };
-      _dispatchSpy = sinon.spy((action) => {
-        _globalState = {
-          ..._globalState,
-          home: homeReducer(_globalState.home, action)
-        };
-      });
-    });
-
-    it('Should fetch navigation', () => {
-      expect(_globalState.home.navigation.items.length).to.equal(0);
-      return setTimeout(fetchNavigation()(_dispatchSpy)
-        .then(() => {
-          _dispatchSpy.should.have.been.calledTwice;
-          expect(_globalState.home.navigation.items.length).to.be.greaterThan(0);
-        }), 15000);
     });
   });
 
