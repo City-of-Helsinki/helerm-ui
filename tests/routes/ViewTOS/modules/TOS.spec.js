@@ -15,7 +15,6 @@ describe('(Redux Module) TOS', () => {
         phases: {},
         records: {},
         attributes: {},
-        path: [],
         documentState: 'view',
         lastUpdated: 0,
         isFetching: false
@@ -33,13 +32,13 @@ describe('(Redux Module) TOS', () => {
       let state = tosReducer(undefined, {});
       expect(state).to.deep.equal(_initialState);
       state = tosReducer(state, {
-        type: '@@@@@@@'
+        type: 'DOESNOTACTUALLYEXISTLOL'
       });
       expect(state).to.deep.equal(_initialState);
       state = tosReducer(state, requestTOS());
       expect(state.isFetching).to.equal(true);
       state = tosReducer(state, {
-        type: '@@@@@@@'
+        type: 'DOESNOTACTUALLYEXISTLOL'
       });
       expect(state.isFetching).to.equal(true);
     });
