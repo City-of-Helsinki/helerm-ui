@@ -1,5 +1,4 @@
 import React from 'react';
-import Navigation from '../../../components/Navigation/components/Navigation';
 import Alert from 'components/Alert';
 import './HomeView.scss';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
@@ -20,11 +19,6 @@ export class HomeView extends React.Component {
 
   render () {
     const {
-      fetchNavigation,
-      setNavigationVisibility,
-      navigation,
-      fetchTOS,
-      selectedTOSPath,
       message
     } = this.props;
     let alertMessage = null;
@@ -40,14 +34,6 @@ export class HomeView extends React.Component {
     }
     return (
       <div>
-        <Navigation
-          fetchTOS={fetchTOS}
-          fetchNavigation={fetchNavigation}
-          navigation={navigation}
-          setNavigationVisibility={setNavigationVisibility}
-          selectedTOSPath={selectedTOSPath}
-        />
-
         <ReactCSSTransitionGroup
           transitionName={'alert-position'}
           transitionEnterTimeout={1000}
@@ -63,11 +49,6 @@ export class HomeView extends React.Component {
 
 HomeView.propTypes = {
   closeMessage: React.PropTypes.func.isRequired,
-  fetchNavigation: React.PropTypes.func.isRequired,
-  fetchTOS: React.PropTypes.func.isRequired,
-  message: React.PropTypes.object.isRequired,
-  navigation: React.PropTypes.object.isRequired,
-  selectedTOSPath: React.PropTypes.array.isRequired,
-  setNavigationVisibility: React.PropTypes.func.isRequired
+  message: React.PropTypes.object.isRequired
 };
 export default HomeView;
