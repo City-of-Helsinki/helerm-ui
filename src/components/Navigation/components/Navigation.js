@@ -20,8 +20,9 @@ export class Navigation extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
+    const { items } = nextProps;
     this.setState({
-      tree: nextProps.items
+      items
     });
   }
 
@@ -42,8 +43,8 @@ export class Navigation extends React.Component {
 
   render () {
     let navigationTitle = 'Navigaatio';
-    if (!this.props.is_open && this.props.selectedTOS.tos.path.length > 0) {
-      navigationTitle = this.props.selectedTOS.tos.path.map((section, index) => {
+    if (!this.props.is_open && this.props.TOSPath.length) {
+      navigationTitle = this.props.TOSPath.map((section, index) => {
         return <div key={index}>{section}</div>;
       });
     }
@@ -74,9 +75,11 @@ export class Navigation extends React.Component {
 }
 
 Navigation.propTypes = {
+  TOSPath: React.PropTypes.array.isRequired,
   fetchNavigation: React.PropTypes.func.isRequired,
+  is_open: React.PropTypes.bool.isRequired,
+  items: React.PropTypes.array.isRequired,
   router: React.PropTypes.object.isRequired,
-  // selectedTOSPath: React.PropTypes.array.isRequired,
   setNavigationVisibility: React.PropTypes.func.isRequired
 };
 

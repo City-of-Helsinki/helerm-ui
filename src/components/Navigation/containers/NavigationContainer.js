@@ -2,6 +2,8 @@ import { connect } from 'react-redux';
 
 import { fetchNavigation, setNavigationVisibility } from '../modules/navigation';
 
+import { itemById } from '../../../utils/helpers';
+
 import Navigation from '../components/Navigation';
 
 const mapDispatchToProps = {
@@ -10,11 +12,16 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => {
+  const { items } = state.navigation;
+  const { selectedTOS } = state;
+  const tos = selectedTOS.tos.id ? itemById(items, selectedTOS.tos.id) : null;
+
   return {
+    TOSPath: tos ? tos.path : [],
     is_open: state.navigation.is_open,
     isFetching: state.navigation.isFetching,
-    items: state.navigation.items,
-    selectedTOS: state.selectedTOS
+    items,
+    selectedTOS
   };
 };
 
