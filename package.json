@@ -145,7 +145,7 @@
     "eslint-config-standard-react": "^4.0.0",
     "eslint-plugin-babel": "^4.0.0",
     "eslint-plugin-promise": "^3.3.0",
-    "eslint-plugin-react": "^6.0.0",
+    "eslint-plugin-react": "^6.10.0",
     "eslint-plugin-standard": "^2.0.0",
     "karma": "^1.0.0",
     "karma-chrome-launcher": "^2.0.0",
