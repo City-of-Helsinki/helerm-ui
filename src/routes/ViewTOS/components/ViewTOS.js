@@ -32,6 +32,12 @@ export class ViewTOS extends React.Component {
     this.props.fetchTOS(id, []);
   }
 
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.params.id !== this.props.params.id) {
+      this.props.fetchTOS(nextProps.params.id, []);
+    }
+  }
+
   formatDateTime (dateTime) {
     const date = dateTime.slice(0, 10);
     const time = dateTime.slice(11, 16);
