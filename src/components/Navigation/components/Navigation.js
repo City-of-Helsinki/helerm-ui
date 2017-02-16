@@ -22,7 +22,7 @@ export class Navigation extends React.Component {
   componentWillReceiveProps (nextProps) {
     const { items } = nextProps;
     this.setState({
-      items
+      tree: items
     });
   }
 
