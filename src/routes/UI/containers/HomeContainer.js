@@ -19,7 +19,7 @@ import {
 
 import {
   closeMessage
-} from '../modules/home';
+} from '../../../store/uiReducer';
 
 import HomeView from '../components/HomeView';
 
@@ -46,9 +46,9 @@ const mapStateToProps = (state) => {
     actions: state.selectedTOS.actions,
     records: state.selectedTOS.records,
     selectedTOSPath: state.selectedTOS.path,
-    isFetching: state.home.isFetching || state.navigation.isFetching,
+    isFetching: state.ui.isFetching || state.navigation.isFetching,
     documentState: state.selectedTOS.documentState,
-    message: state.home.message
+    message: state.ui.message
   };
 };
 

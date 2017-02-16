@@ -1,5 +1,5 @@
 import React from 'react';
-import { Attribute } from 'routes/Home/components/Attribute';
+import { Attribute } from 'routes/UI/components/Attribute';
 import { shallow } from 'enzyme';
 
 describe('(Component) Attribute', () => {

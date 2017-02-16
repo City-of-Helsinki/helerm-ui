@@ -5,7 +5,7 @@ import { Router } from 'react-router';
 import {
   fetchRecordTypes,
   fetchAttributeTypes
-} from '../routes/Home/modules/home';
+} from '../store/uiReducer';
 
 class AppContainer extends Component {
   static propTypes = {

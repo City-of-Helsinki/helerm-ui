@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 import CoreLayout from '../layouts/CoreLayout/CoreLayout';
-import Home from './Home/containers/HomeContainer';
+import Home from './UI/containers/HomeContainer';
 import ViewTOSContainer from './ViewTOS/containers/ViewTOSContainer';
 
 export default () => (

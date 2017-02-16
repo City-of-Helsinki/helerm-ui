@@ -21,7 +21,7 @@ Header.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    isFetching: state.home.isFetching || state.navigation.isFetching || state.selectedTOS.isFetching
+    isFetching: state.ui.isFetching || state.navigation.isFetching || state.selectedTOS.isFetching
   };
 };
 

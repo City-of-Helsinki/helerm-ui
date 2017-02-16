@@ -2,10 +2,10 @@ import React from 'react';
 import { StickyContainer, Sticky } from 'react-sticky';
 import formatDate from 'occasion';
 
-import Phase from '../../Home/components/Phase';
-import Attribute from '../../Home/components/Attribute';
-import ReorderView from '../../Home/components/ReorderView';
-import ImportView from '../../Home/components/ImportView';
+import Phase from '../../UI/components/Phase';
+import Attribute from '../../UI/components/Attribute';
+import ReorderView from '../../UI/components/ReorderView';
+import ImportView from '../../UI/components/ImportView';
 
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
