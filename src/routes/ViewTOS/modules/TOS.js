@@ -465,7 +465,8 @@ const initialState = {
   attributes: {},
   path: [],
   documentState: 'view',
-  lastUpdated: 0
+  lastUpdated: 0,
+  isFetching: false
 };
 
 export default function tosReducer (state = initialState, action) {

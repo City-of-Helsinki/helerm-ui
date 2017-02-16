@@ -13,38 +13,20 @@ export class HomeView extends React.Component {
       showAlert: this.props.message.active
     };
   }
-  componentWillMount () {
-    this.props.fetchAttributeTypes();
-    this.props.fetchRecordTypes();
-  }
+
   componentWillReceiveProps (nextProps) {
     if (nextProps.message) {
       this.setState({ showAlert: nextProps.message.active });
     }
   }
+
   render () {
     const {
       fetchNavigation,
       setNavigationVisibility,
       navigation,
       fetchTOS,
-      selectedTOS,
-      phases,
-      actions,
-      records,
       selectedTOSPath,
-      setPhaseVisibility,
-      isFetching,
-      setPhasesVisibility,
-      documentState,
-      setDocumentState,
-      recordTypes,
-      attributeTypes,
-      addAction,
-      addRecord,
-      addPhase,
-      changeOrder,
-      importItems,
       message
     } = this.props;
     let alertMessage = null;
@@ -59,12 +41,6 @@ export class HomeView extends React.Component {
     }
     return (
       <div>
-        { isFetching &&
-          <Loader
-            isFetching={isFetching}
-          />
-        }
-
         <Navigation
           fetchTOS={fetchTOS}
           fetchNavigation={fetchNavigation}
@@ -73,31 +49,12 @@ export class HomeView extends React.Component {
           selectedTOSPath={selectedTOSPath}
         />
 
-        <ViewTOS
-          selectedTOS={selectedTOS}
-          phases={phases}
-          actions={actions}
-          records={records}
-          setPhaseVisibility={setPhaseVisibility}
-          isFetching={isFetching}
-          setPhasesVisibility={setPhasesVisibility}
-          documentState={documentState}
-          setDocumentState={setDocumentState}
-          recordTypes={recordTypes}
-          attributeTypes={attributeTypes}
-          addAction={addAction}
-          addRecord={addRecord}
-          addPhase={addPhase}
-          changeOrder={changeOrder}
-          importItems={importItems}
-        />
-
         <ReactCSSTransitionGroup
           transitionName={'alert-position'}
           transitionEnterTimeout={1000}
           transitionLeaveTimeout={600}>
           { this.state.showAlert &&
-            alertMessage
+          alertMessage
           }
         </ReactCSSTransitionGroup>
       </div>
@@ -120,13 +77,9 @@ HomeView.propTypes = {
   setPhasesVisibility: React.PropTypes.func.isRequired,
   documentState: React.PropTypes.string.isRequired,
   setDocumentState: React.PropTypes.func.isRequired,
-  fetchRecordTypes: React.PropTypes.func.isRequired,
-  recordTypes: React.PropTypes.object.isRequired,
-  attributeTypes: React.PropTypes.object.isRequired,
   addAction: React.PropTypes.func.isRequired,
   addRecord: React.PropTypes.func.isRequired,
   addPhase: React.PropTypes.func.isRequired,
-  fetchAttributeTypes: React.PropTypes.func.isRequired,
   changeOrder: React.PropTypes.func.isRequired,
   importItems: React.PropTypes.func.isRequired,
   message: React.PropTypes.object.isRequired,

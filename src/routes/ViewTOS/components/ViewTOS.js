@@ -26,8 +26,10 @@ export class ViewTOS extends React.Component {
     };
   }
 
-  componentWillMount() {
-
+  componentWillMount () {
+    const { id } = this.props.params;
+    // TODO: Add path for nav
+    this.props.fetchTOS(id, []);
   }
 
   formatDateTime (dateTime) {
@@ -182,8 +184,8 @@ export class ViewTOS extends React.Component {
   }
 
   render () {
-    const { selectedTOS, phases } = this.props;
-    if (selectedTOS !== undefined && Object.keys(selectedTOS).length !== 0) {
+    const { selectedTOS, phases, isFetching } = this.props;
+    if (!isFetching && selectedTOS !== undefined && Object.keys(selectedTOS).length !== 0) {
       const phaseElements = this.generatePhases(selectedTOS.phases);
       const TOSMetaData = this.generateMetaData(this.props.attributeTypes, selectedTOS.attributes);
 
