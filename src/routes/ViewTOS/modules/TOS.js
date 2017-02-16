@@ -30,7 +30,7 @@ export function requestTOS () {
   };
 }
 
-export function receiveTOS (tosPath, json) {
+export function receiveTOS (json) {
   json.phases.map(phase => {
     phase.is_open = false;
     phase.actions.map(action => {
@@ -56,7 +56,6 @@ export function receiveTOS (tosPath, json) {
   json = normalize(json, tosSchema);
   return {
     type: RECEIVE_TOS,
-    path: tosPath,
     data: json,
     receivedAt: Date.now()
   };
@@ -251,14 +250,14 @@ export function executeOrderChange (newOrder, itemType, itemParent, currentState
   };
 }
 
-export function fetchTOS (tosId, tosPath) {
+export function fetchTOS (tosId) {
   return function (dispatch) {
     dispatch(requestTOS());
     const url = 'https://api.hel.fi/helerm-test/v1/function/' + tosId;
     return fetch(url)
       .then(response => response.json())
       .then(json =>
-        dispatch(receiveTOS(tosPath, json))
+        dispatch(receiveTOS(json))
       );
   };
 }
@@ -315,9 +314,6 @@ const ACTION_HANDLERS = {
       },
       records: {
         $set: action.data.entities.records
-      },
-      path: {
-        $set: action.path
       },
       lastUpdated: {
         $set: action.receivedAt
@@ -463,7 +459,6 @@ const initialState = {
   phases: {},
   records: {},
   attributes: {},
-  path: [],
   documentState: 'view',
   lastUpdated: 0,
   isFetching: false

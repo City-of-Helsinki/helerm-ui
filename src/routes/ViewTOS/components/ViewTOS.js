@@ -31,13 +31,12 @@ export class ViewTOS extends React.Component {
 
   componentDidMount () {
     const { id } = this.props.params;
-    // TODO: Add path for nav
-    this.props.fetchTOS(id, []);
+    this.props.fetchTOS(id);
   }
 
   componentWillReceiveProps (nextProps) {
     if (nextProps.params.id !== this.props.params.id) {
-      this.props.fetchTOS(nextProps.params.id, []);
+      this.props.fetchTOS(nextProps.params.id);
     }
   }
 
