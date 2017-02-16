@@ -15,7 +15,7 @@ import {
   addPhase,
   changeOrder,
   importItems
-} from '../../ViewTOS/modules/tos';
+} from '../../ViewTOS/tosReducer';
 
 import {
   closeMessage

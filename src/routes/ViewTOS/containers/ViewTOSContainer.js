@@ -10,7 +10,7 @@ import {
   addPhase,
   changeOrder,
   importItems
-} from '../modules/tos';
+} from '../tosReducer';
 
 import ViewTOS from '../components/ViewTOS';
 
