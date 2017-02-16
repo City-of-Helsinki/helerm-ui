@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 import homeReducer from '../routes/Home/modules/home';
 import tosReducer from '../routes/ViewTOS/modules/tos';
-import navigationReducer from '../routes/Navigation/modules/navigation';
+import navigationReducer from '../components/Navigation/modules/navigation';
 
 export const makeRootReducer = (asyncReducers) => {
   return combineReducers({

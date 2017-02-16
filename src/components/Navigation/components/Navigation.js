@@ -36,8 +36,8 @@ export class Navigation extends React.Component {
   }
 
   onLeafMouseClick (event, leaf) {
-    // this.props.router.push(`/view-tos/${leaf.id}`);
-    this.props.fetchTOS(leaf.id, leaf.path);
+    this.props.router.push(`/view-tos/${leaf.id}`);
+    // this.props.fetchTOS(leaf.id, leaf.path);
   }
 
   render () {
@@ -47,6 +47,7 @@ export class Navigation extends React.Component {
         return <div key={index}>{section}</div>;
       });
     }
+
     return (
       <div className='navigation-menu'>
         <button className='btn btn-default btn-sm pull-right' onClick={this.toggleNavigationVisibility}>
