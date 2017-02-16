@@ -1,8 +1,8 @@
 import React from 'react';
-import Navigation from '../../../components/Navigation/components/Navigation';
-import Loader from 'components/Loader';
+// import Navigation from '../../../components/Navigation/components/Navigation';
+// import Loader from 'components/Loader';
 import Alert from 'components/Alert';
-import ViewTOS from '../../ViewTOS/components/ViewTOS';
+// import ViewTOS from '../../ViewTOS/components/ViewTOS';
 import './HomeView.scss';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
@@ -22,11 +22,6 @@ export class HomeView extends React.Component {
 
   render () {
     const {
-      fetchNavigation,
-      setNavigationVisibility,
-      navigation,
-      fetchTOS,
-      selectedTOSPath,
       message
     } = this.props;
     let alertMessage = null;
@@ -41,14 +36,6 @@ export class HomeView extends React.Component {
     }
     return (
       <div>
-        <Navigation
-          fetchTOS={fetchTOS}
-          fetchNavigation={fetchNavigation}
-          navigation={navigation}
-          setNavigationVisibility={setNavigationVisibility}
-          selectedTOSPath={selectedTOSPath}
-        />
-
         <ReactCSSTransitionGroup
           transitionName={'alert-position'}
           transitionEnterTimeout={1000}
