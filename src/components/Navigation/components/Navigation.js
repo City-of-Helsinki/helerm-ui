@@ -39,6 +39,7 @@ export class Navigation extends React.Component {
 
   onLeafMouseClick (event, leaf) {
     this.props.router.push(`/view-tos/${leaf.id}`);
+    this.toggleNavigationVisibility();
   }
 
   render () {

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import { fetchNavigation, setNavigationVisibility } from '../modules/navigation';
+import { fetchNavigation, setNavigationVisibility } from '../navigationReducer';
 
 import { itemById } from '../../../utils/helpers';
 

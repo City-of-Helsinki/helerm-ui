@@ -2,7 +2,7 @@ import {
   fetchNavigation,
   requestNavigation,
   default as navigationReducer
-} from 'components/Navigation/modules/navigation';
+} from 'components/Navigation/navigationReducer';
 
 describe('(Redux Module) Navigation', () => {
   describe('(Reducer) NavigationReducer', () => {
