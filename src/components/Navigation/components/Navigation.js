@@ -26,6 +26,12 @@ export class Navigation extends React.Component {
     });
   }
 
+  componentDidUpdate () {
+    if (this.props.TOSPath.length === 0) {
+      this.props.setNavigationVisibility(true);
+    }
+  }
+
   toggleNavigationVisibility () {
     const currentVisibility = this.props.is_open;
     this.props.setNavigationVisibility(!currentVisibility);
