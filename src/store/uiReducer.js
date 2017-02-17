@@ -1,6 +1,8 @@
 import fetch from 'isomorphic-fetch';
 import update from 'immutability-helper';
 
+import { getApiUrl } from '../utils/helpers';
+
 // ------------------------------------
 // Constants
 // ------------------------------------
@@ -58,7 +60,8 @@ export function closeMessage () {
 
 export function fetchRecordTypes () {
   return function (dispatch) {
-    return fetch('https://api.hel.fi/helerm-test/v1/record_type/?page_size=2000')
+    const url = getApiUrl('record_type', { page_size: RESULTS_PER_PAGE });
+    return fetch(url)
       .then(response => response.json())
       .then(json =>
         dispatch(receiveRecordTypes(json))
@@ -68,10 +71,10 @@ export function fetchRecordTypes () {
 
 export function fetchAttributeTypes () {
   return function (dispatch) {
-    return fetch('https://api.hel.fi/helerm-test/v1/attribute/schemas/')
+    return fetch(getApiUrl('attribute/schemas'))
       .then(response => response.json())
       .then(validationRules => {
-        return fetch('https://api.hel.fi/helerm-test/v1/attribute/')
+        return fetch(getApiUrl('attribute'))
           .then(response => response.json())
           .then(json =>
             dispatch(receiveAttributeTypes(json, validationRules)));

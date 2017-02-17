@@ -2,6 +2,8 @@ import fetch from 'isomorphic-fetch';
 import update from 'immutability-helper';
 import { normalize, Schema, arrayOf } from 'normalizr';
 
+import { getApiUrl } from '../../utils/helpers';
+
 // ------------------------------------
 // Constants
 // ------------------------------------
@@ -249,7 +251,7 @@ export function executeOrderChange (newOrder, itemType, itemParent, currentState
 export function fetchTOS (tosId) {
   return function (dispatch) {
     dispatch(requestTOS());
-    const url = 'https://api.hel.fi/helerm-test/v1/function/' + tosId;
+    const url = getApiUrl(`function/${tosId}`);
     return fetch(url)
       .then(response => response.json())
       .then(json =>
