@@ -253,10 +253,13 @@ export function fetchTOS (tosId) {
     dispatch(requestTOS());
     const url = getApiUrl(`function/${tosId}`);
     return fetch(url)
-      .then(response => response.json())
-      .then(json =>
-        dispatch(receiveTOS(json))
-      );
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(res.statusText);
+        }
+        return res.json();
+      })
+      .then(json => dispatch(receiveTOS(json)));
   };
 }
 
