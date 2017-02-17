@@ -7,6 +7,7 @@ import { normalize, Schema, arrayOf } from 'normalizr';
 // ------------------------------------
 export const REQUEST_TOS = 'tos/REQUEST_TOS';
 export const RECEIVE_TOS = 'tos/RECEIVE_TOS';
+export const RESET_TOS = 'tos/RRESET_TOS';
 
 export const SET_PHASE_VISIBILITY = 'tos/SET_PHASE_VISIBILITY';
 export const SET_PHASES_VISIBILITY = 'tos/SET_PHASES_VISIBILITY';
@@ -257,6 +258,12 @@ export function fetchTOS (tosId) {
   };
 }
 
+export function clearTOS () {
+  return {
+    type: RESET_TOS
+  };
+}
+
 export function importItems (newItem, level, itemParent) {
   return function (dispatch, getState) {
     dispatch(executeImport(newItem, level, itemParent, getState()));
@@ -272,6 +279,7 @@ export function changeOrder (newOrder, itemType, itemParent) {
 export const actions = {
   requestTOS,
   receiveTOS,
+  clearTOS,
   setPhaseVisibility,
   setPhasesVisibility,
   addAction,
@@ -317,6 +325,9 @@ const ACTION_HANDLERS = {
         $set: false
       }
     });
+  },
+  [RESET_TOS]: () => {
+    return initialState;
   },
   [SET_PHASE_VISIBILITY]: (state, action) => {
     return update(state, {
