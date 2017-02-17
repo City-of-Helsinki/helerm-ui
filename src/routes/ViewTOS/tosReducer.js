@@ -122,12 +122,7 @@ export function addRecord (actionIndex, recordName, recordType, attributes) {
     type: ADD_RECORD,
     actionIndex,
     recordId,
-    newRecord,
-    message: {
-      active: true,
-      success: true,
-      text: 'Lisäys onnistui'
-    }
+    newRecord
   };
 }
 
