@@ -360,6 +360,7 @@ ViewTOS.propTypes = {
   addRecord: React.PropTypes.func.isRequired,
   attributeTypes: React.PropTypes.object.isRequired,
   changeOrder: React.PropTypes.func.isRequired,
+  clearTOS: React.PropTypes.func.isRequired,
   documentState: React.PropTypes.string.isRequired,
   fetchTOS: React.PropTypes.func.isRequired,
   importItems: React.PropTypes.func.isRequired,
