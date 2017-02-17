@@ -1,11 +1,11 @@
 import LTT from 'list-to-tree';
-
 import {
   orderBy,
   find,
   filter,
   flatten,
-  map
+  map,
+  forEach
 } from 'lodash';
 
 export function convertToTree (itemList) {
@@ -48,6 +48,12 @@ export function convertToTree (itemList) {
   return sortTree(unOrderedTree);
 }
 
+/**
+ *
+ * @param items
+ * @param id
+ * @returns {*}
+ */
 export function itemById (items, id) {
   let searchResult = find(items, (item) => (item.id === id));
 
@@ -61,4 +67,30 @@ export function itemById (items, id) {
     return null;
   }
   return searchResult;
+}
+
+/**
+ *
+ * @param url
+ * @param query
+ * @returns {string}
+ */
+export function getApiUrl (url, query = {}) {
+  const queryString = buildQueryString(query);
+  return [API_URL, API_VERSION, url, queryString].join('/');
+}
+
+/**
+ *
+ * @param query
+ * @returns {string}
+ */
+export function buildQueryString (query) {
+  const pairs = [];
+
+  forEach(query, (value, key) => {
+    pairs.push([key, value].join('='));
+  });
+
+  return pairs.length ? '?' + pairs.join('&') : '';
 }

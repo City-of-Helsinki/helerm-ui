@@ -13,6 +13,9 @@
     "browser": true
   },
   "globals": {
+    "API_URL": false,
+    "API_VERSION": false,
+    "RESULTS_PER_PAGE": false,
     "__DEV__": false,
     "__TEST__": false,
     "__PROD__": false,
