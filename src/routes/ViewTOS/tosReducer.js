@@ -7,7 +7,7 @@ import { normalize, Schema, arrayOf } from 'normalizr';
 // ------------------------------------
 export const REQUEST_TOS = 'tos/REQUEST_TOS';
 export const RECEIVE_TOS = 'tos/RECEIVE_TOS';
-export const RESET_TOS = 'tos/RRESET_TOS';
+export const RESET_TOS = 'tos/RESET_TOS';
 
 export const SET_PHASE_VISIBILITY = 'tos/SET_PHASE_VISIBILITY';
 export const SET_PHASES_VISIBILITY = 'tos/SET_PHASES_VISIBILITY';
