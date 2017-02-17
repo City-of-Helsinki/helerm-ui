@@ -40,6 +40,10 @@ export class ViewTOS extends React.Component {
     }
   }
 
+  componentWillUnmount () {
+    this.props.clearTOS();
+  }
+
   formatDateTime (dateTime) {
     const date = dateTime.slice(0, 10);
     const time = dateTime.slice(11, 16);

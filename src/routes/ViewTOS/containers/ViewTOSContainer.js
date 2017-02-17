@@ -9,7 +9,8 @@ import {
   addRecord,
   addPhase,
   changeOrder,
-  importItems
+  importItems,
+  clearTOS
 } from '../tosReducer';
 
 import ViewTOS from '../components/ViewTOS';
@@ -23,7 +24,8 @@ const mapDispatchToProps = {
   addRecord,
   addPhase,
   changeOrder,
-  importItems
+  importItems,
+  clearTOS
 };
 
 const mapStateToProps = (state) => {
