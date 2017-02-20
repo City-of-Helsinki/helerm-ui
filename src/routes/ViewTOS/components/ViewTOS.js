@@ -47,8 +47,12 @@ export class ViewTOS extends React.Component {
   }
 
   fetchTOS (id) {
-    return this.props.fetchTOS(id)
-      .catch(() => this.props.push(`/404?tos-id=${id}`));
+    this.props.fetchTOS(id)
+      .catch((err) => {
+        if (err instanceof URIError) {
+          this.props.push(`/404?tos-id=${id}`);
+        }
+      });
   }
 
   formatDateTime (dateTime) {
@@ -121,7 +125,7 @@ export class ViewTOS extends React.Component {
           attributeKey={metadata.type}
           attribute={metadata.name}
           documentState={this.props.documentState}
-          attributeTypes={this.props.attributeTypes}
+          attributeTypes={attributeTypes}
           mode='view'
           type='attribute'
           editable={false}
@@ -203,7 +207,7 @@ export class ViewTOS extends React.Component {
 
   render () {
     const { selectedTOS, phases, isFetching } = this.props;
-    if (!isFetching && selectedTOS !== undefined && Object.keys(selectedTOS).length !== 0) {
+    if (!isFetching && selectedTOS && Object.keys(selectedTOS).length !== 0) {
       const phaseElements = this.generatePhases(selectedTOS.phases);
       const TOSMetaData = this.generateMetaData(this.props.attributeTypes, selectedTOS.attributes);
 

@@ -38,7 +38,7 @@ const mapStateToProps = (state) => {
     actions: state.selectedTOS.actions,
     attributeTypes: state.ui.attributeTypes,
     documentState: state.selectedTOS.documentState,
-    isFetching: state.selectedTOS.isFetching,
+    isFetching: state.ui.isFetching || state.selectedTOS.isFetching,
     items: state.navigation.items,
     phases: state.selectedTOS.phases,
     records: state.selectedTOS.records,
