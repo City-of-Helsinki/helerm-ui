@@ -41,7 +41,7 @@ export class ViewTOS extends React.Component {
       const { id } = nextProps.params;
       this.fetchTOS(id);
     }
-    if (route.path === 'view-tos/:id') {
+    if (route && route.path === 'view-tos/:id') {
       this.props.setNavigationVisibility(false);
     }
   }
