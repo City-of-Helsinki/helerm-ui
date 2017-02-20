@@ -41,9 +41,7 @@ export class Header extends React.Component {
         <nav className='navbar navbar-inverse container-fluid'>
           <Link to='/' className='brand-title navbar-brand'>Tiedonohjausjärjestelmä Alpha v0.1.4</Link>
         </nav>
-        {isFetching &&
-        <Loader />
-        }
+        <Loader show={isFetching}/>
         <ReactCSSTransitionGroup
           transitionName={'alert-position'}
           transitionEnterTimeout={1000}
@@ -53,7 +51,7 @@ export class Header extends React.Component {
       </div>
     );
   }
-};
+}
 
 Header.propTypes = {
   closeMessage: React.PropTypes.func,
