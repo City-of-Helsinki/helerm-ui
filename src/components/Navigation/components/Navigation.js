@@ -1,5 +1,4 @@
 import React from 'react';
-import { withRouter } from 'react-router';
 import InfinityMenu from 'react-infinity-menu';
 
 import './Navigation.scss';
@@ -44,7 +43,7 @@ export class Navigation extends React.Component {
   }
 
   onLeafMouseClick (event, leaf) {
-    this.props.router.push(`/view-tos/${leaf.id}`);
+    this.props.push(`/view-tos/${leaf.id}`);
     this.toggleNavigationVisibility();
   }
 
@@ -86,8 +85,8 @@ Navigation.propTypes = {
   fetchNavigation: React.PropTypes.func.isRequired,
   is_open: React.PropTypes.bool.isRequired,
   items: React.PropTypes.array.isRequired,
-  router: React.PropTypes.object.isRequired,
+  push: React.PropTypes.func.isRequired,
   setNavigationVisibility: React.PropTypes.func.isRequired
 };
 
-export default withRouter(Navigation);
+export default Navigation;
