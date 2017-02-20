@@ -1,12 +1,14 @@
 import { applyMiddleware, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { browserHistory } from 'react-router';
+import { routerMiddleware } from 'react-router-redux';
 import makeRootReducer from './reducers';
 
 export default (initialState = {}) => {
   // ======================================================
   // Middleware Configuration
   // ======================================================
-  const middleware = [thunk];
+  const middleware = [thunk, routerMiddleware(browserHistory)];
   // const middleware = process.env.NODE_ENV !== 'production' ?
   //   [require('redux-immutable-state-invariant')(), thunk] :
   //   [thunk];
