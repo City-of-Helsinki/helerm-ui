@@ -6,7 +6,15 @@ describe('(Component) Header', () => {
   let _wrapper;
 
   beforeEach(() => {
-    _wrapper = shallow(<Header isFetching={false}/>);
+    _wrapper = shallow(
+      <Header
+        isFetching={false}
+        message={{
+          text: ''
+        }}
+        closeMessage={() => null}
+      />
+    );
   });
 
   it('Renders a nav bar with correct title', () => {
