@@ -43,7 +43,7 @@ export class Header extends React.Component {
         {isFetching &&
         <Loader />
         }
-        {message.text !== '' && alertMessage}
+        {this.state.showAlert && alertMessage}
       </div>
     );
   }
