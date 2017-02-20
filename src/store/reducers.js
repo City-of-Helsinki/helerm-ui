@@ -1,15 +1,15 @@
 import { combineReducers } from 'redux';
-import { routerReducer } from 'react-router-redux';
-import uiReducer from './uiReducer';
-import tosReducer from '../routes/ViewTOS/tosReducer';
-import navigationReducer from '../components/Navigation/navigationReducer';
+import { routerReducer as routing } from 'react-router-redux';
+import { default as ui } from './uiReducer';
+import { default as selectedTOS } from '../routes/ViewTOS/tosReducer';
+import { default as navigation } from '../components/Navigation/navigationReducer';
 
 export const makeRootReducer = (asyncReducers) => {
   return combineReducers({
-    navigation: navigationReducer,
-    routing: routerReducer,
-    selectedTOS: tosReducer,
-    ui: uiReducer,
+    navigation,
+    routing,
+    selectedTOS,
+    ui,
     ...asyncReducers
   });
 };
