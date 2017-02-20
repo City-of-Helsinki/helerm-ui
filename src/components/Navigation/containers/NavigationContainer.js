@@ -1,4 +1,6 @@
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
 import { fetchNavigation, setNavigationVisibility } from '../navigationReducer';
 
@@ -6,9 +8,12 @@ import { itemById } from '../../../utils/helpers';
 
 import Navigation from '../components/Navigation';
 
-const mapDispatchToProps = {
-  fetchNavigation,
-  setNavigationVisibility
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchNavigation: bindActionCreators(fetchNavigation, dispatch),
+    push: (path) => dispatch(push(path)),
+    setNavigationVisibility: bindActionCreators(setNavigationVisibility, dispatch)
+  };
 };
 
 const mapStateToProps = (state) => {
