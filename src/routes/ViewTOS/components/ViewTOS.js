@@ -15,6 +15,7 @@ import './ViewTOS.scss';
 export class ViewTOS extends React.Component {
   constructor (props) {
     super(props);
+    this.fetchTOS = this.fetchTOS.bind(this);
     this.onChange = this.onChange.bind(this);
     this.createNewPhase = this.createNewPhase.bind(this);
     this.cancelPhaseCreation = this.cancelPhaseCreation.bind(this);
@@ -31,17 +32,23 @@ export class ViewTOS extends React.Component {
 
   componentDidMount () {
     const { id } = this.props.params;
-    this.props.fetchTOS(id);
+    this.fetchTOS(id);
   }
 
   componentWillReceiveProps (nextProps) {
     if (nextProps.params.id !== this.props.params.id) {
-      this.props.fetchTOS(nextProps.params.id);
+      const { id } = nextProps.params;
+      this.fetchTOS(id);
     }
   }
 
   componentWillUnmount () {
     this.props.clearTOS();
+  }
+
+  fetchTOS (id) {
+    return this.props.fetchTOS(id)
+      .catch(() => this.props.push(`/404?tos-id=${id}`));
   }
 
   formatDateTime (dateTime) {
