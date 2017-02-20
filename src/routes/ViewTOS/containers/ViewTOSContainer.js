@@ -2,6 +2,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
 
+import { setNavigationVisibility } from '../../../components/Navigation/navigationReducer';
+
 import {
   fetchTOS,
   setPhaseVisibility,
@@ -27,6 +29,7 @@ const mapDispatchToProps = (dispatch) => {
     fetchTOS: bindActionCreators(fetchTOS, dispatch),
     importItems: bindActionCreators(importItems, dispatch),
     push: (path) => dispatch(push(path)),
+    setNavigationVisibility: bindActionCreators(setNavigationVisibility, dispatch),
     setDocumentState: bindActionCreators(setDocumentState, dispatch),
     setPhasesVisibility: bindActionCreators(setPhasesVisibility, dispatch),
     setPhaseVisibility: bindActionCreators(setPhaseVisibility, dispatch)

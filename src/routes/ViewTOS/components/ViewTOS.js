@@ -48,8 +48,10 @@ export class ViewTOS extends React.Component {
 
   fetchTOS (id) {
     this.props.fetchTOS(id)
+      .then(() => this.props.setNavigationVisibility(false))
       .catch((err) => {
         if (err instanceof URIError) {
+          // We have a 404 from API
           this.props.push(`/404?tos-id=${id}`);
         }
       });
