@@ -374,13 +374,13 @@ ViewTOS.propTypes = {
   isFetching: React.PropTypes.bool.isRequired,
   params: React.PropTypes.object.isRequired,
   phases: React.PropTypes.object.isRequired,
-  push: React.PropTypes.push.isRequired,
-  records: React.PropTypes.object.isRequired,
+  push: React.PropTypes.func.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
+  records: React.PropTypes.object.isRequired,
   selectedTOS: React.PropTypes.object.isRequired,
   setDocumentState: React.PropTypes.func.isRequired,
-  setPhasesVisibility: React.PropTypes.func.isRequired,
-  setPhaseVisibility: React.PropTypes.func.isRequired
+  setPhaseVisibility: React.PropTypes.func.isRequired,
+  setPhasesVisibility: React.PropTypes.func.isRequired
 };
 
 export default ViewTOS;
