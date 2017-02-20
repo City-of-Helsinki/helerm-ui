@@ -9,24 +9,44 @@ import Alert from '../Alert/Alert';
 import Loader from '../Loader';
 import './Header.scss';
 
-export const Header = ({ isFetching, message, closeMessage }) => {
-  return (
-    <div>
-      <nav className='navbar navbar-inverse container-fluid'>
-        <Link to='/' className='brand-title navbar-brand'>Tiedonohjausjärjestelmä Alpha v0.1.4</Link>
-      </nav>
-      {isFetching &&
-      <Loader />
-      }
-      {message.text !== '' &&
-      <Alert
-        message={message.text}
-        style={(message.success ? 'alert-success' : 'alert-danger')}
-        close={closeMessage}
-      />
-      }
-    </div>
-  );
+export class Header extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = { showAlert: false };
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.message) {
+      this.setState({ showAlert: nextProps.message.active });
+    }
+  }
+
+  render () {
+    const { isFetching, message, closeMessage } = this.props;
+    let alertMessage = null;
+    if (this.state.showAlert === true) {
+      alertMessage = (
+        <Alert
+          message={message.text}
+          style={(message.success ? 'alert-success' : 'alert-danger')}
+          close={closeMessage}
+        />
+      );
+      setTimeout(closeMessage, 5000);
+    }
+
+    return (
+      <div>
+        <nav className='navbar navbar-inverse container-fluid'>
+          <Link to='/' className='brand-title navbar-brand'>Tiedonohjausjärjestelmä Alpha v0.1.4</Link>
+        </nav>
+        {isFetching &&
+        <Loader />
+        }
+        {message.text !== '' && alertMessage}
+      </div>
+    );
+  }
 };
 
 Header.propTypes = {
