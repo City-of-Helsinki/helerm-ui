@@ -30,7 +30,7 @@ export const Header = ({ isFetching, message, closeMessage }) => {
 };
 
 Header.propTypes = {
-  closeMessage: React.propTypes.func,
+  closeMessage: React.PropTypes.func,
   isFetching: React.PropTypes.bool,
   message: React.PropTypes.object
 };
