@@ -80,7 +80,8 @@ export class ViewTOS extends React.Component {
       this.props.addPhase(this.state.newPhaseName, this.props.selectedTOS.id);
       this.setState({ createPhaseMode: false, newPhaseName: '' });
     }
-    this.props.displayMessage();
+    // TODO: remove me...
+    this.props.displayMessage('LÖLLERÖ');
   }
 
   cancelPhaseCreation (event) {
