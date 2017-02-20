@@ -385,6 +385,7 @@ ViewTOS.propTypes = {
   records: React.PropTypes.object.isRequired,
   selectedTOS: React.PropTypes.object.isRequired,
   setDocumentState: React.PropTypes.func.isRequired,
+  setNavigationVisibility: React.PropTypes.func.isRequired,
   setPhaseVisibility: React.PropTypes.func.isRequired,
   setPhasesVisibility: React.PropTypes.func.isRequired
 };
