@@ -6,10 +6,10 @@ import navigationReducer from '../components/Navigation/navigationReducer';
 
 export const makeRootReducer = (asyncReducers) => {
   return combineReducers({
-    routing: routerReducer,
-    ui: uiReducer,
-    selectedTOS: tosReducer,
     navigation: navigationReducer,
+    routing: routerReducer,
+    selectedTOS: tosReducer,
+    ui: uiReducer,
     ...asyncReducers
   });
 };

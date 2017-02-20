@@ -255,7 +255,7 @@ export function fetchTOS (tosId) {
     return fetch(url)
       .then(res => {
         if (!res.ok) {
-          throw new Error(res.statusText);
+          throw new URIError(res.statusText);
         }
         return res.json();
       })
