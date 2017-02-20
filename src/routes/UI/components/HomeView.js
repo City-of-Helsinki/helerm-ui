@@ -30,7 +30,7 @@ export class HomeView extends React.Component {
           close={this.props.closeMessage}
         />
       );
-      setTimeout(this.props.closeMessage, 6000);
+      setTimeout(this.props.closeMessage, 5000);
     }
     return (
       <div>
