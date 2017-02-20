@@ -16,6 +16,12 @@ router.route('/login/helsinki/return')
   .get(authCtrl.passport.authenticate('helsinki'), authCtrl.authCallback);
 
 /**
+ * GET /auth/me
+ */
+router.route('/me')
+  .get(authCtrl.getCurrentUser);
+
+/**
  * POST /auth/logout
  */
 router.route('/logout')

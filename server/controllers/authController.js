@@ -45,6 +45,16 @@ function authCallback (req, res) {
 }
 
 /**
+ * Get current logged in user
+ * @param req
+ * @param res
+ */
+function getCurrentUser (req, res) {
+  debug('CurrentUser');
+  res.json(req.user || {});
+}
+
+/**
  * Logout
  * @param req
  * @param res
@@ -55,4 +65,4 @@ function logOut (req, res) {
   res.redirect(`https://api.hel.fi/sso/logout/?next=${redirectUrl}`);
 }
 
-export default { passport, authCallback, logOut };
+export default { passport, authCallback, getCurrentUser, logOut };
