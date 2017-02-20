@@ -1,4 +1,6 @@
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { push } from 'react-router-redux';
 
 import {
   fetchTOS,
@@ -15,17 +17,20 @@ import {
 
 import ViewTOS from '../components/ViewTOS';
 
-const mapDispatchToProps = {
-  fetchTOS,
-  setPhaseVisibility,
-  setPhasesVisibility,
-  setDocumentState,
-  addAction,
-  addRecord,
-  addPhase,
-  changeOrder,
-  importItems,
-  clearTOS
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addAction: bindActionCreators(addAction, dispatch),
+    addPhase: bindActionCreators(addPhase, dispatch),
+    addRecord: bindActionCreators(addRecord, dispatch),
+    changeOrder: bindActionCreators(changeOrder, dispatch),
+    clearTOS: bindActionCreators(clearTOS, dispatch),
+    fetchTOS: bindActionCreators(fetchTOS, dispatch),
+    importItems: bindActionCreators(importItems, dispatch),
+    push: (path) => dispatch(push(path)),
+    setDocumentState: bindActionCreators(setDocumentState, dispatch),
+    setPhasesVisibility: bindActionCreators(setPhasesVisibility, dispatch),
+    setPhaseVisibility: bindActionCreators(setPhaseVisibility, dispatch)
+  };
 };
 
 const mapStateToProps = (state) => {
