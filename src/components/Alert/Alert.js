@@ -1,7 +1,7 @@
 import React from 'react';
 import './Alert.scss';
 
-export const Alert = ({ message, style, action, actionMessage }) => (
+export const Alert = ({ message, style, action, actionMessage, close }) => (
   <span className={'alert alert-dismissible alert-position ' + style}>
     { message }
     <a className='alert-link' onClick={action}> { actionMessage } </a>
