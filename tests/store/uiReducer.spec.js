@@ -65,11 +65,11 @@ describe('(Redux Module) UI', () => {
 
     it('Should fetch record types', () => {
       expect(_.keys(_globalState.ui.recordTypes).length).to.equal(0);
-      return fetchRecordTypes()(_dispatchSpy)
+      return setTimeout(fetchRecordTypes()(_dispatchSpy)
         .then(() => {
           _dispatchSpy.should.have.been.calledOnce;
           expect(_.keys(_globalState.ui.recordTypes).length).to.be.greaterThan(0);
-        });
+        }), 15000);
     });
   });
 
@@ -91,11 +91,11 @@ describe('(Redux Module) UI', () => {
 
     it('Should fetch validation rules and attribute types', () => {
       expect(_.keys(_globalState.ui.attributeTypes).length).to.equal(0);
-      return fetchAttributeTypes()(_dispatchSpy)
+      return setTimeout(fetchAttributeTypes()(_dispatchSpy)
         .then(() => {
           _dispatchSpy.should.have.been.calledOnce;
           expect(_.keys(_globalState.ui.attributeTypes).length).to.be.greaterThan(0);
-        });
+        }), 15000);
     });
   });
 });

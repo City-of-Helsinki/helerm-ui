@@ -66,14 +66,14 @@ describe('(Redux Module) TOS', () => {
       expect(_.keys(_globalState.selectedTOS.actions).length).to.equal(0);
       expect(_.keys(_globalState.selectedTOS.records).length).to.equal(0);
       expect(_.keys(_globalState.selectedTOS.attributes).length).to.equal(0);
-      return fetchTOS('8fb03366f89e422c9ca1503b78a98530')(_dispatchSpy)
+      return setTimeout(fetchTOS('8fb03366f89e422c9ca1503b78a98530')(_dispatchSpy)
         .then(() => {
           _dispatchSpy.should.have.been.calledTwice;
           expect(_.keys(_globalState.selectedTOS.tos).length).to.be.greaterThan(0);
           expect(_.keys(_globalState.selectedTOS.phases).length).to.be.greaterThan(0);
           expect(_.keys(_globalState.selectedTOS.actions).length).to.be.greaterThan(0);
           expect(_.keys(_globalState.selectedTOS.records).length).to.be.greaterThan(0);
-        });
+        }), 15000);
     });
   });
 });
