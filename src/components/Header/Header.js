@@ -2,6 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import { closeMessage } from '../../store/uiReducer';
 
@@ -43,7 +44,12 @@ export class Header extends React.Component {
         {isFetching &&
         <Loader />
         }
-        {this.state.showAlert && alertMessage}
+        <ReactCSSTransitionGroup
+          transitionName={'alert-position'}
+          transitionEnterTimeout={1000}
+          transitionLeaveTimeout={600}>
+          {this.state.showAlert && alertMessage}
+        </ReactCSSTransitionGroup>
       </div>
     );
   }
