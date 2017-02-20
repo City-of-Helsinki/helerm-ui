@@ -10,6 +10,7 @@ export const RECEIVE_RECORDTYPES = 'ui/RECEIVE_RECORDTYPES';
 export const RECEIVE_ATTRIBUTE_TYPES = 'ui/RECEIVE_ATTRIBUTE_TYPES';
 
 export const CLOSE_MESSAGE = 'ui/CLOSE_MESSAGE';
+export const DISPLAY_MESSAGE = 'ui/DISPLAY_MESSAGE';
 
 // ------------------------------------
 // Actions
@@ -49,6 +50,12 @@ export function receiveAttributeTypes (attributes, validationRules) {
   return {
     type: RECEIVE_ATTRIBUTE_TYPES,
     attributeTypeList
+  };
+}
+
+export function displayMessage () {
+  return {
+    type: DISPLAY_MESSAGE
   };
 }
 
@@ -104,6 +111,15 @@ const ACTION_HANDLERS = {
   [RECEIVE_ATTRIBUTE_TYPES]: (state, action) => {
     return update(state, {
       attributeTypes: { $set: action.attributeTypeList }
+    });
+  },
+  [DISPLAY_MESSAGE]: (state, action) => {
+    return update(state, {
+      message: {
+        active: { $set: true },
+        message: 'test',
+        success: { $set: true }
+      }
     });
   },
   [CLOSE_MESSAGE]: (state, action) => {

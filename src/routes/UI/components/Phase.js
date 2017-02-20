@@ -85,6 +85,7 @@ export class Phase extends React.Component {
             addRecord={this.props.addRecord}
             changeOrder={this.props.changeOrder}
             importItems={this.props.importItems}
+            displayMessage={this.props.displayMessage}
           />
         );
       }
@@ -128,6 +129,7 @@ export class Phase extends React.Component {
     this.props.setPhaseVisibility(this.props.phaseIndex, true);
     this.props.addAction(this.props.phaseIndex, this.state.newActionName);
     this.setState({ mode: 'view', newActionName: '' });
+    this.props.displayMessage();
   }
 
   cancelActionCreation (event) {
@@ -287,6 +289,7 @@ Phase.propTypes = {
   addRecord: React.PropTypes.func.isRequired,
   attributeTypes: React.PropTypes.object.isRequired,
   changeOrder: React.PropTypes.func.isRequired,
+  displayMessage: React.PropTypes.func.isRequired,
   documentState: React.PropTypes.string.isRequired,
   importItems: React.PropTypes.func.isRequired,
   phase: React.PropTypes.object.isRequired,

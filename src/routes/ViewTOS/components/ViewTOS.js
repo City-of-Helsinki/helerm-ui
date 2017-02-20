@@ -80,6 +80,7 @@ export class ViewTOS extends React.Component {
       this.props.addPhase(this.state.newPhaseName, this.props.selectedTOS.id);
       this.setState({ createPhaseMode: false, newPhaseName: '' });
     }
+    this.props.displayMessage();
   }
 
   cancelPhaseCreation (event) {
@@ -200,6 +201,7 @@ export class ViewTOS extends React.Component {
             attributeTypes={this.props.attributeTypes}
             addAction={this.props.addAction}
             addRecord={this.props.addRecord}
+            displayMessage={this.props.displayMessage}
             changeOrder={this.props.changeOrder}
             importItems={this.props.importItems}
             update={this.state.update}
@@ -377,6 +379,7 @@ ViewTOS.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
   changeOrder: React.PropTypes.func.isRequired,
   clearTOS: React.PropTypes.func.isRequired,
+  displayMessage: React.PropTypes.func.isRequired,
   documentState: React.PropTypes.string.isRequired,
   fetchTOS: React.PropTypes.func.isRequired,
   importItems: React.PropTypes.func.isRequired,

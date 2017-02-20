@@ -140,6 +140,7 @@ export class AddRecord extends React.Component {
     e.preventDefault();
     const { recordName, recordType, newAttributes } = this.state;
     this.props.createRecord(actionId, recordName.name, recordType.name, newAttributes);
+    this.props.displayMessage();
   }
 
   cancelRecordCreation (e) {
@@ -189,6 +190,7 @@ AddRecord.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
   cancelRecordCreation: React.PropTypes.func.isRequired,
   createRecord: React.PropTypes.func.isRequired,
+  displayMessage: React.PropTypes.func.isRequired,
   recordTypes: React.PropTypes.object.isRequired
 };
 

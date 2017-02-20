@@ -18,7 +18,8 @@ import {
 } from '../../ViewTOS/tosReducer';
 
 import {
-  closeMessage
+  closeMessage,
+  displayMessage
 } from '../../../store/uiReducer';
 
 import HomeView from '../components/HomeView';
@@ -35,7 +36,8 @@ const mapDispatchToProps = {
   addPhase,
   changeOrder,
   importItems,
-  closeMessage
+  closeMessage,
+  displayMessage
 };
 
 const mapStateToProps = (state) => {

@@ -169,6 +169,7 @@ export class Action extends React.Component {
             attributeTypes={this.props.attributeTypes}
             recordTypes={this.props.recordTypes}
             mode={this.state.mode}
+            displayMessage={this.props.displayMessage}
             actionId={this.props.action.id}
             cancelRecordCreation={this.cancelRecordCreation}
             createRecord={this.createRecord}
@@ -247,6 +248,7 @@ Action.propTypes = {
   addRecord: React.PropTypes.func.isRequired,
   attributeTypes: React.PropTypes.object.isRequired,
   changeOrder: React.PropTypes.func.isRequired,
+  displayMessage: React.PropTypes.func.isRequired,
   documentState: React.PropTypes.string.isRequired,
   importItems: React.PropTypes.func.isRequired,
   phases: React.PropTypes.object.isRequired,

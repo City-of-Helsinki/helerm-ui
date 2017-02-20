@@ -17,6 +17,8 @@ import {
   clearTOS
 } from '../tosReducer';
 
+import { displayMessage } from '../../../store/uiReducer';
+
 import ViewTOS from '../components/ViewTOS';
 
 const mapDispatchToProps = (dispatch) => {
@@ -26,6 +28,7 @@ const mapDispatchToProps = (dispatch) => {
     addRecord: bindActionCreators(addRecord, dispatch),
     changeOrder: bindActionCreators(changeOrder, dispatch),
     clearTOS: bindActionCreators(clearTOS, dispatch),
+    displayMessage: bindActionCreators(displayMessage, dispatch),
     fetchTOS: bindActionCreators(fetchTOS, dispatch),
     importItems: bindActionCreators(importItems, dispatch),
     push: (path) => dispatch(push(path)),

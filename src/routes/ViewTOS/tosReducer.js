@@ -125,7 +125,12 @@ export function addRecord (actionIndex, recordName, recordType, attributes) {
     type: ADD_RECORD,
     actionIndex,
     recordId,
-    newRecord
+    newRecord,
+    message: {
+      active: true,
+      success: true,
+      text: 'Lisäys onnistui'
+    }
   };
 }
 
@@ -402,7 +407,8 @@ const ACTION_HANDLERS = {
         [action.recordId]: {
           $set: action.newRecord
         }
-      }
+      },
+      message: { $set: action.message }
     });
   },
   [EXECUTE_ORDER_CHANGE]: (state, action) => {
