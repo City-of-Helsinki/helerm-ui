@@ -53,9 +53,10 @@ export function receiveAttributeTypes (attributes, validationRules) {
   };
 }
 
-export function displayMessage () {
+export function displayMessage (message) {
   return {
-    type: DISPLAY_MESSAGE
+    type: DISPLAY_MESSAGE,
+    message
   };
 }
 
@@ -117,7 +118,7 @@ const ACTION_HANDLERS = {
     return update(state, {
       message: {
         active: { $set: true },
-        message: 'test',
+        text: { $set: action.message },
         success: { $set: true }
       }
     });
