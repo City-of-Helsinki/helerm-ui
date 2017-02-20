@@ -14,6 +14,7 @@ export const Alert = ({ message, style, action, actionMessage, close }) => (
 Alert.propTypes = {
   action: React.PropTypes.func,
   actionMessage: React.PropTypes.string,
+  close: React.PropTypes.func,
   message: React.PropTypes.string.isRequired,
   style: React.PropTypes.string.isRequired
 };
