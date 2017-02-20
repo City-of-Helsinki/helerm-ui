@@ -67,3 +67,29 @@ export function buildQueryString (query) {
 
   return pairs.length ? '?' + pairs.join('&') : '';
 }
+
+/**
+ * Centered PopUp-Window
+ * @param url
+ * @param title
+ * @param w
+ * @param h
+ * @returns {Window}
+ */
+export function centeredPopUp (url, title, w, h) {
+  const left = (screen.width / 2) - (w / 2);
+  const top = (screen.height / 2) - (h / 2);
+  return window.open(
+    url,
+    title,
+    `
+    toolbar=no,
+    location=no,
+    directories=no,
+    status=no, menubar=no,
+    scrollbars=no,
+    resizable=no,
+    copyhistory=no,
+    width=${w}, height=${h}, top=${top}, left=${left}
+  `);
+};
