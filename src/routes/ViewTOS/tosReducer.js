@@ -20,6 +20,8 @@ export const ADD_PHASE = 'tos/ADD_PHASE';
 
 export const SET_DOCUMENT_STATE = 'tos/SET_DOCUMENT_STATE';
 
+export const SEND_FOR_INSPECTION = 'tos/SEND_FOR_INSPECTION';
+
 export const EXECUTE_IMPORT = 'tos/EXECUTE_IMPORT';
 export const EXECUTE_ORDER_CHANGE = 'tos/EXECUTE_ORDER_CHANGE';
 
@@ -142,6 +144,13 @@ export function addPhase (name, parent) {
   return {
     type: ADD_PHASE,
     newPhase
+  };
+}
+
+export function sendForInspection (tosState) {
+  return {
+    type: SEND_FOR_INSPECTION,
+    tosState
   };
 }
 
@@ -351,6 +360,9 @@ const ACTION_HANDLERS = {
         $set: action.allPhasesOpen
       }
     });
+  },
+  [SEND_FOR_INSPECTION]: (state, action) => {
+    console.log('Ready for inspection: ', action.tosState);
   },
   [SET_DOCUMENT_STATE]: (state, action) => {
     return update(state, {

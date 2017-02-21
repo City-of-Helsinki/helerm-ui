@@ -8,6 +8,7 @@ import {
   fetchTOS,
   setPhaseVisibility,
   setPhasesVisibility,
+  sendForInspection,
   setDocumentState,
   addAction,
   addRecord,
@@ -33,6 +34,7 @@ const mapDispatchToProps = (dispatch) => {
     importItems: bindActionCreators(importItems, dispatch),
     push: (path) => dispatch(push(path)),
     setNavigationVisibility: bindActionCreators(setNavigationVisibility, dispatch),
+    sendForInspection: bindActionCreators(sendForInspection, dispatch),
     setDocumentState: bindActionCreators(setDocumentState, dispatch),
     setPhasesVisibility: bindActionCreators(setPhasesVisibility, dispatch),
     setPhaseVisibility: bindActionCreators(setPhaseVisibility, dispatch)

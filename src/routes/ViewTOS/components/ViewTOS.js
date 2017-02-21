@@ -228,7 +228,11 @@ export class ViewTOS extends React.Component {
                 <div className='document-buttons col-xs-12 col-md-6'>
                   { this.props.documentState !== 'edit' &&
                   <span>
-                    <button className='btn btn-default btn-sm pull-right'>Lähetä tarkastettavaksi</button>
+                    <button
+                      className='btn btn-default btn-sm pull-right'
+                      onClick={() => this.props.sendForInspection(selectedTOS)}>
+                      Lähetä tarkastettavaksi
+                    </button>
                     <button
                       className='btn btn-primary btn-sm pull-right'
                       onClick={() => this.props.setDocumentState('edit')}>
@@ -391,6 +395,7 @@ ViewTOS.propTypes = {
   recordTypes: React.PropTypes.object.isRequired,
   records: React.PropTypes.object.isRequired,
   selectedTOS: React.PropTypes.object.isRequired,
+  sendForInspection: React.PropTypes.func.isRequired,
   setDocumentState: React.PropTypes.func.isRequired,
   setNavigationVisibility: React.PropTypes.func.isRequired,
   setPhaseVisibility: React.PropTypes.func.isRequired,
