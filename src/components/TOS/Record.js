@@ -43,7 +43,7 @@ export class Record extends React.Component {
   generateRecordObjects (record) {
     const recordObjects = [];
     recordObjects.push({ recordKey: 'Asiakirjatyypin tarkenne', name: record.name, type: '' });
-    recordObjects.push({ recordKey: 'Tyyppi', name: this.props.recordTypes[record.type], type: record.type });
+    recordObjects.push({ recordKey: 'Tyyppi', name: record.attributes.RecordType, type: record.attributes.RecordType });
     return recordObjects;
   }
 
@@ -69,7 +69,7 @@ export class Record extends React.Component {
   generateAttributes (attributes, recordName, recordType) {
     const attributeElements = [];
     for (const key in attributes) {
-      if (attributes.hasOwnProperty(key)) {
+      if (attributes.hasOwnProperty(key) && this.props.attributeTypes[key]) {
         attributeElements.push(
           <Attribute
             key={key}
