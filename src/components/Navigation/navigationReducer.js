@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import update from 'immutability-helper';
 
-import { convertToTree } from '../../utils/helpers.js';
+import { convertToTree, getApiUrl } from '../../utils/helpers.js';
 
 // ------------------------------------
 // Constants
@@ -39,7 +39,8 @@ export function setNavigationVisibility (value) {
 export function fetchNavigation () {
   return function (dispatch) {
     dispatch(requestNavigation());
-    return fetch('https://api.hel.fi/helerm-test/v1/function/?page_size=2000')
+    const url = getApiUrl('function', { page_size: RESULTS_PER_PAGE });
+    return fetch(url)
       .then(response => response.json())
       .then(json =>
         dispatch(receiveNavigation(json))
