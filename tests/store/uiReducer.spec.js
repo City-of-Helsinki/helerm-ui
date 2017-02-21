@@ -1,6 +1,5 @@
 import {
   closeMessage,
-  fetchRecordTypes,
   fetchAttributeTypes,
   default as uiReducer
 } from 'store/uiReducer';
@@ -44,32 +43,6 @@ describe('(Redux Module) UI', () => {
         type: 'DOESNOTACTUALLYEXISTLOL'
       });
       expect(state.message.active).to.equal(false);
-    });
-  });
-
-  describe('(Action Creator) fetchRecordTypes', () => {
-    let _dispatchSpy;
-    let _globalState;
-
-    beforeEach(() => {
-      _globalState = {
-        ui: uiReducer(undefined, {})
-      };
-      _dispatchSpy = sinon.spy((action) => {
-        _globalState = {
-          ..._globalState,
-          ui: uiReducer(_globalState.home, action)
-        };
-      });
-    });
-
-    it('Should fetch record types', () => {
-      expect(_.keys(_globalState.ui.recordTypes).length).to.equal(0);
-      return setTimeout(fetchRecordTypes()(_dispatchSpy)
-        .then(() => {
-          _dispatchSpy.should.have.been.calledOnce;
-          expect(_.keys(_globalState.ui.recordTypes).length).to.be.greaterThan(0);
-        }), 15000);
     });
   });
 
