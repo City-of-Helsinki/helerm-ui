@@ -1,6 +1,12 @@
 import LTT from 'list-to-tree';
-import orderBy from 'lodash/orderBy';
-import forEach from 'lodash/forEach';
+import {
+  orderBy,
+  find,
+  filter,
+  flatten,
+  map,
+  forEach
+} from 'lodash';
 
 export function convertToTree (itemList) {
   // ------------------------------------
@@ -40,6 +46,27 @@ export function convertToTree (itemList) {
     });
   };
   return sortTree(unOrderedTree);
+}
+
+/**
+ *
+ * @param items
+ * @param id
+ * @returns {*}
+ */
+export function itemById (items, id) {
+  let searchResult = find(items, (item) => (item.id === id));
+
+  if (!searchResult) {
+    let filteredItems = filter(items, (item) => (item.children));
+    let subset = flatten(map(filteredItems, (item) => (item.children)));
+
+    if (subset.length !== 0) {
+      return itemById(subset, id);
+    }
+    return null;
+  }
+  return searchResult;
 }
 
 /**
