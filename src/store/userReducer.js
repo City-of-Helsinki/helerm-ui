@@ -1,7 +1,9 @@
 import fetch from 'isomorphic-fetch';
 import update from 'immutability-helper';
+import { isEmpty } from 'lodash';
 
 import { centeredPopUp } from '../utils/helpers';
+import { setStorageItem, removeStorageItem } from '../utils/storage';
 
 // ------------------------------------
 // Constants
@@ -33,20 +35,9 @@ export function retrieveUserFromSession () {
         return res.json();
       })
       .then((user) => {
-        // TODO: how should we handle PUT / POST requests to API?
-        // if (user.token) {
-        //   const url = getApiUrl(`v1/users/${user.id}/`);
-        //   return fetch(url)
-        //     .then((democracyUser) => {
-        //       return democracyUser.json();
-        //     })
-        //     .then((democracyUserJSON) => {
-        //       const userWithOrganization = Object.assign({},
-        //         user,
-        //         { adminOrganizations: get(democracyUserJSON, 'admin_organizations', null) });
-        //       return dispatch(receiveUserData(userWithOrganization));
-        //     });
-        // }
+        if (!isEmpty(user.token)) {
+          setStorageItem('token', user.token);
+        }
         return dispatch(receiveUserData(user));
       });
   };
@@ -81,7 +72,10 @@ export function login () {
 export function logout () {
   return function (dispatch) {
     return fetch('/auth/logout', { method: 'POST', credentials: 'same-origin' })
-      .then(() => dispatch(clearUserData()));
+      .then(() => {
+        removeStorageItem('token');
+        dispatch(clearUserData());
+      });
   };
 }
 
