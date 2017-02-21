@@ -66,17 +66,6 @@ export function closeMessage () {
   };
 }
 
-export function fetchRecordTypes () {
-  return function (dispatch) {
-    const url = getApiUrl('record_type', { page_size: RESULTS_PER_PAGE });
-    return fetch(url)
-      .then(response => response.json())
-      .then(json =>
-        dispatch(receiveRecordTypes(json))
-      );
-  };
-}
-
 export function fetchAttributeTypes () {
   return function (dispatch) {
     return fetch(getApiUrl('attribute/schemas'))
@@ -91,10 +80,8 @@ export function fetchAttributeTypes () {
 }
 
 export const actions = {
-  receiveRecordTypes,
   receiveAttributeTypes,
   closeMessage,
-  fetchRecordTypes,
   fetchAttributeTypes
 };
 
@@ -102,16 +89,17 @@ export const actions = {
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [RECEIVE_RECORDTYPES]: (state, action) => {
-    return update(state, {
-      recordTypes: {
-        $set: action.recordTypeList
-      }
-    });
-  },
   [RECEIVE_ATTRIBUTE_TYPES]: (state, action) => {
+    const recordTypes = action.attributeTypeList.RecordType;
+    const recordTypeList = {};
+    recordTypes.values.map(result => {
+      const trimmedResult = result.id.replace(/-/g, '');
+      recordTypeList[trimmedResult] = result.value;
+    });
+    delete action.attributeTypeList.RecordType;
     return update(state, {
-      attributeTypes: { $set: action.attributeTypeList }
+      attributeTypes: { $set: action.attributeTypeList },
+      recordTypes: { $set: recordTypeList }
     });
   },
   [DISPLAY_MESSAGE]: (state, action) => {

@@ -9,8 +9,7 @@ import {
 
 class AppContainer extends Component {
   static propTypes = {
-    fetchAttributeTypes: PropTypes.func.isRequired,
-    fetchRecordTypes: PropTypes.func.isRequired,
+    fetchAttributeTypes: PropTypes.func,
     history: PropTypes.object.isRequired,
     routes: PropTypes.object.isRequired,
     store: PropTypes.object.isRequired
@@ -18,7 +17,6 @@ class AppContainer extends Component {
 
   componentWillMount () {
     this.props.fetchAttributeTypes();
-    this.props.fetchRecordTypes();
   }
 
   shouldComponentUpdate () {
