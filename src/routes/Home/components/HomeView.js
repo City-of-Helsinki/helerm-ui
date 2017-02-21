@@ -37,6 +37,7 @@ export class HomeView extends React.Component {
       isFetching,
       setPhasesVisibility,
       documentState,
+      sendForInspection,
       setDocumentState,
       recordTypes,
       attributeTypes,
@@ -80,6 +81,7 @@ export class HomeView extends React.Component {
           isFetching={isFetching}
           setPhasesVisibility={setPhasesVisibility}
           documentState={documentState}
+          sendForInspection={sendForInspection}
           setDocumentState={setDocumentState}
           recordTypes={recordTypes}
           attributeTypes={attributeTypes}

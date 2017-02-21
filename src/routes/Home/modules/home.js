@@ -24,6 +24,7 @@ export const ADD_PHASE = 'ADD_PHASE';
 export const RECEIVE_RECORDTYPES = 'RECEIVE_RECORDTYPES';
 export const RECEIVE_ATTRIBUTE_TYPES = 'RECEIVE_ATTRIBUTE_TYPES';
 
+export const SEND_FOR_INSPECTION = 'SEND_FOR_INSPECTION';
 export const SET_DOCUMENT_STATE = 'SET_DOCUMENT_STATE';
 export const CLOSE_MESSAGE = 'CLOSE_MESSAGE';
 
@@ -214,6 +215,13 @@ export function receiveAttributeTypes (attributes, validationRules) {
   return {
     type: RECEIVE_ATTRIBUTE_TYPES,
     attributeTypeList
+  };
+}
+
+export function sendForInspection (selectedTOS) {
+  return {
+    type: SEND_FOR_INSPECTION,
+    selectedTOS
   };
 }
 
@@ -499,6 +507,9 @@ const ACTION_HANDLERS = {
         }
       }
     });
+  },
+  [SEND_FOR_INSPECTION]: (state, action) => {
+    console.log('Ready for inspection: ', action.selectedTOS);
   },
   [SET_DOCUMENT_STATE]: (state, action) => {
     return update(state, {
