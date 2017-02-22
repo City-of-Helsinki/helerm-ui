@@ -82,7 +82,11 @@ export function del (endpoint, params = {}, options = { method: 'DELETE' }) {
 export function callApi (endpoint, params, options = {}) {
   const token = getStorageItem('token');
   const url = getApiUrl(endpoint, params);
-  const finalOptions = merge({ method: 'GET', credentials: 'include' }, options);
+  const finalOptions = merge({
+    method: 'GET',
+    // credentials: 'include',
+    mode: 'cors'
+  }, options);
   const defaultHeaders = {
     'Accept': 'application/json'
   };
@@ -97,7 +101,7 @@ export function callApi (endpoint, params, options = {}) {
 
   finalOptions.headers = merge(new Headers(), defaultHeaders, options.headers || {});
 
-  return fetch(url, options);
+  return fetch(url, finalOptions);
 }
 
 /**
