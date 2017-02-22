@@ -305,6 +305,7 @@ export const actions = {
   addAction,
   addRecord,
   addPhase,
+  editAction,
   setDocumentState,
   executeImport,
   executeOrderChange,
