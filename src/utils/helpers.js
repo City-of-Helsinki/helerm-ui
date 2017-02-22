@@ -4,8 +4,7 @@ import {
   find,
   filter,
   flatten,
-  map,
-  forEach
+  map
 } from 'lodash';
 
 export function convertToTree (itemList) {
@@ -49,7 +48,7 @@ export function convertToTree (itemList) {
 }
 
 /**
- *
+ * Find item by id (nested array with `children`-key)
  * @param items
  * @param id
  * @returns {*}
@@ -67,32 +66,6 @@ export function itemById (items, id) {
     return null;
   }
   return searchResult;
-}
-
-/**
- *
- * @param url
- * @param query
- * @returns {string}
- */
-export function getApiUrl (url, query = {}) {
-  const queryString = buildQueryString(query);
-  return [API_URL, API_VERSION, url, queryString].join('/');
-}
-
-/**
- *
- * @param query
- * @returns {string}
- */
-export function buildQueryString (query) {
-  const pairs = [];
-
-  forEach(query, (value, key) => {
-    pairs.push([key, value].join('='));
-  });
-
-  return pairs.length ? '?' + pairs.join('&') : '';
 }
 
 /**
@@ -119,4 +92,4 @@ export function centeredPopUp (url, title, w, h) {
     copyhistory=no,
     width=${w}, height=${h}, top=${top}, left=${left}
   `);
-};
+}

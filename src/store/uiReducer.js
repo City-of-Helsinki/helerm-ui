@@ -1,7 +1,6 @@
-import fetch from 'isomorphic-fetch';
 import update from 'immutability-helper';
 
-import { getApiUrl } from '../utils/helpers';
+import { default as api } from '../utils/api';
 
 // ------------------------------------
 // Constants
@@ -55,10 +54,10 @@ export function closeMessage () {
 
 export function fetchAttributeTypes () {
   return function (dispatch) {
-    return fetch(getApiUrl('attribute/schemas'))
+    return api.get('attribute/schemas')
       .then(response => response.json())
       .then(validationRules => {
-        return fetch(getApiUrl('attribute'))
+        return api.get('attribute')
           .then(response => response.json())
           .then(json =>
             dispatch(receiveAttributeTypes(json, validationRules)));

@@ -1,8 +1,7 @@
-import fetch from 'isomorphic-fetch';
 import update from 'immutability-helper';
 import { normalize, Schema, arrayOf } from 'normalizr';
 
-import { getApiUrl } from '../../utils/helpers';
+import { default as api } from '../../utils/api';
 
 // ------------------------------------
 // Constants
@@ -260,8 +259,7 @@ export function executeOrderChange (newOrder, itemType, itemParent, currentState
 export function fetchTOS (tosId) {
   return function (dispatch) {
     dispatch(requestTOS());
-    const url = getApiUrl(`function/${tosId}`);
-    return fetch(url)
+    return api.get(`function/${tosId}`)
       .then(res => {
         if (!res.ok) {
           throw new URIError(res.statusText);
