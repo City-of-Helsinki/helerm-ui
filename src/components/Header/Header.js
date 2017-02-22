@@ -31,7 +31,7 @@ export class Header extends React.Component {
     if (this.state.showAlert === true) {
       alertMessage = (
         <Alert
-          message={message.text}
+          text={message.text}
           style={(message.success ? 'alert-success' : 'alert-danger')}
           close={closeMessage}
         />
