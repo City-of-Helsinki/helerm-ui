@@ -6,6 +6,10 @@ import {
 
 import { getStorageItem } from './storage';
 
+/**
+ * Which actions are allowed without authentication
+ * @type {[*]}
+ */
 const ALLOWED_METHODS_WITHOUT_AUTHENTICATION = ['GET'];
 
 /**
