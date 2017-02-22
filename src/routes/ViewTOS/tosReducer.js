@@ -8,6 +8,7 @@ import { default as api } from '../../utils/api';
 // ------------------------------------
 export const REQUEST_TOS = 'tos/REQUEST_TOS';
 export const RECEIVE_TOS = 'tos/RECEIVE_TOS';
+export const TOS_ERROR = 'tos/TOS_ERROR';
 export const RESET_TOS = 'tos/RESET_TOS';
 
 export const SET_PHASE_VISIBILITY = 'tos/SET_PHASE_VISIBILITY';
@@ -65,6 +66,18 @@ export function receiveTOS (json) {
     type: RECEIVE_TOS,
     data: json,
     receivedAt: Date.now()
+  };
+}
+
+export function clearTOS () {
+  return {
+    type: RESET_TOS
+  };
+}
+
+export function TOSError () {
+  return {
+    type: TOS_ERROR
   };
 }
 
@@ -160,13 +173,6 @@ export function editPhase (editedPhase) {
   return {
     type: EDIT_PHASE,
     editedPhase
-  };
-}
-
-export function sendForInspection (selectedTOS) {
-  return {
-    type: SEND_FOR_INSPECTION,
-    selectedTOS
   };
 }
 
@@ -279,6 +285,7 @@ export function fetchTOS (tosId) {
     return api.get(`function/${tosId}`)
       .then(res => {
         if (!res.ok) {
+          dispatch(TOSError());
           throw new URIError(res.statusText);
         }
         return res.json();
@@ -287,9 +294,18 @@ export function fetchTOS (tosId) {
   };
 }
 
-export function clearTOS () {
-  return {
-    type: RESET_TOS
+export function sendForInspection (tos) {
+  return function (dispatch) {
+    dispatch(requestTOS());
+    return api.put(`function/${tos.id}`, tos)
+      .then(res => {
+        if (!res.ok) {
+          dispatch(TOSError());
+          throw new URIError(res.statusText);
+        }
+        return res.json();
+      })
+      .then(json => dispatch(receiveTOS(json)));
   };
 }
 
@@ -360,6 +376,13 @@ const ACTION_HANDLERS = {
   [RESET_TOS]: () => {
     return initialState;
   },
+  [TOS_ERROR]: (state) => {
+    return update(state, {
+      isFetching: {
+        $set: false
+      }
+    });
+  },
   [SET_PHASE_VISIBILITY]: (state, action) => {
     return update(state, {
       phases: {
@@ -377,9 +400,6 @@ const ACTION_HANDLERS = {
         $set: action.allPhasesOpen
       }
     });
-  },
-  [SEND_FOR_INSPECTION]: (state, action) => {
-    console.log('Ready for inspection: ', action.tosState);
   },
   [SET_DOCUMENT_STATE]: (state, action) => {
     return update(state, {
