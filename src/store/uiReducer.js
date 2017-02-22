@@ -92,8 +92,8 @@ const ACTION_HANDLERS = {
     return update(state, {
       message: {
         active: { $set: true },
-        text: { $set: action.message },
-        success: { $set: true }
+        text: { $set: action.message.text },
+        success: { $set: action.message.success }
       }
     });
   },
