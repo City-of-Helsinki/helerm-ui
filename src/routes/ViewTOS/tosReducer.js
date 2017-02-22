@@ -424,8 +424,6 @@ const ACTION_HANDLERS = {
     });
   },
   [EDIT_ACTION]: (state, action) => {
-    console.log(action.editedAction);
-    console.log(state.actions);
     return update(state, {
       actions: {
         [action.editedAction.id]: {
