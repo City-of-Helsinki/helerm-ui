@@ -6,7 +6,6 @@ import { getApiUrl } from '../utils/helpers';
 // ------------------------------------
 // Constants
 // ------------------------------------
-export const RECEIVE_RECORDTYPES = 'ui/RECEIVE_RECORDTYPES';
 export const RECEIVE_ATTRIBUTE_TYPES = 'ui/RECEIVE_ATTRIBUTE_TYPES';
 
 export const CLOSE_MESSAGE = 'ui/CLOSE_MESSAGE';
@@ -15,18 +14,6 @@ export const DISPLAY_MESSAGE = 'ui/DISPLAY_MESSAGE';
 // ------------------------------------
 // Actions
 // ------------------------------------
-export function receiveRecordTypes (recordTypes) {
-  const recordTypeList = {};
-  recordTypes.results.map(result => {
-    const trimmedResult = result.id.replace(/-/g, '');
-    recordTypeList[trimmedResult] = result.value;
-  });
-  return {
-    type: RECEIVE_RECORDTYPES,
-    recordTypeList
-  };
-}
-
 export function receiveAttributeTypes (attributes, validationRules) {
   const attributeTypeList = {};
   attributes.results.map(result => {
@@ -80,9 +67,9 @@ export function fetchAttributeTypes () {
 }
 
 export const actions = {
-  receiveAttributeTypes,
   closeMessage,
-  fetchAttributeTypes
+  fetchAttributeTypes,
+  receiveAttributeTypes
 };
 
 // ------------------------------------
