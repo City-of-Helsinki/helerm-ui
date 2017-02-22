@@ -80,6 +80,7 @@ export class Phase extends React.Component {
             actionIndex={key}
             action={this.props.actions[actions[key]]}
             editAction={this.props.editAction}
+            editRecord={this.props.editRecord}
             phases={this.props.phases}
             phasesOrder={this.props.phasesOrder}
             actions={this.props.actions}
@@ -299,6 +300,7 @@ Phase.propTypes = {
   documentState: React.PropTypes.string.isRequired,
   editAction: React.PropTypes.func.isRequired,
   editPhase: React.PropTypes.func.isRequired,
+  editRecord: React.PropTypes.func.isRequired,
   importItems: React.PropTypes.func.isRequired,
   phase: React.PropTypes.object.isRequired,
   phaseIndex: React.PropTypes.string.isRequired,
