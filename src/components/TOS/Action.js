@@ -63,6 +63,7 @@ export class Action extends React.Component {
           <Record
             key={key}
             record={this.props.records[records[key]]}
+            editRecord={this.props.editRecord}
             recordTypes={this.props.recordTypes}
             documentState={this.props.documentState}
             attributeTypes={this.props.attributeTypes}
@@ -256,6 +257,7 @@ Action.propTypes = {
   displayMessage: React.PropTypes.func.isRequired,
   documentState: React.PropTypes.string.isRequired,
   editAction: React.PropTypes.func.isRequired,
+  editRecord: React.PropTypes.func.isRequired,
   importItems: React.PropTypes.func.isRequired,
   phases: React.PropTypes.object.isRequired,
   phasesOrder: React.PropTypes.array.isRequired,

@@ -19,6 +19,7 @@ export const ADD_RECORD = 'tos/ADD_RECORD';
 export const ADD_PHASE = 'tos/ADD_PHASE';
 
 export const EDIT_ACTION = 'tos/EDIT_ACTION';
+export const EDIT_RECORD = 'tos/EDIT_RECORD';
 export const EDIT_PHASE = 'tos/EDIT_PHASE';
 
 export const SET_DOCUMENT_STATE = 'tos/SET_DOCUMENT_STATE';
@@ -166,6 +167,13 @@ export function editAction (editedAction) {
   return {
     type: EDIT_ACTION,
     editedAction
+  };
+}
+
+export function editRecord (editedRecord) {
+  return {
+    type: EDIT_RECORD,
+    editedRecord
   };
 }
 
@@ -331,6 +339,7 @@ export const actions = {
   addRecord,
   addPhase,
   editAction,
+  editRecord,
   editPhase,
   setDocumentState,
   executeImport,
@@ -460,6 +469,21 @@ const ACTION_HANDLERS = {
         [action.editedAction.id]: {
           name: {
             $set: action.editedAction.name
+          }
+        }
+      }
+    });
+  },
+  [EDIT_RECORD]: (state, action) => {
+    console.log(action.editedRecord);
+    return update(state, {
+      records: {
+        [action.editedRecord.id]: {
+          name: {
+            $set: action.editedRecord.name
+          },
+          attributes: {
+            $set: action.editedRecord.attributes
           }
         }
       }

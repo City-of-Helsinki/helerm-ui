@@ -213,6 +213,7 @@ export class ViewTOS extends React.Component {
             addAction={this.props.addAction}
             addRecord={this.props.addRecord}
             editAction={this.props.editAction}
+            editRecord={this.props.editRecord}
             editPhase={this.props.editPhase}
             displayMessage={this.props.displayMessage}
             changeOrder={this.props.changeOrder}
@@ -400,6 +401,7 @@ ViewTOS.propTypes = {
   documentState: React.PropTypes.string.isRequired,
   editAction: React.PropTypes.func.isRequired,
   editPhase: React.PropTypes.func.isRequired,
+  editRecord: React.PropTypes.func.isRequired,
   fetchTOS: React.PropTypes.func.isRequired,
   importItems: React.PropTypes.func.isRequired,
   isFetching: React.PropTypes.bool.isRequired,

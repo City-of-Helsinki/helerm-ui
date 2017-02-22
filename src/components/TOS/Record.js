@@ -28,6 +28,12 @@ export class Record extends React.Component {
 
   saveRecord () {
     this.setMode('view');
+    const savedRecord = {
+      id: this.props.record.id,
+      name: this.props.record.name,
+      attributes: this.props.record.attributes
+    };
+    this.props.editRecord(savedRecord);
   }
 
   cancelRecordEdit () {
@@ -165,6 +171,7 @@ export class Record extends React.Component {
 Record.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
   documentState: React.PropTypes.string.isRequired,
+  editRecord: React.PropTypes.func.isRequired,
   record: React.PropTypes.object.isRequired,
   recordTypes: React.PropTypes.object.isRequired
 };
