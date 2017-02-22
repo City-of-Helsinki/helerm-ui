@@ -13,6 +13,8 @@ import {
   addAction,
   addRecord,
   addPhase,
+  editAction,
+  editPhase,
   changeOrder,
   importItems,
   clearTOS
@@ -27,6 +29,8 @@ const mapDispatchToProps = (dispatch) => {
     addAction: bindActionCreators(addAction, dispatch),
     addPhase: bindActionCreators(addPhase, dispatch),
     addRecord: bindActionCreators(addRecord, dispatch),
+    editAction: bindActionCreators(editAction, dispatch),
+    editPhase: bindActionCreators(editPhase, dispatch),
     changeOrder: bindActionCreators(changeOrder, dispatch),
     clearTOS: bindActionCreators(clearTOS, dispatch),
     displayMessage: bindActionCreators(displayMessage, dispatch),

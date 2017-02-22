@@ -41,6 +41,11 @@ export class Action extends React.Component {
 
   saveActionTitle (event) {
     event.preventDefault();
+    const savedAction = {
+      id: this.props.action.id,
+      name: this.state.name
+    };
+    this.props.editAction(savedAction);
     if (this.state.name.length > 0) {
       this.setState({ mode: 'view' });
     }
@@ -250,6 +255,7 @@ Action.propTypes = {
   changeOrder: React.PropTypes.func.isRequired,
   displayMessage: React.PropTypes.func.isRequired,
   documentState: React.PropTypes.string.isRequired,
+  editAction: React.PropTypes.func.isRequired,
   importItems: React.PropTypes.func.isRequired,
   phases: React.PropTypes.object.isRequired,
   phasesOrder: React.PropTypes.array.isRequired,

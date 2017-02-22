@@ -17,6 +17,9 @@ export const ADD_ACTION = 'tos/ADD_ACTION';
 export const ADD_RECORD = 'tos/ADD_RECORD';
 export const ADD_PHASE = 'tos/ADD_PHASE';
 
+export const EDIT_ACTION = 'tos/EDIT_ACTION';
+export const EDIT_PHASE = 'tos/EDIT_PHASE';
+
 export const SET_DOCUMENT_STATE = 'tos/SET_DOCUMENT_STATE';
 
 export const SEND_FOR_INSPECTION = 'tos/SEND_FOR_INSPECTION';
@@ -143,6 +146,20 @@ export function addPhase (name, parent) {
   return {
     type: ADD_PHASE,
     newPhase
+  };
+}
+
+export function editAction (editedAction) {
+  return {
+    type: EDIT_ACTION,
+    editedAction
+  };
+}
+
+export function editPhase (editedPhase) {
+  return {
+    type: EDIT_PHASE,
+    editedPhase
   };
 }
 
@@ -297,6 +314,8 @@ export const actions = {
   addAction,
   addRecord,
   addPhase,
+  editAction,
+  editPhase,
   setDocumentState,
   executeImport,
   executeOrderChange,
@@ -411,6 +430,28 @@ const ACTION_HANDLERS = {
       records: {
         [action.recordId]: {
           $set: action.newRecord
+        }
+      }
+    });
+  },
+  [EDIT_ACTION]: (state, action) => {
+    return update(state, {
+      actions: {
+        [action.editedAction.id]: {
+          name: {
+            $set: action.editedAction.name
+          }
+        }
+      }
+    });
+  },
+  [EDIT_PHASE]: (state, action) => {
+    return update(state, {
+      phases: {
+        [action.editedPhase.id]: {
+          name: {
+            $set: action.editedPhase.name
+          }
         }
       }
     });
