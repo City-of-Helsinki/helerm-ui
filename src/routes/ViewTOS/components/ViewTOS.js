@@ -394,6 +394,7 @@ ViewTOS.propTypes = {
   push: React.PropTypes.func.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
   records: React.PropTypes.object.isRequired,
+  route: React.PropTypes.object.isRequired,
   selectedTOS: React.PropTypes.object.isRequired,
   sendForInspection: React.PropTypes.func.isRequired,
   setDocumentState: React.PropTypes.func.isRequired,

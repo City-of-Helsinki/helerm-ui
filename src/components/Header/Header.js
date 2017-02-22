@@ -61,9 +61,9 @@ export class Header extends React.Component {
 
 Header.propTypes = {
   closeMessage: React.PropTypes.func,
-  setNavigationVisibility: React.PropTypes.func,
   isFetching: React.PropTypes.bool,
-  message: React.PropTypes.object
+  message: React.PropTypes.object,
+  setNavigationVisibility: React.PropTypes.func
 };
 
 const mapStateToProps = (state) => {
