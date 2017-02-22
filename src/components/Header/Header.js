@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import { closeMessage } from '../../store/uiReducer';
+import { setNavigationVisibility } from '../Navigation/navigationReducer';
 
 import Alert from '../Alert/Alert';
 import Loader from '../Loader';
@@ -25,7 +26,7 @@ export class Header extends React.Component {
   }
 
   render () {
-    const { isFetching, message, closeMessage } = this.props;
+    const { isFetching, message, closeMessage, setNavigationVisibility } = this.props;
     let alertMessage = null;
     if (this.state.showAlert === true) {
       alertMessage = (
@@ -40,7 +41,9 @@ export class Header extends React.Component {
 
     return (
       <div>
-        <nav className='navbar navbar-inverse container-fluid'>
+        <nav
+          className='navbar navbar-inverse container-fluid'
+          onClick={() => setNavigationVisibility(true)}>
           <Link to='/' className='brand-title navbar-brand'>Tiedonohjausjärjestelmä Alpha v0.1.4</Link>
           <LoginContainer />
         </nav>
@@ -58,6 +61,7 @@ export class Header extends React.Component {
 
 Header.propTypes = {
   closeMessage: React.PropTypes.func,
+  setNavigationVisibility: React.PropTypes.func,
   isFetching: React.PropTypes.bool,
   message: React.PropTypes.object
 };
@@ -71,7 +75,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    closeMessage: bindActionCreators(closeMessage, dispatch)
+    closeMessage: bindActionCreators(closeMessage, dispatch),
+    setNavigationVisibility: bindActionCreators(setNavigationVisibility, dispatch)
   };
 };
 

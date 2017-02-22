@@ -36,7 +36,7 @@ export class ViewTOS extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    const { route } = nextProps.params;
+    const { route } = nextProps;
     if (nextProps.params.id !== this.props.params.id) {
       const { id } = nextProps.params;
       this.fetchTOS(id);
