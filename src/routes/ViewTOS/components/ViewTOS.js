@@ -16,6 +16,7 @@ export class ViewTOS extends React.Component {
   constructor (props) {
     super(props);
     this.fetchTOS = this.fetchTOS.bind(this);
+    this.sendForInspection = this.sendForInspection.bind(this);
     this.onChange = this.onChange.bind(this);
     this.createNewPhase = this.createNewPhase.bind(this);
     this.cancelPhaseCreation = this.cancelPhaseCreation.bind(this);
@@ -59,6 +60,15 @@ export class ViewTOS extends React.Component {
           this.props.push(`/404?tos-id=${id}`);
         }
       });
+  }
+
+  sendForInspection () {
+    return this.props.sendForInspection(this.props.selectedTOS)
+      .then(data => console.log(data))
+      .catch(err => this.props.displayMessage({
+        text: err.message,
+        success: false
+      }));
   }
 
   formatDateTime (dateTime) {
@@ -232,7 +242,7 @@ export class ViewTOS extends React.Component {
                   <span>
                     <button
                       className='btn btn-default btn-sm pull-right'
-                      onClick={() => this.props.sendForInspection(selectedTOS)}>
+                      onClick={this.sendForInspection}>
                       Lähetä tarkastettavaksi
                     </button>
                     <button
