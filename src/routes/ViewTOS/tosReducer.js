@@ -24,8 +24,6 @@ export const EDIT_PHASE = 'tos/EDIT_PHASE';
 
 export const SET_DOCUMENT_STATE = 'tos/SET_DOCUMENT_STATE';
 
-export const SEND_FOR_INSPECTION = 'tos/SEND_FOR_INSPECTION';
-
 export const EXECUTE_IMPORT = 'tos/EXECUTE_IMPORT';
 export const EXECUTE_ORDER_CHANGE = 'tos/EXECUTE_ORDER_CHANGE';
 
@@ -360,10 +358,13 @@ const ACTION_HANDLERS = {
       }
     });
   },
+  // TODO: Seriously, refactor me...
   [RECEIVE_TOS]: (state, action) => {
+    const tos = action.data.entities.tos[action.data.result];
     return update(state, {
-      tos: {
-        $set: action.data.entities.tos[action.data.result]
+      $merge: tos,
+      attributes: {
+        $set: action.data.entities.tos[action.data.result].attributes
       },
       actions: {
         $set: action.data.entities.actions
@@ -560,7 +561,15 @@ const ACTION_HANDLERS = {
 // Reducer
 // ------------------------------------
 const initialState = {
-  tos: {},
+  id: null,
+  function_id: null,
+  parent: null,
+  version: null,
+  name: null,
+  error_count: null,
+  state: null,
+  created_at: null,
+  modified_at: null,
   actions: {},
   phases: {},
   records: {},

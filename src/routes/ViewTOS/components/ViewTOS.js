@@ -197,14 +197,15 @@ export class ViewTOS extends React.Component {
 
   generatePhases (phases) {
     const phaseElements = [];
+    const phasesOrder = Object.keys(this.props.selectedTOS.phases);
     for (const key in phases) {
       if (phases.hasOwnProperty(key)) {
         phaseElements.push(
           <Phase
             key={key}
-            phaseIndex={phases[key]}
-            phase={this.props.phases[phases[key]]}
-            phasesOrder={this.props.selectedTOS.phases}
+            phaseIndex={phases[key].id}
+            phase={this.props.phases[key]}
+            phasesOrder={phasesOrder}
             phases={this.props.phases}
             actions={this.props.actions}
             records={this.props.records}
@@ -230,7 +231,7 @@ export class ViewTOS extends React.Component {
 
   render () {
     const { selectedTOS, phases, isFetching } = this.props;
-    if (!isFetching && selectedTOS && Object.keys(selectedTOS).length !== 0) {
+    if (!isFetching && selectedTOS.id) {
       const phaseElements = this.generatePhases(selectedTOS.phases);
       const TOSMetaData = this.generateMetaData(this.props.attributeTypes, selectedTOS.attributes);
 

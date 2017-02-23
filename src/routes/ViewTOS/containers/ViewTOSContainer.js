@@ -57,8 +57,8 @@ const mapStateToProps = (state) => {
     phases: state.selectedTOS.phases,
     records: state.selectedTOS.records,
     recordTypes: state.ui.recordTypes,
-    selectedTOS: state.selectedTOS.tos,
-    selectedTOSPath: state.selectedTOS.path
+    selectedTOS: state.selectedTOS,
+    testi: state.selectedTOS
   };
 };
 
