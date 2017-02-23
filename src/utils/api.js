@@ -81,26 +81,31 @@ export function del (endpoint, params = {}, options = { method: 'DELETE' }) {
  */
 export function callApi (endpoint, params, options = {}) {
   const token = getStorageItem('token');
+  const defaultHeaders = new Headers();
   const url = getApiUrl(endpoint, params);
   const finalOptions = merge({
     method: 'GET',
     credentials: 'include',
     mode: 'cors'
   }, options);
-  const defaultHeaders = {
-    'Accept': 'application/json'
-  };
+
+  defaultHeaders.append('Accept', 'application/json');
 
   if (!token && !ALLOWED_METHODS_WITHOUT_AUTHENTICATION.includes(finalOptions.method)) {
     throw Error(`Following methods for API-endpoint require authentication: ${ALLOWED_METHODS_WITHOUT_AUTHENTICATION.join(', ')}`);
   }
 
   if (token) {
-    defaultHeaders.Authorization = `JWT ${token}`;
+    defaultHeaders.append('Authorization', `JWT ${token}`);
   }
 
-  finalOptions.headers = merge(new Headers(), defaultHeaders, options.headers || {});
+  if (options.headers) {
+    Object.keys(options.headers).map(key => {
+      defaultHeaders.append(key, options.headers[key]);
+    });
+  }
 
+  finalOptions.headers = defaultHeaders;
   return fetch(url, finalOptions);
 }
 
