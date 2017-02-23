@@ -30,19 +30,19 @@ export class Record extends React.Component {
     this.setState({ mode: value });
   }
 
-  editRecord () {
-    this.setMode('edit');
-    this.setState({ showAttributes: true });
-  }
+  // editRecord () {
+  //   this.setMode('edit');
+  //   this.setState({ showAttributes: true });
+  // }
 
   saveRecord () {
     this.setMode('view');
-    const savedRecord = {
-      id: this.props.record.id,
-      name: this.props.record.name,
-      attributes: this.props.record.attributes
-    };
-    this.props.editRecord(savedRecord);
+    // const savedRecord = {
+    //   id: this.props.record.id,
+    //   name: this.props.record.name,
+    //   attributes: this.props.record.attributes
+    // };
+    // this.props.editRecord(savedRecord);
   }
 
   cancelRecordEdit () {
