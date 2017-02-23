@@ -66,7 +66,12 @@ export class ViewTOS extends React.Component {
 
   sendForInspection () {
     return this.props.sendForInspection(this.props.selectedTOS)
-      .then(data => console.log(data))
+      .then(() => {
+        return this.props.displayMessage({
+          text: 'Luonnos lähetettiin tarkastettavaksi',
+          success: true
+        });
+      })
       .catch(err => {
         return this.props.displayMessage({
           text: err.message,
