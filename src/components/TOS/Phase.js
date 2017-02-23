@@ -136,7 +136,10 @@ export class Phase extends React.Component {
     this.props.setPhaseVisibility(this.props.phaseIndex, true);
     this.props.addAction(this.props.phaseIndex, this.state.newActionName);
     this.setState({ mode: 'view', newActionName: '' });
-    this.props.displayMessage('Toimenpiteen lisäys onnistui!');
+    this.props.displayMessage({
+      text: 'Toimenpiteen lisäys onnistui!',
+      success: true
+    });
   }
 
   cancelActionCreation (event) {

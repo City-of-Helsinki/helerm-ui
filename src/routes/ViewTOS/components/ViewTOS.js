@@ -67,10 +67,12 @@ export class ViewTOS extends React.Component {
   sendForInspection () {
     return this.props.sendForInspection(this.props.selectedTOS)
       .then(data => console.log(data))
-      .catch(err => this.props.displayMessage({
-        text: err.message,
-        success: false
-      }));
+      .catch(err => {
+        return this.props.displayMessage({
+          text: err.message,
+          success: false
+        });
+      });
   }
 
   formatDateTime (dateTime) {
@@ -93,7 +95,10 @@ export class ViewTOS extends React.Component {
       this.props.addPhase(this.state.newPhaseName, this.props.selectedTOS.id);
       this.setState({ createPhaseMode: false, newPhaseName: '' });
     }
-    this.props.displayMessage('Käsittelyvaiheen lisäys onnistui!');
+    this.props.displayMessage({
+      text: 'Käsittelyvaiheen lisäys onnistui!',
+      success: true
+    });
   }
 
   cancelPhaseCreation (event) {

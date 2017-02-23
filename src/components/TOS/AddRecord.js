@@ -140,7 +140,10 @@ export class AddRecord extends React.Component {
     e.preventDefault();
     const { recordName, recordType, newAttributes } = this.state;
     this.props.createRecord(actionId, recordName.name, recordType.name, newAttributes);
-    this.props.displayMessage('Asiakirjan lisäys onnistui!');
+    this.props.displayMessage({
+      text: 'Asiakirjan lisäys onnistui!',
+      success: true
+    });
   }
 
   cancelRecordCreation (e) {
