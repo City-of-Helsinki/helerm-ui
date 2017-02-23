@@ -48,6 +48,29 @@ export function convertToTree (itemList) {
 }
 
 /**
+ * Normalize tos for API
+ * @param tos
+ * @returns {*}
+ */
+export function normalizeTosForApi (tos) {
+  // TODO: needs some serious refactoring...
+  const phases = Object.keys(tos.phases).map(phase => tos.phases[phase]);
+  phases.map(phase => phase.actions.map((action, actionIndex) => {
+    delete phase.actions[actionIndex];
+    phase.actions[actionIndex] = tos.actions[action];
+    phase.actions[actionIndex].records.map((record, recordsIndex) => {
+      delete phase.actions[actionIndex].records[recordsIndex];
+      phase.actions[actionIndex].records[recordsIndex] = tos.records[record];
+    });
+  }));
+
+  delete tos.actions;
+  delete tos.records;
+  tos.phases = phases;
+  return tos;
+}
+
+/**
  * Find item by id (nested array with `children`-key)
  * @param items
  * @param id
