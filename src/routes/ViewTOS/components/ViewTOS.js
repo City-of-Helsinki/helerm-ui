@@ -2,13 +2,15 @@ import React from 'react';
 import { StickyContainer, Sticky } from 'react-sticky';
 import formatDate from 'occasion';
 
-import Phase from '../../../components/TOS/Phase';
-import Attribute from '../../../components/TOS/Attribute';
-import ReorderView from '../../../components/TOS/ReorderView';
-import ImportView from '../../../components/TOS/ImportView';
+import Phase from 'components/TOS/Phase';
+import Attribute from 'components/TOS/Attribute';
+import ReorderView from 'components/TOS/ReorderView';
+import ImportView from 'components/TOS/ImportView';
 
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
+
+import IsAuthenticated from 'components/IsAuthenticated/IsAuthenticated';
 
 import './ViewTOS.scss';
 
@@ -241,11 +243,13 @@ export class ViewTOS extends React.Component {
                 <div className='document-buttons col-xs-12 col-md-6'>
                   { this.props.documentState !== 'edit' &&
                   <span>
-                    <button
-                      className='btn btn-default btn-sm pull-right'
-                      onClick={this.sendForInspection}>
-                      Lähetä tarkastettavaksi
-                    </button>
+                    <IsAuthenticated>
+                      <button
+                        className='btn btn-default btn-sm pull-right'
+                        onClick={this.sendForInspection}>
+                        Lähetä tarkastettavaksi
+                      </button>
+                    </IsAuthenticated>
                     <button
                       className='btn btn-primary btn-sm pull-right'
                       onClick={() => this.props.setDocumentState('edit')}>
