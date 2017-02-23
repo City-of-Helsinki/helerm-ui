@@ -479,12 +479,11 @@ const ACTION_HANDLERS = {
     console.log(action.editedRecord);
     return update(state, {
       records: {
-        [action.editedRecord.id]: {
-          name: {
-            $set: action.editedRecord.name
-          },
+        [action.editedRecord.recordId]: {
           attributes: {
-            $set: action.editedRecord.attributes
+            [action.editedRecord.attributeIndex]: {
+              $set: action.editedRecord.attribute
+            }
           }
         }
       }

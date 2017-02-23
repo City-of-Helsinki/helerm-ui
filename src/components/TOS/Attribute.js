@@ -39,6 +39,12 @@ export class Attribute extends React.Component {
 
   submit (event) {
     event.preventDefault();
+    const savedAttribute = {
+      recordId: this.props.recordId,
+      attribute: this.props.attribute,
+      attributeIndex: this.props.attributeIndex
+    };
+    this.props.editRecord(savedAttribute);
     setTimeout(() => this.changeState('view'),
       150
     );
@@ -165,8 +171,10 @@ Attribute.propTypes = {
   attributeKey: React.PropTypes.string.isRequired,
   attributeTypes: React.PropTypes.object.isRequired,
   documentState: React.PropTypes.string.isRequired,
+  editRecord: React.PropTypes.func.isRequired,
   editable: React.PropTypes.bool.isRequired,
   mode: React.PropTypes.string.isRequired,
+  recordId: React.PropTypes.string,
   showAttributes: React.PropTypes.bool.isRequired,
   type: React.PropTypes.string.isRequired
 };

@@ -158,6 +158,7 @@ export class ViewTOS extends React.Component {
           mode='view'
           type='attribute'
           editable={false}
+          editRecord={this.props.editRecord}
           showAttributes={true}
         />
       );
@@ -176,6 +177,7 @@ export class ViewTOS extends React.Component {
             documentState={this.props.documentState}
             showAttributes={this.state.showMetadata}
             editable={true}
+            editRecord={this.props.editRecord}
           />
         );
       }
