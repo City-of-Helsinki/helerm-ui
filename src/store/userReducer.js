@@ -1,9 +1,9 @@
 import fetch from 'isomorphic-fetch';
 import update from 'immutability-helper';
-import { isEmpty, get } from 'lodash';
+import { isEmpty, /*get,*/ isString } from 'lodash';
 
 import { centeredPopUp } from '../utils/helpers';
-import { default as api } from '../utils/api';
+// import { default as api } from '../utils/api';
 import { setStorageItem, removeStorageItem } from '../utils/storage';
 
 // ------------------------------------
@@ -31,13 +31,14 @@ export function clearUserData () {
 
 export function retrieveUserFromSession () {
   return function (dispatch) {
-    return fetch('/auth/me?' + (+new Date()), { method: 'GET', credentials: 'same-origin' })
+    return fetch(`/auth/me?${+new Date()}`, { method: 'GET', credentials: 'same-origin' })
       .then((res) => {
         return res.json();
       })
       .then((user) => {
-        if (!isEmpty(user.token)) {
+        if (isString(user.token) && !isEmpty(user.token)) {
           setStorageItem('token', user.token);
+          // TODO: Enable when API is ready
           // const url = `users/${user.id}/`;
           // return api.get(url, { user }, {})
           //   .then((democracyUser) => {
