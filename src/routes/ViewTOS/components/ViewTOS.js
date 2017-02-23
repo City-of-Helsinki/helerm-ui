@@ -365,7 +365,7 @@ export class ViewTOS extends React.Component {
                       <ReorderView
                         target='phase'
                         toggleReorderView={() => this.toggleReorderView()}
-                        keys={this.props.selectedTOS.phases}
+                        keys={Object.keys(this.props.phases)}
                         values={this.props.phases}
                         changeOrder={this.props.changeOrder}
                         parent={null}
