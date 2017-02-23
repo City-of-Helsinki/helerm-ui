@@ -2,6 +2,7 @@ import update from 'immutability-helper';
 import { normalize, Schema, arrayOf } from 'normalizr';
 
 import { default as api } from '../../utils/api';
+import { normalizeTosForApi } from '../../utils/helpers';
 
 // ------------------------------------
 // Constants
@@ -38,7 +39,8 @@ export function requestTOS () {
 }
 
 export function receiveTOS (json) {
-  json.phases.map(phase => {
+  json.phases.map((phase, index) => {
+    phase.index = phase.index || index;
     phase.is_open = false;
     phase.actions.map(action => {
       action.records.map(record => {
@@ -264,7 +266,7 @@ export function executeOrderChange (newOrder, itemType, itemParent, currentState
     item.index = index + 1;
     parentList.push(item.id);
   });
-  const itemList = Object.assign({}, currentState.selectedTOS[itemLevel]);
+  let itemList = Object.assign({}, currentState.selectedTOS[itemLevel]);
   for (const key in itemList) {
     if (itemList.hasOwnProperty(key)) {
       reorderedList.map(item => {
@@ -274,6 +276,8 @@ export function executeOrderChange (newOrder, itemType, itemParent, currentState
       });
     }
   }
+  itemList = parentLevel === 'tos' ? reorderedList : itemList;
+
   return {
     type: EXECUTE_ORDER_CHANGE,
     itemList,
@@ -301,9 +305,10 @@ export function fetchTOS (tosId) {
 }
 
 export function sendForInspection (tos) {
+  const finalTos = normalizeTosForApi(tos);
   return function (dispatch) {
     dispatch(requestTOS());
-    return api.put(`function/${tos.id}`, tos)
+    return api.put(`function/${tos.id}`, finalTos)
       .then(res => {
         if (!res.ok) {
           dispatch(TOSError());
@@ -358,7 +363,6 @@ const ACTION_HANDLERS = {
       }
     });
   },
-  // TODO: Seriously, refactor me...
   [RECEIVE_TOS]: (state, action) => {
     const tos = action.data.entities.tos[action.data.result];
     return update(state, {
@@ -420,11 +424,6 @@ const ACTION_HANDLERS = {
   },
   [ADD_PHASE]: (state, action) => {
     return update(state, {
-      tos: {
-        phases: {
-          $push: [action.newPhase.id]
-        }
-      },
       phases: {
         [action.newPhase.id]: {
           $set: action.newPhase
@@ -503,11 +502,6 @@ const ACTION_HANDLERS = {
   [EXECUTE_ORDER_CHANGE]: (state, action) => {
     if (action.itemType === 'phase') {
       return update(state, {
-        [action.parentLevel]: {
-          [action.itemLevel]: {
-            $set: action.parentList
-          }
-        },
         [action.itemLevel]: {
           $set: action.itemList
         }
