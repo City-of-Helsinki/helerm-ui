@@ -1,8 +1,9 @@
 import fetch from 'isomorphic-fetch';
 import update from 'immutability-helper';
-import { isEmpty } from 'lodash';
+import { isEmpty, get } from 'lodash';
 
 import { centeredPopUp } from '../utils/helpers';
+import { default as api } from '../utils/api';
 import { setStorageItem, removeStorageItem } from '../utils/storage';
 
 // ------------------------------------
@@ -37,6 +38,17 @@ export function retrieveUserFromSession () {
       .then((user) => {
         if (!isEmpty(user.token)) {
           setStorageItem('token', user.token);
+          // const url = `users/${user.id}/`;
+          // return api.get(url, { user }, {})
+          //   .then((democracyUser) => {
+          //     return democracyUser.json();
+          //   })
+          //   .then((democracyUserJSON) => {
+          //     const userWithOrganization = Object.assign({},
+          //       user,
+          //       { adminOrganizations: get(democracyUserJSON, 'admin_organizations', null) });
+          //     return dispatch(receiveUserData(userWithOrganization));
+          //   });
         }
         return dispatch(receiveUserData(user));
       });
