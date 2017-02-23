@@ -84,7 +84,7 @@ export function callApi (endpoint, params, options = {}) {
   const url = getApiUrl(endpoint, params);
   const finalOptions = merge({
     method: 'GET',
-    // credentials: 'include',
+    credentials: 'include',
     mode: 'cors'
   }, options);
   const defaultHeaders = {
