@@ -17,6 +17,15 @@ export class Record extends React.Component {
     };
   }
 
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.record.name) {
+      this.setState({
+        name: nextProps.record.name,
+        attributes: nextProps.record.attributes
+      });
+    }
+  }
+
   setMode (value) {
     this.setState({ mode: value });
   }
@@ -58,6 +67,7 @@ export class Record extends React.Component {
       return (
         <Attribute
           key={index}
+          recordId={this.props.record.id}
           attributeIndex={record.type}
           attributeKey=''
           attribute={record.name}
@@ -66,6 +76,7 @@ export class Record extends React.Component {
           mode={this.state.mode}
           type='record'
           editable={true}
+          editRecord={this.props.editRecord}
           showAttributes={true}
         />
       );
@@ -79,6 +90,7 @@ export class Record extends React.Component {
         attributeElements.push(
           <Attribute
             key={key}
+            recordId={this.props.record.id}
             attributeIndex={key}
             attributeKey={this.props.attributeTypes[key].name}
             attribute={attributes[key]}
@@ -87,6 +99,7 @@ export class Record extends React.Component {
             mode={this.state.mode}
             type='attribute'
             editable={true}
+            editRecord={this.props.editRecord}
             showAttributes={this.state.showAttributes}
           />);
       }
@@ -147,7 +160,7 @@ export class Record extends React.Component {
               Peruuta
             </button>
           </div>
-          }
+        }
         </div>
         }
         { this.state.deleting &&
