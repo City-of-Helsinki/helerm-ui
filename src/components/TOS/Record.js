@@ -9,21 +9,16 @@ export class Record extends React.Component {
   constructor (props) {
     super(props);
     this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
+    this.updateRecordName = this.updateRecordName.bind(this);
+    this.updateRecordAttribute = this.updateRecordAttribute.bind(this);
     this.state = {
       showAttributes: false,
       mode: 'view',
       deleting: false,
-      deleted: false
+      deleted: false,
+      name: this.props.record.name,
+      attributes: this.props.record.attributes
     };
-  }
-
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.record.name) {
-      this.setState({
-        name: nextProps.record.name,
-        attributes: nextProps.record.attributes
-      });
-    }
   }
 
   setMode (value) {
@@ -35,24 +30,43 @@ export class Record extends React.Component {
   //   this.setState({ showAttributes: true });
   // }
 
-  saveRecord () {
-    this.setMode('view');
-    // const savedRecord = {
-    //   id: this.props.record.id,
-    //   name: this.props.record.name,
-    //   attributes: this.props.record.attributes
-    // };
-    // this.props.editRecord(savedRecord);
-  }
+  // saveRecord () {
+  //   this.setMode('view');
+  // }
 
-  cancelRecordEdit () {
-    this.setMode('view');
-  }
+  // cancelRecordEdit () {
+  //   this.setMode('view');
+  // }
 
   toggleAttributeVisibility () {
     const currentVisibility = this.state.showAttributes;
     const newVisibility = !currentVisibility;
     this.setState({ showAttributes: newVisibility });
+  }
+
+  updateRecordName (recordName, recordId) {
+    this.setState({
+      name: recordName
+    });
+    const updatedRecordName = {
+      name: recordName,
+      recordId: recordId
+    };
+    this.props.editRecord(updatedRecordName);
+  }
+
+  updateRecordAttribute (attribute, attributeIndex, recordId) {
+    this.setState({
+      attributes: {
+        [attributeIndex]: attribute
+      }
+    });
+    const savedAttribute = {
+      attribute: attribute,
+      attributeIndex: attributeIndex,
+      recordId: recordId
+    };
+    this.props.editRecord(savedAttribute);
   }
 
   generateRecordObjects (record) {
@@ -76,7 +90,8 @@ export class Record extends React.Component {
           mode={this.state.mode}
           type='record'
           editable={true}
-          editRecord={this.props.editRecord}
+          updateRecordName={this.updateRecordName}
+          updateRecordAttribute={this.updateRecordAttribute}
           showAttributes={true}
         />
       );
@@ -99,7 +114,7 @@ export class Record extends React.Component {
             mode={this.state.mode}
             type='attribute'
             editable={true}
-            editRecord={this.props.editRecord}
+            updateRecordAttribute={this.updateRecordAttribute}
             showAttributes={this.state.showAttributes}
           />);
       }
@@ -149,7 +164,7 @@ export class Record extends React.Component {
           }
           { recordAttributes }
           { attributes }
-          { this.state.mode === 'edit' &&
+          {/* { this.state.mode === 'edit' &&
           <div className='col-xs-12'>
             <button className='btn btn-primary pull-right edit-record__submit'
                     onClick={() => this.saveRecord()}>
@@ -160,7 +175,7 @@ export class Record extends React.Component {
               Peruuta
             </button>
           </div>
-        }
+          } */}
         </div>
         }
         { this.state.deleting &&
