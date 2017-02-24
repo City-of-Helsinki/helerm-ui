@@ -209,7 +209,8 @@ Record.propTypes = {
   documentState: React.PropTypes.string.isRequired,
   editRecord: React.PropTypes.func.isRequired,
   record: React.PropTypes.object.isRequired,
-  recordTypes: React.PropTypes.object.isRequired
+  recordTypes: React.PropTypes.object.isRequired,
+  removeRecord: React.PropTypes.func.isRequired
 };
 
 export default Record;

@@ -81,6 +81,8 @@ export class Phase extends React.Component {
             action={this.props.actions[actions[key]]}
             editAction={this.props.editAction}
             editRecord={this.props.editRecord}
+            removeAction={this.props.removeAction}
+            removeRecord={this.props.removeRecord}
             phases={this.props.phases}
             phasesOrder={this.props.phasesOrder}
             actions={this.props.actions}
@@ -314,6 +316,9 @@ Phase.propTypes = {
   phasesOrder: React.PropTypes.array.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
   records: React.PropTypes.object.isRequired,
+  removeAction: React.PropTypes.func.isRequired,
+  removePhase: React.PropTypes.func.isRequired,
+  removeRecord: React.PropTypes.func.isRequired,
   setPhaseVisibility: React.PropTypes.func.isRequired,
   update: React.PropTypes.string.isRequired
 };
