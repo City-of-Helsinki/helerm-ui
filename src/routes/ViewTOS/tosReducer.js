@@ -309,7 +309,6 @@ export function fetchTOS (tosId) {
 
 export function sendForInspection (tos) {
   const finalTos = normalizeTosForApi(tos);
-  debugger;
   return function (dispatch) {
     dispatch(requestTOS());
     return api.put(`function/${tos.id}`, finalTos)

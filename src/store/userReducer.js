@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch';
 import update from 'immutability-helper';
-import { isEmpty, /*get,*/ isString } from 'lodash';
+import { isEmpty, /* get, */ isString } from 'lodash';
 
 import { centeredPopUp } from '../utils/helpers';
 // import { default as api } from '../utils/api';
