@@ -23,6 +23,10 @@ export const EDIT_ACTION = 'tos/EDIT_ACTION';
 export const EDIT_RECORD = 'tos/EDIT_RECORD';
 export const EDIT_PHASE = 'tos/EDIT_PHASE';
 
+export const REMOVE_ACTION = 'tos/REMOVE_ACTION';
+export const REMOVE_RECORD = 'tos/REMOVE_RECORD';
+export const REMOVE_PHASE = 'tos/REMOVE_PHASE';
+
 export const SET_DOCUMENT_STATE = 'tos/SET_DOCUMENT_STATE';
 
 export const EXECUTE_IMPORT = 'tos/EXECUTE_IMPORT';
@@ -183,6 +187,27 @@ export function editPhase (editedPhase) {
   return {
     type: EDIT_PHASE,
     editedPhase
+  };
+}
+
+export function removeAction (actionToRemove) {
+  return {
+    type: REMOVE_ACTION,
+    actionToRemove
+  };
+}
+
+export function removeRecord (recordToRemove) {
+  return {
+    type: REMOVE_RECORD,
+    recordToRemove
+  };
+}
+
+export function removePhase (phaseToRemove) {
+  return {
+    type: REMOVE_PHASE,
+    phaseToRemove
   };
 }
 
@@ -521,6 +546,33 @@ const ACTION_HANDLERS = {
           name: {
             $set: action.editedPhase.name
           }
+        }
+      }
+    });
+  },
+  [REMOVE_ACTION]: (state, action) => {
+    return update(state, {
+      actions: {
+        [action.actionToRemove]: {
+          $set: undefined
+        }
+      }
+    });
+  },
+  [REMOVE_RECORD]: (state, action) => {
+    return update(state, {
+      records: {
+        [action.recordToRemove]: {
+          $set: undefined
+        }
+      }
+    });
+  },
+  [REMOVE_PHASE]: (state, action) => {
+    return update(state, {
+      phases: {
+        [action.phaseToRemove]: {
+          $set: undefined
         }
       }
     });
