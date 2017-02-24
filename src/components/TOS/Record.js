@@ -61,12 +61,12 @@ export class Record extends React.Component {
         [attributeIndex]: attribute
       }
     });
-    const savedAttribute = {
+    const updateRecordAttribute = {
       attribute: attribute,
       attributeIndex: attributeIndex,
       recordId: recordId
     };
-    this.props.editRecord(savedAttribute);
+    this.props.editRecord(updateRecordAttribute);
   }
 
   generateRecordObjects (record) {
