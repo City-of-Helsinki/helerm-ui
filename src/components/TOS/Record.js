@@ -10,6 +10,7 @@ export class Record extends React.Component {
     super(props);
     this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
     this.updateRecordName = this.updateRecordName.bind(this);
+    this.updateRecordType = this.updateRecordType.bind(this);
     this.updateRecordAttribute = this.updateRecordAttribute.bind(this);
     this.state = {
       showAttributes: false,
@@ -55,6 +56,15 @@ export class Record extends React.Component {
     this.props.editRecord(updatedRecordName);
   }
 
+  updateRecordType (attribute, recordId) {
+    console.log(this.props);
+    const updatedRecordType = {
+      type: attribute,
+      recordId: recordId
+    };
+    this.props.editRecord(updatedRecordType);
+  }
+
   updateRecordAttribute (attribute, attributeIndex, recordId) {
     this.setState({
       attributes: {
@@ -91,6 +101,7 @@ export class Record extends React.Component {
           type='record'
           editable={true}
           updateRecordName={this.updateRecordName}
+          updateRecordType={this.updateRecordType}
           updateRecordAttribute={this.updateRecordAttribute}
           showAttributes={true}
         />

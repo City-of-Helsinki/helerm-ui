@@ -41,6 +41,11 @@ export class Attribute extends React.Component {
     event.preventDefault();
     if (this.props.attributeIndex === '') {
       this.props.updateRecordName(this.state.attribute, this.props.recordId);
+    } else if (this.props.attributeIndex === this.props.attribute) {
+      this.props.updateRecordType(
+        this.state.attribute,
+        this.props.recordId
+      );
     } else {
       this.props.updateRecordAttribute(
         this.state.attribute,
@@ -181,7 +186,8 @@ Attribute.propTypes = {
   showAttributes: React.PropTypes.bool.isRequired,
   type: React.PropTypes.string.isRequired,
   updateRecordAttribute: React.PropTypes.func,
-  updateRecordName: React.PropTypes.func
+  updateRecordName: React.PropTypes.func,
+  updateRecordType: React.PropTypes.func
 };
 
 export default Attribute;

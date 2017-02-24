@@ -488,18 +488,31 @@ const ACTION_HANDLERS = {
           }
         }
       });
-    }
-    return update(state, {
-      records: {
-        [action.editedRecord.recordId]: {
-          attributes: {
-            [action.editedRecord.attributeIndex]: {
-              $set: action.editedRecord.attribute
+    } else if (action.editedRecord.type) {
+      return update(state, {
+        records : {
+          [action.editedRecord.recordId]: {
+            attributes: {
+              RecordType: {
+                $set: action.editedRecord.name
+              }
             }
           }
         }
-      }
-    });
+      });
+    } else {
+      return update(state, {
+        records: {
+          [action.editedRecord.recordId]: {
+            attributes: {
+              [action.editedRecord.attributeIndex]: {
+                $set: action.editedRecord.attribute
+              }
+            }
+          }
+        }
+      });
+    }
   },
   [EDIT_PHASE]: (state, action) => {
     return update(state, {
