@@ -39,7 +39,7 @@ export class Attribute extends React.Component {
 
   submit (event) {
     event.preventDefault();
-    if (this.props.attributeIndex === '') { // This means the record name
+    if (this.props.attributeIndex === '') {
       this.props.updateRecordName(this.state.attribute, this.props.recordId);
     } else {
       this.props.updateRecordAttribute(
