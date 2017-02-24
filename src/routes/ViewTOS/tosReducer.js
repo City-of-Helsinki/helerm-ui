@@ -478,7 +478,6 @@ const ACTION_HANDLERS = {
     });
   },
   [EDIT_RECORD]: (state, action) => {
-    console.log(action.editedRecord);
     if (action.editedRecord.name) {
       return update(state, {
         records : {
