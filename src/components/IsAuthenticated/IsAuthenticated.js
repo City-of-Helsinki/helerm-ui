@@ -1,17 +1,25 @@
 import React, { PropTypes, Children } from 'react';
+import { connect } from 'react-redux';
 
 class IsAuthenticated extends React.Component {
   render () {
-    const { children } = this.props;
+    const { children, user } = this.props;
 
     return (
-      Children.only(children)
+      !!user.token && Children.only(children)
     );
   }
 }
 
 IsAuthenticated.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
+  user: PropTypes.object
 };
 
-export default IsAuthenticated;
+const mapStateToProps = (state) => {
+  return {
+    user: state.user
+  };
+};
+
+export default connect(mapStateToProps)(IsAuthenticated);
