@@ -46,6 +46,7 @@ webpackConfig.output = {
 // ------------------------------------
 // Plugins
 // ------------------------------------
+
 webpackConfig.plugins = [
   new webpack.DefinePlugin(config.globals),
   new HtmlWebpackPlugin({
@@ -56,7 +57,9 @@ webpackConfig.plugins = [
     inject   : 'body',
     minify   : {
       collapseWhitespace : true
-    }
+    },
+    VERSION: config.globals.GIT_VERSION,
+    HASH: config.globals.GIT_COMMIT_HASH
   })
 ];
 
@@ -164,7 +167,7 @@ webpackConfig.module.loaders.push(
   { test: /\.eot(\?.*)?$/,   loader: 'file?prefix=fonts/&name=assets/[name].[ext]' },
   { test: /\.svg(\?.*)?$/,   loader: 'url?prefix=fonts/&name=assets/[name].[ext]&limit=10000&mimetype=image/svg+xml' },
   { test: /\.(png|jpg)$/,    loader: 'url?name=assets/[name].[ext]&limit=8192' }
-)
+);
 /* eslint-enable */
 
 // ------------------------------------
