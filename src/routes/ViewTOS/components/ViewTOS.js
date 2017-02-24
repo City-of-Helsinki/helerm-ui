@@ -255,20 +255,20 @@ export class ViewTOS extends React.Component {
                 <h4 className='col-md-6 col-xs-12'>{selectedTOS.function_id} {selectedTOS.name}</h4>
                 <div className='document-buttons col-xs-12 col-md-6'>
                   { selectedTOS.documentState !== 'edit' &&
-                  <span>
-                    <IsAuthenticated>
-                      <button
-                        className='btn btn-default btn-sm pull-right'
-                        onClick={this.sendForInspection}>
-                        Lähetä tarkastettavaksi
-                      </button>
-                    </IsAuthenticated>
-                    <button
-                      className='btn btn-primary btn-sm pull-right'
-                      onClick={() => this.props.setDocumentState('edit')}>
-                      Muokkaustila
-                    </button>
-                  </span>
+                  <IsAuthenticated>
+                    <span>
+                        <button
+                          className='btn btn-default btn-sm pull-right'
+                          onClick={this.sendForInspection}>
+                          Lähetä tarkastettavaksi
+                        </button>
+                        <button
+                          className='btn btn-primary btn-sm pull-right'
+                          onClick={() => this.props.setDocumentState('edit')}>
+                          Muokkaustila
+                        </button>
+                    </span>
+                  </IsAuthenticated>
                   }
                   { selectedTOS.documentState === 'edit' &&
                   <span>
