@@ -35,19 +35,13 @@ export class Record extends React.Component {
   //   this.setState({ showAttributes: true });
   // }
 
-  saveRecord () {
-    this.setMode('view');
-    // const savedRecord = {
-    //   id: this.props.record.id,
-    //   name: this.props.record.name,
-    //   attributes: this.props.record.attributes
-    // };
-    // this.props.editRecord(savedRecord);
-  }
+  // saveRecord () {
+  //   this.setMode('view');
+  // }
 
-  cancelRecordEdit () {
-    this.setMode('view');
-  }
+  // cancelRecordEdit () {
+  //   this.setMode('view');
+  // }
 
   toggleAttributeVisibility () {
     const currentVisibility = this.state.showAttributes;
@@ -149,7 +143,7 @@ export class Record extends React.Component {
           }
           { recordAttributes }
           { attributes }
-          { this.state.mode === 'edit' &&
+          {/* { this.state.mode === 'edit' &&
           <div className='col-xs-12'>
             <button className='btn btn-primary pull-right edit-record__submit'
                     onClick={() => this.saveRecord()}>
@@ -160,7 +154,7 @@ export class Record extends React.Component {
               Peruuta
             </button>
           </div>
-        }
+          } */}
         </div>
         }
         { this.state.deleting &&
