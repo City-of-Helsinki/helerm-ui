@@ -26,7 +26,7 @@ export class Header extends React.Component {
   }
 
   render () {
-    const { isFetching, message, closeMessage, setNavigationVisibility } = this.props;
+    const { isFetching, message, closeMessage } = this.props;
     let alertMessage = null;
     if (this.state.showAlert === true) {
       alertMessage = (
@@ -60,8 +60,7 @@ export class Header extends React.Component {
 Header.propTypes = {
   closeMessage: React.PropTypes.func,
   isFetching: React.PropTypes.bool,
-  message: React.PropTypes.object,
-  setNavigationVisibility: React.PropTypes.func
+  message: React.PropTypes.object
 };
 
 const mapStateToProps = (state) => {
