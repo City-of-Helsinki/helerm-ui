@@ -257,16 +257,16 @@ export class ViewTOS extends React.Component {
                   { selectedTOS.documentState !== 'edit' &&
                   <IsAuthenticated>
                     <span>
-                        <button
-                          className='btn btn-default btn-sm pull-right'
-                          onClick={this.sendForInspection}>
-                          Lähetä tarkastettavaksi
-                        </button>
-                        <button
-                          className='btn btn-primary btn-sm pull-right'
-                          onClick={() => this.props.setDocumentState('edit')}>
-                          Muokkaustila
-                        </button>
+                      <button
+                        className='btn btn-default btn-sm pull-right'
+                        onClick={this.sendForInspection}>
+                        Lähetä tarkastettavaksi
+                      </button>
+                      <button
+                        className='btn btn-primary btn-sm pull-right'
+                        onClick={() => this.props.setDocumentState('edit')}>
+                        Muokkaustila
+                      </button>
                     </span>
                   </IsAuthenticated>
                   }
