@@ -115,6 +115,7 @@ export class Action extends React.Component {
 
   delete () {
     this.setState({ deleted: true, deleting: false });
+    this.props.removeAction(this.props.action.id);
   }
 
   createRecord (actionId, name, type, attributes) {

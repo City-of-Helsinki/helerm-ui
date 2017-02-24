@@ -153,6 +153,7 @@ export class Phase extends React.Component {
 
   delete () {
     this.setState({ deleted: true, deleting: false });
+    this.props.removePhase(this.props.phase.id);
   }
 
   render () {
