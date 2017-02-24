@@ -39,6 +39,16 @@ export class Attribute extends React.Component {
 
   submit (event) {
     event.preventDefault();
+    if (this.props.attributeIndex === '') { // This means the record name
+      this.props.updateRecordName(this.state.attribute, this.props.recordId);
+    } else {
+      this.props.updateRecordAttribute(
+        this.state.attribute,
+        this.props.attributeIndex,
+        this.props.recordId
+      );
+    }
+
     setTimeout(() => this.changeState('view'),
       150
     );
@@ -169,7 +179,9 @@ Attribute.propTypes = {
   mode: React.PropTypes.string.isRequired,
   recordId: React.PropTypes.string,
   showAttributes: React.PropTypes.bool.isRequired,
-  type: React.PropTypes.string.isRequired
+  type: React.PropTypes.string.isRequired,
+  updateRecordAttribute: React.PropTypes.func,
+  updateRecordName: React.PropTypes.func
 };
 
 export default Attribute;

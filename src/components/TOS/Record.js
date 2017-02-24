@@ -9,6 +9,8 @@ export class Record extends React.Component {
   constructor (props) {
     super(props);
     this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
+    this.updateRecordName = this.updateRecordName.bind(this);
+    this.updateRecordAttribute = this.updateRecordAttribute.bind(this);
     this.state = {
       showAttributes: false,
       mode: 'view',
@@ -42,6 +44,31 @@ export class Record extends React.Component {
     this.setState({ showAttributes: newVisibility });
   }
 
+  updateRecordName (recordName, recordId) {
+    this.setState({
+      name: recordName
+    });
+    const updatedRecordName = {
+      name: recordName,
+      recordId: recordId
+    };
+    this.props.editRecord(updatedRecordName);
+  }
+
+  updateRecordAttribute (attribute, attributeIndex, recordId) {
+    this.setState({
+      attributes: {
+        [attributeIndex]: attribute
+      }
+    });
+    const savedAttribute = {
+      attribute: attribute,
+      attributeIndex: attributeIndex,
+      recordId: recordId
+    };
+    this.props.editRecord(savedAttribute);
+  }
+
   generateRecordObjects (record) {
     const recordObjects = [];
     recordObjects.push({ recordKey: 'Asiakirjatyypin tarkenne', name: record.name, type: '' });
@@ -63,6 +90,8 @@ export class Record extends React.Component {
           mode={this.state.mode}
           type='record'
           editable={true}
+          updateRecordName={this.updateRecordName}
+          updateRecordAttribute={this.updateRecordAttribute}
           showAttributes={true}
         />
       );
@@ -85,6 +114,7 @@ export class Record extends React.Component {
             mode={this.state.mode}
             type='attribute'
             editable={true}
+            updateRecordAttribute={this.updateRecordAttribute}
             showAttributes={this.state.showAttributes}
           />);
       }
