@@ -1,9 +1,12 @@
 /* eslint key-spacing:0 spaced-comment:0 */
 const path = require('path');
+const GitRevisionPlugin = require('git-revision-webpack-plugin');
 const debug = require('debug')('app:config');
 const argv = require('yargs').argv;
 const ip = require('ip');
 const dotenv = require('dotenv');
+
+const gitRevisionPlugin = new GitRevisionPlugin();
 
 dotenv.load();
 
@@ -88,6 +91,8 @@ config.globals = {
   '__BASENAME__': JSON.stringify(process.env.BASENAME || ''),
   'CLIENT_ID': process.env.CLIENT_ID,
   'CLIENT_SECRET': process.env.CLIENT_SECRET,
+  'GIT_VERSION': JSON.stringify(gitRevisionPlugin.version()),
+  'GIT_COMMIT_HASH': JSON.stringify(gitRevisionPlugin.commithash()),
   'JWT_TOKEN': process.env.JWT_TOKEN,
   'APP_URL': process.env.APP_URL,
   'API_URL': JSON.stringify(process.env.API_URL),

@@ -17,6 +17,8 @@
     "API_VERSION"       : false,
     "RESULTS_PER_PAGE"  : false,
     "STORAGE_PREFIX"    : false,
+    "GIT_VERSION"       : false,
+    "GIT_COMMIT_HASH"   : false,
     "__DEV__"           : false,
     "__TEST__"          : false,
     "__PROD__"          : false,
