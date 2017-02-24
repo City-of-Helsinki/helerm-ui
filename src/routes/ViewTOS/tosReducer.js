@@ -39,11 +39,13 @@ export function requestTOS () {
 }
 
 export function receiveTOS (json) {
-  json.phases.map((phase, index) => {
-    phase.index = phase.index || index;
+  json.phases.map((phase, phaseIndex) => {
+    phase.index = phase.index || phaseIndex;
     phase.is_open = false;
-    phase.actions.map(action => {
-      action.records.map(record => {
+    phase.actions.map((action, actionIndex) => {
+      action.index = action.index || actionIndex;
+      action.records.map((record, recordIndex) => {
+        record.index = record.index || recordIndex;
         record.is_open = false;
       });
     });
@@ -276,6 +278,7 @@ export function executeOrderChange (newOrder, itemType, itemParent, currentState
       });
     }
   }
+
   itemList = parentLevel === 'tos' ? reorderedList : itemList;
 
   return {
@@ -306,6 +309,7 @@ export function fetchTOS (tosId) {
 
 export function sendForInspection (tos) {
   const finalTos = normalizeTosForApi(tos);
+  debugger;
   return function (dispatch) {
     dispatch(requestTOS());
     return api.put(`function/${tos.id}`, finalTos)
