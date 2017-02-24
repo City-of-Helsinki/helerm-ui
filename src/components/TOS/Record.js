@@ -13,17 +13,10 @@ export class Record extends React.Component {
       showAttributes: false,
       mode: 'view',
       deleting: false,
-      deleted: false
+      deleted: false,
+      name: this.props.record.name,
+      attributes: this.props.record.attributes
     };
-  }
-
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.record.name) {
-      this.setState({
-        name: nextProps.record.name,
-        attributes: nextProps.record.attributes
-      });
-    }
   }
 
   setMode (value) {
