@@ -555,7 +555,7 @@ const ACTION_HANDLERS = {
     delete actionsCopy[action.actionToRemove];
 
     return update(state, {
-      phases: {
+      actions: {
         $set: actionsCopy
       }
     });
@@ -565,7 +565,7 @@ const ACTION_HANDLERS = {
     delete recordsCopy[action.recordToRemove];
 
     return update(state, {
-      phases: {
+      records: {
         $set: recordsCopy
       }
     });
