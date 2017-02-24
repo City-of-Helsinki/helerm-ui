@@ -142,7 +142,7 @@ export class Record extends React.Component {
   }
 
   render () {
-    const { record } = this.props;
+    const { record } = this.props; // TYPE IS UNDEFINED
     const recordObjects = this.generateRecordObjects(record);
     const recordAttributes = this.generateRecordAttributes(recordObjects);
     const attributes = this.generateAttributes(record.attributes);
