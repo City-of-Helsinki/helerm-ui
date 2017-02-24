@@ -136,12 +136,13 @@ export class ViewTOS extends React.Component {
   }
 
   generateMetaData (attributeTypes, attributes) {
-    const modifiedDateTime = this.formatDateTime(this.props.selectedTOS.modified_at);
+    const { modified_at, documentState, editRecord, version } = this.props.selectedTOS;
+    const modifiedDateTime = this.formatDateTime(modified_at);
     const formattedDate = formatDate(modifiedDateTime.date, 'DD.MM.YYYY');
     const dateTime = formattedDate + ' ' + modifiedDateTime.time;
     const attributeElements = [];
     const versionData = [
-      { type: 'Versionumero', name: '1.0' },
+      { type: 'Versionumero', name: version.toString() },
       { type: 'Tila', name: 'Luonnos' },
       { type: 'Muokkausajankohta', name: dateTime },
       { type: 'Muokkaaja', name: 'Matti Meikäläinen' }
@@ -153,12 +154,12 @@ export class ViewTOS extends React.Component {
           attributeIndex={metadata.type}
           attributeKey={metadata.type}
           attribute={metadata.name}
-          documentState={this.props.selectedTOS.documentState}
+          documentState={documentState}
           attributeTypes={attributeTypes}
           mode='view'
           type='attribute'
           editable={false}
-          editRecord={this.props.editRecord}
+          editRecord={editRecord}
           showAttributes={true}
         />
       );
@@ -173,8 +174,8 @@ export class ViewTOS extends React.Component {
             attribute={attributes[key]}
             mode='view'
             type='attribute'
-            attributeTypes={this.props.attributeTypes}
-            documentState={this.props.selectedTOS.documentState}
+            attributeTypes={attributeTypes}
+            documentState={documentState}
             showAttributes={this.state.showMetadata}
             editable={true}
             editRecord={this.props.editRecord}
