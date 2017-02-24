@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import './Action.scss';
 import Record from './Record';
 import AddRecord from './AddRecord';
@@ -187,7 +188,7 @@ export class Action extends React.Component {
           <span className='col-xs-6 attribute-label'>
             Tyyppi
           </span>
-          <div className={'col-xs-12 records ' + (this.props.documentState === 'edit' ? 'records-editing' : '')}>
+          <div className={classNames('col-xs-12 records', { 'records-editing': this.props.documentState === 'edit' })}>
             { recordElements }
           </div>
 
