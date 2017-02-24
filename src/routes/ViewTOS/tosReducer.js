@@ -551,29 +551,32 @@ const ACTION_HANDLERS = {
     });
   },
   [REMOVE_ACTION]: (state, action) => {
+    const actionsCopy = state.actions;
+    delete actionsCopy[action.actionToRemove];
+
     return update(state, {
-      actions: {
-        [action.actionToRemove]: {
-          $set: undefined
-        }
+      phases: {
+        $set: actionsCopy
       }
     });
   },
   [REMOVE_RECORD]: (state, action) => {
+    const recordsCopy = state.records;
+    delete recordsCopy[action.recordToRemove];
+
     return update(state, {
-      records: {
-        [action.recordToRemove]: {
-          $set: undefined
-        }
+      phases: {
+        $set: recordsCopy
       }
     });
   },
   [REMOVE_PHASE]: (state, action) => {
+    const phasesCopy = state.phases;
+    delete phasesCopy[action.phaseToRemove];
+
     return update(state, {
       phases: {
-        [action.phaseToRemove]: {
-          $set: undefined
-        }
+        $set: phasesCopy
       }
     });
   },
