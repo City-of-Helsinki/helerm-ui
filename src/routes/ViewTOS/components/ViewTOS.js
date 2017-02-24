@@ -153,7 +153,7 @@ export class ViewTOS extends React.Component {
           attributeIndex={metadata.type}
           attributeKey={metadata.type}
           attribute={metadata.name}
-          documentState={this.props.documentState}
+          documentState={this.props.selectedTOS.documentState}
           attributeTypes={attributeTypes}
           mode='view'
           type='attribute'
@@ -174,7 +174,7 @@ export class ViewTOS extends React.Component {
             mode='view'
             type='attribute'
             attributeTypes={this.props.attributeTypes}
-            documentState={this.props.documentState}
+            documentState={this.props.selectedTOS.documentState}
             showAttributes={this.state.showMetadata}
             editable={true}
             editRecord={this.props.editRecord}
@@ -216,14 +216,14 @@ export class ViewTOS extends React.Component {
           <Phase
             key={key}
             phaseIndex={phases[key].id}
-            phase={this.props.phases[key]}
+            phase={this.props.selectedTOS.phases[key]}
             phasesOrder={phasesOrder}
-            phases={this.props.phases}
-            actions={this.props.actions}
-            records={this.props.records}
+            phases={this.props.selectedTOS.phases}
+            actions={this.props.selectedTOS.actions}
+            records={this.props.selectedTOS.records}
             setPhaseVisibility={this.setPhaseVisibility}
             recordTypes={this.props.recordTypes}
-            documentState={this.props.documentState}
+            documentState={this.props.selectedTOS.documentState}
             attributeTypes={this.props.attributeTypes}
             addAction={this.props.addAction}
             addRecord={this.props.addRecord}
@@ -242,7 +242,7 @@ export class ViewTOS extends React.Component {
   }
 
   render () {
-    const { selectedTOS, phases, isFetching } = this.props;
+    const { selectedTOS, isFetching } = this.props;
     if (!isFetching && selectedTOS.id) {
       const phaseElements = this.generatePhases(selectedTOS.phases);
       const TOSMetaData = this.generateMetaData(this.props.attributeTypes, selectedTOS.attributes);
@@ -254,7 +254,7 @@ export class ViewTOS extends React.Component {
               <div className='row'>
                 <h4 className='col-md-6 col-xs-12'>{selectedTOS.function_id} {selectedTOS.name}</h4>
                 <div className='document-buttons col-xs-12 col-md-6'>
-                  { this.props.documentState !== 'edit' &&
+                  { selectedTOS.documentState !== 'edit' &&
                   <span>
                     <IsAuthenticated>
                       <button
@@ -270,7 +270,7 @@ export class ViewTOS extends React.Component {
                     </button>
                   </span>
                   }
-                  { this.props.documentState === 'edit' &&
+                  { selectedTOS.documentState === 'edit' &&
                   <span>
                     <button
                       className='btn btn-primary btn-sm pull-right'
@@ -298,7 +298,7 @@ export class ViewTOS extends React.Component {
                   </div>
                 </div>
                 <div className='col-xs-12 button-row'>
-                  { this.props.documentState === 'edit' && !this.state.createPhaseMode &&
+                  { selectedTOS.documentState === 'edit' && !this.state.createPhaseMode &&
                   <span className='pull-right'>
                     <Dropdown
                       children={[
@@ -325,12 +325,12 @@ export class ViewTOS extends React.Component {
                   }
                   <button
                     className='btn btn-default btn-sm pull-right'
-                    onClick={() => this.props.setPhasesVisibility(phases, true)}>
+                    onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, true)}>
                     Avaa kaikki
                   </button>
                   <button
                     className='btn btn-default btn-sm pull-right'
-                    onClick={() => this.props.setPhasesVisibility(phases, false)}>
+                    onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, false)}>
                     Pienennä kaikki
                   </button>
                 </div>
@@ -365,8 +365,8 @@ export class ViewTOS extends React.Component {
                       <ReorderView
                         target='phase'
                         toggleReorderView={() => this.toggleReorderView()}
-                        keys={Object.keys(this.props.phases)}
-                        values={this.props.phases}
+                        keys={Object.keys(selectedTOS.phases)}
+                        values={selectedTOS.phases}
                         changeOrder={this.props.changeOrder}
                         parent={null}
                         parentName={selectedTOS.function_id + ' ' + selectedTOS.name}
@@ -381,10 +381,10 @@ export class ViewTOS extends React.Component {
                       <ImportView
                         level='phase'
                         toggleImportView={() => this.toggleImportView()}
-                        phases={this.props.phases}
-                        phasesOrder={this.props.selectedTOS.phases}
-                        actions={this.props.actions}
-                        records={this.props.records}
+                        phases={selectedTOS.phases}
+                        phasesOrder={selectedTOS.phases}
+                        actions={selectedTOS.actions}
+                        records={selectedTOS.records}
                         importItems={this.props.importItems}
                         title='käsittelyvaiheita'
                         targetText={'TOS-kuvaukseen ' + selectedTOS.name}
@@ -407,7 +407,6 @@ export class ViewTOS extends React.Component {
 }
 
 ViewTOS.propTypes = {
-  actions: React.PropTypes.object.isRequired,
   addAction: React.PropTypes.func.isRequired,
   addPhase: React.PropTypes.func.isRequired,
   addRecord: React.PropTypes.func.isRequired,
@@ -415,7 +414,6 @@ ViewTOS.propTypes = {
   changeOrder: React.PropTypes.func.isRequired,
   clearTOS: React.PropTypes.func.isRequired,
   displayMessage: React.PropTypes.func.isRequired,
-  documentState: React.PropTypes.string.isRequired,
   editAction: React.PropTypes.func.isRequired,
   editPhase: React.PropTypes.func.isRequired,
   editRecord: React.PropTypes.func.isRequired,
@@ -423,10 +421,8 @@ ViewTOS.propTypes = {
   importItems: React.PropTypes.func.isRequired,
   isFetching: React.PropTypes.bool.isRequired,
   params: React.PropTypes.object.isRequired,
-  phases: React.PropTypes.object.isRequired,
   push: React.PropTypes.func.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
-  records: React.PropTypes.object.isRequired,
   route: React.PropTypes.object.isRequired,
   selectedTOS: React.PropTypes.object.isRequired,
   sendForInspection: React.PropTypes.func.isRequired,
