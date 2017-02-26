@@ -116,8 +116,8 @@ export class Record extends React.Component {
             attributeIndex={key}
             attributeKey={this.props.attributeTypes[key].name}
             attribute={attributes[key]}
-            documentState={this.props.documentState}
             attributeTypes={this.props.attributeTypes}
+            documentState={this.props.documentState}
             mode={this.state.mode}
             type='attribute'
             editable={true}

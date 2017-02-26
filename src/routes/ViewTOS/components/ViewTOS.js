@@ -176,9 +176,9 @@ export class ViewTOS extends React.Component {
             type='attribute'
             attributeTypes={attributeTypes}
             documentState={documentState}
-            showAttributes={this.state.showMetadata}
             editable={true}
             editRecord={this.props.editRecord}
+            showAttributes={this.state.showMetadata}
           />
         );
       }
@@ -219,18 +219,18 @@ export class ViewTOS extends React.Component {
             phaseIndex={phases[key].id}
             phase={this.props.selectedTOS.phases[key]}
             phasesOrder={phasesOrder}
-            phases={this.props.selectedTOS.phases}
-            actions={this.props.selectedTOS.actions}
-            records={this.props.selectedTOS.records}
             setPhaseVisibility={this.setPhaseVisibility}
+            actions={this.props.selectedTOS.actions}
+            phases={this.props.selectedTOS.phases}
+            records={this.props.selectedTOS.records}
             recordTypes={this.props.recordTypes}
             documentState={this.props.selectedTOS.documentState}
             attributeTypes={this.props.attributeTypes}
             addAction={this.props.addAction}
             addRecord={this.props.addRecord}
             editAction={this.props.editAction}
-            editRecord={this.props.editRecord}
             editPhase={this.props.editPhase}
+            editRecord={this.props.editRecord}
             removeAction={this.props.removeAction}
             removePhase={this.props.removePhase}
             removeRecord={this.props.removeRecord}

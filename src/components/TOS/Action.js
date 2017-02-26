@@ -175,13 +175,13 @@ export class Action extends React.Component {
           </Sticky>
           { this.state.creating &&
           <AddRecord
+            actionId={this.props.action.id}
             attributeTypes={this.props.attributeTypes}
             recordTypes={this.props.recordTypes}
+            createRecord={this.createRecord}
+            cancelRecordCreation={this.cancelRecordCreation}
             mode={this.state.mode}
             displayMessage={this.props.displayMessage}
-            actionId={this.props.action.id}
-            cancelRecordCreation={this.cancelRecordCreation}
-            createRecord={this.createRecord}
           />
           }
           <span className='col-xs-6 attribute-label'>
