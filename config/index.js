@@ -5,6 +5,7 @@ const debug = require('debug')('app:config');
 const argv = require('yargs').argv;
 const ip = require('ip');
 const dotenv = require('dotenv');
+const pkgVersion = require('../package.json').version;
 
 const gitRevisionPlugin = new GitRevisionPlugin();
 
@@ -91,6 +92,7 @@ config.globals = {
   '__BASENAME__': JSON.stringify(process.env.BASENAME || ''),
   'CLIENT_ID': process.env.CLIENT_ID,
   'CLIENT_SECRET': process.env.CLIENT_SECRET,
+  'VERSION': JSON.stringify(pkgVersion),
   'GIT_VERSION': JSON.stringify(gitRevisionPlugin.version()),
   'GIT_COMMIT_HASH': JSON.stringify(gitRevisionPlugin.commithash()),
   'JWT_TOKEN': process.env.JWT_TOKEN,
