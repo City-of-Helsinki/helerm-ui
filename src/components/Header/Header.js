@@ -42,7 +42,7 @@ export class Header extends React.Component {
     return (
       <div>
         <nav className='navbar navbar-inverse container-fluid'>
-          <Link to='/' className='brand-title navbar-brand'>Tiedonohjausjärjestelmä Alpha v0.1.4</Link>
+          <Link to='/' className='brand-title navbar-brand'>Tiedonohjausjärjestelmä Alpha v{VERSION}</Link>
           <LoginContainer />
         </nav>
         <Loader show={isFetching}/>
