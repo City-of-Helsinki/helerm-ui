@@ -10,7 +10,15 @@ describe('(Redux Module) TOS', () => {
     let _initialState;
     beforeEach(() => {
       _initialState = {
-        tos: {},
+        id: null,
+        function_id: null,
+        parent: null,
+        version: null,
+        name: null,
+        error_count: null,
+        state: null,
+        created_at: null,
+        modified_at: null,
         actions: {},
         phases: {},
         records: {},

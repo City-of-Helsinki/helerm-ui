@@ -22,6 +22,6 @@ describe('(Component) Header', () => {
     const title = nav.find('Link');
     expect(nav).to.exist;
     expect(title).to.exist;
-    expect(title.children().text()).to.match(/Tiedonohjausjärjestelmä/);
+    expect(title.children().at(0).text()).to.match(/Tiedonohjausjärjestelmä/);
   });
 });

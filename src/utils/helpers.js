@@ -4,8 +4,7 @@ import {
   find,
   filter,
   flatten,
-  map,
-  forEach
+  map
 } from 'lodash';
 
 export function convertToTree (itemList) {
@@ -49,7 +48,30 @@ export function convertToTree (itemList) {
 }
 
 /**
- *
+ * Normalize tos for API
+ * @param tos
+ * @returns {*}
+ */
+export function normalizeTosForApi (tos) {
+  // TODO: needs some serious refactoring...
+  const phases = Object.keys(tos.phases).map(phase => tos.phases[phase]);
+  phases.map(phase => phase.actions.map((action, actionIndex) => {
+    delete phase.actions[actionIndex];
+    phase.actions[actionIndex] = tos.actions[action];
+    phase.actions[actionIndex].records.map((record, recordsIndex) => {
+      delete phase.actions[actionIndex].records[recordsIndex];
+      phase.actions[actionIndex].records[recordsIndex] = tos.records[record];
+    });
+  }));
+
+  delete tos.actions;
+  delete tos.records;
+  tos.phases = phases;
+  return tos;
+}
+
+/**
+ * Find item by id (nested array with `children`-key)
  * @param items
  * @param id
  * @returns {*}
@@ -70,27 +92,27 @@ export function itemById (items, id) {
 }
 
 /**
- *
+ * Centered PopUp-Window
  * @param url
- * @param query
- * @returns {string}
+ * @param title
+ * @param w
+ * @param h
+ * @returns {Window}
  */
-export function getApiUrl (url, query = {}) {
-  const queryString = buildQueryString(query);
-  return [API_URL, API_VERSION, url, queryString].join('/');
-}
-
-/**
- *
- * @param query
- * @returns {string}
- */
-export function buildQueryString (query) {
-  const pairs = [];
-
-  forEach(query, (value, key) => {
-    pairs.push([key, value].join('='));
-  });
-
-  return pairs.length ? '?' + pairs.join('&') : '';
+export function centeredPopUp (url, title, w, h) {
+  const left = (screen.width / 2) - (w / 2);
+  const top = (screen.height / 2) - (h / 2);
+  return window.open(
+    url,
+    title,
+    `
+    toolbar=no,
+    location=no,
+    directories=no,
+    status=no, menubar=no,
+    scrollbars=no,
+    resizable=no,
+    copyhistory=no,
+    width=${w}, height=${h}, top=${top}, left=${left}
+  `);
 }

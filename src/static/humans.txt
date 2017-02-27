@@ -2,7 +2,9 @@
 
 # TEAM
 
+    Ville Ristimäki -- Lead Front-end Developer -- https://github.com/villeristi
     Kalle Mäkynen -- Front-end Developer -- https://github.com/kallemakynen
+    Joni Rämö -- Front-end Developer -- https://github.com/jonraem
     Emilia Pesonen -- UI/UX Designer
     Tomi Sjöblom -- UI/UX Designer
     Ari Koli -- Scrum master

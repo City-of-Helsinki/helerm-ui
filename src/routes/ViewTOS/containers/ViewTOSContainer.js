@@ -6,16 +6,22 @@ import { setNavigationVisibility } from '../../../components/Navigation/navigati
 
 import {
   fetchTOS,
+  clearTOS,
   setPhaseVisibility,
   setPhasesVisibility,
-  sendForInspection,
-  setDocumentState,
   addAction,
-  addRecord,
   addPhase,
-  changeOrder,
+  addRecord,
+  editAction,
+  editPhase,
+  editRecord,
+  removeAction,
+  removePhase,
+  removeRecord,
+  setDocumentState,
   importItems,
-  clearTOS
+  changeOrder,
+  sendForInspection
 } from '../tosReducer';
 
 import { displayMessage } from '../../../store/uiReducer';
@@ -24,35 +30,36 @@ import ViewTOS from '../components/ViewTOS';
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    fetchTOS: bindActionCreators(fetchTOS, dispatch),
+    clearTOS: bindActionCreators(clearTOS, dispatch),
+    setPhaseVisibility: bindActionCreators(setPhaseVisibility, dispatch),
+    setPhasesVisibility: bindActionCreators(setPhasesVisibility, dispatch),
     addAction: bindActionCreators(addAction, dispatch),
     addPhase: bindActionCreators(addPhase, dispatch),
     addRecord: bindActionCreators(addRecord, dispatch),
-    changeOrder: bindActionCreators(changeOrder, dispatch),
-    clearTOS: bindActionCreators(clearTOS, dispatch),
-    displayMessage: bindActionCreators(displayMessage, dispatch),
-    fetchTOS: bindActionCreators(fetchTOS, dispatch),
-    importItems: bindActionCreators(importItems, dispatch),
+    editAction: bindActionCreators(editAction, dispatch),
+    editPhase: bindActionCreators(editPhase, dispatch),
+    editRecord: bindActionCreators(editRecord, dispatch),
+    removeAction: bindActionCreators(removeAction, dispatch),
+    removePhase: bindActionCreators(removePhase, dispatch),
+    removeRecord: bindActionCreators(removeRecord, dispatch),
     push: (path) => dispatch(push(path)),
-    setNavigationVisibility: bindActionCreators(setNavigationVisibility, dispatch),
-    sendForInspection: bindActionCreators(sendForInspection, dispatch),
     setDocumentState: bindActionCreators(setDocumentState, dispatch),
-    setPhasesVisibility: bindActionCreators(setPhasesVisibility, dispatch),
-    setPhaseVisibility: bindActionCreators(setPhaseVisibility, dispatch)
+    importItems: bindActionCreators(importItems, dispatch),
+    changeOrder: bindActionCreators(changeOrder, dispatch),
+    sendForInspection: bindActionCreators(sendForInspection, dispatch),
+    setNavigationVisibility: bindActionCreators(setNavigationVisibility, dispatch),
+    displayMessage: bindActionCreators(displayMessage, dispatch)
   };
 };
 
 const mapStateToProps = (state) => {
   return {
-    actions: state.selectedTOS.actions,
     attributeTypes: state.ui.attributeTypes,
-    documentState: state.selectedTOS.documentState,
     isFetching: state.ui.isFetching || state.selectedTOS.isFetching,
     items: state.navigation.items,
-    phases: state.selectedTOS.phases,
-    records: state.selectedTOS.records,
     recordTypes: state.ui.recordTypes,
-    selectedTOS: state.selectedTOS.tos,
-    selectedTOSPath: state.selectedTOS.path
+    selectedTOS: state.selectedTOS
   };
 };
 

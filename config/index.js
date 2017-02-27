@@ -1,52 +1,57 @@
 /* eslint key-spacing:0 spaced-comment:0 */
 const path = require('path');
+const GitRevisionPlugin = require('git-revision-webpack-plugin');
 const debug = require('debug')('app:config');
 const argv = require('yargs').argv;
 const ip = require('ip');
+const dotenv = require('dotenv');
+const pkgVersion = require('../package.json').version;
 
-const constants = require('./constants');
+const gitRevisionPlugin = new GitRevisionPlugin();
+
+dotenv.load();
 
 debug('Creating default configuration.');
 // ========================================================
 // Default Configuration
 // ========================================================
 const config = {
-  env : process.env.NODE_ENV || 'development',
+  env: process.env.NODE_ENV || 'development',
 
   // ----------------------------------
   // Project Structure
   // ----------------------------------
-  path_base  : path.resolve(__dirname, '..'),
-  dir_client : 'src',
-  dir_dist   : 'dist',
-  dir_server : 'server',
-  dir_test   : 'tests',
+  path_base: path.resolve(__dirname, '..'),
+  dir_client: 'src',
+  dir_dist: 'dist',
+  dir_server: 'server',
+  dir_test: 'tests',
 
   // ----------------------------------
   // Server Configuration
   // ----------------------------------
-  server_host : ip.address(), // use string 'localhost' to prevent exposure on local network
-  server_port : process.env.PORT || 3000,
+  server_host: ip.address(), // use string 'localhost' to prevent exposure on local network
+  server_port: process.env.PORT || 3000,
 
   // ----------------------------------
   // Compiler Configuration
   // ----------------------------------
-  compiler_babel : {
-    cacheDirectory : true,
-    plugins        : ['transform-runtime', 'transform-decorators-legacy'],
-    presets        : ['es2015', 'react', 'stage-0']
+  compiler_babel: {
+    cacheDirectory: true,
+    plugins: ['transform-runtime', 'transform-decorators-legacy'],
+    presets: ['es2015', 'react', 'stage-0']
   },
-  compiler_devtool         : 'source-map',
-  compiler_hash_type       : 'hash',
-  compiler_fail_on_warning : false,
-  compiler_quiet           : false,
-  compiler_public_path     : '/',
-  compiler_stats           : {
-    chunks : false,
-    chunkModules : false,
-    colors : true
+  compiler_devtool: 'source-map',
+  compiler_hash_type: 'hash',
+  compiler_fail_on_warning: false,
+  compiler_quiet: false,
+  compiler_public_path: '/',
+  compiler_stats: {
+    chunks: false,
+    chunkModules: false,
+    colors: true
   },
-  compiler_vendors : [
+  compiler_vendors: [
     'react',
     'react-redux',
     'react-router',
@@ -56,38 +61,46 @@ const config = {
   // ----------------------------------
   // Test Configuration
   // ----------------------------------
-  coverage_reporters : [
-    { type : 'text-summary' },
-    { type : 'lcov', dir : 'coverage' }
+  coverage_reporters: [
+    { type: 'text-summary' },
+    { type: 'lcov', dir: 'coverage' }
   ]
 };
 
 /************************************************
--------------------------------------------------
+ -------------------------------------------------
 
-All Internal Configuration Below
-Edit at Your Own Risk
+ All Internal Configuration Below
+ Edit at Your Own Risk
 
--------------------------------------------------
-************************************************/
+ -------------------------------------------------
+ ************************************************/
 
 // ------------------------------------
 // Environment
 // ------------------------------------
 // N.B.: globals added here must _also_ be added to .eslintrc
 config.globals = {
-  'process.env'  : {
-    'NODE_ENV' : JSON.stringify(config.env)
+  'process.env': {
+    'NODE_ENV': JSON.stringify(config.env)
   },
-  'NODE_ENV'        : config.env,
-  '__DEV__'         : config.env === 'development',
-  '__PROD__'        : config.env === 'production',
-  '__TEST__'        : config.env === 'test',
-  '__COVERAGE__'    : !argv.watch && config.env === 'test',
-  '__BASENAME__'    : JSON.stringify(process.env.BASENAME || ''),
-  'API_URL'         : JSON.stringify(process.env.API_URL || constants.API_URL),
-  'API_VERSION'     : JSON.stringify(process.env.API_VERSION || constants.API_VERSION),
-  'RESULTS_PER_PAGE': JSON.stringify(process.env.RESULTS_PER_PAGE || constants.RESULTS_PER_PAGE)
+  'NODE_ENV': config.env,
+  '__DEV__': config.env === 'development',
+  '__PROD__': config.env === 'production',
+  '__TEST__': config.env === 'test',
+  '__COVERAGE__': !argv.watch && config.env === 'test',
+  '__BASENAME__': JSON.stringify(process.env.BASENAME || ''),
+  'CLIENT_ID': process.env.CLIENT_ID,
+  'CLIENT_SECRET': process.env.CLIENT_SECRET,
+  'VERSION': JSON.stringify(pkgVersion),
+  'GIT_VERSION': JSON.stringify(gitRevisionPlugin.version()),
+  'GIT_COMMIT_HASH': JSON.stringify(gitRevisionPlugin.commithash()),
+  'JWT_TOKEN': process.env.JWT_TOKEN,
+  'APP_URL': process.env.APP_URL,
+  'API_URL': JSON.stringify(process.env.API_URL),
+  'API_VERSION': JSON.stringify(process.env.API_VERSION),
+  'RESULTS_PER_PAGE': JSON.stringify(process.env.RESULTS_PER_PAGE),
+  'STORAGE_PREFIX': JSON.stringify(process.env.STORAGE_PREFIX || 'HELERM')
 };
 
 // ------------------------------------
@@ -115,9 +128,9 @@ function base () {
 }
 
 config.utils_paths = {
-  base   : base,
-  client : base.bind(null, config.dir_client),
-  dist   : base.bind(null, config.dir_dist)
+  base: base,
+  client: base.bind(null, config.dir_client),
+  dist: base.bind(null, config.dir_dist)
 };
 
 // ========================================================

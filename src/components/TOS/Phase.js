@@ -42,6 +42,11 @@ export class Phase extends React.Component {
 
   savePhaseTitle (event) {
     event.preventDefault();
+    const savedPhase = {
+      id: this.props.phase.id,
+      name: this.state.name
+    };
+    this.props.editPhase(savedPhase);
     if (this.state.name.length > 0) {
       this.setState({ mode: 'view' });
     }
@@ -74,15 +79,19 @@ export class Phase extends React.Component {
             key={key}
             actionIndex={key}
             action={this.props.actions[actions[key]]}
-            phases={this.props.phases}
-            phasesOrder={this.props.phasesOrder}
+            addRecord={this.props.addRecord}
+            editAction={this.props.editAction}
+            editRecord={this.props.editRecord}
+            removeAction={this.props.removeAction}
+            removeRecord={this.props.removeRecord}
             actions={this.props.actions}
             records={this.props.records}
+            phases={this.props.phases}
+            phasesOrder={this.props.phasesOrder}
             recordTypes={this.props.recordTypes}
-            documentState={this.props.documentState}
             attributeTypes={this.props.attributeTypes}
+            documentState={this.props.documentState}
             phaseIndex={this.props.phaseIndex}
-            addRecord={this.props.addRecord}
             changeOrder={this.props.changeOrder}
             importItems={this.props.importItems}
             displayMessage={this.props.displayMessage}
@@ -129,7 +138,10 @@ export class Phase extends React.Component {
     this.props.setPhaseVisibility(this.props.phaseIndex, true);
     this.props.addAction(this.props.phaseIndex, this.state.newActionName);
     this.setState({ mode: 'view', newActionName: '' });
-    this.props.displayMessage('Toimenpiteen lisäys onnistui!');
+    this.props.displayMessage({
+      text: 'Toimenpiteen lisäys onnistui!',
+      success: true
+    });
   }
 
   cancelActionCreation (event) {
@@ -143,6 +155,7 @@ export class Phase extends React.Component {
 
   delete () {
     this.setState({ deleted: true, deleting: false });
+    this.props.removePhase(this.props.phase.id);
   }
 
   render () {
@@ -173,112 +186,114 @@ export class Phase extends React.Component {
       );
     }
     return (
-      <span className='col-xs-12 box phase'>
+      <div>
         { !this.state.deleted &&
-        <StickyContainer>
-          <Sticky className={'phase-title ' + (this.props.phase.is_open ? 'open' : 'closed')}>
-            { phaseTitle }
-            <span className='phase-buttons'>
-              { phase.actions.length !== 0 &&
-              <button
-                type='button'
-                className='btn btn-info btn-sm pull-right'
-                title={phase.is_open ? 'Pienennä' : 'Laajenna'}
-                onClick={() => this.props.setPhaseVisibility(phaseIndex, !phase.is_open)}>
-                <span
-                  className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
-                  aria-hidden='true'
-                />
-              </button>
-              }
-              { this.props.documentState === 'edit' &&
-              <span className='pull-right'>
-                <Dropdown children={phaseDropdownItems} small={true}/>
+        <span className='col-xs-12 box phase'>
+          <StickyContainer>
+            <Sticky className={'phase-title ' + (this.props.phase.is_open ? 'open' : 'closed')}>
+              { phaseTitle }
+              <span className='phase-buttons'>
+                { phase.actions.length !== 0 &&
+                <button
+                  type='button'
+                  className='btn btn-info btn-sm pull-right'
+                  title={phase.is_open ? 'Pienennä' : 'Laajenna'}
+                  onClick={() => this.props.setPhaseVisibility(phaseIndex, !phase.is_open)}>
+                  <span
+                    className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
+                    aria-hidden='true'
+                  />
+                </button>
+                }
+                { this.props.documentState === 'edit' &&
+                <span className='pull-right'>
+                  <Dropdown children={phaseDropdownItems} small={true}/>
+                </span>
+                }
               </span>
-              }
-            </span>
-          </Sticky>
-          { this.state.mode === 'add' &&
-          <form onSubmit={this.addAction} className='row add-action'>
-            <h5 className='col-xs-12'>Uusi toimenpide</h5>
-            <div className='col-xs-12 col-md-6'>
-              <input type='text'
-                     className='form-control'
-                     value={this.state.newActionName}
-                     onChange={this.onNewChange}
-                     placeholder='Toimenpiteen nimi'/>
+            </Sticky>
+            { this.state.mode === 'add' &&
+            <form onSubmit={this.addAction} className='row add-action'>
+              <h5 className='col-xs-12'>Uusi toimenpide</h5>
+              <div className='col-xs-12 col-md-6'>
+                <input type='text'
+                       className='form-control'
+                       value={this.state.newActionName}
+                       onChange={this.onNewChange}
+                       placeholder='Toimenpiteen nimi'/>
+              </div>
+              <div className='col-xs-12 col-md-4 add-action-buttons'>
+                <button
+                  className='btn btn-danger col-xs-6'
+                  onClick={this.cancelActionCreation}>
+                  Peruuta
+                </button>
+                <button className='btn btn-primary col-xs-6' type='submit'>Lisää</button>
+              </div>
+            </form>
+            }
+            <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>
+              { actionElements }
             </div>
-            <div className='col-xs-12 col-md-4 add-action-buttons'>
-              <button
-                className='btn btn-danger col-xs-6'
-                onClick={this.cancelActionCreation}>
-                Peruuta
-              </button>
-              <button className='btn btn-primary col-xs-6' type='submit'>Lisää</button>
-            </div>
-          </form>
+          </StickyContainer>
+          { this.state.deleting &&
+          <Popup
+            content={
+              <DeleteView
+                type='phase'
+                target={this.state.name}
+                action={() => this.delete()}
+                cancel={() => this.cancelDeletion()}
+              />
+            }
+            closePopup={() => this.cancelDeletion()}
+          />
           }
-          <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>
-            { actionElements }
-          </div>
-        </StickyContainer>
-        }
-        { this.state.deleting &&
-        <Popup
-          content={
-            <DeleteView
-              type='phase'
-              target={this.state.name}
-              action={() => this.delete()}
-              cancel={() => this.cancelDeletion()}
-            />
+          { this.state.showReorderView &&
+          <Popup
+            content={
+              <ReorderView
+                target='action'
+                toggleReorderView={() => this.toggleReorderView()}
+                keys={this.props.phase.actions}
+                values={this.props.actions}
+                changeOrder={this.props.changeOrder}
+                parent={phaseIndex}
+                parentName={this.state.name}
+              />
+            }
+            closePopup={() => this.toggleReorderView()}
+          />
           }
-          closePopup={() => this.cancelDeletion()}
-        />
-        }
-        { this.state.showReorderView &&
-        <Popup
-          content={
-            <ReorderView
-              target='action'
-              toggleReorderView={() => this.toggleReorderView()}
-              keys={this.props.phase.actions}
-              values={this.props.actions}
-              changeOrder={this.props.changeOrder}
-              parent={phaseIndex}
-              parentName={this.state.name}
-            />
+          { this.state.showImportView &&
+          <Popup
+            content={
+              <ImportView
+                level='action'
+                toggleImportView={() => this.toggleImportView()}
+                title='toimenpiteitä'
+                targetText={'käsittelyvaiheeseen "' + phase.name + '"'}
+                itemsToImportText='toimenpiteet'
+                phasesOrder={this.props.phasesOrder}
+                phases={this.props.phases}
+                actions={this.props.actions}
+                records={this.props.records}
+                importItems={this.props.importItems}
+                parent={phaseIndex}
+                showItems={() => this.props.setPhaseVisibility(phaseIndex, true)}
+              />
+            }
+            closePopup={() => this.toggleImportView()}
+          />
           }
-          closePopup={() => this.toggleReorderView()}
-        />
+          {/*
+           { update } is a hack to fix firefox specific issue of re-rendering phases
+           remove once firefox issue is fixed
+           */}
+          <div className='update'>{ update }</div>
+        </span>
         }
-        { this.state.showImportView &&
-        <Popup
-          content={
-            <ImportView
-              level='action'
-              toggleImportView={() => this.toggleImportView()}
-              title='toimenpiteitä'
-              targetText={'käsittelyvaiheeseen "' + phase.name + '"'}
-              itemsToImportText='toimenpiteet'
-              phasesOrder={this.props.phasesOrder}
-              phases={this.props.phases}
-              actions={this.props.actions}
-              records={this.props.records}
-              importItems={this.props.importItems}
-              parent={phaseIndex}
-              showItems={() => this.props.setPhaseVisibility(phaseIndex, true)}
-            />
-          }
-          closePopup={() => this.toggleImportView()}
-        />
-        }
-        {/*
-         { update } is a hack to fix firefox specific issue of re-rendering phases
-         remove once firefox issue is fixed
-         */}
-        <div className='update'>{ update }</div>
-      </span>
+      </div>
     );
   }
 }
@@ -291,6 +306,9 @@ Phase.propTypes = {
   changeOrder: React.PropTypes.func.isRequired,
   displayMessage: React.PropTypes.func.isRequired,
   documentState: React.PropTypes.string.isRequired,
+  editAction: React.PropTypes.func.isRequired,
+  editPhase: React.PropTypes.func.isRequired,
+  editRecord: React.PropTypes.func.isRequired,
   importItems: React.PropTypes.func.isRequired,
   phase: React.PropTypes.object.isRequired,
   phaseIndex: React.PropTypes.string.isRequired,
@@ -298,6 +316,9 @@ Phase.propTypes = {
   phasesOrder: React.PropTypes.array.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
   records: React.PropTypes.object.isRequired,
+  removeAction: React.PropTypes.func.isRequired,
+  removePhase: React.PropTypes.func.isRequired,
+  removeRecord: React.PropTypes.func.isRequired,
   setPhaseVisibility: React.PropTypes.func.isRequired,
   update: React.PropTypes.string.isRequired
 };

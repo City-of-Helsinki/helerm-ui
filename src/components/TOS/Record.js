@@ -9,11 +9,16 @@ export class Record extends React.Component {
   constructor (props) {
     super(props);
     this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
+    this.updateRecordName = this.updateRecordName.bind(this);
+    this.updateRecordType = this.updateRecordType.bind(this);
+    this.updateRecordAttribute = this.updateRecordAttribute.bind(this);
     this.state = {
       showAttributes: false,
       mode: 'view',
       deleting: false,
-      deleted: false
+      deleted: false,
+      name: this.props.record.name,
+      attributes: this.props.record.attributes
     };
   }
 
@@ -21,23 +26,53 @@ export class Record extends React.Component {
     this.setState({ mode: value });
   }
 
-  editRecord () {
-    this.setMode('edit');
-    this.setState({ showAttributes: true });
-  }
+  // editRecord () {
+  //   this.setMode('edit');
+  //   this.setState({ showAttributes: true });
+  // }
 
-  saveRecord () {
-    this.setMode('view');
-  }
+  // saveRecord () {
+  //   this.setMode('view');
+  // }
 
-  cancelRecordEdit () {
-    this.setMode('view');
-  }
+  // cancelRecordEdit () {
+  //   this.setMode('view');
+  // }
 
   toggleAttributeVisibility () {
     const currentVisibility = this.state.showAttributes;
     const newVisibility = !currentVisibility;
     this.setState({ showAttributes: newVisibility });
+  }
+
+  updateRecordName (recordName, recordId) {
+    this.setState({
+      name: recordName
+    });
+    const updatedRecordName = {
+      name: recordName,
+      recordId: recordId
+    };
+    this.props.editRecord(updatedRecordName);
+  }
+
+  updateRecordType (attribute, recordId) {
+    console.log(this.props);
+    const updatedRecordType = {
+      type: attribute,
+      recordId: recordId
+    };
+    this.props.editRecord(updatedRecordType);
+  }
+
+  updateRecordAttribute (attribute, attributeIndex, recordId) {
+    this.setState({
+      attributes: {
+        [attributeIndex]: attribute
+      }
+    });
+    const updateRecordAttribute = { attribute, attributeIndex, recordId };
+    this.props.editRecord(updateRecordAttribute);
   }
 
   generateRecordObjects (record) {
@@ -52,6 +87,7 @@ export class Record extends React.Component {
       return (
         <Attribute
           key={index}
+          recordId={this.props.record.id}
           attributeIndex={record.type}
           attributeKey=''
           attribute={record.name}
@@ -60,6 +96,9 @@ export class Record extends React.Component {
           mode={this.state.mode}
           type='record'
           editable={true}
+          updateRecordName={this.updateRecordName}
+          updateRecordType={this.updateRecordType}
+          updateRecordAttribute={this.updateRecordAttribute}
           showAttributes={true}
         />
       );
@@ -73,14 +112,16 @@ export class Record extends React.Component {
         attributeElements.push(
           <Attribute
             key={key}
+            recordId={this.props.record.id}
             attributeIndex={key}
             attributeKey={this.props.attributeTypes[key].name}
             attribute={attributes[key]}
-            documentState={this.props.documentState}
             attributeTypes={this.props.attributeTypes}
+            documentState={this.props.documentState}
             mode={this.state.mode}
             type='attribute'
             editable={true}
+            updateRecordAttribute={this.updateRecordAttribute}
             showAttributes={this.state.showAttributes}
           />);
       }
@@ -94,10 +135,11 @@ export class Record extends React.Component {
 
   delete () {
     this.setState({ deleted: true, deleting: false });
+    this.props.removeRecord(this.props.record.id);
   }
 
   render () {
-    const { record } = this.props;
+    const { record } = this.props; // TYPE IS UNDEFINED
     const recordObjects = this.generateRecordObjects(record);
     const recordAttributes = this.generateRecordAttributes(recordObjects);
     const attributes = this.generateAttributes(record.attributes);
@@ -130,7 +172,7 @@ export class Record extends React.Component {
           }
           { recordAttributes }
           { attributes }
-          { this.state.mode === 'edit' &&
+          {/* { this.state.mode === 'edit' &&
           <div className='col-xs-12'>
             <button className='btn btn-primary pull-right edit-record__submit'
                     onClick={() => this.saveRecord()}>
@@ -141,7 +183,7 @@ export class Record extends React.Component {
               Peruuta
             </button>
           </div>
-          }
+          } */}
         </div>
         }
         { this.state.deleting &&
@@ -165,8 +207,10 @@ export class Record extends React.Component {
 Record.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
   documentState: React.PropTypes.string.isRequired,
+  editRecord: React.PropTypes.func.isRequired,
   record: React.PropTypes.object.isRequired,
-  recordTypes: React.PropTypes.object.isRequired
+  recordTypes: React.PropTypes.object.isRequired,
+  removeRecord: React.PropTypes.func.isRequired
 };
 
 export default Record;

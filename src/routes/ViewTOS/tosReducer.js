@@ -1,26 +1,33 @@
-import fetch from 'isomorphic-fetch';
 import update from 'immutability-helper';
 import { normalize, Schema, arrayOf } from 'normalizr';
 
-import { getApiUrl } from '../../utils/helpers';
+import { default as api } from '../../utils/api';
+import { normalizeTosForApi } from '../../utils/helpers';
 
 // ------------------------------------
 // Constants
 // ------------------------------------
 export const REQUEST_TOS = 'tos/REQUEST_TOS';
 export const RECEIVE_TOS = 'tos/RECEIVE_TOS';
+export const TOS_ERROR = 'tos/TOS_ERROR';
 export const RESET_TOS = 'tos/RESET_TOS';
 
 export const SET_PHASE_VISIBILITY = 'tos/SET_PHASE_VISIBILITY';
 export const SET_PHASES_VISIBILITY = 'tos/SET_PHASES_VISIBILITY';
 
 export const ADD_ACTION = 'tos/ADD_ACTION';
-export const ADD_RECORD = 'tos/ADD_RECORD';
 export const ADD_PHASE = 'tos/ADD_PHASE';
+export const ADD_RECORD = 'tos/ADD_RECORD';
+
+export const EDIT_ACTION = 'tos/EDIT_ACTION';
+export const EDIT_PHASE = 'tos/EDIT_PHASE';
+export const EDIT_RECORD = 'tos/EDIT_RECORD';
+
+export const REMOVE_ACTION = 'tos/REMOVE_ACTION';
+export const REMOVE_PHASE = 'tos/REMOVE_PHASE';
+export const REMOVE_RECORD = 'tos/REMOVE_RECORD';
 
 export const SET_DOCUMENT_STATE = 'tos/SET_DOCUMENT_STATE';
-
-export const SEND_FOR_INSPECTION = 'tos/SEND_FOR_INSPECTION';
 
 export const EXECUTE_IMPORT = 'tos/EXECUTE_IMPORT';
 export const EXECUTE_ORDER_CHANGE = 'tos/EXECUTE_ORDER_CHANGE';
@@ -36,10 +43,13 @@ export function requestTOS () {
 }
 
 export function receiveTOS (json) {
-  json.phases.map(phase => {
+  json.phases.map((phase, phaseIndex) => {
+    phase.index = phase.index || phaseIndex;
     phase.is_open = false;
-    phase.actions.map(action => {
-      action.records.map(record => {
+    phase.actions.map((action, actionIndex) => {
+      action.index = action.index || actionIndex;
+      action.records.map((record, recordIndex) => {
+        record.index = record.index || recordIndex;
         record.is_open = false;
       });
     });
@@ -66,6 +76,33 @@ export function receiveTOS (json) {
   };
 }
 
+export function fetchTOS (tosId) {
+  return function (dispatch) {
+    dispatch(requestTOS());
+    return api.get(`function/${tosId}`)
+      .then(res => {
+        if (!res.ok) {
+          dispatch(TOSError());
+          throw new URIError(res.statusText);
+        }
+        return res.json();
+      })
+      .then(json => dispatch(receiveTOS(json)));
+  };
+}
+
+export function TOSError () {
+  return {
+    type: TOS_ERROR
+  };
+}
+
+export function clearTOS () {
+  return {
+    type: RESET_TOS
+  };
+}
+
 export function setPhaseVisibility (phase, visibility) {
   return {
     type: SET_PHASE_VISIBILITY,
@@ -88,20 +125,6 @@ export function setPhasesVisibility (phases, value) {
   return {
     type: SET_PHASES_VISIBILITY,
     allPhasesOpen
-  };
-}
-
-export function addAction (phaseIndex, name) {
-  const actionId = Math.random().toString(36).replace(/[^a-z]+/g, '');
-  const newAction = {
-    id: actionId,
-    name: name,
-    phase: phaseIndex,
-    records: []
-  };
-  return {
-    type: ADD_ACTION,
-    newAction
   };
 }
 
@@ -131,6 +154,20 @@ export function addRecord (actionIndex, recordName, recordType, attributes) {
   };
 }
 
+export function addAction (phaseIndex, name) {
+  const actionId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+  const newAction = {
+    id: actionId,
+    name: name,
+    phase: phaseIndex,
+    records: []
+  };
+  return {
+    type: ADD_ACTION,
+    newAction
+  };
+}
+
 export function addPhase (name, parent) {
   const phaseId = Math.random().toString(36).replace(/[^a-z]+/g, '');
   const newPhase = {
@@ -147,10 +184,45 @@ export function addPhase (name, parent) {
   };
 }
 
-export function sendForInspection (tosState) {
+export function editRecord (editedRecord) {
   return {
-    type: SEND_FOR_INSPECTION,
-    tosState
+    type: EDIT_RECORD,
+    editedRecord
+  };
+}
+
+export function editAction (editedAction) {
+  return {
+    type: EDIT_ACTION,
+    editedAction
+  };
+}
+
+export function editPhase (editedPhase) {
+  return {
+    type: EDIT_PHASE,
+    editedPhase
+  };
+}
+
+export function removeRecord (recordToRemove) {
+  return {
+    type: REMOVE_RECORD,
+    recordToRemove
+  };
+}
+
+export function removeAction (actionToRemove) {
+  return {
+    type: REMOVE_ACTION,
+    actionToRemove
+  };
+}
+
+export function removePhase (phaseToRemove) {
+  return {
+    type: REMOVE_PHASE,
+    phaseToRemove
   };
 }
 
@@ -236,7 +308,7 @@ export function executeOrderChange (newOrder, itemType, itemParent, currentState
     item.index = index + 1;
     parentList.push(item.id);
   });
-  const itemList = Object.assign({}, currentState.selectedTOS[itemLevel]);
+  let itemList = Object.assign({}, currentState.selectedTOS[itemLevel]);
   for (const key in itemList) {
     if (itemList.hasOwnProperty(key)) {
       reorderedList.map(item => {
@@ -246,6 +318,9 @@ export function executeOrderChange (newOrder, itemType, itemParent, currentState
       });
     }
   }
+
+  itemList = parentLevel === 'tos' ? reorderedList : itemList;
+
   return {
     type: EXECUTE_ORDER_CHANGE,
     itemList,
@@ -254,27 +329,6 @@ export function executeOrderChange (newOrder, itemType, itemParent, currentState
     parentLevel,
     itemLevel,
     parentList
-  };
-}
-
-export function fetchTOS (tosId) {
-  return function (dispatch) {
-    dispatch(requestTOS());
-    const url = getApiUrl(`function/${tosId}`);
-    return fetch(url)
-      .then(res => {
-        if (!res.ok) {
-          throw new URIError(res.statusText);
-        }
-        return res.json();
-      })
-      .then(json => dispatch(receiveTOS(json)));
-  };
-}
-
-export function clearTOS () {
-  return {
-    type: RESET_TOS
   };
 }
 
@@ -290,19 +344,38 @@ export function changeOrder (newOrder, itemType, itemParent) {
   };
 }
 
+export function sendForInspection (tos) {
+  const finalTos = normalizeTosForApi(tos);
+  return function (dispatch) {
+    dispatch(requestTOS());
+    return api.put(`function/${tos.id}`, finalTos)
+    .then(res => {
+      if (!res.ok) {
+        dispatch(TOSError());
+        throw new URIError(res.statusText);
+      }
+      return res.json();
+    })
+    .then(json => dispatch(receiveTOS(json)));
+  };
+}
+
 export const actions = {
   requestTOS,
   receiveTOS,
+  fetchTOS,
   clearTOS,
   setPhaseVisibility,
   setPhasesVisibility,
   addAction,
   addRecord,
   addPhase,
+  editAction,
+  editRecord,
+  editPhase,
   setDocumentState,
   executeImport,
   executeOrderChange,
-  fetchTOS,
   importItems,
   changeOrder
 };
@@ -319,9 +392,11 @@ const ACTION_HANDLERS = {
     });
   },
   [RECEIVE_TOS]: (state, action) => {
+    const tos = action.data.entities.tos[action.data.result];
     return update(state, {
-      tos: {
-        $set: action.data.entities.tos[action.data.result]
+      $merge: tos,
+      attributes: {
+        $set: action.data.entities.tos[action.data.result].attributes
       },
       actions: {
         $set: action.data.entities.actions
@@ -343,6 +418,13 @@ const ACTION_HANDLERS = {
   [RESET_TOS]: () => {
     return initialState;
   },
+  [TOS_ERROR]: (state) => {
+    return update(state, {
+      isFetching: {
+        $set: false
+      }
+    });
+  },
   [SET_PHASE_VISIBILITY]: (state, action) => {
     return update(state, {
       phases: {
@@ -361,30 +443,6 @@ const ACTION_HANDLERS = {
       }
     });
   },
-  [SEND_FOR_INSPECTION]: (state, action) => {
-    console.log('Ready for inspection: ', action.tosState);
-  },
-  [SET_DOCUMENT_STATE]: (state, action) => {
-    return update(state, {
-      documentState: {
-        $set: action.newState
-      }
-    });
-  },
-  [ADD_PHASE]: (state, action) => {
-    return update(state, {
-      tos: {
-        phases: {
-          $push: [action.newPhase.id]
-        }
-      },
-      phases: {
-        [action.newPhase.id]: {
-          $set: action.newPhase
-        }
-      }
-    });
-  },
   [ADD_ACTION]: (state, action) => {
     return update(state, {
       phases: {
@@ -397,6 +455,15 @@ const ACTION_HANDLERS = {
       actions: {
         [action.newAction.id]: {
           $set: action.newAction
+        }
+      }
+    });
+  },
+  [ADD_PHASE]: (state, action) => {
+    return update(state, {
+      phases: {
+        [action.newPhase.id]: {
+          $set: action.newPhase
         }
       }
     });
@@ -417,32 +484,101 @@ const ACTION_HANDLERS = {
       }
     });
   },
-  [EXECUTE_ORDER_CHANGE]: (state, action) => {
-    if (action.itemType === 'phase') {
-      return update(state, {
-        [action.parentLevel]: {
-          [action.itemLevel]: {
-            $set: action.parentList
+  [EDIT_ACTION]: (state, action) => {
+    return update(state, {
+      actions: {
+        [action.editedAction.id]: {
+          name: {
+            $set: action.editedAction.name
           }
-        },
-        [action.itemLevel]: {
-          $set: action.itemList
+        }
+      }
+    });
+  },
+  [EDIT_PHASE]: (state, action) => {
+    return update(state, {
+      phases: {
+        [action.editedPhase.id]: {
+          name: {
+            $set: action.editedPhase.name
+          }
+        }
+      }
+    });
+  },
+  [EDIT_RECORD]: (state, action) => {
+    if (action.editedRecord.name) {
+      return update(state, {
+        records : {
+          [action.editedRecord.recordId]: {
+            name: {
+              $set: action.editedRecord.name
+            }
+          }
+        }
+      });
+    } else if (action.editedRecord.type) {
+      return update(state, {
+        records : {
+          [action.editedRecord.recordId]: {
+            attributes: {
+              RecordType: {
+                $set: action.editedRecord.name
+              }
+            }
+          }
         }
       });
     } else {
       return update(state, {
-        [action.parentLevel]: {
-          [action.itemParent]: {
-            [action.itemLevel]: {
-              $set: action.parentList
+        records: {
+          [action.editedRecord.recordId]: {
+            attributes: {
+              [action.editedRecord.attributeIndex]: {
+                $set: action.editedRecord.attribute
+              }
             }
           }
-        },
-        [action.itemLevel]: {
-          $set: action.itemList
         }
       });
     }
+  },
+  [REMOVE_ACTION]: (state, action) => {
+    const actionsCopy = state.actions;
+    delete actionsCopy[action.actionToRemove];
+
+    return update(state, {
+      actions: {
+        $set: actionsCopy
+      }
+    });
+  },
+  [REMOVE_PHASE]: (state, action) => {
+    const phasesCopy = state.phases;
+    delete phasesCopy[action.phaseToRemove];
+
+    return update(state, {
+      phases: {
+        $set: phasesCopy
+      }
+    });
+  },
+  [REMOVE_RECORD]: (state, action) => {
+    const recordsCopy = state.records;
+    delete recordsCopy[action.recordToRemove];
+
+    return update(state, {
+      records: {
+        $set: recordsCopy
+      }
+    });
+  },
+  [SET_DOCUMENT_STATE]: (state, action) => {
+    return update(state, {
+      documentState: {
+        $set: action.newState
+      }
+    });
   },
   [EXECUTE_IMPORT]: (state, action) => {
     if (action.level === 'phase') {
@@ -470,6 +606,28 @@ const ACTION_HANDLERS = {
         }
       });
     }
+  },
+  [EXECUTE_ORDER_CHANGE]: (state, action) => {
+    if (action.itemType === 'phase') {
+      return update(state, {
+        [action.itemLevel]: {
+          $set: action.itemList
+        }
+      });
+    } else {
+      return update(state, {
+        [action.parentLevel]: {
+          [action.itemParent]: {
+            [action.itemLevel]: {
+              $set: action.parentList
+            }
+          }
+        },
+        [action.itemLevel]: {
+          $set: action.itemList
+        }
+      });
+    }
   }
 };
 
@@ -477,7 +635,15 @@ const ACTION_HANDLERS = {
 // Reducer
 // ------------------------------------
 const initialState = {
-  tos: {},
+  id: null,
+  function_id: null,
+  parent: null,
+  version: null,
+  name: null,
+  error_count: null,
+  state: null,
+  created_at: null,
+  modified_at: null,
   actions: {},
   phases: {},
   records: {},

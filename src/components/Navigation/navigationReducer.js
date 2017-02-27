@@ -1,7 +1,7 @@
-import fetch from 'isomorphic-fetch';
 import update from 'immutability-helper';
 
-import { convertToTree, getApiUrl } from '../../utils/helpers.js';
+import { convertToTree } from '../../utils/helpers';
+import { default as api } from '../../utils/api.js';
 
 // ------------------------------------
 // Constants
@@ -39,8 +39,7 @@ export function setNavigationVisibility (value) {
 export function fetchNavigation () {
   return function (dispatch) {
     dispatch(requestNavigation());
-    const url = getApiUrl('function', { page_size: RESULTS_PER_PAGE });
-    return fetch(url)
+    return api.get('function', { page_size: RESULTS_PER_PAGE })
       .then(response => response.json())
       .then(json =>
         dispatch(receiveNavigation(json))

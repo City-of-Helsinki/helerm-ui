@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import './Action.scss';
 import Record from './Record';
 import AddRecord from './AddRecord';
@@ -41,6 +42,11 @@ export class Action extends React.Component {
 
   saveActionTitle (event) {
     event.preventDefault();
+    const savedAction = {
+      id: this.props.action.id,
+      name: this.state.name
+    };
+    this.props.editAction(savedAction);
     if (this.state.name.length > 0) {
       this.setState({ mode: 'view' });
     }
@@ -58,6 +64,8 @@ export class Action extends React.Component {
           <Record
             key={key}
             record={this.props.records[records[key]]}
+            editRecord={this.props.editRecord}
+            removeRecord={this.props.removeRecord}
             recordTypes={this.props.recordTypes}
             documentState={this.props.documentState}
             attributeTypes={this.props.attributeTypes}
@@ -108,6 +116,7 @@ export class Action extends React.Component {
 
   delete () {
     this.setState({ deleted: true, deleting: false });
+    this.props.removeAction(this.props.action.id);
   }
 
   createRecord (actionId, name, type, attributes) {
@@ -166,13 +175,13 @@ export class Action extends React.Component {
           </Sticky>
           { this.state.creating &&
           <AddRecord
+            actionId={this.props.action.id}
             attributeTypes={this.props.attributeTypes}
             recordTypes={this.props.recordTypes}
+            createRecord={this.createRecord}
+            cancelRecordCreation={this.cancelRecordCreation}
             mode={this.state.mode}
             displayMessage={this.props.displayMessage}
-            actionId={this.props.action.id}
-            cancelRecordCreation={this.cancelRecordCreation}
-            createRecord={this.createRecord}
           />
           }
           <span className='col-xs-6 attribute-label'>
@@ -181,7 +190,7 @@ export class Action extends React.Component {
           <span className='col-xs-6 attribute-label'>
             Tyyppi
           </span>
-          <div className={'col-xs-12 records ' + (this.props.documentState === 'edit' ? 'records-editing' : '')}>
+          <div className={classNames('col-xs-12 records', { 'records-editing': this.props.documentState === 'edit' })}>
             { recordElements }
           </div>
 
@@ -250,11 +259,15 @@ Action.propTypes = {
   changeOrder: React.PropTypes.func.isRequired,
   displayMessage: React.PropTypes.func.isRequired,
   documentState: React.PropTypes.string.isRequired,
+  editAction: React.PropTypes.func.isRequired,
+  editRecord: React.PropTypes.func.isRequired,
   importItems: React.PropTypes.func.isRequired,
   phases: React.PropTypes.object.isRequired,
   phasesOrder: React.PropTypes.array.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
-  records: React.PropTypes.object.isRequired
+  records: React.PropTypes.object.isRequired,
+  removeAction: React.PropTypes.func.isRequired,
+  removeRecord: React.PropTypes.func.isRequired
 };
 
 export default Action;

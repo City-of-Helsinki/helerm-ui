@@ -1,12 +1,10 @@
-import fetch from 'isomorphic-fetch';
 import update from 'immutability-helper';
 
-import { getApiUrl } from '../utils/helpers';
+import { default as api } from '../utils/api';
 
 // ------------------------------------
 // Constants
 // ------------------------------------
-export const RECEIVE_RECORDTYPES = 'ui/RECEIVE_RECORDTYPES';
 export const RECEIVE_ATTRIBUTE_TYPES = 'ui/RECEIVE_ATTRIBUTE_TYPES';
 
 export const CLOSE_MESSAGE = 'ui/CLOSE_MESSAGE';
@@ -15,18 +13,6 @@ export const DISPLAY_MESSAGE = 'ui/DISPLAY_MESSAGE';
 // ------------------------------------
 // Actions
 // ------------------------------------
-export function receiveRecordTypes (recordTypes) {
-  const recordTypeList = {};
-  recordTypes.results.map(result => {
-    const trimmedResult = result.id.replace(/-/g, '');
-    recordTypeList[trimmedResult] = result.value;
-  });
-  return {
-    type: RECEIVE_RECORDTYPES,
-    recordTypeList
-  };
-}
-
 export function receiveAttributeTypes (attributes, validationRules) {
   const attributeTypeList = {};
   attributes.results.map(result => {
@@ -68,10 +54,10 @@ export function closeMessage () {
 
 export function fetchAttributeTypes () {
   return function (dispatch) {
-    return fetch(getApiUrl('attribute/schemas'))
+    return api.get('attribute/schemas')
       .then(response => response.json())
       .then(validationRules => {
-        return fetch(getApiUrl('attribute'))
+        return api.get('attribute')
           .then(response => response.json())
           .then(json =>
             dispatch(receiveAttributeTypes(json, validationRules)));
@@ -80,9 +66,9 @@ export function fetchAttributeTypes () {
 }
 
 export const actions = {
-  receiveAttributeTypes,
   closeMessage,
-  fetchAttributeTypes
+  fetchAttributeTypes,
+  receiveAttributeTypes
 };
 
 // ------------------------------------
@@ -106,8 +92,8 @@ const ACTION_HANDLERS = {
     return update(state, {
       message: {
         active: { $set: true },
-        text: { $set: action.message },
-        success: { $set: true }
+        text: { $set: action.message.text },
+        success: { $set: action.message.success }
       }
     });
   },

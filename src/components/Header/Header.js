@@ -9,6 +9,8 @@ import { setNavigationVisibility } from '../Navigation/navigationReducer';
 
 import Alert from '../Alert/Alert';
 import Loader from '../Loader';
+import LoginContainer from '../Login/containers/LoginContainer';
+
 import './Header.scss';
 
 export class Header extends React.Component {
@@ -24,12 +26,12 @@ export class Header extends React.Component {
   }
 
   render () {
-    const { isFetching, message, closeMessage, setNavigationVisibility } = this.props;
+    const { isFetching, message, closeMessage } = this.props;
     let alertMessage = null;
     if (this.state.showAlert === true) {
       alertMessage = (
         <Alert
-          message={message.text}
+          text={message.text}
           style={(message.success ? 'alert-success' : 'alert-danger')}
           close={closeMessage}
         />
@@ -39,10 +41,9 @@ export class Header extends React.Component {
 
     return (
       <div>
-        <nav
-          className='navbar navbar-inverse container-fluid'
-          onClick={() => setNavigationVisibility(true)}>
-          <Link to='/' className='brand-title navbar-brand'>Tiedonohjausjärjestelmä Alpha v0.1.4</Link>
+        <nav className='navbar navbar-inverse container-fluid'>
+          <Link to='/' className='brand-title navbar-brand'>Tiedonohjausjärjestelmä Alpha v{VERSION}</Link>
+          <LoginContainer />
         </nav>
         <Loader show={isFetching}/>
         <ReactCSSTransitionGroup
@@ -58,7 +59,6 @@ export class Header extends React.Component {
 
 Header.propTypes = {
   closeMessage: React.PropTypes.func,
-  setNavigationVisibility: React.PropTypes.func,
   isFetching: React.PropTypes.bool,
   message: React.PropTypes.object
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import './Dropdown.scss';
 
 export class Dropdown extends React.Component {
@@ -19,9 +20,9 @@ export class Dropdown extends React.Component {
       return (
         <button
           key={index}
-          className={'btn btn-sm dropdown-row ' + item.style}
+          className={classNames('btn btn-sm dropdown-row', item.style)}
           onClick={() => this.handleClick(index)}>
-          <span className={'fa dropdown-icon ' + item.icon}/>
+          <span className={classNames('fa dropdown-icon', item.icon)}/>
           {item.text}
         </button>
       );
@@ -34,17 +35,13 @@ export class Dropdown extends React.Component {
     return (
       <span className='dropdown-wrapper' onBlur={() => setTimeout(() => this.setState({ open: false }), 180)}>
         <button
-          className={
-            'btn btn-primary ' +
-            (small ? 'btn-sm' : '') +
-            (extraSmall ? 'btn-xs' : '')
-          }
+          className={classNames('btn btn-primary', { 'btn-sm': small }, { 'btn-xs': extraSmall })}
           onClick={() => this.setState({ open: !this.state.open })}
         >
           <span className='fa fa-bars'/>
         </button>
         { this.state.open &&
-        <div className={'dropdown-items ' + (extraSmall ? 'items-xs' : '')}>
+        <div className={classNames('dropdown-items', { 'items-xs': extraSmall })}>
           {dropdownRows}
         </div>
         }
