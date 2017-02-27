@@ -15,8 +15,8 @@ const Popup = ({ content, closePopup }) => {
 };
 
 Popup.propTypes = {
-  content: React.PropTypes.object.isRequired,
-  closePopup: React.PropTypes.func.isRequired
+  closePopup: React.PropTypes.func.isRequired,
+  content: React.PropTypes.object.isRequired
 };
 
 export default Popup;

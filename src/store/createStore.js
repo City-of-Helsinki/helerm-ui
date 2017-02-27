@@ -1,14 +1,14 @@
 import { applyMiddleware, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { browserHistory } from 'react-router';
+import { routerMiddleware } from 'react-router-redux';
 import makeRootReducer from './reducers';
-import { updateLocation } from './location';
 
 export default (initialState = {}) => {
   // ======================================================
   // Middleware Configuration
   // ======================================================
-  const middleware = [thunk];
+  const middleware = [thunk, routerMiddleware(browserHistory)];
   // const middleware = process.env.NODE_ENV !== 'production' ?
   //   [require('redux-immutable-state-invariant')(), thunk] :
   //   [thunk];
@@ -35,9 +35,6 @@ export default (initialState = {}) => {
     )
   );
   store.asyncReducers = {};
-
-  // To unsubscribe, invoke `store.unsubscribeHistory()` anytime
-  store.unsubscribeHistory = browserHistory.listen(updateLocation(store));
 
   if (module.hot) {
     module.hot.accept('./reducers', () => {

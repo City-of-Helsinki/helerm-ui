@@ -13,5 +13,6 @@ For example:
 $bootstrap-sass-asset-helper: true;
 
 @import './vendor/hel-components/variables';
-@import '../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap';
+@import '~bootstrap-sass/assets/stylesheets/bootstrap';
+@import '~font-awesome/scss/font-awesome';
 @import './vendor/hel-components/bootswatch-flatly';
