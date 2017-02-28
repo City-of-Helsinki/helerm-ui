@@ -312,7 +312,7 @@ Phase.propTypes = {
   importItems: React.PropTypes.func.isRequired,
   phase: React.PropTypes.object.isRequired,
   phaseIndex: React.PropTypes.string.isRequired,
-  phases: React.PropTypes.object.isRequired,
+  phases: React.PropTypes.object.isRequired || React.PropTypes.array.isRequired,
   phasesOrder: React.PropTypes.array.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
   records: React.PropTypes.object.isRequired,
