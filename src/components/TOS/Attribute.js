@@ -72,8 +72,9 @@ export class Attribute extends React.Component {
         <Select
           autoBlur={true}
           className='form-control edit-record__input'
+          clearable={false}
           value={this.state.attribute}
-          onChange={(option) => this.onChange(option.value)}
+          onChange={({ value }) => this.onChange(value)}
           onBlur={this.submit}
           autofocus={true}
           options={options}
@@ -85,7 +86,7 @@ export class Attribute extends React.Component {
           <input
             className='col-xs-6 form-control edit-record__input'
             value={this.state.attribute}
-            onChange={(e) => this.onChange(e.target.value)}
+            onChange={({ target: { value } }) => this.onChange(value)}
             onBlur={this.submit}
             autoFocus={true}
           />
@@ -103,7 +104,7 @@ export class Attribute extends React.Component {
           <input
             className='col-xs-6 form-control edit-record__input'
             value={this.state.attribute}
-            onChange={(e) => this.onChange(e.target.value)}
+            onChange={({ target: { value } }) => this.onChange(value)}
             onBlur={this.submit}
             autoFocus={true}
           />
@@ -129,8 +130,9 @@ export class Attribute extends React.Component {
         <Select
           autoBlur={true}
           className='col-xs-6 form-control edit-record__input'
+          clearable={false}
           value={this.state.attribute}
-          onChange={(option) => this.onChange(option.value)}
+          onChange={({ value }) => this.onChange(value)}
           onBlur={this.submit}
           autofocus={true}
           options={options}
