@@ -92,7 +92,7 @@ config.globals = {
   '__BASENAME__': JSON.stringify(process.env.BASENAME || ''),
   'CLIENT_ID': process.env.CLIENT_ID,
   'CLIENT_SECRET': process.env.CLIENT_SECRET,
-  'CLIENT_AUDIENCE': JSON.stringify(process.env.CLIENT_AUDIENCE) || null,
+  'CLIENT_AUDIENCE': process.env.CLIENT_AUDIENCE || null,
   'VERSION': JSON.stringify(pkgVersion),
   'GIT_VERSION': JSON.stringify(gitRevisionPlugin.version()),
   'GIT_COMMIT_HASH': JSON.stringify(gitRevisionPlugin.commithash()),
