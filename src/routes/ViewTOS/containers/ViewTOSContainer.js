@@ -7,6 +7,7 @@ import { setNavigationVisibility } from '../../../components/Navigation/navigati
 import {
   fetchTOS,
   clearTOS,
+  resetTOS,
   setPhaseVisibility,
   setPhasesVisibility,
   addAction,
@@ -32,6 +33,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchTOS: bindActionCreators(fetchTOS, dispatch),
     clearTOS: bindActionCreators(clearTOS, dispatch),
+    resetTOS: bindActionCreators(resetTOS, dispatch),
     setPhaseVisibility: bindActionCreators(setPhaseVisibility, dispatch),
     setPhasesVisibility: bindActionCreators(setPhasesVisibility, dispatch),
     addAction: bindActionCreators(addAction, dispatch),

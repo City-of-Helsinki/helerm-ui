@@ -18,18 +18,20 @@ export class ViewTOS extends React.Component {
   constructor (props) {
     super(props);
     this.fetchTOS = this.fetchTOS.bind(this);
+    this.cancelEdit = this.cancelEdit.bind(this);
     this.sendForInspection = this.sendForInspection.bind(this);
     this.onChange = this.onChange.bind(this);
     this.createNewPhase = this.createNewPhase.bind(this);
     this.cancelPhaseCreation = this.cancelPhaseCreation.bind(this);
     this.setPhaseVisibility = this.setPhaseVisibility.bind(this);
     this.state = {
-      showMetadata: false,
       createPhaseMode: false,
       newPhaseName: '',
-      update: '',
+      originalTos: {},
+      showImportView: false,
+      showMetadata: false,
       showReorderView: false,
-      showImportView: false
+      update: ''
     };
   }
 
@@ -40,6 +42,15 @@ export class ViewTOS extends React.Component {
 
   componentWillReceiveProps (nextProps) {
     const { route } = nextProps;
+
+    // If we have selectedTOS & selectedTOS hasn't change during receiveProps
+    // => cache it to state to be able to discard changes
+    if (
+      (this.props.selectedTOS.id || nextProps.selectedTOS.id) &&
+      nextProps.selectedTOS.id !== this.props.selectedTOS.id
+    ) {
+      this.setState({ originalTos: nextProps.selectedTOS });
+    }
     if (nextProps.params.id !== this.props.params.id) {
       const { id } = nextProps.params;
       this.fetchTOS(id);
@@ -62,6 +73,11 @@ export class ViewTOS extends React.Component {
           this.props.push(`/404?tos-id=${id}`);
         }
       });
+  }
+
+  cancelEdit () {
+    console.log(this.state.originalTos);
+    return this.props.resetTOS(this.state.originalTos);
   }
 
   sendForInspection () {
@@ -283,7 +299,7 @@ export class ViewTOS extends React.Component {
                     </button>
                     <button
                       className='btn btn-danger btn-sm pull-right'
-                      onClick={() => this.props.setDocumentState('view')}>
+                      onClick={this.cancelEdit}>
                       Peruuta muokkaus
                     </button>
                     <span
@@ -430,6 +446,7 @@ ViewTOS.propTypes = {
   removeAction: React.PropTypes.func.isRequired,
   removePhase: React.PropTypes.func.isRequired,
   removeRecord: React.PropTypes.func.isRequired,
+  resetTOS: React.PropTypes.func.isRequired,
   route: React.PropTypes.object.isRequired,
   selectedTOS: React.PropTypes.object.isRequired,
   sendForInspection: React.PropTypes.func.isRequired,
