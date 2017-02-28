@@ -262,7 +262,7 @@ Action.propTypes = {
   editAction: React.PropTypes.func.isRequired,
   editRecord: React.PropTypes.func.isRequired,
   importItems: React.PropTypes.func.isRequired,
-  phases: React.PropTypes.object.isRequired,
+  phases: React.PropTypes.object.isRequired || React.PropTypes.array.isRequired,
   phasesOrder: React.PropTypes.array.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
   records: React.PropTypes.object.isRequired,
