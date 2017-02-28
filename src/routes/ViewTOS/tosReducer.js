@@ -523,7 +523,7 @@ const ACTION_HANDLERS = {
           [action.editedRecord.recordId]: {
             attributes: {
               RecordType: {
-                $set: action.editedRecord.name
+                $set: action.editedRecord.type
               }
             }
           }
