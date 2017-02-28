@@ -11,6 +11,7 @@ export const REQUEST_TOS = 'tos/REQUEST_TOS';
 export const RECEIVE_TOS = 'tos/RECEIVE_TOS';
 export const TOS_ERROR = 'tos/TOS_ERROR';
 export const RESET_TOS = 'tos/RESET_TOS';
+export const CLEAR_TOS = 'tos/CLEAR_TOS';
 
 export const SET_PHASE_VISIBILITY = 'tos/SET_PHASE_VISIBILITY';
 export const SET_PHASES_VISIBILITY = 'tos/SET_PHASES_VISIBILITY';
@@ -99,7 +100,14 @@ export function TOSError () {
 
 export function clearTOS () {
   return {
-    type: RESET_TOS
+    type: CLEAR_TOS
+  };
+}
+
+export function resetTOS (originalTos) {
+  return {
+    type: RESET_TOS,
+    originalTos
   };
 }
 
@@ -349,14 +357,14 @@ export function sendForInspection (tos) {
   return function (dispatch) {
     dispatch(requestTOS());
     return api.put(`function/${tos.id}`, finalTos)
-    .then(res => {
-      if (!res.ok) {
-        dispatch(TOSError());
-        throw new URIError(res.statusText);
-      }
-      return res.json();
-    })
-    .then(json => dispatch(receiveTOS(json)));
+      .then(res => {
+        if (!res.ok) {
+          dispatch(TOSError());
+          throw new URIError(res.statusText);
+        }
+        return res.json();
+      })
+      .then(json => dispatch(receiveTOS(json)));
   };
 }
 
@@ -415,7 +423,16 @@ const ACTION_HANDLERS = {
       }
     });
   },
-  [RESET_TOS]: () => {
+  [RESET_TOS]: (state, action) => {
+    console.log(action);
+    return update(state, {
+      $merge: action.originalTos,
+      documentState: {
+        $set: 'view'
+      }
+    });
+  },
+  [CLEAR_TOS]: () => {
     return initialState;
   },
   [TOS_ERROR]: (state) => {
@@ -509,7 +526,7 @@ const ACTION_HANDLERS = {
   [EDIT_RECORD]: (state, action) => {
     if (action.editedRecord.name) {
       return update(state, {
-        records : {
+        records: {
           [action.editedRecord.recordId]: {
             name: {
               $set: action.editedRecord.name
@@ -519,7 +536,7 @@ const ACTION_HANDLERS = {
       });
     } else if (action.editedRecord.type) {
       return update(state, {
-        records : {
+        records: {
           [action.editedRecord.recordId]: {
             attributes: {
               RecordType: {

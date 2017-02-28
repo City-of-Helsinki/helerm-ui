@@ -22,7 +22,8 @@ class Login extends React.Component {
 
   getUserLink () {
     const { user } = this.props;
-    const linkText = user.id ? `${user.firstName}, Kirjaudu ulos` : 'Kirjaudu sisään';
+    const displayName = user.id ? user.displayName ? user.displayName : `${user.firstName}${user.lastName ? ' ' + user.lastName + ', ' : ', '}` : null;
+    const linkText = user.id ? `${displayName} Kirjaudu ulos` : 'Kirjaudu sisään';
 
     return (
       <a href='' className='navbar-link' onClick={this.handleUserLinkClick}>{linkText}</a>
