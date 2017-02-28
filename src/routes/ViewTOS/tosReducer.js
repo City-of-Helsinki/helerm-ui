@@ -1,4 +1,5 @@
 import update from 'immutability-helper';
+import indexOf from 'lodash/indexOf';
 import { normalize, Schema, arrayOf } from 'normalizr';
 
 import { default as api } from '../../utils/api';
@@ -205,10 +206,11 @@ export function editPhase (editedPhase) {
   };
 }
 
-export function removeRecord (recordToRemove) {
+export function removeRecord (recordToRemove, actionId) {
   return {
     type: REMOVE_RECORD,
-    recordToRemove
+    recordToRemove,
+    actionId
   };
 }
 
@@ -564,12 +566,23 @@ const ACTION_HANDLERS = {
     });
   },
   [REMOVE_RECORD]: (state, action) => {
-    const recordsCopy = state.records;
-    delete recordsCopy[action.recordToRemove];
+    const stateCopy = state;
+    delete stateCopy.records[action.recordToRemove];
+    const recordIndex = indexOf(
+      stateCopy.actions[action.actionId].records,
+      action.recordToRemove
+    );
 
     return update(state, {
       records: {
-        $set: recordsCopy
+        $set: stateCopy.records
+      },
+      actions: {
+        [action.actionId]: {
+          records: {
+            $splice: [[recordIndex, 1]]
+          }
+        }
       }
     });
   },

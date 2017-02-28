@@ -135,7 +135,7 @@ export class Record extends React.Component {
 
   delete () {
     this.setState({ deleted: true, deleting: false });
-    this.props.removeRecord(this.props.record.id);
+    this.props.removeRecord(this.props.record.id, this.props.record.action);
   }
 
   render () {
