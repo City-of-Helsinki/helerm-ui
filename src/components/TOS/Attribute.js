@@ -61,7 +61,7 @@ export class Attribute extends React.Component {
       });
       return (
         <Select
-          autoBlur={true}
+          autoBlur={false}
           openOnFocus={true}
           className='form-control edit-record__input'
           clearable={false}
@@ -120,7 +120,7 @@ export class Attribute extends React.Component {
     return (
       <form onSubmit={this.submit}>
         <Select
-          autoBlur={true}
+          autoBlur={false}
           openOnFocus={true}
           className='col-xs-6 form-control edit-record__input'
           clearable={false}
