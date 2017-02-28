@@ -567,11 +567,13 @@ const ACTION_HANDLERS = {
   },
   [REMOVE_RECORD]: (state, action) => {
     const stateCopy = state;
-    delete stateCopy.records[action.recordToRemove];
+
     const recordIndex = indexOf(
       stateCopy.actions[action.actionId].records,
       action.recordToRemove
     );
+
+    delete stateCopy.records[action.recordToRemove];
 
     return update(state, {
       records: {
