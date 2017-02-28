@@ -24,12 +24,13 @@ export class ViewTOS extends React.Component {
     this.cancelPhaseCreation = this.cancelPhaseCreation.bind(this);
     this.setPhaseVisibility = this.setPhaseVisibility.bind(this);
     this.state = {
-      showMetadata: false,
       createPhaseMode: false,
       newPhaseName: '',
-      update: '',
+      originalTos: {},
+      showImportView: false,
+      showMetadata: false,
       showReorderView: false,
-      showImportView: false
+      update: ''
     };
   }
 
@@ -40,6 +41,15 @@ export class ViewTOS extends React.Component {
 
   componentWillReceiveProps (nextProps) {
     const { route } = nextProps;
+
+    // If we have selectedTOS & selectedTOS hasn't change during receiveProps
+    // => cache it to state to be able to discard changes
+    if (
+      (this.props.selectedTOS.id || nextProps.selectedTOS.id) &&
+      nextProps.selectedTOS.id !== this.props.selectedTOS.id
+    ) {
+      this.setState({ originalTos: nextProps.selectedTOS });
+    }
     if (nextProps.params.id !== this.props.params.id) {
       const { id } = nextProps.params;
       this.fetchTOS(id);
