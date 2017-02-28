@@ -18,6 +18,7 @@ export class ViewTOS extends React.Component {
   constructor (props) {
     super(props);
     this.fetchTOS = this.fetchTOS.bind(this);
+    this.cancelEdit = this.cancelEdit.bind(this);
     this.sendForInspection = this.sendForInspection.bind(this);
     this.onChange = this.onChange.bind(this);
     this.createNewPhase = this.createNewPhase.bind(this);
@@ -72,6 +73,11 @@ export class ViewTOS extends React.Component {
           this.props.push(`/404?tos-id=${id}`);
         }
       });
+  }
+
+  cancelEdit () {
+    console.log(this.state.originalTos);
+    return this.props.resetTOS(this.state.originalTos);
   }
 
   sendForInspection () {
@@ -293,7 +299,7 @@ export class ViewTOS extends React.Component {
                     </button>
                     <button
                       className='btn btn-danger btn-sm pull-right'
-                      onClick={() => this.props.setDocumentState('view')}>
+                      onClick={this.cancelEdit}>
                       Peruuta muokkaus
                     </button>
                     <span
@@ -440,6 +446,7 @@ ViewTOS.propTypes = {
   removeAction: React.PropTypes.func.isRequired,
   removePhase: React.PropTypes.func.isRequired,
   removeRecord: React.PropTypes.func.isRequired,
+  resetTOS: React.PropTypes.func.isRequired,
   route: React.PropTypes.object.isRequired,
   selectedTOS: React.PropTypes.object.isRequired,
   sendForInspection: React.PropTypes.func.isRequired,
