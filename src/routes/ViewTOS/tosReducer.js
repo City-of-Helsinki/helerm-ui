@@ -424,7 +424,6 @@ const ACTION_HANDLERS = {
     });
   },
   [RESET_TOS]: (state, action) => {
-    console.log(action);
     return update(state, {
       $merge: action.originalTos,
       documentState: {

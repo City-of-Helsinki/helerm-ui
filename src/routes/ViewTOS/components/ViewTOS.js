@@ -76,7 +76,6 @@ export class ViewTOS extends React.Component {
   }
 
   cancelEdit () {
-    console.log(this.state.originalTos);
     return this.props.resetTOS(this.state.originalTos);
   }
 
