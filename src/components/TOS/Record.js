@@ -8,6 +8,8 @@ import Popup from 'components/Popup';
 export class Record extends React.Component {
   constructor (props) {
     super(props);
+
+    this.openEditView = this.openEditView.bind(this);
     this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
     this.updateRecordName = this.updateRecordName.bind(this);
     this.updateRecordType = this.updateRecordType.bind(this);
@@ -37,6 +39,10 @@ export class Record extends React.Component {
   // cancelRecordEdit () {
   //   this.setMode('view');
   // }
+
+  openEditView () {
+    console.log('Hello.');
+  }
 
   toggleAttributeVisibility () {
     const currentVisibility = this.state.showAttributes;
@@ -149,12 +155,20 @@ export class Record extends React.Component {
           <div className='record-button-group'>
             { this.props.documentState === 'edit' &&
             <Dropdown
-              children={[{
-                text: 'Poista asiakirja',
-                icon: 'fa-trash',
-                style: 'btn-delete',
-                action: () => this.setState({ deleting: true })
-              }]}
+              children={[
+                {
+                  text: 'Muokkaa asiakirjaa',
+                  icon: 'fa-pencil',
+                  style: 'btn-primary',
+                  action: () => this.openEditView()
+                },
+                {
+                  text: 'Poista asiakirja',
+                  icon: 'fa-trash',
+                  style: 'btn-delete',
+                  action: () => this.setState({ deleting: true })
+                }
+              ]}
               extraSmall={true}
             />
             }
