@@ -24,6 +24,7 @@ export class ViewTOS extends React.Component {
     this.createNewPhase = this.createNewPhase.bind(this);
     this.cancelPhaseCreation = this.cancelPhaseCreation.bind(this);
     this.setPhaseVisibility = this.setPhaseVisibility.bind(this);
+    this.updateTOSAttribute = this.updateTOSAttribute.bind(this);
     this.state = {
       createPhaseMode: false,
       newPhaseName: '',
@@ -131,6 +132,14 @@ export class ViewTOS extends React.Component {
     this.setState({ newPhaseName: event.target.value });
   }
 
+  updateTOSAttribute (attribute, attributeIndex) {
+    const updatedTOSAttribute = {
+      tosAttribute: attribute,
+      attributeIndex
+    };
+    this.props.editRecord(updatedTOSAttribute);
+  }
+
   /*
    setPhaseVisibility is a hack to fix firefox specific issue of re-rendering phases
    remove once firefox issue is fixed
@@ -195,6 +204,8 @@ export class ViewTOS extends React.Component {
             editable={true}
             editRecord={this.props.editRecord}
             showAttributes={this.state.showMetadata}
+            tosAttribute={true}
+            updateTOSAttribute={this.updateTOSAttribute}
           />
         );
       }

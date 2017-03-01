@@ -46,6 +46,11 @@ export class Attribute extends React.Component {
         this.state.attribute,
         this.props.recordId
       );
+    } else if (this.props.tosAttribute) {
+      this.props.updateTOSAttribute(
+        this.state.attribute,
+        this.props.attributeIndex
+      );
     } else {
       this.props.updateRecordAttribute(
         this.state.attribute,
@@ -184,10 +189,12 @@ Attribute.propTypes = {
   mode: React.PropTypes.string.isRequired,
   recordId: React.PropTypes.string,
   showAttributes: React.PropTypes.bool.isRequired,
+  tosAttribute: React.PropTypes.bool,
   type: React.PropTypes.string.isRequired,
   updateRecordAttribute: React.PropTypes.func,
   updateRecordName: React.PropTypes.func,
-  updateRecordType: React.PropTypes.func
+  updateRecordType: React.PropTypes.func,
+  updateTOSAttribute: React.PropTypes.func
 };
 
 export default Attribute;

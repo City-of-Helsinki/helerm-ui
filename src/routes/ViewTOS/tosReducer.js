@@ -550,6 +550,14 @@ const ACTION_HANDLERS = {
           }
         }
       });
+    } else if (action.editedRecord.tosAttribute) {
+      return update(state, {
+        attributes: {
+          [action.editedRecord.attributeIndex]: {
+            $set: action.editedRecord.tosAttribute
+          }
+        }
+      });
     } else {
       return update(state, {
         records: {
