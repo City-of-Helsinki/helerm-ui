@@ -1,4 +1,5 @@
 import React from 'react';
+import forEach from 'lodash/forEach';
 import './Phase.scss';
 import Action from './Action.js';
 import DeleteView from './DeleteView';
@@ -154,6 +155,9 @@ export class Phase extends React.Component {
 
   delete () {
     this.setState({ deleting: false });
+    forEach(this.props.phase.actions, (action) => {
+      this.props.removeAction(action, this.props.phase.id);
+    });
     this.props.removePhase(this.props.phase.id);
   }
 
