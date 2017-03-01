@@ -13,7 +13,7 @@ const helsinkiStrategy = new HelsinkiStrategy({
   debug('access token:', accessToken);
   debug('refresh token:', refreshToken);
   debug('acquiring token from api...');
-  helsinkiStrategy.getAPIToken(accessToken, null, (token) => {
+  helsinkiStrategy.getAPIToken(accessToken, config.globals.CLIENT_AUDIENCE, (token) => {
     profile.token = token;
     return done(null, profile);
   });
