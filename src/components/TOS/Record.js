@@ -16,7 +16,6 @@ export class Record extends React.Component {
       showAttributes: false,
       mode: 'view',
       deleting: false,
-      deleted: false,
       name: this.props.record.name,
       attributes: this.props.record.attributes
     };
@@ -134,7 +133,7 @@ export class Record extends React.Component {
   }
 
   delete () {
-    this.setState({ deleted: true, deleting: false });
+    this.setState({ deleting: false });
     this.props.removeRecord(this.props.record.id, this.props.record.action);
   }
 
@@ -145,7 +144,6 @@ export class Record extends React.Component {
     const attributes = this.generateAttributes(record.attributes);
     return (
       <div className={'record col-xs-12 ' + (this.state.showAttributes ? 'record-open' : '')}>
-        { !this.state.deleted &&
         <div className='list-group'>
           { this.state.mode === 'view' &&
           <div className='record-button-group'>
@@ -185,7 +183,6 @@ export class Record extends React.Component {
           </div>
           } */}
         </div>
-        }
         { this.state.deleting &&
         <Popup
           content={

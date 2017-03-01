@@ -22,7 +22,6 @@ export class Action extends React.Component {
       name: this.props.action.name,
       creating: false,
       deleting: false,
-      deleted: false,
       showReorderView: false,
       showImportView: false
     };
@@ -115,7 +114,7 @@ export class Action extends React.Component {
   }
 
   delete () {
-    this.setState({ deleted: true, deleting: false });
+    this.setState({ deleting: false });
     this.props.removeAction(this.props.action.id, this.props.action.phase);
   }
 
@@ -168,7 +167,6 @@ export class Action extends React.Component {
     }
     return (
       <div>
-        { !this.state.deleted &&
         <StickyContainer className='row box action'>
           <Sticky className='action-title'>
             { actionTitle }
@@ -245,7 +243,6 @@ export class Action extends React.Component {
           />
           }
         </StickyContainer>
-        }
       </div>
     );
   }

@@ -22,7 +22,6 @@ export class Phase extends React.Component {
       newActionName: '',
       mode: 'view',
       deleting: false,
-      deleted: false,
       showReorderView: false,
       showImportView: false
     };
@@ -154,7 +153,7 @@ export class Phase extends React.Component {
   }
 
   delete () {
-    this.setState({ deleted: true, deleting: false });
+    this.setState({ deleting: false });
     this.props.removePhase(this.props.phase.id);
   }
 
@@ -187,7 +186,6 @@ export class Phase extends React.Component {
     }
     return (
       <div>
-        { !this.state.deleted &&
         <span className='col-xs-12 box phase'>
           <StickyContainer>
             <Sticky className={'phase-title ' + (this.props.phase.is_open ? 'open' : 'closed')}>
@@ -292,7 +290,6 @@ export class Phase extends React.Component {
            */}
           <div className='update'>{ update }</div>
         </span>
-        }
       </div>
     );
   }
