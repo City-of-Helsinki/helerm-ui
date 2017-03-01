@@ -42,11 +42,11 @@ export class Phase extends React.Component {
 
   savePhaseTitle (event) {
     event.preventDefault();
-    const savedPhase = {
+    const updatedPhase = {
       id: this.props.phase.id,
       name: this.state.name
     };
-    this.props.editPhase(savedPhase);
+    this.props.editPhase(updatedPhase);
     if (this.state.name.length > 0) {
       this.setState({ mode: 'view' });
     }

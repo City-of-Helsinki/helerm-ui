@@ -70,8 +70,8 @@ export class Record extends React.Component {
         [attributeIndex]: attribute
       }
     });
-    const updateRecordAttribute = { attribute, attributeIndex, recordId };
-    this.props.editRecord(updateRecordAttribute);
+    const updatedRecordAttribute = { attribute, attributeIndex, recordId };
+    this.props.editRecord(updatedRecordAttribute);
   }
 
   generateRecordObjects (record) {

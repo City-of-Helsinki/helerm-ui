@@ -41,11 +41,11 @@ export class Action extends React.Component {
 
   saveActionTitle (event) {
     event.preventDefault();
-    const savedAction = {
+    const updatedAction = {
       id: this.props.action.id,
       name: this.state.name
     };
-    this.props.editAction(savedAction);
+    this.props.editAction(updatedAction);
     if (this.state.name.length > 0) {
       this.setState({ mode: 'view' });
     }
