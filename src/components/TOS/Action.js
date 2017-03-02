@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import './Action.scss';
 import Record from './Record';
-import AddRecord from './AddRecord';
+import RecordForm from './RecordForm';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
 import DeleteView from './DeleteView';
@@ -173,7 +173,7 @@ export class Action extends React.Component {
             { actionTitle }
           </Sticky>
           { this.state.creating &&
-          <AddRecord
+          <RecordForm
             actionId={this.props.action.id}
             attributeTypes={this.props.attributeTypes}
             recordTypes={this.props.recordTypes}

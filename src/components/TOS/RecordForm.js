@@ -1,8 +1,8 @@
 import React from 'react';
-import './AddRecord.scss';
+import './RecordForm.scss';
 import update from 'immutability-helper';
 
-export class AddRecord extends React.Component {
+export class RecordForm extends React.Component {
   constructor (props) {
     super(props);
     this.generateAttributeElements = this.generateAttributeElements.bind(this);
@@ -155,6 +155,7 @@ export class AddRecord extends React.Component {
     const { attributeTypes, recordTypes, actionId } = this.props;
     const attributeElements = this.generateAttributeElements(attributeTypes);
     const typeDropdown = this.generateDropdown(recordTypes);
+    console.log(this.state);
     return (
       <div className='action add-box col-xs-12'>
         <h4>Uusi asiakirja</h4>
@@ -188,7 +189,7 @@ export class AddRecord extends React.Component {
   }
 }
 
-AddRecord.propTypes = {
+RecordForm.propTypes = {
   actionId: React.PropTypes.string.isRequired,
   attributeTypes: React.PropTypes.object.isRequired,
   cancelRecordCreation: React.PropTypes.func.isRequired,
@@ -197,4 +198,4 @@ AddRecord.propTypes = {
   recordTypes: React.PropTypes.object.isRequired
 };
 
-export default AddRecord;
+export default RecordForm;
