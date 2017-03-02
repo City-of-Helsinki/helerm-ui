@@ -118,6 +118,7 @@
     "passport": "^0.3.2",
     "passport-helsinki": "City-of-Helsinki/passport-helsinki",
     "postcss-loader": "^0.13.0",
+    "promise-polyfill": "^6.0.2",
     "react": "^15.4.1",
     "react-addons-css-transition-group": "^15.4.1",
     "react-dnd": "^2.1.4",

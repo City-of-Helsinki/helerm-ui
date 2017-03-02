@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch';
+import Promise from 'promise-polyfill';
 import {
   forEach,
   merge
@@ -11,6 +12,11 @@ import { getStorageItem } from './storage';
  * @type {[*]}
  */
 const ALLOWED_METHODS_WITHOUT_AUTHENTICATION = ['GET'];
+
+// Add Promise to window if not supported...
+if (!window.Promise) {
+  window.Promise = Promise;
+}
 
 /**
  *
