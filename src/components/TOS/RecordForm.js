@@ -204,10 +204,10 @@ export class RecordForm extends React.Component {
 }
 
 RecordForm.propTypes = {
-  actionId: React.PropTypes.string.isRequired,
+  actionId: React.PropTypes.string,
   attributeTypes: React.PropTypes.object.isRequired,
-  createRecord: React.PropTypes.func.isRequired,
   closeRecordForm: React.PropTypes.func.isRequired,
+  createRecord: React.PropTypes.func,
   displayMessage: React.PropTypes.func.isRequired,
   editRecordWithForm: React.PropTypes.func,
   recordId: React.PropTypes.string,
