@@ -418,6 +418,9 @@ const ACTION_HANDLERS = {
       lastUpdated: {
         $set: action.receivedAt
       },
+      documentState: {
+        $set: 'view'
+      },
       isFetching: {
         $set: false
       }
