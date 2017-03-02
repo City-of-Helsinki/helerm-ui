@@ -155,7 +155,6 @@ export class RecordForm extends React.Component {
     const { attributeTypes, recordTypes, actionId } = this.props;
     const attributeElements = this.generateAttributeElements(attributeTypes);
     const typeDropdown = this.generateDropdown(recordTypes);
-    console.log(this.state);
     return (
       <div className='action add-box col-xs-12'>
         <h4>Uusi asiakirja</h4>
