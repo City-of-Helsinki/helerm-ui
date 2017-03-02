@@ -6,7 +6,7 @@ export class RecordForm extends React.Component {
   constructor (props) {
     super(props);
     this.generateAttributeElements = this.generateAttributeElements.bind(this);
-    this.cancelRecordCreation = this.cancelRecordCreation.bind(this);
+    this.closeRecordForm = this.closeRecordForm.bind(this);
     this.state = {
       newAttributes: this.initializeState(this.props.attributeTypes),
       recordName: {
@@ -146,9 +146,9 @@ export class RecordForm extends React.Component {
     });
   }
 
-  cancelRecordCreation (e) {
+  closeRecordForm (e) {
     e.preventDefault();
-    this.props.cancelRecordCreation();
+    this.props.closeRecordForm();
   }
 
   render () {
@@ -178,7 +178,7 @@ export class RecordForm extends React.Component {
             <button className='btn btn-primary pull-right edit-record__submit' type='submit'>Valmis</button>
             <button
               className='btn btn-danger pull-right edit-record__cancel'
-              onClick={(e) => this.cancelRecordCreation(e)}>
+              onClick={(e) => this.closeRecordForm(e)}>
               Peruuta
             </button>
           </div>
@@ -191,8 +191,8 @@ export class RecordForm extends React.Component {
 RecordForm.propTypes = {
   actionId: React.PropTypes.string.isRequired,
   attributeTypes: React.PropTypes.object.isRequired,
-  cancelRecordCreation: React.PropTypes.func.isRequired,
   createRecord: React.PropTypes.func.isRequired,
+  closeRecordForm: React.PropTypes.func.isRequired,
   displayMessage: React.PropTypes.func.isRequired,
   recordTypes: React.PropTypes.object.isRequired
 };
