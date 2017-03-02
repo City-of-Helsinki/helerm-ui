@@ -58,7 +58,7 @@ export class Record extends React.Component {
       name: recordName,
       recordId: recordId
     };
-    this.props.editRecord(updatedRecordName);
+    this.props.editRecordAttribute(updatedRecordName);
   }
 
   updateRecordType (attribute, recordId) {
@@ -67,7 +67,7 @@ export class Record extends React.Component {
       type: attribute,
       recordId: recordId
     };
-    this.props.editRecord(updatedRecordType);
+    this.props.editRecordAttribute(updatedRecordType);
   }
 
   updateRecordAttribute (attribute, attributeIndex, recordId) {
@@ -77,7 +77,7 @@ export class Record extends React.Component {
       }
     });
     const updatedRecordAttribute = { attribute, attributeIndex, recordId };
-    this.props.editRecord(updatedRecordAttribute);
+    this.props.editRecordAttribute(updatedRecordAttribute);
   }
 
   generateRecordObjects (record) {
@@ -219,6 +219,7 @@ Record.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
   documentState: React.PropTypes.string.isRequired,
   editRecord: React.PropTypes.func.isRequired,
+  editRecordAttribute: React.PropTypes.func.isRequired,
   record: React.PropTypes.object.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
   removeRecord: React.PropTypes.func.isRequired

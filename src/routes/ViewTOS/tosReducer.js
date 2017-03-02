@@ -25,6 +25,7 @@ export const ADD_RECORD = 'tos/ADD_RECORD';
 export const EDIT_ACTION = 'tos/EDIT_ACTION';
 export const EDIT_PHASE = 'tos/EDIT_PHASE';
 export const EDIT_RECORD = 'tos/EDIT_RECORD';
+export const EDIT_RECORD_ATTRIBUTE = 'tos/EDIT_RECORD_ATTRIBUTE';
 
 export const REMOVE_ACTION = 'tos/REMOVE_ACTION';
 export const REMOVE_PHASE = 'tos/REMOVE_PHASE';
@@ -197,6 +198,13 @@ export function addPhase (name, parent) {
 export function editRecord (editedRecord) {
   return {
     type: EDIT_RECORD,
+    editedRecord
+  };
+}
+
+export function editRecordAttribute (editedRecord) {
+  return {
+    type: EDIT_RECORD_ATTRIBUTE,
     editedRecord
   };
 }
@@ -384,6 +392,7 @@ export const actions = {
   addPhase,
   editAction,
   editRecord,
+  editRecordAttribute,
   editPhase,
   setDocumentState,
   executeImport,
@@ -528,6 +537,9 @@ const ACTION_HANDLERS = {
     });
   },
   [EDIT_RECORD]: (state, action) => {
+    console.log('🍑');
+  },
+  [EDIT_RECORD_ATTRIBUTE]: (state, action) => {
     if (action.editedRecord.name) {
       return update(state, {
         records: {
