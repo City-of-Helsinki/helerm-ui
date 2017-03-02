@@ -84,7 +84,11 @@ export function login () {
 
 export function logout () {
   return function (dispatch) {
-    return fetch('/auth/logout', { method: 'POST', credentials: 'same-origin' })
+    return fetch('/auth/logout', {
+      method: 'POST',
+      credentials: 'same-origin',
+      mode: 'no-cors'
+    })
       .then(() => {
         removeStorageItem('token');
         dispatch(clearUserData());
