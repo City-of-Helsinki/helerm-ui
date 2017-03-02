@@ -424,7 +424,6 @@ const ACTION_HANDLERS = {
     });
   },
   [RESET_TOS]: (state, action) => {
-    console.log(action);
     return update(state, {
       $merge: action.originalTos,
       documentState: {
@@ -540,7 +539,7 @@ const ACTION_HANDLERS = {
           [action.editedRecord.recordId]: {
             attributes: {
               RecordType: {
-                $set: action.editedRecord.name
+                $set: action.editedRecord.type
               }
             }
           }

@@ -1,4 +1,5 @@
 import React from 'react';
+import Select from 'react-select';
 import './Attribute.scss';
 
 export class Attribute extends React.Component {
@@ -12,23 +13,14 @@ export class Attribute extends React.Component {
     };
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.mode) {
-      this.setState({ mode: nextProps.mode });
-    }
-    if (nextProps.attribute) {
-      this.setState({ attribute: nextProps.attribute });
-    }
-  }
-
   activateEditMode () {
     if (this.state.mode !== 'edit') {
       this.changeState('edit');
     }
   }
 
-  onChange (event) {
-    this.setState({ attribute: event.target.value });
+  onChange (val) {
+    this.setState({ attribute: val });
   }
 
   changeState (newState) {
@@ -61,20 +53,24 @@ export class Attribute extends React.Component {
 
   generateAttributeInput (attribute, currentAttribute) {
     if (attribute.values && attribute.values.length) {
-      const options = attribute.values.map((option, index) => {
-        return <option key={index} value={option.value}>{option.value}</option>;
+      const options = attribute.values.map(option => {
+        return {
+          value: option.value,
+          label: option.value
+        };
       });
       return (
-        <select
+        <Select
+          autoBlur={false}
+          openOnFocus={true}
           className='form-control edit-record__input'
+          clearable={false}
           value={this.state.attribute}
-          onChange={this.onChange}
+          onChange={({ value }) => this.onChange(value)}
           onBlur={this.submit}
-          autoFocus={true}
-        >
-          <option value={null}>[ Tyhjä ]</option>
-          { options }
-        </select>
+          autofocus={true}
+          options={options}
+        />
       );
     } else if (attribute.values.length === 0 || attribute.type) {
       return (
@@ -82,7 +78,7 @@ export class Attribute extends React.Component {
           <input
             className='col-xs-6 form-control edit-record__input'
             value={this.state.attribute}
-            onChange={this.onChange}
+            onChange={({ target: { value } }) => this.onChange(value)}
             onBlur={this.submit}
             autoFocus={true}
           />
@@ -100,7 +96,7 @@ export class Attribute extends React.Component {
           <input
             className='col-xs-6 form-control edit-record__input'
             value={this.state.attribute}
-            onChange={this.onChange}
+            onChange={({ target: { value } }) => this.onChange(value)}
             onBlur={this.submit}
             autoFocus={true}
           />
@@ -115,21 +111,25 @@ export class Attribute extends React.Component {
     const options = [];
     for (const key in recordTypes) {
       if (recordTypes.hasOwnProperty(key)) {
-        options.push(<option key={key} value={recordTypes[key]}>{recordTypes[key]}</option>);
+        options.push({
+          label: recordTypes[key],
+          value: recordTypes[key]
+        });
       }
     }
     return (
       <form onSubmit={this.submit}>
-        <select
+        <Select
+          autoBlur={false}
+          openOnFocus={true}
           className='col-xs-6 form-control edit-record__input'
+          clearable={false}
           value={this.state.attribute}
-          onChange={this.onChange}
+          onChange={({ value }) => this.onChange(value)}
           onBlur={this.submit}
-          autoFocus={true}
-        >
-          <option value={null}>[ Tyhjä ]</option>
-          {options}
-        </select>
+          autofocus={true}
+          options={options}
+        />
       </form>
     );
   }
