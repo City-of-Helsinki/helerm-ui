@@ -195,10 +195,26 @@ export function addPhase (name, parent) {
   };
 }
 
-export function editRecord (editedRecord) {
+export function editRecord (recordId, recordName, recordType, attributes) {
+  console.log(attributes);
+  let editedAttributes = [];
+  for (const key in attributes) {
+    if (attributes.hasOwnProperty(key)) {
+      if (attributes[key].checked === true) {
+        editedAttributes = Object.assign({}, editedAttributes, { [key]: attributes[key].name });
+      }
+    }
+  }
+  console.log(editedAttributes);
+  const editedRecord = Object.assign({}, {
+    attributes: editedAttributes,
+    name: recordName,
+    type: recordType
+  });
   return {
     type: EDIT_RECORD,
-    editedRecord
+    editedRecord,
+    recordId
   };
 }
 
@@ -537,7 +553,22 @@ const ACTION_HANDLERS = {
     });
   },
   [EDIT_RECORD]: (state, action) => {
-    console.log('🍑');
+    console.log('imcaled', action);
+    return update(state, {
+      records: {
+        [action.recordId]: {
+          name: {
+            $set: action.editedRecord.name
+          },
+          type: {
+            $set: action.editedRecord.type
+          },
+          attributes: {
+            $set: action.editedRecord.attributes
+          }
+        }
+      }
+    });
   },
   [EDIT_RECORD_ATTRIBUTE]: (state, action) => {
     if (action.editedRecord.name) {
