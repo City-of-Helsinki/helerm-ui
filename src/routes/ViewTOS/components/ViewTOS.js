@@ -20,6 +20,7 @@ export class ViewTOS extends React.Component {
     this.fetchTOS = this.fetchTOS.bind(this);
     this.cancelEdit = this.cancelEdit.bind(this);
     this.sendForInspection = this.sendForInspection.bind(this);
+    this.saveDraft = this.saveDraft.bind(this);
     this.onChange = this.onChange.bind(this);
     this.createNewPhase = this.createNewPhase.bind(this);
     this.cancelPhaseCreation = this.cancelPhaseCreation.bind(this);
@@ -79,11 +80,12 @@ export class ViewTOS extends React.Component {
     return this.props.resetTOS(this.state.originalTos);
   }
 
-  sendForInspection () {
-    return this.props.sendForInspection(this.props.selectedTOS)
+  saveDraft () {
+    // this.props.setDocumentState('view');
+    return this.props.saveDraft(this.props.selectedTOS)
       .then(() => {
         return this.props.displayMessage({
-          text: 'Luonnos lähetettiin tarkastettavaksi',
+          text: 'Luonnos tallennettu',
           success: true
         });
       })
@@ -93,6 +95,13 @@ export class ViewTOS extends React.Component {
           success: false
         });
       });
+  }
+
+  sendForInspection () {
+    return this.props.displayMessage({
+      text: 'Ei implementoitu vielä: Luonnos lähetettiin tarkastettavaksi',
+      success: true
+    });
   }
 
   formatDateTime (dateTime) {
@@ -293,7 +302,7 @@ export class ViewTOS extends React.Component {
                   <span>
                     <button
                       className='btn btn-primary btn-sm pull-right'
-                      onClick={() => this.props.setDocumentState('view')}>
+                      onClick={this.saveDraft}>
                       Tallenna luonnos
                     </button>
                     <button
@@ -447,8 +456,8 @@ ViewTOS.propTypes = {
   removeRecord: React.PropTypes.func.isRequired,
   resetTOS: React.PropTypes.func.isRequired,
   route: React.PropTypes.object.isRequired,
+  saveDraft: React.PropTypes.func.isRequired,
   selectedTOS: React.PropTypes.object.isRequired,
-  sendForInspection: React.PropTypes.func.isRequired,
   setDocumentState: React.PropTypes.func.isRequired,
   setNavigationVisibility: React.PropTypes.func.isRequired,
   setPhaseVisibility: React.PropTypes.func.isRequired,
