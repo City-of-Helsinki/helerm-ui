@@ -14,8 +14,8 @@ import { StickyContainer, Sticky } from 'react-sticky';
 export class Action extends React.Component {
   constructor (props) {
     super(props);
-    this.createRecord = this.createRecord.bind(this);
     this.saveActionTitle = this.saveActionTitle.bind(this);
+    this.createRecord = this.createRecord.bind(this);
     this.cancelRecordCreation = this.cancelRecordCreation.bind(this);
     this.editRecordForm = this.editRecordForm.bind(this);
     this.editRecordWithForm = this.editRecordWithForm.bind(this);
@@ -115,8 +115,6 @@ export class Action extends React.Component {
     this.setState({ creating: false });
   }
 
-  cancelDeletion () {
-    this.setState({ deleting: false });
   editRecordForm (recordId) {
     this.setState({
       editing: true,
@@ -142,6 +140,10 @@ export class Action extends React.Component {
   delete () {
     this.setState({ deleting: false });
     this.props.removeAction(this.props.action.id, this.props.action.phase);
+  }
+
+  cancelDeletion () {
+    this.setState({ deleting: false });
   }
 
   createRecord (actionId, name, type, attributes) {
