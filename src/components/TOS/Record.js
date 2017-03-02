@@ -160,7 +160,7 @@ export class Record extends React.Component {
                   text: 'Muokkaa asiakirjaa',
                   icon: 'fa-pencil',
                   style: 'btn-primary',
-                  action: () => this.openEditView()
+                  action: () => this.props.editRecordForm(record.id)
                 },
                 {
                   text: 'Poista asiakirja',
@@ -218,8 +218,8 @@ export class Record extends React.Component {
 Record.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
   documentState: React.PropTypes.string.isRequired,
-  editRecord: React.PropTypes.func.isRequired,
   editRecordAttribute: React.PropTypes.func.isRequired,
+  editRecordForm: React.PropTypes.func.isRequired,
   record: React.PropTypes.object.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
   removeRecord: React.PropTypes.func.isRequired

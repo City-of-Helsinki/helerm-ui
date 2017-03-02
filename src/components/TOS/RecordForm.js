@@ -16,7 +16,8 @@ export class RecordForm extends React.Component {
       recordType: {
         name: '',
         checked: true
-      }
+      },
+      editForm: !!this.props.editRecordWithForm
     };
   }
 
@@ -146,6 +147,16 @@ export class RecordForm extends React.Component {
     });
   }
 
+  editRecord (e, actionId) {
+    e.preventDefault();
+    const { recordName, recordType, newAttributes } = this.state;
+    this.props.editRecordWithForm(this.props.recordId, recordName.name, recordType.name, newAttributes);
+    this.props.displayMessage({
+      text: 'Asiakirjan muokkaus onnistui!',
+      success: true
+    });
+  }
+
   closeRecordForm (e) {
     e.preventDefault();
     this.props.closeRecordForm();
@@ -153,12 +164,16 @@ export class RecordForm extends React.Component {
 
   render () {
     const { attributeTypes, recordTypes, actionId } = this.props;
+    const { editForm } = this.state;
     const attributeElements = this.generateAttributeElements(attributeTypes);
     const typeDropdown = this.generateDropdown(recordTypes);
     return (
       <div className='action add-box col-xs-12'>
-        <h4>Uusi asiakirja</h4>
-        <form onSubmit={(e) => this.addRecord(e, actionId)} className='edit-record'>
+        <h4>{ editForm ? 'Muokkaa asiakirjaa' : 'Uusi asiakirja' }</h4>
+        <form onSubmit={(e) => editForm
+                ? this.editRecord(e, actionId)
+                : this.addRecord(e, actionId)}
+              className='edit-record'>
           <div className='col-xs-12 col-lg-6 form-group'>
             <label className='edit-record__label'>Asiakirjatyypin tarkenne</label>
             <span className='fa fa-asterisk required-asterisk'/>
@@ -194,6 +209,8 @@ RecordForm.propTypes = {
   createRecord: React.PropTypes.func.isRequired,
   closeRecordForm: React.PropTypes.func.isRequired,
   displayMessage: React.PropTypes.func.isRequired,
+  editRecordWithForm: React.PropTypes.func,
+  recordId: React.PropTypes.string,
   recordTypes: React.PropTypes.object.isRequired
 };
 

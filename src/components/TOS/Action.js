@@ -17,10 +17,14 @@ export class Action extends React.Component {
     this.createRecord = this.createRecord.bind(this);
     this.saveActionTitle = this.saveActionTitle.bind(this);
     this.cancelRecordCreation = this.cancelRecordCreation.bind(this);
+    this.editRecordForm = this.editRecordForm.bind(this);
+    this.editRecordWithForm = this.editRecordWithForm.bind(this);
+    this.cancelRecordEdit = this.cancelRecordEdit.bind(this);
     this.state = {
       mode: 'view',
       name: this.props.action.name,
       creating: false,
+      editing: false,
       deleting: false,
       showReorderView: false,
       showImportView: false
@@ -63,12 +67,13 @@ export class Action extends React.Component {
           <Record
             key={key}
             record={this.props.records[records[key]]}
-            editRecord={this.props.editRecord}
+            editRecordForm={this.editRecordForm}
             editRecordAttribute={this.props.editRecordAttribute}
             removeRecord={this.props.removeRecord}
             recordTypes={this.props.recordTypes}
             documentState={this.props.documentState}
             attributeTypes={this.props.attributeTypes}
+            displayMessage={this.props.displayMessage}
           />
         );
       }
@@ -112,6 +117,26 @@ export class Action extends React.Component {
 
   cancelDeletion () {
     this.setState({ deleting: false });
+  editRecordForm (recordId) {
+    this.setState({
+      editing: true,
+      recordId
+    });
+  }
+
+  cancelRecordEdit () {
+    this.setState({
+      editing: false,
+      recordId: undefined
+    });
+  }
+
+  editRecordWithForm (actionId, name, type, attributes) {
+    this.setState({
+      editing: false,
+      recordId: undefined
+    });
+    this.props.editRecord(actionId, name, type, attributes);
   }
 
   delete () {
@@ -178,10 +203,21 @@ export class Action extends React.Component {
             attributeTypes={this.props.attributeTypes}
             recordTypes={this.props.recordTypes}
             createRecord={this.createRecord}
-            cancelRecordCreation={this.cancelRecordCreation}
+            closeRecordForm={this.cancelRecordCreation}
             mode={this.state.mode}
             displayMessage={this.props.displayMessage}
           />
+          }
+          { this.state.editing &&
+            <RecordForm
+              recordId={this.state.recordId}
+              attributeTypes={this.props.attributeTypes}
+              recordTypes={this.props.recordTypes}
+              editRecordWithForm={this.editRecordWithForm}
+              closeRecordForm={this.cancelRecordEdit}
+              mode={this.state.mode}
+              displayMessage={this.props.displayMessage}
+            />
           }
           <span className='col-xs-6 attribute-label'>
             Asiakirjatyypin tarkenne
