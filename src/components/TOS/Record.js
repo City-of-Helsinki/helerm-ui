@@ -9,7 +9,6 @@ export class Record extends React.Component {
   constructor (props) {
     super(props);
 
-    this.openEditView = this.openEditView.bind(this);
     this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
     this.updateRecordName = this.updateRecordName.bind(this);
     this.updateRecordType = this.updateRecordType.bind(this);
@@ -39,10 +38,6 @@ export class Record extends React.Component {
   // cancelRecordEdit () {
   //   this.setMode('view');
   // }
-
-  openEditView () {
-    console.log('Hello.');
-  }
 
   toggleAttributeVisibility () {
     const currentVisibility = this.state.showAttributes;
