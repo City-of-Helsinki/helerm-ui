@@ -5,24 +5,24 @@ import { push } from 'react-router-redux';
 import { setNavigationVisibility } from '../../../components/Navigation/navigationReducer';
 
 import {
-  fetchTOS,
-  clearTOS,
-  resetTOS,
-  setPhaseVisibility,
-  setPhasesVisibility,
   addAction,
   addPhase,
   addRecord,
+  changeOrder,
+  clearTOS,
   editAction,
   editPhase,
   editRecord,
+  fetchTOS,
+  importItems,
   removeAction,
   removePhase,
   removeRecord,
+  resetTOS,
+  saveDraft,
   setDocumentState,
-  importItems,
-  changeOrder,
-  sendForInspection
+  setPhasesVisibility,
+  setPhaseVisibility
 } from '../tosReducer';
 
 import { displayMessage } from '../../../store/uiReducer';
@@ -49,7 +49,7 @@ const mapDispatchToProps = (dispatch) => {
     setDocumentState: bindActionCreators(setDocumentState, dispatch),
     importItems: bindActionCreators(importItems, dispatch),
     changeOrder: bindActionCreators(changeOrder, dispatch),
-    sendForInspection: bindActionCreators(sendForInspection, dispatch),
+    saveDraft: bindActionCreators(saveDraft, dispatch),
     setNavigationVisibility: bindActionCreators(setNavigationVisibility, dispatch),
     displayMessage: bindActionCreators(displayMessage, dispatch)
   };

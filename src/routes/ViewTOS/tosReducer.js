@@ -352,7 +352,7 @@ export function changeOrder (newOrder, itemType, itemParent) {
   };
 }
 
-export function sendForInspection (tos) {
+export function saveDraft (tos) {
   const finalTos = normalizeTosForApi(tos);
   return function (dispatch) {
     dispatch(requestTOS());
