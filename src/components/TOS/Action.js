@@ -211,15 +211,15 @@ export class Action extends React.Component {
           />
           }
           { this.state.editing &&
-            <RecordForm
-              recordId={this.state.recordId}
-              attributeTypes={this.props.attributeTypes}
-              recordTypes={this.props.recordTypes}
-              editRecordWithForm={this.editRecordWithForm}
-              closeRecordForm={this.cancelRecordEdit}
-              mode={this.state.mode}
-              displayMessage={this.props.displayMessage}
-            />
+          <RecordForm
+            recordId={this.state.recordId}
+            attributeTypes={this.props.attributeTypes}
+            recordTypes={this.props.recordTypes}
+            editRecordWithForm={this.editRecordWithForm}
+            closeRecordForm={this.cancelRecordEdit}
+            mode={this.state.mode}
+            displayMessage={this.props.displayMessage}
+          />
           }
           <span className='col-xs-6 attribute-label'>
             Asiakirjatyypin tarkenne

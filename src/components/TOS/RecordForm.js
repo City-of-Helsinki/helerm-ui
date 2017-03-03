@@ -32,8 +32,7 @@ export class RecordForm extends React.Component {
           }
         });
       }
-    }
-    ;
+    };
     return initialState;
   }
 
