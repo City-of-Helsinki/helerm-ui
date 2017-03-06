@@ -224,15 +224,19 @@ export class Action extends React.Component {
             displayMessage={this.props.displayMessage}
           />
           }
-          <span className='col-xs-6 attribute-label'>
+          { !this.state.editing &&
+          <div>
+            <span className='col-xs-6 attribute-label'>
             Asiakirjatyypin tarkenne
-          </span>
-          <span className='col-xs-6 attribute-label'>
+            </span>
+            <span className='col-xs-6 attribute-label'>
             Tyyppi
-          </span>
-          <div className={classNames('col-xs-12 records', { 'records-editing': this.props.documentState === 'edit' })}>
-            { recordElements }
+            </span>
+            <div className={classNames('col-xs-12 records', { 'records-editing': this.props.documentState === 'edit' })}>
+              { recordElements }
+            </div>
           </div>
+          }
 
           { this.state.deleting &&
           <Popup
