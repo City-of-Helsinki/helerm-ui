@@ -142,7 +142,7 @@ export class Attribute extends React.Component {
   render () {
     const { attribute, attributeIndex, showAttributes, attributeKey, attributeTypes, editable, type } = this.props;
     let attributeValue;
-    if (editable === false) {
+    if (editable === false && attribute !== null) {
       return (
         <a className='list-group-item col-xs-6'>
           <strong>{attributeIndex}:</strong>
@@ -161,21 +161,25 @@ export class Attribute extends React.Component {
         attributeValue = this.generateRecordInput(attributeIndex, attribute);
       }
     }
-    return (
-      <a
-        onClick={() => this.activateEditMode()}
-        className={'list-group-item col-xs-6 attribute ' + (showAttributes ? 'visible' : 'hidden')}>
-        <span className='table-key'>
-          { attributeKey }
-          { type === 'attribute' &&
-          this.props.documentState === 'edit' &&
-          attributeTypes[attributeIndex].required &&
-          <span className='fa fa-asterisk required-asterisk'/>
-          }
-        </span>
-        { attributeValue }
-      </a>
-    );
+
+    if (attribute !== null) {
+      return (
+        <a
+          onClick={() => this.activateEditMode()}
+          className={'list-group-item col-xs-6 attribute ' + (showAttributes ? 'visible' : 'hidden')}>
+          <span className='table-key'>
+            { attributeKey }
+            { type === 'attribute' &&
+            this.props.documentState === 'edit' &&
+            attributeTypes[attributeIndex].required &&
+            <span className='fa fa-asterisk required-asterisk'/>
+            }
+          </span>
+          { attributeValue }
+        </a>
+      );
+    }
+    return null;
   }
 }
 
