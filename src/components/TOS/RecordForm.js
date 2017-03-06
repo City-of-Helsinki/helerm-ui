@@ -6,7 +6,7 @@ export class RecordForm extends React.Component {
   constructor (props) {
     super(props);
     this.generateAttributeElements = this.generateAttributeElements.bind(this);
-    this.getActiveOptionValues = this.getActiveOptionValues.bind(this);
+    this.getActiveValue = this.getActiveValue.bind(this);
     this.closeRecordForm = this.closeRecordForm.bind(this);
     this.state = {
       newAttributes: this.initializeState(this.props.attributeTypes),
@@ -62,7 +62,7 @@ export class RecordForm extends React.Component {
     }));
   }
 
-  getActiveOptionValues (key) {
+  getActiveValue (key) {
     if (this.state.newAttributes[key].name) {
       return this.state.newAttributes[key].name;
     }
@@ -90,7 +90,7 @@ export class RecordForm extends React.Component {
                 }
               </label>
               <select
-                value={this.getActiveOptionValues(key)}
+                value={this.getActiveValue(key)}
                 className='form-control edit-record__select'
                 onChange={(e) => this.onChange(e.target.value, key, 'name')}
                 disabled={!this.state.newAttributes[key].checked}>
@@ -116,6 +116,7 @@ export class RecordForm extends React.Component {
               </label>
               <input
                 className='form-control edit-record__input'
+                value={this.getActiveValue(key)}
                 placeholder={attributeTypes[key].name}
                 onChange={(e) => this.onChange(e.target.value, key, 'name')}
                 disabled={!this.state.newAttributes[key].checked}
