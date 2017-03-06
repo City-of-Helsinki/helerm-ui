@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch';
+import Promise from 'promise-polyfill';
 import {
   forEach,
   merge
@@ -11,6 +12,11 @@ import { getStorageItem } from './storage';
  * @type {[*]}
  */
 const ALLOWED_METHODS_WITHOUT_AUTHENTICATION = ['GET'];
+
+// Add Promise to window if not supported...
+if (!window.Promise) {
+  window.Promise = Promise;
+}
 
 /**
  *
@@ -91,7 +97,7 @@ export function callApi (endpoint, params, options = {}) {
 
   defaultHeaders.append('Accept', 'application/json');
 
-  if (!token && !ALLOWED_METHODS_WITHOUT_AUTHENTICATION.includes(finalOptions.method)) {
+  if (!token && ALLOWED_METHODS_WITHOUT_AUTHENTICATION.indexOf(finalOptions.method) !== 0) {
     throw Error(`Following methods for API-endpoint require authentication: ${ALLOWED_METHODS_WITHOUT_AUTHENTICATION.join(', ')}`);
   }
 

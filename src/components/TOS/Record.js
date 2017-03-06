@@ -57,7 +57,6 @@ export class Record extends React.Component {
   }
 
   updateRecordType (attribute, recordId) {
-    console.log(this.props);
     const updatedRecordType = {
       type: attribute,
       recordId: recordId

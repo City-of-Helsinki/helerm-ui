@@ -1,9 +1,35 @@
+$attribute-input-height: 31px;
+
 .attribute {
-  border: 0px;
+  border: 0;
   border-top: 1px solid #f2f2f2;
-  padding: 10px 15px 15px;
+  padding: 15px;
+
+  .table-value {
+    line-height: 31px;
+  }
 }
- .edit-record__input {
+
+.edit-record__input {
   margin-bottom: -10px;
-  height: 31px;
- }
+  height: $attribute-input-height;
+  padding: 0;
+  border: 0;
+
+  .Select-control {
+    height: $attribute-input-height;
+    border-radius: 2px;
+  }
+}
+
+.Select--single > .Select-control .Select-value {
+  line-height: $attribute-input-height;
+}
+
+.Select-input {
+  height: $attribute-input-height;
+}
+
+.Select-clear {
+  margin-bottom: -4px;
+}
