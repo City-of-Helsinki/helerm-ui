@@ -18,6 +18,7 @@ export function receiveAttributeTypes (attributes, validationRules) {
   attributes.results.map(result => {
     if (result.values) {
       let required;
+      let requiredIn = [];
       validationRules.record.required.map(rule => {
         if (rule === result.identifier) {
           required = true;
@@ -26,9 +27,19 @@ export function receiveAttributeTypes (attributes, validationRules) {
       if (required !== true) {
         required = false;
       }
+
+      Object.keys(validationRules).map(key => {
+        validationRules[key].required && validationRules[key].required.map(rule => {
+          if (rule === result.identifier) {
+            requiredIn.push(key);
+          }
+        });
+      });
+
       attributeTypeList[result.identifier] = {
         name: result.name,
         values: result.values,
+        requiredIn,
         required
       };
     }
