@@ -11,11 +11,15 @@ export class RecordForm extends React.Component {
     this.state = {
       newAttributes: this.initializeState(this.props.attributeTypes),
       recordName: {
-        name: '',
+        name: this.props.record.name
+          ? this.props.record.name
+          : '',
         checked: true
       },
       recordType: {
-        name: '',
+        name: this.props.record.attributes.RecordType
+          ? this.props.record.attributes.RecordType
+          : '',
         checked: true
       },
       editForm: !!this.props.editRecordWithForm
@@ -131,13 +135,16 @@ export class RecordForm extends React.Component {
 
   generateDropdown (recordTypes) {
     const options = [];
+    const selectedRecordType = this.state.recordType.name;
     for (const key in recordTypes) {
       if (recordTypes.hasOwnProperty(key)) {
         options.push(<option key={key} value={key}>{recordTypes[key]}</option>);
       }
     }
+
     return (
       <select
+        value={selectedRecordType}
         className='form-control col-xs-6'
         onChange={(e) => this.onBaseAttributeChange(e.target.value, 'recordType', 'name')}>
         <option value={null}>[ Tyhjä ]</option>
