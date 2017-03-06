@@ -115,10 +115,11 @@ export class Action extends React.Component {
     this.setState({ creating: false });
   }
 
-  editRecordForm (recordId, recordAttributes) {
+  editRecordForm (recordId, recordName, recordAttributes) {
     this.setState({
       record: {
         id: recordId,
+        name: recordName,
         attributes: recordAttributes
       }
     }, () => { this.setState({ editing: true }); });
@@ -214,8 +215,7 @@ export class Action extends React.Component {
           }
           { this.state.editing &&
           <RecordForm
-            recordId={this.state.record.id}
-            recordAttributes={this.state.record.attributes}
+            record={this.state.record}
             recordTypes={this.props.recordTypes}
             attributeTypes={this.props.attributeTypes}
             editRecordWithForm={this.editRecordWithForm}

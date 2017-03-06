@@ -23,13 +23,13 @@ export class RecordForm extends React.Component {
   }
 
   initializeState (attributeTypes) {
-    const { recordAttributes } = this.props;
+    const { attributes } = this.props.record;
     let initialState = {};
     for (const key in attributeTypes) {
       if (attributeTypes.hasOwnProperty(key)) {
         initialState = Object.assign({}, initialState, {
           [key]: {
-            name: recordAttributes[key] ? recordAttributes[key] : null,
+            name: attributes[key] ? attributes[key] : null,
             checked: true
           }
         });
@@ -158,7 +158,7 @@ export class RecordForm extends React.Component {
   editRecord (e, actionId) {
     e.preventDefault();
     const { recordName, recordType, newAttributes } = this.state;
-    this.props.editRecordWithForm(this.props.recordId, recordName.name, recordType.name, newAttributes);
+    this.props.editRecordWithForm(this.props.record.id, recordName.name, recordType.name, newAttributes);
     this.props.displayMessage({
       text: 'Asiakirjan muokkaus onnistui!',
       success: true
@@ -218,8 +218,11 @@ RecordForm.propTypes = {
   createRecord: React.PropTypes.func,
   displayMessage: React.PropTypes.func.isRequired,
   editRecordWithForm: React.PropTypes.func,
-  recordAttributes: React.PropTypes.object,
-  recordId: React.PropTypes.string,
+  record: React.PropTypes.shape({
+    id: React.PropTypes.string.isRequired,
+    name: React.PropTypes.string.isRequired,
+    attributes: React.PropTypes.object.isRequired
+  }),
   recordTypes: React.PropTypes.object.isRequired
 };
 

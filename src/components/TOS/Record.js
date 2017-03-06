@@ -154,7 +154,7 @@ export class Record extends React.Component {
                   text: 'Muokkaa asiakirjaa',
                   icon: 'fa-pencil',
                   style: 'btn-primary',
-                  action: () => this.props.editRecordForm(record.id, this.state.attributes)
+                  action: () => this.props.editRecordForm(record.id, this.state.name, this.state.attributes)
                 },
                 {
                   text: 'Poista asiakirja',
