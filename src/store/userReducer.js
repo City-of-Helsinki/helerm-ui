@@ -1,9 +1,9 @@
 import fetch from 'isomorphic-fetch';
 import update from 'immutability-helper';
-import { isEmpty, /* get, */ isString } from 'lodash';
+import { isEmpty, get, isString } from 'lodash';
 
 import { centeredPopUp } from '../utils/helpers';
-// import { default as api } from '../utils/api';
+import { default as api } from '../utils/api';
 import { setStorageItem, removeStorageItem } from '../utils/storage';
 
 // ------------------------------------
@@ -38,18 +38,19 @@ export function retrieveUserFromSession () {
       .then((user) => {
         if (isString(user.token) && !isEmpty(user.token)) {
           setStorageItem('token', user.token);
-          // TODO: Enable when API is ready
-          // const url = `users/${user.id}/`;
-          // return api.get(url, { user }, {})
-          //   .then((democracyUser) => {
-          //     return democracyUser.json();
-          //   })
-          //   .then((democracyUserJSON) => {
-          //     const userWithOrganization = Object.assign({},
-          //       user,
-          //       { adminOrganizations: get(democracyUserJSON, 'admin_organizations', null) });
-          //     return dispatch(receiveUserData(userWithOrganization));
-          //   });
+          const url = `user/${user.id}`;
+          return api.get(url)
+            .then((helermUserData) => {
+              return helermUserData.json();
+            })
+            .then((helermUser) => {
+              const permissions = get(helermUser, 'permissions', null);
+              const userWithPermissions = Object.assign({},
+                user,
+                { permissions: permissions }
+              );
+              return dispatch(receiveUserData(userWithPermissions));
+            });
         }
         return dispatch(receiveUserData(user));
       });
