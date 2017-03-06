@@ -555,7 +555,6 @@ const ACTION_HANDLERS = {
     });
   },
   [EDIT_RECORD]: (state, action) => {
-    console.log('imcaled', action);
     return update(state, {
       records: {
         [action.recordId]: {
