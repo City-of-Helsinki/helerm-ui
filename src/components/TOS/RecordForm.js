@@ -209,6 +209,7 @@ RecordForm.propTypes = {
   createRecord: React.PropTypes.func,
   displayMessage: React.PropTypes.func.isRequired,
   editRecordWithForm: React.PropTypes.func,
+  recordAttributes: React.PropTypes.object,
   recordId: React.PropTypes.string,
   recordTypes: React.PropTypes.object.isRequired
 };
