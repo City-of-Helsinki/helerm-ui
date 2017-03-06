@@ -1,8 +1,6 @@
 import React from 'react';
 import './RecordForm.scss';
 import update from 'immutability-helper';
-import map from 'lodash/map';
-import includes from 'lodash/includes';
 
 export class RecordForm extends React.Component {
   constructor (props) {
@@ -64,16 +62,9 @@ export class RecordForm extends React.Component {
     }));
   }
 
-  getActiveOptionValues (keys) {
-    const mappedOptions = map(keys, (key) => (key.value));
-    const attributeValues = map(this.state.newAttributes, (attribute) => (
-      attribute.name
-    ));
-    console.log(attributeValues);
-    for (const option of mappedOptions) {
-      if (includes(attributeValues, option)) {
-        return option;
-      }
+  getActiveOptionValues (key) {
+    if (this.state.newAttributes[key].name) {
+      return this.state.newAttributes[key].name;
     }
   }
 
@@ -99,7 +90,7 @@ export class RecordForm extends React.Component {
                 }
               </label>
               <select
-                value={this.getActiveOptionValues(attributeTypes[key].values)}
+                value={this.getActiveOptionValues(key)}
                 className='form-control edit-record__select'
                 onChange={(e) => this.onChange(e.target.value, key, 'name')}
                 disabled={!this.state.newAttributes[key].checked}>
