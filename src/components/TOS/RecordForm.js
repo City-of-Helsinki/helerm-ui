@@ -1,11 +1,14 @@
 import React from 'react';
 import './RecordForm.scss';
 import update from 'immutability-helper';
+import map from 'lodash/map';
+import includes from 'lodash/includes';
 
 export class RecordForm extends React.Component {
   constructor (props) {
     super(props);
     this.generateAttributeElements = this.generateAttributeElements.bind(this);
+    this.getActiveOptionValues = this.getActiveOptionValues.bind(this);
     this.closeRecordForm = this.closeRecordForm.bind(this);
     this.state = {
       newAttributes: this.initializeState(this.props.attributeTypes),
@@ -22,12 +25,13 @@ export class RecordForm extends React.Component {
   }
 
   initializeState (attributeTypes) {
+    const { recordAttributes } = this.props;
     let initialState = {};
     for (const key in attributeTypes) {
       if (attributeTypes.hasOwnProperty(key)) {
         initialState = Object.assign({}, initialState, {
           [key]: {
-            name: null,
+            name: recordAttributes[key] ? recordAttributes[key] : null,
             checked: true
           }
         });
@@ -60,6 +64,19 @@ export class RecordForm extends React.Component {
     }));
   }
 
+  getActiveOptionValues (keys) {
+    const mappedOptions = map(keys, (key) => (key.value));
+    const attributeValues = map(this.state.newAttributes, (attribute) => (
+      attribute.name
+    ));
+    console.log(attributeValues);
+    for (const option of mappedOptions) {
+      if (includes(attributeValues, option)) {
+        return option;
+      }
+    }
+  }
+
   generateAttributeElements (attributeTypes) {
     const attributeElements = [];
     for (const key in attributeTypes) {
@@ -82,6 +99,7 @@ export class RecordForm extends React.Component {
                 }
               </label>
               <select
+                value={this.getActiveOptionValues(attributeTypes[key].values)}
                 className='form-control edit-record__select'
                 onChange={(e) => this.onChange(e.target.value, key, 'name')}
                 disabled={!this.state.newAttributes[key].checked}>
