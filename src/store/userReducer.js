@@ -44,7 +44,7 @@ export function retrieveUserFromSession () {
               return helermUserData.json();
             })
             .then((helermUser) => {
-              const permissions = get(helermUser, 'permissions', null);
+              const permissions = get(helermUser, 'permissions', []);
               const userWithPermissions = Object.assign({},
                 user,
                 { permissions: permissions }
