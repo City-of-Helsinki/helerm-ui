@@ -7,6 +7,7 @@ export class RecordForm extends React.Component {
     super(props);
     this.generateAttributeElements = this.generateAttributeElements.bind(this);
     this.getActiveValue = this.getActiveValue.bind(this);
+    this.getCheckedState = this.getCheckedState.bind(this);
     this.closeRecordForm = this.closeRecordForm.bind(this);
     this.state = {
       newAttributes: this.initializeState(this.props.attributeTypes),
@@ -72,6 +73,14 @@ export class RecordForm extends React.Component {
     }
   }
 
+  getCheckedState (key) {
+    if (this.state.editForm && !this.state.newAttributes[key].name) {
+      return false;
+    } else {
+      return this.state.newAttributes[key].checked;
+    }
+  }
+
   generateAttributeElements (attributeTypes) {
     const attributeElements = [];
     for (const key in attributeTypes) {
@@ -84,7 +93,7 @@ export class RecordForm extends React.Component {
             <div key={key} className='col-xs-12 col-lg-6 form-group'>
               <input
                 type='checkbox'
-                checked={this.state.newAttributes[key].checked}
+                checked={this.getCheckedState(key)}
                 value={this.state.newAttributes[key].checked}
                 onChange={(e) => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}/>
               <label className='edit-record__label'>
@@ -108,7 +117,7 @@ export class RecordForm extends React.Component {
             <div key={key} className='col-xs-12 col-lg-6 form-group'>
               <input
                 type='checkbox'
-                checked={this.state.newAttributes[key].checked}
+                checked={this.getCheckedState(key)}
                 value={this.state.newAttributes[key].checked}
                 onChange={(e) => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}
               />
