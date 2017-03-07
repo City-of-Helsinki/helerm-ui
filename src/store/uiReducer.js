@@ -37,9 +37,36 @@ export function receiveAttributeTypes (attributes, validationRules) {
         });
       });
 
+      // Add conditional rules if any
       Object.keys(validationRules).map(key => {
-        validationRules[key].allOf && validationRules[key].allOf.map(rule => {
-          // TODO: add rules
+        validationRules[key].allOf && validationRules[key].allOf.map(oneOf => {
+          Object.keys(oneOf).map(oneOfKey => {
+            // We're only interested in required-keys
+            const rules = oneOf[oneOfKey];
+            const required = rules[0].required;
+
+            required.map(requiredIndentifier => {
+              Object.keys(rules[0].properties).map(property => {
+                let values = [];
+                Object.keys(rules[0].properties[property]).map(key => {
+                  rules[0].properties[property][key].map(value => {
+                    values.push(value);
+                  });
+                });
+
+                const exists = !!requiredIf.find(reqObj => {
+                  return reqObj.key === property;
+                });
+
+                if (requiredIndentifier === result.identifier && !exists) {
+                  requiredIf.push({
+                    key: property,
+                    values
+                  });
+                }
+              });
+            });
+          });
         });
       });
 
