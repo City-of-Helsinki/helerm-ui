@@ -147,7 +147,7 @@ export class RecordForm extends React.Component {
     const selectedRecordType = this.state.recordType.name;
     for (const key in recordTypes) {
       if (recordTypes.hasOwnProperty(key)) {
-        options.push(<option key={key} value={key}>{recordTypes[key]}</option>);
+        options.push(<option key={key} value={key}>{recordTypes[key].name}</option>);
       }
     }
 

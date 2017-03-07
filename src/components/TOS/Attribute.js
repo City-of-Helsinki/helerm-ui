@@ -117,8 +117,8 @@ export class Attribute extends React.Component {
     for (const key in recordTypes) {
       if (recordTypes.hasOwnProperty(key)) {
         options.push({
-          label: recordTypes[key],
-          value: recordTypes[key]
+          label: recordTypes[key].name,
+          value: recordTypes[key].name
         });
       }
     }
