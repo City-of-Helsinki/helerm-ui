@@ -28,7 +28,7 @@ export function receiveAttributeTypes (attributes, validationRules) {
         }
       });
 
-
+      // Add requiredIn attributes
       Object.keys(validationRules).map(key => {
         validationRules[key].required && validationRules[key].required.map(rule => {
           if (rule === result.identifier) {
