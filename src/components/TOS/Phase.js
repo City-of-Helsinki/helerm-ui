@@ -270,7 +270,7 @@ export class Phase extends React.Component {
             content={
               <ImportView
                 level='action'
-                toggleImportView={() => this.toggleImportView()}
+                toggleImportView={this.toggleImportView}
                 title='toimenpiteitä'
                 targetText={'käsittelyvaiheeseen "' + phase.name + '"'}
                 itemsToImportText='toimenpiteet'
