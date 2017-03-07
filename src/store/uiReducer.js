@@ -15,15 +15,19 @@ export const DISPLAY_MESSAGE = 'ui/DISPLAY_MESSAGE';
 // ------------------------------------
 export function receiveAttributeTypes (attributes, validationRules) {
   const attributeTypeList = {};
+  debugger;
   attributes.results.map(result => {
     if (result.values) {
       let required;
       let requiredIn = [];
+      let requiredIf = [];
+
       validationRules.record.required.map(rule => {
         if (rule === result.identifier) {
           required = true;
         }
       });
+
       if (required !== true) {
         required = false;
       }
@@ -36,9 +40,16 @@ export function receiveAttributeTypes (attributes, validationRules) {
         });
       });
 
+      Object.keys(validationRules).map(key => {
+        validationRules[key].allOf && validationRules[key].allOf.map(rule => {
+          // TODO: add rules
+        });
+      });
+
       attributeTypeList[result.identifier] = {
         name: result.name,
         values: result.values,
+        requiredIf,
         requiredIn,
         required
       };
