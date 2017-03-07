@@ -83,7 +83,7 @@ export class ImportView extends React.Component {
             <a
               key={key}
               href=''
-              onClick={(e) => this.selectForImport(e, values[items[key]].id)}>{values[items[key]].name}
+              onClick={(e) => this.selectForImport(e, values[items[key].id].id)}>{values[items[key].id].name}
             </a>
           </div>
         );
