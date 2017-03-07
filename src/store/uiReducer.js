@@ -15,22 +15,19 @@ export const DISPLAY_MESSAGE = 'ui/DISPLAY_MESSAGE';
 // ------------------------------------
 export function receiveAttributeTypes (attributes, validationRules) {
   const attributeTypeList = {};
-  debugger;
   attributes.results.map(result => {
     if (result.values) {
-      let required;
+      let required = false;
       let requiredIn = [];
       let requiredIf = [];
 
+      // Add basic required if so
       validationRules.record.required.map(rule => {
         if (rule === result.identifier) {
           required = true;
         }
       });
 
-      if (required !== true) {
-        required = false;
-      }
 
       Object.keys(validationRules).map(key => {
         validationRules[key].required && validationRules[key].required.map(rule => {
