@@ -205,7 +205,6 @@ export function editRecord (recordId, recordName, recordType, attributes) {
       }
     }
   }
-  console.log(editedAttributes);
   const editedRecord = Object.assign({}, {
     attributes: editedAttributes,
     name: recordName,
