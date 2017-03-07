@@ -43,6 +43,13 @@ export class RecordForm extends React.Component {
     return initialState;
   }
 
+  getRecordTypeId (recordType) {
+    const correctType = find(this.props.recordTypes, (type) => (
+      type.name === recordType
+    ));
+    return correctType.id;
+  }
+
   onChange (e, key, field) {
     const newValue = e;
     this.setState(update(this.state, {
