@@ -1,10 +1,12 @@
 import LTT from 'list-to-tree';
 import {
-  orderBy,
-  find,
   filter,
+  find,
   flatten,
-  map
+  includes,
+  isEmpty,
+  map,
+  orderBy
 } from 'lodash';
 
 export function convertToTree (itemList) {
@@ -115,4 +117,14 @@ export function centeredPopUp (url, title, w, h) {
     copyhistory=no,
     width=${w}, height=${h}, top=${top}, left=${left}
   `);
+}
+
+/**
+ * Check for user permissions
+ * @param user
+ * @param permission
+ * @returns {*}
+ */
+export function checkPermissions (user, permission) {
+  return !isEmpty(user) && includes(user.permissions, permission);
 }

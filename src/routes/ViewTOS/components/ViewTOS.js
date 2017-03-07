@@ -10,7 +10,9 @@ import ImportView from 'components/TOS/ImportView';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
 
-import IsAuthenticated from 'components/IsAuthenticated/IsAuthenticated';
+import IsAllowed from 'components/IsAllowed/IsAllowed';
+
+import { EDIT } from '../../../../config/constants';
 
 import './ViewTOS.scss';
 
@@ -283,7 +285,7 @@ export class ViewTOS extends React.Component {
                 <h4 className='col-md-6 col-xs-12'>{selectedTOS.function_id} {selectedTOS.name}</h4>
                 <div className='document-buttons col-xs-12 col-md-6'>
                   { selectedTOS.documentState !== 'edit' &&
-                  <IsAuthenticated>
+                  <IsAllowed to={EDIT}>
                     <span>
                       <button
                         className='btn btn-default btn-sm pull-right'
@@ -296,24 +298,26 @@ export class ViewTOS extends React.Component {
                         Muokkaustila
                       </button>
                     </span>
-                  </IsAuthenticated>
+                  </IsAllowed>
                   }
                   { selectedTOS.documentState === 'edit' &&
-                  <span>
-                    <button
-                      className='btn btn-primary btn-sm pull-right'
-                      onClick={this.saveDraft}>
-                      Tallenna luonnos
-                    </button>
-                    <button
-                      className='btn btn-danger btn-sm pull-right'
-                      onClick={this.cancelEdit}>
-                      Peruuta muokkaus
-                    </button>
-                    <span
-                      className='fa fa-asterisk required-asterisk required-legend'> = Pakollinen tieto
+                  <IsAllowed to={EDIT}>
+                    <span>
+                      <button
+                        className='btn btn-primary btn-sm pull-right'
+                        onClick={this.saveDraft}>
+                        Tallenna luonnos
+                      </button>
+                      <button
+                        className='btn btn-danger btn-sm pull-right'
+                        onClick={this.cancelEdit}>
+                        Peruuta muokkaus
+                      </button>
+                      <span
+                        className='fa fa-asterisk required-asterisk required-legend'> = Pakollinen tieto
+                      </span>
                     </span>
-                  </span>
+                  </IsAllowed>
                   }
                 </div>
               </div>
