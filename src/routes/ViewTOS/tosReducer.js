@@ -407,13 +407,13 @@ const ACTION_HANDLERS = {
         $set: action.data.entities.tos[action.data.result].attributes
       },
       actions: {
-        $set: action.data.entities.actions
+        $set: action.data.entities.actions ? action.data.entities.actions : {}
       },
       phases: {
-        $set: action.data.entities.phases
+        $set: action.data.entities.phases ? action.data.entities.phases : {}
       },
       records: {
-        $set: action.data.entities.records
+        $set: action.data.entities.records ? action.data.entities.records : {}
       },
       lastUpdated: {
         $set: action.receivedAt

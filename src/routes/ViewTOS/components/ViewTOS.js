@@ -236,36 +236,38 @@ export class ViewTOS extends React.Component {
 
   generatePhases (phases) {
     const phaseElements = [];
-    const phasesOrder = Object.keys(this.props.selectedTOS.phases);
-    for (const key in phases) {
-      if (phases.hasOwnProperty(key)) {
-        phaseElements.push(
-          <Phase
-            key={key}
-            phaseIndex={phases[key].id}
-            phase={this.props.selectedTOS.phases[key]}
-            phasesOrder={phasesOrder}
-            setPhaseVisibility={this.setPhaseVisibility}
-            actions={this.props.selectedTOS.actions}
-            phases={this.props.selectedTOS.phases}
-            records={this.props.selectedTOS.records}
-            recordTypes={this.props.recordTypes}
-            documentState={this.props.selectedTOS.documentState}
-            attributeTypes={this.props.attributeTypes}
-            addAction={this.props.addAction}
-            addRecord={this.props.addRecord}
-            editAction={this.props.editAction}
-            editPhase={this.props.editPhase}
-            editRecord={this.props.editRecord}
-            removeAction={this.props.removeAction}
-            removePhase={this.props.removePhase}
-            removeRecord={this.props.removeRecord}
-            displayMessage={this.props.displayMessage}
-            changeOrder={this.props.changeOrder}
-            importItems={this.props.importItems}
-            update={this.state.update}
-          />
-        );
+    if (phases) {
+      const phasesOrder = Object.keys(this.props.selectedTOS.phases);
+      for (const key in phases) {
+        if (phases.hasOwnProperty(key)) {
+          phaseElements.push(
+            <Phase
+              key={key}
+              phaseIndex={phases[key].id}
+              phase={this.props.selectedTOS.phases[key]}
+              phasesOrder={phasesOrder}
+              setPhaseVisibility={this.setPhaseVisibility}
+              actions={this.props.selectedTOS.actions}
+              phases={this.props.selectedTOS.phases}
+              records={this.props.selectedTOS.records}
+              recordTypes={this.props.recordTypes}
+              documentState={this.props.selectedTOS.documentState}
+              attributeTypes={this.props.attributeTypes}
+              addAction={this.props.addAction}
+              addRecord={this.props.addRecord}
+              editAction={this.props.editAction}
+              editPhase={this.props.editPhase}
+              editRecord={this.props.editRecord}
+              removeAction={this.props.removeAction}
+              removePhase={this.props.removePhase}
+              removeRecord={this.props.removeRecord}
+              displayMessage={this.props.displayMessage}
+              changeOrder={this.props.changeOrder}
+              importItems={this.props.importItems}
+              update={this.state.update}
+            />
+          );
+        }
       }
     }
     return phaseElements;
