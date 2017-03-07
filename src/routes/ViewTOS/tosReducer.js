@@ -207,9 +207,10 @@ export function editRecord (recordId, recordName, recordType, attributes) {
   }
   const editedRecord = Object.assign({}, {
     attributes: editedAttributes,
-    name: recordName,
-    type: recordType
+    name: recordName
   });
+  editedRecord.attributes.RecordType = recordType;
+
   return {
     type: EDIT_RECORD,
     editedRecord,
@@ -559,9 +560,6 @@ const ACTION_HANDLERS = {
         [action.recordId]: {
           name: {
             $set: action.editedRecord.name
-          },
-          type: {
-            $set: action.editedRecord.type
           },
           attributes: {
             $set: action.editedRecord.attributes

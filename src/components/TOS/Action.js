@@ -137,7 +137,8 @@ export class Action extends React.Component {
       editing: false,
       recordId: undefined
     });
-    this.props.editRecord(actionId, name, type, attributes);
+    const typeName = this.props.recordTypes[type].name;
+    this.props.editRecord(actionId, name, typeName, attributes);
   }
 
   delete () {
