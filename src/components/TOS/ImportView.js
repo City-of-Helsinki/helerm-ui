@@ -76,14 +76,19 @@ export class ImportView extends React.Component {
 
   generateLinks (values, items) {
     let links = [];
-    for (const key in items) {
-      if (items.hasOwnProperty(key)) {
+    let itemsInArray = items;
+    if (!items.length) {
+      itemsInArray = Object.keys(items); // Because items mutates into object for unknown reason
+    }
+    for (const key in itemsInArray) {
+      if (itemsInArray.hasOwnProperty(key)) {
         links.push(
           <div key={key} className='col-xs-12'>
             <a
               key={key}
               href=''
-              onClick={(e) => this.selectForImport(e, values[items[key].id].id)}>{values[items[key].id].name}
+              onClick={(e) => this.selectForImport(e, values[itemsInArray[key]].id)}>
+              {values[itemsInArray[key]].name}
             </a>
           </div>
         );
