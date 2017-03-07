@@ -18,6 +18,7 @@ export class Record extends React.Component {
       mode: 'view',
       deleting: false,
       name: this.props.record.name,
+      type: this.props.record.attributes.RecordType,
       attributes: this.props.record.attributes
     };
   }
