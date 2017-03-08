@@ -41,8 +41,8 @@ export function receiveAttributeTypes (attributes, validationRules) {
       Object.keys(validationRules).map(key => {
         validationRules[key].allOf && validationRules[key].allOf.map(oneOf => {
           Object.keys(oneOf).map(oneOfKey => {
-            // We're only interested in required-keys
             const rules = oneOf[oneOfKey];
+            // We're only interested in required-keys
             const required = rules[0].required;
 
             required.map(requiredIndentifier => {
