@@ -5,7 +5,8 @@
  * @returns {boolean}
  */
 export const validateTOS = (tos, rules) => {
-  debugger;
+  let errors = [];
+  // debugger;
 
-  return true;
+  return errors;
 };
