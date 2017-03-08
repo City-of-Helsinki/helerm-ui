@@ -476,7 +476,12 @@ ViewTOS.propTypes = {
   resetTOS: React.PropTypes.func.isRequired,
   route: React.PropTypes.object.isRequired,
   saveDraft: React.PropTypes.func.isRequired,
-  selectedTOS: React.PropTypes.object.isRequired,
+  selectedTOS: React.PropTypes.shape({
+    actions: React.PropTypes.object.isRequired,
+    attributes: React.PropTypes.object.isRequired,
+    phases: React.PropTypes.object.isRequired,
+    records: React.PropTypes.object.isRequired
+  }).isRequired,
   setDocumentState: React.PropTypes.func.isRequired,
   setNavigationVisibility: React.PropTypes.func.isRequired,
   setPhaseVisibility: React.PropTypes.func.isRequired,
