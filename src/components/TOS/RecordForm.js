@@ -1,7 +1,7 @@
 import React from 'react';
 import './RecordForm.scss';
 import update from 'immutability-helper';
-import find from 'lodash/find';
+// import find from 'lodash/find';
 
 export class RecordForm extends React.Component {
   constructor (props) {
