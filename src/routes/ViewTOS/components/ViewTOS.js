@@ -13,6 +13,7 @@ import Dropdown from 'components/Dropdown';
 import IsAllowed from 'components/IsAllowed/IsAllowed';
 
 import { EDIT } from '../../../../config/constants';
+import { validateTOS } from '../../../utils/validators';
 
 import './ViewTOS.scss';
 
@@ -272,10 +273,13 @@ export class ViewTOS extends React.Component {
   }
 
   render () {
-    const { selectedTOS, isFetching } = this.props;
+    const { attributeTypes, selectedTOS, isFetching } = this.props;
     if (!isFetching && selectedTOS.id) {
       const phaseElements = this.generatePhases(selectedTOS.phases);
-      const TOSMetaData = this.generateMetaData(this.props.attributeTypes, selectedTOS.attributes);
+      const TOSMetaData = this.generateMetaData(attributeTypes, selectedTOS.attributes);
+
+      const isValidTos = validateTOS(selectedTOS, attributeTypes);
+      console.log(isValidTos);
 
       return (
         <div>
