@@ -323,4 +323,9 @@ Phase.propTypes = {
   update: React.PropTypes.string.isRequired
 };
 
+Phase.defaultProps = {
+  actions: {},
+  records: {}
+};
+
 export default Phase;
