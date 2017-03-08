@@ -10,7 +10,9 @@ import ImportView from 'components/TOS/ImportView';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
 
-import IsAuthenticated from 'components/IsAuthenticated/IsAuthenticated';
+import IsAllowed from 'components/IsAllowed/IsAllowed';
+
+import { EDIT } from '../../../../config/constants';
 
 import './ViewTOS.scss';
 
@@ -245,37 +247,39 @@ export class ViewTOS extends React.Component {
 
   generatePhases (phases) {
     const phaseElements = [];
-    const phasesOrder = Object.keys(this.props.selectedTOS.phases);
-    for (const key in phases) {
-      if (phases.hasOwnProperty(key)) {
-        phaseElements.push(
-          <Phase
-            key={key}
-            phaseIndex={phases[key].id}
-            phase={this.props.selectedTOS.phases[key]}
-            phasesOrder={phasesOrder}
-            setPhaseVisibility={this.setPhaseVisibility}
-            actions={this.props.selectedTOS.actions}
-            phases={this.props.selectedTOS.phases}
-            records={this.props.selectedTOS.records}
-            recordTypes={this.props.recordTypes}
-            documentState={this.props.selectedTOS.documentState}
-            attributeTypes={this.props.attributeTypes}
-            addAction={this.props.addAction}
-            addRecord={this.props.addRecord}
-            editAction={this.props.editAction}
-            editPhase={this.props.editPhase}
-            editRecord={this.props.editRecord}
-            editRecordAttribute={this.props.editRecordAttribute}
-            removeAction={this.props.removeAction}
-            removePhase={this.props.removePhase}
-            removeRecord={this.props.removeRecord}
-            displayMessage={this.props.displayMessage}
-            changeOrder={this.props.changeOrder}
-            importItems={this.props.importItems}
-            update={this.state.update}
-          />
-        );
+    if (phases) {
+      const phasesOrder = Object.keys(this.props.selectedTOS.phases);
+      for (const key in phases) {
+        if (phases.hasOwnProperty(key)) {
+          phaseElements.push(
+            <Phase
+              key={key}
+              phaseIndex={phases[key].id}
+              phase={this.props.selectedTOS.phases[key]}
+              phasesOrder={phasesOrder}
+              setPhaseVisibility={this.setPhaseVisibility}
+              actions={this.props.selectedTOS.actions}
+              phases={this.props.selectedTOS.phases}
+              records={this.props.selectedTOS.records}
+              recordTypes={this.props.recordTypes}
+              documentState={this.props.selectedTOS.documentState}
+              attributeTypes={this.props.attributeTypes}
+              addAction={this.props.addAction}
+              addRecord={this.props.addRecord}
+              editAction={this.props.editAction}
+              editPhase={this.props.editPhase}
+              editRecord={this.props.editRecord}
+              editRecordAttribute={this.props.editRecordAttribute}
+              removeAction={this.props.removeAction}
+              removePhase={this.props.removePhase}
+              removeRecord={this.props.removeRecord}
+              displayMessage={this.props.displayMessage}
+              changeOrder={this.props.changeOrder}
+              importItems={this.props.importItems}
+              update={this.state.update}
+            />
+          );
+        }
       }
     }
     return phaseElements;
@@ -295,7 +299,7 @@ export class ViewTOS extends React.Component {
                 <h4 className='col-md-6 col-xs-12'>{selectedTOS.function_id} {selectedTOS.name}</h4>
                 <div className='document-buttons col-xs-12 col-md-6'>
                   { selectedTOS.documentState !== 'edit' &&
-                  <IsAuthenticated>
+                  <IsAllowed to={EDIT}>
                     <span>
                       <button
                         className='btn btn-default btn-sm pull-right'
@@ -308,24 +312,26 @@ export class ViewTOS extends React.Component {
                         Muokkaustila
                       </button>
                     </span>
-                  </IsAuthenticated>
+                  </IsAllowed>
                   }
                   { selectedTOS.documentState === 'edit' &&
-                  <span>
-                    <button
-                      className='btn btn-primary btn-sm pull-right'
-                      onClick={this.saveDraft}>
-                      Tallenna luonnos
-                    </button>
-                    <button
-                      className='btn btn-danger btn-sm pull-right'
-                      onClick={this.cancelEdit}>
-                      Peruuta muokkaus
-                    </button>
-                    <span
-                      className='fa fa-asterisk required-asterisk required-legend'> = Pakollinen tieto
+                  <IsAllowed to={EDIT}>
+                    <span>
+                      <button
+                        className='btn btn-primary btn-sm pull-right'
+                        onClick={this.saveDraft}>
+                        Tallenna luonnos
+                      </button>
+                      <button
+                        className='btn btn-danger btn-sm pull-right'
+                        onClick={this.cancelEdit}>
+                        Peruuta muokkaus
+                      </button>
+                      <span
+                        className='fa fa-asterisk required-asterisk required-legend'> = Pakollinen tieto
+                      </span>
                     </span>
-                  </span>
+                  </IsAllowed>
                   }
                 </div>
               </div>
