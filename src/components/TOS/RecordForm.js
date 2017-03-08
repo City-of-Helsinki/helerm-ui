@@ -44,12 +44,12 @@ export class RecordForm extends React.Component {
     return initialState;
   }
 
-  findRecordTypeFromList (recordType) {
-    const correctType = find(this.props.recordTypes, (type) => (
-      type.name === recordType
-    ));
-    return correctType;
-  }
+  // findRecordTypeFromList (recordType) {
+  //   const correctType = find(this.props.recordTypes, (type) => (
+  //     type.name === recordType
+  //   ));
+  //   return correctType;
+  // }
 
   onChange (e, key, field) {
     const newValue = e;
