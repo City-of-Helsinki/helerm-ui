@@ -1,7 +1,22 @@
 import React from 'react';
 import InfinityMenu from 'react-infinity-menu';
+import Select from 'react-select';
+
+import {
+  DRAFT,
+  SENT_FOR_REVIEW,
+  WAITING_FOR_APPROVAL,
+  APPROVED
+} from '../../../../config/constants';
 
 import './Navigation.scss';
+
+const filterStatuses = [
+  { value: DRAFT, label: 'Luonnos' },
+  { value: SENT_FOR_REVIEW, label: 'Lähetetty tarkastettavaksi' },
+  { value: WAITING_FOR_APPROVAL, label: 'Odottaa hyväksymistä' },
+  { value: APPROVED, label: 'Hyväksytty' }
+];
 
 export class Navigation extends React.Component {
   constructor (props) {
@@ -9,7 +24,10 @@ export class Navigation extends React.Component {
     this.onNodeMouseClick = this.onNodeMouseClick.bind(this);
     this.onLeafMouseClick = this.onLeafMouseClick.bind(this);
     this.toggleNavigationVisibility = this.toggleNavigationVisibility.bind(this);
+    this.filter = this.filter.bind(this);
+    this.handleStatusFilterChange = this.handleStatusFilterChange.bind(this);
     this.state = {
+      filterStatuses: [],
       tree: []
     };
   }
@@ -41,6 +59,15 @@ export class Navigation extends React.Component {
     this.toggleNavigationVisibility();
   }
 
+  filter (node, searchStr) {
+    console.log(node, searchStr);
+    return true;
+  }
+
+  handleStatusFilterChange (val) {
+    this.setState({ filterStatuses: val });
+  }
+
   render () {
     let navigationTitle = 'Navigaatio';
     if (!this.props.is_open && this.props.TOSPath.length) {
@@ -62,11 +89,26 @@ export class Navigation extends React.Component {
           <div className='nav-path-list' onClick={this.toggleNavigationVisibility}>{navigationTitle}</div>
           }
           {this.props.is_open &&
-          <InfinityMenu
-            tree={this.state.tree}
-            onNodeMouseClick={this.onNodeMouseClick}
-            onLeafMouseClick={this.onLeafMouseClick}
-          />
+          <div>
+            <Select
+              autoBlur={true}
+              placeholder='Suodata statuksen mukaan...'
+              name='form-field-name'
+              value={this.state.filterStatuses}
+              multi={true}
+              joinValues={true}
+              clearable={false}
+              resetValue={filterStatuses}
+              options={filterStatuses}
+              onChange={this.handleStatusFilterChange}
+            />
+            <InfinityMenu
+              filter={this.filter}
+              tree={this.state.tree}
+              onNodeMouseClick={this.onNodeMouseClick}
+              onLeafMouseClick={this.onLeafMouseClick}
+            />
+          </div>
           }
         </div>
       </div>

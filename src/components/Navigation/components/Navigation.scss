@@ -100,7 +100,7 @@
 .react-infinity-menu-default-search-input {
   display: block;
   position: relative;
-  z-index: 1;
+  //z-index: 1;
   width: 100%;
   height: $input-height-base; // Make inputs at least the height of their button counterpart (base line-height + padding + border)
   padding: $padding-base-vertical $padding-base-horizontal;
@@ -383,6 +383,7 @@ ul:last-child {
 
 .nav-path-list {
   cursor: pointer;
+  line-height: 33px;
 }
 
 .nav-path-list:hover {
