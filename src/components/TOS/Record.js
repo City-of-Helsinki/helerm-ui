@@ -8,6 +8,7 @@ import Popup from 'components/Popup';
 export class Record extends React.Component {
   constructor (props) {
     super(props);
+
     this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
     this.updateRecordName = this.updateRecordName.bind(this);
     this.updateRecordType = this.updateRecordType.bind(this);
@@ -16,8 +17,8 @@ export class Record extends React.Component {
       showAttributes: false,
       mode: 'view',
       deleting: false,
-      deleted: false,
       name: this.props.record.name,
+      type: this.props.record.attributes.RecordType,
       attributes: this.props.record.attributes
     };
   }
@@ -53,7 +54,7 @@ export class Record extends React.Component {
       name: recordName,
       recordId: recordId
     };
-    this.props.editRecord(updatedRecordName);
+    this.props.editRecordAttribute(updatedRecordName);
   }
 
   updateRecordType (attribute, recordId) {
@@ -61,7 +62,7 @@ export class Record extends React.Component {
       type: attribute,
       recordId: recordId
     };
-    this.props.editRecord(updatedRecordType);
+    this.props.editRecordAttribute(updatedRecordType);
   }
 
   updateRecordAttribute (attribute, attributeIndex, recordId) {
@@ -70,8 +71,8 @@ export class Record extends React.Component {
         [attributeIndex]: attribute
       }
     });
-    const updateRecordAttribute = { attribute, attributeIndex, recordId };
-    this.props.editRecord(updateRecordAttribute);
+    const updatedRecordAttribute = { attribute, attributeIndex, recordId };
+    this.props.editRecordAttribute(updatedRecordAttribute);
   }
 
   generateRecordObjects (record) {
@@ -133,8 +134,8 @@ export class Record extends React.Component {
   }
 
   delete () {
-    this.setState({ deleted: true, deleting: false });
-    this.props.removeRecord(this.props.record.id);
+    this.setState({ deleting: false });
+    this.props.removeRecord(this.props.record.id, this.props.record.action);
   }
 
   render () {
@@ -144,18 +145,25 @@ export class Record extends React.Component {
     const attributes = this.generateAttributes(record.attributes);
     return (
       <div className={'record col-xs-12 ' + (this.state.showAttributes ? 'record-open' : '')}>
-        { !this.state.deleted &&
         <div className='list-group'>
           { this.state.mode === 'view' &&
           <div className='record-button-group'>
             { this.props.documentState === 'edit' &&
             <Dropdown
-              children={[{
-                text: 'Poista asiakirja',
-                icon: 'fa-trash',
-                style: 'btn-delete',
-                action: () => this.setState({ deleting: true })
-              }]}
+              children={[
+                {
+                  text: 'Muokkaa asiakirjaa',
+                  icon: 'fa-pencil',
+                  style: 'btn-primary',
+                  action: () => this.props.editRecordForm(record.id, this.state.name, this.state.attributes)
+                },
+                {
+                  text: 'Poista asiakirja',
+                  icon: 'fa-trash',
+                  style: 'btn-delete',
+                  action: () => this.setState({ deleting: true })
+                }
+              ]}
               extraSmall={true}
             />
             }
@@ -184,7 +192,6 @@ export class Record extends React.Component {
           </div>
           } */}
         </div>
-        }
         { this.state.deleting &&
         <Popup
           content={
@@ -206,7 +213,8 @@ export class Record extends React.Component {
 Record.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
   documentState: React.PropTypes.string.isRequired,
-  editRecord: React.PropTypes.func.isRequired,
+  editRecordAttribute: React.PropTypes.func.isRequired,
+  editRecordForm: React.PropTypes.func.isRequired,
   record: React.PropTypes.object.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
   removeRecord: React.PropTypes.func.isRequired

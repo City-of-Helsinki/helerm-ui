@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import './Action.scss';
 import Record from './Record';
-import AddRecord from './AddRecord';
+import RecordForm from './RecordForm';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
 import DeleteView from './DeleteView';
@@ -14,15 +14,18 @@ import { StickyContainer, Sticky } from 'react-sticky';
 export class Action extends React.Component {
   constructor (props) {
     super(props);
-    this.createRecord = this.createRecord.bind(this);
     this.saveActionTitle = this.saveActionTitle.bind(this);
+    this.createRecord = this.createRecord.bind(this);
     this.cancelRecordCreation = this.cancelRecordCreation.bind(this);
+    this.editRecordForm = this.editRecordForm.bind(this);
+    this.editRecordWithForm = this.editRecordWithForm.bind(this);
+    this.cancelRecordEdit = this.cancelRecordEdit.bind(this);
     this.state = {
       mode: 'view',
       name: this.props.action.name,
       creating: false,
+      editing: false,
       deleting: false,
-      deleted: false,
       showReorderView: false,
       showImportView: false
     };
@@ -42,11 +45,11 @@ export class Action extends React.Component {
 
   saveActionTitle (event) {
     event.preventDefault();
-    const savedAction = {
+    const updatedAction = {
       id: this.props.action.id,
       name: this.state.name
     };
-    this.props.editAction(savedAction);
+    this.props.editAction(updatedAction);
     if (this.state.name.length > 0) {
       this.setState({ mode: 'view' });
     }
@@ -64,11 +67,13 @@ export class Action extends React.Component {
           <Record
             key={key}
             record={this.props.records[records[key]]}
-            editRecord={this.props.editRecord}
+            editRecordForm={this.editRecordForm}
+            editRecordAttribute={this.props.editRecordAttribute}
             removeRecord={this.props.removeRecord}
             recordTypes={this.props.recordTypes}
             documentState={this.props.documentState}
             attributeTypes={this.props.attributeTypes}
+            displayMessage={this.props.displayMessage}
           />
         );
       }
@@ -110,13 +115,38 @@ export class Action extends React.Component {
     this.setState({ creating: false });
   }
 
-  cancelDeletion () {
-    this.setState({ deleting: false });
+  editRecordForm (recordId, recordName, recordAttributes) {
+    this.setState({
+      record: {
+        id: recordId,
+        name: recordName,
+        attributes: recordAttributes
+      }
+    }, () => { this.setState({ editing: true }); });
+  }
+
+  cancelRecordEdit () {
+    this.setState({
+      editing: false,
+      recordId: undefined
+    });
+  }
+
+  editRecordWithForm (actionId, name, type, attributes) {
+    this.setState({
+      editing: false,
+      recordId: undefined
+    });
+    this.props.editRecord(actionId, name, type, attributes);
   }
 
   delete () {
-    this.setState({ deleted: true, deleting: false });
-    this.props.removeAction(this.props.action.id);
+    this.setState({ deleting: false });
+    this.props.removeAction(this.props.action.id, this.props.action.phase);
+  }
+
+  cancelDeletion () {
+    this.setState({ deleting: false });
   }
 
   createRecord (actionId, name, type, attributes) {
@@ -168,31 +198,45 @@ export class Action extends React.Component {
     }
     return (
       <div>
-        { !this.state.deleted &&
         <StickyContainer className='row box action'>
           <Sticky className='action-title'>
             { actionTitle }
           </Sticky>
           { this.state.creating &&
-          <AddRecord
+          <RecordForm
             actionId={this.props.action.id}
             attributeTypes={this.props.attributeTypes}
             recordTypes={this.props.recordTypes}
             createRecord={this.createRecord}
-            cancelRecordCreation={this.cancelRecordCreation}
+            closeRecordForm={this.cancelRecordCreation}
             mode={this.state.mode}
             displayMessage={this.props.displayMessage}
           />
           }
-          <span className='col-xs-6 attribute-label'>
+          { this.state.editing &&
+          <RecordForm
+            record={this.state.record}
+            recordTypes={this.props.recordTypes}
+            attributeTypes={this.props.attributeTypes}
+            editRecordWithForm={this.editRecordWithForm}
+            closeRecordForm={this.cancelRecordEdit}
+            mode={this.state.mode}
+            displayMessage={this.props.displayMessage}
+          />
+          }
+          { !this.state.editing &&
+          <div>
+            <span className='col-xs-6 attribute-label'>
             Asiakirjatyypin tarkenne
-          </span>
-          <span className='col-xs-6 attribute-label'>
+            </span>
+            <span className='col-xs-6 attribute-label'>
             Tyyppi
-          </span>
-          <div className={classNames('col-xs-12 records', { 'records-editing': this.props.documentState === 'edit' })}>
-            { recordElements }
+            </span>
+            <div className={classNames('col-xs-12 records', { 'records-editing': this.props.documentState === 'edit' })}>
+              { recordElements }
+            </div>
           </div>
+          }
 
           { this.state.deleting &&
           <Popup
@@ -245,7 +289,6 @@ export class Action extends React.Component {
           />
           }
         </StickyContainer>
-        }
       </div>
     );
   }
@@ -261,8 +304,9 @@ Action.propTypes = {
   documentState: React.PropTypes.string.isRequired,
   editAction: React.PropTypes.func.isRequired,
   editRecord: React.PropTypes.func.isRequired,
+  editRecordAttribute: React.PropTypes.func.isRequired,
   importItems: React.PropTypes.func.isRequired,
-  phases: React.PropTypes.object.isRequired,
+  phases: React.PropTypes.object.isRequired || React.PropTypes.array.isRequired,
   phasesOrder: React.PropTypes.array.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
   records: React.PropTypes.object.isRequired,
