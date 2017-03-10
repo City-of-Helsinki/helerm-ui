@@ -42,7 +42,12 @@ export class Header extends React.Component {
     return (
       <div>
         <nav className='navbar navbar-inverse container-fluid'>
-          <Link to='/' className='brand-title navbar-brand'>Tiedonohjausjärjestelmä v{VERSION}</Link>
+          <Link
+            to='/'
+            className='brand-title navbar-brand'
+            onClick={() => this.props.setNavigationVisibility(true)}>
+            Tiedonohjausjärjestelmä v{VERSION}
+          </Link>
           <LoginContainer />
         </nav>
         <Loader show={isFetching}/>
@@ -60,7 +65,8 @@ export class Header extends React.Component {
 Header.propTypes = {
   closeMessage: React.PropTypes.func,
   isFetching: React.PropTypes.bool,
-  message: React.PropTypes.object
+  message: React.PropTypes.object,
+  setNavigationVisibility: React.PropTypes.func
 };
 
 const mapStateToProps = (state) => {
