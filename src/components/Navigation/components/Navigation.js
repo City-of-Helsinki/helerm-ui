@@ -59,12 +59,10 @@ export class Navigation extends React.Component {
     this.toggleNavigationVisibility();
   }
 
-  filter (node, searchStr) {
-    console.log(node, searchStr);
-    return true;
-  }
-
   handleStatusFilterChange (val) {
+    const { tree } = this.state;
+    // TODO: Filter tree so it displays only statuses from filterStatuses
+    // const filteredTree = filterTreeSoItDisplaysOnlyStatusesFromFilterStatuses(tree);
     this.setState({ filterStatuses: val });
   }
 
@@ -93,7 +91,6 @@ export class Navigation extends React.Component {
             <Select
               autoBlur={true}
               placeholder='Suodata statuksen mukaan...'
-              name='form-field-name'
               value={this.state.filterStatuses}
               multi={true}
               joinValues={true}
@@ -103,7 +100,6 @@ export class Navigation extends React.Component {
               onChange={this.handleStatusFilterChange}
             />
             <InfinityMenu
-              filter={this.filter}
               tree={this.state.tree}
               onNodeMouseClick={this.onNodeMouseClick}
               onLeafMouseClick={this.onLeafMouseClick}
