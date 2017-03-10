@@ -1,5 +1,7 @@
 import React from 'react';
 import map from 'lodash/map';
+import filter from 'lodash/filter';
+import includes from 'lodash/includes';
 import InfinityMenu from 'react-infinity-menu';
 import Select from 'react-select';
 
@@ -60,6 +62,23 @@ export class Navigation extends React.Component {
     this.toggleNavigationVisibility();
   }
 
+  filter (tree) {
+    const { filterStatuses } = this.state;
+    let filteredTree = tree;
+
+    if (filterStatuses.length) {
+      filteredTree = filter(filteredTree, (item) => {
+        if (includes(filterStatuses, item.state)) {
+          if (item.children) {
+            this.filter(item.children);
+          }
+          return item;
+        }
+      });
+    }
+    return filteredTree;
+  }
+
   handleStatusFilterChange (valArray) {
     const mappedValues = map(valArray, (val) => val.value);
     this.setState({ filterStatuses: mappedValues });
@@ -99,7 +118,7 @@ export class Navigation extends React.Component {
               onChange={this.handleStatusFilterChange}
             />
             <InfinityMenu
-              tree={this.state.tree}
+              tree={this.filter(this.state.tree)}
               onNodeMouseClick={this.onNodeMouseClick}
               onLeafMouseClick={this.onLeafMouseClick}
             />
