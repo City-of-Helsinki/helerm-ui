@@ -1,4 +1,5 @@
 import React from 'react';
+import map from 'lodash/map';
 import InfinityMenu from 'react-infinity-menu';
 import Select from 'react-select';
 
@@ -59,11 +60,9 @@ export class Navigation extends React.Component {
     this.toggleNavigationVisibility();
   }
 
-  handleStatusFilterChange (val) {
-    const { tree } = this.state;
-    // TODO: Filter tree so it displays only statuses from filterStatuses
-    // const filteredTree = filterTreeSoItDisplaysOnlyStatusesFromFilterStatuses(tree);
-    this.setState({ filterStatuses: val });
+  handleStatusFilterChange (valArray) {
+    const mappedValues = map(valArray, (val) => val.value);
+    this.setState({ filterStatuses: mappedValues });
   }
 
   render () {
