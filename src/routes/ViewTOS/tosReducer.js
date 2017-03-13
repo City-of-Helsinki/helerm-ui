@@ -387,8 +387,7 @@ export function saveDraft (tos) {
     return api.put(`function/${tos.id}`, finalTos)
       .then(res => {
         if (!res.ok) {
-          dispatch(TOSError());
-          throw new URIError(res.statusText);
+          return dispatch(TOSError());
         }
         return res.json();
       })
@@ -468,6 +467,7 @@ const ACTION_HANDLERS = {
   },
   [TOS_ERROR]: (state) => {
     return update(state, {
+      $merge: state,
       isFetching: {
         $set: false
       }
