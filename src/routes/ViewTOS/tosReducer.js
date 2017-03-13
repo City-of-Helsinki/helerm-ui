@@ -387,7 +387,8 @@ export function saveDraft (tos) {
     return api.put(`function/${tos.id}`, finalTos)
       .then(res => {
         if (!res.ok) {
-          return dispatch(TOSError());
+          dispatch(TOSError());
+          throw Error(res.statusText);
         }
         return res.json();
       })
