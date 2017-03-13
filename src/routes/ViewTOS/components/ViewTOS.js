@@ -86,13 +86,15 @@ export class ViewTOS extends React.Component {
   saveDraft () {
     // this.props.setDocumentState('view');
     return this.props.saveDraft(this.props.selectedTOS)
-      .then(() => {
+      .then((data) => {
+        console.log(data);
         return this.props.displayMessage({
           text: 'Luonnos tallennettu',
           success: true
         });
       })
       .catch(err => {
+        console.log(err);
         return this.props.displayMessage({
           text: err.message,
           success: false
