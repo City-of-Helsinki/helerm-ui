@@ -154,9 +154,10 @@ export function addRecord (actionIndex, recordName, recordType, attributes) {
     action: actionIndex,
     attributes: newAttributes,
     name: recordName,
-    type: recordType,
     is_open: false
   });
+  newRecord.attributes.RecordType = recordType;
+
   return {
     type: ADD_RECORD,
     actionIndex,
