@@ -1,4 +1,6 @@
 import update from 'immutability-helper';
+import indexOf from 'lodash/indexOf';
+import includes from 'lodash/includes';
 import { normalize, Schema, arrayOf } from 'normalizr';
 
 import { default as api } from '../../utils/api';
@@ -23,6 +25,7 @@ export const ADD_RECORD = 'tos/ADD_RECORD';
 export const EDIT_ACTION = 'tos/EDIT_ACTION';
 export const EDIT_PHASE = 'tos/EDIT_PHASE';
 export const EDIT_RECORD = 'tos/EDIT_RECORD';
+export const EDIT_RECORD_ATTRIBUTE = 'tos/EDIT_RECORD_ATTRIBUTE';
 
 export const REMOVE_ACTION = 'tos/REMOVE_ACTION';
 export const REMOVE_PHASE = 'tos/REMOVE_PHASE';
@@ -192,9 +195,32 @@ export function addPhase (name, parent) {
   };
 }
 
-export function editRecord (editedRecord) {
+export function editRecord (recordId, recordName, recordType, attributes) {
+  console.log(attributes);
+  let editedAttributes = [];
+  for (const key in attributes) {
+    if (attributes.hasOwnProperty(key)) {
+      if (attributes[key].checked === true) {
+        editedAttributes = Object.assign({}, editedAttributes, { [key]: attributes[key].name });
+      }
+    }
+  }
+  const editedRecord = Object.assign({}, {
+    attributes: editedAttributes,
+    name: recordName
+  });
+  editedRecord.attributes.RecordType = recordType;
+
   return {
     type: EDIT_RECORD,
+    editedRecord,
+    recordId
+  };
+}
+
+export function editRecordAttribute (editedRecord) {
+  return {
+    type: EDIT_RECORD_ATTRIBUTE,
     editedRecord
   };
 }
@@ -213,17 +239,19 @@ export function editPhase (editedPhase) {
   };
 }
 
-export function removeRecord (recordToRemove) {
+export function removeRecord (recordToRemove, actionId) {
   return {
     type: REMOVE_RECORD,
-    recordToRemove
+    recordToRemove,
+    actionId
   };
 }
 
-export function removeAction (actionToRemove) {
+export function removeAction (actionToRemove, phaseId) {
   return {
     type: REMOVE_ACTION,
-    actionToRemove
+    actionToRemove,
+    phaseId
   };
 }
 
@@ -380,6 +408,7 @@ export const actions = {
   addPhase,
   editAction,
   editRecord,
+  editRecordAttribute,
   editPhase,
   setDocumentState,
   executeImport,
@@ -526,6 +555,20 @@ const ACTION_HANDLERS = {
     });
   },
   [EDIT_RECORD]: (state, action) => {
+    return update(state, {
+      records: {
+        [action.recordId]: {
+          name: {
+            $set: action.editedRecord.name
+          },
+          attributes: {
+            $set: action.editedRecord.attributes
+          }
+        }
+      }
+    });
+  },
+  [EDIT_RECORD_ATTRIBUTE]: (state, action) => {
     if (action.editedRecord.name) {
       return update(state, {
         records: {
@@ -548,6 +591,14 @@ const ACTION_HANDLERS = {
           }
         }
       });
+    } else if (action.editedRecord.tosAttribute) {
+      return update(state, {
+        attributes: {
+          [action.editedRecord.attributeIndex]: {
+            $set: action.editedRecord.tosAttribute
+          }
+        }
+      });
     } else {
       return update(state, {
         records: {
@@ -563,12 +614,34 @@ const ACTION_HANDLERS = {
     }
   },
   [REMOVE_ACTION]: (state, action) => {
-    const actionsCopy = state.actions;
-    delete actionsCopy[action.actionToRemove];
+    const stateCopy = state;
+    const actionIndex = indexOf(
+      stateCopy.phases[action.phaseId].actions,
+      action.actionToRemove
+    );
+
+    const recordsUnderAction = stateCopy.actions[action.actionToRemove].records;
+    for (var record in stateCopy.records) {
+      if (includes(recordsUnderAction, record)) {
+        delete stateCopy.records[record];
+      }
+    }
+
+    delete stateCopy.actions[action.actionToRemove];
 
     return update(state, {
       actions: {
-        $set: actionsCopy
+        $set: stateCopy.actions
+      },
+      phases: {
+        [action.phaseId]: {
+          actions: {
+            $splice: [[actionIndex, 1]]
+          }
+        }
+      },
+      records: {
+        $set: stateCopy.records
       }
     });
   },
@@ -583,12 +656,25 @@ const ACTION_HANDLERS = {
     });
   },
   [REMOVE_RECORD]: (state, action) => {
-    const recordsCopy = state.records;
-    delete recordsCopy[action.recordToRemove];
+    const stateCopy = state;
+
+    const recordIndex = indexOf(
+      stateCopy.actions[action.actionId].records,
+      action.recordToRemove
+    );
+
+    delete stateCopy.records[action.recordToRemove];
 
     return update(state, {
       records: {
-        $set: recordsCopy
+        $set: stateCopy.records
+      },
+      actions: {
+        [action.actionId]: {
+          records: {
+            $splice: [[recordIndex, 1]]
+          }
+        }
       }
     });
   },

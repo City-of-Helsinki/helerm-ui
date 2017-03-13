@@ -1,40 +1,55 @@
 import React from 'react';
-import './AddRecord.scss';
+import './RecordForm.scss';
 import update from 'immutability-helper';
+// import find from 'lodash/find';
 
-export class AddRecord extends React.Component {
+export class RecordForm extends React.Component {
   constructor (props) {
     super(props);
     this.generateAttributeElements = this.generateAttributeElements.bind(this);
-    this.cancelRecordCreation = this.cancelRecordCreation.bind(this);
+    this.getActiveValue = this.getActiveValue.bind(this);
+    this.getCheckedState = this.getCheckedState.bind(this);
+    this.closeRecordForm = this.closeRecordForm.bind(this);
     this.state = {
       newAttributes: this.initializeState(this.props.attributeTypes),
       recordName: {
-        name: '',
+        value: this.props.record.name
+          ? this.props.record.name
+          : '',
         checked: true
       },
       recordType: {
-        name: '',
+        value: this.props.record.attributes.RecordType
+          ? this.props.record.attributes.RecordType
+          : '',
         checked: true
-      }
+      },
+      editForm: !!this.props.editRecordWithForm
     };
   }
 
   initializeState (attributeTypes) {
+    const { attributes } = this.props.record;
     let initialState = {};
     for (const key in attributeTypes) {
       if (attributeTypes.hasOwnProperty(key)) {
         initialState = Object.assign({}, initialState, {
           [key]: {
-            name: null,
+            name: attributes[key] ? attributes[key] : null,
             checked: true
           }
         });
       }
-    }
-    ;
+    };
     return initialState;
   }
+
+  // findRecordTypeFromList (recordType) {
+  //   const correctType = find(this.props.recordTypes, (type) => (
+  //     type.name === recordType
+  //   ));
+  //   return correctType;
+  // }
 
   onChange (e, key, field) {
     const newValue = e;
@@ -60,6 +75,20 @@ export class AddRecord extends React.Component {
     }));
   }
 
+  getActiveValue (key) {
+    if (this.state.newAttributes[key].name) {
+      return this.state.newAttributes[key].name;
+    }
+  }
+
+  getCheckedState (key) {
+    if (this.state.editForm && !this.state.newAttributes[key].name) {
+      return false;
+    } else {
+      return this.state.newAttributes[key].checked;
+    }
+  }
+
   generateAttributeElements (attributeTypes) {
     const attributeElements = [];
     for (const key in attributeTypes) {
@@ -72,7 +101,7 @@ export class AddRecord extends React.Component {
             <div key={key} className='col-xs-12 col-lg-6 form-group'>
               <input
                 type='checkbox'
-                checked={this.state.newAttributes[key].checked}
+                checked={this.getCheckedState(key)}
                 value={this.state.newAttributes[key].checked}
                 onChange={(e) => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}/>
               <label className='edit-record__label'>
@@ -82,6 +111,7 @@ export class AddRecord extends React.Component {
                 }
               </label>
               <select
+                value={this.getActiveValue(key)}
                 className='form-control edit-record__select'
                 onChange={(e) => this.onChange(e.target.value, key, 'name')}
                 disabled={!this.state.newAttributes[key].checked}>
@@ -95,7 +125,7 @@ export class AddRecord extends React.Component {
             <div key={key} className='col-xs-12 col-lg-6 form-group'>
               <input
                 type='checkbox'
-                checked={this.state.newAttributes[key].checked}
+                checked={this.getCheckedState(key)}
                 value={this.state.newAttributes[key].checked}
                 onChange={(e) => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}
               />
@@ -107,6 +137,7 @@ export class AddRecord extends React.Component {
               </label>
               <input
                 className='form-control edit-record__input'
+                value={this.getActiveValue(key)}
                 placeholder={attributeTypes[key].name}
                 onChange={(e) => this.onChange(e.target.value, key, 'name')}
                 disabled={!this.state.newAttributes[key].checked}
@@ -123,13 +154,18 @@ export class AddRecord extends React.Component {
     const options = [];
     for (const key in recordTypes) {
       if (recordTypes.hasOwnProperty(key)) {
-        options.push(<option key={key} value={key}>{recordTypes[key]}</option>);
+        options.push(
+          <option key={key} value={recordTypes[key].name}>
+            {recordTypes[key].name}
+          </option>
+        );
       }
     }
     return (
       <select
+        value={this.state.recordType.value}
         className='form-control col-xs-6'
-        onChange={(e) => this.onBaseAttributeChange(e.target.value, 'recordType', 'name')}>
+        onChange={(e) => this.onBaseAttributeChange(e.target.value, 'recordType', 'value')}>
         <option value={null}>[ Tyhjä ]</option>
         {options}
       </select>
@@ -139,34 +175,48 @@ export class AddRecord extends React.Component {
   addRecord (e, actionId) {
     e.preventDefault();
     const { recordName, recordType, newAttributes } = this.state;
-    this.props.createRecord(actionId, recordName.name, recordType.name, newAttributes);
+    this.props.createRecord(actionId, recordName.value, recordType.value, newAttributes);
     this.props.displayMessage({
       text: 'Asiakirjan lisäys onnistui!',
       success: true
     });
   }
 
-  cancelRecordCreation (e) {
+  editRecord (e, actionId) {
     e.preventDefault();
-    this.props.cancelRecordCreation();
+    const { recordName, recordType, newAttributes } = this.state;
+    this.props.editRecordWithForm(this.props.record.id, recordName.value, recordType.value, newAttributes);
+    this.props.displayMessage({
+      text: 'Asiakirjan muokkaus onnistui!',
+      success: true
+    });
+  }
+
+  closeRecordForm (e) {
+    e.preventDefault();
+    this.props.closeRecordForm();
   }
 
   render () {
     const { attributeTypes, recordTypes, actionId } = this.props;
+    const { editForm } = this.state;
     const attributeElements = this.generateAttributeElements(attributeTypes);
     const typeDropdown = this.generateDropdown(recordTypes);
     return (
       <div className='action add-box col-xs-12'>
-        <h4>Uusi asiakirja</h4>
-        <form onSubmit={(e) => this.addRecord(e, actionId)} className='edit-record'>
+        <h4>{ editForm ? 'Muokkaa asiakirjaa' : 'Uusi asiakirja' }</h4>
+        <form onSubmit={(e) => editForm
+                ? this.editRecord(e, actionId)
+                : this.addRecord(e, actionId)}
+              className='edit-record'>
           <div className='col-xs-12 col-lg-6 form-group'>
             <label className='edit-record__label'>Asiakirjatyypin tarkenne</label>
             <span className='fa fa-asterisk required-asterisk'/>
             <input
               className='col-xs-6 form-control edit-record__input'
               placeholder='Tarkenne'
-              value={this.state.recordName.name}
-              onChange={(e) => this.onBaseAttributeChange(e.target.value, 'recordName', 'name')}/>
+              value={this.state.recordName.value}
+              onChange={(e) => this.onBaseAttributeChange(e.target.value, 'recordName', 'value')}/>
           </div>
           <div className='col-xs-12 col-lg-6 form-group'>
             <label className='edit-record__label'>Tyyppi</label>
@@ -178,7 +228,7 @@ export class AddRecord extends React.Component {
             <button className='btn btn-primary pull-right edit-record__submit' type='submit'>Valmis</button>
             <button
               className='btn btn-danger pull-right edit-record__cancel'
-              onClick={(e) => this.cancelRecordCreation(e)}>
+              onClick={(e) => this.closeRecordForm(e)}>
               Peruuta
             </button>
           </div>
@@ -188,13 +238,19 @@ export class AddRecord extends React.Component {
   }
 }
 
-AddRecord.propTypes = {
-  actionId: React.PropTypes.string.isRequired,
+RecordForm.propTypes = {
+  actionId: React.PropTypes.string,
   attributeTypes: React.PropTypes.object.isRequired,
-  cancelRecordCreation: React.PropTypes.func.isRequired,
-  createRecord: React.PropTypes.func.isRequired,
+  closeRecordForm: React.PropTypes.func.isRequired,
+  createRecord: React.PropTypes.func,
   displayMessage: React.PropTypes.func.isRequired,
+  editRecordWithForm: React.PropTypes.func,
+  record: React.PropTypes.shape({
+    id: React.PropTypes.string.isRequired,
+    name: React.PropTypes.string.isRequired,
+    attributes: React.PropTypes.object.isRequired
+  }),
   recordTypes: React.PropTypes.object.isRequired
 };
 
-export default AddRecord;
+export default RecordForm;
