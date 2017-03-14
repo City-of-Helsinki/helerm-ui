@@ -170,11 +170,23 @@ export class ViewTOS extends React.Component {
     this.setState({ showImportView: !current });
   }
 
+  generateDropdownItems () {
+    return [
+      {
+        text: 'Muokkaa metatietoja',
+        icon: 'fa-pencil',
+        style: 'btn-primary',
+        action: () => this.setState({ editingMetaData: true })
+      }
+    ];
+  }
+
   generateMetaData (attributeTypes, attributes) {
     const { modified_at, documentState, editRecord, version } = this.props.selectedTOS;
     const modifiedDateTime = this.formatDateTime(modified_at);
     const formattedDate = formatDate(modifiedDateTime.date, 'DD.MM.YYYY');
     const dateTime = formattedDate + ' ' + modifiedDateTime.time;
+    const dropdownItems = this.generateDropdownItems();
     const attributeElements = [];
     const versionData = [
       { type: 'Versionumero', name: version.toString() },
@@ -236,6 +248,11 @@ export class ViewTOS extends React.Component {
               aria-hidden='true'
             />
           </button>
+          {this.props.selectedTOS.documentState === 'edit' &&
+          <span className='action-dropdown-button'>
+            <Dropdown children={dropdownItems} extraSmall={true}/>
+          </span>
+          }
         </div>
         <div className={'metadata-data-row__secondary ' + (this.state.showMetadata ? '' : 'hidden')}>
           {attributeElements.slice(2)}
