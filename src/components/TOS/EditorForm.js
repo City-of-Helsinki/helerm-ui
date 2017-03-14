@@ -192,6 +192,41 @@ export class EditorForm extends React.Component {
     });
   }
 
+  resolveOnSubmit (e, actionId) {
+    const { action, type } = this.props.editorConfig;
+
+    switch (type) {
+      case 'tos':
+        if (action === 'edit') {
+          // this.editMetaData(e, actionId);
+        }
+        break;
+      case 'phase':
+        if (action === 'add') {
+          // this.addPhase(e, actionId);
+        }
+        if (action === 'edit') {
+          // this.editPhase(e, actionId);
+        }
+        break;
+      case 'action':
+        if (action === 'add') {
+          // this.addAction(e, actionId);
+        }
+        if (action === 'edit') {
+          // this.editAction(e, actionId);
+        }
+        break;
+      case 'record':
+        if (action === 'add') {
+          this.addRecord(e, actionId);
+        }
+        if (action === 'edit') {
+          this.editRecord(e, actionId);
+        }
+    }
+  }
+
   closeEditorForm (e) {
     e.preventDefault();
     this.props.closeEditorForm();
@@ -205,9 +240,7 @@ export class EditorForm extends React.Component {
     return (
       <div className='action add-box col-xs-12'>
         <h4>{ editForm ? 'Muokkaa asiakirjaa' : 'Uusi asiakirja' }</h4>
-        <form onSubmit={(e) => editForm
-                ? this.editRecord(e, actionId)
-                : this.addRecord(e, actionId)}
+        <form onSubmit={(e) => this.resolveOnSubmit(e, actionId)}
               className='edit-record'>
           <div className='col-xs-12 col-lg-6 form-group'>
             <label className='edit-record__label'>Asiakirjatyypin tarkenne</label>
