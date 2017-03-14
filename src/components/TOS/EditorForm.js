@@ -245,6 +245,10 @@ EditorForm.propTypes = {
   createRecord: React.PropTypes.func,
   displayMessage: React.PropTypes.func.isRequired,
   editRecordWithForm: React.PropTypes.func,
+  editorConfig: React.PropTypes.shape({
+    type: React.PropTypes.string.isRequired,
+    action: React.PropTypes.string.isRequired
+  }),
   record: React.PropTypes.shape({
     id: React.PropTypes.string.isRequired,
     name: React.PropTypes.string.isRequired,
