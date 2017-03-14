@@ -281,11 +281,7 @@ EditorForm.propTypes = {
     recordTypes: React.PropTypes.object,
     attributeTypes: React.PropTypes.object.isRequired,
     createRecord: React.PropTypes.func,
-    record: React.PropTypes.shape({
-      id: React.PropTypes.string,
-      name: React.PropTypes.string,
-      attributes: React.PropTypes.object
-    })
+    record: React.PropTypes.object
   }),
   targetId: React.PropTypes.string
 };
