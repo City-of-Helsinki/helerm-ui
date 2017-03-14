@@ -281,11 +281,11 @@ EditorForm.propTypes = {
     action: React.PropTypes.string.isRequired
   }),
   record: React.PropTypes.shape({
-    id: React.PropTypes.string.isRequired,
-    name: React.PropTypes.string.isRequired,
-    attributes: React.PropTypes.object.isRequired
+    id: React.PropTypes.string,
+    name: React.PropTypes.string,
+    attributes: React.PropTypes.object
   }),
-  recordTypes: React.PropTypes.object.isRequired
+  recordTypes: React.PropTypes.object,
 };
 
 export default EditorForm;
