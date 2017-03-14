@@ -218,6 +218,7 @@ export class Action extends React.Component {
           }
           { this.state.editing &&
           <EditorForm
+            targetId={this.state.record.id}
             record={this.state.record}
             recordTypes={this.props.recordTypes}
             attributeTypes={this.props.attributeTypes}

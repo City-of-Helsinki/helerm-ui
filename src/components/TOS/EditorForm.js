@@ -184,7 +184,7 @@ export class EditorForm extends React.Component {
   editRecord (e, targetId) {
     e.preventDefault();
     const { recordName, recordType, newAttributes } = this.state;
-    this.props.editRecordWithForm(this.props.record.id, recordName.value, recordType.value, newAttributes);
+    this.props.editRecordWithForm(targetId, recordName.value, recordType.value, newAttributes);
     this.props.displayMessage({
       text: 'Asiakirjan muokkaus onnistui!',
       success: true
