@@ -205,29 +205,33 @@ export class Action extends React.Component {
           { this.state.creating &&
           <EditorForm
             targetId={this.props.action.id}
-            attributeTypes={this.props.attributeTypes}
-            recordTypes={this.props.recordTypes}
-            createRecord={this.createRecord}
-            closeEditorForm={this.cancelRecordCreation}
+            recordConfig={{
+              recordTypes: this.props.recordTypes,
+              attributeTypes: this.props.attributeTypes,
+              createRecord: this.createRecord
+            }}
             editorConfig={{
               type: 'record',
               action: 'create'
             }}
+            closeEditorForm={this.cancelRecordCreation}
             displayMessage={this.props.displayMessage}
           />
           }
           { this.state.editing &&
           <EditorForm
             targetId={this.state.record.id}
-            record={this.state.record}
-            recordTypes={this.props.recordTypes}
-            attributeTypes={this.props.attributeTypes}
-            editRecordWithForm={this.editRecordWithForm}
-            closeEditorForm={this.cancelRecordEdit}
+            recordConfig={{
+              record: this.state.record,
+              recordTypes: this.props.recordTypes,
+              attributeTypes: this.props.attributeTypes,
+              editRecordWithForm: this.editRecordWithForm
+            }}
             editorConfig={{
               type: 'record',
               action: 'edit'
             }}
+            closeEditorForm={this.cancelRecordEdit}
             displayMessage={this.props.displayMessage}
           />
           }

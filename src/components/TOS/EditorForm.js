@@ -11,16 +11,16 @@ export class EditorForm extends React.Component {
     this.getCheckedState = this.getCheckedState.bind(this);
     this.closeEditorForm = this.closeEditorForm.bind(this);
     this.state = {
-      newAttributes: this.initializeAttributes(this.props.attributeTypes),
+      newAttributes: this.initializeAttributes(this.props.recordConfig.attributeTypes),
       recordName: {
-        value: this.props.record.name
-          ? this.props.record.name
+        value: this.props.recordConfig.record.name
+          ? this.props.recordConfig.record.name
           : '',
         checked: true
       },
       recordType: {
-        value: this.props.record.attributes.RecordType
-          ? this.props.record.attributes.RecordType
+        value: this.props.recordConfig.record.attributes.RecordType
+          ? this.props.recordConfig.record.attributes.RecordType
           : '',
         checked: true
       }
@@ -28,7 +28,7 @@ export class EditorForm extends React.Component {
   }
 
   initializeAttributes (attributeTypes) {
-    const { attributes } = this.props.record;
+    const { attributes } = this.props.recordConfig.record;
     let initialState = {};
     for (const key in attributeTypes) {
       if (attributeTypes.hasOwnProperty(key)) {
@@ -174,7 +174,7 @@ export class EditorForm extends React.Component {
   addRecord (e, targetId) {
     e.preventDefault();
     const { recordName, recordType, newAttributes } = this.state;
-    this.props.createRecord(targetId, recordName.value, recordType.value, newAttributes);
+    this.props.recordConfig.createRecord(targetId, recordName.value, recordType.value, newAttributes);
     this.props.displayMessage({
       text: 'Asiakirjan lisäys onnistui!',
       success: true
@@ -184,7 +184,7 @@ export class EditorForm extends React.Component {
   editRecord (e, targetId) {
     e.preventDefault();
     const { recordName, recordType, newAttributes } = this.state;
-    this.props.editRecordWithForm(targetId, recordName.value, recordType.value, newAttributes);
+    this.props.recordConfig.editRecordWithForm(targetId, recordName.value, recordType.value, newAttributes);
     this.props.displayMessage({
       text: 'Asiakirjan muokkaus onnistui!',
       success: true
@@ -232,12 +232,12 @@ export class EditorForm extends React.Component {
   }
 
   render () {
-    const { attributeTypes, recordTypes, targetId } = this.props;
-    const attributeElements = this.generateAttributeElements(attributeTypes);
-    const typeDropdown = this.generateDropdown(recordTypes);
+    const { targetId } = this.props;
+    const attributeElements = this.generateAttributeElements(this.props.recordConfig.attributeTypes);
+    const typeDropdown = this.generateDropdown(this.props.recordConfig.recordTypes);
     return (
       <div className='action add-box col-xs-12'>
-        <h4>{ this.props.editRecordWithForm ? 'Muokkaa asiakirjaa' : 'Uusi asiakirja' }</h4>
+        <h4>{ this.props.recordConfig.editRecordWithForm ? 'Muokkaa asiakirjaa' : 'Uusi asiakirja' }</h4>
         <form onSubmit={(e) => this.resolveOnSubmit(e, targetId)}
               className='edit-record'>
           <div className='col-xs-12 col-lg-6 form-group'>
@@ -270,21 +270,23 @@ export class EditorForm extends React.Component {
 }
 
 EditorForm.propTypes = {
-  attributeTypes: React.PropTypes.object.isRequired,
   closeEditorForm: React.PropTypes.func.isRequired,
-  createRecord: React.PropTypes.func,
   displayMessage: React.PropTypes.func.isRequired,
-  editRecordWithForm: React.PropTypes.func,
   editorConfig: React.PropTypes.shape({
     type: React.PropTypes.string.isRequired,
     action: React.PropTypes.string.isRequired
   }),
-  record: React.PropTypes.shape({
-    id: React.PropTypes.string,
-    name: React.PropTypes.string,
-    attributes: React.PropTypes.object
+  recordConfig: React.PropTypes.shape({
+    editRecordWithForm: React.PropTypes.func,
+    recordTypes: React.PropTypes.object,
+    attributeTypes: React.PropTypes.object.isRequired,
+    createRecord: React.PropTypes.func,
+    record: React.PropTypes.shape({
+      id: React.PropTypes.string,
+      name: React.PropTypes.string,
+      attributes: React.PropTypes.object
+    })
   }),
-  recordTypes: React.PropTypes.object,
   targetId: React.PropTypes.string
 };
 
