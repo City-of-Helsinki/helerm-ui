@@ -9,7 +9,7 @@ export class EditorForm extends React.Component {
     this.generateAttributeElements = this.generateAttributeElements.bind(this);
     this.getActiveValue = this.getActiveValue.bind(this);
     this.getCheckedState = this.getCheckedState.bind(this);
-    this.closeRecordForm = this.closeRecordForm.bind(this);
+    this.closeEditorForm = this.closeEditorForm.bind(this);
     this.state = {
       newAttributes: this.initializeState(this.props.attributeTypes),
       recordName: {
@@ -192,9 +192,9 @@ export class EditorForm extends React.Component {
     });
   }
 
-  closeRecordForm (e) {
+  closeEditorForm (e) {
     e.preventDefault();
-    this.props.closeRecordForm();
+    this.props.closeEditorForm();
   }
 
   render () {
@@ -241,7 +241,7 @@ export class EditorForm extends React.Component {
 EditorForm.propTypes = {
   actionId: React.PropTypes.string,
   attributeTypes: React.PropTypes.object.isRequired,
-  closeRecordForm: React.PropTypes.func.isRequired,
+  closeEditorForm: React.PropTypes.func.isRequired,
   createRecord: React.PropTypes.func,
   displayMessage: React.PropTypes.func.isRequired,
   editRecordWithForm: React.PropTypes.func,

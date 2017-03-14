@@ -208,7 +208,7 @@ export class Action extends React.Component {
             attributeTypes={this.props.attributeTypes}
             recordTypes={this.props.recordTypes}
             createRecord={this.createRecord}
-            closeRecordForm={this.cancelRecordCreation}
+            closeEditorForm={this.cancelRecordCreation}
             mode={this.state.mode}
             displayMessage={this.props.displayMessage}
           />
@@ -219,7 +219,7 @@ export class Action extends React.Component {
             recordTypes={this.props.recordTypes}
             attributeTypes={this.props.attributeTypes}
             editRecordWithForm={this.editRecordWithForm}
-            closeRecordForm={this.cancelRecordEdit}
+            closeEditorForm={this.cancelRecordEdit}
             mode={this.state.mode}
             displayMessage={this.props.displayMessage}
           />
