@@ -6,6 +6,7 @@ import Phase from 'components/TOS/Phase';
 import Attribute from 'components/TOS/Attribute';
 import ReorderView from 'components/TOS/ReorderView';
 import ImportView from 'components/TOS/ImportView';
+import EditorForm from 'components/TOS/EditorForm';
 
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
@@ -354,9 +355,25 @@ export class ViewTOS extends React.Component {
             <div className='single-tos-content'>
               <div className='row'>
                 <div className='general-info space-between'>
-                  <div className='version-details col-xs-12'>
-                    { TOSMetaData }
-                  </div>
+                  {this.state.editingMetaData &&
+                    <EditorForm
+                      targetId={this.props.selectedTOS.id}
+                      attributes={this.props.selectedTOS.attributes}
+                      attributeTypes={this.props.attributeTypes}
+                      editMetaData={this.editMetaData}
+                      editorConfig={{
+                        type: 'tos',
+                        action: 'edit'
+                      }}
+                      closeEditorForm={this.cancelEdit}
+                      displayMessage={this.props.displayMessage}
+                    />
+                  }
+                  {!this.state.editingMetaData &&
+                    <div className='version-details col-xs-12'>
+                      { TOSMetaData }
+                    </div>
+                  }
                 </div>
                 <div className='col-xs-12 button-row'>
                   { selectedTOS.documentState === 'edit' && !this.state.createPhaseMode &&

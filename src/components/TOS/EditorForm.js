@@ -270,6 +270,7 @@ EditorForm.propTypes = {
   attributes: React.PropTypes.object.isRequired,
   closeEditorForm: React.PropTypes.func.isRequired,
   displayMessage: React.PropTypes.func.isRequired,
+  // editMetaData: React.PropTypes.object,
   editorConfig: React.PropTypes.shape({
     type: React.PropTypes.string.isRequired,
     action: React.PropTypes.string.isRequired
