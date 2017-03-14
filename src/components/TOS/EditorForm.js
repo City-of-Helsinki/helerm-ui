@@ -11,7 +11,7 @@ export class EditorForm extends React.Component {
     this.getCheckedState = this.getCheckedState.bind(this);
     this.closeEditorForm = this.closeEditorForm.bind(this);
     this.state = {
-      newAttributes: this.initializeState(this.props.attributeTypes),
+      newAttributes: this.initializeAttributes(this.props.attributeTypes),
       recordName: {
         value: this.props.record.name
           ? this.props.record.name
@@ -27,7 +27,7 @@ export class EditorForm extends React.Component {
     };
   }
 
-  initializeState (attributeTypes) {
+  initializeAttributes (attributeTypes) {
     const { attributes } = this.props.record;
     let initialState = {};
     for (const key in attributeTypes) {
