@@ -41,6 +41,18 @@ export function retrieveUserFromSession () {
           const url = `user/${user.id}`;
           return api.get(url)
             .then((helermUserData) => {
+              if (helermUserData.status === 401) {
+                return fetch('/auth/logout', {
+                  method: 'POST',
+                  credentials: 'same-origin',
+                  mode: 'no-cors'
+                })
+                  .then(() => {
+                    removeStorageItem('token');
+                    dispatch(clearUserData());
+                    return window.location.reload();
+                  });
+              }
               return helermUserData.json();
             })
             .then((helermUser) => {
