@@ -1,9 +1,9 @@
 import React from 'react';
-import './RecordForm.scss';
+import './EditorForm.scss';
 import update from 'immutability-helper';
 // import find from 'lodash/find';
 
-export class RecordForm extends React.Component {
+export class EditorForm extends React.Component {
   constructor (props) {
     super(props);
     this.generateAttributeElements = this.generateAttributeElements.bind(this);
@@ -238,7 +238,7 @@ export class RecordForm extends React.Component {
   }
 }
 
-RecordForm.propTypes = {
+EditorForm.propTypes = {
   actionId: React.PropTypes.string,
   attributeTypes: React.PropTypes.object.isRequired,
   closeRecordForm: React.PropTypes.func.isRequired,
@@ -253,4 +253,4 @@ RecordForm.propTypes = {
   recordTypes: React.PropTypes.object.isRequired
 };
 
-export default RecordForm;
+export default EditorForm;

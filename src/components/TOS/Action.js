@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import './Action.scss';
 import Record from './Record';
-import RecordForm from './RecordForm';
+import EditorForm from './EditorForm';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
 import DeleteView from './DeleteView';
@@ -203,7 +203,7 @@ export class Action extends React.Component {
             { actionTitle }
           </Sticky>
           { this.state.creating &&
-          <RecordForm
+          <EditorForm
             actionId={this.props.action.id}
             attributeTypes={this.props.attributeTypes}
             recordTypes={this.props.recordTypes}
@@ -214,7 +214,7 @@ export class Action extends React.Component {
           />
           }
           { this.state.editing &&
-          <RecordForm
+          <EditorForm
             record={this.state.record}
             recordTypes={this.props.recordTypes}
             attributeTypes={this.props.attributeTypes}
