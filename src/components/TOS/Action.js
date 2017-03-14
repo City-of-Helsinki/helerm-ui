@@ -204,7 +204,7 @@ export class Action extends React.Component {
           </Sticky>
           { this.state.creating &&
           <EditorForm
-            actionId={this.props.action.id}
+            targetId={this.props.action.id}
             attributeTypes={this.props.attributeTypes}
             recordTypes={this.props.recordTypes}
             createRecord={this.createRecord}

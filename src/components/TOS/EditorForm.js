@@ -171,17 +171,17 @@ export class EditorForm extends React.Component {
     );
   }
 
-  addRecord (e, actionId) {
+  addRecord (e, targetId) {
     e.preventDefault();
     const { recordName, recordType, newAttributes } = this.state;
-    this.props.createRecord(actionId, recordName.value, recordType.value, newAttributes);
+    this.props.createRecord(targetId, recordName.value, recordType.value, newAttributes);
     this.props.displayMessage({
       text: 'Asiakirjan lisäys onnistui!',
       success: true
     });
   }
 
-  editRecord (e, actionId) {
+  editRecord (e, targetId) {
     e.preventDefault();
     const { recordName, recordType, newAttributes } = this.state;
     this.props.editRecordWithForm(this.props.record.id, recordName.value, recordType.value, newAttributes);
@@ -191,37 +191,37 @@ export class EditorForm extends React.Component {
     });
   }
 
-  resolveOnSubmit (e, actionId) {
+  resolveOnSubmit (e, targetId) {
     const { action, type } = this.props.editorConfig;
 
     switch (type) {
       case 'tos':
         if (action === 'edit') {
-          // this.editMetaData(e, actionId);
+          // this.editMetaData(e, targetId);
         }
         break;
       case 'phase':
         if (action === 'add') {
-          // this.addPhase(e, actionId);
+          // this.addPhase(e, targetId);
         }
         if (action === 'edit') {
-          // this.editPhase(e, actionId);
+          // this.editPhase(e, targetId);
         }
         break;
       case 'action':
         if (action === 'add') {
-          // this.addAction(e, actionId);
+          // this.addAction(e, targetId);
         }
         if (action === 'edit') {
-          // this.editAction(e, actionId);
+          // this.editAction(e, targetId);
         }
         break;
       case 'record':
         if (action === 'add') {
-          this.addRecord(e, actionId);
+          this.addRecord(e, targetId);
         }
         if (action === 'edit') {
-          this.editRecord(e, actionId);
+          this.editRecord(e, targetId);
         }
     }
   }
@@ -232,13 +232,13 @@ export class EditorForm extends React.Component {
   }
 
   render () {
-    const { attributeTypes, recordTypes, actionId } = this.props;
+    const { attributeTypes, recordTypes, targetId } = this.props;
     const attributeElements = this.generateAttributeElements(attributeTypes);
     const typeDropdown = this.generateDropdown(recordTypes);
     return (
       <div className='action add-box col-xs-12'>
         <h4>{ this.props.editRecordWithForm ? 'Muokkaa asiakirjaa' : 'Uusi asiakirja' }</h4>
-        <form onSubmit={(e) => this.resolveOnSubmit(e, actionId)}
+        <form onSubmit={(e) => this.resolveOnSubmit(e, targetId)}
               className='edit-record'>
           <div className='col-xs-12 col-lg-6 form-group'>
             <label className='edit-record__label'>Asiakirjatyypin tarkenne</label>
@@ -270,7 +270,6 @@ export class EditorForm extends React.Component {
 }
 
 EditorForm.propTypes = {
-  actionId: React.PropTypes.string,
   attributeTypes: React.PropTypes.object.isRequired,
   closeEditorForm: React.PropTypes.func.isRequired,
   createRecord: React.PropTypes.func,
@@ -286,6 +285,7 @@ EditorForm.propTypes = {
     attributes: React.PropTypes.object
   }),
   recordTypes: React.PropTypes.object,
+  targetId: React.PropTypes.string
 };
 
 export default EditorForm;
