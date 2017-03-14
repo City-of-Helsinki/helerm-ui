@@ -116,8 +116,9 @@ export function callApi (endpoint, params, options = {}) {
     .then(res => {
       // TODO: Remove me & use refresh token
       if (res.status === 401) {
-        removeStorageItem('token');
-        return window.location.reload();
+        removeStorageItem('token', () => {
+          return window.location.reload();
+        });
       }
       return res;
     });
