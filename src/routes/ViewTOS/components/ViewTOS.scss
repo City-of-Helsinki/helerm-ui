@@ -77,6 +77,11 @@
   right: 20px;
   top: 15px;
   z-index: 1;
+
+  .action-dropdown-button {
+    right: 32px;
+    top: 0;
+  }
 }
 .btn-delete {
   color: #fff;
