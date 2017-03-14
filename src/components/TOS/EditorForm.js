@@ -23,8 +23,7 @@ export class EditorForm extends React.Component {
           ? this.props.record.attributes.RecordType
           : '',
         checked: true
-      },
-      editForm: !!this.props.editRecordWithForm
+      }
     };
   }
 
@@ -82,7 +81,7 @@ export class EditorForm extends React.Component {
   }
 
   getCheckedState (key) {
-    if (this.state.editForm && !this.state.newAttributes[key].name) {
+    if (this.props.editorConfig.action === 'edit' && !this.state.newAttributes[key].name) {
       return false;
     } else {
       return this.state.newAttributes[key].checked;
@@ -234,12 +233,11 @@ export class EditorForm extends React.Component {
 
   render () {
     const { attributeTypes, recordTypes, actionId } = this.props;
-    const { editForm } = this.state;
     const attributeElements = this.generateAttributeElements(attributeTypes);
     const typeDropdown = this.generateDropdown(recordTypes);
     return (
       <div className='action add-box col-xs-12'>
-        <h4>{ editForm ? 'Muokkaa asiakirjaa' : 'Uusi asiakirja' }</h4>
+        <h4>{ this.props.editRecordWithForm ? 'Muokkaa asiakirjaa' : 'Uusi asiakirja' }</h4>
         <form onSubmit={(e) => this.resolveOnSubmit(e, actionId)}
               className='edit-record'>
           <div className='col-xs-12 col-lg-6 form-group'>
