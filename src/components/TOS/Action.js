@@ -205,9 +205,12 @@ export class Action extends React.Component {
           { this.state.creating &&
           <EditorForm
             targetId={this.props.action.id}
+            attributes={this.state.record.attributes}
+            attributeTypes={this.props.attributeTypes}
             recordConfig={{
               recordTypes: this.props.recordTypes,
-              attributeTypes: this.props.attributeTypes,
+              recordId: this.state.record.id,
+              recordName: this.state.record.name,
               createRecord: this.createRecord
             }}
             editorConfig={{
@@ -221,10 +224,12 @@ export class Action extends React.Component {
           { this.state.editing &&
           <EditorForm
             targetId={this.state.record.id}
+            attributes={this.state.record.attributes}
+            attributeTypes={this.props.attributeTypes}
             recordConfig={{
-              record: this.state.record,
               recordTypes: this.props.recordTypes,
-              attributeTypes: this.props.attributeTypes,
+              recordId: this.state.record.id,
+              recordName: this.state.record.name,
               editRecordWithForm: this.editRecordWithForm
             }}
             editorConfig={{

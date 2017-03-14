@@ -11,24 +11,20 @@ export class EditorForm extends React.Component {
     this.getCheckedState = this.getCheckedState.bind(this);
     this.closeEditorForm = this.closeEditorForm.bind(this);
     this.state = {
-      newAttributes: this.initializeAttributes(this.props.recordConfig.attributeTypes),
+      newAttributes: this.initializeAttributes(this.props.attributeTypes),
       recordName: {
-        value: this.props.recordConfig.record.name
-          ? this.props.recordConfig.record.name
-          : '',
+        value: this.props.recordConfig.recordName || '',
         checked: true
       },
       recordType: {
-        value: this.props.recordConfig.record.attributes.RecordType
-          ? this.props.recordConfig.record.attributes.RecordType
-          : '',
+        value: this.props.attributes.RecordType || '',
         checked: true
       }
     };
   }
 
   initializeAttributes (attributeTypes) {
-    const { attributes } = this.props.recordConfig.record;
+    const { attributes } = this.props;
     let initialState = {};
     for (const key in attributeTypes) {
       if (attributeTypes.hasOwnProperty(key)) {
@@ -232,8 +228,8 @@ export class EditorForm extends React.Component {
   }
 
   render () {
-    const { targetId } = this.props;
-    const attributeElements = this.generateAttributeElements(this.props.recordConfig.attributeTypes);
+    const { attributeTypes, targetId } = this.props;
+    const attributeElements = this.generateAttributeElements(attributeTypes);
     const typeDropdown = this.generateDropdown(this.props.recordConfig.recordTypes);
     return (
       <div className='action add-box col-xs-12'>
@@ -270,6 +266,8 @@ export class EditorForm extends React.Component {
 }
 
 EditorForm.propTypes = {
+  attributeTypes: React.PropTypes.object.isRequired,
+  attributes: React.PropTypes.object.isRequired,
   closeEditorForm: React.PropTypes.func.isRequired,
   displayMessage: React.PropTypes.func.isRequired,
   editorConfig: React.PropTypes.shape({
@@ -279,9 +277,9 @@ EditorForm.propTypes = {
   recordConfig: React.PropTypes.shape({
     editRecordWithForm: React.PropTypes.func,
     recordTypes: React.PropTypes.object,
-    attributeTypes: React.PropTypes.object.isRequired,
     createRecord: React.PropTypes.func,
-    record: React.PropTypes.object
+    recordId: React.PropTypes.string,
+    recordName: React.PropTypes.string
   }),
   targetId: React.PropTypes.string
 };
