@@ -259,7 +259,7 @@ export class EditorForm extends React.Component {
             <button className='btn btn-primary pull-right edit-record__submit' type='submit'>Valmis</button>
             <button
               className='btn btn-danger pull-right edit-record__cancel'
-              onClick={(e) => this.closeRecordForm(e)}>
+              onClick={(e) => this.closeEditorForm(e)}>
               Peruuta
             </button>
           </div>

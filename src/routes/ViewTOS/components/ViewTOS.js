@@ -242,7 +242,7 @@ export class ViewTOS extends React.Component {
               children={[
                 {
                   text: 'Muokkaa metatietoja',
-                  icon: 'fa-file-text',
+                  icon: 'fa-pencil',
                   style: 'btn-primary',
                   action: () => this.setState({ editingMetaData: true })
                 }
