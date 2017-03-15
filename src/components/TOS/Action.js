@@ -22,7 +22,7 @@ export class Action extends React.Component {
     this.cancelRecordEdit = this.cancelRecordEdit.bind(this);
     this.state = {
       mode: 'view',
-      name: this.props.action.name,
+      name: this.props.action ? this.props.action.name : 'ERROR',
       creating: false,
       editing: false,
       deleting: false,
@@ -32,7 +32,7 @@ export class Action extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.action.name) {
+    if (nextProps.action && nextProps.action.name) {
       this.setState({ name: nextProps.action.name });
     }
   }
@@ -81,7 +81,7 @@ export class Action extends React.Component {
     return elements;
   }
 
-  generateDropdownItems (recordCount) {
+  generateDropdownItems () {
     return [
       {
         text: 'Uusi asiakirja',
@@ -122,7 +122,9 @@ export class Action extends React.Component {
         name: recordName,
         attributes: recordAttributes
       }
-    }, () => { this.setState({ editing: true }); });
+    }, () => {
+      this.setState({ editing: true });
+    });
   }
 
   cancelRecordEdit () {
@@ -165,9 +167,10 @@ export class Action extends React.Component {
   }
 
   render () {
+    // TODO: Handle errors where we don't have an valid action (i.e 400 error from API)
     const { action } = this.props;
-    const recordElements = this.generateRecords(action.records);
-    const dropdownItems = this.generateDropdownItems(action.records.length);
+    const recordElements = action && action.records ? this.generateRecords(action.records) : [];
+    const dropdownItems = this.generateDropdownItems();
     let actionTitle;
     if (this.state.mode === 'view') {
       actionTitle = (
@@ -224,7 +227,7 @@ export class Action extends React.Component {
             displayMessage={this.props.displayMessage}
           />
           }
-          { !this.state.editing &&
+          { !this.state.editing && !!recordElements.length &&
           <div>
             <span className='col-xs-6 attribute-label'>
             Asiakirjatyypin tarkenne
@@ -232,7 +235,8 @@ export class Action extends React.Component {
             <span className='col-xs-6 attribute-label'>
             Tyyppi
             </span>
-            <div className={classNames('col-xs-12 records', { 'records-editing': this.props.documentState === 'edit' })}>
+            <div
+              className={classNames('col-xs-12 records', { 'records-editing': this.props.documentState === 'edit' })}>
               { recordElements }
             </div>
           </div>
