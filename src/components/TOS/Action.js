@@ -218,7 +218,7 @@ export class Action extends React.Component {
             }}
             editorConfig={{
               type: 'record',
-              action: 'create'
+              action: 'add'
             }}
             closeEditorForm={this.cancelRecordCreation}
             displayMessage={this.props.displayMessage}
