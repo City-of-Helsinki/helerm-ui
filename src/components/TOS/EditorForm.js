@@ -13,8 +13,8 @@ export class EditorForm extends React.Component {
     this.state = {
       newAttributes: this.initializeAttributes(this.props.attributeTypes),
       recordName: {
-        value: this.props.recordConfig.recordName || '',
         checked: true
+        value: this.props.recordConfig ? this.props.recordConfig.recordName : '',
       },
       recordType: {
         value: this.props.attributes.RecordType || '',
