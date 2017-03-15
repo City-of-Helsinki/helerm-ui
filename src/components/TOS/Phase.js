@@ -16,6 +16,7 @@ export class Phase extends React.Component {
     this.onNewChange = this.onNewChange.bind(this);
     this.createNewAction = this.createNewAction.bind(this);
     this.addAction = this.addAction.bind(this);
+    this.editPhaseTitle = this.editPhaseTitle.bind(this);
     this.savePhaseTitle = this.savePhaseTitle.bind(this);
     this.cancelActionCreation = this.cancelActionCreation.bind(this);
     this.state = {
@@ -169,7 +170,7 @@ export class Phase extends React.Component {
     let phaseTitle;
     if (this.state.mode !== 'edit') {
       phaseTitle =
-        (<span onClick={() => this.editPhaseTitle()}>
+        (<span onClick={this.editPhaseTitle}>
           <i className='fa fa-info-circle' aria-hidden='true'/> {this.state.name}
         </span>
         );
