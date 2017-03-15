@@ -242,29 +242,39 @@ export class EditorForm extends React.Component {
     this.props.closeEditorForm();
   }
 
+  renderDescriptions () {
+    const typeDropdown = this.generateDropdown(this.props.recordConfig.recordTypes);
+
+    return (
+      <div>
+        <div className='col-xs-12 col-lg-6 form-group'>
+          <label className='edit-record__label'>Tarkenne</label>
+          <span className='fa fa-asterisk required-asterisk'/>
+          <input
+            className='col-xs-6 form-control edit-record__input'
+            placeholder='Tarkenne'
+            value={this.state.recordName.value}
+            onChange={(e) => this.onBaseAttributeChange(e.target.value, 'recordName', 'value')}/>
+        </div>
+        <div className='col-xs-12 col-lg-6 form-group'>
+          <label className='edit-record__label'>Tyyppi</label>
+          <span className='fa fa-asterisk required-asterisk'/>
+          { typeDropdown }
+        </div>
+      </div>
+    );
+  }
+
   render () {
     const { attributeTypes, targetId } = this.props;
     const attributeElements = this.generateAttributeElements(attributeTypes);
-    const typeDropdown = this.generateDropdown(this.props.recordConfig.recordTypes);
+
     return (
       <div className='action add-box col-xs-12'>
         <h4>{this.resolveLabel()}</h4>
         <form onSubmit={(e) => this.resolveOnSubmit(e, targetId)}
               className='edit-record'>
-          <div className='col-xs-12 col-lg-6 form-group'>
-            <label className='edit-record__label'>Tarkenne</label>
-            <span className='fa fa-asterisk required-asterisk'/>
-            <input
-              className='col-xs-6 form-control edit-record__input'
-              placeholder='Tarkenne'
-              value={this.state.recordName.value}
-              onChange={(e) => this.onBaseAttributeChange(e.target.value, 'recordName', 'value')}/>
-          </div>
-          <div className='col-xs-12 col-lg-6 form-group'>
-            <label className='edit-record__label'>Tyyppi</label>
-            <span className='fa fa-asterisk required-asterisk'/>
-            { typeDropdown }
-          </div>
+          { this.props.editorConfig.type !== 'tos' ? this.renderDescriptions() : null }
           { attributeElements }
           <div className='col-xs-12'>
             <button className='btn btn-primary pull-right edit-record__submit' type='submit'>Valmis</button>
