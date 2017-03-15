@@ -167,6 +167,16 @@ export class EditorForm extends React.Component {
     );
   }
 
+  editMetaData (e, targetId) {
+    e.preventDefault();
+    const { newAttributes } = this.state;
+    this.props.editMetaDataWithForm(targetId, newAttributes);
+    this.props.displayMessage({
+      text: 'Metatietojen muokkaus onnistui!',
+      success: true
+    });
+  }
+
   addRecord (e, targetId) {
     e.preventDefault();
     const { recordName, recordType, newAttributes } = this.state;
@@ -208,7 +218,7 @@ export class EditorForm extends React.Component {
     switch (type) {
       case 'tos':
         if (action === 'edit') {
-          // this.editMetaData(e, targetId);
+          this.editMetaData(e, targetId);
         }
         break;
       case 'phase':
@@ -295,7 +305,7 @@ EditorForm.propTypes = {
   attributes: React.PropTypes.object.isRequired,
   closeEditorForm: React.PropTypes.func.isRequired,
   displayMessage: React.PropTypes.func.isRequired,
-  // editMetaData: React.PropTypes.object,
+  editMetaDataWithForm: React.PropTypes.func,
   editorConfig: React.PropTypes.shape({
     type: React.PropTypes.string.isRequired,
     action: React.PropTypes.string.isRequired

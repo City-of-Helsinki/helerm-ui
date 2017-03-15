@@ -27,6 +27,7 @@ export class ViewTOS extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.createNewPhase = this.createNewPhase.bind(this);
     this.cancelPhaseCreation = this.cancelPhaseCreation.bind(this);
+    this.editMetaDataWithForm = this.editMetaDataWithForm.bind(this);
     this.setPhaseVisibility = this.setPhaseVisibility.bind(this);
     this.updateTOSAttribute = this.updateTOSAttribute.bind(this);
     this.state = {
@@ -149,6 +150,12 @@ export class ViewTOS extends React.Component {
       attributeIndex
     };
     this.props.editRecord(updatedTOSAttribute);
+  }
+
+  editMetaDataWithForm (id, attributes) {
+    console.log(this);
+    this.setState({ editingMetaData: false });
+    console.log(id, attributes);
   }
 
   /*
@@ -360,7 +367,7 @@ export class ViewTOS extends React.Component {
                       targetId={this.props.selectedTOS.id}
                       attributes={this.props.selectedTOS.attributes}
                       attributeTypes={this.props.attributeTypes}
-                      editMetaData={this.editMetaData}
+                      editMetaDataWithForm={this.editMetaDataWithForm}
                       editorConfig={{
                         type: 'tos',
                         action: 'edit'
