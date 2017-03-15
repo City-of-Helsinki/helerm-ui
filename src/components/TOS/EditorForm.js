@@ -252,7 +252,7 @@ export class EditorForm extends React.Component {
         <form onSubmit={(e) => this.resolveOnSubmit(e, targetId)}
               className='edit-record'>
           <div className='col-xs-12 col-lg-6 form-group'>
-            <label className='edit-record__label'>Asiakirjatyypin tarkenne</label>
+            <label className='edit-record__label'>Tarkenne</label>
             <span className='fa fa-asterisk required-asterisk'/>
             <input
               className='col-xs-6 form-control edit-record__input'
