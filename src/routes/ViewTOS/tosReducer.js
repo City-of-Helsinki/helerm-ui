@@ -382,10 +382,11 @@ export function changeOrder (newOrder, itemType, itemParent) {
 }
 
 export function saveDraft (tos) {
-  const finalTos = normalizeTosForApi(tos);
+  const originalTos = Object.assign({}, tos);
+
   return function (dispatch) {
     dispatch(requestTOS());
-    return api.put(`function/${tos.id}`, finalTos)
+    return api.put(`function/${tos.id}`, normalizeTosForApi(originalTos))
       .then(res => {
         if (!res.ok) {
           dispatch(TOSError());

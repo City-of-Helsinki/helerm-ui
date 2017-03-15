@@ -1,4 +1,5 @@
 import LTT from 'list-to-tree';
+import { schema, denormalize } from 'normalizr';
 import {
   filter,
   find,
@@ -58,6 +59,25 @@ export function normalizeTosForApi (tos) {
   // TODO: needs some serious refactoring...
   const finalTos = Object.assign({}, tos);
   const phases = Object.keys(finalTos.phases).map(phase => finalTos.phases[phase]);
+
+  const tosSchema = new schema.Entity('tos');
+  const phase = new schema.Entity('phases');
+  const action = new schema.Entity('actions');
+  const record = new schema.Entity('records');
+
+  tosSchema.define({
+    phases: [phase]
+  });
+  phase.define({
+    actions: [action]
+  });
+  action.define({
+    records: [record]
+  });
+
+  // TODO: Handle denormalization so we have a phases-array with all the necessary info inside...
+  // denormalize(data, schema, entities);
+
   phases.map(phase => phase.actions.map((action, actionIndex) => {
     delete phase.actions[actionIndex];
     phase.actions[actionIndex] = finalTos.actions[action];
@@ -66,10 +86,10 @@ export function normalizeTosForApi (tos) {
       phase.actions[actionIndex].records[recordsIndex] = finalTos.records[record];
     });
   }));
-
   delete finalTos.actions;
   delete finalTos.records;
   finalTos.phases = phases;
+
   return finalTos;
 }
 
