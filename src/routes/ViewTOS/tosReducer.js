@@ -1,7 +1,8 @@
 import update from 'immutability-helper';
 import indexOf from 'lodash/indexOf';
 import includes from 'lodash/includes';
-import { normalize, denormalize, schema } from 'normalizr';
+import { map } from 'lodash';
+import { normalize, schema } from 'normalizr';
 
 import { default as api } from '../../utils/api';
 import { normalizeTosForApi } from '../../utils/helpers';
@@ -381,12 +382,15 @@ export function changeOrder (newOrder, itemType, itemParent) {
   };
 }
 
-export function saveDraft (tos) {
-  const originalTos = Object.assign({}, tos);
-
-  return function (dispatch) {
+export function saveDraft () {
+  return function (dispatch, getState) {
     dispatch(requestTOS());
-    return api.put(`function/${tos.id}`, normalizeTosForApi(originalTos))
+    const tos = Object.assign({}, getState().selectedTOS);
+    const newTos = Object.assign({}, tos);
+    const finalPhases = normalizeTosForApi(newTos);
+    const denormalizedTos = update(tos, { phases: { $set: finalPhases } });
+
+    return api.put(`function/${tos.id}`, denormalizedTos)
       .then(res => {
         if (!res.ok) {
           dispatch(TOSError());
@@ -423,7 +427,7 @@ export const actions = {
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [REQUEST_TOS]: (state, action) => {
+  [REQUEST_TOS]: (state) => {
     return update(state, {
       isFetching: {
         $set: true
@@ -469,8 +473,25 @@ const ACTION_HANDLERS = {
     return initialState;
   },
   [TOS_ERROR]: (state) => {
+    // TODO: Find out what mutates store so hard...
+    const actions = {};
+    const phases = {};
+    map(state.actions, action => {
+      actions[action.id] = action;
+      return map(action.records, (record, recordIndex) => {
+        actions[action.id].records[recordIndex] = record.id;
+      });
+    });
+    map(state.phases, phase => {
+      phases[phase.id] = phase;
+      return map(phase.actions, (action, actionIndex) => {
+        phases[phase.id].actions[actionIndex] = action.id;
+      });
+    });
+
     return update(state, {
-      $merge: state,
+      actions: { $set: actions },
+      phases: { $set: phases },
       isFetching: {
         $set: false
       }
