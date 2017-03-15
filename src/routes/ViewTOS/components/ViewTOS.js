@@ -46,12 +46,12 @@ export class ViewTOS extends React.Component {
 
   componentWillReceiveProps (nextProps) {
     const { route } = nextProps;
-
     // If we have selectedTOS & selectedTOS hasn't change during receiveProps
     // => cache it to state to be able to discard changes
     if (
       (this.props.selectedTOS.id || nextProps.selectedTOS.id) &&
-      nextProps.selectedTOS.id !== this.props.selectedTOS.id
+      nextProps.selectedTOS.id !== this.props.selectedTOS.id ||
+      nextProps.selectedTOS.version !== this.props.selectedTOS.version
     ) {
       this.setState({ originalTos: nextProps.selectedTOS });
     }
