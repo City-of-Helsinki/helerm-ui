@@ -196,7 +196,6 @@ export function addPhase (name, parent) {
 }
 
 export function editRecord (recordId, recordName, recordType, attributes) {
-  console.log(attributes);
   let editedAttributes = [];
   for (const key in attributes) {
     if (attributes.hasOwnProperty(key)) {
