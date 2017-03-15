@@ -1,7 +1,7 @@
 import update from 'immutability-helper';
 import indexOf from 'lodash/indexOf';
 import includes from 'lodash/includes';
-import { normalize, Schema, arrayOf } from 'normalizr';
+import { normalize, denormalize, schema } from 'normalizr';
 
 import { default as api } from '../../utils/api';
 import { normalizeTosForApi } from '../../utils/helpers';
@@ -58,19 +58,19 @@ export function receiveTOS (json) {
       });
     });
   });
-  const tosSchema = new Schema('tos');
-  const phase = new Schema('phases');
-  const action = new Schema('actions');
-  const record = new Schema('records');
+  const tosSchema = new schema.Entity('tos');
+  const phase = new schema.Entity('phases');
+  const action = new schema.Entity('actions');
+  const record = new schema.Entity('records');
 
   tosSchema.define({
-    phases: arrayOf(phase)
+    phases: [phase]
   });
   phase.define({
-    actions: arrayOf(action)
+    actions: [action]
   });
   action.define({
-    records: arrayOf(record)
+    records: [record]
   });
   json = normalize(json, tosSchema);
   return {
