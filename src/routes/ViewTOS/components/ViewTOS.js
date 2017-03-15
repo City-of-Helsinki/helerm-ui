@@ -21,7 +21,7 @@ export class ViewTOS extends React.Component {
   constructor (props) {
     super(props);
     this.fetchTOS = this.fetchTOS.bind(this);
-    this.cancelEdit = this.cancelEdit.bind(this);
+    this.cancelMetaDataEdit = this.cancelMetaDataEdit.bind(this);
     this.sendForInspection = this.sendForInspection.bind(this);
     this.saveDraft = this.saveDraft.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -83,6 +83,10 @@ export class ViewTOS extends React.Component {
 
   cancelEdit () {
     return this.props.resetTOS(this.state.originalTos);
+  }
+
+  cancelMetaDataEdit () {
+    this.setState({ editingMetaData: false });
   }
 
   saveDraft () {
@@ -370,7 +374,7 @@ export class ViewTOS extends React.Component {
                         type: 'tos',
                         action: 'edit'
                       }}
-                      closeEditorForm={this.cancelEdit}
+                      closeEditorForm={this.cancelMetaDataEdit}
                       displayMessage={this.props.displayMessage}
                     />
                   }
