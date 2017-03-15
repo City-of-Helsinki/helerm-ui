@@ -208,12 +208,10 @@ export class Action extends React.Component {
           { this.state.creating &&
           <EditorForm
             targetId={this.props.action.id}
-            attributes={this.state.record.attributes}
+            attributes={{}}
             attributeTypes={this.props.attributeTypes}
             recordConfig={{
               recordTypes: this.props.recordTypes,
-              recordId: this.state.record.id,
-              recordName: this.state.record.name,
               createRecord: this.createRecord
             }}
             editorConfig={{
