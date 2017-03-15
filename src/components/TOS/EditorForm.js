@@ -187,6 +187,21 @@ export class EditorForm extends React.Component {
     });
   }
 
+  resolveLabel () {
+    const { type, action } = this.props.editorConfig;
+
+    switch (type) {
+      case 'tos':
+        return 'Muokkaa metatietoja';
+      case 'phase':
+        return action === 'edit' ? 'Muokkaa käsittelyvaihetta' : 'Uusi käsittelyvaihe';
+      case 'action':
+        return action === 'edit' ? 'Muokkaa toimenpidettä' : 'Uusi toimenpide';
+      case 'record':
+        return action === 'edit' ? 'Muokkaa asiakirjaa' : 'Uusi asiakirja';
+    }
+  }
+
   resolveOnSubmit (e, targetId) {
     const { action, type } = this.props.editorConfig;
 
@@ -233,7 +248,7 @@ export class EditorForm extends React.Component {
     const typeDropdown = this.generateDropdown(this.props.recordConfig.recordTypes);
     return (
       <div className='action add-box col-xs-12'>
-        <h4>{ this.props.recordConfig.editRecordWithForm ? 'Muokkaa asiakirjaa' : 'Uusi asiakirja' }</h4>
+        <h4>{this.resolveLabel()}</h4>
         <form onSubmit={(e) => this.resolveOnSubmit(e, targetId)}
               className='edit-record'>
           <div className='col-xs-12 col-lg-6 form-group'>
