@@ -81,7 +81,7 @@ export class Action extends React.Component {
     return elements;
   }
 
-  generateDropdownItems (recordCount) {
+  generateDropdownItems () {
     return [
       {
         text: 'Uusi asiakirja',
@@ -170,7 +170,7 @@ export class Action extends React.Component {
     // TODO: Handle errors where we don't have an valid action (i.e 400 error from API)
     const { action } = this.props;
     const recordElements = action && action.records ? this.generateRecords(action.records) : [];
-    const dropdownItems = this.generateDropdownItems(action && action.records ? action.records.length : 0);
+    const dropdownItems = this.generateDropdownItems();
     let actionTitle;
     if (this.state.mode === 'view') {
       actionTitle = (
@@ -227,7 +227,7 @@ export class Action extends React.Component {
             displayMessage={this.props.displayMessage}
           />
           }
-          { !this.state.editing &&
+          { !this.state.editing && !!recordElements.length &&
           <div>
             <span className='col-xs-6 attribute-label'>
             Asiakirjatyypin tarkenne
