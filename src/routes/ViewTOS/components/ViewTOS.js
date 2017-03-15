@@ -152,10 +152,9 @@ export class ViewTOS extends React.Component {
     this.props.editRecord(updatedTOSAttribute);
   }
 
-  editMetaDataWithForm (id, attributes) {
-    console.log(this);
+  editMetaDataWithForm (attributes) {
     this.setState({ editingMetaData: false });
-    console.log(id, attributes);
+    this.props.editMetaData(attributes);
   }
 
   /*
@@ -500,6 +499,7 @@ ViewTOS.propTypes = {
   clearTOS: React.PropTypes.func.isRequired,
   displayMessage: React.PropTypes.func.isRequired,
   editAction: React.PropTypes.func.isRequired,
+  editMetaData: React.PropTypes.func.isRequired,
   editPhase: React.PropTypes.func.isRequired,
   editRecord: React.PropTypes.func.isRequired,
   editRecordAttribute: React.PropTypes.func.isRequired,

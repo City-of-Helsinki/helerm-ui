@@ -167,10 +167,10 @@ export class EditorForm extends React.Component {
     );
   }
 
-  editMetaData (e, targetId) {
+  editMetaData (e) {
     e.preventDefault();
     const { newAttributes } = this.state;
-    this.props.editMetaDataWithForm(targetId, newAttributes);
+    this.props.editMetaDataWithForm(newAttributes);
     this.props.displayMessage({
       text: 'Metatietojen muokkaus onnistui!',
       success: true
@@ -218,7 +218,7 @@ export class EditorForm extends React.Component {
     switch (type) {
       case 'tos':
         if (action === 'edit') {
-          this.editMetaData(e, targetId);
+          this.editMetaData(e);
         }
         break;
       case 'phase':
