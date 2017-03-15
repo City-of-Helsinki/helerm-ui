@@ -21,6 +21,7 @@ export class ViewTOS extends React.Component {
   constructor (props) {
     super(props);
     this.fetchTOS = this.fetchTOS.bind(this);
+    this.cancelEdit = this.cancelEdit.bind(this);
     this.cancelMetaDataEdit = this.cancelMetaDataEdit.bind(this);
     this.sendForInspection = this.sendForInspection.bind(this);
     this.saveDraft = this.saveDraft.bind(this);
