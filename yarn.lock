@@ -5089,6 +5089,14 @@ redux-actions@^0.12.0:
     lodash "^4.13.1"
     reduce-reducers "^0.1.0"
 
+redux-actions@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/redux-actions/-/redux-actions-2.0.1.tgz#8bae89938987bd0a446c509dfdac6b64e770765a"
+  dependencies:
+    invariant "^2.2.1"
+    lodash "^4.13.1"
+    reduce-reducers "^0.1.0"
+
 redux-connect@^4.0.1:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/redux-connect/-/redux-connect-4.0.2.tgz#dc46283ff5a9895dcea84b23c1d101713e14b6bd"
