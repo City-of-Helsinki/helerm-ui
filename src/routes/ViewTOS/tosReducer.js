@@ -143,7 +143,7 @@ export function setPhasesVisibility (phases, value) {
 
 export function addRecord (actionIndex, recordName, recordType, attributes) {
   const recordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
-  let newAttributes = [];
+  let newAttributes = {};
   for (const key in attributes) {
     if (attributes.hasOwnProperty(key)) {
       if (attributes[key].checked === true) {
