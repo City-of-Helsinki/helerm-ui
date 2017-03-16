@@ -35,6 +35,9 @@ export class Action extends React.Component {
     if (nextProps.action && nextProps.action.name) {
       this.setState({ name: nextProps.action.name });
     }
+    if (nextProps.documentState === 'view') {
+      this.setState({ editing: false });
+    }
   }
 
   editActionTitle () {
