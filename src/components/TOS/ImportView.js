@@ -13,6 +13,14 @@ export class ImportView extends React.Component {
     };
   }
 
+  componentWillMount () {
+    document.body.classList.add('noscroll');
+  }
+
+  componentWillUnmount () {
+    document.body.classList.remove('noscroll');
+  }
+
   generateImportableElements (level) {
     let elements;
     switch (level) {
