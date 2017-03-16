@@ -156,7 +156,7 @@ export class ViewTOS extends React.Component {
       tosAttribute: attribute,
       attributeIndex
     };
-    this.props.editRecord(updatedTOSAttribute);
+    this.props.editRecordAttribute(updatedTOSAttribute);
   }
 
   editMetaDataWithForm (attributes) {
