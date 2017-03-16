@@ -1,52 +1,64 @@
 import update from 'immutability-helper';
-import indexOf from 'lodash/indexOf';
-import includes from 'lodash/includes';
-import { map } from 'lodash';
+import { createAction, handleActions } from 'redux-actions';
+import { map, indexOf, includes } from 'lodash';
 import { normalize, schema } from 'normalizr';
 
 import { default as api } from '../../../utils/api';
 import { normalizeTosForApi } from '../../../utils/helpers';
 
+const initialState = {
+  id: null,
+  function_id: null,
+  parent: null,
+  version: null,
+  name: null,
+  error_count: null,
+  state: null,
+  created_at: null,
+  modified_at: null,
+  actions: {},
+  phases: {},
+  records: {},
+  attributes: {},
+  documentState: 'view',
+  lastUpdated: 0,
+  isFetching: false
+};
+
 // ------------------------------------
 // Constants
 // ------------------------------------
-export const REQUEST_TOS = 'tos/REQUEST_TOS';
-export const RECEIVE_TOS = 'tos/RECEIVE_TOS';
-export const TOS_ERROR = 'tos/TOS_ERROR';
-export const RESET_TOS = 'tos/RESET_TOS';
-export const CLEAR_TOS = 'tos/CLEAR_TOS';
+export const REQUEST_TOS = 'requestTosAction';
+export const RECEIVE_TOS = 'receiveTosAction';
+export const TOS_ERROR = 'tosErrorAction';
+export const RESET_TOS = 'resetTosAction';
+export const CLEAR_TOS = 'clearTosAction';
 
-export const SET_PHASE_VISIBILITY = 'tos/SET_PHASE_VISIBILITY';
-export const SET_PHASES_VISIBILITY = 'tos/SET_PHASES_VISIBILITY';
+export const SET_PHASE_VISIBILITY = 'setPhaseVisibilityAction';
+export const SET_PHASES_VISIBILITY = 'setPhasesVisibilityAction';
 
-export const ADD_ACTION = 'tos/ADD_ACTION';
-export const ADD_PHASE = 'tos/ADD_PHASE';
-export const ADD_RECORD = 'tos/ADD_RECORD';
+export const ADD_ACTION = 'addActionAction';
+export const ADD_PHASE = 'addPhaseAction';
+export const ADD_RECORD = 'addRecordAction';
 
-export const EDIT_ACTION = 'tos/EDIT_ACTION';
-export const EDIT_PHASE = 'tos/EDIT_PHASE';
-export const EDIT_RECORD = 'tos/EDIT_RECORD';
-export const EDIT_RECORD_ATTRIBUTE = 'tos/EDIT_RECORD_ATTRIBUTE';
-export const EDIT_META_DATA = 'tos/EDIT_META_DATA';
+export const EDIT_ACTION = 'editActionAction';
+export const EDIT_PHASE = 'editPhaseAction';
+export const EDIT_RECORD = 'editRecordAction';
+export const EDIT_RECORD_ATTRIBUTE = 'editRecordAttributeAction';
+export const EDIT_META_DATA = 'editMetaDataAction';
 
-export const REMOVE_ACTION = 'tos/REMOVE_ACTION';
-export const REMOVE_PHASE = 'tos/REMOVE_PHASE';
-export const REMOVE_RECORD = 'tos/REMOVE_RECORD';
+export const REMOVE_ACTION = 'removeActionAction';
+export const REMOVE_PHASE = 'removePhaseAction';
+export const REMOVE_RECORD = 'removeRecordAction';
 
-export const SET_DOCUMENT_STATE = 'tos/SET_DOCUMENT_STATE';
+export const SET_DOCUMENT_STATE = 'setDocumentStateAction';
 
-export const EXECUTE_IMPORT = 'tos/EXECUTE_IMPORT';
-export const EXECUTE_ORDER_CHANGE = 'tos/EXECUTE_ORDER_CHANGE';
+export const EXECUTE_IMPORT = 'executeImportAction';
+export const EXECUTE_ORDER_CHANGE = 'executeOrderChangeAction';
 
 // ------------------------------------
 // Actions
 // ------------------------------------
-
-export function requestTOS () {
-  return {
-    type: REQUEST_TOS
-  };
-}
 
 export function receiveTOS (json) {
   json.phases.map((phase, phaseIndex) => {
@@ -75,20 +87,18 @@ export function receiveTOS (json) {
     records: [record]
   });
   json = normalize(json, tosSchema);
-  return {
-    type: RECEIVE_TOS,
-    data: json,
-    receivedAt: Date.now()
-  };
+  const data = Object.assign({}, json, { receivedAt: Date.now() });
+
+  return createAction(RECEIVE_TOS)(data);
 }
 
 export function fetchTOS (tosId) {
   return function (dispatch) {
-    dispatch(requestTOS());
+    dispatch(createAction(REQUEST_TOS));
     return api.get(`function/${tosId}`)
       .then(res => {
         if (!res.ok) {
-          dispatch(TOSError());
+          dispatch(createAction(TOS_ERROR));
           throw new URIError(res.statusText);
         }
         return res.json();
@@ -97,31 +107,16 @@ export function fetchTOS (tosId) {
   };
 }
 
-export function TOSError () {
-  return {
-    type: TOS_ERROR
-  };
-}
-
 export function clearTOS () {
-  return {
-    type: CLEAR_TOS
-  };
+  return createAction(CLEAR_TOS);
 }
 
 export function resetTOS (originalTos) {
-  return {
-    type: RESET_TOS,
-    originalTos
-  };
+  return createAction(RESET_TOS)(originalTos);
 }
 
 export function setPhaseVisibility (phase, visibility) {
-  return {
-    type: SET_PHASE_VISIBILITY,
-    phase,
-    visibility
-  };
+  return createAction(SET_PHASE_VISIBILITY)({ phase, visibility });
 }
 
 export function setPhasesVisibility (phases, value) {
@@ -135,10 +130,7 @@ export function setPhasesVisibility (phases, value) {
       });
     }
   }
-  return {
-    type: SET_PHASES_VISIBILITY,
-    allPhasesOpen
-  };
+  return createAction(SET_PHASES_VISIBILITY)(allPhasesOpen);
 }
 
 export function addRecord (actionIndex, recordName, recordType, attributes) {
@@ -160,12 +152,7 @@ export function addRecord (actionIndex, recordName, recordType, attributes) {
   });
   newRecord.attributes.RecordType = recordType;
 
-  return {
-    type: ADD_RECORD,
-    actionIndex,
-    recordId,
-    newRecord
-  };
+  return createAction(ADD_RECORD)({ actionIndex, recordId, newRecord });
 }
 
 export function addAction (phaseIndex, name) {
@@ -176,10 +163,7 @@ export function addAction (phaseIndex, name) {
     phase: phaseIndex,
     records: []
   };
-  return {
-    type: ADD_ACTION,
-    newAction
-  };
+  return createAction(ADD_ACTION)(newAction);
 }
 
 export function addPhase (name, parent) {
@@ -192,14 +176,13 @@ export function addPhase (name, parent) {
     attributes: {},
     is_open: false
   };
-  return {
-    type: ADD_PHASE,
-    newPhase
-  };
+
+  return createAction(ADD_PHASE)(newPhase);
 }
 
 export function editRecord (recordId, recordName, recordType, attributes) {
   let editedAttributes = [];
+
   for (const key in attributes) {
     if (attributes.hasOwnProperty(key)) {
       if (attributes[key].checked === true) {
@@ -207,38 +190,27 @@ export function editRecord (recordId, recordName, recordType, attributes) {
       }
     }
   }
+
   const editedRecord = Object.assign({}, {
     attributes: editedAttributes,
     name: recordName
   });
+
   editedRecord.attributes.RecordType = recordType;
 
-  return {
-    type: EDIT_RECORD,
-    editedRecord,
-    recordId
-  };
+  return createAction(EDIT_RECORD)({ editedRecord, recordId });
 }
 
 export function editRecordAttribute (editedRecord) {
-  return {
-    type: EDIT_RECORD_ATTRIBUTE,
-    editedRecord
-  };
+  return createAction(EDIT_RECORD_ATTRIBUTE)(editedRecord);
 }
 
 export function editAction (editedAction) {
-  return {
-    type: EDIT_ACTION,
-    editedAction
-  };
+  return createAction(EDIT_ACTION)(editedAction);
 }
 
 export function editPhase (editedPhase) {
-  return {
-    type: EDIT_PHASE,
-    editedPhase
-  };
+  return createAction(EDIT_PHASE)(editedPhase);
 }
 
 export function editMetaData (attributes) {
@@ -251,40 +223,23 @@ export function editMetaData (attributes) {
     }
   }
 
-  return {
-    type: EDIT_META_DATA,
-    editedMetaData
-  };
+  return createAction(EDIT_META_DATA)(editedMetaData);
 }
 
 export function removeRecord (recordToRemove, actionId) {
-  return {
-    type: REMOVE_RECORD,
-    recordToRemove,
-    actionId
-  };
+  return createAction(REMOVE_RECORD)({ recordToRemove, actionId });
 }
 
 export function removeAction (actionToRemove, phaseId) {
-  return {
-    type: REMOVE_ACTION,
-    actionToRemove,
-    phaseId
-  };
+  return createAction(REMOVE_ACTION)({ actionToRemove, phaseId });
 }
 
 export function removePhase (phaseToRemove) {
-  return {
-    type: REMOVE_PHASE,
-    phaseToRemove
-  };
+  return createAction(REMOVE_PHASE)(phaseToRemove);
 }
 
 export function setDocumentState (newState) {
-  return {
-    type: SET_DOCUMENT_STATE,
-    newState
-  };
+  return createAction(SET_DOCUMENT_STATE)(newState);
 }
 
 export function executeImport (newItem, level, itemParent, currentState) {
@@ -322,15 +277,7 @@ export function executeImport (newItem, level, itemParent, currentState) {
   const newCopy = Object.assign({}, currentItems[newItem], { id: newId }, { index: newIndex }, { name: newName });
   const newItems = Object.assign({}, currentItems, { [newId]: newCopy });
 
-  return {
-    type: EXECUTE_IMPORT,
-    level,
-    itemParent,
-    parentLevel,
-    itemLevel,
-    newId,
-    newItems
-  };
+  return createAction(EXECUTE_IMPORT)({ level, itemParent, parentLevel, itemLevel, newId, newItems });
 }
 
 export function executeOrderChange (newOrder, itemType, itemParent, currentState) {
@@ -375,15 +322,7 @@ export function executeOrderChange (newOrder, itemType, itemParent, currentState
 
   itemList = parentLevel === 'tos' ? reorderedList : itemList;
 
-  return {
-    type: EXECUTE_ORDER_CHANGE,
-    itemList,
-    itemType,
-    itemParent,
-    parentLevel,
-    itemLevel,
-    parentList
-  };
+  return createAction(EXECUTE_ORDER_CHANGE)({ itemList, itemType, itemParent, parentLevel, itemLevel, parentList });
 }
 
 export function importItems (newItem, level, itemParent) {
@@ -400,7 +339,7 @@ export function changeOrder (newOrder, itemType, itemParent) {
 
 export function saveDraft () {
   return function (dispatch, getState) {
-    dispatch(requestTOS());
+    dispatch(createAction(REQUEST_TOS));
     const tos = Object.assign({}, getState().selectedTOS);
     const newTos = Object.assign({}, tos);
     const finalPhases = normalizeTosForApi(newTos);
@@ -409,7 +348,7 @@ export function saveDraft () {
     return api.put(`function/${tos.id}`, denormalizedTos)
       .then(res => {
         if (!res.ok) {
-          dispatch(TOSError());
+          dispatch(createAction(TOS_ERROR));
           throw Error(res.statusText);
         }
         return res.json();
@@ -418,395 +357,388 @@ export function saveDraft () {
   };
 }
 
-export const actions = {
-  requestTOS,
-  receiveTOS,
-  fetchTOS,
-  clearTOS,
-  setPhaseVisibility,
-  setPhasesVisibility,
-  addAction,
-  addRecord,
-  addPhase,
-  editAction,
-  editPhase,
-  editRecord,
-  editRecordAttribute,
-  editMetaData,
-  setDocumentState,
-  executeImport,
-  executeOrderChange,
-  importItems,
-  changeOrder
-};
-
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
-const ACTION_HANDLERS = {
-  [REQUEST_TOS]: (state) => {
-    return update(state, {
-      isFetching: {
-        $set: true
-      }
-    });
-  },
-  [RECEIVE_TOS]: (state, action) => {
-    const tos = action.data.entities.tos[action.data.result];
-    return update(state, {
-      $merge: tos,
-      attributes: {
-        $set: action.data.entities.tos[action.data.result].attributes
-      },
-      actions: {
-        $set: action.data.entities.actions ? action.data.entities.actions : {}
-      },
-      phases: {
-        $set: action.data.entities.phases ? action.data.entities.phases : {}
-      },
-      records: {
-        $set: action.data.entities.records ? action.data.entities.records : {}
-      },
-      lastUpdated: {
-        $set: action.receivedAt
-      },
-      documentState: {
-        $set: 'view'
-      },
-      isFetching: {
-        $set: false
-      }
-    });
-  },
-  [RESET_TOS]: (state, action) => {
-    return update(state, {
-      $merge: action.originalTos,
-      documentState: {
-        $set: 'view'
-      }
-    });
-  },
-  [CLEAR_TOS]: () => {
-    return initialState;
-  },
-  [TOS_ERROR]: (state) => {
-    // TODO: Find out what mutates store so hard...
-    const actions = {};
-    const phases = {};
-    map(state.actions, action => {
-      actions[action.id] = action;
-      return map(action.records, (record, recordIndex) => {
-        actions[action.id].records[recordIndex] = record.id;
-      });
-    });
-    map(state.phases, phase => {
-      phases[phase.id] = phase;
-      return map(phase.actions, (action, actionIndex) => {
-        phases[phase.id].actions[actionIndex] = action.id;
-      });
-    });
+const requestTosAction = (state) => {
+  return update(state, {
+    isFetching: {
+      $set: true
+    }
+  });
+};
 
-    return update(state, {
-      actions: { $set: actions },
-      phases: { $set: phases },
-      isFetching: {
-        $set: false
-      }
+const receiveTosAction = (state, { payload }) => {
+  const tos = payload.entities.tos[payload.result];
+  return update(state, {
+    $merge: tos,
+    attributes: {
+      $set: payload.entities.tos[payload.result].attributes
+    },
+    actions: {
+      $set: payload.entities.actions ? payload.entities.actions : {}
+    },
+    phases: {
+      $set: payload.entities.phases ? payload.entities.phases : {}
+    },
+    records: {
+      $set: payload.entities.records ? payload.entities.records : {}
+    },
+    lastUpdated: {
+      $set: payload.receivedAt
+    },
+    documentState: {
+      $set: 'view'
+    },
+    isFetching: {
+      $set: false
+    }
+  });
+};
+
+const resetTosAction = (state, { payload }) => {
+  return update(state, {
+    $merge: payload,
+    documentState: {
+      $set: 'view'
+    }
+  });
+};
+
+const clearTosAction = () => {
+  return initialState;
+};
+
+const tosErrorAction = (state) => {
+  // TODO: Find out what mutates store so hard...
+  const actions = {};
+  const phases = {};
+  map(state.actions, action => {
+    actions[action.id] = action;
+    return map(action.records, (record, recordIndex) => {
+      actions[action.id].records[recordIndex] = record.id;
     });
-  },
-  [SET_PHASE_VISIBILITY]: (state, action) => {
-    return update(state, {
-      phases: {
-        [action.phase]: {
-          is_open: {
-            $set: action.visibility
-          }
+  });
+  map(state.phases, phase => {
+    phases[phase.id] = phase;
+    return map(phase.actions, (action, actionIndex) => {
+      phases[phase.id].actions[actionIndex] = action.id;
+    });
+  });
+
+  return update(state, {
+    actions: { $set: actions },
+    phases: { $set: phases },
+    isFetching: {
+      $set: false
+    }
+  });
+};
+
+const setPhaseVisibilityAction = (state, { payload }) => {
+  return update(state, {
+    phases: {
+      [payload.phase]: {
+        is_open: {
+          $set: payload.visibility
         }
       }
-    });
-  },
-  [SET_PHASES_VISIBILITY]: (state, action) => {
-    return update(state, {
-      phases: {
-        $set: action.allPhasesOpen
-      }
-    });
-  },
-  [ADD_ACTION]: (state, action) => {
-    return update(state, {
-      phases: {
-        [action.newAction.phase]: {
-          actions: {
-            $push: [action.newAction.id]
-          }
-        }
-      },
-      actions: {
-        [action.newAction.id]: {
-          $set: action.newAction
+    }
+  });
+};
+
+const setPhasesVisibilityAction = (state, { payload }) => {
+  return update(state, {
+    phases: {
+      $set: payload
+    }
+  });
+};
+
+const addActionAction = (state, { payload }) => {
+  return update(state, {
+    phases: {
+      [payload.phase]: {
+        actions: {
+          $push: [payload.id]
         }
       }
-    });
-  },
-  [ADD_PHASE]: (state, action) => {
-    return update(state, {
-      phases: {
-        [action.newPhase.id]: {
-          $set: action.newPhase
-        }
+    },
+    actions: {
+      [payload.id]: {
+        $set: payload
       }
-    });
-  },
-  [ADD_RECORD]: (state, action) => {
-    return update(state, {
-      actions: {
-        [action.actionIndex]: {
-          records: {
-            $push: [action.recordId]
-          }
-        }
-      },
-      records: {
-        [action.recordId]: {
-          $set: action.newRecord
-        }
+    }
+  });
+};
+
+const addPhaseAction = (state, { payload }) => {
+  return update(state, {
+    phases: {
+      [payload.id]: {
+        $set: payload
       }
-    });
-  },
-  [EDIT_ACTION]: (state, action) => {
-    return update(state, {
-      actions: {
-        [action.editedAction.id]: {
-          name: {
-            $set: action.editedAction.name
-          }
-        }
-      }
-    });
-  },
-  [EDIT_PHASE]: (state, action) => {
-    return update(state, {
-      phases: {
-        [action.editedPhase.id]: {
-          name: {
-            $set: action.editedPhase.name
-          }
-        }
-      }
-    });
-  },
-  [EDIT_RECORD]: (state, action) => {
-    return update(state, {
-      records: {
-        [action.recordId]: {
-          name: {
-            $set: action.editedRecord.name
-          },
-          attributes: {
-            $set: action.editedRecord.attributes
-          }
-        }
-      }
-    });
-  },
-  [EDIT_RECORD_ATTRIBUTE]: (state, action) => {
-    if (action.editedRecord.name) {
-      return update(state, {
+    }
+  });
+};
+
+const addRecordAction = (state, { payload }) => {
+  return update(state, {
+    actions: {
+      [payload.actionIndex]: {
         records: {
-          [action.editedRecord.recordId]: {
-            name: {
-              $set: action.editedRecord.name
-            }
-          }
+          $push: [payload.recordId]
         }
-      });
-    } else if (action.editedRecord.type) {
-      return update(state, {
-        records: {
-          [action.editedRecord.recordId]: {
-            attributes: {
-              RecordType: {
-                $set: action.editedRecord.type
-              }
-            }
-          }
+      }
+    },
+    records: {
+      [payload.recordId]: {
+        $set: payload
+      }
+    }
+  });
+};
+
+const editActionAction = (state, { payload }) => {
+  return update(state, {
+    actions: {
+      [payload.id]: {
+        name: {
+          $set: payload.name
         }
-      });
-    } else if (action.editedRecord.tosAttribute) {
-      return update(state, {
+      }
+    }
+  });
+};
+
+const editPhaseAction = (state, { payload }) => {
+  return update(state, {
+    phases: {
+      [payload.id]: {
+        name: {
+          $set: payload.name
+        }
+      }
+    }
+  });
+};
+
+const editRecordAction = (state, { payload }) => {
+  return update(state, {
+    records: {
+      [payload.recordId]: {
+        name: {
+          $set: payload.editedRecord.name
+        },
         attributes: {
-          [action.editedRecord.attributeIndex]: {
-            $set: action.editedRecord.tosAttribute
+          $set: payload.editedRecord.attributes
+        }
+      }
+    }
+  });
+};
+
+const editRecordAttributeAction = (state, { payload }) => {
+  if (payload.name) {
+    return update(state, {
+      records: {
+        [payload.recordId]: {
+          name: {
+            $set: payload.name
           }
         }
-      });
-    } else {
-      return update(state, {
-        records: {
-          [action.editedRecord.recordId]: {
-            attributes: {
-              [action.editedRecord.attributeIndex]: {
-                $set: action.editedRecord.attribute
-              }
+      }
+    });
+  } else if (payload.type) {
+    return update(state, {
+      records: {
+        [payload.recordId]: {
+          attributes: {
+            RecordType: {
+              $set: payload.type
             }
           }
         }
-      });
-    }
-  },
-  [EDIT_META_DATA]: (state, action) => {
+      }
+    });
+  } else if (payload.tosAttribute) {
     return update(state, {
       attributes: {
-        $set: action.editedMetaData
-      }
-    });
-  },
-  [REMOVE_ACTION]: (state, action) => {
-    const stateCopy = state;
-    const actionIndex = indexOf(
-      stateCopy.phases[action.phaseId].actions,
-      action.actionToRemove
-    );
-
-    const recordsUnderAction = stateCopy.actions[action.actionToRemove].records;
-    for (var record in stateCopy.records) {
-      if (includes(recordsUnderAction, record)) {
-        delete stateCopy.records[record];
-      }
-    }
-
-    delete stateCopy.actions[action.actionToRemove];
-
-    return update(state, {
-      actions: {
-        $set: stateCopy.actions
-      },
-      phases: {
-        [action.phaseId]: {
-          actions: {
-            $splice: [[actionIndex, 1]]
-          }
+        [payload.attributeIndex]: {
+          $set: payload.tosAttribute
         }
-      },
-      records: {
-        $set: stateCopy.records
       }
     });
-  },
-  [REMOVE_PHASE]: (state, action) => {
-    const phasesCopy = state.phases;
-    delete phasesCopy[action.phaseToRemove];
-
-    return update(state, {
-      phases: {
-        $set: phasesCopy
-      }
-    });
-  },
-  [REMOVE_RECORD]: (state, action) => {
-    const stateCopy = state;
-
-    const recordIndex = indexOf(
-      stateCopy.actions[action.actionId].records,
-      action.recordToRemove
-    );
-
-    delete stateCopy.records[action.recordToRemove];
-
+  } else {
     return update(state, {
       records: {
-        $set: stateCopy.records
-      },
-      actions: {
-        [action.actionId]: {
-          records: {
-            $splice: [[recordIndex, 1]]
+        [payload.recordId]: {
+          attributes: {
+            [payload.attributeIndex]: {
+              $set: payload.attribute
+            }
           }
         }
       }
     });
-  },
-  [SET_DOCUMENT_STATE]: (state, action) => {
-    return update(state, {
-      documentState: {
-        $set: action.newState
-      }
-    });
-  },
-  [EXECUTE_IMPORT]: (state, action) => {
-    if (action.level === 'phase') {
-      return update(state, {
-        [action.parentLevel]: {
-          [action.itemLevel]: {
-            $push: [action.newId]
-          }
-        },
-        [action.itemLevel]: {
-          $set: action.newItems
-        }
-      });
-    } else {
-      return update(state, {
-        [action.parentLevel]: {
-          [action.itemParent]: {
-            [action.itemLevel]: {
-              $push: [action.newId]
-            }
-          }
-        },
-        [action.itemLevel]: {
-          $set: action.newItems
-        }
-      });
-    }
-  },
-  [EXECUTE_ORDER_CHANGE]: (state, action) => {
-    if (action.itemType === 'phase') {
-      return update(state, {
-        [action.itemLevel]: {
-          $set: action.itemList
-        }
-      });
-    } else {
-      return update(state, {
-        [action.parentLevel]: {
-          [action.itemParent]: {
-            [action.itemLevel]: {
-              $set: action.parentList
-            }
-          }
-        },
-        [action.itemLevel]: {
-          $set: action.itemList
-        }
-      });
-    }
   }
 };
 
-// ------------------------------------
-// Reducer
-// ------------------------------------
-const initialState = {
-  id: null,
-  function_id: null,
-  parent: null,
-  version: null,
-  name: null,
-  error_count: null,
-  state: null,
-  created_at: null,
-  modified_at: null,
-  actions: {},
-  phases: {},
-  records: {},
-  attributes: {},
-  documentState: 'view',
-  lastUpdated: 0,
-  isFetching: false
+const editMetaDataAction = (state, { payload }) => {
+  return update(state, {
+    attributes: {
+      $set: payload
+    }
+  });
 };
 
-export default function tosReducer (state = initialState, action) {
-  const handler = ACTION_HANDLERS[action.type];
-  return handler ? handler(state, action) : state;
-}
+const removeActionAction = (state, { payload }) => {
+  const stateCopy = Object.assign({}, state);
+  const actionIndex = indexOf(
+    stateCopy.phases[payload.phaseId].actions,
+    payload.actionToRemove
+  );
+
+  const recordsUnderAction = stateCopy.actions[payload.actionToRemove].records;
+  for (const record in stateCopy.records) {
+    if (includes(recordsUnderAction, record)) {
+      delete stateCopy.records[record];
+    }
+  }
+
+  delete stateCopy.actions[payload.actionToRemove];
+  return update(state, {
+    actions: {
+      $set: stateCopy.actions
+    },
+    phases: {
+      [payload.phaseId]: {
+        actions: {
+          $splice: [[actionIndex, 1]]
+        }
+      }
+    },
+    records: {
+      $set: stateCopy.records
+    }
+  });
+};
+
+const removePhaseAction = (state, { payload }) => {
+  const phasesCopy = Object.assign({}, state.phases);
+  delete phasesCopy[payload];
+
+  return update(state, {
+    phases: {
+      $set: phasesCopy
+    }
+  });
+};
+
+const removeRecordAction = (state, { payload }) => {
+  // TODO: Removes a faulty one (index+1)
+  const stateCopy = Object.assign({}, state);
+
+  const recordIndex = indexOf(
+    stateCopy.actions[payload.actionId].records,
+    payload.recordToRemove
+  );
+
+  delete stateCopy.records[payload.recordToRemove];
+  return update(state, {
+    records: {
+      $set: stateCopy.records
+    },
+    actions: {
+      [payload.actionId]: {
+        records: {
+          $splice: [[recordIndex, 1]]
+        }
+      }
+    }
+  });
+};
+
+const setDocumentStateAction = (state, { payload }) => {
+  return update(state, {
+    documentState: {
+      $set: payload
+    }
+  });
+};
+
+const executeImportAction = (state, { payload }) => {
+  debugger;
+  if (payload.level === 'phase') {
+    return update(state, {
+      [payload.parentLevel]: {
+        [payload.itemLevel]: {
+          $push: [payload.newId]
+        }
+      },
+      [payload.itemLevel]: {
+        $set: payload.newItems
+      }
+    });
+  } else {
+    return update(state, {
+      [payload.parentLevel]: {
+        [payload.itemParent]: {
+          [payload.itemLevel]: {
+            $push: [payload.newId]
+          }
+        }
+      },
+      [payload.itemLevel]: {
+        $set: payload.newItems
+      }
+    });
+  }
+};
+
+const executeOrderAction = (state, { payload }) => {
+  if (payload.itemType === 'phase') {
+    return update(state, {
+      [payload.itemLevel]: {
+        $set: payload.itemList
+      }
+    });
+  } else {
+    return update(state, {
+      [payload.parentLevel]: {
+        [payload.itemParent]: {
+          [payload.itemLevel]: {
+            $set: payload.parentList
+          }
+        }
+      },
+      [payload.itemLevel]: {
+        $set: payload.itemList
+      }
+    });
+  }
+};
+
+export default handleActions({
+  requestTosAction,
+  receiveTosAction,
+  resetTosAction,
+  clearTosAction,
+  tosErrorAction,
+  setPhaseVisibilityAction,
+  setPhasesVisibilityAction,
+  addActionAction,
+  addPhaseAction,
+  addRecordAction,
+  editActionAction,
+  editPhaseAction,
+  editRecordAction,
+  editRecordAttributeAction,
+  editMetaDataAction,
+  removeActionAction,
+  removePhaseAction,
+  removeRecordAction,
+  setDocumentStateAction,
+  executeImportAction,
+  executeOrderAction
+}, initialState);
