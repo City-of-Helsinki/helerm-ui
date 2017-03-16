@@ -4,8 +4,8 @@ import includes from 'lodash/includes';
 import { map } from 'lodash';
 import { normalize, schema } from 'normalizr';
 
-import { default as api } from '../../utils/api';
-import { normalizeTosForApi } from '../../utils/helpers';
+import { default as api } from '../../../utils/api';
+import { normalizeTosForApi } from '../../../utils/helpers';
 
 // ------------------------------------
 // Constants

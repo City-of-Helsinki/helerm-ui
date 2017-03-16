@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
 
-import { setNavigationVisibility } from '../../../components/Navigation/navigationReducer';
+import { setNavigationVisibility } from '../../Navigation/navigationReducer';
 
 import {
   addAction,
@@ -25,11 +25,11 @@ import {
   setDocumentState,
   setPhasesVisibility,
   setPhaseVisibility
-} from '../tosReducer';
+} from './tosReducer';
 
 import { displayMessage } from '../../../store/uiReducer';
 
-import ViewTOS from '../components/ViewTOS';
+import ViewTOS from './ViewTOS';
 
 const mapDispatchToProps = (dispatch) => {
   return {

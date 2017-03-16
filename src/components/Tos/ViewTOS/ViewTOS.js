@@ -1,17 +1,17 @@
 import React from 'react';
-import { StickyContainer, Sticky } from 'react-sticky';
+import { StickyContainer } from 'react-sticky';
 import formatDate from 'occasion';
 
-import Phase from 'components/TOS/Phase';
-import Attribute from 'components/TOS/Attribute';
-import ReorderView from 'components/TOS/ReorderView';
-import ImportView from 'components/TOS/ImportView';
-import EditorForm from 'components/TOS/EditorForm';
+import Phase from 'components/Tos/Phase';
+import Attribute from 'components/Tos/Attribute';
+import ReorderView from 'components/Tos/ReorderView';
+import ImportView from 'components/Tos/ImportView';
+import EditorForm from 'components/Tos/EditorForm';
 
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
 
-import TosHeader from 'components/TOS/Header/TosHeader';
+import TosHeader from 'components/Tos/Header/TosHeader';
 
 import './ViewTOS.scss';
 
@@ -446,7 +446,7 @@ export class ViewTOS extends React.Component {
                         records={selectedTOS.records}
                         importItems={this.props.importItems}
                         title='käsittelyvaiheita'
-                        targetText={'TOS-kuvaukseen ' + selectedTOS.name}
+                        targetText={'Tos-kuvaukseen ' + selectedTOS.name}
                         itemsToImportText='käsittelyvaiheet'
                       />
                     }

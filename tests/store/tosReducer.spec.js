@@ -2,10 +2,10 @@ import {
   fetchTOS,
   requestTOS,
   default as tosReducer
-} from 'routes/ViewTOS/tosReducer';
+} from 'components/Tos/ViewTOS/tosReducer';
 import _ from 'lodash';
 
-describe('(Redux Module) TOS', () => {
+describe('(Redux Module) Tos', () => {
   describe('(Reducer) TOSReducer', () => {
     let _initialState;
     beforeEach(() => {
@@ -68,7 +68,7 @@ describe('(Redux Module) TOS', () => {
       });
     });
 
-    it('Should fetch TOS', () => {
+    it('Should fetch Tos', () => {
       expect(_.keys(_globalState.selectedTOS.tos).length).to.equal(0);
       expect(_.keys(_globalState.selectedTOS.phases).length).to.equal(0);
       expect(_.keys(_globalState.selectedTOS.actions).length).to.equal(0);

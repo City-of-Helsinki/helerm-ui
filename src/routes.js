@@ -1,8 +1,8 @@
 import React from 'react';
 import { Route } from 'react-router';
-import CoreLayout from '../layouts/CoreLayout/CoreLayout';
-import ViewTOSContainer from './ViewTOS/containers/ViewTOSContainer';
-import NotFound from './NotFound/NotFound';
+import CoreLayout from './layouts/CoreLayout/CoreLayout';
+import ViewTOSContainer from './components/Tos/ViewTOS/ViewTOSContainer';
+import NotFound from './components/NotFound/NotFound';
 
 export default () => (
   <div>

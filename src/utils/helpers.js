@@ -34,7 +34,7 @@ export function convertToTree (itemList) {
     return tree.map(item => {
       if (item.children !== undefined) {
         // ------------------------------------
-        // Generate path to show when navigation is minimized and TOS is shown
+        // Generate path to show when navigation is minimized and Tos is shown
         // ------------------------------------
         item.path.push(item.name);
         item.children.map(child => {

@@ -3,7 +3,6 @@ import { Provider, connect } from 'react-redux';
 import { Router } from 'react-router';
 
 import {
-  fetchRecordTypes,
   fetchAttributeTypes
 } from '../store/uiReducer';
 
@@ -37,9 +36,6 @@ class AppContainer extends Component {
   }
 }
 
-const mapDispatchToProps = {
-  fetchRecordTypes,
-  fetchAttributeTypes
-};
+const mapDispatchToProps = { fetchAttributeTypes };
 
 export default connect(null, mapDispatchToProps)(AppContainer);

@@ -18,7 +18,7 @@ const history = syncHistoryWithStore(browserHistory, store);
 const MOUNT_NODE = document.getElementById('root');
 
 let render = () => {
-  const routes = require('./routes/index').default(store);
+  const routes = require('./routes').default(store);
 
   ReactDOM.render(
     <AppContainer history={history} store={store} routes={routes}/>,
@@ -47,7 +47,7 @@ if (__DEV__) {
     };
 
     // Setup hot module replacement
-    module.hot.accept('./routes/index', () =>
+    module.hot.accept('./routes', () =>
       setImmediate(() => {
         ReactDOM.unmountComponentAtNode(MOUNT_NODE);
         render();
