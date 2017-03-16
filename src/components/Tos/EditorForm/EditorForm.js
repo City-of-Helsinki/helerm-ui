@@ -35,7 +35,7 @@ export class EditorForm extends React.Component {
           }
         });
       }
-    };
+    }
     return initialState;
   }
 
@@ -191,11 +191,12 @@ export class EditorForm extends React.Component {
   addRecord (e, targetId) {
     e.preventDefault();
     const { recordName, recordType, newAttributes } = this.state;
+
     this.props.recordConfig.createRecord(
       targetId,
       recordName.value,
       recordType.value,
-      newAttributes
+      this.filterAttributes(newAttributes)
     );
     this.props.displayMessage({
       text: 'Asiakirjan lisäys onnistui!',
