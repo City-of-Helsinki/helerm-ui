@@ -1,45 +1,41 @@
 import React from 'react';
-import './RecordForm.scss';
+import './EditorForm.scss';
 import update from 'immutability-helper';
 // import find from 'lodash/find';
 
-export class RecordForm extends React.Component {
+export class EditorForm extends React.Component {
   constructor (props) {
     super(props);
     this.generateAttributeElements = this.generateAttributeElements.bind(this);
     this.getActiveValue = this.getActiveValue.bind(this);
     this.getCheckedState = this.getCheckedState.bind(this);
-    this.closeRecordForm = this.closeRecordForm.bind(this);
+    this.closeEditorForm = this.closeEditorForm.bind(this);
     this.state = {
-      newAttributes: this.initializeState(this.props.attributeTypes),
+      newAttributes: this.initializeAttributes(this.props.attributeTypes),
       recordName: {
-        value: this.props.record && this.props.record.name
-          ? this.props.record.name
-          : '',
+        value: this.props.recordConfig ? this.props.recordConfig.recordName : '',
         checked: true
       },
       recordType: {
-        value: this.props.record && this.props.record.attributes.RecordType
-          ? this.props.record.attributes.RecordType
-          : '',
+        value: this.props.attributes.RecordType || '',
         checked: true
-      },
-      editForm: !!this.props.editRecordWithForm
+      }
     };
   }
 
-  initializeState (attributeTypes) {
+  initializeAttributes (attributeTypes) {
+    const { attributes } = this.props;
     let initialState = {};
     for (const key in attributeTypes) {
       if (attributeTypes.hasOwnProperty(key)) {
         initialState = Object.assign({}, initialState, {
           [key]: {
-            name: this.props.record && this.props.record.attributes ? this.props.record.attributes[key] : null,
+            name: attributes[key] ? attributes[key] : null,
             checked: true
           }
         });
       }
-    }
+    };
     return initialState;
   }
 
@@ -81,7 +77,7 @@ export class RecordForm extends React.Component {
   }
 
   getCheckedState (key) {
-    if (this.state.editForm && !this.state.newAttributes[key].name) {
+    if (this.props.editorConfig.action === 'edit' && !this.state.newAttributes[key].name) {
       return false;
     } else {
       return this.state.newAttributes[key].checked;
@@ -171,63 +167,151 @@ export class RecordForm extends React.Component {
     );
   }
 
-  addRecord (e, actionId) {
+  filterAttributes (attributes) {
+    const filteredAttributes = Object.assign({}, attributes);
+    for (const key in filteredAttributes) {
+      if (!filteredAttributes[key].name) {
+        delete filteredAttributes[key];
+      }
+    }
+    return filteredAttributes;
+  }
+
+  editMetaData (e) {
+    e.preventDefault();
+    const { newAttributes } = this.state;
+
+    this.props.editMetaDataWithForm(this.filterAttributes(newAttributes));
+    this.props.displayMessage({
+      text: 'Metatietojen muokkaus onnistui!',
+      success: true
+    });
+  }
+
+  addRecord (e, targetId) {
     e.preventDefault();
     const { recordName, recordType, newAttributes } = this.state;
-    this.props.createRecord(actionId, recordName.value, recordType.value, newAttributes);
+    this.props.recordConfig.createRecord(
+      targetId,
+      recordName.value,
+      recordType.value,
+      newAttributes
+    );
     this.props.displayMessage({
       text: 'Asiakirjan lisäys onnistui!',
       success: true
     });
   }
 
-  editRecord (e, actionId) {
+  editRecord (e, targetId) {
     e.preventDefault();
     const { recordName, recordType, newAttributes } = this.state;
-    this.props.editRecordWithForm(this.props.record.id, recordName.value, recordType.value, newAttributes);
+    this.props.recordConfig.editRecordWithForm(
+      targetId,
+      recordName.value,
+      recordType.value,
+      this.filterAttributes(newAttributes)
+    );
     this.props.displayMessage({
       text: 'Asiakirjan muokkaus onnistui!',
       success: true
     });
   }
 
-  closeRecordForm (e) {
+  resolveLabel () {
+    const { type, action } = this.props.editorConfig;
+
+    switch (type) {
+      case 'tos':
+        return 'Muokkaa metatietoja';
+      case 'phase':
+        return action === 'edit' ? 'Muokkaa käsittelyvaihetta' : 'Uusi käsittelyvaihe';
+      case 'action':
+        return action === 'edit' ? 'Muokkaa toimenpidettä' : 'Uusi toimenpide';
+      case 'record':
+        return action === 'edit' ? 'Muokkaa asiakirjaa' : 'Uusi asiakirja';
+    }
+  }
+
+  resolveOnSubmit (e, targetId) {
+    const { action, type } = this.props.editorConfig;
+
+    switch (type) {
+      case 'tos':
+        if (action === 'edit') {
+          this.editMetaData(e);
+        }
+        break;
+      case 'phase':
+        if (action === 'add') {
+          // this.addPhase(e, targetId);
+        }
+        if (action === 'edit') {
+          // this.editPhase(e, targetId);
+        }
+        break;
+      case 'action':
+        if (action === 'add') {
+          // this.addAction(e, targetId);
+        }
+        if (action === 'edit') {
+          // this.editAction(e, targetId);
+        }
+        break;
+      case 'record':
+        if (action === 'add') {
+          this.addRecord(e, targetId);
+        }
+        if (action === 'edit') {
+          this.editRecord(e, targetId);
+        }
+    }
+  }
+
+  closeEditorForm (e) {
     e.preventDefault();
-    this.props.closeRecordForm();
+    this.props.closeEditorForm();
+  }
+
+  renderDescriptions () {
+    const typeDropdown = this.generateDropdown(this.props.recordConfig.recordTypes);
+
+    return (
+      <div>
+        <div className='col-xs-12 col-lg-6 form-group'>
+          <label className='edit-record__label'>Tarkenne</label>
+          <span className='fa fa-asterisk required-asterisk'/>
+          <input
+            className='col-xs-6 form-control edit-record__input'
+            placeholder='Tarkenne'
+            value={this.state.recordName.value}
+            onChange={(e) => this.onBaseAttributeChange(e.target.value, 'recordName', 'value')}/>
+        </div>
+        <div className='col-xs-12 col-lg-6 form-group'>
+          <label className='edit-record__label'>Tyyppi</label>
+          <span className='fa fa-asterisk required-asterisk'/>
+          { typeDropdown }
+        </div>
+      </div>
+    );
   }
 
   render () {
-    const { attributeTypes, recordTypes, actionId } = this.props;
-    const { editForm } = this.state;
+    const { attributeTypes, targetId } = this.props;
     const attributeElements = this.generateAttributeElements(attributeTypes);
-    const typeDropdown = this.generateDropdown(recordTypes);
+
     return (
       <div className='action add-box col-xs-12'>
-        <h4>{ editForm ? 'Muokkaa asiakirjaa' : 'Uusi asiakirja' }</h4>
-        <form onSubmit={(e) => editForm
-          ? this.editRecord(e, actionId)
-          : this.addRecord(e, actionId)}
+        <h4>{this.resolveLabel()}</h4>
+        <form onSubmit={(e) => this.resolveOnSubmit(e, targetId)}
               className='edit-record'>
-          <div className='col-xs-12 col-lg-6 form-group'>
-            <label className='edit-record__label'>Asiakirjatyypin tarkenne</label>
-            <span className='fa fa-asterisk required-asterisk'/>
-            <input
-              className='col-xs-6 form-control edit-record__input'
-              placeholder='Tarkenne'
-              value={this.state.recordName.value}
-              onChange={(e) => this.onBaseAttributeChange(e.target.value, 'recordName', 'value')}/>
-          </div>
-          <div className='col-xs-12 col-lg-6 form-group'>
-            <label className='edit-record__label'>Tyyppi</label>
-            <span className='fa fa-asterisk required-asterisk'/>
-            { typeDropdown }
-          </div>
+          { this.props.editorConfig.type !== 'tos' ? this.renderDescriptions() : null }
           { attributeElements }
           <div className='col-xs-12'>
             <button className='btn btn-primary pull-right edit-record__submit' type='submit'>Valmis</button>
             <button
               className='btn btn-danger pull-right edit-record__cancel'
-              onClick={(e) => this.closeRecordForm(e)}>
+              onClick={(e) => this.closeEditorForm(e)}>
               Peruuta
             </button>
           </div>
@@ -237,19 +321,24 @@ export class RecordForm extends React.Component {
   }
 }
 
-RecordForm.propTypes = {
-  actionId: React.PropTypes.string,
+EditorForm.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
-  closeRecordForm: React.PropTypes.func.isRequired,
-  createRecord: React.PropTypes.func,
+  attributes: React.PropTypes.object.isRequired,
+  closeEditorForm: React.PropTypes.func.isRequired,
   displayMessage: React.PropTypes.func.isRequired,
-  editRecordWithForm: React.PropTypes.func,
-  record: React.PropTypes.shape({
-    id: React.PropTypes.string.isRequired,
-    name: React.PropTypes.string.isRequired,
-    attributes: React.PropTypes.object.isRequired
+  editMetaDataWithForm: React.PropTypes.func,
+  editorConfig: React.PropTypes.shape({
+    type: React.PropTypes.string.isRequired,
+    action: React.PropTypes.string.isRequired
   }),
-  recordTypes: React.PropTypes.object.isRequired
+  recordConfig: React.PropTypes.shape({
+    editRecordWithForm: React.PropTypes.func,
+    recordTypes: React.PropTypes.object,
+    createRecord: React.PropTypes.func,
+    recordId: React.PropTypes.string,
+    recordName: React.PropTypes.string
+  }),
+  targetId: React.PropTypes.string
 };
 
-export default RecordForm;
+export default EditorForm;

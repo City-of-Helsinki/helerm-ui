@@ -6,6 +6,7 @@ import Phase from 'components/TOS/Phase';
 import Attribute from 'components/TOS/Attribute';
 import ReorderView from 'components/TOS/ReorderView';
 import ImportView from 'components/TOS/ImportView';
+import EditorForm from 'components/TOS/EditorForm';
 
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
@@ -21,11 +22,13 @@ export class ViewTOS extends React.Component {
     super(props);
     this.fetchTOS = this.fetchTOS.bind(this);
     this.cancelEdit = this.cancelEdit.bind(this);
+    this.cancelMetaDataEdit = this.cancelMetaDataEdit.bind(this);
     this.sendForInspection = this.sendForInspection.bind(this);
     this.saveDraft = this.saveDraft.bind(this);
     this.onChange = this.onChange.bind(this);
     this.createNewPhase = this.createNewPhase.bind(this);
     this.cancelPhaseCreation = this.cancelPhaseCreation.bind(this);
+    this.editMetaDataWithForm = this.editMetaDataWithForm.bind(this);
     this.setPhaseVisibility = this.setPhaseVisibility.bind(this);
     this.updateTOSAttribute = this.updateTOSAttribute.bind(this);
     this.state = {
@@ -62,6 +65,9 @@ export class ViewTOS extends React.Component {
     if (route && route.path === 'view-tos/:id') {
       this.props.setNavigationVisibility(false);
     }
+    if (nextProps.selectedTOS.documentState === 'view') {
+      this.setState({ editingMetaData: false });
+    }
   }
 
   componentWillUnmount () {
@@ -81,6 +87,10 @@ export class ViewTOS extends React.Component {
 
   cancelEdit () {
     return this.props.resetTOS(this.state.originalTos);
+  }
+
+  cancelMetaDataEdit () {
+    this.setState({ editingMetaData: false });
   }
 
   saveDraft () {
@@ -146,7 +156,12 @@ export class ViewTOS extends React.Component {
       tosAttribute: attribute,
       attributeIndex
     };
-    this.props.editRecord(updatedTOSAttribute);
+    this.props.editRecordAttribute(updatedTOSAttribute);
+  }
+
+  editMetaDataWithForm (attributes) {
+    this.setState({ editingMetaData: false });
+    this.props.editMetaData(attributes);
   }
 
   /*
@@ -235,6 +250,21 @@ export class ViewTOS extends React.Component {
               aria-hidden='true'
             />
           </button>
+          {this.props.selectedTOS.documentState === 'edit' &&
+          <span className='action-dropdown-button'>
+            <Dropdown
+              children={[
+                {
+                  text: 'Muokkaa metatietoja',
+                  icon: 'fa-pencil',
+                  style: 'btn-primary',
+                  action: () => this.setState({ editingMetaData: true })
+                }
+              ]}
+              small={true}
+            />
+          </span>
+          }
         </div>
         <div className={'metadata-data-row__secondary ' + (this.state.showMetadata ? '' : 'hidden')}>
           {attributeElements.slice(2)}
@@ -338,9 +368,25 @@ export class ViewTOS extends React.Component {
             <div className='single-tos-content'>
               <div className='row'>
                 <div className='general-info space-between'>
-                  <div className='version-details col-xs-12'>
-                    { TOSMetaData }
-                  </div>
+                  {this.state.editingMetaData &&
+                    <EditorForm
+                      targetId={this.props.selectedTOS.id}
+                      attributes={this.props.selectedTOS.attributes}
+                      attributeTypes={this.props.attributeTypes}
+                      editMetaDataWithForm={this.editMetaDataWithForm}
+                      editorConfig={{
+                        type: 'tos',
+                        action: 'edit'
+                      }}
+                      closeEditorForm={this.cancelMetaDataEdit}
+                      displayMessage={this.props.displayMessage}
+                    />
+                  }
+                  {!this.state.editingMetaData &&
+                    <div className='version-details col-xs-12'>
+                      { TOSMetaData }
+                    </div>
+                  }
                 </div>
                 <div className='col-xs-12 button-row'>
                   { selectedTOS.documentState === 'edit' && !this.state.createPhaseMode &&
@@ -460,6 +506,7 @@ ViewTOS.propTypes = {
   clearTOS: React.PropTypes.func.isRequired,
   displayMessage: React.PropTypes.func.isRequired,
   editAction: React.PropTypes.func.isRequired,
+  editMetaData: React.PropTypes.func.isRequired,
   editPhase: React.PropTypes.func.isRequired,
   editRecord: React.PropTypes.func.isRequired,
   editRecordAttribute: React.PropTypes.func.isRequired,
