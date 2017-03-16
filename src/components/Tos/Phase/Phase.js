@@ -1,13 +1,13 @@
 import React from 'react';
 import forEach from 'lodash/forEach';
 import './Phase.scss';
-import Action from './Action.js';
-import DeleteView from './DeleteView';
+import Action from '../Action/Action.js';
+import DeleteView from '../DeleteView/DeleteView';
 import { StickyContainer, Sticky } from 'react-sticky';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
-import ReorderView from './ReorderView';
-import ImportView from './ImportView';
+import ReorderView from '../Reorder/ReorderView';
+import ImportView from '../ImportView/ImportView';
 
 export class Phase extends React.Component {
   constructor (props) {

@@ -1,13 +1,13 @@
 import React from 'react';
 import classNames from 'classnames';
 import './Action.scss';
-import Record from './Record';
-import EditorForm from './EditorForm';
+import Record from '../Record/Record';
+import EditorForm from '../EditorForm/EditorForm';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
-import DeleteView from './DeleteView';
-import ReorderView from './ReorderView';
-import ImportView from './ImportView';
+import DeleteView from '../DeleteView/DeleteView';
+import ReorderView from '../Reorder/ReorderView';
+import ImportView from '../ImportView/ImportView';
 
 import { StickyContainer, Sticky } from 'react-sticky';
 

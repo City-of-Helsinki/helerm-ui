@@ -1,7 +1,7 @@
 import React from 'react';
 import './Record.scss';
-import Attribute from './Attribute';
-import DeleteView from './DeleteView';
+import Attribute from '../Attribute/Attribute';
+import DeleteView from '../DeleteView/DeleteView';
 import Dropdown from 'components/Dropdown';
 import Popup from 'components/Popup';
 
@@ -180,17 +180,17 @@ export class Record extends React.Component {
           { recordAttributes }
           { attributes }
           {/* { this.state.mode === 'edit' &&
-          <div className='col-xs-12'>
-            <button className='btn btn-primary pull-right edit-record__submit'
-                    onClick={() => this.saveRecord()}>
-              Valmis
-            </button>
-            <button className='btn btn-default pull-right edit-record__cancel'
-                    onClick={() => this.cancelRecordEdit()}>
-              Peruuta
-            </button>
-          </div>
-          } */}
+           <div className='col-xs-12'>
+           <button className='btn btn-primary pull-right edit-record__submit'
+           onClick={() => this.saveRecord()}>
+           Valmis
+           </button>
+           <button className='btn btn-default pull-right edit-record__cancel'
+           onClick={() => this.cancelRecordEdit()}>
+           Peruuta
+           </button>
+           </div>
+           } */}
         </div>
         { this.state.deleting &&
         <Popup
