@@ -13,13 +13,13 @@ export class RecordForm extends React.Component {
     this.state = {
       newAttributes: this.initializeState(this.props.attributeTypes),
       recordName: {
-        value: this.props.record.name
+        value: this.props.record && this.props.record.name
           ? this.props.record.name
           : '',
         checked: true
       },
       recordType: {
-        value: this.props.record.attributes.RecordType
+        value: this.props.record && this.props.record.attributes.RecordType
           ? this.props.record.attributes.RecordType
           : '',
         checked: true
@@ -29,18 +29,17 @@ export class RecordForm extends React.Component {
   }
 
   initializeState (attributeTypes) {
-    const { attributes } = this.props.record;
     let initialState = {};
     for (const key in attributeTypes) {
       if (attributeTypes.hasOwnProperty(key)) {
         initialState = Object.assign({}, initialState, {
           [key]: {
-            name: attributes[key] ? attributes[key] : null,
+            name: this.props.record && this.props.record.attributes ? this.props.record.attributes[key] : null,
             checked: true
           }
         });
       }
-    };
+    }
     return initialState;
   }
 
@@ -206,8 +205,8 @@ export class RecordForm extends React.Component {
       <div className='action add-box col-xs-12'>
         <h4>{ editForm ? 'Muokkaa asiakirjaa' : 'Uusi asiakirja' }</h4>
         <form onSubmit={(e) => editForm
-                ? this.editRecord(e, actionId)
-                : this.addRecord(e, actionId)}
+          ? this.editRecord(e, actionId)
+          : this.addRecord(e, actionId)}
               className='edit-record'>
           <div className='col-xs-12 col-lg-6 form-group'>
             <label className='edit-record__label'>Asiakirjatyypin tarkenne</label>
