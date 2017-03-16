@@ -117,14 +117,15 @@ export function resetTOS (originalTos) {
 
 export function addRecord (actionIndex, recordName, recordType, attributes) {
   const recordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
-  let newAttributes = [];
+  const newAttributes = {};
   for (const key in attributes) {
     if (attributes.hasOwnProperty(key)) {
       if (attributes[key].checked === true) {
-        newAttributes = Object.assign({}, newAttributes, { [key]: attributes[key].name });
+        newAttributes[key] = attributes[key].name;
       }
     }
   }
+
   const newRecord = Object.assign({}, {
     id: recordId,
     action: actionIndex,
@@ -138,12 +139,12 @@ export function addRecord (actionIndex, recordName, recordType, attributes) {
 }
 
 export function editRecord (recordId, recordName, recordType, attributes) {
-  let editedAttributes = [];
+  let editedAttributes = {};
 
   for (const key in attributes) {
     if (attributes.hasOwnProperty(key)) {
       if (attributes[key].checked === true) {
-        editedAttributes = Object.assign({}, editedAttributes, { [key]: attributes[key].name });
+        editedAttributes[key] = attributes[key].name
       }
     }
   }
