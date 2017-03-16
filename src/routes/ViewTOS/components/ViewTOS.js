@@ -65,6 +65,9 @@ export class ViewTOS extends React.Component {
     if (route && route.path === 'view-tos/:id') {
       this.props.setNavigationVisibility(false);
     }
+    if (nextProps.selectedTOS.documentState === 'view') {
+      this.setState({ editingMetaData: false });
+    }
   }
 
   componentWillUnmount () {
