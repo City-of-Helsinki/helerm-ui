@@ -94,11 +94,11 @@ export function receiveTOS (json) {
 
 export function fetchTOS (tosId) {
   return function (dispatch) {
-    dispatch(createAction(REQUEST_TOS));
+    dispatch(createAction(REQUEST_TOS)());
     return api.get(`function/${tosId}`)
       .then(res => {
         if (!res.ok) {
-          dispatch(createAction(TOS_ERROR));
+          dispatch(createAction(TOS_ERROR)());
           throw new URIError(res.statusText);
         }
         return res.json();
@@ -108,7 +108,7 @@ export function fetchTOS (tosId) {
 }
 
 export function clearTOS () {
-  return createAction(CLEAR_TOS);
+  return createAction(CLEAR_TOS)();
 }
 
 export function resetTOS (originalTos) {
@@ -320,7 +320,13 @@ export function executeOrderChange (newOrder, itemType, itemParent, currentState
     }
   }
 
-  itemList = parentLevel === 'tos' ? reorderedList : itemList;
+  itemList = parentLevel === 'tos'
+    ? reorderedList.reduce((result, item) => {
+      const key = item.id;
+      result[key] = item;
+      return result;
+    }, {})
+    : itemList;
 
   return createAction(EXECUTE_ORDER_CHANGE)({ itemList, itemType, itemParent, parentLevel, itemLevel, parentList });
 }
@@ -339,7 +345,7 @@ export function changeOrder (newOrder, itemType, itemParent) {
 
 export function saveDraft () {
   return function (dispatch, getState) {
-    dispatch(createAction(REQUEST_TOS));
+    dispatch(createAction(REQUEST_TOS)());
     const tos = Object.assign({}, getState().selectedTOS);
     const newTos = Object.assign({}, tos);
     const finalPhases = normalizeTosForApi(newTos);
@@ -348,7 +354,7 @@ export function saveDraft () {
     return api.put(`function/${tos.id}`, denormalizedTos)
       .then(res => {
         if (!res.ok) {
-          dispatch(createAction(TOS_ERROR));
+          dispatch(createAction(TOS_ERROR)());
           throw Error(res.statusText);
         }
         return res.json();
@@ -493,7 +499,7 @@ const addRecordAction = (state, { payload }) => {
     },
     records: {
       [payload.recordId]: {
-        $set: payload
+        $set: payload.newRecord
       }
     }
   });
@@ -668,14 +674,8 @@ const setDocumentStateAction = (state, { payload }) => {
 };
 
 const executeImportAction = (state, { payload }) => {
-  debugger;
   if (payload.level === 'phase') {
     return update(state, {
-      [payload.parentLevel]: {
-        [payload.itemLevel]: {
-          $push: [payload.newId]
-        }
-      },
       [payload.itemLevel]: {
         $set: payload.newItems
       }
@@ -696,7 +696,7 @@ const executeImportAction = (state, { payload }) => {
   }
 };
 
-const executeOrderAction = (state, { payload }) => {
+const executeOrderChangeAction = (state, { payload }) => {
   if (payload.itemType === 'phase') {
     return update(state, {
       [payload.itemLevel]: {
@@ -740,5 +740,5 @@ export default handleActions({
   removeRecordAction,
   setDocumentStateAction,
   executeImportAction,
-  executeOrderAction
+  executeOrderChangeAction
 }, initialState);
