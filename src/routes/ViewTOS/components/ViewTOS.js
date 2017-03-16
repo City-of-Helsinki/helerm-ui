@@ -11,9 +11,7 @@ import EditorForm from 'components/TOS/EditorForm';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
 
-import IsAllowed from 'components/IsAllowed/IsAllowed';
-
-import { EDIT } from '../../../../config/constants';
+import TosHeader from 'components/TOS/tosHeader';
 
 import './ViewTOS.scss';
 
@@ -320,69 +318,38 @@ export class ViewTOS extends React.Component {
       return (
         <div>
           <StickyContainer className='col-xs-12 single-tos-container'>
-            <Sticky className='single-tos-header'>
-              <div className='row'>
-                <h4 className='col-md-6 col-xs-12'>{selectedTOS.function_id} {selectedTOS.name}</h4>
-                <div className='document-buttons col-xs-12 col-md-6'>
-                  { selectedTOS.documentState !== 'edit' &&
-                  <IsAllowed to={EDIT}>
-                    <span>
-                      <button
-                        className='btn btn-default btn-sm pull-right'
-                        onClick={this.sendForInspection}>
-                        Lähetä tarkastettavaksi
-                      </button>
-                      <button
-                        className='btn btn-primary btn-sm pull-right'
-                        onClick={() => this.props.setDocumentState('edit')}>
-                        Muokkaustila
-                      </button>
-                    </span>
-                  </IsAllowed>
-                  }
-                  { selectedTOS.documentState === 'edit' &&
-                  <IsAllowed to={EDIT}>
-                    <span>
-                      <button
-                        className='btn btn-primary btn-sm pull-right'
-                        onClick={this.saveDraft}>
-                        Tallenna luonnos
-                      </button>
-                      <button
-                        className='btn btn-danger btn-sm pull-right'
-                        onClick={this.cancelEdit}>
-                        Peruuta muokkaus
-                      </button>
-                      <span
-                        className='fa fa-asterisk required-asterisk required-legend'> = Pakollinen tieto
-                      </span>
-                    </span>
-                  </IsAllowed>
-                  }
-                </div>
-              </div>
-            </Sticky>
+
+            <TosHeader
+              functionId={selectedTOS.function_id}
+              name={selectedTOS.name}
+              documentState={selectedTOS.documentState}
+              sendForInspection={this.sendForInspection}
+              setDocumentState={(state) => this.props.setDocumentState(state)}
+              saveDraft={this.saveDraft}
+              cancelEdit={this.cancelEdit}
+            />
+
             <div className='single-tos-content'>
               <div className='row'>
                 <div className='general-info space-between'>
                   {this.state.editingMetaData &&
-                    <EditorForm
-                      targetId={this.props.selectedTOS.id}
-                      attributes={this.props.selectedTOS.attributes}
-                      attributeTypes={this.props.attributeTypes}
-                      editMetaDataWithForm={this.editMetaDataWithForm}
-                      editorConfig={{
-                        type: 'tos',
-                        action: 'edit'
-                      }}
-                      closeEditorForm={this.cancelMetaDataEdit}
-                      displayMessage={this.props.displayMessage}
-                    />
+                  <EditorForm
+                    targetId={this.props.selectedTOS.id}
+                    attributes={this.props.selectedTOS.attributes}
+                    attributeTypes={this.props.attributeTypes}
+                    editMetaDataWithForm={this.editMetaDataWithForm}
+                    editorConfig={{
+                      type: 'tos',
+                      action: 'edit'
+                    }}
+                    closeEditorForm={this.cancelMetaDataEdit}
+                    displayMessage={this.props.displayMessage}
+                  />
                   }
                   {!this.state.editingMetaData &&
-                    <div className='version-details col-xs-12'>
-                      { TOSMetaData }
-                    </div>
+                  <div className='version-details col-xs-12'>
+                    { TOSMetaData }
+                  </div>
                   }
                 </div>
                 <div className='col-xs-12 button-row'>
