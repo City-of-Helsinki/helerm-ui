@@ -441,7 +441,7 @@ export class ViewTOS extends React.Component {
                         level='phase'
                         toggleImportView={() => this.toggleImportView()}
                         phases={selectedTOS.phases}
-                        phasesOrder={selectedTOS.phases}
+                        phasesOrder={Object.keys(selectedTOS.phases)}
                         actions={selectedTOS.actions}
                         records={selectedTOS.records}
                         importItems={this.props.importItems}
