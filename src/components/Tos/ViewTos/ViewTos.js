@@ -13,7 +13,7 @@ import Dropdown from 'components/Dropdown';
 
 import TosHeader from 'components/Tos/Header/TosHeader';
 
-import './ViewTOS.scss';
+import './ViewTos.scss';
 
 export class ViewTOS extends React.Component {
   constructor (props) {

@@ -2,7 +2,7 @@ import {
   fetchTOS,
   requestTOS,
   default as tosReducer
-} from 'components/Tos/ViewTOS/tosReducer';
+} from 'components/Tos/ViewTos/tosReducer';
 import _ from 'lodash';
 
 describe('(Redux Module) Tos', () => {

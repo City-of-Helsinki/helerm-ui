@@ -35,7 +35,7 @@ import {
 
 import { displayMessage } from '../../../store/uiReducer';
 
-import ViewTOS from './ViewTOS';
+import ViewTOS from './ViewTos';
 
 const mapDispatchToProps = (dispatch) => {
   return {

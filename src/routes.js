@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router';
 import CoreLayout from './layouts/CoreLayout/CoreLayout';
-import ViewTOSContainer from './components/Tos/ViewTOS/ViewTOSContainer';
+import ViewTOSContainer from './components/Tos/ViewTos/ViewTosContainer';
 import NotFound from './components/NotFound/NotFound';
 
 export default () => (
