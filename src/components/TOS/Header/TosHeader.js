@@ -26,7 +26,7 @@ const TosHeader = ({
             saveDraft={saveDraft}
             sendForInspection={sendForInspection}
             setDocumentState={setDocumentState}
-            state={state}
+            status={state}
           />
         </div>
       </div>

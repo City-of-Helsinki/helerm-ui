@@ -11,7 +11,7 @@ import {
   APPROVED
 } from '../../../../config/constants';
 
-const ActionButtons = ({ cancelEdit, documentState, saveDraft, sendForInspection, setDocumentState, state }) => {
+const ActionButtons = ({ cancelEdit, documentState, saveDraft, sendForInspection, setDocumentState, status }) => {
   const editable = (
     <div>
       { documentState !== 'edit' &&
@@ -56,10 +56,10 @@ const ActionButtons = ({ cancelEdit, documentState, saveDraft, sendForInspection
       }
     </div>
   );
-  
+
   return (
     <div>
-      { state === DRAFT && editable }
+      { status === DRAFT && editable }
     </div>
   );
 };
@@ -70,7 +70,7 @@ ActionButtons.propTypes = {
   saveDraft: PropTypes.func,
   sendForInspection: PropTypes.func,
   setDocumentState: PropTypes.func,
-  state: PropTypes.string.isRequired
+  status: PropTypes.string.isRequired
 };
 
 export default ActionButtons;
