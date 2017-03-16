@@ -9,7 +9,7 @@ import {
   editPhaseAction,
   removePhaseAction,
   setPhaseVisibilityAction,
-  setPhasesVisibilityAction,
+  setPhasesVisibilityAction
 } from './Phase/reducer';
 
 import { default as api } from '../../utils/api';
