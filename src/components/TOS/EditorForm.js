@@ -167,10 +167,21 @@ export class EditorForm extends React.Component {
     );
   }
 
+  filterAttributes (attributes) {
+    const filteredAttributes = Object.assign({}, attributes);
+    for (const key in filteredAttributes) {
+      if (!filteredAttributes[key].name) {
+        delete filteredAttributes[key];
+      }
+    }
+    return filteredAttributes;
+  }
+
   editMetaData (e) {
     e.preventDefault();
     const { newAttributes } = this.state;
-    this.props.editMetaDataWithForm(newAttributes);
+
+    this.props.editMetaDataWithForm(this.filterAttributes(newAttributes));
     this.props.displayMessage({
       text: 'Metatietojen muokkaus onnistui!',
       success: true
@@ -180,7 +191,12 @@ export class EditorForm extends React.Component {
   addRecord (e, targetId) {
     e.preventDefault();
     const { recordName, recordType, newAttributes } = this.state;
-    this.props.recordConfig.createRecord(targetId, recordName.value, recordType.value, newAttributes);
+    this.props.recordConfig.createRecord(
+      targetId,
+      recordName.value,
+      recordType.value,
+      newAttributes
+    );
     this.props.displayMessage({
       text: 'Asiakirjan lisäys onnistui!',
       success: true
@@ -190,7 +206,12 @@ export class EditorForm extends React.Component {
   editRecord (e, targetId) {
     e.preventDefault();
     const { recordName, recordType, newAttributes } = this.state;
-    this.props.recordConfig.editRecordWithForm(targetId, recordName.value, recordType.value, newAttributes);
+    this.props.recordConfig.editRecordWithForm(
+      targetId,
+      recordName.value,
+      recordType.value,
+      this.filterAttributes(newAttributes)
+    );
     this.props.displayMessage({
       text: 'Asiakirjan muokkaus onnistui!',
       success: true
