@@ -5,27 +5,33 @@ import { push } from 'react-router-redux';
 import { setNavigationVisibility } from '../../Navigation/navigationReducer';
 
 import {
-  addAction,
-  addPhase,
   addRecord,
   changeOrder,
   clearTOS,
-  editAction,
-  editPhase,
   editRecord,
   editRecordAttribute,
   editMetaData,
   fetchTOS,
   importItems,
-  removeAction,
-  removePhase,
   removeRecord,
   resetTOS,
   saveDraft,
-  setDocumentState,
+  setDocumentState
+} from '../tosReducer';
+
+import {
+  addAction,
+  editAction,
+  removeAction
+} from '../Action/reducer';
+
+import {
+  addPhase,
+  editPhase,
+  removePhase,
   setPhasesVisibility,
   setPhaseVisibility
-} from './tosReducer';
+} from '../Phase/reducer';
 
 import { displayMessage } from '../../../store/uiReducer';
 

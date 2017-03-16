@@ -1,10 +1,19 @@
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
-import { map, indexOf, includes } from 'lodash';
+import { map, indexOf } from 'lodash';
 import { normalize, schema } from 'normalizr';
 
-import { default as api } from '../../../utils/api';
-import { normalizeTosForApi } from '../../../utils/helpers';
+import { addActionAction, editActionAction, removeActionAction } from './Action/reducer';
+import {
+  addPhaseAction,
+  editPhaseAction,
+  removePhaseAction,
+  setPhaseVisibilityAction,
+  setPhasesVisibilityAction,
+} from './Phase/reducer';
+
+import { default as api } from '../../utils/api';
+import { normalizeTosForApi } from '../../utils/helpers';
 
 const initialState = {
   id: null,
@@ -34,21 +43,12 @@ export const TOS_ERROR = 'tosErrorAction';
 export const RESET_TOS = 'resetTosAction';
 export const CLEAR_TOS = 'clearTosAction';
 
-export const SET_PHASE_VISIBILITY = 'setPhaseVisibilityAction';
-export const SET_PHASES_VISIBILITY = 'setPhasesVisibilityAction';
-
-export const ADD_ACTION = 'addActionAction';
-export const ADD_PHASE = 'addPhaseAction';
 export const ADD_RECORD = 'addRecordAction';
 
-export const EDIT_ACTION = 'editActionAction';
-export const EDIT_PHASE = 'editPhaseAction';
 export const EDIT_RECORD = 'editRecordAction';
 export const EDIT_RECORD_ATTRIBUTE = 'editRecordAttributeAction';
 export const EDIT_META_DATA = 'editMetaDataAction';
 
-export const REMOVE_ACTION = 'removeActionAction';
-export const REMOVE_PHASE = 'removePhaseAction';
 export const REMOVE_RECORD = 'removeRecordAction';
 
 export const SET_DOCUMENT_STATE = 'setDocumentStateAction';
@@ -115,24 +115,6 @@ export function resetTOS (originalTos) {
   return createAction(RESET_TOS)(originalTos);
 }
 
-export function setPhaseVisibility (phase, visibility) {
-  return createAction(SET_PHASE_VISIBILITY)({ phase, visibility });
-}
-
-export function setPhasesVisibility (phases, value) {
-  const allPhasesOpen = {};
-  for (const key in phases) {
-    if (phases.hasOwnProperty(key)) {
-      allPhasesOpen[key] = update(phases[key], {
-        is_open: {
-          $set: value
-        }
-      });
-    }
-  }
-  return createAction(SET_PHASES_VISIBILITY)(allPhasesOpen);
-}
-
 export function addRecord (actionIndex, recordName, recordType, attributes) {
   const recordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
   let newAttributes = [];
@@ -153,31 +135,6 @@ export function addRecord (actionIndex, recordName, recordType, attributes) {
   newRecord.attributes.RecordType = recordType;
 
   return createAction(ADD_RECORD)({ actionIndex, recordId, newRecord });
-}
-
-export function addAction (phaseIndex, name) {
-  const actionId = Math.random().toString(36).replace(/[^a-z]+/g, '');
-  const newAction = {
-    id: actionId,
-    name: name,
-    phase: phaseIndex,
-    records: []
-  };
-  return createAction(ADD_ACTION)(newAction);
-}
-
-export function addPhase (name, parent) {
-  const phaseId = Math.random().toString(36).replace(/[^a-z]+/g, '');
-  const newPhase = {
-    name: name,
-    id: phaseId,
-    function: parent,
-    actions: [],
-    attributes: {},
-    is_open: false
-  };
-
-  return createAction(ADD_PHASE)(newPhase);
 }
 
 export function editRecord (recordId, recordName, recordType, attributes) {
@@ -205,14 +162,6 @@ export function editRecordAttribute (editedRecord) {
   return createAction(EDIT_RECORD_ATTRIBUTE)(editedRecord);
 }
 
-export function editAction (editedAction) {
-  return createAction(EDIT_ACTION)(editedAction);
-}
-
-export function editPhase (editedPhase) {
-  return createAction(EDIT_PHASE)(editedPhase);
-}
-
 export function editMetaData (attributes) {
   let editedMetaData = [];
   for (const key in attributes) {
@@ -228,14 +177,6 @@ export function editMetaData (attributes) {
 
 export function removeRecord (recordToRemove, actionId) {
   return createAction(REMOVE_RECORD)({ recordToRemove, actionId });
-}
-
-export function removeAction (actionToRemove, phaseId) {
-  return createAction(REMOVE_ACTION)({ actionToRemove, phaseId });
-}
-
-export function removePhase (phaseToRemove) {
-  return createAction(REMOVE_PHASE)(phaseToRemove);
 }
 
 export function setDocumentState (newState) {
@@ -441,53 +382,6 @@ const tosErrorAction = (state) => {
   });
 };
 
-const setPhaseVisibilityAction = (state, { payload }) => {
-  return update(state, {
-    phases: {
-      [payload.phase]: {
-        is_open: {
-          $set: payload.visibility
-        }
-      }
-    }
-  });
-};
-
-const setPhasesVisibilityAction = (state, { payload }) => {
-  return update(state, {
-    phases: {
-      $set: payload
-    }
-  });
-};
-
-const addActionAction = (state, { payload }) => {
-  return update(state, {
-    phases: {
-      [payload.phase]: {
-        actions: {
-          $push: [payload.id]
-        }
-      }
-    },
-    actions: {
-      [payload.id]: {
-        $set: payload
-      }
-    }
-  });
-};
-
-const addPhaseAction = (state, { payload }) => {
-  return update(state, {
-    phases: {
-      [payload.id]: {
-        $set: payload
-      }
-    }
-  });
-};
-
 const addRecordAction = (state, { payload }) => {
   return update(state, {
     actions: {
@@ -500,30 +394,6 @@ const addRecordAction = (state, { payload }) => {
     records: {
       [payload.recordId]: {
         $set: payload.newRecord
-      }
-    }
-  });
-};
-
-const editActionAction = (state, { payload }) => {
-  return update(state, {
-    actions: {
-      [payload.id]: {
-        name: {
-          $set: payload.name
-        }
-      }
-    }
-  });
-};
-
-const editPhaseAction = (state, { payload }) => {
-  return update(state, {
-    phases: {
-      [payload.id]: {
-        name: {
-          $set: payload.name
-        }
       }
     }
   });
@@ -594,49 +464,6 @@ const editMetaDataAction = (state, { payload }) => {
   return update(state, {
     attributes: {
       $set: payload
-    }
-  });
-};
-
-const removeActionAction = (state, { payload }) => {
-  const stateCopy = Object.assign({}, state);
-  const actionIndex = indexOf(
-    stateCopy.phases[payload.phaseId].actions,
-    payload.actionToRemove
-  );
-
-  const recordsUnderAction = stateCopy.actions[payload.actionToRemove].records;
-  for (const record in stateCopy.records) {
-    if (includes(recordsUnderAction, record)) {
-      delete stateCopy.records[record];
-    }
-  }
-
-  delete stateCopy.actions[payload.actionToRemove];
-  return update(state, {
-    actions: {
-      $set: stateCopy.actions
-    },
-    phases: {
-      [payload.phaseId]: {
-        actions: {
-          $splice: [[actionIndex, 1]]
-        }
-      }
-    },
-    records: {
-      $set: stateCopy.records
-    }
-  });
-};
-
-const removePhaseAction = (state, { payload }) => {
-  const phasesCopy = Object.assign({}, state.phases);
-  delete phasesCopy[payload];
-
-  return update(state, {
-    phases: {
-      $set: phasesCopy
     }
   });
 };
