@@ -11,7 +11,7 @@ import EditorForm from 'components/TOS/EditorForm';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
 
-import TosHeader from 'components/TOS/tosHeader';
+import TosHeader from 'components/TOS/Header/TosHeader';
 
 import './ViewTOS.scss';
 
@@ -323,6 +323,7 @@ export class ViewTOS extends React.Component {
               functionId={selectedTOS.function_id}
               name={selectedTOS.name}
               documentState={selectedTOS.documentState}
+              state={selectedTOS.state}
               sendForInspection={this.sendForInspection}
               setDocumentState={(state) => this.props.setDocumentState(state)}
               saveDraft={this.saveDraft}
