@@ -1,39 +1,30 @@
 import update from 'immutability-helper';
+import { createAction, handleActions } from 'redux-actions';
 
 import { convertToTree } from '../../utils/helpers';
 import { default as api } from '../../utils/api.js';
 
-// ------------------------------------
-// Constants
-// ------------------------------------
-export const REQUEST_NAVIGATION = 'navigation/REQUEST_NAVIGATION';
-export const RECEIVE_NAVIGATION = 'navigation/RECEIVE_NAVIGATION';
+const initialState = {
+  isFetching: false,
+  items: [],
+  is_open: true
+};
 
-export const SET_NAVIGATION_VISIBILITY = 'navigation/SET_NAVIGATION_VISIBILITY';
+export const REQUEST_NAVIGATION = 'requestNavigationAction';
+export const RECEIVE_NAVIGATION = 'receiveNavigationAction';
+export const SET_NAVIGATION_VISIBILITY = 'setNavigationVisibilityAction';
 
-// ------------------------------------
-// Actions
-// ------------------------------------
 export function requestNavigation () {
-  return {
-    type: REQUEST_NAVIGATION,
-    isFetching: true
-  };
+  return createAction(REQUEST_NAVIGATION)();
 }
 
 export function receiveNavigation (items) {
   const orderedTree = convertToTree(items);
-  return {
-    type: RECEIVE_NAVIGATION,
-    items: orderedTree
-  };
+  return createAction(RECEIVE_NAVIGATION)(orderedTree);
 }
 
 export function setNavigationVisibility (value) {
-  return {
-    type: SET_NAVIGATION_VISIBILITY,
-    value
-  };
+  return createAction(SET_NAVIGATION_VISIBILITY)(value);
 }
 
 export function fetchNavigation () {
@@ -47,48 +38,30 @@ export function fetchNavigation () {
   };
 }
 
-export const actions = {
-  requestNavigation,
-  receiveNavigation,
-  setNavigationVisibility,
-  fetchNavigation
+const requestNavigationAction = (state) => {
+  return update(state, {
+    isFetching: {
+      $set: true
+    }
+  });
 };
 
-// ------------------------------------
-// Action Handlers
-// ------------------------------------
-const ACTION_HANDLERS = {
-  [REQUEST_NAVIGATION]: (state, action) => {
-    return update(state, {
-      isFetching: {
-        $set: true
-      }
-    });
-  },
-  [RECEIVE_NAVIGATION]: (state, action) => {
-    return update(state, {
-      items: { $set: action.items },
-      is_open: { $set: true },
-      isFetching: { $set: false }
-    });
-  },
-  [SET_NAVIGATION_VISIBILITY]: (state, action) => {
-    return update(state, {
-      is_open: { $set: action.value }
-    });
-  }
+const receiveNavigationAction = (state, { payload }) => {
+  return update(state, {
+    items: { $set: payload },
+    is_open: { $set: true },
+    isFetching: { $set: false }
+  });
 };
 
-// ------------------------------------
-// Reducer
-// ------------------------------------
-const initialState = {
-  isFetching: false,
-  items: [],
-  is_open: true
+const setNavigationVisibilityAction = (state, { payload }) => {
+  return update(state, {
+    is_open: { $set: payload }
+  });
 };
 
-export default function navigationReducer (state = initialState, action) {
-  const handler = ACTION_HANDLERS[action.type];
-  return handler ? handler(state, action) : state;
-}
+export default handleActions({
+  requestNavigationAction,
+  receiveNavigationAction,
+  setNavigationVisibilityAction
+}, initialState);

@@ -10,7 +10,7 @@ import {
   SENT_FOR_REVIEW,
   WAITING_FOR_APPROVAL,
   APPROVED
-} from '../../../../config/constants';
+} from '../../../config/constants';
 
 import './Navigation.scss';
 

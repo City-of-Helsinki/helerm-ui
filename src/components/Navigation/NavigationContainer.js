@@ -2,11 +2,11 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { fetchNavigation, setNavigationVisibility } from '../navigationReducer';
+import { fetchNavigation, setNavigationVisibility } from './navigationReducer';
 
-import { itemById } from '../../../utils/helpers';
+import { itemById } from '../../utils/helpers';
 
-import Navigation from '../components/Navigation';
+import Navigation from './Navigation';
 
 const mapDispatchToProps = (dispatch) => {
   return {
