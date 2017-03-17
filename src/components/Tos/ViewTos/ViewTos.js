@@ -195,7 +195,7 @@ export class ViewTOS extends React.Component {
       { type: 'Versionumero', name: version.toString() },
       { type: 'Tila', name: getStatusLabel(state) },
       { type: 'Muokkausajankohta', name: dateTime },
-      { type: 'Muokkaaja', name: 'Matti Meikäläinen' }
+      { type: 'Muokkaaja', name: 'Martin Von Meikäläinen' }
     ];
     versionData.map((metadata, index) => {
       attributeElements.push(
