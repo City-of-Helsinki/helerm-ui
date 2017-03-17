@@ -295,7 +295,6 @@ export function executeImport (newItem, level, itemParent, currentState) {
   switch (level) {
     case 'phase':
       currentItems = Object.assign({}, currentState.selectedTOS.phases);
-      parentLevel = 'tos';
       itemLevel = 'phases';
       break;
     case 'action':
@@ -736,11 +735,6 @@ const ACTION_HANDLERS = {
   [EXECUTE_IMPORT]: (state, action) => {
     if (action.level === 'phase') {
       return update(state, {
-        [action.parentLevel]: {
-          [action.itemLevel]: {
-            $push: [action.newId]
-          }
-        },
         [action.itemLevel]: {
           $set: action.newItems
         }
