@@ -5,6 +5,7 @@ import { push } from 'react-router-redux';
 import { setNavigationVisibility } from '../../Navigation/reducer';
 
 import {
+  changeStatus,
   clearTOS,
   editMetaData,
   fetchTOS,
@@ -35,38 +36,37 @@ import {
 } from '../Record/reducer';
 
 import { importItems } from '../ImportView/reducer';
-
 import { changeOrder } from '../Reorder/reducer';
-
 import { displayMessage } from '../../../store/uiReducer';
 
 import ViewTOS from './ViewTos';
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchTOS: bindActionCreators(fetchTOS, dispatch),
-    clearTOS: bindActionCreators(clearTOS, dispatch),
-    resetTOS: bindActionCreators(resetTOS, dispatch),
-    setPhaseVisibility: bindActionCreators(setPhaseVisibility, dispatch),
-    setPhasesVisibility: bindActionCreators(setPhasesVisibility, dispatch),
     addAction: bindActionCreators(addAction, dispatch),
     addPhase: bindActionCreators(addPhase, dispatch),
     addRecord: bindActionCreators(addRecord, dispatch),
+    changeOrder: bindActionCreators(changeOrder, dispatch),
+    changeStatus: bindActionCreators(changeStatus, dispatch),
+    clearTOS: bindActionCreators(clearTOS, dispatch),
+    displayMessage: bindActionCreators(displayMessage, dispatch),
     editAction: bindActionCreators(editAction, dispatch),
+    editMetaData: bindActionCreators(editMetaData, dispatch),
     editPhase: bindActionCreators(editPhase, dispatch),
     editRecord: bindActionCreators(editRecord, dispatch),
     editRecordAttribute: bindActionCreators(editRecordAttribute, dispatch),
-    editMetaData: bindActionCreators(editMetaData, dispatch),
+    fetchTOS: bindActionCreators(fetchTOS, dispatch),
+    importItems: bindActionCreators(importItems, dispatch),
+    push: (path) => dispatch(push(path)),
     removeAction: bindActionCreators(removeAction, dispatch),
     removePhase: bindActionCreators(removePhase, dispatch),
     removeRecord: bindActionCreators(removeRecord, dispatch),
-    push: (path) => dispatch(push(path)),
-    setDocumentState: bindActionCreators(setDocumentState, dispatch),
-    importItems: bindActionCreators(importItems, dispatch),
-    changeOrder: bindActionCreators(changeOrder, dispatch),
+    resetTOS: bindActionCreators(resetTOS, dispatch),
     saveDraft: bindActionCreators(saveDraft, dispatch),
+    setDocumentState: bindActionCreators(setDocumentState, dispatch),
     setNavigationVisibility: bindActionCreators(setNavigationVisibility, dispatch),
-    displayMessage: bindActionCreators(displayMessage, dispatch)
+    setPhasesVisibility: bindActionCreators(setPhasesVisibility, dispatch),
+    setPhaseVisibility: bindActionCreators(setPhaseVisibility, dispatch)
   };
 };
 

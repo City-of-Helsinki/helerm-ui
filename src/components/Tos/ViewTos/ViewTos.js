@@ -21,7 +21,7 @@ export class ViewTOS extends React.Component {
     this.fetchTOS = this.fetchTOS.bind(this);
     this.cancelEdit = this.cancelEdit.bind(this);
     this.cancelMetaDataEdit = this.cancelMetaDataEdit.bind(this);
-    this.sendForInspection = this.sendForInspection.bind(this);
+    this.changeStatus = this.changeStatus.bind(this);
     this.saveDraft = this.saveDraft.bind(this);
     this.onChange = this.onChange.bind(this);
     this.createNewPhase = this.createNewPhase.bind(this);
@@ -107,11 +107,12 @@ export class ViewTOS extends React.Component {
       });
   }
 
-  sendForInspection () {
-    return this.props.displayMessage({
-      text: 'Ei implementoitu vielä: Luonnos lähetettiin tarkastettavaksi',
-      success: true
-    });
+  changeStatus (status) {
+    return this.props.changeStatus(status);
+    // return this.props.displayMessage({
+    //   text: 'Ei implementoitu vielä: Luonnos lähetettiin tarkastettavaksi',
+    //   success: true
+    // });
   }
 
   formatDateTime (dateTime) {
@@ -327,7 +328,7 @@ export class ViewTOS extends React.Component {
               name={selectedTOS.name}
               documentState={selectedTOS.documentState}
               state={selectedTOS.state}
-              sendForInspection={this.sendForInspection}
+              changeStatus={this.changeStatus}
               setDocumentState={(state) => this.props.setDocumentState(state)}
               saveDraft={this.saveDraft}
               cancelEdit={this.cancelEdit}
@@ -471,6 +472,7 @@ ViewTOS.propTypes = {
   addRecord: React.PropTypes.func.isRequired,
   attributeTypes: React.PropTypes.object.isRequired,
   changeOrder: React.PropTypes.func.isRequired,
+  changeStatus: React.PropTypes.func.isRequired,
   clearTOS: React.PropTypes.func.isRequired,
   displayMessage: React.PropTypes.func.isRequired,
   editAction: React.PropTypes.func.isRequired,
@@ -493,8 +495,8 @@ ViewTOS.propTypes = {
   selectedTOS: React.PropTypes.object.isRequired,
   setDocumentState: React.PropTypes.func.isRequired,
   setNavigationVisibility: React.PropTypes.func.isRequired,
+  setPhasesVisibility: React.PropTypes.func.isRequired,
   setPhaseVisibility: React.PropTypes.func.isRequired,
-  setPhasesVisibility: React.PropTypes.func.isRequired
 };
 
 export default ViewTOS;
