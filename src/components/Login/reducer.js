@@ -1,32 +1,23 @@
 import fetch from 'isomorphic-fetch';
 import update from 'immutability-helper';
+import { createAction, handleActions } from 'redux-actions';
 import { isEmpty, get, isString } from 'lodash';
 
 import { centeredPopUp } from '../../utils/helpers';
 import { default as api } from '../../utils/api';
 import { setStorageItem, removeStorageItem } from '../../utils/storage';
 
-// ------------------------------------
-// Constants
-// ------------------------------------
-export const RECEIVE_USERDATA = 'user/RECEIVE_USERDATA';
-export const CLEAR_USERDATA = 'user/CLEAR_USERDATA';
+const initialState = {};
 
-// ------------------------------------
-// Actions
-// ------------------------------------
+export const RECEIVE_USERDATA = 'receiveUserDataAction';
+export const CLEAR_USERDATA = 'clearUserDataAction';
 
 export function receiveUserData (user) {
-  return {
-    type: RECEIVE_USERDATA,
-    user
-  };
+  return createAction(RECEIVE_USERDATA)(user);
 }
 
 export function clearUserData () {
-  return {
-    type: CLEAR_USERDATA
-  };
+  return createAction(CLEAR_USERDATA)();
 }
 
 export function retrieveUserFromSession () {
@@ -109,35 +100,19 @@ export function logout () {
   };
 }
 
-export const actions = {
-  login,
-  logout,
-  retrieveUserFromSession
+const receiveUserDataAction = (state, { payload }) => {
+  return update(state, {
+    $merge: payload
+  });
 };
 
-// ------------------------------------
-// Action Handlers
-// ------------------------------------
-const ACTION_HANDLERS = {
-  [RECEIVE_USERDATA]: (state, action) => {
-    const { user } = action;
-    return update(state, {
-      $merge: user
-    });
-  },
-  [CLEAR_USERDATA]: (state) => {
-    return update(state, {
-      $set: initialState
-    });
-  }
+const clearUserDataAction = (state) => {
+  return update(state, {
+    $set: initialState
+  });
 };
 
-// ------------------------------------
-// Reducer
-// ------------------------------------
-const initialState = {};
-
-export default function userReducer (state = initialState, action) {
-  const handler = ACTION_HANDLERS[action.type];
-  return handler ? handler(state, action) : state;
-}
+export default handleActions({
+  receiveUserDataAction,
+  clearUserDataAction
+}, initialState);
