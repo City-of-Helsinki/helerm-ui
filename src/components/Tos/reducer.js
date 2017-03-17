@@ -99,21 +99,6 @@ export function receiveTOS (json) {
   return createAction(RECEIVE_TOS)(data);
 }
 
-export function fetchTOS (tosId) {
-  return function (dispatch) {
-    dispatch(createAction(REQUEST_TOS)());
-    return api.get(`function/${tosId}`)
-      .then(res => {
-        if (!res.ok) {
-          dispatch(createAction(TOS_ERROR)());
-          throw new URIError(res.statusText);
-        }
-        return res.json();
-      })
-      .then(json => dispatch(receiveTOS(json)));
-  };
-}
-
 export function clearTOS () {
   return createAction(CLEAR_TOS)();
 }
@@ -139,6 +124,21 @@ export function setDocumentState (newState) {
   return createAction(SET_DOCUMENT_STATE)(newState);
 }
 
+export function fetchTOS (tosId) {
+  return function (dispatch) {
+    dispatch(createAction(REQUEST_TOS)());
+    return api.get(`function/${tosId}`)
+      .then(res => {
+        if (!res.ok) {
+          dispatch(createAction(TOS_ERROR)());
+          throw new URIError(res.statusText);
+        }
+        return res.json();
+      })
+      .then(json => dispatch(receiveTOS(json)));
+  };
+}
+
 export function saveDraft () {
   return function (dispatch, getState) {
     dispatch(createAction(REQUEST_TOS)());
@@ -157,6 +157,23 @@ export function saveDraft () {
       })
       .then(json => dispatch(receiveTOS(json)));
   };
+}
+
+export function changeStatus (status) {
+  return function (dispatch, getState) {
+    const tos = Object.assign({}, getState().selectedTOS);
+
+    return api.patch(`function/${tos.id}`, { state: status })
+      .then(res => {
+        debugger;
+        if (!res.ok) {
+          dispatch(createAction(TOS_ERROR)());
+          throw Error(res.statusText);
+        }
+        return res.json();
+      })
+      .then(json => dispatch(receiveTOS(json)));
+  }
 }
 
 // ------------------------------------
