@@ -1,8 +1,5 @@
-import {
-  fetchTOS,
-  requestTOS,
-  default as tosReducer
-} from 'components/Tos/ViewTos/tosReducer';
+import { createAction } from 'redux-actions';
+import { fetchTOS, default as tosReducer } from 'components/Tos/reducer';
 import _ from 'lodash';
 
 describe('(Redux Module) Tos', () => {
@@ -43,7 +40,7 @@ describe('(Redux Module) Tos', () => {
         type: 'DOESNOTACTUALLYEXISTLOL'
       });
       expect(state).to.deep.equal(_initialState);
-      state = tosReducer(state, requestTOS());
+      state = tosReducer(state, createAction('requestTosAction')());
       expect(state.isFetching).to.equal(true);
       state = tosReducer(state, {
         type: 'DOESNOTACTUALLYEXISTLOL'
