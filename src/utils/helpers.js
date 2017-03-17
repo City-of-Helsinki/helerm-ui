@@ -9,6 +9,13 @@ import {
   orderBy
 } from 'lodash';
 
+import {
+  DRAFT,
+  SENT_FOR_REVIEW,
+  WAITING_FOR_APPROVAL,
+  APPROVED
+} from '../../config/constants';
+
 export function convertToTree (itemList) {
   // ------------------------------------
   // Combine navigation number and names
@@ -129,4 +136,24 @@ export function centeredPopUp (url, title, w, h) {
  */
 export function checkPermissions (user, permission) {
   return !isEmpty(user) && includes(user.permissions, permission);
+}
+
+/**
+ * Get status's label
+ * @param status
+ * @returns {*}
+ */
+export function getStatusLabel (status) {
+  switch (status) {
+    case DRAFT:
+      return 'Luonnos';
+    case SENT_FOR_REVIEW:
+      return 'Tarkastettavana';
+    case WAITING_FOR_APPROVAL:
+      return 'Hyväksyttävänä';
+    case APPROVED:
+      return 'Hyväksytty';
+    default:
+      return 'Luonnos';
+  }
 }

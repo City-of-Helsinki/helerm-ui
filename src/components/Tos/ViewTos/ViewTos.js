@@ -13,6 +13,8 @@ import Dropdown from 'components/Dropdown';
 
 import TosHeader from 'components/Tos/Header/TosHeader';
 
+import { getStatusLabel } from '../../../utils/helpers';
+
 import './ViewTos.scss';
 
 export class ViewTOS extends React.Component {
@@ -184,14 +186,14 @@ export class ViewTOS extends React.Component {
   }
 
   generateMetaData (attributeTypes, attributes) {
-    const { modified_at, documentState, editRecord, version } = this.props.selectedTOS;
+    const { modified_at, documentState, editRecord, version, state } = this.props.selectedTOS;
     const modifiedDateTime = this.formatDateTime(modified_at);
     const formattedDate = formatDate(modifiedDateTime.date, 'DD.MM.YYYY');
     const dateTime = formattedDate + ' ' + modifiedDateTime.time;
     const attributeElements = [];
     const versionData = [
       { type: 'Versionumero', name: version.toString() },
-      { type: 'Tila', name: 'Luonnos' },
+      { type: 'Tila', name: getStatusLabel(state) },
       { type: 'Muokkausajankohta', name: dateTime },
       { type: 'Muokkaaja', name: 'Matti Meikäläinen' }
     ];

@@ -5,10 +5,12 @@ import ActionButton from './ActionButton';
 
 import {
   EDIT,
+  REVIEW,
+  APPROVE,
   DRAFT,
   SENT_FOR_REVIEW,
-  // WAITING_FOR_APPROVAL,
-  // APPROVED
+  WAITING_FOR_APPROVAL,
+  APPROVED
 } from '../../../../config/constants';
 
 const ActionButtons = ({ cancelEdit, documentState, saveDraft, changeStatus, setDocumentState, status }) => {
@@ -35,9 +37,49 @@ const ActionButtons = ({ cancelEdit, documentState, saveDraft, changeStatus, set
     </IsAllowed>
   );
 
+  const reviewable = (
+    <IsAllowed to={REVIEW}>
+      <span>
+        <ActionButton
+          className='btn-sm pull-right'
+          type='primary'
+          action={() => changeStatus(WAITING_FOR_APPROVAL)}
+          label={'Lähetä hyväksyttäväksi'}
+        />
+        <ActionButton
+          className='btn-sm pull-right'
+          type='danger'
+          action={() => changeStatus(DRAFT)}
+          label={'Palauta luonnokseksi'}
+        />
+      </span>
+    </IsAllowed>
+  );
+
+  const approvable = (
+    <IsAllowed to={APPROVE}>
+      <span>
+        <ActionButton
+          className='btn-sm pull-right'
+          type='primary'
+          action={() => changeStatus(APPROVED)}
+          label={'Hyväksy'}
+        />
+        <ActionButton
+          className='btn-sm pull-right'
+          type='danger'
+          action={() => changeStatus(DRAFT)}
+          label={'Palauta luonnokseksi'}
+        />
+      </span>
+    </IsAllowed>
+  );
+
   return (
     <div>
       { status === DRAFT && editable }
+      { status === SENT_FOR_REVIEW && reviewable }
+      { status === WAITING_FOR_APPROVAL && approvable }
     </div>
   );
 };

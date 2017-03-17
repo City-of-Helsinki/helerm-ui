@@ -161,11 +161,11 @@ export function saveDraft () {
 
 export function changeStatus (status) {
   return function (dispatch, getState) {
+    dispatch(createAction(REQUEST_TOS)());
     const tos = Object.assign({}, getState().selectedTOS);
 
     return api.patch(`function/${tos.id}`, { state: status })
       .then(res => {
-        debugger;
         if (!res.ok) {
           dispatch(createAction(TOS_ERROR)());
           throw Error(res.statusText);
