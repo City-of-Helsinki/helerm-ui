@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import './Action.scss';
 import Record from './Record';
-import RecordForm from './RecordForm';
+import EditorForm from './EditorForm';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
 import DeleteView from './DeleteView';
@@ -34,6 +34,9 @@ export class Action extends React.Component {
   componentWillReceiveProps (nextProps) {
     if (nextProps.action && nextProps.action.name) {
       this.setState({ name: nextProps.action.name });
+    }
+    if (nextProps.documentState === 'view') {
+      this.setState({ editing: false });
     }
   }
 
@@ -206,24 +209,38 @@ export class Action extends React.Component {
             { actionTitle }
           </Sticky>
           { this.state.creating &&
-          <RecordForm
-            actionId={this.props.action.id}
+          <EditorForm
+            targetId={this.props.action.id}
+            attributes={{}}
             attributeTypes={this.props.attributeTypes}
-            recordTypes={this.props.recordTypes}
-            createRecord={this.createRecord}
-            closeRecordForm={this.cancelRecordCreation}
-            mode={this.state.mode}
+            recordConfig={{
+              recordTypes: this.props.recordTypes,
+              createRecord: this.createRecord
+            }}
+            editorConfig={{
+              type: 'record',
+              action: 'add'
+            }}
+            closeEditorForm={this.cancelRecordCreation}
             displayMessage={this.props.displayMessage}
           />
           }
           { this.state.editing &&
-          <RecordForm
-            record={this.state.record}
-            recordTypes={this.props.recordTypes}
+          <EditorForm
+            targetId={this.state.record.id}
+            attributes={this.state.record.attributes}
             attributeTypes={this.props.attributeTypes}
-            editRecordWithForm={this.editRecordWithForm}
-            closeRecordForm={this.cancelRecordEdit}
-            mode={this.state.mode}
+            recordConfig={{
+              recordTypes: this.props.recordTypes,
+              recordId: this.state.record.id,
+              recordName: this.state.record.name,
+              editRecordWithForm: this.editRecordWithForm
+            }}
+            editorConfig={{
+              type: 'record',
+              action: 'edit'
+            }}
+            closeEditorForm={this.cancelRecordEdit}
             displayMessage={this.props.displayMessage}
           />
           }

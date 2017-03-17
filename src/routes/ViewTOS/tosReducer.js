@@ -27,6 +27,7 @@ export const EDIT_ACTION = 'tos/EDIT_ACTION';
 export const EDIT_PHASE = 'tos/EDIT_PHASE';
 export const EDIT_RECORD = 'tos/EDIT_RECORD';
 export const EDIT_RECORD_ATTRIBUTE = 'tos/EDIT_RECORD_ATTRIBUTE';
+export const EDIT_META_DATA = 'tos/EDIT_META_DATA';
 
 export const REMOVE_ACTION = 'tos/REMOVE_ACTION';
 export const REMOVE_PHASE = 'tos/REMOVE_PHASE';
@@ -142,7 +143,7 @@ export function setPhasesVisibility (phases, value) {
 
 export function addRecord (actionIndex, recordName, recordType, attributes) {
   const recordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
-  let newAttributes = [];
+  let newAttributes = {};
   for (const key in attributes) {
     if (attributes.hasOwnProperty(key)) {
       if (attributes[key].checked === true) {
@@ -198,7 +199,6 @@ export function addPhase (name, parent) {
 }
 
 export function editRecord (recordId, recordName, recordType, attributes) {
-  console.log(attributes);
   let editedAttributes = [];
   for (const key in attributes) {
     if (attributes.hasOwnProperty(key)) {
@@ -238,6 +238,22 @@ export function editPhase (editedPhase) {
   return {
     type: EDIT_PHASE,
     editedPhase
+  };
+}
+
+export function editMetaData (attributes) {
+  let editedMetaData = [];
+  for (const key in attributes) {
+    if (attributes.hasOwnProperty(key)) {
+      if (attributes[key].checked === true) {
+        editedMetaData = Object.assign({}, editedMetaData, { [key]: attributes[key].name });
+      }
+    }
+  }
+
+  return {
+    type: EDIT_META_DATA,
+    editedMetaData
   };
 }
 
@@ -413,9 +429,10 @@ export const actions = {
   addRecord,
   addPhase,
   editAction,
+  editPhase,
   editRecord,
   editRecordAttribute,
-  editPhase,
+  editMetaData,
   setDocumentState,
   executeImport,
   executeOrderChange,
@@ -636,6 +653,13 @@ const ACTION_HANDLERS = {
         }
       });
     }
+  },
+  [EDIT_META_DATA]: (state, action) => {
+    return update(state, {
+      attributes: {
+        $set: action.editedMetaData
+      }
+    });
   },
   [REMOVE_ACTION]: (state, action) => {
     const stateCopy = state;
