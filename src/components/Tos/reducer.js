@@ -173,7 +173,7 @@ export function changeStatus (status) {
         return res.json();
       })
       .then(json => dispatch(receiveTOS(json)));
-  }
+  };
 }
 
 // ------------------------------------

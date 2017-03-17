@@ -1,5 +1,5 @@
 import update from 'immutability-helper';
-import { createAction, handleActions } from 'redux-actions';
+import { createAction } from 'redux-actions';
 
 export const EXECUTE_ORDER_CHANGE = 'executeOrderChangeAction';
 

@@ -36,7 +36,7 @@ export function editRecord (recordId, recordName, recordType, attributes) {
   for (const key in attributes) {
     if (attributes.hasOwnProperty(key)) {
       if (attributes[key].checked === true) {
-        editedAttributes[key] = attributes[key].name
+        editedAttributes[key] = attributes[key].name;
       }
     }
   }

@@ -36,11 +36,11 @@ const TosHeader = ({
 
 TosHeader.propTypes = {
   cancelEdit: PropTypes.func,
+  changeStatus: PropTypes.func,
   documentState: PropTypes.string.isRequired,
   functionId: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   saveDraft: PropTypes.func,
-  changeStatus: PropTypes.func,
   setDocumentState: PropTypes.func,
   state: PropTypes.string
 };
