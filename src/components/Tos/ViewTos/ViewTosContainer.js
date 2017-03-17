@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
+import { displayMessage } from '../../../utils/helpers';
 
 import { setNavigationVisibility } from '../../Navigation/reducer';
 
@@ -37,11 +38,24 @@ import {
 
 import { importItems } from '../ImportView/reducer';
 import { changeOrder } from '../Reorder/reducer';
-import { displayMessage } from '../../../store/uiReducer';
 
 import ViewTOS from './ViewTos';
 
 const mapDispatchToProps = (dispatch) => {
+
+  // const message = bindActionCreators(toastr, dispatch);
+  //
+  // const displayMessage = (msg, opts = {}) => {
+  //   debugger;
+  //   return message.add({
+  //     id: 'mycustomid', // If not provided we will add one.
+  //     type: 'success',
+  //     title: 'your title',
+  //     message: 'message',
+  //     options: {}
+  //   });
+  // };
+
   return {
     addAction: bindActionCreators(addAction, dispatch),
     addPhase: bindActionCreators(addPhase, dispatch),
@@ -49,7 +63,7 @@ const mapDispatchToProps = (dispatch) => {
     changeOrder: bindActionCreators(changeOrder, dispatch),
     changeStatus: bindActionCreators(changeStatus, dispatch),
     clearTOS: bindActionCreators(clearTOS, dispatch),
-    displayMessage: bindActionCreators(displayMessage, dispatch),
+    displayMessage: (msg, opts) => displayMessage(msg, opts),
     editAction: bindActionCreators(editAction, dispatch),
     editMetaData: bindActionCreators(editMetaData, dispatch),
     editPhase: bindActionCreators(editPhase, dispatch),

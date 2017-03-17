@@ -2,23 +2,15 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
-import { closeMessage } from '../../store/uiReducer';
 import { setNavigationVisibility } from '../Navigation/reducer';
 
-import Alert from '../Alert/Alert';
 import Loader from '../Loader';
 import LoginContainer from '../Login/LoginContainer';
 
 import './Header.scss';
 
 export class Header extends React.Component {
-  constructor (props) {
-    super(props);
-    this.state = { showAlert: false };
-  }
-
   componentWillReceiveProps (nextProps) {
     if (nextProps.message) {
       this.setState({ showAlert: nextProps.message.active });
@@ -26,18 +18,7 @@ export class Header extends React.Component {
   }
 
   render () {
-    const { isFetching, message, closeMessage } = this.props;
-    let alertMessage = null;
-    if (this.state.showAlert === true) {
-      alertMessage = (
-        <Alert
-          text={message.text}
-          style={(message.success ? 'alert-success' : 'alert-danger')}
-          close={closeMessage}
-        />
-      );
-      setTimeout(closeMessage, 5000);
-    }
+    const { isFetching } = this.props;
 
     return (
       <div>
@@ -51,19 +32,12 @@ export class Header extends React.Component {
           <LoginContainer />
         </nav>
         <Loader show={isFetching}/>
-        <ReactCSSTransitionGroup
-          transitionName={'alert-position'}
-          transitionEnterTimeout={1000}
-          transitionLeaveTimeout={600}>
-          {this.state.showAlert && alertMessage}
-        </ReactCSSTransitionGroup>
       </div>
     );
   }
 }
 
 Header.propTypes = {
-  closeMessage: React.PropTypes.func,
   isFetching: React.PropTypes.bool,
   message: React.PropTypes.object,
   setNavigationVisibility: React.PropTypes.func
@@ -71,14 +45,12 @@ Header.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    message: state.ui.message,
     isFetching: state.ui.isFetching || state.navigation.isFetching || state.selectedTOS.isFetching
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    closeMessage: bindActionCreators(closeMessage, dispatch),
     setNavigationVisibility: bindActionCreators(setNavigationVisibility, dispatch)
   };
 };
