@@ -9,7 +9,7 @@ const TosHeader = ({
   functionId,
   name,
   saveDraft,
-  sendForInspection,
+  changeStatus,
   setDocumentState,
   state
 }) => {
@@ -24,7 +24,7 @@ const TosHeader = ({
             cancelEdit={cancelEdit}
             documentState={documentState}
             saveDraft={saveDraft}
-            sendForInspection={sendForInspection}
+            changeStatus={changeStatus}
             setDocumentState={setDocumentState}
             status={state}
           />
@@ -40,7 +40,7 @@ TosHeader.propTypes = {
   functionId: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   saveDraft: PropTypes.func,
-  sendForInspection: PropTypes.func,
+  changeStatus: PropTypes.func,
   setDocumentState: PropTypes.func,
   state: PropTypes.string
 };

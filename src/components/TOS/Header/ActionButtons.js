@@ -5,13 +5,13 @@ import ActionButton from './ActionButton';
 
 import {
   EDIT,
-  DRAFT
-  // SENT_FOR_REVIEW,
+  DRAFT,
+  SENT_FOR_REVIEW,
   // WAITING_FOR_APPROVAL,
   // APPROVED
 } from '../../../../config/constants';
 
-const ActionButtons = ({ cancelEdit, documentState, saveDraft, sendForInspection, setDocumentState, status }) => {
+const ActionButtons = ({ cancelEdit, documentState, saveDraft, changeStatus, setDocumentState, status }) => {
   const editMode = documentState === 'edit';
   const editable = (
     <IsAllowed to={EDIT}>
@@ -19,7 +19,7 @@ const ActionButtons = ({ cancelEdit, documentState, saveDraft, sendForInspection
         <ActionButton
           className='btn-sm pull-right'
           type={editMode ? 'primary' : 'default'}
-          action={editMode ? saveDraft : sendForInspection}
+          action={editMode ? saveDraft : () => changeStatus(SENT_FOR_REVIEW)}
           label={editMode ? 'Tallenna luonnos' : 'Lähetä tarkastettavaksi'}
         />
         <ActionButton
@@ -44,9 +44,9 @@ const ActionButtons = ({ cancelEdit, documentState, saveDraft, sendForInspection
 
 ActionButtons.propTypes = {
   cancelEdit: PropTypes.func,
+  changeStatus: PropTypes.func,
   documentState: PropTypes.string,
   saveDraft: PropTypes.func,
-  sendForInspection: PropTypes.func,
   setDocumentState: PropTypes.func,
   status: PropTypes.string.isRequired
 };
