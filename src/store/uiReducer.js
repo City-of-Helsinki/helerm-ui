@@ -126,7 +126,10 @@ const ACTION_HANDLERS = {
     const recordTypeList = {};
     recordTypes.values.map(result => {
       const trimmedResult = result.id.replace(/-/g, '');
-      recordTypeList[trimmedResult] = result.value;
+      recordTypeList[trimmedResult] = {
+        id: result.id,
+        name: result.value
+      };
     });
     delete action.attributeTypeList.RecordType;
     return update(state, {

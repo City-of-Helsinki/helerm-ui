@@ -1,5 +1,8 @@
 import update from 'immutability-helper';
-import { normalize, Schema, arrayOf } from 'normalizr';
+import indexOf from 'lodash/indexOf';
+import includes from 'lodash/includes';
+import { map } from 'lodash';
+import { normalize, schema } from 'normalizr';
 
 import { default as api } from '../../utils/api';
 import { normalizeTosForApi } from '../../utils/helpers';
@@ -23,6 +26,8 @@ export const ADD_RECORD = 'tos/ADD_RECORD';
 export const EDIT_ACTION = 'tos/EDIT_ACTION';
 export const EDIT_PHASE = 'tos/EDIT_PHASE';
 export const EDIT_RECORD = 'tos/EDIT_RECORD';
+export const EDIT_RECORD_ATTRIBUTE = 'tos/EDIT_RECORD_ATTRIBUTE';
+export const EDIT_META_DATA = 'tos/EDIT_META_DATA';
 
 export const REMOVE_ACTION = 'tos/REMOVE_ACTION';
 export const REMOVE_PHASE = 'tos/REMOVE_PHASE';
@@ -55,19 +60,19 @@ export function receiveTOS (json) {
       });
     });
   });
-  const tosSchema = new Schema('tos');
-  const phase = new Schema('phases');
-  const action = new Schema('actions');
-  const record = new Schema('records');
+  const tosSchema = new schema.Entity('tos');
+  const phase = new schema.Entity('phases');
+  const action = new schema.Entity('actions');
+  const record = new schema.Entity('records');
 
   tosSchema.define({
-    phases: arrayOf(phase)
+    phases: [phase]
   });
   phase.define({
-    actions: arrayOf(action)
+    actions: [action]
   });
   action.define({
-    records: arrayOf(record)
+    records: [record]
   });
   json = normalize(json, tosSchema);
   return {
@@ -138,7 +143,7 @@ export function setPhasesVisibility (phases, value) {
 
 export function addRecord (actionIndex, recordName, recordType, attributes) {
   const recordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
-  let newAttributes = [];
+  let newAttributes = {};
   for (const key in attributes) {
     if (attributes.hasOwnProperty(key)) {
       if (attributes[key].checked === true) {
@@ -151,9 +156,10 @@ export function addRecord (actionIndex, recordName, recordType, attributes) {
     action: actionIndex,
     attributes: newAttributes,
     name: recordName,
-    type: recordType,
     is_open: false
   });
+  newRecord.attributes.RecordType = recordType;
+
   return {
     type: ADD_RECORD,
     actionIndex,
@@ -192,9 +198,31 @@ export function addPhase (name, parent) {
   };
 }
 
-export function editRecord (editedRecord) {
+export function editRecord (recordId, recordName, recordType, attributes) {
+  let editedAttributes = [];
+  for (const key in attributes) {
+    if (attributes.hasOwnProperty(key)) {
+      if (attributes[key].checked === true) {
+        editedAttributes = Object.assign({}, editedAttributes, { [key]: attributes[key].name });
+      }
+    }
+  }
+  const editedRecord = Object.assign({}, {
+    attributes: editedAttributes,
+    name: recordName
+  });
+  editedRecord.attributes.RecordType = recordType;
+
   return {
     type: EDIT_RECORD,
+    editedRecord,
+    recordId
+  };
+}
+
+export function editRecordAttribute (editedRecord) {
+  return {
+    type: EDIT_RECORD_ATTRIBUTE,
     editedRecord
   };
 }
@@ -213,17 +241,35 @@ export function editPhase (editedPhase) {
   };
 }
 
-export function removeRecord (recordToRemove) {
+export function editMetaData (attributes) {
+  let editedMetaData = [];
+  for (const key in attributes) {
+    if (attributes.hasOwnProperty(key)) {
+      if (attributes[key].checked === true) {
+        editedMetaData = Object.assign({}, editedMetaData, { [key]: attributes[key].name });
+      }
+    }
+  }
+
   return {
-    type: REMOVE_RECORD,
-    recordToRemove
+    type: EDIT_META_DATA,
+    editedMetaData
   };
 }
 
-export function removeAction (actionToRemove) {
+export function removeRecord (recordToRemove, actionId) {
+  return {
+    type: REMOVE_RECORD,
+    recordToRemove,
+    actionId
+  };
+}
+
+export function removeAction (actionToRemove, phaseId) {
   return {
     type: REMOVE_ACTION,
-    actionToRemove
+    actionToRemove,
+    phaseId
   };
 }
 
@@ -352,15 +398,19 @@ export function changeOrder (newOrder, itemType, itemParent) {
   };
 }
 
-export function saveDraft (tos) {
-  const finalTos = normalizeTosForApi(tos);
-  return function (dispatch) {
+export function saveDraft () {
+  return function (dispatch, getState) {
     dispatch(requestTOS());
-    return api.put(`function/${tos.id}`, finalTos)
+    const tos = Object.assign({}, getState().selectedTOS);
+    const newTos = Object.assign({}, tos);
+    const finalPhases = normalizeTosForApi(newTos);
+    const denormalizedTos = update(tos, { phases: { $set: finalPhases } });
+
+    return api.put(`function/${tos.id}`, denormalizedTos)
       .then(res => {
         if (!res.ok) {
           dispatch(TOSError());
-          throw new URIError(res.statusText);
+          throw Error(res.statusText);
         }
         return res.json();
       })
@@ -379,8 +429,10 @@ export const actions = {
   addRecord,
   addPhase,
   editAction,
-  editRecord,
   editPhase,
+  editRecord,
+  editRecordAttribute,
+  editMetaData,
   setDocumentState,
   executeImport,
   executeOrderChange,
@@ -392,7 +444,7 @@ export const actions = {
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [REQUEST_TOS]: (state, action) => {
+  [REQUEST_TOS]: (state) => {
     return update(state, {
       isFetching: {
         $set: true
@@ -407,13 +459,13 @@ const ACTION_HANDLERS = {
         $set: action.data.entities.tos[action.data.result].attributes
       },
       actions: {
-        $set: action.data.entities.actions
+        $set: action.data.entities.actions ? action.data.entities.actions : {}
       },
       phases: {
-        $set: action.data.entities.phases
+        $set: action.data.entities.phases ? action.data.entities.phases : {}
       },
       records: {
-        $set: action.data.entities.records
+        $set: action.data.entities.records ? action.data.entities.records : {}
       },
       lastUpdated: {
         $set: action.receivedAt
@@ -438,7 +490,25 @@ const ACTION_HANDLERS = {
     return initialState;
   },
   [TOS_ERROR]: (state) => {
+    // TODO: Find out what mutates store so hard...
+    const actions = {};
+    const phases = {};
+    map(state.actions, action => {
+      actions[action.id] = action;
+      return map(action.records, (record, recordIndex) => {
+        actions[action.id].records[recordIndex] = record.id;
+      });
+    });
+    map(state.phases, phase => {
+      phases[phase.id] = phase;
+      return map(phase.actions, (action, actionIndex) => {
+        phases[phase.id].actions[actionIndex] = action.id;
+      });
+    });
+
     return update(state, {
+      actions: { $set: actions },
+      phases: { $set: phases },
       isFetching: {
         $set: false
       }
@@ -526,6 +596,20 @@ const ACTION_HANDLERS = {
     });
   },
   [EDIT_RECORD]: (state, action) => {
+    return update(state, {
+      records: {
+        [action.recordId]: {
+          name: {
+            $set: action.editedRecord.name
+          },
+          attributes: {
+            $set: action.editedRecord.attributes
+          }
+        }
+      }
+    });
+  },
+  [EDIT_RECORD_ATTRIBUTE]: (state, action) => {
     if (action.editedRecord.name) {
       return update(state, {
         records: {
@@ -548,6 +632,14 @@ const ACTION_HANDLERS = {
           }
         }
       });
+    } else if (action.editedRecord.tosAttribute) {
+      return update(state, {
+        attributes: {
+          [action.editedRecord.attributeIndex]: {
+            $set: action.editedRecord.tosAttribute
+          }
+        }
+      });
     } else {
       return update(state, {
         records: {
@@ -562,13 +654,42 @@ const ACTION_HANDLERS = {
       });
     }
   },
+  [EDIT_META_DATA]: (state, action) => {
+    return update(state, {
+      attributes: {
+        $set: action.editedMetaData
+      }
+    });
+  },
   [REMOVE_ACTION]: (state, action) => {
-    const actionsCopy = state.actions;
-    delete actionsCopy[action.actionToRemove];
+    const stateCopy = state;
+    const actionIndex = indexOf(
+      stateCopy.phases[action.phaseId].actions,
+      action.actionToRemove
+    );
+
+    const recordsUnderAction = stateCopy.actions[action.actionToRemove].records;
+    for (var record in stateCopy.records) {
+      if (includes(recordsUnderAction, record)) {
+        delete stateCopy.records[record];
+      }
+    }
+
+    delete stateCopy.actions[action.actionToRemove];
 
     return update(state, {
       actions: {
-        $set: actionsCopy
+        $set: stateCopy.actions
+      },
+      phases: {
+        [action.phaseId]: {
+          actions: {
+            $splice: [[actionIndex, 1]]
+          }
+        }
+      },
+      records: {
+        $set: stateCopy.records
       }
     });
   },
@@ -583,12 +704,25 @@ const ACTION_HANDLERS = {
     });
   },
   [REMOVE_RECORD]: (state, action) => {
-    const recordsCopy = state.records;
-    delete recordsCopy[action.recordToRemove];
+    const stateCopy = state;
+
+    const recordIndex = indexOf(
+      stateCopy.actions[action.actionId].records,
+      action.recordToRemove
+    );
+
+    delete stateCopy.records[action.recordToRemove];
 
     return update(state, {
       records: {
-        $set: recordsCopy
+        $set: stateCopy.records
+      },
+      actions: {
+        [action.actionId]: {
+          records: {
+            $splice: [[recordIndex, 1]]
+          }
+        }
       }
     });
   },

@@ -5,7 +5,7 @@ import {
   merge
 } from 'lodash';
 
-import { getStorageItem } from './storage';
+import { getStorageItem, removeStorageItem } from './storage';
 
 /**
  * Which actions are allowed without authentication
@@ -112,7 +112,16 @@ export function callApi (endpoint, params, options = {}) {
   }
 
   finalOptions.headers = defaultHeaders;
-  return fetch(url, finalOptions);
+  return fetch(url, finalOptions)
+    .then(res => {
+      // TODO: Remove me & use refresh token
+      if (res.status === 401) {
+        removeStorageItem('token', () => {
+          return window.location.reload();
+        });
+      }
+      return res;
+    });
 }
 
 /**

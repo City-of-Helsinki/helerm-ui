@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import './Action.scss';
 import Record from './Record';
-import AddRecord from './AddRecord';
+import EditorForm from './EditorForm';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
 import DeleteView from './DeleteView';
@@ -14,23 +14,29 @@ import { StickyContainer, Sticky } from 'react-sticky';
 export class Action extends React.Component {
   constructor (props) {
     super(props);
-    this.createRecord = this.createRecord.bind(this);
     this.saveActionTitle = this.saveActionTitle.bind(this);
+    this.createRecord = this.createRecord.bind(this);
     this.cancelRecordCreation = this.cancelRecordCreation.bind(this);
+    this.editRecordForm = this.editRecordForm.bind(this);
+    this.editRecordWithForm = this.editRecordWithForm.bind(this);
+    this.cancelRecordEdit = this.cancelRecordEdit.bind(this);
     this.state = {
       mode: 'view',
-      name: this.props.action.name,
+      name: this.props.action ? this.props.action.name : 'ERROR',
       creating: false,
+      editing: false,
       deleting: false,
-      deleted: false,
       showReorderView: false,
       showImportView: false
     };
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.action.name) {
+    if (nextProps.action && nextProps.action.name) {
       this.setState({ name: nextProps.action.name });
+    }
+    if (nextProps.documentState === 'view') {
+      this.setState({ editing: false });
     }
   }
 
@@ -42,11 +48,11 @@ export class Action extends React.Component {
 
   saveActionTitle (event) {
     event.preventDefault();
-    const savedAction = {
+    const updatedAction = {
       id: this.props.action.id,
       name: this.state.name
     };
-    this.props.editAction(savedAction);
+    this.props.editAction(updatedAction);
     if (this.state.name.length > 0) {
       this.setState({ mode: 'view' });
     }
@@ -64,11 +70,13 @@ export class Action extends React.Component {
           <Record
             key={key}
             record={this.props.records[records[key]]}
-            editRecord={this.props.editRecord}
+            editRecordForm={this.editRecordForm}
+            editRecordAttribute={this.props.editRecordAttribute}
             removeRecord={this.props.removeRecord}
             recordTypes={this.props.recordTypes}
             documentState={this.props.documentState}
             attributeTypes={this.props.attributeTypes}
+            displayMessage={this.props.displayMessage}
           />
         );
       }
@@ -76,7 +84,7 @@ export class Action extends React.Component {
     return elements;
   }
 
-  generateDropdownItems (recordCount) {
+  generateDropdownItems () {
     return [
       {
         text: 'Uusi asiakirja',
@@ -110,13 +118,40 @@ export class Action extends React.Component {
     this.setState({ creating: false });
   }
 
-  cancelDeletion () {
-    this.setState({ deleting: false });
+  editRecordForm (recordId, recordName, recordAttributes) {
+    this.setState({
+      record: {
+        id: recordId,
+        name: recordName,
+        attributes: recordAttributes
+      }
+    }, () => {
+      this.setState({ editing: true });
+    });
+  }
+
+  cancelRecordEdit () {
+    this.setState({
+      editing: false,
+      recordId: undefined
+    });
+  }
+
+  editRecordWithForm (actionId, name, type, attributes) {
+    this.setState({
+      editing: false,
+      recordId: undefined
+    });
+    this.props.editRecord(actionId, name, type, attributes);
   }
 
   delete () {
-    this.setState({ deleted: true, deleting: false });
-    this.props.removeAction(this.props.action.id);
+    this.setState({ deleting: false });
+    this.props.removeAction(this.props.action.id, this.props.action.phase);
+  }
+
+  cancelDeletion () {
+    this.setState({ deleting: false });
   }
 
   createRecord (actionId, name, type, attributes) {
@@ -135,9 +170,10 @@ export class Action extends React.Component {
   }
 
   render () {
+    // TODO: Handle errors where we don't have an valid action (i.e 400 error from API)
     const { action } = this.props;
-    const recordElements = this.generateRecords(action.records);
-    const dropdownItems = this.generateDropdownItems(action.records.length);
+    const recordElements = action && action.records ? this.generateRecords(action.records) : [];
+    const dropdownItems = this.generateDropdownItems();
     let actionTitle;
     if (this.state.mode === 'view') {
       actionTitle = (
@@ -168,31 +204,60 @@ export class Action extends React.Component {
     }
     return (
       <div>
-        { !this.state.deleted &&
         <StickyContainer className='row box action'>
           <Sticky className='action-title'>
             { actionTitle }
           </Sticky>
           { this.state.creating &&
-          <AddRecord
-            actionId={this.props.action.id}
+          <EditorForm
+            targetId={this.props.action.id}
+            attributes={{}}
             attributeTypes={this.props.attributeTypes}
-            recordTypes={this.props.recordTypes}
-            createRecord={this.createRecord}
-            cancelRecordCreation={this.cancelRecordCreation}
-            mode={this.state.mode}
+            recordConfig={{
+              recordTypes: this.props.recordTypes,
+              createRecord: this.createRecord
+            }}
+            editorConfig={{
+              type: 'record',
+              action: 'add'
+            }}
+            closeEditorForm={this.cancelRecordCreation}
             displayMessage={this.props.displayMessage}
           />
           }
-          <span className='col-xs-6 attribute-label'>
+          { this.state.editing &&
+          <EditorForm
+            targetId={this.state.record.id}
+            attributes={this.state.record.attributes}
+            attributeTypes={this.props.attributeTypes}
+            recordConfig={{
+              recordTypes: this.props.recordTypes,
+              recordId: this.state.record.id,
+              recordName: this.state.record.name,
+              editRecordWithForm: this.editRecordWithForm
+            }}
+            editorConfig={{
+              type: 'record',
+              action: 'edit'
+            }}
+            closeEditorForm={this.cancelRecordEdit}
+            displayMessage={this.props.displayMessage}
+          />
+          }
+          { !this.state.editing && !!recordElements.length &&
+          <div>
+            <span className='col-xs-6 attribute-label'>
             Asiakirjatyypin tarkenne
-          </span>
-          <span className='col-xs-6 attribute-label'>
+            </span>
+            <span className='col-xs-6 attribute-label'>
             Tyyppi
-          </span>
-          <div className={classNames('col-xs-12 records', { 'records-editing': this.props.documentState === 'edit' })}>
-            { recordElements }
+            </span>
+            <div
+              className={classNames('col-xs-12 records', { 'records-editing': this.props.documentState === 'edit' })}>
+              { recordElements }
+            </div>
           </div>
+          }
 
           { this.state.deleting &&
           <Popup
@@ -245,7 +310,6 @@ export class Action extends React.Component {
           />
           }
         </StickyContainer>
-        }
       </div>
     );
   }
@@ -261,8 +325,9 @@ Action.propTypes = {
   documentState: React.PropTypes.string.isRequired,
   editAction: React.PropTypes.func.isRequired,
   editRecord: React.PropTypes.func.isRequired,
+  editRecordAttribute: React.PropTypes.func.isRequired,
   importItems: React.PropTypes.func.isRequired,
-  phases: React.PropTypes.object.isRequired,
+  phases: React.PropTypes.object.isRequired || React.PropTypes.array.isRequired,
   phasesOrder: React.PropTypes.array.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
   records: React.PropTypes.object.isRequired,

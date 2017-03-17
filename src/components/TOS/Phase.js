@@ -1,4 +1,5 @@
 import React from 'react';
+import forEach from 'lodash/forEach';
 import './Phase.scss';
 import Action from './Action.js';
 import DeleteView from './DeleteView';
@@ -15,6 +16,7 @@ export class Phase extends React.Component {
     this.onNewChange = this.onNewChange.bind(this);
     this.createNewAction = this.createNewAction.bind(this);
     this.addAction = this.addAction.bind(this);
+    this.editPhaseTitle = this.editPhaseTitle.bind(this);
     this.savePhaseTitle = this.savePhaseTitle.bind(this);
     this.cancelActionCreation = this.cancelActionCreation.bind(this);
     this.state = {
@@ -22,7 +24,6 @@ export class Phase extends React.Component {
       newActionName: '',
       mode: 'view',
       deleting: false,
-      deleted: false,
       showReorderView: false,
       showImportView: false
     };
@@ -42,11 +43,11 @@ export class Phase extends React.Component {
 
   savePhaseTitle (event) {
     event.preventDefault();
-    const savedPhase = {
+    const updatedPhase = {
       id: this.props.phase.id,
       name: this.state.name
     };
-    this.props.editPhase(savedPhase);
+    this.props.editPhase(updatedPhase);
     if (this.state.name.length > 0) {
       this.setState({ mode: 'view' });
     }
@@ -82,6 +83,7 @@ export class Phase extends React.Component {
             addRecord={this.props.addRecord}
             editAction={this.props.editAction}
             editRecord={this.props.editRecord}
+            editRecordAttribute={this.props.editRecordAttribute}
             removeAction={this.props.removeAction}
             removeRecord={this.props.removeRecord}
             actions={this.props.actions}
@@ -154,7 +156,10 @@ export class Phase extends React.Component {
   }
 
   delete () {
-    this.setState({ deleted: true, deleting: false });
+    this.setState({ deleting: false });
+    forEach(this.props.phase.actions, (action) => {
+      this.props.removeAction(action, this.props.phase.id);
+    });
     this.props.removePhase(this.props.phase.id);
   }
 
@@ -165,7 +170,7 @@ export class Phase extends React.Component {
     let phaseTitle;
     if (this.state.mode !== 'edit') {
       phaseTitle =
-        (<span onClick={() => this.editPhaseTitle()}>
+        (<span onClick={this.editPhaseTitle}>
           <i className='fa fa-info-circle' aria-hidden='true'/> {this.state.name}
         </span>
         );
@@ -187,7 +192,6 @@ export class Phase extends React.Component {
     }
     return (
       <div>
-        { !this.state.deleted &&
         <span className='col-xs-12 box phase'>
           <StickyContainer>
             <Sticky className={'phase-title ' + (this.props.phase.is_open ? 'open' : 'closed')}>
@@ -292,7 +296,6 @@ export class Phase extends React.Component {
            */}
           <div className='update'>{ update }</div>
         </span>
-        }
       </div>
     );
   }
@@ -309,10 +312,11 @@ Phase.propTypes = {
   editAction: React.PropTypes.func.isRequired,
   editPhase: React.PropTypes.func.isRequired,
   editRecord: React.PropTypes.func.isRequired,
+  editRecordAttribute: React.PropTypes.func.isRequired,
   importItems: React.PropTypes.func.isRequired,
   phase: React.PropTypes.object.isRequired,
   phaseIndex: React.PropTypes.string.isRequired,
-  phases: React.PropTypes.object.isRequired,
+  phases: React.PropTypes.object.isRequired || React.PropTypes.array.isRequired,
   phasesOrder: React.PropTypes.array.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
   records: React.PropTypes.object.isRequired,

@@ -18,14 +18,18 @@ export function getStorageItem (key) {
  *
  * @param {string} key
  * @param {*} value
+ * @param callback
  */
-export function setStorageItem (key, value) {
+export function setStorageItem (key, value, callback = null) {
   if (!isString(value)) {
     value = JSON.stringify(value);
   }
   try {
     localStorage.setItem(buildStorageKey(key), value);
     debug('storage item set: %s -> %s', key, value);
+    if (callback && typeof callback === 'function') {
+      callback();
+    }
   } catch (e) {
     // fall silently
   }
@@ -34,10 +38,14 @@ export function setStorageItem (key, value) {
 /**
  *
  * @param {string} key
+ * @param callback
  */
-export function removeStorageItem (key) {
+export function removeStorageItem (key, callback = null) {
   localStorage.removeItem(buildStorageKey(key));
   debug('storage item removed: %s', key);
+  if (callback && typeof callback === 'function') {
+    callback();
+  }
 }
 
 /**

@@ -5,6 +5,12 @@
   background-color: white;
   border: 1px solid $black50;
   border-radius: $border-radius-base;
+
+  .Select-control {
+    border: 2px solid #dce4ec;
+    border-radius: 0;
+    margin: 10px 0;
+  }
 }
 
 .navigation-menu-items {
@@ -100,7 +106,7 @@
 .react-infinity-menu-default-search-input {
   display: block;
   position: relative;
-  z-index: 1;
+  //z-index: 1;
   width: 100%;
   height: $input-height-base; // Make inputs at least the height of their button counterpart (base line-height + padding + border)
   padding: $padding-base-vertical $padding-base-horizontal;
@@ -252,7 +258,7 @@ ul:last-child {
 }
 
 .infinity-menu-container:after {
-  content: 'Haku';
+  //content: 'Haku';
   pointer-events: none;
   position: absolute;
   color: $gray;
@@ -383,6 +389,7 @@ ul:last-child {
 
 .nav-path-list {
   cursor: pointer;
+  line-height: 33px;
 }
 
 .nav-path-list:hover {

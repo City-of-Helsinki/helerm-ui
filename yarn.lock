@@ -2122,6 +2122,10 @@ eslint-plugin-babel@^4.0.0:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/eslint-plugin-babel/-/eslint-plugin-babel-4.0.1.tgz#77de74dabd67a6bef3b16bf258f5804e971e7349"
 
+eslint-plugin-immutable@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-immutable/-/eslint-plugin-immutable-1.0.0.tgz#4fe5839836be9809e08bac00cb7ce10e4b8e4821"
+
 eslint-plugin-promise@^3.3.0:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/eslint-plugin-promise/-/eslint-plugin-promise-3.4.1.tgz#6911a9010bf84e17d82e19e0ab0f80ab3ad6db4c"
@@ -4125,11 +4129,9 @@ normalize.css@^4.1.1:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/normalize.css/-/normalize.css-4.2.0.tgz#21d66cc557154d4379fd1e079ec7de58a379b099"
 
-normalizr@^2.2.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/normalizr/-/normalizr-2.3.1.tgz#ac12d771ce1fe6a43094c3d828caada4ed9a4540"
-  dependencies:
-    lodash "^4.17.2"
+normalizr@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/normalizr/-/normalizr-3.2.2.tgz#542e915a260ca53279b76a63fb554185e9225f90"
 
 "npmlog@0 || 1 || 2 || 3 || 4", npmlog@^4.0.0, npmlog@^4.0.1:
   version "4.0.2"

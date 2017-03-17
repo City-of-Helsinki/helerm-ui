@@ -56,20 +56,22 @@ export function convertToTree (itemList) {
  */
 export function normalizeTosForApi (tos) {
   // TODO: needs some serious refactoring...
-  const phases = Object.keys(tos.phases).map(phase => tos.phases[phase]);
-  phases.map(phase => phase.actions.map((action, actionIndex) => {
-    delete phase.actions[actionIndex];
-    phase.actions[actionIndex] = tos.actions[action];
-    phase.actions[actionIndex].records.map((record, recordsIndex) => {
-      delete phase.actions[actionIndex].records[recordsIndex];
-      phase.actions[actionIndex].records[recordsIndex] = tos.records[record];
-    });
-  }));
+  const finalTos = Object.assign({}, tos);
+  const phases = map(finalTos.phases, phase => phase);
+  const finalPhases = [];
 
-  delete tos.actions;
-  delete tos.records;
-  tos.phases = phases;
-  return tos;
+  phases.map((phase, phaseIndex) => {
+    finalPhases.push(phase);
+    phase.actions.map((action, actionIndex) => {
+      finalPhases[phaseIndex].actions[actionIndex] = finalTos.actions[action];
+      phase.actions[actionIndex].records.map((record, recordsIndex) => {
+        delete phase.actions[actionIndex].records[recordsIndex];
+        finalPhases[phaseIndex].actions[actionIndex].records[recordsIndex] = finalTos.records[record];
+      });
+    });
+  });
+
+  return finalPhases;
 }
 
 /**
