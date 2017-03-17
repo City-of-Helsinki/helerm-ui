@@ -24,6 +24,12 @@ import {
   removeRecordAction
 } from './Record/reducer';
 
+import {
+  executeImportAction
+} from './ImportView/reducer';
+
+import { executeOrderChangeAction } from './Reorder/reducer';
+
 import { default as api } from '../../utils/api';
 import { normalizeTosForApi } from '../../utils/helpers';
 
@@ -54,13 +60,8 @@ export const RECEIVE_TOS = 'receiveTosAction';
 export const TOS_ERROR = 'tosErrorAction';
 export const RESET_TOS = 'resetTosAction';
 export const CLEAR_TOS = 'clearTosAction';
-
 export const EDIT_META_DATA = 'editMetaDataAction';
-
 export const SET_DOCUMENT_STATE = 'setDocumentStateAction';
-
-export const EXECUTE_IMPORT = 'executeImportAction';
-export const EXECUTE_ORDER_CHANGE = 'executeOrderChangeAction';
 
 // ------------------------------------
 // Actions
@@ -121,7 +122,6 @@ export function resetTOS (originalTos) {
   return createAction(RESET_TOS)(originalTos);
 }
 
-
 export function editMetaData (attributes) {
   let editedMetaData = [];
   for (const key in attributes) {
@@ -137,107 +137,6 @@ export function editMetaData (attributes) {
 
 export function setDocumentState (newState) {
   return createAction(SET_DOCUMENT_STATE)(newState);
-}
-
-export function executeImport (newItem, level, itemParent, currentState) {
-  const newId = Math.random().toString(36).replace(/[^a-z]+/g, '');
-  let currentItems;
-  let parentLevel;
-  let itemLevel;
-  switch (level) {
-    case 'phase':
-      currentItems = Object.assign({}, currentState.selectedTOS.phases);
-      parentLevel = 'tos';
-      itemLevel = 'phases';
-      break;
-    case 'action':
-      currentItems = Object.assign({}, currentState.selectedTOS.actions);
-      parentLevel = 'phases';
-      itemLevel = 'actions';
-      break;
-    case 'record':
-      currentItems = Object.assign({}, currentState.selectedTOS.records);
-      parentLevel = 'actions';
-      itemLevel = 'records';
-      break;
-    default:
-      return currentState;
-  }
-  let indexes = [];
-  for (const key in currentItems) {
-    if (currentItems.hasOwnProperty(key)) {
-      indexes.push(currentItems[key].index);
-    }
-  }
-  const newIndex = indexes.length > 0 ? Math.max.apply(null, indexes) + 1 : 1;
-  const newName = currentItems[newItem].name + ' (KOPIO)';
-  const newCopy = Object.assign({}, currentItems[newItem], { id: newId }, { index: newIndex }, { name: newName });
-  const newItems = Object.assign({}, currentItems, { [newId]: newCopy });
-
-  return createAction(EXECUTE_IMPORT)({ level, itemParent, parentLevel, itemLevel, newId, newItems });
-}
-
-export function executeOrderChange (newOrder, itemType, itemParent, currentState) {
-  let parentLevel;
-  let itemLevel;
-  const affectedItems = newOrder;
-  switch (itemType) {
-    case 'phase':
-      parentLevel = 'tos';
-      itemLevel = 'phases';
-      break;
-    case 'action':
-      parentLevel = 'phases';
-      itemLevel = 'actions';
-      break;
-    case 'record':
-      parentLevel = 'actions';
-      itemLevel = 'records';
-      break;
-    default:
-      return currentState;
-  }
-  const reorderedList = [];
-  affectedItems.map(item => {
-    reorderedList.push(currentState.selectedTOS[itemLevel][item]);
-  });
-  const parentList = [];
-  reorderedList.map((item, index) => {
-    item.index = index + 1;
-    parentList.push(item.id);
-  });
-  let itemList = Object.assign({}, currentState.selectedTOS[itemLevel]);
-  for (const key in itemList) {
-    if (itemList.hasOwnProperty(key)) {
-      reorderedList.map(item => {
-        if (itemList[key].id === item.id) {
-          itemList[key] = item;
-        }
-      });
-    }
-  }
-
-  itemList = parentLevel === 'tos'
-    ? reorderedList.reduce((result, item) => {
-      const key = item.id;
-      result[key] = item;
-      return result;
-    }, {})
-    : itemList;
-
-  return createAction(EXECUTE_ORDER_CHANGE)({ itemList, itemType, itemParent, parentLevel, itemLevel, parentList });
-}
-
-export function importItems (newItem, level, itemParent) {
-  return function (dispatch, getState) {
-    dispatch(executeImport(newItem, level, itemParent, getState()));
-  };
-}
-
-export function changeOrder (newOrder, itemType, itemParent) {
-  return function (dispatch, getState) {
-    dispatch(executeOrderChange(newOrder, itemType, itemParent, getState()));
-  };
 }
 
 export function saveDraft () {
@@ -352,52 +251,6 @@ const setDocumentStateAction = (state, { payload }) => {
       $set: payload
     }
   });
-};
-
-const executeImportAction = (state, { payload }) => {
-  if (payload.level === 'phase') {
-    return update(state, {
-      [payload.itemLevel]: {
-        $set: payload.newItems
-      }
-    });
-  } else {
-    return update(state, {
-      [payload.parentLevel]: {
-        [payload.itemParent]: {
-          [payload.itemLevel]: {
-            $push: [payload.newId]
-          }
-        }
-      },
-      [payload.itemLevel]: {
-        $set: payload.newItems
-      }
-    });
-  }
-};
-
-const executeOrderChangeAction = (state, { payload }) => {
-  if (payload.itemType === 'phase') {
-    return update(state, {
-      [payload.itemLevel]: {
-        $set: payload.itemList
-      }
-    });
-  } else {
-    return update(state, {
-      [payload.parentLevel]: {
-        [payload.itemParent]: {
-          [payload.itemLevel]: {
-            $set: payload.parentList
-          }
-        }
-      },
-      [payload.itemLevel]: {
-        $set: payload.itemList
-      }
-    });
-  }
 };
 
 export default handleActions({

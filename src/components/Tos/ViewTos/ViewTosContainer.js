@@ -5,11 +5,9 @@ import { push } from 'react-router-redux';
 import { setNavigationVisibility } from '../../Navigation/navigationReducer';
 
 import {
-  changeOrder,
   clearTOS,
   editMetaData,
   fetchTOS,
-  importItems,
   resetTOS,
   saveDraft,
   setDocumentState
@@ -35,6 +33,10 @@ import {
   editRecordAttribute,
   removeRecord
 } from '../Record/reducer';
+
+import { importItems } from '../ImportView/reducer';
+
+import { changeOrder } from '../Reorder/reducer';
 
 import { displayMessage } from '../../../store/uiReducer';
 
