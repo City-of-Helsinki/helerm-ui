@@ -1,4 +1,5 @@
 import LTT from 'list-to-tree';
+import { toastr } from 'react-redux-toastr'
 import {
   filter,
   find,
@@ -156,4 +157,14 @@ export function getStatusLabel (status) {
     default:
       return 'Luonnos';
   }
+}
+
+/**
+ * Display message in UI
+ * @param message
+ * @param opts
+ */
+export function displayMessage (message, opts = { type: 'success' }) {
+  const { title, body } = message;
+  return toastr[opts.type](title, body, opts);
 }
