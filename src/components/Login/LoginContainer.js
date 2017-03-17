@@ -5,9 +5,9 @@ import {
   login,
   logout,
   retrieveUserFromSession
-} from '../../../store/userReducer';
+} from './reducer';
 
-import Login from '../components/Login';
+import Login from './Login';
 
 const mapDispatchToProps = (dispatch) => {
   return {

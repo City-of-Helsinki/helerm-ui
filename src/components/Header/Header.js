@@ -5,11 +5,11 @@ import { Link } from 'react-router';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import { closeMessage } from '../../store/uiReducer';
-import { setNavigationVisibility } from '../Navigation/navigationReducer';
+import { setNavigationVisibility } from '../Navigation/reducer';
 
 import Alert from '../Alert/Alert';
 import Loader from '../Loader';
-import LoginContainer from '../Login/containers/LoginContainer';
+import LoginContainer from '../Login/LoginContainer';
 
 import './Header.scss';
 

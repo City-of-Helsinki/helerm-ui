@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import '../Login.scss';
+import './Login.scss';
 
 class Login extends React.Component {
   constructor () {

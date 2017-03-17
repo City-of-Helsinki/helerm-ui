@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
 
-import { setNavigationVisibility } from '../../Navigation/navigationReducer';
+import { setNavigationVisibility } from '../../Navigation/reducer';
 
 import {
   clearTOS,
@@ -11,7 +11,7 @@ import {
   resetTOS,
   saveDraft,
   setDocumentState
-} from '../tosReducer';
+} from '../reducer';
 
 import {
   addAction,
