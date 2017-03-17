@@ -1263,7 +1263,7 @@ clap@^1.0.9:
   dependencies:
     chalk "^1.1.3"
 
-classnames@^2.2.4, classnames@^2.2.5:
+classnames@^2.2.3, classnames@^2.2.4, classnames@^2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.5.tgz#fb3801d453467649ef3603c7d61a02bd129bde6d"
 
@@ -2244,7 +2244,7 @@ event-stream@~3.3.0:
     stream-combiner "~0.0.4"
     through "~2.3.1"
 
-eventemitter3@1.x.x:
+eventemitter3@1.x.x, eventemitter3@^1.1.1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-1.2.0.tgz#1c86991d816ad1e504750e73874224ecf3bec508"
 
@@ -2359,7 +2359,7 @@ fastparse@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/fastparse/-/fastparse-1.1.1.tgz#d1e2643b38a94d7583b479060e6c4affc94071f8"
 
-fbjs@^0.8.1, fbjs@^0.8.4:
+fbjs@^0.8.0-alpha.3, fbjs@^0.8.1, fbjs@^0.8.4:
   version "0.8.9"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.9.tgz#180247fbd347dcc9004517b904f865400a0c8f14"
   dependencies:
@@ -4918,6 +4918,15 @@ react-infinity-menu@^2.4.1:
 react-input-autosize@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/react-input-autosize/-/react-input-autosize-1.1.0.tgz#3fe1ac832387d8abab85f6051ceab1c9e5570853"
+
+react-redux-toastr@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/react-redux-toastr/-/react-redux-toastr-5.0.0.tgz#041fea0f0686b633eb8e678e2ec23f219f9ef9d7"
+  dependencies:
+    classnames "^2.2.3"
+    eventemitter3 "^1.1.1"
+    fbjs "^0.8.0-alpha.3"
+    uuid "^2.0.1"
 
 react-redux@^4.4.5:
   version "4.4.6"

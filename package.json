@@ -127,6 +127,7 @@
     "react-fontawesome": "^1.2.0",
     "react-infinity-menu": "^2.4.1",
     "react-redux": "^4.4.5",
+    "react-redux-toastr": "^5.0.0",
     "react-router": "^2.8.0",
     "react-router-redux": "^4.0.8",
     "react-select": "^1.0.0-rc.3",
