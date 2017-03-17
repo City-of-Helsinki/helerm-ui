@@ -11,12 +11,6 @@ import LoginContainer from '../Login/LoginContainer';
 import './Header.scss';
 
 export class Header extends React.Component {
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.message) {
-      this.setState({ showAlert: nextProps.message.active });
-    }
-  }
-
   render () {
     const { isFetching } = this.props;
 
@@ -39,7 +33,6 @@ export class Header extends React.Component {
 
 Header.propTypes = {
   isFetching: React.PropTypes.bool,
-  message: React.PropTypes.object,
   setNavigationVisibility: React.PropTypes.func
 };
 

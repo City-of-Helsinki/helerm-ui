@@ -42,20 +42,6 @@ import { changeOrder } from '../Reorder/reducer';
 import ViewTOS from './ViewTos';
 
 const mapDispatchToProps = (dispatch) => {
-
-  // const message = bindActionCreators(toastr, dispatch);
-  //
-  // const displayMessage = (msg, opts = {}) => {
-  //   debugger;
-  //   return message.add({
-  //     id: 'mycustomid', // If not provided we will add one.
-  //     type: 'success',
-  //     title: 'your title',
-  //     message: 'message',
-  //     options: {}
-  //   });
-  // };
-
   return {
     addAction: bindActionCreators(addAction, dispatch),
     addPhase: bindActionCreators(addPhase, dispatch),

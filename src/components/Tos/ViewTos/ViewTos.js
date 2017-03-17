@@ -500,8 +500,8 @@ ViewTOS.propTypes = {
   selectedTOS: React.PropTypes.object.isRequired,
   setDocumentState: React.PropTypes.func.isRequired,
   setNavigationVisibility: React.PropTypes.func.isRequired,
-  setPhasesVisibility: React.PropTypes.func.isRequired,
   setPhaseVisibility: React.PropTypes.func.isRequired,
+  setPhasesVisibility: React.PropTypes.func.isRequired
 };
 
 export default ViewTOS;

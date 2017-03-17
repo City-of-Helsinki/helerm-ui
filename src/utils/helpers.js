@@ -1,5 +1,5 @@
 import LTT from 'list-to-tree';
-import { toastr } from 'react-redux-toastr'
+import { toastr } from 'react-redux-toastr';
 import {
   filter,
   find,
