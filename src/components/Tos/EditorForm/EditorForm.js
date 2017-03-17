@@ -183,8 +183,8 @@ export class EditorForm extends React.Component {
 
     this.props.editMetaDataWithForm(this.filterAttributes(newAttributes));
     this.props.displayMessage({
-      text: 'Metatietojen muokkaus onnistui!',
-      success: true
+      title: 'Metatiedot',
+      body: 'Tietojen muokkaus onnistui!'
     });
   }
 
@@ -199,8 +199,8 @@ export class EditorForm extends React.Component {
       this.filterAttributes(newAttributes)
     );
     this.props.displayMessage({
-      text: 'Asiakirjan lisäys onnistui!',
-      success: true
+      title: 'Asiakirja',
+      body: 'Asiakirjan lisäys onnistui!'
     });
   }
 
@@ -214,8 +214,8 @@ export class EditorForm extends React.Component {
       this.filterAttributes(newAttributes)
     );
     this.props.displayMessage({
-      text: 'Asiakirjan muokkaus onnistui!',
-      success: true
+      title: 'Asiakirja',
+      body: 'Asiakirjan muokkaus onnistui!'
     });
   }
 

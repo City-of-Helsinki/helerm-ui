@@ -141,8 +141,8 @@ export class Phase extends React.Component {
     this.props.addAction(this.props.phaseIndex, this.state.newActionName);
     this.setState({ mode: 'view', newActionName: '' });
     this.props.displayMessage({
-      text: 'Toimenpiteen lisäys onnistui!',
-      success: true
+      title: 'Toimenpide',
+      body: 'Toimenpiteen lisäys onnistui!'
     });
   }
 

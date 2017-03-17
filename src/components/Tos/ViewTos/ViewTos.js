@@ -95,26 +95,29 @@ export class ViewTOS extends React.Component {
 
   saveDraft () {
     return this.props.saveDraft()
-      .then((data) => {
+      .then(() => {
         return this.props.displayMessage({
-          text: 'Luonnos tallennettu',
-          success: true
+          title: 'Luonnos',
+          body: 'Luonnos tallennettu'
         });
       })
       .catch(err => {
         return this.props.displayMessage({
-          text: err.message,
-          success: false
-        });
+          title: 'Error!',
+          body: err.message
+        }, { type: 'error' });
       });
   }
 
   changeStatus (status) {
-    return this.props.changeStatus(status);
-    // return this.props.displayMessage({
-    //   text: 'Ei implementoitu vielä: Luonnos lähetettiin tarkastettavaksi',
-    //   success: true
-    // });
+    const { state } = this.props.selectedTOS;
+    return this.props.changeStatus(status)
+      .then(() => {
+        return this.props.displayMessage({
+          title: 'Tila vaihdettu',
+          body: `${getStatusLabel(state)} => ${getStatusLabel(status)}`
+        });
+      });
   }
 
   formatDateTime (dateTime) {
@@ -138,8 +141,8 @@ export class ViewTOS extends React.Component {
       this.setState({ createPhaseMode: false, newPhaseName: '' });
     }
     this.props.displayMessage({
-      text: 'Käsittelyvaiheen lisäys onnistui!',
-      success: true
+      title: 'Käsittelyvaihe',
+      body: 'Käsittelyvaiheen lisäys onnistui!'
     });
   }
 
@@ -497,8 +500,8 @@ ViewTOS.propTypes = {
   selectedTOS: React.PropTypes.object.isRequired,
   setDocumentState: React.PropTypes.func.isRequired,
   setNavigationVisibility: React.PropTypes.func.isRequired,
+  setPhasesVisibility: React.PropTypes.func.isRequired,
   setPhaseVisibility: React.PropTypes.func.isRequired,
-  setPhasesVisibility: React.PropTypes.func.isRequired
 };
 
 export default ViewTOS;
