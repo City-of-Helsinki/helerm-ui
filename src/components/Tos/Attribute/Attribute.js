@@ -13,6 +13,12 @@ export class Attribute extends React.Component {
     };
   }
 
+  componentWillReceiveProps (nextProps) {
+    if (this.state.attribute !== nextProps.attribute) {
+      this.setState({ attribute: nextProps.attribute });
+    }
+  }
+
   activateEditMode () {
     if (this.state.mode !== 'edit') {
       this.changeState('edit');
