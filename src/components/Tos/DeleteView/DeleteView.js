@@ -30,8 +30,8 @@ export class DeleteView extends React.Component {
         <h3>Olet poistamassa {this.state.type[this.props.type].name} &quot;{this.props.target}&quot;</h3>
         { this.state.type[this.props.type].children &&
         <span className='has-children-text'>
-            Huomioi, että myös kaikki {this.state.type[this.props.type].childrenText} sisältämät tiedot poistetaan
-          </span>
+          Huomioi, että myös kaikki {this.state.type[this.props.type].childrenText} sisältämät tiedot poistetaan
+        </span>
         }
         <h4>Vahvista poisto</h4>
         <div className='popup-buttons'>
