@@ -47,7 +47,7 @@ if (__DEV__) {
     };
 
     // Setup hot module replacement
-    module.hot.accept('./routes', () =>
+    module.hot.accept('./routes.js', () =>
       setImmediate(() => {
         ReactDOM.unmountComponentAtNode(MOUNT_NODE);
         render();
