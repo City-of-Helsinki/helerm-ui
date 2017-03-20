@@ -53,14 +53,10 @@ export class ReorderView extends React.Component {
       <div className='row'>
         <h3 className='col-xs-12'>Järjestä</h3>
         { target === 'phase' &&
-        <span className='col-xs-12 reorder-subtext'>
-          Järjestä TOS:n <strong className='reorder-subtext-highlight'>{parentName}</strong> käsittelyvaiheita
-        </span>
+        <span className='col-xs-12 reorder-subtext'>Järjestä TOS:n <strong className='reorder-subtext-highlight'>{parentName}</strong> käsittelyvaiheita</span>
         }
         { target === 'action' &&
-        <span className='col-xs-12 reorder-subtext'>
-          Järjestä käsittelyvaiheen <strong className='reorder-subtext-highlight'>{parentName}</strong> toimenpiteet
-        </span>
+        <span className='col-xs-12 reorder-subtext'>Järjestä käsittelyvaiheen <strong className='reorder-subtext-highlight'>{parentName}</strong> toimenpiteet</span>
         }
         <div className='col-xs-12 reorder-list'>
           { keys.map((key, index) => (
