@@ -16,6 +16,7 @@ describe('(Redux Module) Tos', () => {
         state: null,
         created_at: null,
         modified_at: null,
+        modified_by: null,
         actions: {},
         phases: {},
         records: {},
