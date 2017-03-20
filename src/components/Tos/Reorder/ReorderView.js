@@ -16,15 +16,18 @@ export class ReorderView extends React.Component {
       keys: this.props.keys
     };
   }
+
   componentWillReceiveProps (nextProps) {
     if (nextProps.keys) {
       this.setState({ keys: nextProps.keys });
     }
   }
+
   changeOrder (keys) {
     this.props.changeOrder(keys, this.props.target, this.props.parent);
     this.props.toggleReorderView();
   }
+
   moveItem (dragIndex, hoverIndex) {
     const { keys } = this.state;
     const dragItem = keys[dragIndex];
@@ -38,9 +41,11 @@ export class ReorderView extends React.Component {
       }
     }));
   }
+
   stop (e) {
     e.stopPropagation();
   }
+
   render () {
     const { keys } = this.state;
     const { target, values, toggleReorderView, parentName } = this.props;
@@ -48,12 +53,12 @@ export class ReorderView extends React.Component {
       <div className='row'>
         <h3 className='col-xs-12'>Järjestä</h3>
         { target === 'phase' &&
-          <span className='col-xs-12 reorder-subtext'>
+        <span className='col-xs-12 reorder-subtext'>
             Järjestä TOS:n <strong className='reorder-subtext-highlight'>{parentName}</strong> käsittelyvaiheita
           </span>
         }
         { target === 'action' &&
-          <span className='col-xs-12 reorder-subtext'>
+        <span className='col-xs-12 reorder-subtext'>
             Järjestä käsittelyvaiheen <strong className='reorder-subtext-highlight'>{parentName}</strong> toimenpiteet
           </span>
         }
