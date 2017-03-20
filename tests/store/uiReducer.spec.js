@@ -1,5 +1,4 @@
 import {
-  closeMessage,
   fetchAttributeTypes,
   default as uiReducer
 } from 'store/uiReducer';
@@ -12,12 +11,7 @@ describe('(Redux Module) UI', () => {
       _initialState = {
         isFetching: false,
         recordTypes: {},
-        attributeTypes: {},
-        message: {
-          active: false,
-          text: '',
-          success: false
-        }
+        attributeTypes: {}
       };
     });
     it('Should be a function.', () => {
@@ -35,14 +29,10 @@ describe('(Redux Module) UI', () => {
         type: 'DOESNOTACTUALLYEXISTLOL'
       });
       expect(state).to.deep.equal(_initialState);
-      state.message.active = true;                  // TODO: Improve this
-      expect(state.message.active).to.equal(true);
-      state = uiReducer(state, closeMessage());
-      expect(state.message.active).to.equal(false);
       state = uiReducer(state, {
         type: 'DOESNOTACTUALLYEXISTLOL'
       });
-      expect(state.message.active).to.equal(false);
+      expect(state).to.deep.equal(_initialState);
     });
   });
 
