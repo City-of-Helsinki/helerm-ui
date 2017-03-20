@@ -65,16 +65,17 @@ export function convertToTree (itemList) {
 export function normalizeTosForApi (tos) {
   // TODO: needs some serious refactoring...
   const finalTos = Object.assign({}, tos);
-  const phases = map(finalTos.phases, phase => phase);
+  const phases = map(finalTos.phases, phase => Object.assign({}, phase));
   const finalPhases = [];
 
   phases.map((phase, phaseIndex) => {
-    finalPhases.push(phase);
-    phase.actions.map((action, actionIndex) => {
-      finalPhases[phaseIndex].actions[actionIndex] = finalTos.actions[action];
-      phase.actions[actionIndex].records.map((record, recordsIndex) => {
-        delete phase.actions[actionIndex].records[recordsIndex];
-        finalPhases[phaseIndex].actions[actionIndex].records[recordsIndex] = finalTos.records[record];
+    finalPhases.push(Object.assign({}, phase));
+    return phase.actions.map((action, actionIndex) => {
+      const actionId = typeof action === 'string' ? action : action.id;
+      Object.assign(finalPhases[phaseIndex].actions, { [actionIndex]: finalTos.actions[actionId] });
+      return finalTos.actions[actionId].records.map((record, recordsIndex) => {
+        const recordId = typeof record === 'string' ? record : record.id;
+        return Object.assign(finalPhases[phaseIndex].actions[actionIndex].records, { [recordsIndex]: finalTos.records[recordId] });
       });
     });
   });
