@@ -1,18 +1,16 @@
 import update from 'immutability-helper';
+import { createAction, handleActions } from 'redux-actions';
 
 import { default as api } from '../utils/api';
 
-// ------------------------------------
-// Constants
-// ------------------------------------
-export const RECEIVE_ATTRIBUTE_TYPES = 'ui/RECEIVE_ATTRIBUTE_TYPES';
+const initialState = {
+  isFetching: false,
+  recordTypes: {},
+  attributeTypes: {}
+};
 
-export const CLOSE_MESSAGE = 'ui/CLOSE_MESSAGE';
-export const DISPLAY_MESSAGE = 'ui/DISPLAY_MESSAGE';
+export const RECEIVE_ATTRIBUTE_TYPES = 'receiveAttributeTypesAction';
 
-// ------------------------------------
-// Actions
-// ------------------------------------
 export function receiveAttributeTypes (attributes, validationRules) {
   const attributeTypeList = {};
   attributes.results.map(result => {
@@ -33,23 +31,8 @@ export function receiveAttributeTypes (attributes, validationRules) {
       };
     }
   });
-  return {
-    type: RECEIVE_ATTRIBUTE_TYPES,
-    attributeTypeList
-  };
-}
 
-export function displayMessage (message) {
-  return {
-    type: DISPLAY_MESSAGE,
-    message
-  };
-}
-
-export function closeMessage () {
-  return {
-    type: CLOSE_MESSAGE
-  };
+  return createAction(RECEIVE_ATTRIBUTE_TYPES)(attributeTypeList);
 }
 
 export function fetchAttributeTypes () {
@@ -65,67 +48,23 @@ export function fetchAttributeTypes () {
   };
 }
 
-export const actions = {
-  closeMessage,
-  fetchAttributeTypes,
-  receiveAttributeTypes
+const receiveAttributeTypesAction = (state, { payload }) => {
+  const recordTypes = payload.RecordType;
+  const recordTypeList = {};
+  recordTypes.values.map(result => {
+    const trimmedResult = result.id.replace(/-/g, '');
+    recordTypeList[trimmedResult] = {
+      id: result.id,
+      name: result.value
+    };
+  });
+  delete payload.RecordType;
+  return update(state, {
+    attributeTypes: { $set: payload },
+    recordTypes: { $set: recordTypeList }
+  });
 };
 
-// ------------------------------------
-// Action Handlers
-// ------------------------------------
-const ACTION_HANDLERS = {
-  [RECEIVE_ATTRIBUTE_TYPES]: (state, action) => {
-    const recordTypes = action.attributeTypeList.RecordType;
-    const recordTypeList = {};
-    recordTypes.values.map(result => {
-      const trimmedResult = result.id.replace(/-/g, '');
-      recordTypeList[trimmedResult] = {
-        id: result.id,
-        name: result.value
-      };
-    });
-    delete action.attributeTypeList.RecordType;
-    return update(state, {
-      attributeTypes: { $set: action.attributeTypeList },
-      recordTypes: { $set: recordTypeList }
-    });
-  },
-  [DISPLAY_MESSAGE]: (state, action) => {
-    return update(state, {
-      message: {
-        active: { $set: true },
-        text: { $set: action.message.text },
-        success: { $set: action.message.success }
-      }
-    });
-  },
-  [CLOSE_MESSAGE]: (state, action) => {
-    return update(state, {
-      message: {
-        active: { $set: false },
-        text: { $set: '' },
-        success: { $set: false }
-      }
-    });
-  }
-};
-
-// ------------------------------------
-// Reducer
-// ------------------------------------
-const initialState = {
-  isFetching: false,
-  recordTypes: {},
-  attributeTypes: {},
-  message: {
-    active: false,
-    text: '',
-    success: false
-  }
-};
-
-export default function uiReducer (state = initialState, action) {
-  const handler = ACTION_HANDLERS[action.type];
-  return handler ? handler(state, action) : state;
-}
+export default handleActions({
+  receiveAttributeTypesAction
+}, initialState);

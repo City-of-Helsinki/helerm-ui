@@ -1,4 +1,5 @@
 import LTT from 'list-to-tree';
+import { toastr } from 'react-redux-toastr';
 import {
   filter,
   find,
@@ -8,6 +9,13 @@ import {
   map,
   orderBy
 } from 'lodash';
+
+import {
+  DRAFT,
+  SENT_FOR_REVIEW,
+  WAITING_FOR_APPROVAL,
+  APPROVED
+} from '../../config/constants';
 
 export function convertToTree (itemList) {
   // ------------------------------------
@@ -34,7 +42,7 @@ export function convertToTree (itemList) {
     return tree.map(item => {
       if (item.children !== undefined) {
         // ------------------------------------
-        // Generate path to show when navigation is minimized and TOS is shown
+        // Generate path to show when navigation is minimized and Tos is shown
         // ------------------------------------
         item.path.push(item.name);
         item.children.map(child => {
@@ -129,4 +137,34 @@ export function centeredPopUp (url, title, w, h) {
  */
 export function checkPermissions (user, permission) {
   return !isEmpty(user) && includes(user.permissions, permission);
+}
+
+/**
+ * Get status's label
+ * @param status
+ * @returns {*}
+ */
+export function getStatusLabel (status) {
+  switch (status) {
+    case DRAFT:
+      return 'Luonnos';
+    case SENT_FOR_REVIEW:
+      return 'Tarkastettavana';
+    case WAITING_FOR_APPROVAL:
+      return 'Hyväksyttävänä';
+    case APPROVED:
+      return 'Hyväksytty';
+    default:
+      return 'Luonnos';
+  }
+}
+
+/**
+ * Display message in UI
+ * @param message
+ * @param opts
+ */
+export function displayMessage (message, opts = { type: 'success' }) {
+  const { title, body } = message;
+  return toastr[opts.type](title, body, opts);
 }

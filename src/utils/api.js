@@ -67,6 +67,17 @@ export function put (endpoint, data, params = {}, options = {}) {
   return callApi(endpoint, params, merge({ body: data, method: 'PUT' }, options));
 }
 
+export function patch (endpoint, data, params = {}, options = {}) {
+  if (typeof data !== 'string') {
+    data = JSON.stringify(data);
+    options.headers = merge(
+      { 'Content-Type': 'application/json' },
+      options.headers
+    );
+  }
+  return callApi(endpoint, params, merge({ body: data, method: 'PATCH' }, options));
+}
+
 /**
  *
  * @param endpoint
@@ -150,4 +161,4 @@ export function buildQueryString (query) {
   return pairs.length ? '?' + pairs.join('&') : '';
 }
 
-export default { get, post, put, del };
+export default { get, post, put, patch, del };
