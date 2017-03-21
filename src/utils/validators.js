@@ -24,6 +24,30 @@ export const validateTOS = (tos, rules) => {
 };
 
 /**
+ * Validate Phase against rules
+ * @param phase
+ * @param rules
+ * @returns {Array}
+ */
+export const validatePhase = (phase, rules) => {
+  let errors = [];
+  // TODO: implementation
+  return errors;
+};
+
+/**
+ * Validate Action against rules
+ * @param action
+ * @param rules
+ * @returns {Array}
+ */
+export const validateAction = (action, rules) => {
+  let errors = [];
+  // TODO: implementation
+  return errors;
+};
+
+/**
  * Validate Record against rules
  * @param record
  * @param rules
