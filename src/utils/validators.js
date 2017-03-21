@@ -60,12 +60,12 @@ export const validateRecord = (record, rules) => {
     if (rules[key].required && rules[key].requiredIn.includes('record')) {
       if (rules[key].requiredIf.length) {
         for (const item of rules[key].requiredIf) {
-          if (record.attributes[item.key].value && item.values.includes(record.attributes[item.key].value)) {
+          if (record.attributes[item.key] && item.values.includes(record.attributes[item.key])) {
             errors.push(key);
           }
         }
       } else {
-        if (!record.attributes[key].value) {
+        if (!record.attributes[key]) {
           errors.push(key);
         }
       }
