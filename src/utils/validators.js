@@ -8,13 +8,14 @@ export const validateTOS = (tos, rules) => {
   let errors = [];
   for (const key in rules) {
     if (rules[key].required && rules[key].requiredIn.includes('function')) {
-      if (!tos.attributes[key]) {
-        errors.push(key);
-      }
-    }
-    if (rules[key].requiredIf.length) {
-      for (const item in key.requiredIf) {
-        if (item.key === key && !item.values.includes(tos.attributes[key])) {
+      if (rules[key].requiredIf.length) {
+        for (const item of rules[key].requiredIf) {
+          if (tos.attributes[item.key] && item.values.includes(tos.attributes[item.key])) {
+            errors.push(key);
+          }
+        }
+      } else {
+        if (!tos.attributes[key]) {
           errors.push(key);
         }
       }
@@ -57,13 +58,14 @@ export const validateRecord = (record, rules) => {
   let errors = [];
   for (const key in rules) {
     if (rules[key].required && rules[key].requiredIn.includes('record')) {
-      if (!record.attributes[key]) {
-        errors.push(key);
-      }
-    }
-    if (rules[key].requiredIf.length) {
-      for (const item in key.requiredIf) {
-        if (item.key === key && !item.values.includes(record.attributes[key].value)) {
+      if (rules[key].requiredIf.length) {
+        for (const item of rules[key].requiredIf) {
+          if (record.attributes[item.key].value && item.values.includes(record.attributes[item.key].value)) {
+            errors.push(key);
+          }
+        }
+      } else {
+        if (!record.attributes[key].value) {
           errors.push(key);
         }
       }
