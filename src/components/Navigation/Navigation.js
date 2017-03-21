@@ -64,19 +64,22 @@ export class Navigation extends React.Component {
 
   filter (tree) {
     const { filterStatuses } = this.state;
-    let filteredTree = tree;
+
+    const letsFilter = (items) => {
+      return filter(items, (item) => {
+        console.log(item);
+        if (item.children) {
+          return letsFilter(item.children);
+        }
+        return includes(filterStatuses, item.state);
+      });
+    };
 
     if (filterStatuses.length) {
-      filteredTree = filter(filteredTree, (item) => {
-        if (includes(filterStatuses, item.state)) {
-          if (item.children) {
-            this.filter(item.children);
-          }
-          return item;
-        }
-      });
+      return letsFilter(tree);
     }
-    return filteredTree;
+
+    return tree;
   }
 
   handleStatusFilterChange (valArray) {
