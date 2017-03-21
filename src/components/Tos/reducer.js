@@ -233,16 +233,24 @@ const tosErrorAction = (state) => {
   // TODO: Find out what mutates store so hard...
   const actions = {};
   const phases = {};
+
   map(state.actions, action => {
-    actions[action.id] = action;
+    Object.assign(actions, { [action.id]: action });
     return map(action.records, (record, recordIndex) => {
-      actions[action.id].records[recordIndex] = record.id;
+      if (record && typeof record !== 'undefined') {
+        const recordId = typeof record === 'string' ? record : record.id;
+        return Object.assign(actions[action.id].records, { [recordIndex]: recordId });
+      }
     });
   });
+
   map(state.phases, phase => {
-    phases[phase.id] = phase;
+    Object.assign(phases, { [phase.id]: phase });
     return map(phase.actions, (action, actionIndex) => {
-      phases[phase.id].actions[actionIndex] = action.id;
+      if (action && typeof action !== 'undefined') {
+        const actionId = typeof action === 'string' ? action : action.id;
+        Object.assign(phases[phase.id].actions, { [actionIndex]: actionId });
+      }
     });
   });
 

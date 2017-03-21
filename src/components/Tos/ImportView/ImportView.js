@@ -13,6 +13,14 @@ export class ImportView extends React.Component {
     };
   }
 
+  componentWillMount () {
+    document.body.classList.add('noscroll');
+  }
+
+  componentWillUnmount () {
+    document.body.classList.remove('noscroll');
+  }
+
   generateImportableElements (level) {
     let elements;
     switch (level) {
@@ -76,14 +84,19 @@ export class ImportView extends React.Component {
 
   generateLinks (values, items) {
     let links = [];
-    for (const key in items) {
-      if (items.hasOwnProperty(key)) {
+    let itemsInArray = items;
+    if (!items.length) {
+      itemsInArray = Object.keys(items); // Because items mutates into object for unknown reason
+    }
+    for (const key in itemsInArray) {
+      if (itemsInArray.hasOwnProperty(key)) {
         links.push(
           <div key={key} className='col-xs-12'>
             <a
               key={key}
               href=''
-              onClick={(e) => this.selectForImport(e, values[items[key]].id)}>{values[items[key]].name}
+              onClick={(e) => this.selectForImport(e, values[itemsInArray[key]].id)}>
+              {values[itemsInArray[key]].name}
             </a>
           </div>
         );

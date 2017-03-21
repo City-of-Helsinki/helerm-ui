@@ -18,6 +18,7 @@ export class Phase extends React.Component {
     this.addAction = this.addAction.bind(this);
     this.editPhaseTitle = this.editPhaseTitle.bind(this);
     this.savePhaseTitle = this.savePhaseTitle.bind(this);
+    this.toggleImportView = this.toggleImportView.bind(this);
     this.cancelActionCreation = this.cancelActionCreation.bind(this);
     this.state = {
       name: this.props.phase.name,
@@ -274,7 +275,7 @@ export class Phase extends React.Component {
             content={
               <ImportView
                 level='action'
-                toggleImportView={() => this.toggleImportView()}
+                toggleImportView={this.toggleImportView}
                 title='toimenpiteitä'
                 targetText={'käsittelyvaiheeseen "' + phase.name + '"'}
                 itemsToImportText='toimenpiteet'
