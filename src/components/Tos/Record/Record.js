@@ -147,6 +147,7 @@ export class Record extends React.Component {
     const attributes = this.generateAttributes(record.attributes);
 
     const isValidRecord = validateRecord(record, attributeTypes);
+    console.log(isValidRecord);
 
     return (
       <div className={'record col-xs-12 ' + (this.state.showAttributes ? 'record-open' : '')}>
