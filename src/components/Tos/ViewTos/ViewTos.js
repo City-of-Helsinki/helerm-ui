@@ -278,10 +278,9 @@ export class ViewTOS extends React.Component {
     return metadataElement;
   }
 
-  generatePhases (phases) {
+  generatePhases (phases, phasesOrder) {
     const phaseElements = [];
     if (phases) {
-      const phasesOrder = Object.keys(this.props.selectedTOS.phases);
       for (const key in phases) {
         if (phases.hasOwnProperty(key)) {
           phaseElements.push(
@@ -321,7 +320,8 @@ export class ViewTOS extends React.Component {
   render () {
     const { selectedTOS, isFetching } = this.props;
     if (!isFetching && selectedTOS.id) {
-      const phaseElements = this.generatePhases(selectedTOS.phases);
+      const phasesOrder = Object.keys(selectedTOS.phases);
+      const phaseElements = this.generatePhases(selectedTOS.phases, phasesOrder);
       const TOSMetaData = this.generateMetaData(this.props.attributeTypes, selectedTOS.attributes);
 
       return (
@@ -447,7 +447,7 @@ export class ViewTOS extends React.Component {
                         level='phase'
                         toggleImportView={() => this.toggleImportView()}
                         phases={selectedTOS.phases}
-                        phasesOrder={Object.keys(selectedTOS.phases)}
+                        phasesOrder={phasesOrder}
                         actions={selectedTOS.actions}
                         records={selectedTOS.records}
                         importItems={this.props.importItems}
