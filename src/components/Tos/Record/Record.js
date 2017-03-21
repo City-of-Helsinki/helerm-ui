@@ -5,7 +5,7 @@ import DeleteView from '../DeleteView/DeleteView';
 import Dropdown from 'components/Dropdown';
 import Popup from 'components/Popup';
 
-import { validateRecord } from '../../utils/validators';
+import { validateRecord } from '../../../utils/validators';
 
 export class Record extends React.Component {
   constructor (props) {
