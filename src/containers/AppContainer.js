@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { Provider, connect } from 'react-redux';
 import { Router } from 'react-router';
+import ReduxToastr from 'react-redux-toastr';
 
 import {
-  fetchRecordTypes,
   fetchAttributeTypes
 } from '../store/uiReducer';
 
@@ -31,15 +31,21 @@ class AppContainer extends Component {
           <Router history={history}>
             {routes}
           </Router>
+          <ReduxToastr
+            timeOut={4000}
+            newestOnTop={true}
+            preventDuplicates={true}
+            position='top-right'
+            transitionIn='fadeIn'
+            transitionOut='bounceOutUp'
+            progressBar={true}
+          />
         </div>
       </Provider>
     );
   }
 }
 
-const mapDispatchToProps = {
-  fetchRecordTypes,
-  fetchAttributeTypes
-};
+const mapDispatchToProps = { fetchAttributeTypes };
 
 export default connect(null, mapDispatchToProps)(AppContainer);
