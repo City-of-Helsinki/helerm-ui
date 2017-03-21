@@ -5,6 +5,8 @@ import DeleteView from './DeleteView';
 import Dropdown from 'components/Dropdown';
 import Popup from 'components/Popup';
 
+import { validateRecord } from '../../utils/validators';
+
 export class Record extends React.Component {
   constructor (props) {
     super(props);
@@ -139,10 +141,13 @@ export class Record extends React.Component {
   }
 
   render () {
-    const { record } = this.props; // TYPE IS UNDEFINED
+    const { record, attributeTypes } = this.props; // TYPE IS UNDEFINED
     const recordObjects = this.generateRecordObjects(record);
     const recordAttributes = this.generateRecordAttributes(recordObjects);
     const attributes = this.generateAttributes(record.attributes);
+
+    const isValidRecord = validateRecord(record, attributeTypes);
+
     return (
       <div className={'record col-xs-12 ' + (this.state.showAttributes ? 'record-open' : '')}>
         <div className='list-group'>
