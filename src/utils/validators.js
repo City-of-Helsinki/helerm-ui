@@ -2,7 +2,7 @@
  * Validate TOS against rules
  * @param tos
  * @param rules
- * @returns {boolean}
+ * @returns {Array}
  */
 export const validateTOS = (tos, rules) => {
   let errors = [];
