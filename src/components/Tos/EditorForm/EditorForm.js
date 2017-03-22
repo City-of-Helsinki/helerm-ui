@@ -1,7 +1,7 @@
 import React from 'react';
 import './EditorForm.scss';
 import update from 'immutability-helper';
-// import find from 'lodash/find';
+import Select from 'react-select';
 
 export class EditorForm extends React.Component {
   constructor (props) {
@@ -46,25 +46,23 @@ export class EditorForm extends React.Component {
   //   return correctType;
   // }
 
-  onChange (e, key, field) {
-    const newValue = e;
+  onChange (value, key, field) {
     this.setState(update(this.state, {
       newAttributes: {
         [key]: {
           [field]: {
-            $set: newValue
+            $set: value
           }
         }
       }
     }));
   }
 
-  onBaseAttributeChange (e, key, field) {
-    const newValue = e;
+  onBaseAttributeChange (value, key, field) {
     this.setState(update(this.state, {
       [key]: {
         [field]: {
-          $set: newValue
+          $set: value
         }
       }
     }));
@@ -84,14 +82,20 @@ export class EditorForm extends React.Component {
     }
   }
 
+  generateOptions (array) {
+    return array.map(item => ({
+      value: item.value,
+      label: item.value
+    }));
+  }
+
   generateAttributeElements (attributeTypes) {
     const attributeElements = [];
     for (const key in attributeTypes) {
       if (attributeTypes.hasOwnProperty(key)) {
         if (attributeTypes[key].values.length) {
-          const options = attributeTypes[key].values.map((option, index) => (
-            <option key={index} value={option.value}>{option.value}</option>
-          ));
+          const options = this.generateOptions(attributeTypes[key].values);
+
           attributeElements.push(
             <div key={key} className='col-xs-12 col-lg-6 form-group'>
               <input
@@ -105,14 +109,18 @@ export class EditorForm extends React.Component {
                 <span className='fa fa-asterisk required-asterisk'/>
                 }
               </label>
-              <select
-                value={this.getActiveValue(key)}
+              <Select
+                placeholder='Valitse...'
+                autoBlur={true}
+                autofocus={false}
                 className='form-control edit-record__select'
-                onChange={(e) => this.onChange(e.target.value, key, 'name')}
-                disabled={!this.state.newAttributes[key].checked}>
-                <option value={null}>[ Tyhjä ]</option>
-                { options }
-              </select>
+                clearable={false}
+                disabled={!this.state.newAttributes[key].checked}
+                onChange={({ value }) => this.onChange(value, key, 'name')}
+                openOnFocus={true}
+                options={options}
+                value={this.getActiveValue(key)}
+              />
             </div>
           );
         } else if (attributeTypes[key].values.length === 0) {
@@ -146,24 +154,23 @@ export class EditorForm extends React.Component {
   }
 
   generateDropdown (recordTypes) {
-    const options = [];
-    for (const key in recordTypes) {
-      if (recordTypes.hasOwnProperty(key)) {
-        options.push(
-          <option key={key} value={recordTypes[key].name}>
-            {recordTypes[key].name}
-          </option>
-        );
-      }
-    }
+    const optionsRaw = Object.keys(recordTypes).map(record => {
+      return { value: recordTypes[record].name, label: recordTypes[record].name };
+    });
+    const options = this.generateOptions(optionsRaw);
+
     return (
-      <select
-        value={this.state.recordType.value}
+      <Select
+        placeholder='Valitse...'
+        autoBlur={true}
+        autofocus={false}
         className='form-control col-xs-6'
-        onChange={(e) => this.onBaseAttributeChange(e.target.value, 'recordType', 'value')}>
-        <option value={null}>[ Tyhjä ]</option>
-        {options}
-      </select>
+        clearable={false}
+        onChange={({ value }) => this.onBaseAttributeChange(value, 'recordType', 'value')}
+        openOnFocus={true}
+        options={options}
+        value={this.state.recordType.value}
+      />
     );
   }
 
