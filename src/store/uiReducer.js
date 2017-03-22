@@ -15,18 +15,64 @@ export function receiveAttributeTypes (attributes, validationRules) {
   const attributeTypeList = {};
   attributes.results.map(result => {
     if (result.values) {
-      let required;
+      let required = false;
+      let requiredIn = [];
+      let requiredIf = [];
+
+      // Add basic required if so
       validationRules.record.required.map(rule => {
         if (rule === result.identifier) {
           required = true;
         }
       });
-      if (required !== true) {
-        required = false;
-      }
+
+      // Add requiredIn attributes
+      Object.keys(validationRules).map(key => {
+        validationRules[key].required && validationRules[key].required.map(rule => {
+          if (rule === result.identifier) {
+            requiredIn.push(key);
+          }
+        });
+      });
+
+      // Add conditional rules if any
+      Object.keys(validationRules).map(key => {
+        validationRules[key].allOf && validationRules[key].allOf.map(oneOf => {
+          Object.keys(oneOf).map(oneOfKey => {
+            const rules = oneOf[oneOfKey];
+            // We're only interested in required-keys
+            const required = rules[0].required;
+
+            required.map(requiredIndentifier => {
+              Object.keys(rules[0].properties).map(property => {
+                let values = [];
+                Object.keys(rules[0].properties[property]).map(key => {
+                  rules[0].properties[property][key].map(value => {
+                    values.push(value);
+                  });
+                });
+
+                const exists = !!requiredIf.find(reqObj => {
+                  return reqObj.key === property;
+                });
+
+                if (requiredIndentifier === result.identifier && !exists) {
+                  requiredIf.push({
+                    key: property,
+                    values
+                  });
+                }
+              });
+            });
+          });
+        });
+      });
+
       attributeTypeList[result.identifier] = {
         name: result.name,
         values: result.values,
+        requiredIf,
+        requiredIn,
         required
       };
     }
