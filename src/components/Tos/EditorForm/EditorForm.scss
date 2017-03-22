@@ -17,4 +17,17 @@
   &__submit, &__cancel {
     margin-left: 10px;
   }
+
+  .Select {
+    padding: 0;
+    border: none;
+    margin-bottom: 10px;
+    height: auto;
+
+    .Select-control {
+      border: 2px solid #dce4ec;
+      border-radius: 0;
+      margin: 0;
+    }
+  }
 }
