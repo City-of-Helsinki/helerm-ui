@@ -7,7 +7,7 @@ const initialState = {
   isFetching: false,
   recordTypes: {},
   attributeTypes: {},
-  templates: {}
+  templates: []
 };
 
 export const RECEIVE_ATTRIBUTE_TYPES = 'receiveAttributeTypesAction';
