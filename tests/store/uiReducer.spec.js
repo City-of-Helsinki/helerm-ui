@@ -11,7 +11,8 @@ describe('(Redux Module) UI', () => {
       _initialState = {
         isFetching: false,
         recordTypes: {},
-        attributeTypes: {}
+        attributeTypes: {},
+        templates: []
       };
     });
     it('Should be a function.', () => {

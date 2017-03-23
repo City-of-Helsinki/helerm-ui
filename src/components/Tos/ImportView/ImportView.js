@@ -142,6 +142,7 @@ export class ImportView extends React.Component {
   render () {
     const { level, toggleImportView, title, itemsToImportText, targetText } = this.props;
     const importableElements = this.generateImportableElements(level);
+
     return (
       <div className='row'>
         <h3>Tuo {title} {targetText}</h3>

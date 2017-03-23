@@ -6,6 +6,7 @@ import Phase from 'components/Tos/Phase/Phase';
 import Attribute from 'components/Tos/Attribute/Attribute';
 import ReorderView from 'components/Tos/Reorder/ReorderView';
 import ImportView from 'components/Tos/ImportView/ImportView';
+import CloneView from 'components/Tos/CloneView/CloneView';
 import EditorForm from 'components/Tos/EditorForm/EditorForm';
 
 import Popup from 'components/Popup';
@@ -14,7 +15,7 @@ import Dropdown from 'components/Dropdown';
 import TosHeader from 'components/Tos/Header/TosHeader';
 
 // import { EDIT } from '../../../../config/constants';
-import { validateTOS } from '../../../utils/validators';
+// import { validateTOS } from '../../../utils/validators';
 import { getStatusLabel } from '../../../utils/helpers';
 
 import './ViewTos.scss';
@@ -26,6 +27,7 @@ export class ViewTOS extends React.Component {
     this.cancelEdit = this.cancelEdit.bind(this);
     this.cancelMetaDataEdit = this.cancelMetaDataEdit.bind(this);
     this.changeStatus = this.changeStatus.bind(this);
+    this.cloneFromTemplate = this.cloneFromTemplate.bind(this);
     this.saveDraft = this.saveDraft.bind(this);
     this.onChange = this.onChange.bind(this);
     this.createNewPhase = this.createNewPhase.bind(this);
@@ -37,6 +39,7 @@ export class ViewTOS extends React.Component {
       createPhaseMode: false,
       newPhaseName: '',
       originalTos: {},
+      showCloneView: false,
       showImportView: false,
       showMetadata: false,
       showReorderView: false,
@@ -153,6 +156,23 @@ export class ViewTOS extends React.Component {
     this.setState({ newPhaseName: '', createPhaseMode: false });
   }
 
+  cloneFromTemplate (id) {
+    const { cloneFromTemplate } = this.props;
+    return cloneFromTemplate(id)
+      .then(() => {
+        return this.props.displayMessage({
+          title: 'Kloonaus',
+          body: 'Kloonaus onnistui!'
+        });
+      })
+      .catch((err) => {
+        return this.props.displayMessage({
+          title: 'Kloonaus epäonnistui',
+          body: err.message
+        }, { type: 'warning' });
+      });
+  }
+
   onChange (event) {
     this.setState({ newPhaseName: event.target.value });
   }
@@ -188,6 +208,11 @@ export class ViewTOS extends React.Component {
   toggleImportView () {
     const current = this.state.showImportView;
     this.setState({ showImportView: !current });
+  }
+
+  toggleCloneView () {
+    const current = this.state.showCloneView;
+    this.setState({ showCloneView: !current });
   }
 
   generateMetaData (attributeTypes, attributes) {
@@ -320,14 +345,12 @@ export class ViewTOS extends React.Component {
   }
 
   render () {
-    const { attributeTypes, selectedTOS, isFetching } = this.props;
+    const { attributeTypes, selectedTOS, isFetching, templates } = this.props;
     if (!isFetching && selectedTOS.id) {
       const phasesOrder = Object.keys(selectedTOS.phases);
       const phaseElements = this.generatePhases(selectedTOS.phases, phasesOrder);
-      const TOSMetaData = this.generateMetaData(this.props.attributeTypes, selectedTOS.attributes);
-
-      const isValidTos = validateTOS(selectedTOS, attributeTypes);
-      console.log(isValidTos);
+      const TOSMetaData = this.generateMetaData(attributeTypes, selectedTOS.attributes);
+      // const isValidTos = validateTOS(selectedTOS, attributeTypes);
 
       return (
         <div>
@@ -382,6 +405,11 @@ export class ViewTOS extends React.Component {
                           icon: 'fa-download',
                           style: 'btn-primary',
                           action: () => this.toggleImportView()
+                        }, {
+                          text: 'Kloonaa käsittelyvaiheet',
+                          icon: 'fa-clone',
+                          style: 'btn-primary',
+                          action: () => this.toggleCloneView()
                         }, {
                           text: 'Järjestä käsittelyvaiheita',
                           icon: 'fa-th-list',
@@ -464,6 +492,18 @@ export class ViewTOS extends React.Component {
                     closePopup={() => this.toggleImportView()}
                   />
                   }
+                  { this.state.showCloneView &&
+                  <Popup
+                    content={
+                      <CloneView
+                        cloneFromTemplate={(id) => this.cloneFromTemplate(id)}
+                        templates={templates}
+                        toggleCloneView={() => this.toggleCloneView()}
+                      />
+                    }
+                    closePopup={() => this.toggleCloneView()}
+                  />
+                  }
                 </div>
               </div>
             </div>
@@ -484,6 +524,7 @@ ViewTOS.propTypes = {
   changeOrder: React.PropTypes.func.isRequired,
   changeStatus: React.PropTypes.func.isRequired,
   clearTOS: React.PropTypes.func.isRequired,
+  cloneFromTemplate: React.PropTypes.func.isRequired,
   displayMessage: React.PropTypes.func.isRequired,
   editAction: React.PropTypes.func.isRequired,
   editMetaData: React.PropTypes.func.isRequired,
@@ -506,7 +547,8 @@ ViewTOS.propTypes = {
   setDocumentState: React.PropTypes.func.isRequired,
   setNavigationVisibility: React.PropTypes.func.isRequired,
   setPhaseVisibility: React.PropTypes.func.isRequired,
-  setPhasesVisibility: React.PropTypes.func.isRequired
+  setPhasesVisibility: React.PropTypes.func.isRequired,
+  templates: React.PropTypes.array.isRequired
 };
 
 export default ViewTOS;
