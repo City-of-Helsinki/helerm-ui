@@ -33,7 +33,7 @@ export default class CloneView extends React.Component {
   }
 
   render () {
-    const { toggleCloneView, templates, clone } = this.props;
+    const { toggleCloneView, templates } = this.props;
     const { selectedItem } = this.state;
     return (
       <div className='row clone__view'>
