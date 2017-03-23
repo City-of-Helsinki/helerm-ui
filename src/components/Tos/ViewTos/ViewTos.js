@@ -1,6 +1,8 @@
 import React from 'react';
+import { withRouter, routerShape } from 'react-router';
 import { StickyContainer } from 'react-sticky';
 import formatDate from 'occasion';
+import { isEqual } from 'lodash';
 
 import Phase from 'components/Tos/Phase/Phase';
 import Attribute from 'components/Tos/Attribute/Attribute';
@@ -22,17 +24,19 @@ import './ViewTos.scss';
 export class ViewTOS extends React.Component {
   constructor (props) {
     super(props);
-    this.fetchTOS = this.fetchTOS.bind(this);
     this.cancelEdit = this.cancelEdit.bind(this);
     this.cancelMetaDataEdit = this.cancelMetaDataEdit.bind(this);
-    this.changeStatus = this.changeStatus.bind(this);
-    this.saveDraft = this.saveDraft.bind(this);
-    this.onChange = this.onChange.bind(this);
-    this.createNewPhase = this.createNewPhase.bind(this);
     this.cancelPhaseCreation = this.cancelPhaseCreation.bind(this);
+    this.changeStatus = this.changeStatus.bind(this);
+    this.createNewPhase = this.createNewPhase.bind(this);
     this.editMetaDataWithForm = this.editMetaDataWithForm.bind(this);
+    this.fetchTOS = this.fetchTOS.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.routerWillLeave = this.routerWillLeave.bind(this);
+    this.saveDraft = this.saveDraft.bind(this);
     this.setPhaseVisibility = this.setPhaseVisibility.bind(this);
     this.updateTOSAttribute = this.updateTOSAttribute.bind(this);
+
     this.state = {
       createPhaseMode: false,
       newPhaseName: '',
@@ -45,7 +49,9 @@ export class ViewTOS extends React.Component {
   }
 
   componentDidMount () {
-    const { id } = this.props.params;
+    const { params: { id }, router, route } = this.props;
+    router.setRouteLeaveHook(route, this.routerWillLeave);
+
     this.fetchTOS(id);
   }
 
@@ -74,6 +80,16 @@ export class ViewTOS extends React.Component {
 
   componentWillUnmount () {
     this.props.clearTOS();
+  }
+
+  routerWillLeave (e) {
+    const { originalTos } = this.state;
+    const selectedTOS = this.props;
+    if (!isEqual(originalTos, selectedTOS)) {
+      const message = 'Muutoksia ei ole tallennettu, haluatko silti jatkaa?';
+      (e || window.event).returnValue = message;
+      return message;
+    }
   }
 
   fetchTOS (id) {
@@ -327,7 +343,9 @@ export class ViewTOS extends React.Component {
       const TOSMetaData = this.generateMetaData(this.props.attributeTypes, selectedTOS.attributes);
 
       const isValidTos = validateTOS(selectedTOS, attributeTypes);
-      console.log(isValidTos);
+      const { originalTos } = this.state;
+      const selectedTOS = this.props;
+      console.log(!isEqual(originalTos, selectedTOS));
 
       return (
         <div>
@@ -501,6 +519,7 @@ ViewTOS.propTypes = {
   removeRecord: React.PropTypes.func.isRequired,
   resetTOS: React.PropTypes.func.isRequired,
   route: React.PropTypes.object.isRequired,
+  router: routerShape.isRequired,
   saveDraft: React.PropTypes.func.isRequired,
   selectedTOS: React.PropTypes.object.isRequired,
   setDocumentState: React.PropTypes.func.isRequired,
@@ -509,4 +528,4 @@ ViewTOS.propTypes = {
   setPhasesVisibility: React.PropTypes.func.isRequired
 };
 
-export default ViewTOS;
+export default withRouter(ViewTOS);
