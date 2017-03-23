@@ -76,7 +76,8 @@ const mapStateToProps = (state) => {
     isFetching: state.ui.isFetching || state.selectedTOS.isFetching,
     items: state.navigation.items,
     recordTypes: state.ui.recordTypes,
-    selectedTOS: state.selectedTOS
+    selectedTOS: state.selectedTOS,
+    templates: state.ui.templates
   };
 };
 
