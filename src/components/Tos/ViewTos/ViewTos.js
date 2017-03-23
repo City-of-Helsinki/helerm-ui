@@ -6,6 +6,7 @@ import Phase from 'components/Tos/Phase/Phase';
 import Attribute from 'components/Tos/Attribute/Attribute';
 import ReorderView from 'components/Tos/Reorder/ReorderView';
 import ImportView from 'components/Tos/ImportView/ImportView';
+import CloneView from 'components/Tos/CloneView/CloneView';
 import EditorForm from 'components/Tos/EditorForm/EditorForm';
 
 import Popup from 'components/Popup';
@@ -14,7 +15,7 @@ import Dropdown from 'components/Dropdown';
 import TosHeader from 'components/Tos/Header/TosHeader';
 
 // import { EDIT } from '../../../../config/constants';
-import { validateTOS } from '../../../utils/validators';
+// import { validateTOS } from '../../../utils/validators';
 import { getStatusLabel } from '../../../utils/helpers';
 
 import './ViewTos.scss';
@@ -37,6 +38,7 @@ export class ViewTOS extends React.Component {
       createPhaseMode: false,
       newPhaseName: '',
       originalTos: {},
+      showCloneView: false,
       showImportView: false,
       showMetadata: false,
       showReorderView: false,
@@ -190,6 +192,11 @@ export class ViewTOS extends React.Component {
     this.setState({ showImportView: !current });
   }
 
+  toggleCloneView () {
+    const current = this.state.showCloneView;
+    this.setState({ showCloneView: !current });
+  }
+
   generateMetaData (attributeTypes, attributes) {
     const { modified_at, documentState, editRecord, version, state, modified_by } = this.props.selectedTOS;
     const modifiedDateTime = this.formatDateTime(modified_at);
@@ -324,10 +331,8 @@ export class ViewTOS extends React.Component {
     if (!isFetching && selectedTOS.id) {
       const phasesOrder = Object.keys(selectedTOS.phases);
       const phaseElements = this.generatePhases(selectedTOS.phases, phasesOrder);
-      const TOSMetaData = this.generateMetaData(this.props.attributeTypes, selectedTOS.attributes);
-
-      const isValidTos = validateTOS(selectedTOS, attributeTypes);
-      console.log(isValidTos);
+      const TOSMetaData = this.generateMetaData(attributeTypes, selectedTOS.attributes);
+      // const isValidTos = validateTOS(selectedTOS, attributeTypes);
 
       return (
         <div>
@@ -382,6 +387,11 @@ export class ViewTOS extends React.Component {
                           icon: 'fa-download',
                           style: 'btn-primary',
                           action: () => this.toggleImportView()
+                        }, {
+                          text: 'Kloonaa käsittelyvaiheet',
+                          icon: 'fa-clone',
+                          style: 'btn-primary',
+                          action: () => this.toggleCloneView()
                         }, {
                           text: 'Järjestä käsittelyvaiheita',
                           icon: 'fa-th-list',
@@ -464,6 +474,18 @@ export class ViewTOS extends React.Component {
                     closePopup={() => this.toggleImportView()}
                   />
                   }
+                  { this.state.showCloneView &&
+                  <Popup
+                    content={
+                      <CloneView
+                        clone={(id) => console.log('klone', id)}
+                        templates={this.props.templates}
+                        toggleCloneView={() => this.toggleCloneView()}
+                      />
+                    }
+                    closePopup={() => this.toggleCloneView()}
+                  />
+                  }
                 </div>
               </div>
             </div>
@@ -506,7 +528,8 @@ ViewTOS.propTypes = {
   setDocumentState: React.PropTypes.func.isRequired,
   setNavigationVisibility: React.PropTypes.func.isRequired,
   setPhaseVisibility: React.PropTypes.func.isRequired,
-  setPhasesVisibility: React.PropTypes.func.isRequired
+  setPhasesVisibility: React.PropTypes.func.isRequired,
+  templates: React.PropTypes.array.isRequired
 };
 
 export default ViewTOS;
