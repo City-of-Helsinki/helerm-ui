@@ -6,7 +6,7 @@ import './CloneView.scss';
 export default class CloneView extends React.Component {
 
   static propTypes = {
-    clone: PropTypes.func,
+    cloneFromTemplate: PropTypes.func,
     templates: PropTypes.array,
     toggleCloneView: PropTypes.func
   };
@@ -14,11 +14,18 @@ export default class CloneView extends React.Component {
   constructor (props) {
     super(props);
 
+    this.cloneFromTemplate = this.cloneFromTemplate.bind(this);
     this.selectItem = this.selectItem.bind(this);
 
     this.state = {
       selectedItem: null
     };
+  }
+
+  cloneFromTemplate (id) {
+    const { toggleCloneView, cloneFromTemplate } = this.props;
+    toggleCloneView();
+    return cloneFromTemplate(id);
   }
 
   selectItem (key) {
@@ -46,7 +53,7 @@ export default class CloneView extends React.Component {
         </div>
         <div className='clone-controls clearfix'>
           <button
-            onClick={() => clone(selectedItem)}
+            onClick={() => this.cloneFromTemplate(selectedItem)}
             className='btn btn-primary pull-right'
             disabled={!selectedItem}>
             Kloonaa

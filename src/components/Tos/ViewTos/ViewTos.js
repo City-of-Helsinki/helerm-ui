@@ -27,6 +27,7 @@ export class ViewTOS extends React.Component {
     this.cancelEdit = this.cancelEdit.bind(this);
     this.cancelMetaDataEdit = this.cancelMetaDataEdit.bind(this);
     this.changeStatus = this.changeStatus.bind(this);
+    this.cloneFromTemplate = this.cloneFromTemplate.bind(this);
     this.saveDraft = this.saveDraft.bind(this);
     this.onChange = this.onChange.bind(this);
     this.createNewPhase = this.createNewPhase.bind(this);
@@ -153,6 +154,23 @@ export class ViewTOS extends React.Component {
   cancelPhaseCreation (event) {
     event.preventDefault();
     this.setState({ newPhaseName: '', createPhaseMode: false });
+  }
+
+  cloneFromTemplate (id) {
+    const { cloneFromTemplate } = this.props;
+    return cloneFromTemplate(id)
+      .then(() => {
+        return this.props.displayMessage({
+          title: 'Kloonaus',
+          body: 'Kloonaus onnistui!'
+        });
+      })
+      .catch((err) => {
+        return this.props.displayMessage({
+          title: 'Kloonaus epäonnistui',
+          body: err.message
+        }, { type: 'warning' });
+      });
   }
 
   onChange (event) {
@@ -327,7 +345,7 @@ export class ViewTOS extends React.Component {
   }
 
   render () {
-    const { attributeTypes, selectedTOS, isFetching } = this.props;
+    const { attributeTypes, selectedTOS, isFetching, templates } = this.props;
     if (!isFetching && selectedTOS.id) {
       const phasesOrder = Object.keys(selectedTOS.phases);
       const phaseElements = this.generatePhases(selectedTOS.phases, phasesOrder);
@@ -478,8 +496,8 @@ export class ViewTOS extends React.Component {
                   <Popup
                     content={
                       <CloneView
-                        clone={(id) => console.log('klone', id)}
-                        templates={this.props.templates}
+                        cloneFromTemplate={(id) => this.cloneFromTemplate(id)}
+                        templates={templates}
                         toggleCloneView={() => this.toggleCloneView()}
                       />
                     }
@@ -506,6 +524,7 @@ ViewTOS.propTypes = {
   changeOrder: React.PropTypes.func.isRequired,
   changeStatus: React.PropTypes.func.isRequired,
   clearTOS: React.PropTypes.func.isRequired,
+  cloneFromTemplate: React.PropTypes.func.isRequired,
   displayMessage: React.PropTypes.func.isRequired,
   editAction: React.PropTypes.func.isRequired,
   editMetaData: React.PropTypes.func.isRequired,

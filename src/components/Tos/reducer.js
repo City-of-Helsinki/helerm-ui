@@ -27,6 +27,10 @@ import {
   executeImportAction
 } from './ImportView/reducer';
 
+import {
+  receiveTemplateAction
+} from './CloneView/reducer';
+
 import { executeOrderChangeAction } from './Reorder/reducer';
 
 import { default as api } from '../../utils/api';
@@ -258,6 +262,7 @@ export default handleActions({
   receiveTosAction,
   resetTosAction,
   clearTosAction,
+  receiveTemplateAction,
   tosErrorAction,
   setPhaseVisibilityAction,
   setPhasesVisibilityAction,
