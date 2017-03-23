@@ -1,4 +1,5 @@
 import LTT from 'list-to-tree';
+import { normalize, schema } from 'normalizr';
 import { toastr } from 'react-redux-toastr';
 import {
   filter,
@@ -55,6 +56,40 @@ export function convertToTree (itemList) {
     });
   };
   return sortTree(unOrderedTree);
+}
+
+/**
+ * Normalize TOS coming from API
+ * @param tos
+ * @returns {{entities: any, result: any}}
+ */
+export function normalizeTosFromApi (tos) {
+  tos.phases.map((phase, phaseIndex) => {
+    phase.index = phase.index || phaseIndex;
+    phase.is_open = false;
+    phase.actions.map((action, actionIndex) => {
+      action.index = action.index || actionIndex;
+      action.records.map((record, recordIndex) => {
+        record.index = record.index || recordIndex;
+        record.is_open = false;
+      });
+    });
+  });
+  const tosSchema = new schema.Entity('tos');
+  const phase = new schema.Entity('phases');
+  const action = new schema.Entity('actions');
+  const record = new schema.Entity('records');
+
+  tosSchema.define({
+    phases: [phase]
+  });
+  phase.define({
+    actions: [action]
+  });
+  action.define({
+    records: [record]
+  });
+  return normalize(tos, tosSchema);
 }
 
 /**

@@ -6,10 +6,12 @@ import { default as api } from '../utils/api';
 const initialState = {
   isFetching: false,
   recordTypes: {},
-  attributeTypes: {}
+  attributeTypes: {},
+  templates: []
 };
 
 export const RECEIVE_ATTRIBUTE_TYPES = 'receiveAttributeTypesAction';
+export const RECEIVE_TEMPLATES = 'receiveTemplatesAction';
 
 export function receiveAttributeTypes (attributes, validationRules) {
   const attributeTypeList = {};
@@ -81,8 +83,14 @@ export function receiveAttributeTypes (attributes, validationRules) {
   return createAction(RECEIVE_ATTRIBUTE_TYPES)(attributeTypeList);
 }
 
+export function receiveTemplates ({ results }) {
+  const onlyIdAndName = results.map(item => ({ id: item.id, name: item.name }));
+  return createAction(RECEIVE_TEMPLATES)(onlyIdAndName);
+}
+
 export function fetchAttributeTypes () {
   return function (dispatch) {
+    dispatch(createAction('requestFromApiAction')());
     return api.get('attribute/schemas')
       .then(response => response.json())
       .then(validationRules => {
@@ -93,6 +101,23 @@ export function fetchAttributeTypes () {
       });
   };
 }
+
+export function fetchTemplates () {
+  return function (dispatch) {
+    dispatch(createAction('requestFromApiAction')());
+    return api.get('template')
+      .then(response => response.json())
+      .then(res => {
+        dispatch(receiveTemplates(res));
+      });
+  };
+}
+
+const requestFromApiAction = (state) => {
+  return update(state, {
+    isFetching: { $set: true }
+  });
+};
 
 const receiveAttributeTypesAction = (state, { payload }) => {
   const recordTypes = payload.RecordType;
@@ -107,10 +132,22 @@ const receiveAttributeTypesAction = (state, { payload }) => {
   delete payload.RecordType;
   return update(state, {
     attributeTypes: { $set: payload },
-    recordTypes: { $set: recordTypeList }
+    recordTypes: { $set: recordTypeList },
+    isFetching: { $set: false }
+  });
+};
+
+const receiveTemplatesAction = (state, { payload }) => {
+  return update(state, {
+    templates: {
+      $set: payload
+    },
+    isFetching: { $set: false }
   });
 };
 
 export default handleActions({
-  receiveAttributeTypesAction
+  requestFromApiAction,
+  receiveAttributeTypesAction,
+  receiveTemplatesAction
 }, initialState);
