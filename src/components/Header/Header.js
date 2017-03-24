@@ -19,8 +19,7 @@ export class Header extends React.Component {
         <nav className='navbar navbar-inverse container-fluid'>
           <Link
             to='/'
-            className='brand-title navbar-brand'
-            onClick={() => this.props.setNavigationVisibility(true)}>
+            className='brand-title navbar-brand'>
             Tiedonohjausjärjestelmä v{VERSION}
           </Link>
           <LoginContainer />

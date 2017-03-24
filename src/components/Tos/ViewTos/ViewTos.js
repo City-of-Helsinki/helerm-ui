@@ -93,6 +93,7 @@ export class ViewTOS extends React.Component {
 
   routerWillLeave (e) {
     const { isDirty } = this.state;
+
     if (isDirty) {
       const message = 'Muutoksia ei ole tallennettu, haluatko silti jatkaa?';
       (e || window.event).returnValue = message;
