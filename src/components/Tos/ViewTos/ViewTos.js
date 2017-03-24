@@ -2,7 +2,6 @@ import React from 'react';
 import { withRouter, routerShape } from 'react-router';
 import { StickyContainer } from 'react-sticky';
 import formatDate from 'occasion';
-import { isEqual } from 'lodash';
 
 import Phase from 'components/Tos/Phase/Phase';
 import Attribute from 'components/Tos/Attribute/Attribute';
@@ -25,6 +24,7 @@ import './ViewTos.scss';
 export class ViewTOS extends React.Component {
   constructor (props) {
     super(props);
+    this.setDocumentState = this.setDocumentState.bind(this);
     this.cancelEdit = this.cancelEdit.bind(this);
     this.cancelMetaDataEdit = this.cancelMetaDataEdit.bind(this);
     this.cancelPhaseCreation = this.cancelPhaseCreation.bind(this);
@@ -45,6 +45,7 @@ export class ViewTOS extends React.Component {
       createPhaseMode: false,
       newPhaseName: '',
       originalTos: {},
+      isDirty: false,
       showCloneView: false,
       showImportView: false,
       showMetadata: false,
@@ -71,13 +72,16 @@ export class ViewTOS extends React.Component {
     ) {
       this.setState({ originalTos: nextProps.selectedTOS });
     }
+
     if (nextProps.params.id !== this.props.params.id) {
       const { id } = nextProps.params;
       this.fetchTOS(id);
     }
+
     if (route && route.path === 'view-tos/:id') {
       this.props.setNavigationVisibility(false);
     }
+
     if (nextProps.selectedTOS.documentState === 'view') {
       this.setState({ editingMetaData: false });
     }
@@ -88,9 +92,8 @@ export class ViewTOS extends React.Component {
   }
 
   routerWillLeave (e) {
-    const { originalTos } = this.state;
-    const selectedTOS = this.props;
-    if (!isEqual(originalTos, selectedTOS)) {
+    const { isDirty } = this.state;
+    if (isDirty) {
       const message = 'Muutoksia ei ole tallennettu, haluatko silti jatkaa?';
       (e || window.event).returnValue = message;
       return message;
@@ -108,8 +111,16 @@ export class ViewTOS extends React.Component {
       });
   }
 
+  setDocumentState (state) {
+    return this.setState({ isDirty: true }, () => {
+      return this.props.setDocumentState(state);
+    });
+  }
+
   cancelEdit () {
-    return this.props.resetTOS(this.state.originalTos);
+    return this.setState({ isDirty: false }, () => {
+      return this.props.resetTOS(this.state.originalTos);
+    });
   }
 
   cancelMetaDataEdit () {
@@ -368,9 +379,6 @@ export class ViewTOS extends React.Component {
       const phasesOrder = Object.keys(selectedTOS.phases);
       const phaseElements = this.generatePhases(selectedTOS.phases, phasesOrder);
       const TOSMetaData = this.generateMetaData(attributeTypes, selectedTOS.attributes);
-      const { originalTos } = this.state;
-      const selectedTOS = this.props;
-      console.log(!isEqual(originalTos, selectedTOS));
       // const isValidTos = validateTOS(selectedTOS, attributeTypes);
 
       return (
@@ -383,7 +391,7 @@ export class ViewTOS extends React.Component {
               documentState={selectedTOS.documentState}
               state={selectedTOS.state}
               changeStatus={this.changeStatus}
-              setDocumentState={(state) => this.props.setDocumentState(state)}
+              setDocumentState={(state) => this.setDocumentState(state)}
               saveDraft={this.saveDraft}
               cancelEdit={this.cancelEdit}
             />
