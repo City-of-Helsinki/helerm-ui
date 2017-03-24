@@ -6,10 +6,15 @@
   border: 1px solid $black50;
   border-radius: $border-radius-base;
 
-  .Select-control {
-    border: 2px solid #dce4ec;
-    border-radius: 0;
-    margin: 10px 0;
+  .Select {
+    width: 90%;
+    display: inline-block;
+
+    &-control {
+      border: 2px solid #dce4ec;
+      border-radius: 0;
+      margin: 0 0 10px 0;
+    }
   }
 }
 
