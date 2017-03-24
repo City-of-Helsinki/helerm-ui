@@ -49,7 +49,9 @@ export function editRecord (recordId, recordName, recordType, attributes) {
     name: recordName
   });
 
-  editedRecord.attributes.RecordType = recordType;
+  if (recordType) {
+    editedRecord.attributes.RecordType = recordType;
+  }
 
   return createAction(EDIT_RECORD)({ editedRecord, recordId });
 }
