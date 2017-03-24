@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter, routerShape } from 'react-router';
 import { StickyContainer } from 'react-sticky';
 import formatDate from 'occasion';
 
@@ -23,22 +24,28 @@ import './ViewTos.scss';
 export class ViewTOS extends React.Component {
   constructor (props) {
     super(props);
-    this.fetchTOS = this.fetchTOS.bind(this);
+    this.setDocumentState = this.setDocumentState.bind(this);
     this.cancelEdit = this.cancelEdit.bind(this);
     this.cancelMetaDataEdit = this.cancelMetaDataEdit.bind(this);
+    this.cancelPhaseCreation = this.cancelPhaseCreation.bind(this);
     this.changeStatus = this.changeStatus.bind(this);
     this.cloneFromTemplate = this.cloneFromTemplate.bind(this);
     this.saveDraft = this.saveDraft.bind(this);
     this.onChange = this.onChange.bind(this);
     this.createNewPhase = this.createNewPhase.bind(this);
-    this.cancelPhaseCreation = this.cancelPhaseCreation.bind(this);
     this.editMetaDataWithForm = this.editMetaDataWithForm.bind(this);
+    this.fetchTOS = this.fetchTOS.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.routerWillLeave = this.routerWillLeave.bind(this);
+    this.saveDraft = this.saveDraft.bind(this);
     this.setPhaseVisibility = this.setPhaseVisibility.bind(this);
     this.updateTOSAttribute = this.updateTOSAttribute.bind(this);
+
     this.state = {
       createPhaseMode: false,
       newPhaseName: '',
       originalTos: {},
+      isDirty: false,
       showCloneView: false,
       showImportView: false,
       showMetadata: false,
@@ -48,7 +55,9 @@ export class ViewTOS extends React.Component {
   }
 
   componentDidMount () {
-    const { id } = this.props.params;
+    const { params: { id }, router, route } = this.props;
+    router.setRouteLeaveHook(route, this.routerWillLeave);
+
     this.fetchTOS(id);
   }
 
@@ -63,13 +72,16 @@ export class ViewTOS extends React.Component {
     ) {
       this.setState({ originalTos: nextProps.selectedTOS });
     }
+
     if (nextProps.params.id !== this.props.params.id) {
       const { id } = nextProps.params;
       this.fetchTOS(id);
     }
+
     if (route && route.path === 'view-tos/:id') {
       this.props.setNavigationVisibility(false);
     }
+
     if (nextProps.selectedTOS.documentState === 'view') {
       this.setState({ editingMetaData: false });
     }
@@ -77,6 +89,16 @@ export class ViewTOS extends React.Component {
 
   componentWillUnmount () {
     this.props.clearTOS();
+  }
+
+  routerWillLeave (e) {
+    const { isDirty } = this.state;
+
+    if (isDirty) {
+      const message = 'Muutoksia ei ole tallennettu, haluatko silti jatkaa?';
+      (e || window.event).returnValue = message;
+      return message;
+    }
   }
 
   fetchTOS (id) {
@@ -90,8 +112,16 @@ export class ViewTOS extends React.Component {
       });
   }
 
+  setDocumentState (state) {
+    return this.setState({ isDirty: true }, () => {
+      return this.props.setDocumentState(state);
+    });
+  }
+
   cancelEdit () {
-    return this.props.resetTOS(this.state.originalTos);
+    return this.setState({ isDirty: false }, () => {
+      return this.props.resetTOS(this.state.originalTos);
+    });
   }
 
   cancelMetaDataEdit () {
@@ -362,7 +392,7 @@ export class ViewTOS extends React.Component {
               documentState={selectedTOS.documentState}
               state={selectedTOS.state}
               changeStatus={this.changeStatus}
-              setDocumentState={(state) => this.props.setDocumentState(state)}
+              setDocumentState={(state) => this.setDocumentState(state)}
               saveDraft={this.saveDraft}
               cancelEdit={this.cancelEdit}
             />
@@ -542,6 +572,7 @@ ViewTOS.propTypes = {
   removeRecord: React.PropTypes.func.isRequired,
   resetTOS: React.PropTypes.func.isRequired,
   route: React.PropTypes.object.isRequired,
+  router: routerShape.isRequired,
   saveDraft: React.PropTypes.func.isRequired,
   selectedTOS: React.PropTypes.object.isRequired,
   setDocumentState: React.PropTypes.func.isRequired,
@@ -551,4 +582,4 @@ ViewTOS.propTypes = {
   templates: React.PropTypes.array.isRequired
 };
 
-export default ViewTOS;
+export default withRouter(ViewTOS);

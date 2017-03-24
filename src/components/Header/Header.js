@@ -1,9 +1,6 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-
-import { setNavigationVisibility } from '../Navigation/reducer';
 
 import Loader from '../Loader';
 import LoginContainer from '../Login/LoginContainer';
@@ -19,8 +16,7 @@ export class Header extends React.Component {
         <nav className='navbar navbar-inverse container-fluid'>
           <Link
             to='/'
-            className='brand-title navbar-brand'
-            onClick={() => this.props.setNavigationVisibility(true)}>
+            className='brand-title navbar-brand'>
             Tiedonohjausjärjestelmä v{VERSION}
           </Link>
           <LoginContainer />
@@ -32,8 +28,7 @@ export class Header extends React.Component {
 }
 
 Header.propTypes = {
-  isFetching: React.PropTypes.bool,
-  setNavigationVisibility: React.PropTypes.func
+  isFetching: React.PropTypes.bool
 };
 
 const mapStateToProps = (state) => {
@@ -42,10 +37,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setNavigationVisibility: bindActionCreators(setNavigationVisibility, dispatch)
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default connect(mapStateToProps)(Header);
