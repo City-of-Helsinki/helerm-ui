@@ -25,7 +25,10 @@ export function addRecord (actionIndex, recordName, recordType, attributes) {
     name: recordName,
     is_open: false
   });
-  newRecord.attributes.RecordType = recordType;
+
+  if (recordType) {
+    newRecord.attributes.RecordType = recordType;
+  }
 
   return createAction(ADD_RECORD)({ actionIndex, recordId, newRecord });
 }
@@ -46,7 +49,9 @@ export function editRecord (recordId, recordName, recordType, attributes) {
     name: recordName
   });
 
-  editedRecord.attributes.RecordType = recordType;
+  if (recordType) {
+    editedRecord.attributes.RecordType = recordType;
+  }
 
   return createAction(EDIT_RECORD)({ editedRecord, recordId });
 }

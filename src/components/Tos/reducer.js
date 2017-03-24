@@ -1,7 +1,6 @@
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
 import { map } from 'lodash';
-import { normalize, schema } from 'normalizr';
 
 import {
   addActionAction,
@@ -28,10 +27,14 @@ import {
   executeImportAction
 } from './ImportView/reducer';
 
+import {
+  receiveTemplateAction
+} from './CloneView/reducer';
+
 import { executeOrderChangeAction } from './Reorder/reducer';
 
 import { default as api } from '../../utils/api';
-import { normalizeTosForApi } from '../../utils/helpers';
+import { normalizeTosFromApi, normalizeTosForApi } from '../../utils/helpers';
 
 const initialState = {
   id: null,
@@ -68,34 +71,9 @@ export const SET_DOCUMENT_STATE = 'setDocumentStateAction';
 // Actions
 // ------------------------------------
 
-export function receiveTOS (json) {
-  json.phases.map((phase, phaseIndex) => {
-    phase.index = phase.index || phaseIndex;
-    phase.is_open = false;
-    phase.actions.map((action, actionIndex) => {
-      action.index = action.index || actionIndex;
-      action.records.map((record, recordIndex) => {
-        record.index = record.index || recordIndex;
-        record.is_open = false;
-      });
-    });
-  });
-  const tosSchema = new schema.Entity('tos');
-  const phase = new schema.Entity('phases');
-  const action = new schema.Entity('actions');
-  const record = new schema.Entity('records');
-
-  tosSchema.define({
-    phases: [phase]
-  });
-  phase.define({
-    actions: [action]
-  });
-  action.define({
-    records: [record]
-  });
-  json = normalize(json, tosSchema);
-  const data = Object.assign({}, json, { receivedAt: Date.now() });
+export function receiveTOS (tos) {
+  tos = normalizeTosFromApi(tos);
+  const data = Object.assign({}, tos, { receivedAt: Date.now() });
 
   return createAction(RECEIVE_TOS)(data);
 }
@@ -284,6 +262,7 @@ export default handleActions({
   receiveTosAction,
   resetTosAction,
   clearTosAction,
+  receiveTemplateAction,
   tosErrorAction,
   setPhaseVisibilityAction,
   setPhasesVisibilityAction,

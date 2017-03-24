@@ -4,12 +4,14 @@ import { Router } from 'react-router';
 import ReduxToastr from 'react-redux-toastr';
 
 import {
-  fetchAttributeTypes
+  fetchAttributeTypes,
+  fetchTemplates
 } from '../store/uiReducer';
 
 class AppContainer extends Component {
   static propTypes = {
     fetchAttributeTypes: PropTypes.func,
+    fetchTemplates: PropTypes.func,
     history: PropTypes.object.isRequired,
     routes: PropTypes.object.isRequired,
     store: PropTypes.object.isRequired
@@ -17,6 +19,7 @@ class AppContainer extends Component {
 
   componentWillMount () {
     this.props.fetchAttributeTypes();
+    this.props.fetchTemplates();
   }
 
   shouldComponentUpdate () {
@@ -46,6 +49,6 @@ class AppContainer extends Component {
   }
 }
 
-const mapDispatchToProps = { fetchAttributeTypes };
+const mapDispatchToProps = { fetchAttributeTypes, fetchTemplates };
 
 export default connect(null, mapDispatchToProps)(AppContainer);

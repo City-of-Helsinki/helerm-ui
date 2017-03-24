@@ -37,6 +37,7 @@ import {
 } from '../Record/reducer';
 
 import { importItems } from '../ImportView/reducer';
+import { cloneFromTemplate } from '../CloneView/reducer';
 import { changeOrder } from '../Reorder/reducer';
 
 import ViewTOS from './ViewTos';
@@ -49,6 +50,7 @@ const mapDispatchToProps = (dispatch) => {
     changeOrder: bindActionCreators(changeOrder, dispatch),
     changeStatus: bindActionCreators(changeStatus, dispatch),
     clearTOS: bindActionCreators(clearTOS, dispatch),
+    cloneFromTemplate: bindActionCreators(cloneFromTemplate, dispatch),
     displayMessage: (msg, opts) => displayMessage(msg, opts),
     editAction: bindActionCreators(editAction, dispatch),
     editMetaData: bindActionCreators(editMetaData, dispatch),
@@ -76,7 +78,8 @@ const mapStateToProps = (state) => {
     isFetching: state.ui.isFetching || state.selectedTOS.isFetching,
     items: state.navigation.items,
     recordTypes: state.ui.recordTypes,
-    selectedTOS: state.selectedTOS
+    selectedTOS: state.selectedTOS,
+    templates: state.ui.templates
   };
 };
 

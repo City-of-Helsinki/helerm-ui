@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter, routerShape } from 'react-router';
 import { StickyContainer } from 'react-sticky';
 import formatDate from 'occasion';
 
@@ -6,6 +7,7 @@ import Phase from 'components/Tos/Phase/Phase';
 import Attribute from 'components/Tos/Attribute/Attribute';
 import ReorderView from 'components/Tos/Reorder/ReorderView';
 import ImportView from 'components/Tos/ImportView/ImportView';
+import CloneView from 'components/Tos/CloneView/CloneView';
 import EditorForm from 'components/Tos/EditorForm/EditorForm';
 
 import Popup from 'components/Popup';
@@ -14,7 +16,7 @@ import Dropdown from 'components/Dropdown';
 import TosHeader from 'components/Tos/Header/TosHeader';
 
 // import { EDIT } from '../../../../config/constants';
-import { validateTOS } from '../../../utils/validators';
+// import { validateTOS } from '../../../utils/validators';
 import { getStatusLabel } from '../../../utils/helpers';
 
 import './ViewTos.scss';
@@ -22,21 +24,29 @@ import './ViewTos.scss';
 export class ViewTOS extends React.Component {
   constructor (props) {
     super(props);
-    this.fetchTOS = this.fetchTOS.bind(this);
+    this.setDocumentState = this.setDocumentState.bind(this);
     this.cancelEdit = this.cancelEdit.bind(this);
     this.cancelMetaDataEdit = this.cancelMetaDataEdit.bind(this);
+    this.cancelPhaseCreation = this.cancelPhaseCreation.bind(this);
     this.changeStatus = this.changeStatus.bind(this);
+    this.cloneFromTemplate = this.cloneFromTemplate.bind(this);
     this.saveDraft = this.saveDraft.bind(this);
     this.onChange = this.onChange.bind(this);
     this.createNewPhase = this.createNewPhase.bind(this);
-    this.cancelPhaseCreation = this.cancelPhaseCreation.bind(this);
     this.editMetaDataWithForm = this.editMetaDataWithForm.bind(this);
+    this.fetchTOS = this.fetchTOS.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.routerWillLeave = this.routerWillLeave.bind(this);
+    this.saveDraft = this.saveDraft.bind(this);
     this.setPhaseVisibility = this.setPhaseVisibility.bind(this);
     this.updateTOSAttribute = this.updateTOSAttribute.bind(this);
+
     this.state = {
       createPhaseMode: false,
       newPhaseName: '',
       originalTos: {},
+      isDirty: false,
+      showCloneView: false,
       showImportView: false,
       showMetadata: false,
       showReorderView: false,
@@ -45,7 +55,9 @@ export class ViewTOS extends React.Component {
   }
 
   componentDidMount () {
-    const { id } = this.props.params;
+    const { params: { id }, router, route } = this.props;
+    router.setRouteLeaveHook(route, this.routerWillLeave);
+
     this.fetchTOS(id);
   }
 
@@ -60,13 +72,16 @@ export class ViewTOS extends React.Component {
     ) {
       this.setState({ originalTos: nextProps.selectedTOS });
     }
+
     if (nextProps.params.id !== this.props.params.id) {
       const { id } = nextProps.params;
       this.fetchTOS(id);
     }
+
     if (route && route.path === 'view-tos/:id') {
       this.props.setNavigationVisibility(false);
     }
+
     if (nextProps.selectedTOS.documentState === 'view') {
       this.setState({ editingMetaData: false });
     }
@@ -74,6 +89,16 @@ export class ViewTOS extends React.Component {
 
   componentWillUnmount () {
     this.props.clearTOS();
+  }
+
+  routerWillLeave (e) {
+    const { isDirty } = this.state;
+
+    if (isDirty) {
+      const message = 'Muutoksia ei ole tallennettu, haluatko silti jatkaa?';
+      (e || window.event).returnValue = message;
+      return message;
+    }
   }
 
   fetchTOS (id) {
@@ -87,8 +112,16 @@ export class ViewTOS extends React.Component {
       });
   }
 
+  setDocumentState (state) {
+    return this.setState({ isDirty: true }, () => {
+      return this.props.setDocumentState(state);
+    });
+  }
+
   cancelEdit () {
-    return this.props.resetTOS(this.state.originalTos);
+    return this.setState({ isDirty: false }, () => {
+      return this.props.resetTOS(this.state.originalTos);
+    });
   }
 
   cancelMetaDataEdit () {
@@ -153,6 +186,23 @@ export class ViewTOS extends React.Component {
     this.setState({ newPhaseName: '', createPhaseMode: false });
   }
 
+  cloneFromTemplate (id) {
+    const { cloneFromTemplate } = this.props;
+    return cloneFromTemplate(id)
+      .then(() => {
+        return this.props.displayMessage({
+          title: 'Kloonaus',
+          body: 'Kloonaus onnistui!'
+        });
+      })
+      .catch((err) => {
+        return this.props.displayMessage({
+          title: 'Kloonaus epäonnistui',
+          body: err.message
+        }, { type: 'warning' });
+      });
+  }
+
   onChange (event) {
     this.setState({ newPhaseName: event.target.value });
   }
@@ -188,6 +238,11 @@ export class ViewTOS extends React.Component {
   toggleImportView () {
     const current = this.state.showImportView;
     this.setState({ showImportView: !current });
+  }
+
+  toggleCloneView () {
+    const current = this.state.showCloneView;
+    this.setState({ showCloneView: !current });
   }
 
   generateMetaData (attributeTypes, attributes) {
@@ -320,14 +375,12 @@ export class ViewTOS extends React.Component {
   }
 
   render () {
-    const { attributeTypes, selectedTOS, isFetching } = this.props;
+    const { attributeTypes, selectedTOS, isFetching, templates } = this.props;
     if (!isFetching && selectedTOS.id) {
       const phasesOrder = Object.keys(selectedTOS.phases);
       const phaseElements = this.generatePhases(selectedTOS.phases, phasesOrder);
-      const TOSMetaData = this.generateMetaData(this.props.attributeTypes, selectedTOS.attributes);
-
-      const isValidTos = validateTOS(selectedTOS, attributeTypes);
-      console.log(isValidTos);
+      const TOSMetaData = this.generateMetaData(attributeTypes, selectedTOS.attributes);
+      // const isValidTos = validateTOS(selectedTOS, attributeTypes);
 
       return (
         <div>
@@ -339,7 +392,7 @@ export class ViewTOS extends React.Component {
               documentState={selectedTOS.documentState}
               state={selectedTOS.state}
               changeStatus={this.changeStatus}
-              setDocumentState={(state) => this.props.setDocumentState(state)}
+              setDocumentState={(state) => this.setDocumentState(state)}
               saveDraft={this.saveDraft}
               cancelEdit={this.cancelEdit}
             />
@@ -382,6 +435,11 @@ export class ViewTOS extends React.Component {
                           icon: 'fa-download',
                           style: 'btn-primary',
                           action: () => this.toggleImportView()
+                        }, {
+                          text: 'Kloonaa käsittelyvaiheet',
+                          icon: 'fa-clone',
+                          style: 'btn-primary',
+                          action: () => this.toggleCloneView()
                         }, {
                           text: 'Järjestä käsittelyvaiheita',
                           icon: 'fa-th-list',
@@ -464,6 +522,18 @@ export class ViewTOS extends React.Component {
                     closePopup={() => this.toggleImportView()}
                   />
                   }
+                  { this.state.showCloneView &&
+                  <Popup
+                    content={
+                      <CloneView
+                        cloneFromTemplate={(id) => this.cloneFromTemplate(id)}
+                        templates={templates}
+                        toggleCloneView={() => this.toggleCloneView()}
+                      />
+                    }
+                    closePopup={() => this.toggleCloneView()}
+                  />
+                  }
                 </div>
               </div>
             </div>
@@ -484,6 +554,7 @@ ViewTOS.propTypes = {
   changeOrder: React.PropTypes.func.isRequired,
   changeStatus: React.PropTypes.func.isRequired,
   clearTOS: React.PropTypes.func.isRequired,
+  cloneFromTemplate: React.PropTypes.func.isRequired,
   displayMessage: React.PropTypes.func.isRequired,
   editAction: React.PropTypes.func.isRequired,
   editMetaData: React.PropTypes.func.isRequired,
@@ -501,12 +572,14 @@ ViewTOS.propTypes = {
   removeRecord: React.PropTypes.func.isRequired,
   resetTOS: React.PropTypes.func.isRequired,
   route: React.PropTypes.object.isRequired,
+  router: routerShape.isRequired,
   saveDraft: React.PropTypes.func.isRequired,
   selectedTOS: React.PropTypes.object.isRequired,
   setDocumentState: React.PropTypes.func.isRequired,
   setNavigationVisibility: React.PropTypes.func.isRequired,
   setPhaseVisibility: React.PropTypes.func.isRequired,
-  setPhasesVisibility: React.PropTypes.func.isRequired
+  setPhasesVisibility: React.PropTypes.func.isRequired,
+  templates: React.PropTypes.array.isRequired
 };
 
-export default ViewTOS;
+export default withRouter(ViewTOS);
