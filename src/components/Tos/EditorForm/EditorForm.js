@@ -114,9 +114,9 @@ export class EditorForm extends React.Component {
                 autoBlur={true}
                 autofocus={false}
                 className='form-control edit-record__select'
-                clearable={false}
+                clearable={true}
                 disabled={!this.state.newAttributes[key].checked}
-                onChange={({ value }) => this.onChange(value, key, 'name')}
+                onChange={(option) => this.onChange(option ? option.value : null, key, 'name')}
                 openOnFocus={true}
                 options={options}
                 value={this.getActiveValue(key)}
@@ -165,8 +165,8 @@ export class EditorForm extends React.Component {
         autoBlur={true}
         autofocus={false}
         className='form-control col-xs-6'
-        clearable={false}
-        onChange={({ value }) => this.onBaseAttributeChange(value, 'recordType', 'value')}
+        clearable={true}
+        onChange={(option) => this.onBaseAttributeChange(option ? option.value : null, 'recordType', 'value')}
         openOnFocus={true}
         options={options}
         value={this.state.recordType.value}
