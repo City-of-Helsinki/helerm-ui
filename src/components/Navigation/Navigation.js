@@ -1,6 +1,6 @@
 import React from 'react';
 import map from 'lodash/map';
-import filter from 'lodash/filter';
+import forEach from 'lodash/forEach';
 import includes from 'lodash/includes';
 import InfinityMenu from 'react-infinity-menu';
 import Select from 'react-select';
@@ -62,29 +62,47 @@ export class Navigation extends React.Component {
     this.toggleNavigationVisibility();
   }
 
-  filter (tree) {
-    const { filterStatuses } = this.state;
-
-    const letsFilter = (items) => {
-      return filter(items, (item) => {
-        console.log(item);
-        if (item.children) {
-          return letsFilter(item.children);
-        }
-        return includes(filterStatuses, item.state);
-      });
-    };
+  getFilteredTree (filterStatuses) {
+    const { items } = this.props;
+    let treeCopy = JSON.parse(JSON.stringify(items));
 
     if (filterStatuses.length) {
-      return letsFilter(tree);
+      this.filter(treeCopy, filterStatuses);
+      return treeCopy;
     }
+    return items;
+  }
 
-    return tree;
+  filter (filterTree, filterStatuses) {
+    let indexesToRemove = [];
+
+    forEach(filterTree, (item, index) => {
+      if (item.children) {
+        this.filter(item.children, filterStatuses);
+      }
+      if ((!item.children && !includes(filterStatuses, item.state)) ||
+      (item.children && !item.children.length)) {
+        if (item.children && !item.children.length) {
+        }
+        indexesToRemove.push(index);
+      }
+    });
+
+    if (indexesToRemove.length) {
+      for (let i = filterTree.length - 1; i >= 0; i--) {
+        if (includes(indexesToRemove, i)) {
+          filterTree.splice(i, 1);
+        }
+      }
+    }
   }
 
   handleStatusFilterChange (valArray) {
     const mappedValues = map(valArray, (val) => val.value);
-    this.setState({ filterStatuses: mappedValues });
+    this.setState({
+      filterStatuses: mappedValues,
+      tree: this.getFilteredTree(mappedValues)
+    });
   }
 
   render () {
@@ -121,7 +139,7 @@ export class Navigation extends React.Component {
               onChange={this.handleStatusFilterChange}
             />
             <InfinityMenu
-              tree={this.filter(this.state.tree)}
+              tree={this.state.tree}
               onNodeMouseClick={this.onNodeMouseClick}
               onLeafMouseClick={this.onLeafMouseClick}
             />
