@@ -326,7 +326,7 @@ export class ViewTOS extends React.Component {
                   icon: 'fa-clone',
                   style: 'btn-primary',
                   action: () => this.toggleCloneView()
-                },
+                }
               ]}
               small={true}
             />

@@ -52,7 +52,7 @@ export default class CloneView extends React.Component {
           </div>
         </div>
         <div className='clone-controls clearfix'>
-          <div className="alert alert-danger" role="alert"><strong>Huom!</strong> Aiemmat tiedot korvataan.</div>
+          <div className='alert alert-danger' role='alert'><strong>Huom!</strong> Aiemmat tiedot korvataan.</div>
           <button
             onClick={() => this.cloneFromTemplate(selectedItem)}
             className='btn btn-primary pull-right'
