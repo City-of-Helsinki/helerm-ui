@@ -191,13 +191,13 @@ export class ViewTOS extends React.Component {
     return cloneFromTemplate(id)
       .then(() => {
         return this.props.displayMessage({
-          title: 'Kloonaus',
-          body: 'Kloonaus onnistui!'
+          title: 'Kuvaus',
+          body: 'Kuvauksen tuonti onnistui!'
         });
       })
       .catch((err) => {
         return this.props.displayMessage({
-          title: 'Kloonaus epäonnistui',
+          title: 'Kuvaksen tuonti epäonnistui',
           body: err.message
         }, { type: 'warning' });
       });
@@ -320,7 +320,13 @@ export class ViewTOS extends React.Component {
                   icon: 'fa-pencil',
                   style: 'btn-primary',
                   action: () => this.setState({ editingMetaData: true })
-                }
+                },
+                {
+                  text: 'Tuo kuvaus',
+                  icon: 'fa-clone',
+                  style: 'btn-primary',
+                  action: () => this.toggleCloneView()
+                },
               ]}
               small={true}
             />
@@ -435,11 +441,6 @@ export class ViewTOS extends React.Component {
                           icon: 'fa-download',
                           style: 'btn-primary',
                           action: () => this.toggleImportView()
-                        }, {
-                          text: 'Kloonaa käsittelyvaiheet',
-                          icon: 'fa-clone',
-                          style: 'btn-primary',
-                          action: () => this.toggleCloneView()
                         }, {
                           text: 'Järjestä käsittelyvaiheita',
                           icon: 'fa-th-list',
