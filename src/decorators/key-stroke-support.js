@@ -24,10 +24,10 @@ export default function (WrappedComponent) {
     handleKeyDown (e) {
       switch (e.keyCode) {
         case 13:
-          this.props.submit();
+          this.props.submit(e);
           break;
         case 27:
-          this.props.cancel();
+          this.props.cancel(e);
           break;
       }
     }
