@@ -1,9 +1,11 @@
 import React from 'react';
 import forEach from 'lodash/forEach';
-import './Phase.scss';
-import Action from '../Action/Action.js';
-import DeleteView from '../DeleteView/DeleteView';
 import { StickyContainer, Sticky } from 'react-sticky';
+import './Phase.scss';
+
+import Action from '../Action/Action';
+import CreateActionForm from '../Action/CreateActionForm';
+import DeleteView from '../DeleteView/DeleteView';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
 import ReorderView from '../Reorder/ReorderView';
@@ -218,24 +220,12 @@ export class Phase extends React.Component {
               </span>
             </Sticky>
             { this.state.mode === 'add' &&
-            <form onSubmit={this.addAction} className='row add-action'>
-              <h5 className='col-xs-12'>Uusi toimenpide</h5>
-              <div className='col-xs-12 col-md-6'>
-                <input type='text'
-                       className='form-control'
-                       value={this.state.newActionName}
-                       onChange={this.onNewChange}
-                       placeholder='Toimenpiteen nimi'/>
-              </div>
-              <div className='col-xs-12 col-md-4 add-action-buttons'>
-                <button
-                  className='btn btn-danger col-xs-6'
-                  onClick={this.cancelActionCreation}>
-                  Peruuta
-                </button>
-                <button className='btn btn-primary col-xs-6' type='submit'>Lisää</button>
-              </div>
-            </form>
+            <CreateActionForm
+              newActionName={this.state.newActionName}
+              submit={this.addAction}
+              onChange={this.onNewChange}
+              cancel={this.cancelActionCreation}
+            />
             }
             <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>
               { actionElements }
