@@ -9,11 +9,10 @@ import ReorderView from 'components/Tos/Reorder/ReorderView';
 import ImportView from 'components/Tos/ImportView/ImportView';
 import CloneView from 'components/Tos/CloneView/CloneView';
 import EditorForm from 'components/Tos/EditorForm/EditorForm';
+import TosHeader from 'components/Tos/Header/TosHeader';
 
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
-
-import TosHeader from 'components/Tos/Header/TosHeader';
 
 // import { EDIT } from '../../../../config/constants';
 // import { validateTOS } from '../../../utils/validators';
