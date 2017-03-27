@@ -4,16 +4,16 @@ import { StickyContainer } from 'react-sticky';
 import formatDate from 'occasion';
 
 import Phase from 'components/Tos/Phase/Phase';
+import CreatePhaseForm from 'components/Tos/Phase/CreatePhaseForm';
 import Attribute from 'components/Tos/Attribute/Attribute';
 import ReorderView from 'components/Tos/Reorder/ReorderView';
 import ImportView from 'components/Tos/ImportView/ImportView';
 import CloneView from 'components/Tos/CloneView/CloneView';
 import EditorForm from 'components/Tos/EditorForm/EditorForm';
+import TosHeader from 'components/Tos/Header/TosHeader';
 
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
-
-import TosHeader from 'components/Tos/Header/TosHeader';
 
 // import { EDIT } from '../../../../config/constants';
 // import { validateTOS } from '../../../utils/validators';
@@ -464,27 +464,12 @@ export class ViewTOS extends React.Component {
                 </div>
                 <div className='col-xs-12'>
                   { this.state.createPhaseMode &&
-                  <form onSubmit={this.createNewPhase} className='col-xs-12 phase-form'>
-                    <h5>Uusi käsittelyvaihe</h5>
-                    <div className='col-xs-12 col-md-6'>
-                      <input
-                        type='text'
-                        className='form-control'
-                        value={this.state.newPhaseName}
-                        onChange={this.onChange}
-                        onSubmit={this.createNewPhase}
-                        placeholder='Käsittelyvaiheen nimi'
-                      />
-                    </div>
-                    <div className='col-xs-12 col-md-4'>
-                      <button
-                        className='btn btn-danger pull-left'
-                        onClick={this.cancelPhaseCreation}>
-                        Peruuta
-                      </button>
-                      <button className='btn btn-primary pull-left' type='submit'>Lisää</button>
-                    </div>
-                  </form>
+                  <CreatePhaseForm
+                    newPhaseName={this.state.newPhaseName}
+                    onChange={this.onChange}
+                    submit={this.createNewPhase}
+                    cancel={this.cancelPhaseCreation}
+                  />
                   }
                   { phaseElements }
                   { this.state.showReorderView &&
