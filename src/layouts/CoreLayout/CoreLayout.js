@@ -7,12 +7,13 @@ import '../../styles/core.scss';
 
 export const CoreLayout = ({ children }) => (
   <div className='core-layout__viewport'>
-    <Header />
-    <NavigationContainer/>
-    <ValidationBarContainer/>
-    <div className='container-fluid'>
-      {children}
-    </div>
+    <ValidationBarContainer>
+      <Header />
+      <NavigationContainer/>
+      <div className='container-fluid'>
+        {children}
+      </div>
+    </ValidationBarContainer>
   </div>
 );
 

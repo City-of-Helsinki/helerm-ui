@@ -2,6 +2,7 @@ import React from 'react';
 import { withRouter, routerShape } from 'react-router';
 import { StickyContainer } from 'react-sticky';
 import formatDate from 'occasion';
+import map from 'lodash/map';
 
 import Phase from 'components/Tos/Phase/Phase';
 import Attribute from 'components/Tos/Attribute/Attribute';
@@ -9,15 +10,15 @@ import ReorderView from 'components/Tos/Reorder/ReorderView';
 import ImportView from 'components/Tos/ImportView/ImportView';
 import CloneView from 'components/Tos/CloneView/CloneView';
 import EditorForm from 'components/Tos/EditorForm/EditorForm';
+import TosHeader from 'components/Tos/Header/TosHeader';
 
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
 
-import TosHeader from 'components/Tos/Header/TosHeader';
-
 // import { EDIT } from '../../../../config/constants';
-// import { validateTOS } from '../../../utils/validators';
 import { getStatusLabel } from '../../../utils/helpers';
+import { validateTOS } from '../../../utils/validators';
+// import { validateRecord } from '../../../../utils/validators';
 
 import './ViewTos.scss';
 
@@ -374,13 +375,31 @@ export class ViewTOS extends React.Component {
     return phaseElements;
   }
 
+  generateValidation () {
+    const { attributeTypes, selectedTOS } = this.props;
+    const invalidTOSAttributes = map(
+      validateTOS(selectedTOS.attributes, attributeTypes), (item) => (
+        <div>
+          {item}
+        </div>
+      )
+    );
+    // const invalidRecordAttributes = map();
+
+    return (
+      <div>
+        <div>Puuttuvat metatiedot</div>
+        {invalidTOSAttributes}
+      </div>
+    );
+  }
+
   render () {
     const { attributeTypes, selectedTOS, isFetching, templates } = this.props;
     if (!isFetching && selectedTOS.id) {
       const phasesOrder = Object.keys(selectedTOS.phases);
       const phaseElements = this.generatePhases(selectedTOS.phases, phasesOrder);
       const TOSMetaData = this.generateMetaData(attributeTypes, selectedTOS.attributes);
-      // const isValidTos = validateTOS(selectedTOS, attributeTypes);
 
       return (
         <div>

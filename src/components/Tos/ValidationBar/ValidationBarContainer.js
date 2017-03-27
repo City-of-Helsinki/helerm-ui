@@ -4,9 +4,10 @@ import { connect } from 'react-redux';
 import ValidationBar from './ValidationBar';
 
 const mapStateToProps = (state) => {
-  const { selectedTOS } = state;
+  const { ui, selectedTOS } = state;
 
   return {
+    attributeTypes: ui.attributeTypes,
     selectedTOS
   };
 };
