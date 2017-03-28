@@ -39,17 +39,19 @@ passport.deserializeUser((user, done) => {
  */
 function authCallback (req, res) {
   debug('Authcallback');
-  const js = `
-    setTimeout(function(){
-      try{
-        window.close();
-      } catch(e) {
-        location.href = "/";
-      }
-    }, 300);
-  `;
-  const html = `<html><body>Login successful.<script>${js}</script>`;
-  res.send(html);
+  // const js = `
+  //   setTimeout(function(){
+  //     try{
+  //       window.close();
+  //     } catch(e) {
+  //       location.href = "/";
+  //     }
+  //   }, 300);
+  // `;
+  // const html = `<html><body>Login successful.<script>${js}</script>`;
+  // res.send(html);
+  const redirectUrl = req.query.next || `${config.globals.APP_URL}`;
+  res.redirect(redirectUrl);
 }
 
 /**

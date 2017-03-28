@@ -61,29 +61,30 @@ export function retrieveUserFromSession () {
 }
 
 export function login () {
-  return function (dispatch) {
-    return new Promise((resolve) => {
-      const loginPopup = centeredPopUp(
-        '/auth/login/helsinki',
-        'helermLoginWindow',
-        720,
-        600
-      );
-
-      const wait = function wait () {
-        if (!loginPopup || loginPopup.closed) {
-          resolve(true);
-          return;
-        }
-        setTimeout(wait, 500); // Try again in a bit...
-      };
-
-      wait();
-    })
-      .then(() => {
-        return dispatch(retrieveUserFromSession());
-      });
-  };
+  return window.location.assign('/auth/login/helsinki');
+  // return function (dispatch) {
+  //   return new Promise((resolve) => {
+  //     const loginPopup = centeredPopUp(
+  //       '/auth/login/helsinki',
+  //       'helermLoginWindow',
+  //       720,
+  //       600
+  //     );
+  //
+  //     const wait = function wait () {
+  //       if (!loginPopup || loginPopup.closed) {
+  //         resolve(true);
+  //         return;
+  //       }
+  //       setTimeout(wait, 500); // Try again in a bit...
+  //     };
+  //
+  //     wait();
+  //   })
+  //     .then(() => {
+  //       return dispatch(retrieveUserFromSession());
+  //     });
+  // };
 }
 
 export function logout () {
