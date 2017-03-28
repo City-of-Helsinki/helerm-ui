@@ -85,15 +85,19 @@ const ActionButtons = ({
 
   return (
     <div>
-      <ActionButton
-        className='btn-sm pull-right'
-        type='primary'
-        action={() => setValidationVisibility(true)}
-        label={'Tarkasta'}
-      />
       { status === DRAFT && editable }
       { status === SENT_FOR_REVIEW && reviewable }
       { status === WAITING_FOR_APPROVAL && approvable }
+      <div className='validation-button'>
+        <ActionButton
+          className='btn-sm pull-right'
+          style={{ marginRight: '15px' }}
+          type='success'
+          action={() => setValidationVisibility(true)}
+          label={'Tarkasta'}
+          icon={'fa fa-check-circle-o'}
+        />
+      </div>
     </div>
   );
 };
