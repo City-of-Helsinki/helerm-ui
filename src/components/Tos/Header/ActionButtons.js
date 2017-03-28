@@ -94,7 +94,7 @@ const ActionButtons = ({
           style={{ marginRight: '15px' }}
           type='success'
           action={() => setValidationVisibility(true)}
-          label={'Tarkasta'}
+          label={'Esitarkasta'}
           icon={'fa fa-check-circle-o'}
         />
       </div>
