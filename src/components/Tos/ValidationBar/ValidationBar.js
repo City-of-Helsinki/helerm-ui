@@ -37,7 +37,9 @@ export class ValidationBar extends Component {
     return (
       <div>
         <SideBar
-          sidebar={sidebarContent}>
+          sidebar={sidebarContent}
+          open={this.props.is_open}
+          pullRight={true}>
           {children}
         </SideBar>
       </div>
@@ -48,6 +50,7 @@ export class ValidationBar extends Component {
 ValidationBar.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
   children: React.PropTypes.array.isRequired,
+  is_open: React.PropTypes.bool.isRequired,
   selectedTOS: React.PropTypes.object.isRequired
 };
 
