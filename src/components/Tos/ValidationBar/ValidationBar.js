@@ -62,7 +62,6 @@ export class ValidationBar extends Component {
       )
     );
 
-    console.log(invalidTOSAttributes);
     return (
       <div className='sidebar-content'>
         <h4>Puuttuvat metatiedot</h4>
@@ -91,6 +90,7 @@ export class ValidationBar extends Component {
         <SideBar
           sidebar={sidebarContent}
           open={this.props.is_open}
+          onSetOpen={() => this.props.setValidationVisibility(false)}
           pullRight={true}
           styles={styles}>
           {children}
@@ -104,7 +104,8 @@ ValidationBar.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
   children: React.PropTypes.array.isRequired,
   is_open: React.PropTypes.bool.isRequired,
-  selectedTOS: React.PropTypes.object.isRequired
+  selectedTOS: React.PropTypes.object.isRequired,
+  setValidationVisibility: React.PropTypes.func.isRequired
 };
 
 export default ValidationBar;
