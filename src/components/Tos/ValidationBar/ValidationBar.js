@@ -1,8 +1,32 @@
 import React, { Component } from 'react';
 import SideBar from 'react-sidebar';
 import map from 'lodash/map';
+import './ValidationBar.scss';
 
 import { validateTOS, validateRecord } from '../../../utils/validators';
+
+const styles = {
+  sidebar: {
+    width: 256,
+    height: '100%',
+    padding: '10px 0 0 20px',
+    backgroundColor: 'white',
+    zIndex: '99'
+  },
+  sidebarLink: {
+    display: 'block',
+    color: '#757575',
+    textDecoration: 'none'
+  },
+  divider: {
+    margin: '8px 0',
+    height: 1,
+    backgroundColor: '#757575'
+  },
+  content: {
+    height: '100%'
+  }
+};
 
 export class ValidationBar extends Component {
   constructor (props) {
@@ -67,7 +91,8 @@ export class ValidationBar extends Component {
         <SideBar
           sidebar={sidebarContent}
           open={this.props.is_open}
-          pullRight={true}>
+          pullRight={true}
+          styles={styles}>
           {children}
         </SideBar>
       </div>
