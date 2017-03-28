@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import SideBar from 'react-sidebar';
 import map from 'lodash/map';
 
-import { validateTOS } from '../../../utils/validators';
-// import { validateRecord } from '../../../../utils/validators';
+import { validateTOS, validateRecord } from '../../../utils/validators';
 
 export class ValidationBar extends Component {
   constructor (props) {
@@ -11,21 +10,50 @@ export class ValidationBar extends Component {
     this.renderContent = this.renderContent.bind(this);
   }
 
+  generateInvalidAttributes (validate, values) {
+    const mappedInvalidAttributes = map(validate(values, this.props.attributeTypes), (item, index) => (
+      <div key={index} className='missing-attribute'>
+        {'• '}{item}
+      </div>
+    ));
+
+    return (
+      <div className='missing-attributes'>
+        {mappedInvalidAttributes}
+      </div>
+    );
+  }
+
   renderContent () {
-    const { attributeTypes, selectedTOS } = this.props;
-    const invalidTOSAttributes = map(
-      validateTOS(selectedTOS, attributeTypes), (item, index) => (
-        <div key={index}>
-          {item}
-        </div>
+    const { selectedTOS } = this.props;
+
+    const invalidTOSAttributes = this.generateInvalidAttributes(validateTOS, selectedTOS);
+    const invalidPhaseAttributes = [];
+    const invalidActionAttributes = [];
+    const invalidRecordAttributes = map(selectedTOS.records, (record, index) => (
+      <div key={index}>
+        <div className='record-name'>{record.name}</div>
+        {this.generateInvalidAttributes(validateRecord, record)}
+      </div>
       )
     );
-    // const invalidRecordAttributes = map();
+
     console.log(invalidTOSAttributes);
     return (
-      <div>
-        <div>Puuttuvat metatiedot</div>
+      <div className='sidebar-content'>
+        <h4>Puuttuvat metatiedot</h4>
+        {invalidTOSAttributes.length !== 0 &&
+          <h5>TOS-metatiedot</h5>}
         {invalidTOSAttributes}
+        {invalidPhaseAttributes.length !== 0 &&
+          <h5>Käsittelyvaiheet</h5>}
+        {invalidPhaseAttributes}
+        {invalidActionAttributes.length !== 0 &&
+          <h5>Toimenpiteet</h5>}
+        {invalidActionAttributes}
+        {invalidRecordAttributes.length !== 0 &&
+          <h5>Asiakirjat</h5>}
+        {invalidRecordAttributes}
       </div>
     );
   }
