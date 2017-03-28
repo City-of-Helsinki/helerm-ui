@@ -13,7 +13,15 @@ import {
   APPROVED
 } from '../../../../config/constants';
 
-const ActionButtons = ({ cancelEdit, documentState, saveDraft, changeStatus, setDocumentState, status }) => {
+const ActionButtons = ({
+  cancelEdit,
+  documentState,
+  saveDraft,
+  changeStatus,
+  setDocumentState,
+  setValidationVisibility,
+  status
+}) => {
   const editMode = documentState === 'edit';
   const editable = (
     <IsAllowed to={EDIT}>
@@ -77,6 +85,12 @@ const ActionButtons = ({ cancelEdit, documentState, saveDraft, changeStatus, set
 
   return (
     <div>
+      <ActionButton
+        className='btn-sm pull-right'
+        type='primary'
+        action={() => setValidationVisibility(true)}
+        label={'Tarkasta'}
+      />
       { status === DRAFT && editable }
       { status === SENT_FOR_REVIEW && reviewable }
       { status === WAITING_FOR_APPROVAL && approvable }
@@ -90,6 +104,7 @@ ActionButtons.propTypes = {
   documentState: PropTypes.string,
   saveDraft: PropTypes.func,
   setDocumentState: PropTypes.func,
+  setValidationVisibility: PropTypes.func.isRequired,
   status: PropTypes.string.isRequired
 };
 

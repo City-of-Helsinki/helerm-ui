@@ -11,6 +11,7 @@ const TosHeader = ({
   saveDraft,
   changeStatus,
   setDocumentState,
+  setValidationVisibility,
   state
 }) => {
   const tosName = `${functionId} ${name}`;
@@ -26,6 +27,7 @@ const TosHeader = ({
             saveDraft={saveDraft}
             changeStatus={changeStatus}
             setDocumentState={setDocumentState}
+            setValidationVisibility={setValidationVisibility}
             status={state}
           />
         </div>
@@ -42,6 +44,7 @@ TosHeader.propTypes = {
   name: PropTypes.string.isRequired,
   saveDraft: PropTypes.func,
   setDocumentState: PropTypes.func,
+  setValidationVisibility: PropTypes.func,
   state: PropTypes.string
 };
 

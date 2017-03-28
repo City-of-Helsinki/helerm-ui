@@ -38,6 +38,7 @@ export class ViewTOS extends React.Component {
     this.saveDraft = this.saveDraft.bind(this);
     this.setPhaseVisibility = this.setPhaseVisibility.bind(this);
     this.updateTOSAttribute = this.updateTOSAttribute.bind(this);
+    this.setValidationVisibility = this.setValidationVisibility.bind(this);
 
     this.state = {
       createPhaseMode: false,
@@ -46,8 +47,9 @@ export class ViewTOS extends React.Component {
       isDirty: false,
       showCloneView: false,
       showImportView: false,
-      showMetadata: false,
       showReorderView: false,
+      showMetadata: false,
+      showValidationBar: false,
       update: ''
     };
   }
@@ -114,6 +116,11 @@ export class ViewTOS extends React.Component {
     return this.setState({ isDirty: true }, () => {
       return this.props.setDocumentState(state);
     });
+  }
+
+  setValidationVisibility (value) {
+    this.props.setValidationVisibility(value);
+    this.setState({ showValidationBar: value });
   }
 
   cancelEdit () {
@@ -390,6 +397,7 @@ export class ViewTOS extends React.Component {
               state={selectedTOS.state}
               changeStatus={this.changeStatus}
               setDocumentState={(state) => this.setDocumentState(state)}
+              setValidationVisibility={this.setValidationVisibility}
               saveDraft={this.saveDraft}
               cancelEdit={this.cancelEdit}
             />
@@ -576,6 +584,7 @@ ViewTOS.propTypes = {
   setNavigationVisibility: React.PropTypes.func.isRequired,
   setPhaseVisibility: React.PropTypes.func.isRequired,
   setPhasesVisibility: React.PropTypes.func.isRequired,
+  setValidationVisibility: React.PropTypes.func.isRequired,
   templates: React.PropTypes.array.isRequired
 };
 
