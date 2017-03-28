@@ -3,7 +3,7 @@ import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
 import { isEmpty, get, isString } from 'lodash';
 
-import { centeredPopUp } from '../../utils/helpers';
+// import { centeredPopUp } from '../../utils/helpers';
 import { default as api } from '../../utils/api';
 import { setStorageItem, removeStorageItem } from '../../utils/storage';
 
