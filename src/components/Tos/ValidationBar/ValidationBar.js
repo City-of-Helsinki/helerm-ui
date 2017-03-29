@@ -7,7 +7,7 @@ import { validateTOS, validateRecord } from '../../../utils/validators';
 
 const styles = {
   sidebar: {
-    width: 256,
+    width: 300,
     height: '100%',
     padding: '10px 0 0 20px',
     backgroundColor: 'white',
