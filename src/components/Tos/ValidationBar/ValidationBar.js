@@ -48,6 +48,25 @@ export class ValidationBar extends Component {
     );
   }
 
+  generateAttributeSection (validate, element, index) {
+    const invalidAttributes = validate(element, this.props.attributeTypes);
+
+    if (invalidAttributes.length) {
+      return (
+        <div key={index}>
+          <div className='parent-name'>{element.name}</div>
+          <div className='missing-attributes'>
+            {map(invalidAttributes, (item) => (
+              <div className='missing-attribute'>
+                {'• '}{item}
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+  }
+
   renderContent () {
     const { selectedTOS } = this.props;
 
@@ -55,10 +74,7 @@ export class ValidationBar extends Component {
     const invalidPhaseAttributes = [];
     const invalidActionAttributes = [];
     const invalidRecordAttributes = map(selectedTOS.records, (record, index) => (
-      <div key={index}>
-        <div className='record-name'>{record.name}</div>
-        {this.generateInvalidAttributes(validateRecord, record)}
-      </div>
+        this.generateAttributeSection(validateRecord, record, index)
       )
     );
 
