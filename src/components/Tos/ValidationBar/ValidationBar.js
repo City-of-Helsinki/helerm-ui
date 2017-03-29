@@ -74,8 +74,8 @@ export class ValidationBar extends Component {
     const { selectedTOS } = this.props;
 
     const invalidTOSAttributes = this.generateInvalidAttributes(validateTOS, selectedTOS);
-    const invalidPhaseAttributes = undefined;
-    const invalidActionAttributes = undefined;
+    const invalidPhaseAttributes = [];
+    const invalidActionAttributes = [];
     const invalidRecordAttributes = map(selectedTOS.records, (record, index) => (
         this.generateAttributeSection(validateRecord, record, index)
       )
@@ -91,13 +91,13 @@ export class ValidationBar extends Component {
           {invalidTOSAttributes &&
             <h5>TOS-metatiedot</h5>}
           {invalidTOSAttributes}
-          {invalidPhaseAttributes &&
+          {invalidPhaseAttributes.length > 0 &&
             <h5>Käsittelyvaiheet</h5>}
           {invalidPhaseAttributes}
-          {invalidActionAttributes &&
+          {invalidActionAttributes.length > 0 &&
             <h5>Toimenpiteet</h5>}
           {invalidActionAttributes}
-          {invalidRecordAttributes &&
+          {invalidRecordAttributes.length > 0 &&
             <h5>Asiakirjat</h5>}
           {invalidRecordAttributes}
         </div>
