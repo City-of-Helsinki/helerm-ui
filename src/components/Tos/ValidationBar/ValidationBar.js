@@ -82,9 +82,9 @@ export class ValidationBar extends Component {
     );
 
     if (invalidTOSAttributes ||
-        invalidPhaseAttributes ||
-        invalidActionAttributes ||
-        invalidRecordAttributes) {
+        invalidPhaseAttributes > 0 ||
+        invalidActionAttributes > 0 ||
+        invalidRecordAttributes > 0) {
       return (
         <div className='sidebar-content'>
           <h4>Puuttuvat metatiedot</h4>
