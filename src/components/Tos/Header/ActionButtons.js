@@ -83,7 +83,7 @@ const ActionButtons = ({ cancelEdit, documentState, fetchTos, saveDraft, changeS
           className='btn-sm pull-right'
           type='primary'
           icon='fa-file-o'
-          action={() => console.log('test')}
+          action={saveDraft}
           label={'Luo luonnos'}
         />
         <ActionButton
