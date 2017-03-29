@@ -7,12 +7,14 @@ const TosHeader = ({
   cancelEdit,
   documentState,
   functionId,
+  fetchTos,
   name,
   saveDraft,
   changeStatus,
   setDocumentState,
   setValidationVisibility,
-  state
+  state,
+  tosId
 }) => {
   const tosName = `${functionId} ${name}`;
 
@@ -23,12 +25,14 @@ const TosHeader = ({
         <div className='document-buttons col-xs-12 col-md-6'>
           <ActionButtons
             cancelEdit={cancelEdit}
-            documentState={documentState}
-            saveDraft={saveDraft}
             changeStatus={changeStatus}
+            documentState={documentState}
+            fetchTos={fetchTos}
+            saveDraft={saveDraft}
             setDocumentState={setDocumentState}
             setValidationVisibility={setValidationVisibility}
             status={state}
+            tosId={tosId}
           />
         </div>
       </div>
@@ -40,12 +44,14 @@ TosHeader.propTypes = {
   cancelEdit: PropTypes.func,
   changeStatus: PropTypes.func,
   documentState: PropTypes.string.isRequired,
+  fetchTos: PropTypes.func.isRequired,
   functionId: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   saveDraft: PropTypes.func,
   setDocumentState: PropTypes.func,
   setValidationVisibility: PropTypes.func,
-  state: PropTypes.string
+  state: PropTypes.string,
+  tosId: PropTypes.string
 };
 
 export default TosHeader;

@@ -16,13 +16,16 @@ import {
 const ActionButtons = ({
   cancelEdit,
   documentState,
+  fetchTos,
   saveDraft,
   changeStatus,
   setDocumentState,
   setValidationVisibility,
-  status
+  status,
+  tosId
 }) => {
   const editMode = documentState === 'edit';
+
   const editable = (
     <IsAllowed to={EDIT}>
       <span>
@@ -83,11 +86,33 @@ const ActionButtons = ({
     </IsAllowed>
   );
 
+  const draftable = (
+    <IsAllowed to={EDIT}>
+      <span>
+        <ActionButton
+          className='btn-sm pull-right'
+          type='primary'
+          icon='fa-file-o'
+          action={saveDraft}
+          label={'Luo luonnos'}
+        />
+        <ActionButton
+          className='btn-sm pull-right'
+          type='secondary'
+          icon='fa-refresh'
+          action={() => fetchTos(tosId, { state: 'approved' })}
+          label={'Hae viimeisin hyväksytty versio'}
+        />
+      </span>
+    </IsAllowed>
+  );
+
   return (
     <div>
       { status === DRAFT && editable }
       { status === SENT_FOR_REVIEW && reviewable }
       { status === WAITING_FOR_APPROVAL && approvable }
+      { status === APPROVED && draftable }
       { status !== APPROVED &&
       <div className='validation-button'>
         <ActionButton
@@ -96,7 +121,7 @@ const ActionButtons = ({
           type='success'
           action={() => setValidationVisibility(true)}
           label={'Esitarkasta'}
-          icon={'fa fa-check-circle-o'}
+          icon={'fa-check-circle-o'}
         />
       </div>}
     </div>
@@ -107,10 +132,12 @@ ActionButtons.propTypes = {
   cancelEdit: PropTypes.func,
   changeStatus: PropTypes.func,
   documentState: PropTypes.string,
+  fetchTos: PropTypes.func,
   saveDraft: PropTypes.func,
   setDocumentState: PropTypes.func,
   setValidationVisibility: PropTypes.func.isRequired,
-  status: PropTypes.string.isRequired
+  status: PropTypes.string.isRequired,
+  tosId: PropTypes.string.isRequired
 };
 
 export default ActionButtons;

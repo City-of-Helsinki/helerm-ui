@@ -102,8 +102,8 @@ export class ViewTOS extends React.Component {
     }
   }
 
-  fetchTOS (id) {
-    this.props.fetchTOS(id)
+  fetchTOS (id, params = {}) {
+    this.props.fetchTOS(id, params)
       .then(() => this.props.setNavigationVisibility(false))
       .catch((err) => {
         if (err instanceof URIError) {
@@ -398,15 +398,17 @@ export class ViewTOS extends React.Component {
           <StickyContainer className='col-xs-12 single-tos-container'>
 
             <TosHeader
+              cancelEdit={this.cancelEdit}
+              changeStatus={this.changeStatus}
+              documentState={selectedTOS.documentState}
+              fetchTos={this.fetchTOS}
               functionId={selectedTOS.function_id}
               name={selectedTOS.name}
-              documentState={selectedTOS.documentState}
               state={selectedTOS.state}
-              changeStatus={this.changeStatus}
               setDocumentState={(state) => this.setDocumentState(state)}
               setValidationVisibility={this.setValidationVisibility}
               saveDraft={this.saveDraft}
-              cancelEdit={this.cancelEdit}
+              tosId={selectedTOS.id}
             />
 
             <div className='single-tos-content'>
