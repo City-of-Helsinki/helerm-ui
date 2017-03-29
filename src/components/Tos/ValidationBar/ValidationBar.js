@@ -37,7 +37,7 @@ export class ValidationBar extends Component {
   generateInvalidAttributes (validate, values) {
     const mappedInvalidAttributes = map(validate(values, this.props.attributeTypes), (item, index) => (
       <div key={index} className='missing-attribute'>
-        {'• '}{item}
+        {'• '}{this.props.attributeTypes[item].name}
       </div>
     ));
 
@@ -58,7 +58,7 @@ export class ValidationBar extends Component {
           <div className='missing-attributes'>
             {map(invalidAttributes, (item) => (
               <div className='missing-attribute'>
-                {'• '}{item}
+                {'• '}{this.props.attributeTypes[item].name}
               </div>
             ))}
           </div>
