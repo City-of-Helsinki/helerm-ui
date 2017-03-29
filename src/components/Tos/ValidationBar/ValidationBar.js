@@ -35,17 +35,20 @@ export class ValidationBar extends Component {
   }
 
   generateInvalidAttributes (validate, values) {
-    const mappedInvalidAttributes = map(validate(values, this.props.attributeTypes), (item, index) => (
+    const invalidAttributes = validate(values, this.props.attributeTypes);
+    const mappedInvalidAttributes = map(invalidAttributes, (item, index) => (
       <div key={index} className='missing-attribute'>
         {'• '}{this.props.attributeTypes[item].name}
       </div>
     ));
 
-    return (
-      <div className='missing-attributes'>
-        {mappedInvalidAttributes}
-      </div>
-    );
+    if (invalidAttributes.length) {
+      return (
+        <div className='missing-attributes'>
+          {mappedInvalidAttributes}
+        </div>
+      );
+    }
   }
 
   generateAttributeSection (validate, element, index) {
@@ -56,8 +59,8 @@ export class ValidationBar extends Component {
         <div key={index}>
           <div className='parent-name'>{element.name}</div>
           <div className='missing-attributes'>
-            {map(invalidAttributes, (item) => (
-              <div className='missing-attribute'>
+            {map(invalidAttributes, (item, index) => (
+              <div key={index} className='missing-attribute'>
                 {'• '}{this.props.attributeTypes[item].name}
               </div>
             ))}
@@ -71,8 +74,8 @@ export class ValidationBar extends Component {
     const { selectedTOS } = this.props;
 
     const invalidTOSAttributes = this.generateInvalidAttributes(validateTOS, selectedTOS);
-    const invalidPhaseAttributes = [];
-    const invalidActionAttributes = [];
+    const invalidPhaseAttributes = undefined;
+    const invalidActionAttributes = undefined;
     const invalidRecordAttributes = map(selectedTOS.records, (record, index) => (
         this.generateAttributeSection(validateRecord, record, index)
       )
@@ -81,16 +84,16 @@ export class ValidationBar extends Component {
     return (
       <div className='sidebar-content'>
         <h4>Puuttuvat metatiedot</h4>
-        {invalidTOSAttributes.length !== 0 &&
+        {invalidTOSAttributes &&
           <h5>TOS-metatiedot</h5>}
         {invalidTOSAttributes}
-        {invalidPhaseAttributes.length !== 0 &&
+        {invalidPhaseAttributes &&
           <h5>Käsittelyvaiheet</h5>}
         {invalidPhaseAttributes}
-        {invalidActionAttributes.length !== 0 &&
+        {invalidActionAttributes &&
           <h5>Toimenpiteet</h5>}
         {invalidActionAttributes}
-        {invalidRecordAttributes.length !== 0 &&
+        {invalidRecordAttributes &&
           <h5>Asiakirjat</h5>}
         {invalidRecordAttributes}
       </div>
