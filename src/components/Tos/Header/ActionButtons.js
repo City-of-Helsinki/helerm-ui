@@ -88,6 +88,7 @@ const ActionButtons = ({
       { status === DRAFT && editable }
       { status === SENT_FOR_REVIEW && reviewable }
       { status === WAITING_FOR_APPROVAL && approvable }
+      { status !== APPROVED &&
       <div className='validation-button'>
         <ActionButton
           className='btn-sm pull-right'
@@ -97,7 +98,7 @@ const ActionButtons = ({
           label={'Esitarkasta'}
           icon={'fa fa-check-circle-o'}
         />
-      </div>
+      </div>}
     </div>
   );
 };
