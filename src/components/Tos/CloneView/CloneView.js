@@ -37,8 +37,8 @@ export default class CloneView extends React.Component {
     const { selectedItem } = this.state;
     return (
       <div className='row clone__view'>
-        <h3>Kloonaa TOS:n sisältö</h3>
-        <h5>Valitse listalta kloonattava TOS</h5>
+        <h3>Tuo kuvaus</h3>
+        <h5>Valitse listalta tuotava kuvaus</h5>
         <div className='importable-elements '>
           <div className='list-group'>
             {templates.map(({ name, id }) => (
@@ -52,11 +52,12 @@ export default class CloneView extends React.Component {
           </div>
         </div>
         <div className='clone-controls clearfix'>
+          <div className='alert alert-danger' role='alert'><strong>Huom!</strong> Aiemmat tiedot korvataan.</div>
           <button
             onClick={() => this.cloneFromTemplate(selectedItem)}
             className='btn btn-primary pull-right'
             disabled={!selectedItem}>
-            Kloonaa
+            Tuo
           </button>
           <button onClick={toggleCloneView} className='btn btn-danger pull-right'>Peruuta</button>
         </div>

@@ -4,6 +4,7 @@ import { StickyContainer } from 'react-sticky';
 import formatDate from 'occasion';
 
 import Phase from 'components/Tos/Phase/Phase';
+import CreatePhaseForm from 'components/Tos/Phase/CreatePhaseForm';
 import Attribute from 'components/Tos/Attribute/Attribute';
 import ReorderView from 'components/Tos/Reorder/ReorderView';
 import ImportView from 'components/Tos/ImportView/ImportView';
@@ -196,13 +197,13 @@ export class ViewTOS extends React.Component {
     return cloneFromTemplate(id)
       .then(() => {
         return this.props.displayMessage({
-          title: 'Kloonaus',
-          body: 'Kloonaus onnistui!'
+          title: 'Kuvaus',
+          body: 'Kuvauksen tuonti onnistui!'
         });
       })
       .catch((err) => {
         return this.props.displayMessage({
-          title: 'Kloonaus epäonnistui',
+          title: 'Kuvaksen tuonti epäonnistui',
           body: err.message
         }, { type: 'warning' });
       });
@@ -325,6 +326,12 @@ export class ViewTOS extends React.Component {
                   icon: 'fa-pencil',
                   style: 'btn-primary',
                   action: () => this.setState({ editingMetaData: true })
+                },
+                {
+                  text: 'Tuo kuvaus',
+                  icon: 'fa-clone',
+                  style: 'btn-primary',
+                  action: () => this.toggleCloneView()
                 }
               ]}
               small={true}
@@ -441,11 +448,6 @@ export class ViewTOS extends React.Component {
                           style: 'btn-primary',
                           action: () => this.toggleImportView()
                         }, {
-                          text: 'Kloonaa käsittelyvaiheet',
-                          icon: 'fa-clone',
-                          style: 'btn-primary',
-                          action: () => this.toggleCloneView()
-                        }, {
                           text: 'Järjestä käsittelyvaiheita',
                           icon: 'fa-th-list',
                           style: 'btn-primary',
@@ -469,27 +471,12 @@ export class ViewTOS extends React.Component {
                 </div>
                 <div className='col-xs-12'>
                   { this.state.createPhaseMode &&
-                  <form onSubmit={this.createNewPhase} className='col-xs-12 phase-form'>
-                    <h5>Uusi käsittelyvaihe</h5>
-                    <div className='col-xs-12 col-md-6'>
-                      <input
-                        type='text'
-                        className='form-control'
-                        value={this.state.newPhaseName}
-                        onChange={this.onChange}
-                        onSubmit={this.createNewPhase}
-                        placeholder='Käsittelyvaiheen nimi'
-                      />
-                    </div>
-                    <div className='col-xs-12 col-md-4'>
-                      <button
-                        className='btn btn-danger pull-left'
-                        onClick={this.cancelPhaseCreation}>
-                        Peruuta
-                      </button>
-                      <button className='btn btn-primary pull-left' type='submit'>Lisää</button>
-                    </div>
-                  </form>
+                  <CreatePhaseForm
+                    newPhaseName={this.state.newPhaseName}
+                    onChange={this.onChange}
+                    submit={this.createNewPhase}
+                    cancel={this.cancelPhaseCreation}
+                  />
                   }
                   { phaseElements }
                   { this.state.showReorderView &&
