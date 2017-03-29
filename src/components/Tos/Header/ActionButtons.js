@@ -13,8 +13,9 @@ import {
   APPROVED
 } from '../../../../config/constants';
 
-const ActionButtons = ({ cancelEdit, documentState, saveDraft, changeStatus, setDocumentState, status }) => {
+const ActionButtons = ({ cancelEdit, documentState, fetchTos, saveDraft, changeStatus, setDocumentState, status, tosId }) => {
   const editMode = documentState === 'edit';
+
   const editable = (
     <IsAllowed to={EDIT}>
       <span>
@@ -75,11 +76,33 @@ const ActionButtons = ({ cancelEdit, documentState, saveDraft, changeStatus, set
     </IsAllowed>
   );
 
+  const draftable = (
+    <IsAllowed to={EDIT}>
+      <span>
+        <ActionButton
+          className='btn-sm pull-right'
+          type='primary'
+          icon='fa-file-o'
+          action={saveDraft}
+          label={'Luo luonnos'}
+        />
+        <ActionButton
+          className='btn-sm pull-right'
+          type='secondary'
+          icon='fa-refresh'
+          action={() => fetchTos(tosId, { state: 'approved' })}
+          label={'Hae viimeisin hyväksytty versio'}
+        />
+      </span>
+    </IsAllowed>
+  );
+
   return (
     <div>
       { status === DRAFT && editable }
       { status === SENT_FOR_REVIEW && reviewable }
       { status === WAITING_FOR_APPROVAL && approvable }
+      { status === APPROVED && draftable }
     </div>
   );
 };
@@ -88,9 +111,11 @@ ActionButtons.propTypes = {
   cancelEdit: PropTypes.func,
   changeStatus: PropTypes.func,
   documentState: PropTypes.string,
+  fetchTos: PropTypes.func,
   saveDraft: PropTypes.func,
   setDocumentState: PropTypes.func,
-  status: PropTypes.string.isRequired
+  status: PropTypes.string.isRequired,
+  tosId: PropTypes.string.isRequired
 };
 
 export default ActionButtons;

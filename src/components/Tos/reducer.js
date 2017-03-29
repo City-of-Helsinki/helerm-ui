@@ -103,10 +103,10 @@ export function setDocumentState (newState) {
   return createAction(SET_DOCUMENT_STATE)(newState);
 }
 
-export function fetchTOS (tosId) {
+export function fetchTOS (tosId, params = {}) {
   return function (dispatch) {
     dispatch(createAction(REQUEST_TOS)());
-    return api.get(`function/${tosId}`)
+    return api.get(`function/${tosId}`, params)
       .then(res => {
         if (!res.ok) {
           dispatch(createAction(TOS_ERROR)());
