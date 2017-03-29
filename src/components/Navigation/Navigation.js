@@ -2,7 +2,7 @@ import React from 'react';
 import map from 'lodash/map';
 import forEach from 'lodash/forEach';
 import includes from 'lodash/includes';
-import InfinityMenu from 'react-infinity-menu';
+import InfinityMenu from '../InfinityMenu/infinityMenu';
 import Select from 'react-select';
 
 import {
@@ -85,7 +85,7 @@ export class Navigation extends React.Component {
         this.filter(item.children, filterStatuses);
       }
       if ((!item.children && !includes(filterStatuses, item.state)) ||
-      (item.children && !item.children.length)) {
+        (item.children && !item.children.length)) {
         if (item.children && !item.children.length) {
         }
         indexesToRemove.push(index);
@@ -143,6 +143,7 @@ export class Navigation extends React.Component {
               onChange={this.handleStatusFilterChange}
             />
             <InfinityMenu
+              placeholder='Etsi...'
               tree={this.state.tree}
               onNodeMouseClick={this.onNodeMouseClick}
               onLeafMouseClick={this.onLeafMouseClick}
