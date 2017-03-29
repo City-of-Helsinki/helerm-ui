@@ -15,6 +15,7 @@ import {
 
 const ActionButtons = ({ cancelEdit, documentState, saveDraft, changeStatus, setDocumentState, status }) => {
   const editMode = documentState === 'edit';
+
   const editable = (
     <IsAllowed to={EDIT}>
       <span>
@@ -75,11 +76,24 @@ const ActionButtons = ({ cancelEdit, documentState, saveDraft, changeStatus, set
     </IsAllowed>
   );
 
+  const draftable = (
+    <IsAllowed to={EDIT}>
+      <ActionButton
+        className='btn-sm pull-right'
+        type='primary'
+        icon='fa-file-o'
+        action={() => console.log('test')}
+        label={'Luo luonnos'}
+      />
+    </IsAllowed>
+  );
+
   return (
     <div>
       { status === DRAFT && editable }
       { status === SENT_FOR_REVIEW && reviewable }
       { status === WAITING_FOR_APPROVAL && approvable }
+      { status === APPROVED && draftable }
     </div>
   );
 };
