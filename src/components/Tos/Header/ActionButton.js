@@ -6,7 +6,7 @@ const ActionButton = ({ type, action, label, ...rest }) => (
     disabled={rest.disabled}
     className={classname('btn', `btn-${type}`, `${rest.className}`)}
     onClick={action}>
-    {rest.icon && <i className={classname('fa', `${rest.icon}`)}></i>} {label}
+    {rest.icon && <i className={classname('fa', `${rest.icon}`)}/>} {label}
   </button>
 );
 
