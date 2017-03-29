@@ -81,21 +81,31 @@ export class ValidationBar extends Component {
       )
     );
 
+    if (invalidTOSAttributes ||
+        invalidPhaseAttributes ||
+        invalidActionAttributes ||
+        invalidRecordAttributes) {
+      return (
+        <div className='sidebar-content'>
+          <h4>Puuttuvat metatiedot</h4>
+          {invalidTOSAttributes &&
+            <h5>TOS-metatiedot</h5>}
+          {invalidTOSAttributes}
+          {invalidPhaseAttributes &&
+            <h5>Käsittelyvaiheet</h5>}
+          {invalidPhaseAttributes}
+          {invalidActionAttributes &&
+            <h5>Toimenpiteet</h5>}
+          {invalidActionAttributes}
+          {invalidRecordAttributes &&
+            <h5>Asiakirjat</h5>}
+          {invalidRecordAttributes}
+        </div>
+      );
+    }
     return (
       <div className='sidebar-content'>
-        <h4>Puuttuvat metatiedot</h4>
-        {invalidTOSAttributes &&
-          <h5>TOS-metatiedot</h5>}
-        {invalidTOSAttributes}
-        {invalidPhaseAttributes &&
-          <h5>Käsittelyvaiheet</h5>}
-        {invalidPhaseAttributes}
-        {invalidActionAttributes &&
-          <h5>Toimenpiteet</h5>}
-        {invalidActionAttributes}
-        {invalidRecordAttributes &&
-          <h5>Asiakirjat</h5>}
-        {invalidRecordAttributes}
+        <div className='no-missing-attributes fa fa-check-circle'/>
       </div>
     );
   }
