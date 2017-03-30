@@ -3,7 +3,6 @@ import map from 'lodash/map';
 import forEach from 'lodash/forEach';
 import includes from 'lodash/includes';
 import InfinityMenu from '../InfinityMenu/infinityMenu';
-import Select from 'react-select';
 
 import {
   DRAFT,

@@ -22,18 +22,24 @@
     padding: 8px 12px;
   }
 
-  .Select {
-    width: 100%;
+  .navigation-filters {
+    padding-bottom: 15px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid;
 
-    &-control {
-      border: 2px solid #dce4ec;
-      border-radius: $border-radius-base;
-      margin: 0;
-      height: 43px;
-    }
+    .Select {
+      width: 100%;
 
-    &-placeholder {
-      line-height: 40px;
+      &-control {
+        border: 2px solid #dce4ec;
+        border-radius: $border-radius-base;
+        margin: 0;
+        height: 43px;
+      }
+
+      &-placeholder {
+        line-height: 40px;
+      }
     }
   }
 }
@@ -49,9 +55,8 @@
 .nav-title {
   font-size: 1.8rem;
   letter-spacing: 0.03rem;
-  margin-bottom: 0.5rem;
   text-decoration: underline;
-  margin: 0 0 0 35px;
+  margin: 0 0 0.5rem 35px;
   line-height: 3.4rem;
   display: block;
   position: relative;

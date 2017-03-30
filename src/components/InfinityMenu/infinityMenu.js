@@ -353,16 +353,14 @@ export default class InfinityMenu extends Component {
 
     return (
       <div className={className('navigation-menu', { 'navigation-open': this.props.isOpen })}>
-
+        {!!this.props.path.length &&
         <div className='navigation-header clearfix'>
-          {!!this.props.path.length &&
           <ol className='breadcrumb' onClick={this.props.toggleNavigationVisibility}>
             {this.props.path.map((item, index) => (
               <li className={className({ 'active': index === this.props.path.length })}
                   key={index}>{item}</li>
             ))}
           </ol>
-          }
           <button className='btn btn-default btn-sm pull-right nav-button'
                   onClick={this.props.toggleNavigationVisibility}>
             <span className={'fa ' + (this.props.isOpen ? 'fa-minus' : 'fa-plus')}
@@ -370,9 +368,10 @@ export default class InfinityMenu extends Component {
             />
           </button>
         </div>
+        }
 
         {this.props.isOpen &&
-        <div className='row'>
+        <div className='row navigation-filters'>
 
           <div className='col-sm-6'>
             <SearchInput {...searchInputProps}/>
