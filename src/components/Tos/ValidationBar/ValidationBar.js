@@ -3,7 +3,12 @@ import SideBar from 'react-sidebar';
 import map from 'lodash/map';
 import './ValidationBar.scss';
 
-import { validateTOS, validateRecord } from '../../../utils/validators';
+import {
+  validateTOS,
+  validatePhase,
+  validateAction,
+  validateRecord
+} from '../../../utils/validators';
 
 const styles = {
   sidebar: {
@@ -74,12 +79,12 @@ export class ValidationBar extends Component {
     const { selectedTOS } = this.props;
 
     const invalidTOSAttributes = this.generateInvalidAttributes(validateTOS, selectedTOS);
-    const invalidPhaseAttributes = [];
-    const invalidActionAttributes = [];
+    const invalidPhaseAttributes = map(selectedTOS.phases, (phase, index) => (
+        this.generateAttributeSection(validatePhase, phase, index)));
+    const invalidActionAttributes = map(selectedTOS.actions, (action, index) => (
+        this.generateAttributeSection(validateAction, action, index)));
     const invalidRecordAttributes = map(selectedTOS.records, (record, index) => (
-        this.generateAttributeSection(validateRecord, record, index)
-      )
-    );
+        this.generateAttributeSection(validateRecord, record, index)));
 
     if (invalidTOSAttributes ||
         invalidPhaseAttributes > 0 ||
