@@ -453,6 +453,7 @@ export class ViewTOS extends React.Component {
               state={selectedTOS.state}
               setDocumentState={(state) => this.setDocumentState(state)}
               setValidationVisibility={this.setValidationVisibility}
+              review={this.review}
               saveDraft={this.saveDraft}
               tosId={selectedTOS.id}
             />

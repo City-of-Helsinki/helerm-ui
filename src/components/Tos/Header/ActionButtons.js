@@ -21,6 +21,7 @@ const ActionButtons = ({
   changeStatus,
   setDocumentState,
   setValidationVisibility,
+  review,
   status,
   tosId
 }) => {
@@ -32,7 +33,7 @@ const ActionButtons = ({
         <ActionButton
           className='btn-sm pull-right'
           type={editMode ? 'primary' : 'default'}
-          action={editMode ? saveDraft : () => changeStatus(SENT_FOR_REVIEW)}
+          action={editMode ? saveDraft : () => review(SENT_FOR_REVIEW)}
           label={editMode ? 'Tallenna luonnos' : 'Lähetä tarkastettavaksi'}
         />
         <ActionButton
@@ -133,6 +134,7 @@ ActionButtons.propTypes = {
   changeStatus: PropTypes.func,
   documentState: PropTypes.string,
   fetchTos: PropTypes.func,
+  review: PropTypes.func.isRequired,
   saveDraft: PropTypes.func,
   setDocumentState: PropTypes.func,
   setValidationVisibility: PropTypes.func.isRequired,
