@@ -1,9 +1,12 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import SearchInput from './searchInput';
 import NestedObjects from 'nested-objects';
 import _get from 'lodash/get';
 
-export default class InfinityMenu extends React.Component {
+/**
+ * Extracted from https://github.com/socialtables/react-infinity-menu
+ */
+export default class InfinityMenu extends Component {
 
   static propTypes = {
     customComponentMappings: PropTypes.object,
@@ -13,6 +16,7 @@ export default class InfinityMenu extends React.Component {
     filter: PropTypes.func,
     headerContent: PropTypes.any,
     headerProps: PropTypes.object,
+    loadMoreComponent: PropTypes.func,
     maxLeaves: PropTypes.number,
     onLeafMouseClick: PropTypes.func,
     onLeafMouseDown: PropTypes.func,
@@ -48,13 +52,14 @@ export default class InfinityMenu extends React.Component {
     this.setSearchInput = this.setSearchInput.bind(this);
     this.stopSearching = this.stopSearching.bind(this);
     this.startSearching = this.startSearching.bind(this);
+    this.onNodeClick = this.onNodeClick.bind(this);
+    this.onLoadMoreClick = this.onLoadMoreClick.bind(this);
   }
 
   shouldComponentUpdate (nextProps, nextState) {
     if (nextProps.shouldComponentUpdate) {
       return nextProps.shouldComponentUpdate(this.props, this.state, nextProps, nextState);
-    }
-    else {
+    } else {
       return true;
     }
   }
@@ -120,14 +125,12 @@ export default class InfinityMenu extends React.Component {
         node.isSearchDisplay = true;
         trees[key] = node;
         return trees;
-      }
-      else {
+      } else {
         node.isSearchDisplay = false;
         trees[key] = node;
         return trees;
       }
-    }
-    else {
+    } else {
       const filteredSubFolder = node.children.length ? node.children.reduce((p, c, k) => {
         return this.findFiltered(p, c, k);
       }, []) : [];
@@ -140,8 +143,7 @@ export default class InfinityMenu extends React.Component {
         node.maxLeaves = (node.maxLeaves) ? node.maxLeaves : this.props.maxLeaves;
         trees[key] = node;
         return trees;
-      }
-      else {
+      } else {
         node.isSearchOpen = false;
         node.isSearchDisplay = false;
         trees[key] = node;
@@ -193,8 +195,7 @@ export default class InfinityMenu extends React.Component {
             data: curr
           };
           prevs.push(React.createElement(currCustomComponent, componentProps));
-        }
-        else {
+        } else {
           prevs.push(
             <li key={itemKey}
                 className='infinity-menu-leaf-container'
@@ -206,21 +207,19 @@ export default class InfinityMenu extends React.Component {
             </li>
           );
         }
-      }
-      else {
+      } else {
         if (relativeIndex === filteredChildren.length - 1) {
           if (currCustomloadMoreComponent) {
             const loadMoreProps = {
               key: itemKey,
-              onClick: this.onLoadMoreClick.bind(this, tree, curr, keyPath)
+              onClick: (e) => this.onLoadMoreClick(tree, curr, keyPath, e)
             };
             prevs.push(React.createElement(currCustomloadMoreComponent, loadMoreProps));
-          }
-          else {
+          } else {
             prevs.push(
               <li key={itemKey}
                   className='infinity-menu-load-more-container'
-                  onClick={this.onLoadMoreClick.bind(this, tree, curr, keyPath)}
+                  onClick={(e) => this.onLoadMoreClick(tree, curr, keyPath, e)}
               >
                 <span>Load more</span>
               </li>
@@ -229,16 +228,14 @@ export default class InfinityMenu extends React.Component {
         }
       }
       return prevs;
-    }
-    // the node
-    else {
+    } else {
       const key = 'infinity-menu-node-' + currLevel + '-' + curr.id;
       const nodeName = curr.name;
       if ((!curr.isOpen && !isSearching) || (!curr.isSearchOpen && isSearching)) {
         if (shouldDisplay) {
           if (curr.customComponent) {
             const nodeProps = {
-              onClick: this.onNodeClick.bind(this, tree, curr, keyPath),
+              onClick: (e) => this.onNodeClick(tree, curr, keyPath, e),
               name: nodeName,
               isOpen: curr.isOpen,
               isSearching: false,
@@ -246,11 +243,10 @@ export default class InfinityMenu extends React.Component {
               key
             };
             prevs.push(React.createElement(currCustomComponent, nodeProps));
-          }
-          else {
+          } else {
             prevs.push(
               <div key={key}
-                   onClick={this.onNodeClick.bind(this, tree, curr, keyPath)}
+                   onClick={(e) => this.onNodeClick(tree, curr, keyPath, e)}
                    className='infinity-menu-node-container'
               >
                 <label>{nodeName}</label>
@@ -259,13 +255,12 @@ export default class InfinityMenu extends React.Component {
           }
         }
         return prevs;
-      }
-      else {
+      } else {
         let openedNode = [];
         if (shouldDisplay) {
           if (curr.customComponent) {
             const nodeProps = {
-              onClick: this.onNodeClick.bind(this, tree, curr, keyPath),
+              onClick: (e) => this.onNodeClick(tree, curr, keyPath, e),
               name: nodeName,
               isOpen: curr.isOpen,
               data: curr,
@@ -273,11 +268,10 @@ export default class InfinityMenu extends React.Component {
               isSearching
             };
             openedNode.push(React.createElement(currCustomComponent, nodeProps));
-          }
-          else {
+          } else {
             openedNode.push(
               <div key={key}
-                   onClick={this.onNodeClick.bind(this, tree, curr, keyPath)}
+                   onClick={(e) => this.onNodeClick(tree, curr, keyPath, e)}
                    className='infinity-menu-node-container'
               >
                 <label>{nodeName}</label>
@@ -314,11 +308,9 @@ export default class InfinityMenu extends React.Component {
 
     if (displayTree.length) {
       return displayTree;
-    }
-    else if (emptyTreeComponent) {
+    } else if (emptyTreeComponent) {
       return React.createElement(emptyTreeComponent, emptyTreeComponentProps);
-    }
-    else {
+    } else {
       return null;
     }
   }
