@@ -187,7 +187,6 @@ export class EditorForm extends React.Component {
   editMetaData (e) {
     e.preventDefault();
     const { newAttributes } = this.state;
-
     this.props.editMetaDataWithForm(this.filterAttributes(newAttributes));
     this.props.displayMessage({
       title: 'Metatiedot',
