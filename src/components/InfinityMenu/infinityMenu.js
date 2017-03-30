@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import Select from 'react-select';
 import SearchInput from './searchInput';
 import NestedObjects from 'nested-objects';
 import _get from 'lodash/get';
@@ -10,12 +11,13 @@ export default class InfinityMenu extends Component {
 
   static propTypes = {
     customComponentMappings: PropTypes.object,
-    disableDefaultHeaderContent: PropTypes.bool,
     emptyTreeComponent: PropTypes.any,
     emptyTreeComponentProps: PropTypes.object,
     filter: PropTypes.func,
-    headerContent: PropTypes.any,
+    filterStatuses: PropTypes.array,
+    handleStatusFilterChange: PropTypes.func,
     headerProps: PropTypes.object,
+    isOpen: PropTypes.bool,
     loadMoreComponent: PropTypes.func,
     maxLeaves: PropTypes.number,
     onLeafMouseClick: PropTypes.func,
@@ -23,6 +25,12 @@ export default class InfinityMenu extends Component {
     onLeafMouseUp: PropTypes.func,
     onNodeMouseClick: PropTypes.func,
     placeholder: PropTypes.string,
+    statusValue: PropTypes.array,
+    title: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.array
+    ]),
+    toggleNavigationVisibility: PropTypes.func,
     tree: PropTypes.array
   };
 
@@ -345,14 +353,40 @@ export default class InfinityMenu extends Component {
     };
 
     const bodyContent = this.renderBody(displayTree);
-    const defaultHeaderContent = this.props.disableDefaultHeaderContent ? null : React.createElement(SearchInput, headerProps);
-    const headerContent = this.props.headerContent ? React.createElement(this.props.headerContent, headerProps) : defaultHeaderContent;
 
     return (
-      <div className='infinity-menu-container'>
-        {headerContent}
-        <div className='infinity-menu-display-tree-container'>
-          {bodyContent}
+      <div className='navigation-menu'>
+        <div className='infinity-menu-container'>
+          {!this.props.isOpen &&
+          <div className='nav-path-list' onClick={this.props.toggleNavigationVisibility}>{this.props.title}</div>
+          }
+          <button className='btn btn-default btn-sm pull-right' onClick={this.props.toggleNavigationVisibility}>
+          <span
+            className={'fa ' + (this.props.isOpen ? 'fa-minus' : 'fa-plus')}
+            aria-hidden='true'
+          />
+          </button>
+          {this.props.isOpen &&
+          <span>
+          <Select
+            autoBlur={true}
+            placeholder='Suodata statuksen mukaan...'
+            value={this.props.statusValue}
+            multi={true}
+            joinValues={true}
+            clearable={false}
+            resetValue={this.props.filterStatuses}
+            options={this.props.filterStatuses}
+            onChange={this.props.handleStatusFilterChange}
+          />
+          <SearchInput {...headerProps}/>
+        </span>
+          }
+          {this.props.isOpen &&
+          <div className='infinity-menu-display-tree-container'>
+            {bodyContent}
+          </div>
+          }
         </div>
       </div>
     );
