@@ -17,6 +17,12 @@ import Dropdown from 'components/Dropdown';
 
 // import { EDIT } from '../../../../config/constants';
 import { getStatusLabel } from '../../../utils/helpers';
+import {
+  validateTOS,
+  validatePhase,
+  validateAction,
+  validateRecord
+} from '../../../utils/validators';
 
 import './ViewTos.scss';
 
@@ -40,6 +46,7 @@ export class ViewTOS extends React.Component {
     this.setPhaseVisibility = this.setPhaseVisibility.bind(this);
     this.updateTOSAttribute = this.updateTOSAttribute.bind(this);
     this.setValidationVisibility = this.setValidationVisibility.bind(this);
+    this.review = this.review.bind(this);
 
     this.state = {
       createPhaseMode: false,
@@ -111,6 +118,45 @@ export class ViewTOS extends React.Component {
           this.props.push(`/404?tos-id=${id}`);
         }
       });
+  }
+
+  review (status) {
+    if (this.validateAttributes()) {
+      this.changeStatus(status);
+    } else {
+      this.setState({ invalidAttributes: this.validateAttributes });
+      this.props.setValidationVisibility(true);
+    }
+  }
+
+  validateAttributes () {
+    const { selectedTOS, attributeTypes } = this.props;
+    const invalidTOSAttributes = validateTOS(selectedTOS, attributeTypes).length > 0;
+    const invalidPhaseAttributes = this.evaluateAttributes(selectedTOS.phases, validatePhase, attributeTypes);
+    const invalidActionAttributes = this.evaluateAttributes(selectedTOS.actions, validateAction, attributeTypes);
+    const invalidRecordAttributes = this.evaluateAttributes(selectedTOS.records, validateRecord, attributeTypes);
+
+    if (invalidTOSAttributes ||
+        invalidPhaseAttributes ||
+        invalidActionAttributes ||
+        invalidRecordAttributes) {
+      return false;
+    }
+    return true;
+  }
+
+  evaluateAttributes (items, validate, attributeTypes) {
+    if (Object.keys(items).length > 0) {
+      for (const item in items) {
+        const validAttributes = validate(items[item], attributeTypes).length > 0;
+
+        if (!validAttributes) {
+          return true;
+        }
+      }
+    } else {
+      return false;
+    }
   }
 
   setDocumentState (state) {
