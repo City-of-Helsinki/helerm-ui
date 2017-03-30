@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import SideBar from 'react-sidebar';
 import map from 'lodash/map';
+import filter from 'lodash/filter';
 import './ValidationBar.scss';
 
 import {
@@ -56,35 +57,36 @@ export class ValidationBar extends Component {
     }
   }
 
-  generateAttributeSection (validate, element, index) {
-    const invalidAttributes = validate(element, this.props.attributeTypes);
+  generateAttributeSection (validate, elements) {
+    const mappedAttributeSections = map(elements, (element, index) => {
+      const invalidAttributes = validate(element, this.props.attributeTypes);
 
-    if (invalidAttributes.length) {
-      return (
-        <div key={index}>
-          <div className='parent-name'>{element.name}</div>
-          <div className='missing-attributes'>
-            {map(invalidAttributes, (item, index) => (
-              <div key={index} className='missing-attribute'>
-                {'• '}{this.props.attributeTypes[item].name}
-              </div>
-            ))}
+      if (invalidAttributes.length) {
+        return (
+          <div key={index}>
+            <div className='parent-name'>{element.name}</div>
+            <div className='missing-attributes'>
+              {map(invalidAttributes, (item, index) => (
+                <div key={index} className='missing-attribute'>
+                  {'• '}{this.props.attributeTypes[item].name}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      );
-    }
+        );
+      }
+    });
+
+    return filter(mappedAttributeSections, (section) => (section !== undefined));
   }
 
   renderContent () {
     const { selectedTOS } = this.props;
 
     const invalidTOSAttributes = this.generateInvalidAttributes(validateTOS, selectedTOS);
-    const invalidPhaseAttributes = map(selectedTOS.phases, (phase, index) => (
-        this.generateAttributeSection(validatePhase, phase, index)));
-    const invalidActionAttributes = map(selectedTOS.actions, (action, index) => (
-        this.generateAttributeSection(validateAction, action, index)));
-    const invalidRecordAttributes = map(selectedTOS.records, (record, index) => (
-        this.generateAttributeSection(validateRecord, record, index)));
+    const invalidPhaseAttributes = this.generateAttributeSection(validatePhase, selectedTOS.phases);
+    const invalidActionAttributes = this.generateAttributeSection(validateAction, selectedTOS.actions);
+    const invalidRecordAttributes = this.generateAttributeSection(validateRecord, selectedTOS.records);
 
     if (invalidTOSAttributes ||
         invalidPhaseAttributes > 0 ||
