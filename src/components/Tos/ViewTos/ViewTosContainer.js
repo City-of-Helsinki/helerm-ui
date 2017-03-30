@@ -39,6 +39,7 @@ import {
 import { importItems } from '../ImportView/reducer';
 import { cloneFromTemplate } from '../CloneView/reducer';
 import { changeOrder } from '../Reorder/reducer';
+import { setValidationVisibility } from '../ValidationBar/reducer';
 
 import ViewTOS from './ViewTos';
 
@@ -68,7 +69,8 @@ const mapDispatchToProps = (dispatch) => {
     setDocumentState: bindActionCreators(setDocumentState, dispatch),
     setNavigationVisibility: bindActionCreators(setNavigationVisibility, dispatch),
     setPhasesVisibility: bindActionCreators(setPhasesVisibility, dispatch),
-    setPhaseVisibility: bindActionCreators(setPhaseVisibility, dispatch)
+    setPhaseVisibility: bindActionCreators(setPhaseVisibility, dispatch),
+    setValidationVisibility: bindActionCreators(setValidationVisibility, dispatch)
   };
 };
 

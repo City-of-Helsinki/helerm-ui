@@ -1,0 +1,29 @@
+.missing-attributes {
+  margin-bottom: 25px;
+}
+
+.missing-attribute {
+  color: #ff0000;
+}
+
+.sidebar-content {
+  h4 {
+    margin-bottom: 20px;
+  }
+
+  h5 {
+    margin: 20px 0 10px;
+  }
+
+  .element-name {
+    margin-bottom: 5px;
+  }
+
+  .no-missing-attributes {
+    color: #009c3d;
+    font-size: 120px;
+    left: 100px;
+    position: absolute;
+    top: 40%;
+  }
+}

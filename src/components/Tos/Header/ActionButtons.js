@@ -13,7 +13,17 @@ import {
   APPROVED
 } from '../../../../config/constants';
 
-const ActionButtons = ({ cancelEdit, documentState, fetchTos, saveDraft, changeStatus, setDocumentState, status, tosId }) => {
+const ActionButtons = ({
+  cancelEdit,
+  documentState,
+  fetchTos,
+  saveDraft,
+  changeStatus,
+  setDocumentState,
+  setValidationVisibility,
+  status,
+  tosId
+}) => {
   const editMode = documentState === 'edit';
 
   const editable = (
@@ -103,6 +113,17 @@ const ActionButtons = ({ cancelEdit, documentState, fetchTos, saveDraft, changeS
       { status === SENT_FOR_REVIEW && reviewable }
       { status === WAITING_FOR_APPROVAL && approvable }
       { status === APPROVED && draftable }
+      { status !== APPROVED &&
+      <div className='validation-button'>
+        <ActionButton
+          className='btn-sm pull-right'
+          style={{ marginRight: '15px' }}
+          type='success'
+          action={() => setValidationVisibility(true)}
+          label={'Esitarkasta'}
+          icon={'fa-check-circle-o'}
+        />
+      </div>}
     </div>
   );
 };
@@ -114,6 +135,7 @@ ActionButtons.propTypes = {
   fetchTos: PropTypes.func,
   saveDraft: PropTypes.func,
   setDocumentState: PropTypes.func,
+  setValidationVisibility: PropTypes.func.isRequired,
   status: PropTypes.string.isRequired,
   tosId: PropTypes.string.isRequired
 };

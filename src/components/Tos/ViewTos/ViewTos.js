@@ -16,7 +16,6 @@ import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
 
 // import { EDIT } from '../../../../config/constants';
-// import { validateTOS } from '../../../utils/validators';
 import { getStatusLabel } from '../../../utils/helpers';
 
 import './ViewTos.scss';
@@ -40,6 +39,7 @@ export class ViewTOS extends React.Component {
     this.saveDraft = this.saveDraft.bind(this);
     this.setPhaseVisibility = this.setPhaseVisibility.bind(this);
     this.updateTOSAttribute = this.updateTOSAttribute.bind(this);
+    this.setValidationVisibility = this.setValidationVisibility.bind(this);
 
     this.state = {
       createPhaseMode: false,
@@ -48,8 +48,9 @@ export class ViewTOS extends React.Component {
       isDirty: false,
       showCloneView: false,
       showImportView: false,
-      showMetadata: false,
       showReorderView: false,
+      showMetadata: false,
+      showValidationBar: false,
       update: ''
     };
   }
@@ -116,6 +117,11 @@ export class ViewTOS extends React.Component {
     return this.setState({ isDirty: true }, () => {
       return this.props.setDocumentState(state);
     });
+  }
+
+  setValidationVisibility (value) {
+    this.props.setValidationVisibility(value);
+    this.setState({ showValidationBar: value });
   }
 
   cancelEdit () {
@@ -386,7 +392,6 @@ export class ViewTOS extends React.Component {
       const phasesOrder = Object.keys(selectedTOS.phases);
       const phaseElements = this.generatePhases(selectedTOS.phases, phasesOrder);
       const TOSMetaData = this.generateMetaData(attributeTypes, selectedTOS.attributes);
-      // const isValidTos = validateTOS(selectedTOS, attributeTypes);
 
       return (
         <div>
@@ -399,9 +404,10 @@ export class ViewTOS extends React.Component {
               fetchTos={this.fetchTOS}
               functionId={selectedTOS.function_id}
               name={selectedTOS.name}
-              saveDraft={this.saveDraft}
-              setDocumentState={(state) => this.setDocumentState(state)}
               state={selectedTOS.state}
+              setDocumentState={(state) => this.setDocumentState(state)}
+              setValidationVisibility={this.setValidationVisibility}
+              saveDraft={this.saveDraft}
               tosId={selectedTOS.id}
             />
 
@@ -567,6 +573,7 @@ ViewTOS.propTypes = {
   setNavigationVisibility: React.PropTypes.func.isRequired,
   setPhaseVisibility: React.PropTypes.func.isRequired,
   setPhasesVisibility: React.PropTypes.func.isRequired,
+  setValidationVisibility: React.PropTypes.func.isRequired,
   templates: React.PropTypes.array.isRequired
 };
 

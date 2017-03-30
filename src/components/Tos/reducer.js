@@ -87,7 +87,7 @@ export function resetTOS (originalTos) {
 }
 
 export function editMetaData (attributes) {
-  let editedMetaData = [];
+  let editedMetaData = {};
   for (const key in attributes) {
     if (attributes.hasOwnProperty(key)) {
       if (attributes[key].checked === true) {
