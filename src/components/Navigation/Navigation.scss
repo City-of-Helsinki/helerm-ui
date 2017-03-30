@@ -6,14 +6,34 @@
   border: 1px solid $black50;
   border-radius: $border-radius-base;
 
+  .navigation-header  {
+    padding-bottom: 15px;
+  }
+
+  .breadcrumb {
+    border-radius: $border-radius-base;
+    float: left;
+    width: 95%;
+    margin-bottom: 0;
+  }
+
+  .nav-button {
+    border-radius: $border-radius-base;
+    padding: 8px 12px;
+  }
+
   .Select {
-    width: 85%;
-    display: inline-block;
+    width: 100%;
 
     &-control {
       border: 2px solid #dce4ec;
-      border-radius: 0;
-      margin: 0 0 10px 0;
+      border-radius: $border-radius-base;
+      margin: 0;
+      height: 43px;
+    }
+
+    &-placeholder {
+      line-height: 40px;
     }
   }
 }
@@ -208,7 +228,7 @@
     border-bottom: 0px;
     position: absolute;
     left: 17px;
-    top: -23px;
+    top: -30px;
     z-index: 2;
     pointer-events: none;
   }
@@ -257,19 +277,9 @@ ul:last-child {
   font-weight: 500;
   position: absolute;
   left: 15px;
-  top: 2px;
+  top: -3px;
   z-index: 2;
   pointer-events: none;
-}
-
-.infinity-menu-container:after {
-  //content: 'Haku';
-  pointer-events: none;
-  position: absolute;
-  color: $gray;
-  top: 60px;
-  left: 30px;
-  z-index: 1;
 }
 
 .react-infinity-menu-default-search-input:focus {
@@ -287,6 +297,10 @@ ul:last-child {
   height: 100%;
   z-index: 1;
   pointer-events: none;
+}
+
+.infinity-menu-display-tree-container > .infinity-menu-node-container:first-child:before {
+  border-left: none;
 }
 
 .infinity-menu-leaf-container {

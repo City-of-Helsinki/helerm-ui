@@ -127,6 +127,7 @@ export class Navigation extends React.Component {
           onNodeMouseClick={this.onNodeMouseClick}
           statusValue={this.state.filterStatuses}
           title={navigationTitle}
+          path={this.props.TOSPath}
           toggleNavigationVisibility={this.toggleNavigationVisibility}
           tree={this.state.tree}
         />
