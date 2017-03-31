@@ -35,15 +35,18 @@ export class Navigation extends React.Component {
   }
 
   componentWillMount () {
-    this.props.fetchNavigation();
+    const { tree } = this.state;
+    if (!tree.length) {
+      this.props.fetchNavigation();
+    }
   }
 
   componentWillReceiveProps (nextProps) {
-    const { items, TOSPath } = nextProps;
+    const { items, tosPath } = nextProps;
     this.setState({
       tree: items
     }, () => {
-      if (!TOSPath.length) {
+      if (!tosPath.length) {
         this.props.setNavigationVisibility(true);
       }
     });
@@ -109,9 +112,10 @@ export class Navigation extends React.Component {
   }
 
   render () {
+    const { onLeafMouseClick } = this.props;
     let navigationTitle = 'Navigaatio';
-    if (!this.props.is_open && this.props.TOSPath.length) {
-      navigationTitle = this.props.TOSPath.map((section, index) => {
+    if (!this.props.is_open && this.props.tosPath.length) {
+      navigationTitle = this.props.tosPath.map((section, index) => {
         return <div key={index}>{section}</div>;
       });
     }
@@ -122,11 +126,11 @@ export class Navigation extends React.Component {
           filterStatuses={filterStatuses}
           handleStatusFilterChange={this.handleStatusFilterChange}
           isOpen={this.props.is_open}
-          onLeafMouseClick={this.onLeafMouseClick}
+          onLeafMouseClick={onLeafMouseClick ? (event, leaf) => onLeafMouseClick(event, leaf) : this.onLeafMouseClick}
           onNodeMouseClick={this.onNodeMouseClick}
           statusValue={this.state.filterStatuses}
           title={navigationTitle}
-          path={this.props.TOSPath}
+          path={this.props.tosPath}
           toggleNavigationVisibility={this.toggleNavigationVisibility}
           tree={this.state.tree}
         />
@@ -136,12 +140,13 @@ export class Navigation extends React.Component {
 }
 
 Navigation.propTypes = {
-  TOSPath: PropTypes.array.isRequired,
   fetchNavigation: PropTypes.func.isRequired,
   is_open: PropTypes.bool.isRequired,
   items: PropTypes.array.isRequired,
+  onLeafMouseClick: PropTypes.func,
   push: PropTypes.func.isRequired,
-  setNavigationVisibility: PropTypes.func.isRequired
+  setNavigationVisibility: PropTypes.func.isRequired,
+  tosPath: PropTypes.array.isRequired
 };
 
 export default Navigation;
