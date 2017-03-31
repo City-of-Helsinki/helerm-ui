@@ -1,7 +1,6 @@
 import React from 'react';
 import { withRouter, routerShape } from 'react-router';
 import { StickyContainer } from 'react-sticky';
-import formatDate from 'occasion';
 
 import Phase from 'components/Tos/Phase/Phase';
 import CreatePhaseForm from 'components/Tos/Phase/CreatePhaseForm';
@@ -15,8 +14,7 @@ import TosHeader from 'components/Tos/Header/TosHeader';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
 
-// import { EDIT } from '../../../../config/constants';
-import { getStatusLabel } from '../../../utils/helpers';
+import { formatDateTime, getStatusLabel } from '../../../utils/helpers';
 import {
   validateTOS,
   validatePhase,
@@ -136,13 +134,7 @@ export class ViewTOS extends React.Component {
     const invalidActionAttributes = this.evaluateAttributes(selectedTOS.actions, validateAction, attributeTypes);
     const invalidRecordAttributes = this.evaluateAttributes(selectedTOS.records, validateRecord, attributeTypes);
 
-    if (invalidTOSAttributes ||
-        invalidPhaseAttributes ||
-        invalidActionAttributes ||
-        invalidRecordAttributes) {
-      return false;
-    }
-    return true;
+    return invalidTOSAttributes || invalidPhaseAttributes || invalidActionAttributes || invalidRecordAttributes;
   }
 
   evaluateAttributes (items, validate, attributeTypes) {
@@ -205,12 +197,6 @@ export class ViewTOS extends React.Component {
           body: `${getStatusLabel(state)} => ${getStatusLabel(status)}`
         });
       });
-  }
-
-  formatDateTime (dateTime) {
-    const date = dateTime.slice(0, 10);
-    const time = dateTime.slice(11, 16);
-    return { date, time };
   }
 
   toggleMetadataVisibility (current) {
@@ -299,14 +285,13 @@ export class ViewTOS extends React.Component {
 
   generateMetaData (attributeTypes, attributes) {
     const { modified_at, documentState, editRecord, version, state, modified_by } = this.props.selectedTOS;
-    const modifiedDateTime = this.formatDateTime(modified_at);
-    const formattedDate = formatDate(modifiedDateTime.date, 'DD.MM.YYYY');
-    const dateTime = formattedDate + ' ' + modifiedDateTime.time;
+    const formattedDateTime = formatDateTime(modified_at);
+
     const attributeElements = [];
     const versionData = [
       { type: 'Versionumero', name: version.toString() },
       { type: 'Tila', name: getStatusLabel(state) },
-      { type: 'Muokkausajankohta', name: dateTime },
+      { type: 'Muokkausajankohta', name: formattedDateTime },
       { type: 'Muokkaaja', name: modified_by }
     ];
     versionData.map((metadata, index) => {
