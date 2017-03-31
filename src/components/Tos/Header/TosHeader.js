@@ -13,6 +13,7 @@ const TosHeader = ({
   changeStatus,
   setDocumentState,
   setValidationVisibility,
+  review,
   state,
   tosId
 }) => {
@@ -31,6 +32,7 @@ const TosHeader = ({
             saveDraft={saveDraft}
             setDocumentState={setDocumentState}
             setValidationVisibility={setValidationVisibility}
+            review={review}
             status={state}
             tosId={tosId}
           />
@@ -47,6 +49,7 @@ TosHeader.propTypes = {
   fetchTos: PropTypes.func.isRequired,
   functionId: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
+  review: PropTypes.func.isRequired,
   saveDraft: PropTypes.func,
   setDocumentState: PropTypes.func,
   setValidationVisibility: PropTypes.func,
