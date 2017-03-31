@@ -1,3 +1,5 @@
+import includes from 'lodash/includes';
+
 /**
  * Validate TOS against rules
  * @param tos
@@ -7,10 +9,10 @@
 export const validateTOS = (tos, rules) => {
   let errors = [];
   for (const key in rules) {
-    if (rules[key].required && rules[key].requiredIn.includes('function')) {
+    if (rules[key].required && includes(rules[key].requiredIn, 'function')) {
       if (rules[key].requiredIf.length) {
         for (const item of rules[key].requiredIf) {
-          if (tos.attributes[item.key] && item.values.includes(tos.attributes[item.key])) {
+          if (tos.attributes[item.key] && includes(item.values, tos.attributes[item.key])) {
             errors.push(key);
           }
         }
@@ -57,10 +59,10 @@ export const validateAction = (action, rules) => {
 export const validateRecord = (record, rules) => {
   let errors = [];
   for (const key in rules) {
-    if (rules[key].required && rules[key].requiredIn.includes('record')) {
+    if (rules[key].required && includes(rules[key].requiredIn, 'record')) {
       if (rules[key].requiredIf.length) {
         for (const item of rules[key].requiredIf) {
-          if (record.attributes[item.key] && item.values.includes(record.attributes[item.key])) {
+          if (record.attributes[item.key] && includes(item.values, record.attributes[item.key])) {
             errors.push(key);
           }
         }
