@@ -3974,7 +3974,7 @@ nested-error-stacks@^1.0.0:
   dependencies:
     inherits "~2.0.1"
 
-nested-objects@0.0.2:
+nested-objects@0.0.2, nested-objects@^0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/nested-objects/-/nested-objects-0.0.2.tgz#dffcc35bbbed73affb857e89fa7c9ee969bc7780"
 

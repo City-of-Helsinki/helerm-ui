@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import map from 'lodash/map';
 import forEach from 'lodash/forEach';
 import includes from 'lodash/includes';
-import InfinityMenu from 'react-infinity-menu';
-import Select from 'react-select';
+import InfinityMenu from '../InfinityMenu/infinityMenu';
 
 import {
   DRAFT,
@@ -85,7 +84,7 @@ export class Navigation extends React.Component {
         this.filter(item.children, filterStatuses);
       }
       if ((!item.children && !includes(filterStatuses, item.state)) ||
-      (item.children && !item.children.length)) {
+        (item.children && !item.children.length)) {
         if (item.children && !item.children.length) {
         }
         indexesToRemove.push(index);
@@ -119,49 +118,30 @@ export class Navigation extends React.Component {
 
     return (
       <div className='container-fluid'>
-        <div className='navigation-menu'>
-          <button className='btn btn-default btn-sm pull-right' onClick={this.toggleNavigationVisibility}>
-            <span
-              className={'fa ' + (this.props.is_open ? 'fa-minus' : 'fa-plus')}
-              aria-hidden='true'
-            />
-          </button>
-          {!this.props.is_open &&
-          <div className='nav-path-list' onClick={this.toggleNavigationVisibility}>{navigationTitle}</div>
-          }
-          {this.props.is_open &&
-          <div>
-            <Select
-              autoBlur={true}
-              placeholder='Suodata statuksen mukaan...'
-              value={this.state.filterStatuses}
-              multi={true}
-              joinValues={true}
-              clearable={false}
-              resetValue={filterStatuses}
-              options={filterStatuses}
-              onChange={this.handleStatusFilterChange}
-            />
-            <InfinityMenu
-              tree={this.state.tree}
-              onNodeMouseClick={this.onNodeMouseClick}
-              onLeafMouseClick={this.onLeafMouseClick}
-            />
-          </div>
-          }
-        </div>
+        <InfinityMenu
+          filterStatuses={filterStatuses}
+          handleStatusFilterChange={this.handleStatusFilterChange}
+          isOpen={this.props.is_open}
+          onLeafMouseClick={this.onLeafMouseClick}
+          onNodeMouseClick={this.onNodeMouseClick}
+          statusValue={this.state.filterStatuses}
+          title={navigationTitle}
+          path={this.props.TOSPath}
+          toggleNavigationVisibility={this.toggleNavigationVisibility}
+          tree={this.state.tree}
+        />
       </div>
     );
   }
 }
 
 Navigation.propTypes = {
-  TOSPath: React.PropTypes.array.isRequired,
-  fetchNavigation: React.PropTypes.func.isRequired,
-  is_open: React.PropTypes.bool.isRequired,
-  items: React.PropTypes.array.isRequired,
-  push: React.PropTypes.func.isRequired,
-  setNavigationVisibility: React.PropTypes.func.isRequired
+  TOSPath: PropTypes.array.isRequired,
+  fetchNavigation: PropTypes.func.isRequired,
+  is_open: PropTypes.bool.isRequired,
+  items: PropTypes.array.isRequired,
+  push: PropTypes.func.isRequired,
+  setNavigationVisibility: PropTypes.func.isRequired
 };
 
 export default Navigation;
