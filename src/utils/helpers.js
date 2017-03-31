@@ -1,6 +1,7 @@
 import LTT from 'list-to-tree';
 import { normalize, schema } from 'normalizr';
 import { toastr } from 'react-redux-toastr';
+import moment from 'moment';
 import {
   filter,
   find,
@@ -203,4 +204,14 @@ export function getStatusLabel (status) {
 export function displayMessage (message, opts = { type: 'success' }) {
   const { title, body } = message;
   return toastr[opts.type](title, body, opts);
+}
+
+/**
+ * Format datetime-object
+ * @param dateTime
+ * @param format
+ * @returns {string}
+ */
+export function formatDateTime (dateTime, format = 'DD.MM.YYYY HH:mm') {
+  return moment(dateTime).format(format);
 }

@@ -3925,9 +3925,9 @@ mocha@^3.0.1:
     mkdirp "0.5.1"
     supports-color "3.1.2"
 
-moment@2.x.x:
-  version "2.17.1"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.17.1.tgz#fed9506063f36b10f066c8b59a144d7faebe1d82"
+moment@2.x.x, moment@^2.18.1:
+  version "2.18.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
 
 ms@0.7.1:
   version "0.7.1"
@@ -3974,7 +3974,7 @@ nested-error-stacks@^1.0.0:
   dependencies:
     inherits "~2.0.1"
 
-nested-objects@0.0.2, nested-objects@^0.0.2:
+nested-objects@^0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/nested-objects/-/nested-objects-0.0.2.tgz#dffcc35bbbed73affb857e89fa7c9ee969bc7780"
 
@@ -4125,10 +4125,6 @@ normalize-url@^1.4.0:
     query-string "^4.1.0"
     sort-keys "^1.0.0"
 
-normalize.css@^4.1.1:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/normalize.css/-/normalize.css-4.2.0.tgz#21d66cc557154d4379fd1e079ec7de58a379b099"
-
 normalizr@^3.2.2:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/normalizr/-/normalizr-3.2.2.tgz#542e915a260ca53279b76a63fb554185e9225f90"
@@ -4224,10 +4220,6 @@ object.values@^1.0.3:
     es-abstract "^1.6.1"
     function-bind "^1.1.0"
     has "^1.0.1"
-
-occasion@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/occasion/-/occasion-1.0.0.tgz#4f6a84e0475bea2d4c2e9a8a9408cf95250a8b00"
 
 on-finished@~2.3.0:
   version "2.3.0"
@@ -4904,12 +4896,6 @@ react-element-to-jsx-string@^5.0.0:
     sortobject "^1.0.0"
     stringify-object "2.4.0"
     traverse "^0.6.6"
-
-react-infinity-menu@^2.4.1:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/react-infinity-menu/-/react-infinity-menu-2.4.1.tgz#c526a8709597af5c09eaf72efd958965dc4e0855"
-  dependencies:
-    nested-objects "0.0.2"
 
 react-input-autosize@^1.1.0:
   version "1.1.0"
