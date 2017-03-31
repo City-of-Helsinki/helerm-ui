@@ -1,5 +1,6 @@
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
+import find from 'lodash/find';
 
 import { default as api } from '../utils/api';
 
@@ -54,7 +55,7 @@ export function receiveAttributeTypes (attributes, validationRules) {
                   });
                 });
 
-                const exists = !!requiredIf.find(reqObj => {
+                const exists = !!find(requiredIf, (reqObj) => {
                   return reqObj.key === property;
                 });
 
