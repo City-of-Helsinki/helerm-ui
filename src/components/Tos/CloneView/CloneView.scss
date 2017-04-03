@@ -5,6 +5,14 @@
     overflow: auto;
   }
 
+  .nav-tabs {
+    margin-bottom: 15px;
+
+    > li > a {
+      cursor: pointer;
+    }
+  }
+
   .clone-controls {
     margin-top: 15px;
 

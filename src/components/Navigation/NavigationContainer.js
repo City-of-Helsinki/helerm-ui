@@ -16,13 +16,14 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   const { items } = state.navigation;
   const { selectedTOS } = state;
   const tos = selectedTOS.id ? itemById(items, selectedTOS.id) : null;
+  const tosPath = ownProps.tosPath ? ownProps.tosPath : tos ? tos.path : [];
 
   return {
-    TOSPath: tos ? tos.path : [],
+    tosPath,
     is_open: state.navigation.is_open,
     isFetching: state.navigation.isFetching,
     items,

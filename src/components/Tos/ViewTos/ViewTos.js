@@ -224,9 +224,9 @@ export class ViewTOS extends React.Component {
     this.setState({ newPhaseName: '', createPhaseMode: false });
   }
 
-  cloneFromTemplate (id) {
+  cloneFromTemplate (selectedMethod, id) {
     const { cloneFromTemplate } = this.props;
-    return cloneFromTemplate(id)
+    return cloneFromTemplate(selectedMethod, id)
       .then(() => {
         return this.props.displayMessage({
           title: 'Kuvaus',
@@ -552,7 +552,8 @@ export class ViewTOS extends React.Component {
                   <Popup
                     content={
                       <CloneView
-                        cloneFromTemplate={(id) => this.cloneFromTemplate(id)}
+                        cloneFromTemplate={(selectedMethod, id) => this.cloneFromTemplate(selectedMethod, id)}
+                        setNavigationVisibility={this.props.setNavigationVisibility}
                         templates={templates}
                         toggleCloneView={() => this.toggleCloneView()}
                       />

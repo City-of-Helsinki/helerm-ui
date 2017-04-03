@@ -9,7 +9,7 @@ export const CoreLayout = ({ children }) => (
   <div className='core-layout__viewport'>
     <ValidationBarContainer>
       <Header />
-      <NavigationContainer/>
+      <NavigationContainer />
       <div className='container-fluid'>
         {children}
       </div>

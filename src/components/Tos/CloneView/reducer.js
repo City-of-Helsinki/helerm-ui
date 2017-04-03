@@ -7,10 +7,10 @@ import { default as api } from '../../../utils/api';
 
 export const RECEIVE_TEMPLATE = 'receiveTemplateAction';
 
-export function cloneFromTemplate (id) {
+export function cloneFromTemplate (endpoint, id) {
   return function (dispatch) {
     dispatch(createAction(REQUEST_TOS)());
-    return api.get(`template/${id}`)
+    return api.get(`${endpoint}/${id}`)
       .then(res => {
         if (!res.ok) {
           dispatch(createAction(TOS_ERROR)());
@@ -27,16 +27,16 @@ export const receiveTemplateAction = (state, { payload }) => {
 
   return update(state, {
     attributes: {
-      $set: tos[result].attributes
+      $merge: tos[result].attributes || {}
     },
     actions: {
-      $set: actions
+      $merge: actions || {}
     },
     phases: {
-      $set: phases
+      $merge: phases || {}
     },
     records: {
-      $set: records
+      $merge: records || {}
     },
     lastUpdated: {
       $set: Date.now()

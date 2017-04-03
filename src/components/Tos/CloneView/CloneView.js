@@ -1,12 +1,17 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes, createElement } from 'react';
 import classNames from 'classnames';
 
 import './CloneView.scss';
+import NavigationContainer from '../../Navigation/NavigationContainer';
+
+const METHOD_TEMPLATE = 'template';
+const METHOD_FUNCTION = 'function';
 
 export default class CloneView extends React.Component {
 
   static propTypes = {
     cloneFromTemplate: PropTypes.func,
+    setNavigationVisibility: PropTypes.func,
     templates: PropTypes.array,
     toggleCloneView: PropTypes.func
   };
@@ -15,52 +20,104 @@ export default class CloneView extends React.Component {
     super(props);
 
     this.cloneFromTemplate = this.cloneFromTemplate.bind(this);
+    this.clearSelected = this.clearSelected.bind(this);
     this.selectItem = this.selectItem.bind(this);
+    this.selectMethod = this.selectMethod.bind(this);
+    this.toggleCloneView = this.toggleCloneView.bind(this);
 
     this.state = {
-      selectedItem: null
+      selectedItem: {},
+      selectedMethod: METHOD_TEMPLATE
     };
   }
 
   cloneFromTemplate (id) {
-    const { toggleCloneView, cloneFromTemplate } = this.props;
+    const { selectedMethod } = this.state;
+    const { toggleCloneView, cloneFromTemplate, setNavigationVisibility } = this.props;
+    setNavigationVisibility(false);
     toggleCloneView();
-    return cloneFromTemplate(id);
+    return cloneFromTemplate(selectedMethod, id);
   }
 
-  selectItem (key) {
-    this.setState({ selectedItem: key });
+  clearSelected () {
+    return this.setState({ selectedItem: {} });
+  }
+
+  selectItem ({ id, name }) {
+    this.setState({ selectedItem: { id, name } });
+  }
+
+  selectMethod (selectedMethod) {
+    return this.setState({ selectedMethod });
+  }
+
+  toggleCloneView () {
+    const { toggleCloneView, setNavigationVisibility } = this.props;
+    setNavigationVisibility(false);
+    return toggleCloneView();
   }
 
   render () {
-    const { toggleCloneView, templates } = this.props;
-    const { selectedItem } = this.state;
+    const { templates } = this.props;
+    const { selectedItem, selectedMethod } = this.state;
+    const hasSelectedItem = !!selectedItem.id;
+
+    const treeViewProps = {
+      tosPath: [],
+      onLeafMouseClick: (event, leaf) => {
+        const { id, name } = leaf;
+        return this.selectItem({ id, name });
+      }
+    };
+
+    const treeView = createElement(NavigationContainer, treeViewProps);
+
     return (
       <div className='row clone__view'>
-        <h3>Tuo kuvaus</h3>
-        <h5>Valitse listalta tuotava kuvaus</h5>
-        <div className='importable-elements '>
+        <ul className='nav nav-tabs disabled'>
+          <li role='presentation'
+              className={classNames({ 'disabled': hasSelectedItem, 'active': selectedMethod === METHOD_TEMPLATE })}>
+            <a onClick={() => this.selectMethod(METHOD_TEMPLATE)}>Tuo kuvaus templatesta</a>
+          </li>
+          <li role='presentation'
+              className={classNames({ 'disabled': hasSelectedItem, 'active': selectedMethod === METHOD_FUNCTION })}>
+            <a onClick={() => this.selectMethod(METHOD_FUNCTION)}>Tuo kuvaus toisesta kuvauksesta</a>
+          </li>
+        </ul>
+
+        {!hasSelectedItem && selectedMethod === METHOD_TEMPLATE &&
+        <div className='importable-elements'>
           <div className='list-group'>
             {templates.map(({ name, id }) => (
               <button key={id}
                       type='button'
-                      className={classNames('list-group-item', { 'active': selectedItem === id })}
-                      onClick={() => this.selectItem(id)}>
+                      className={classNames('list-group-item', { 'active': selectedItem.id === id })}
+                      onClick={() => this.selectItem({ id, name })}>
                 {name}
               </button>
             ))}
           </div>
         </div>
+        }
+
+        {!hasSelectedItem && selectedMethod === METHOD_FUNCTION && <div className='row'>{treeView}</div>}
+
+        {hasSelectedItem &&
         <div className='clone-controls clearfix'>
-          <div className='alert alert-danger' role='alert'><strong>Huom!</strong> Aiemmat tiedot korvataan.</div>
+          <div className='alert alert-info' role='alert'>
+            <strong>Tuotava kuvaus:</strong> <em>{selectedItem.name}</em>
+            <button onClick={this.clearSelected} className='btn btn-xs btn-default pull-right'>Tyhjennä valinta <i
+              className='fa fa-close'/></button>
+          </div>
           <button
-            onClick={() => this.cloneFromTemplate(selectedItem)}
-            className='btn btn-primary pull-right'
-            disabled={!selectedItem}>
-            Tuo
+            onClick={() => this.cloneFromTemplate(selectedItem.id)}
+            className='btn btn-success pull-right'
+            disabled={!hasSelectedItem}>
+            Tuo <i className='fa fa-clone'/>
           </button>
-          <button onClick={toggleCloneView} className='btn btn-danger pull-right'>Peruuta</button>
+          <button onClick={this.toggleCloneView} className='btn btn-danger pull-right'>Peruuta</button>
         </div>
+        }
       </div>
     );
   }
