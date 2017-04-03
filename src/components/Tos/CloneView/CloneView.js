@@ -11,6 +11,7 @@ export default class CloneView extends React.Component {
 
   static propTypes = {
     cloneFromTemplate: PropTypes.func,
+    setNavigationVisibility: PropTypes.func,
     templates: PropTypes.array,
     toggleCloneView: PropTypes.func
   };
@@ -22,6 +23,7 @@ export default class CloneView extends React.Component {
     this.clearSelected = this.clearSelected.bind(this);
     this.selectItem = this.selectItem.bind(this);
     this.selectMethod = this.selectMethod.bind(this);
+    this.toggleCloneView = this.toggleCloneView.bind(this);
 
     this.state = {
       selectedItem: {},
@@ -31,7 +33,8 @@ export default class CloneView extends React.Component {
 
   cloneFromTemplate (id) {
     const { selectedMethod } = this.state;
-    const { toggleCloneView, cloneFromTemplate } = this.props;
+    const { toggleCloneView, cloneFromTemplate, setNavigationVisibility } = this.props;
+    setNavigationVisibility(false);
     toggleCloneView();
     return cloneFromTemplate(selectedMethod, id);
   }
@@ -48,8 +51,14 @@ export default class CloneView extends React.Component {
     return this.setState({ selectedMethod });
   }
 
+  toggleCloneView () {
+    const { toggleCloneView, setNavigationVisibility } = this.props;
+    setNavigationVisibility(false);
+    return toggleCloneView();
+  }
+
   render () {
-    const { toggleCloneView, templates } = this.props;
+    const { templates } = this.props;
     const { selectedItem, selectedMethod } = this.state;
     const hasSelectedItem = !!selectedItem.id;
 
@@ -106,7 +115,7 @@ export default class CloneView extends React.Component {
             disabled={!hasSelectedItem}>
             Tuo <i className='fa fa-clone'/>
           </button>
-          <button onClick={toggleCloneView} className='btn btn-danger pull-right'>Peruuta</button>
+          <button onClick={this.toggleCloneView} className='btn btn-danger pull-right'>Peruuta</button>
         </div>
         }
       </div>

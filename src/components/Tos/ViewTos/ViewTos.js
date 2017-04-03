@@ -553,6 +553,7 @@ export class ViewTOS extends React.Component {
                     content={
                       <CloneView
                         cloneFromTemplate={(selectedMethod, id) => this.cloneFromTemplate(selectedMethod, id)}
+                        setNavigationVisibility={this.props.setNavigationVisibility}
                         templates={templates}
                         toggleCloneView={() => this.toggleCloneView()}
                       />
