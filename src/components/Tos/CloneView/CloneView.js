@@ -19,6 +19,7 @@ export default class CloneView extends React.Component {
     super(props);
 
     this.cloneFromTemplate = this.cloneFromTemplate.bind(this);
+    this.clearSelected = this.clearSelected.bind(this);
     this.selectItem = this.selectItem.bind(this);
     this.selectMethod = this.selectMethod.bind(this);
 
@@ -29,9 +30,14 @@ export default class CloneView extends React.Component {
   }
 
   cloneFromTemplate (id) {
+    const { selectedMethod } = this.state;
     const { toggleCloneView, cloneFromTemplate } = this.props;
     toggleCloneView();
-    return cloneFromTemplate(id);
+    return cloneFromTemplate(selectedMethod, id);
+  }
+
+  clearSelected () {
+    return this.setState({ selectedItem: {} });
   }
 
   selectItem ({ id, name }) {
@@ -45,6 +51,7 @@ export default class CloneView extends React.Component {
   render () {
     const { toggleCloneView, templates } = this.props;
     const { selectedItem, selectedMethod } = this.state;
+    const hasSelectedItem = !!selectedItem.id;
 
     const treeViewProps = {
       tosPath: [],
@@ -58,16 +65,18 @@ export default class CloneView extends React.Component {
 
     return (
       <div className='row clone__view'>
-        <ul className='nav nav-tabs'>
-          <li role='presentation' className={classNames({ 'active': selectedMethod === METHOD_TEMPLATE })}>
+        <ul className='nav nav-tabs disabled'>
+          <li role='presentation'
+              className={classNames({ 'disabled': hasSelectedItem, 'active': selectedMethod === METHOD_TEMPLATE })}>
             <a onClick={() => this.selectMethod(METHOD_TEMPLATE)}>Tuo kuvaus templatesta</a>
           </li>
-          <li role='presentation' className={classNames({ 'active': selectedMethod === METHOD_FUNCTION })}>
-            <a onClick={() => this.selectMethod(METHOD_FUNCTION)}>Tuo kuvaus kuvauksesta</a>
+          <li role='presentation'
+              className={classNames({ 'disabled': hasSelectedItem, 'active': selectedMethod === METHOD_FUNCTION })}>
+            <a onClick={() => this.selectMethod(METHOD_FUNCTION)}>Tuo kuvaus toisesta kuvauksesta</a>
           </li>
         </ul>
 
-        {selectedMethod === METHOD_TEMPLATE &&
+        {!hasSelectedItem && selectedMethod === METHOD_TEMPLATE &&
         <div className='importable-elements'>
           <div className='list-group'>
             {templates.map(({ name, id }) => (
@@ -82,21 +91,24 @@ export default class CloneView extends React.Component {
         </div>
         }
 
-        {selectedMethod === METHOD_FUNCTION && <div className='row'>{treeView}</div>}
+        {!hasSelectedItem && selectedMethod === METHOD_FUNCTION && <div className='row'>{treeView}</div>}
 
+        {hasSelectedItem &&
         <div className='clone-controls clearfix'>
-          {selectedItem.id &&
-          <div className='alert alert-danger' role='alert'><strong>Huom!</strong> Aiemmat tiedot korvataan
-            kuvauksella {selectedItem.name}.</div>
-          }
+          <div className='alert alert-info' role='alert'>
+            <strong>Tuotava kuvaus:</strong> <em>{selectedItem.name}</em>
+            <button onClick={this.clearSelected} className='btn btn-xs btn-default pull-right'>Tyhjennä valinta <i
+              className='fa fa-close'/></button>
+          </div>
           <button
             onClick={() => this.cloneFromTemplate(selectedItem.id)}
-            className='btn btn-primary pull-right'
-            disabled={!selectedItem.id}>
-            Tuo
+            className='btn btn-success pull-right'
+            disabled={!hasSelectedItem}>
+            Tuo <i className='fa fa-clone'/>
           </button>
           <button onClick={toggleCloneView} className='btn btn-danger pull-right'>Peruuta</button>
         </div>
+        }
       </div>
     );
   }
