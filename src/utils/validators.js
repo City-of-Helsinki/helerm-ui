@@ -7,17 +7,16 @@ import includes from 'lodash/includes';
  * @returns {Array}
  */
 export const validateTOS = (tos, rules) => {
-  let errors = [];
+  const errors = [];
   for (const key in rules) {
     if (rules[key].required && includes(rules[key].requiredIn, 'function')) {
-      if (rules[key].requiredIf.length) {
-        for (const item of rules[key].requiredIf) {
-          if (tos.attributes[item.key] && includes(item.values, tos.attributes[item.key])) {
-            errors.push(key);
-          }
-        }
-      } else {
-        if (!tos.attributes[key]) {
+      if (!tos.attributes[key]) {
+        errors.push(key);
+      }
+    }
+    if (rules[key].requiredIf.length) {
+      for (const item of rules[key].requiredIf) {
+        if (tos.attributes[item.key] && includes(item.values, tos.attributes[item.key])) {
           errors.push(key);
         }
       }
@@ -33,7 +32,7 @@ export const validateTOS = (tos, rules) => {
  * @returns {Array}
  */
 export const validatePhase = (phase, rules) => {
-  let errors = [];
+  const errors = [];
   // TODO: implementation
   return errors;
 };
@@ -45,7 +44,7 @@ export const validatePhase = (phase, rules) => {
  * @returns {Array}
  */
 export const validateAction = (action, rules) => {
-  let errors = [];
+  const errors = [];
   // TODO: implementation
   return errors;
 };
@@ -57,17 +56,16 @@ export const validateAction = (action, rules) => {
  * @returns {Array}
  */
 export const validateRecord = (record, rules) => {
-  let errors = [];
+  const errors = [];
   for (const key in rules) {
     if (rules[key].required && includes(rules[key].requiredIn, 'record')) {
-      if (rules[key].requiredIf.length) {
-        for (const item of rules[key].requiredIf) {
-          if (record.attributes[item.key] && includes(item.values, record.attributes[item.key])) {
-            errors.push(key);
-          }
-        }
-      } else {
-        if (!record.attributes[key]) {
+      if (!record.attributes[key]) {
+        errors.push(key);
+      }
+    }
+    if (rules[key].requiredIf.length) {
+      for (const item of rules[key].requiredIf) {
+        if (record.attributes[item.key] && includes(item.values, record.attributes[item.key])) {
           errors.push(key);
         }
       }
