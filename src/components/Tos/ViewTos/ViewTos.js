@@ -134,7 +134,7 @@ export class ViewTOS extends React.Component {
     const invalidActionAttributes = this.evaluateAttributes(selectedTOS.actions, validateAction, attributeTypes);
     const invalidRecordAttributes = this.evaluateAttributes(selectedTOS.records, validateRecord, attributeTypes);
 
-    return invalidTOSAttributes || invalidPhaseAttributes || invalidActionAttributes || invalidRecordAttributes;
+    return !invalidTOSAttributes && !invalidPhaseAttributes && !invalidActionAttributes && !invalidRecordAttributes;
   }
 
   evaluateAttributes (items, validate, attributeTypes) {
