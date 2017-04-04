@@ -130,25 +130,22 @@ export class ViewTOS extends React.Component {
   validateAttributes () {
     const { selectedTOS, attributeTypes } = this.props;
     const invalidTOSAttributes = validateTOS(selectedTOS, attributeTypes).length > 0;
-    const invalidPhaseAttributes = this.evaluateAttributes(selectedTOS.phases, validatePhase, attributeTypes);
-    const invalidActionAttributes = this.evaluateAttributes(selectedTOS.actions, validateAction, attributeTypes);
-    const invalidRecordAttributes = this.evaluateAttributes(selectedTOS.records, validateRecord, attributeTypes);
-
-    return invalidTOSAttributes || invalidPhaseAttributes || invalidActionAttributes || invalidRecordAttributes;
+    const invalidPhaseAttributes = !this.evaluateAttributes(selectedTOS.phases, validatePhase, attributeTypes);
+    const invalidActionAttributes = !this.evaluateAttributes(selectedTOS.actions, validateAction, attributeTypes);
+    const invalidRecordAttributes = !this.evaluateAttributes(selectedTOS.records, validateRecord, attributeTypes);
+    return !invalidTOSAttributes && !invalidPhaseAttributes && !invalidActionAttributes && !invalidRecordAttributes;
   }
 
   evaluateAttributes (items, validate, attributeTypes) {
     if (Object.keys(items).length > 0) {
       for (const item in items) {
-        const validAttributes = validate(items[item], attributeTypes).length > 0;
-
+        const validAttributes = validate(items[item], attributeTypes).length === 0;
         if (!validAttributes) {
-          return true;
+          return false;
         }
       }
-    } else {
-      return false;
     }
+    return true;
   }
 
   setDocumentState (state) {

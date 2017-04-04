@@ -58,19 +58,21 @@ export class ValidationBar extends Component {
   }
 
   generateAttributeSection (validate, elements) {
+    const { attributeTypes } = this.props;
     const mappedAttributeSections = map(elements, (element, index) => {
-      const invalidAttributes = validate(element, this.props.attributeTypes);
-
+      const invalidAttributes = validate(element, attributeTypes);
       if (invalidAttributes.length) {
         return (
           <div key={index}>
             <div className='parent-name'>{element.name}</div>
             <div className='missing-attributes'>
-              {map(invalidAttributes, (item, index) => (
-                <div key={index} className='missing-attribute'>
-                  {'• '}{this.props.attributeTypes[item].name}
-                </div>
-              ))}
+              {map(invalidAttributes, (item, key) => {
+                return (
+                  <div key={key} className='missing-attribute'>
+                    {'•'} {attributeTypes[item].name}
+                  </div>
+                );
+              })}
             </div>
           </div>
         );
@@ -89,9 +91,9 @@ export class ValidationBar extends Component {
     const invalidRecordAttributes = this.generateAttributeSection(validateRecord, selectedTOS.records);
 
     if (invalidTOSAttributes ||
-        invalidPhaseAttributes > 0 ||
-        invalidActionAttributes > 0 ||
-        invalidRecordAttributes > 0) {
+        invalidPhaseAttributes.length > 0 ||
+        invalidActionAttributes.length > 0 ||
+        invalidRecordAttributes.length > 0) {
       return (
         <div className='sidebar-content'>
           <h4>Puuttuvat metatiedot</h4>
