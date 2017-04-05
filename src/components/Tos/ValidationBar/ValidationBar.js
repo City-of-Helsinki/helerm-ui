@@ -98,7 +98,7 @@ export class ValidationBar extends Component {
         <div className='sidebar-content'>
           <h4>Puuttuvat metatiedot</h4>
           {invalidTOSAttributes &&
-            <h5>TOS-metatiedot</h5>}
+            <h5>Asian metatiedot</h5>}
           {invalidTOSAttributes}
           {invalidPhaseAttributes.length > 0 &&
             <h5>Käsittelyvaiheet</h5>}
