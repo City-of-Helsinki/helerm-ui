@@ -132,13 +132,6 @@ export function saveDraft () {
       .then(res => {
         if (!res.ok) {
           dispatch(createAction(TOS_ERROR)());
-          displayMessage({
-            message: {
-              title: 'Ota yhteyttä tukeen',
-              body: res.statusText
-            },
-            opts: { type: 'error' }
-          });
           throw Error(res.statusText);
         }
         return res.json();
@@ -156,13 +149,6 @@ export function changeStatus (status) {
       .then(res => {
         if (!res.ok) {
           dispatch(createAction(TOS_ERROR)());
-          displayMessage({
-            message: {
-              title: 'Ota yhteyttä tukeen',
-              body: res.statusText
-            },
-            opts: { type: 'error' }
-          });
           throw Error(res.statusText);
         }
         return res.json();
