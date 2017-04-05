@@ -2,6 +2,8 @@ import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
 import { map } from 'lodash';
 
+import { displayMessage } from '../../utils/helpers';
+
 import {
   addActionAction,
   editActionAction,

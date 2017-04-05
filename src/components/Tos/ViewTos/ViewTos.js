@@ -174,13 +174,13 @@ export class ViewTOS extends React.Component {
       .then(() => {
         return this.props.displayMessage({
           title: 'Luonnos',
-          body: 'Luonnos tallennettu'
+          body: 'Luonnos tallennettu!'
         });
       })
       .catch(err => {
         return this.props.displayMessage({
-          title: 'Error!',
-          body: err.message
+          title: 'Virhe',
+          body: `"${err.message}"`
         }, { type: 'error' });
       });
   }
@@ -190,9 +190,15 @@ export class ViewTOS extends React.Component {
     return this.props.changeStatus(status)
       .then(() => {
         return this.props.displayMessage({
-          title: 'Tila vaihdettu',
+          title: 'Tila vaihdettu!',
           body: `${getStatusLabel(state)} => ${getStatusLabel(status)}`
         });
+      })
+      .catch(err => {
+        return this.props.displayMessage({
+          title: 'Virhe',
+          body: `"${err.message}"`
+        }, { type: 'error' });
       });
   }
 
@@ -232,8 +238,8 @@ export class ViewTOS extends React.Component {
       })
       .catch((err) => {
         return this.props.displayMessage({
-          title: 'Kuvaksen tuonti epäonnistui',
-          body: err.message
+          title: 'Virhe',
+          body: `"${err.message}"`
         }, { type: 'warning' });
       });
   }
