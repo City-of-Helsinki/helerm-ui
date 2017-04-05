@@ -192,13 +192,13 @@ export class ViewTOS extends React.Component {
         return this.props.displayMessage({
           title: 'Tila vaihdettu!',
           body: `${getStatusLabel(state)} => ${getStatusLabel(status)}`
-        })
-        .catch(err => {
-          return this.props.displayMessage({
-            title: 'Virhe',
-            body: `"${err.message}"`
-          }, { type: 'error' });
         });
+      })
+      .catch(err => {
+        return this.props.displayMessage({
+          title: 'Virhe',
+          body: `"${err.message}"`
+        }, { type: 'error' });
       });
   }
 
