@@ -1,12 +1,12 @@
 import React from 'react';
 import { DeleteView } from 'components/Tos/DeleteView/DeleteView';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 
 describe('(Component) DeleteView', () => {
   let _wrapper;
 
   beforeEach(() => {
-    _wrapper = shallow(
+    _wrapper = mount(
       <DeleteView
         type='action'
         target={''}
@@ -18,5 +18,6 @@ describe('(Component) DeleteView', () => {
 
   it('Passes type prop correctly', () => {
     expect(_wrapper.props().type).to.be.defined;
+    expect(_wrapper.prop('type')).to.equal('action');
   });
 });
