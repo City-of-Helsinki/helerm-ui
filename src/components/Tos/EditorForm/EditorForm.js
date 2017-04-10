@@ -2,6 +2,7 @@ import React from 'react';
 import './EditorForm.scss';
 import update from 'immutability-helper';
 import Select from 'react-select';
+import includes from 'lodash/includes';
 
 export class EditorForm extends React.Component {
   constructor (props) {
@@ -90,10 +91,11 @@ export class EditorForm extends React.Component {
   }
 
   generateAttributeElements (attributeTypes) {
+    const { attributesToShow } = this.props;
     const attributeElements = [];
     for (const key in attributeTypes) {
       if (attributeTypes.hasOwnProperty(key)) {
-        if (attributeTypes[key].values.length) {
+        if (includes(attributesToShow, key) && attributeTypes[key].values.length) {
           const options = this.generateOptions(attributeTypes[key].values);
 
           attributeElements.push(
@@ -123,7 +125,7 @@ export class EditorForm extends React.Component {
               />
             </div>
           );
-        } else if (attributeTypes[key].values.length === 0) {
+        } else if (includes(attributesToShow, key) && attributeTypes[key].values.length === 0) {
           attributeElements.push(
             <div key={key} className='col-xs-12 col-lg-6 form-group'>
               <input
@@ -331,6 +333,7 @@ export class EditorForm extends React.Component {
 EditorForm.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
   attributes: React.PropTypes.object.isRequired,
+  attributesToShow: React.PropTypes.array,
   closeEditorForm: React.PropTypes.func.isRequired,
   displayMessage: React.PropTypes.func.isRequired,
   editMetaDataWithForm: React.PropTypes.func,

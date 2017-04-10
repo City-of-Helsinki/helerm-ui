@@ -444,7 +444,7 @@ export class ViewTOS extends React.Component {
       const phasesOrder = Object.keys(selectedTOS.phases);
       const phaseElements = this.generatePhases(selectedTOS.phases, phasesOrder);
       const TOSMetaData = this.generateMetaData(attributeTypes, selectedTOS.attributes);
-
+      const attributesToShow = this.getAttributesToShow(attributeTypes, selectedTOS.attributes);
       return (
         <div>
           <StickyContainer className='col-xs-12 single-tos-container'>
@@ -472,6 +472,7 @@ export class ViewTOS extends React.Component {
                     targetId={this.props.selectedTOS.id}
                     attributes={this.props.selectedTOS.attributes}
                     attributeTypes={this.props.attributeTypes}
+                    attributesToShow={attributesToShow}
                     editMetaDataWithForm={this.editMetaDataWithForm}
                     editorConfig={{
                       type: 'tos',
