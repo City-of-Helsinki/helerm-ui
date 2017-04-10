@@ -1,6 +1,7 @@
 import React from 'react';
 import { withRouter, routerShape } from 'react-router';
 import { StickyContainer } from 'react-sticky';
+import includes from 'lodash/includes';
 
 import Phase from 'components/Tos/Phase/Phase';
 import CreatePhaseForm from 'components/Tos/Phase/CreatePhaseForm';
@@ -284,6 +285,23 @@ export class ViewTOS extends React.Component {
   toggleCloneView () {
     const current = this.state.showCloneView;
     this.setState({ showCloneView: !current });
+  }
+
+  getAttributesToShow (attributeTypes, attributes) {
+    const attributesToShow = [];
+    const getAttributeKeys = (attributes) => {
+      const attributeKeys = [];
+      for (const key in attributes) {
+        attributeKeys.push(key);
+      }
+      return attributeKeys;
+    };
+    for (const key in attributeTypes) {
+      if (attributeTypes[key].required || includes(getAttributeKeys(attributes), key)) {
+        attributesToShow.push(key);
+      }
+    }
+    return attributesToShow;
   }
 
   generateMetaData (attributeTypes, attributes) {
