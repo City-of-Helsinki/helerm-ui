@@ -84,6 +84,7 @@ export class EditorForm extends React.Component {
   }
 
   getAttributesToShow (attributeTypes, attributes) {
+    const { newAttributes } = this.state;
     const attributesToShow = [];
     const getAttributeKeys = (attributes) => {
       const attributeKeys = [];
@@ -92,9 +93,22 @@ export class EditorForm extends React.Component {
       }
       return attributeKeys;
     };
-    for (const key in attributeTypes) {
-      if (attributeTypes[key].required || includes(getAttributeKeys(attributes), key)) {
-        attributesToShow.push(key);
+
+    for (const attributeType in attributeTypes) {
+      if (attributeTypes[attributeType].required || includes(getAttributeKeys(attributes), attributeType)) {
+        attributesToShow.push(attributeType);
+      }
+      if (attributeTypes[attributeType].requiredIf.length) { // if has requiredIf
+        const requiredIf = attributeTypes[attributeType].requiredIf;
+        for (const attribute in newAttributes) { // for each attribute
+          for (const item in requiredIf) { // for each item in requiredIf
+            if (requiredIf[item].key === attribute) { // if requiredIf has attribute
+              if (includes(requiredIf[item].values, newAttributes[attribute].name)) { // if requiredIf has same value as attribute
+                attributesToShow.push(attributeType);
+              }
+            }
+          }
+        }
       }
     }
     return attributesToShow;
@@ -109,7 +123,6 @@ export class EditorForm extends React.Component {
         complementAttributes.push(key);
       }
     }
-
     return complementAttributes;
   }
 
