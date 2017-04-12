@@ -380,6 +380,12 @@ export class ViewTOS extends React.Component {
                   action: () => this.setState({ editingMetaData: true })
                 },
                 {
+                  text: 'Täydennä metatietoja',
+                  icon: 'fa-plus-square',
+                  style: 'btn-primary',
+                  action: () => this.setState({ complementingMetaData: true })
+                },
+                {
                   text: 'Tuo kuvaus',
                   icon: 'fa-clone',
                   style: 'btn-primary',
