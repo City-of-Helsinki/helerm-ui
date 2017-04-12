@@ -100,6 +100,19 @@ export class EditorForm extends React.Component {
     return attributesToShow;
   }
 
+  getComplementAttributes (attributeTypes, attributesToShow) {
+    const complementAttributes = [];
+    const unwantedAttributes = ['PhaseType', 'ActionType', 'RecordType'];
+
+    for (const key in attributeTypes) {
+      if (!includes(attributesToShow, key) && !includes(unwantedAttributes, key)) {
+        complementAttributes.push(key);
+      }
+    }
+
+    return complementAttributes;
+  }
+
   generateOptions (array) {
     return array.map(item => ({
       value: item.value,
@@ -109,6 +122,9 @@ export class EditorForm extends React.Component {
 
   generateAttributeElements (attributeTypes) {
     let attributesToShow = this.getAttributesToShow(attributeTypes, this.props.attributes);
+    if (this.props.editorConfig.action === 'complement') {
+      attributesToShow = this.getComplementAttributes(attributeTypes, attributesToShow);
+    }
     const attributeElements = [];
 
     for (const key in attributeTypes) {

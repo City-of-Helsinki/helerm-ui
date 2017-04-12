@@ -31,6 +31,7 @@ export class ViewTOS extends React.Component {
     this.setDocumentState = this.setDocumentState.bind(this);
     this.cancelEdit = this.cancelEdit.bind(this);
     this.cancelMetaDataEdit = this.cancelMetaDataEdit.bind(this);
+    this.cancelMetaDataComplement = this.cancelMetaDataComplement.bind(this);
     this.cancelPhaseCreation = this.cancelPhaseCreation.bind(this);
     this.changeStatus = this.changeStatus.bind(this);
     this.cloneFromTemplate = this.cloneFromTemplate.bind(this);
@@ -90,7 +91,10 @@ export class ViewTOS extends React.Component {
     }
 
     if (nextProps.selectedTOS.documentState === 'view') {
-      this.setState({ editingMetaData: false });
+      this.setState({
+        editingMetaData: false,
+        complementingMetaData: false
+      });
     }
   }
 
@@ -168,6 +172,10 @@ export class ViewTOS extends React.Component {
 
   cancelMetaDataEdit () {
     this.setState({ editingMetaData: false });
+  }
+
+  cancelMetaDataComplement () {
+    this.setState({ complementingMetaData: false });
   }
 
   saveDraft () {
@@ -258,7 +266,10 @@ export class ViewTOS extends React.Component {
   }
 
   editMetaDataWithForm (attributes) {
-    this.setState({ editingMetaData: false });
+    this.setState({
+      editingMetaData: false,
+      complementingMetaData: false
+    });
     this.props.editMetaData(attributes);
   }
 
@@ -469,7 +480,21 @@ export class ViewTOS extends React.Component {
                     displayMessage={this.props.displayMessage}
                   />
                   }
-                  {!this.state.editingMetaData &&
+                  {this.state.complementingMetaData &&
+                  <EditorForm
+                    targetId={this.props.selectedTOS.id}
+                    attributes={this.props.selectedTOS.attributes}
+                    attributeTypes={this.props.attributeTypes}
+                    editMetaDataWithForm={this.editMetaDataWithForm}
+                    editorConfig={{
+                      type: 'tos',
+                      action: 'complement'
+                    }}
+                    closeEditorForm={this.cancelMetaDataComplement}
+                    displayMessage={this.props.displayMessage}
+                  />
+                  }
+                  {(!this.state.editingMetaData && !this.state.complementingMetaData) &&
                   <div className='version-details col-xs-12'>
                     { TOSMetaData }
                   </div>
