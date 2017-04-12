@@ -1,7 +1,6 @@
 import React from 'react';
 import { withRouter, routerShape } from 'react-router';
 import { StickyContainer } from 'react-sticky';
-import includes from 'lodash/includes';
 
 import Phase from 'components/Tos/Phase/Phase';
 import CreatePhaseForm from 'components/Tos/Phase/CreatePhaseForm';
