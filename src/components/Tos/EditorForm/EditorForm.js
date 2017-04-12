@@ -234,11 +234,11 @@ export class EditorForm extends React.Component {
       case 'tos':
         return 'Muokkaa metatietoja';
       case 'phase':
-        return action === 'edit' ? 'Muokkaa käsittelyvaihetta' : 'Uusi käsittelyvaihe';
+        return action === 'add' ? 'Uusi käsittelyvaihe' : 'Muokkaa käsittelyvaihetta';
       case 'action':
-        return action === 'edit' ? 'Muokkaa toimenpidettä' : 'Uusi toimenpide';
+        return action === 'add' ? 'Uusi toimenpide' : 'Muokkaa toimenpidettä';
       case 'record':
-        return action === 'edit' ? 'Muokkaa asiakirjaa' : 'Uusi asiakirja';
+        return action === 'add' ? 'Uusi asiakirja' : 'Muokkaa asiakirjaa';
     }
   }
 
@@ -247,23 +247,17 @@ export class EditorForm extends React.Component {
 
     switch (type) {
       case 'tos':
-        if (action === 'edit') {
+        if (action === 'edit' || action === 'complement') {
           this.editMetaData(e);
         }
         break;
       case 'phase':
-        if (action === 'add') {
-          // this.addPhase(e, targetId);
-        }
-        if (action === 'edit') {
+        if (action === 'edit' || action === 'complement') {
           // this.editPhase(e, targetId);
         }
         break;
       case 'action':
-        if (action === 'add') {
-          // this.addAction(e, targetId);
-        }
-        if (action === 'edit') {
+        if (action === 'edit' || action === 'complement') {
           // this.editAction(e, targetId);
         }
         break;
@@ -271,7 +265,7 @@ export class EditorForm extends React.Component {
         if (action === 'add') {
           this.addRecord(e, targetId);
         }
-        if (action === 'edit') {
+        if (action === 'edit' || action === 'complement') {
           this.editRecord(e, targetId);
         }
     }
