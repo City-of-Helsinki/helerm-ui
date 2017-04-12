@@ -83,6 +83,23 @@ export class EditorForm extends React.Component {
     }
   }
 
+  getAttributesToShow (attributeTypes, attributes) {
+    const attributesToShow = [];
+    const getAttributeKeys = (attributes) => {
+      const attributeKeys = [];
+      for (const key in attributes) {
+        attributeKeys.push(key);
+      }
+      return attributeKeys;
+    };
+    for (const key in attributeTypes) {
+      if (attributeTypes[key].required || includes(getAttributeKeys(attributes), key)) {
+        attributesToShow.push(key);
+      }
+    }
+    return attributesToShow;
+  }
+
   generateOptions (array) {
     return array.map(item => ({
       value: item.value,
@@ -91,8 +108,9 @@ export class EditorForm extends React.Component {
   }
 
   generateAttributeElements (attributeTypes) {
-    const { attributesToShow } = this.props;
+    let attributesToShow = this.getAttributesToShow(attributeTypes, this.props.attributes);
     const attributeElements = [];
+
     for (const key in attributeTypes) {
       if (attributeTypes.hasOwnProperty(key)) {
         if (includes(attributesToShow, key) && attributeTypes[key].values.length) {
@@ -327,7 +345,6 @@ export class EditorForm extends React.Component {
 EditorForm.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
   attributes: React.PropTypes.object.isRequired,
-  attributesToShow: React.PropTypes.array,
   closeEditorForm: React.PropTypes.func.isRequired,
   displayMessage: React.PropTypes.func.isRequired,
   editMetaDataWithForm: React.PropTypes.func,

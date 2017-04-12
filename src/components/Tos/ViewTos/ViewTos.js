@@ -287,23 +287,6 @@ export class ViewTOS extends React.Component {
     this.setState({ showCloneView: !current });
   }
 
-  getAttributesToShow (attributeTypes, attributes) {
-    const attributesToShow = [];
-    const getAttributeKeys = (attributes) => {
-      const attributeKeys = [];
-      for (const key in attributes) {
-        attributeKeys.push(key);
-      }
-      return attributeKeys;
-    };
-    for (const key in attributeTypes) {
-      if (attributeTypes[key].required || includes(getAttributeKeys(attributes), key)) {
-        attributesToShow.push(key);
-      }
-    }
-    return attributesToShow;
-  }
-
   generateMetaData (attributeTypes, attributes) {
     const { modified_at, documentState, editRecord, version, state, modified_by } = this.props.selectedTOS;
     const formattedDateTime = formatDateTime(modified_at);
@@ -450,7 +433,6 @@ export class ViewTOS extends React.Component {
       const phasesOrder = Object.keys(selectedTOS.phases);
       const phaseElements = this.generatePhases(selectedTOS.phases, phasesOrder);
       const TOSMetaData = this.generateMetaData(attributeTypes, selectedTOS.attributes);
-      const attributesToShow = this.getAttributesToShow(attributeTypes, selectedTOS.attributes);
       return (
         <div>
           <StickyContainer className='col-xs-12 single-tos-container'>
@@ -478,7 +460,6 @@ export class ViewTOS extends React.Component {
                     targetId={this.props.selectedTOS.id}
                     attributes={this.props.selectedTOS.attributes}
                     attributeTypes={this.props.attributeTypes}
-                    attributesToShow={attributesToShow}
                     editMetaDataWithForm={this.editMetaDataWithForm}
                     editorConfig={{
                       type: 'tos',
