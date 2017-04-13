@@ -7,7 +7,7 @@ import NavigationContainer from '../../Navigation/NavigationContainer';
 const METHOD_TEMPLATE = 'template';
 const METHOD_FUNCTION = 'function';
 
-export default class CloneView extends React.Component {
+export class CloneView extends React.Component {
 
   static propTypes = {
     cloneFromTemplate: PropTypes.func,
@@ -122,3 +122,5 @@ export default class CloneView extends React.Component {
     );
   }
 };
+
+export default CloneView;

@@ -383,7 +383,7 @@ EditorForm.propTypes = {
   }),
   recordConfig: React.PropTypes.shape({
     editRecordWithForm: React.PropTypes.func,
-    recordTypes: React.PropTypes.object,
+    recordTypes: React.PropTypes.object.isRequired,
     createRecord: React.PropTypes.func,
     recordId: React.PropTypes.string,
     recordName: React.PropTypes.string

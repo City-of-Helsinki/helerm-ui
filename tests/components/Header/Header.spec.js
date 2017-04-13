@@ -9,10 +9,6 @@ describe('(Component) Header', () => {
     _wrapper = shallow(
       <Header
         isFetching={false}
-        message={{
-          text: ''
-        }}
-        closeMessage={() => null}
       />
     );
   });
