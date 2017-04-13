@@ -164,6 +164,12 @@ export class Record extends React.Component {
                   action: () => this.props.editRecordForm(record.id, this.state.name, this.state.attributes)
                 },
                 {
+                  text: 'Täydennä metatietoja',
+                  icon: 'fa-plus-square',
+                  style: 'btn-primary',
+                  action: () => this.props.complementRecordForm(record.id, this.state.name, this.state.attributes)
+                },
+                {
                   text: 'Poista asiakirja',
                   icon: 'fa-trash',
                   style: 'btn-delete',
