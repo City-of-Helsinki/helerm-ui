@@ -309,19 +309,19 @@ export class EditorForm extends React.Component {
 
     return (
       <div className='action add-box col-xs-12'>
+        <div className='col-xs-12'>
+          <button className='btn btn-primary pull-right edit-record__submit' type='submit'>Valmis</button>
+          <button
+            className='btn btn-danger pull-right edit-record__cancel'
+            onClick={(e) => this.closeEditorForm(e)}>
+            Peruuta
+          </button>
+        </div>
         <h4>{this.resolveLabel()}</h4>
         <form onSubmit={(e) => this.resolveOnSubmit(e, targetId)}
               className='edit-record'>
           { this.props.editorConfig.type !== 'tos' ? this.renderDescriptions() : null }
           { attributeElements }
-          <div className='col-xs-12'>
-            <button className='btn btn-primary pull-right edit-record__submit' type='submit'>Valmis</button>
-            <button
-              className='btn btn-danger pull-right edit-record__cancel'
-              onClick={(e) => this.closeEditorForm(e)}>
-              Peruuta
-            </button>
-          </div>
         </form>
       </div>
     );
