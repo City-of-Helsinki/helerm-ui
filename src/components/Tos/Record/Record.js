@@ -224,6 +224,7 @@ export class Record extends React.Component {
 
 Record.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
+  complementRecordForm: React.PropTypes.func.isRequired,
   documentState: React.PropTypes.string.isRequired,
   editRecordAttribute: React.PropTypes.func.isRequired,
   editRecordForm: React.PropTypes.func.isRequired,
