@@ -2,6 +2,7 @@ import React from 'react';
 import './EditorForm.scss';
 import update from 'immutability-helper';
 import Select from 'react-select';
+import includes from 'lodash/includes';
 
 export class EditorForm extends React.Component {
   constructor (props) {
@@ -82,6 +83,49 @@ export class EditorForm extends React.Component {
     }
   }
 
+  getAttributesToShow (attributeTypes, attributes) {
+    const { newAttributes } = this.state;
+    const attributesToShow = [];
+    const getAttributeKeys = (attributes) => {
+      const attributeKeys = [];
+      for (const key in attributes) {
+        attributeKeys.push(key);
+      }
+      return attributeKeys;
+    };
+
+    for (const attributeType in attributeTypes) {
+      if (attributeTypes[attributeType].required || includes(getAttributeKeys(attributes), attributeType)) {
+        attributesToShow.push(attributeType);
+      }
+      if (attributeTypes[attributeType].requiredIf.length) { // if has requiredIf
+        const requiredIf = attributeTypes[attributeType].requiredIf;
+        for (const attribute in newAttributes) { // for each attribute
+          for (const item in requiredIf) { // for each item in requiredIf
+            if (requiredIf[item].key === attribute) { // if requiredIf has attribute
+              if (includes(requiredIf[item].values, newAttributes[attribute].name)) { // if requiredIf has same value as attribute
+                attributesToShow.push(attributeType);
+              }
+            }
+          }
+        }
+      }
+    }
+    return attributesToShow;
+  }
+
+  getComplementAttributes (attributeTypes, attributesToShow) {
+    const complementAttributes = [];
+    const unwantedAttributes = ['PhaseType', 'ActionType', 'RecordType'];
+
+    for (const key in attributeTypes) {
+      if (!includes(attributesToShow, key) && !includes(unwantedAttributes, key)) {
+        complementAttributes.push(key);
+      }
+    }
+    return complementAttributes;
+  }
+
   generateOptions (array) {
     return array.map(item => ({
       value: item.value,
@@ -90,10 +134,15 @@ export class EditorForm extends React.Component {
   }
 
   generateAttributeElements (attributeTypes) {
+    let attributesToShow = this.getAttributesToShow(attributeTypes, this.props.attributes);
+    if (this.props.editorConfig.action === 'complement') {
+      attributesToShow = this.getComplementAttributes(attributeTypes, attributesToShow);
+    }
     const attributeElements = [];
+
     for (const key in attributeTypes) {
       if (attributeTypes.hasOwnProperty(key)) {
-        if (attributeTypes[key].values.length) {
+        if (includes(attributesToShow, key) && attributeTypes[key].values.length) {
           const options = this.generateOptions(attributeTypes[key].values);
 
           attributeElements.push(
@@ -123,7 +172,7 @@ export class EditorForm extends React.Component {
               />
             </div>
           );
-        } else if (attributeTypes[key].values.length === 0) {
+        } else if (includes(attributesToShow, key) && attributeTypes[key].values.length === 0) {
           attributeElements.push(
             <div key={key} className='col-xs-12 col-lg-6 form-group'>
               <input
@@ -232,11 +281,11 @@ export class EditorForm extends React.Component {
       case 'tos':
         return 'Muokkaa metatietoja';
       case 'phase':
-        return action === 'edit' ? 'Muokkaa käsittelyvaihetta' : 'Uusi käsittelyvaihe';
+        return action === 'add' ? 'Uusi käsittelyvaihe' : 'Muokkaa käsittelyvaihetta';
       case 'action':
-        return action === 'edit' ? 'Muokkaa toimenpidettä' : 'Uusi toimenpide';
+        return action === 'add' ? 'Uusi toimenpide' : 'Muokkaa toimenpidettä';
       case 'record':
-        return action === 'edit' ? 'Muokkaa asiakirjaa' : 'Uusi asiakirja';
+        return action === 'add' ? 'Uusi asiakirja' : 'Muokkaa asiakirjaa';
     }
   }
 
@@ -245,23 +294,17 @@ export class EditorForm extends React.Component {
 
     switch (type) {
       case 'tos':
-        if (action === 'edit') {
+        if (action === 'edit' || action === 'complement') {
           this.editMetaData(e);
         }
         break;
       case 'phase':
-        if (action === 'add') {
-          // this.addPhase(e, targetId);
-        }
-        if (action === 'edit') {
+        if (action === 'edit' || action === 'complement') {
           // this.editPhase(e, targetId);
         }
         break;
       case 'action':
-        if (action === 'add') {
-          // this.addAction(e, targetId);
-        }
-        if (action === 'edit') {
+        if (action === 'edit' || action === 'complement') {
           // this.editAction(e, targetId);
         }
         break;
@@ -269,7 +312,7 @@ export class EditorForm extends React.Component {
         if (action === 'add') {
           this.addRecord(e, targetId);
         }
-        if (action === 'edit') {
+        if (action === 'edit' || action === 'complement') {
           this.editRecord(e, targetId);
         }
     }
