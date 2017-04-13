@@ -18,13 +18,16 @@ export class Action extends React.Component {
     this.createRecord = this.createRecord.bind(this);
     this.cancelRecordCreation = this.cancelRecordCreation.bind(this);
     this.editRecordForm = this.editRecordForm.bind(this);
+    this.complementRecordForm = this.complementRecordForm.bind(this);
     this.editRecordWithForm = this.editRecordWithForm.bind(this);
     this.cancelRecordEdit = this.cancelRecordEdit.bind(this);
+    this.cancelRecordComplement = this.cancelRecordComplement.bind(this);
     this.state = {
       mode: 'view',
       name: this.props.action ? this.props.action.name : 'ERROR',
       creating: false,
       editing: false,
+      complementing: false,
       deleting: false,
       showReorderView: false,
       showImportView: false
@@ -36,7 +39,10 @@ export class Action extends React.Component {
       this.setState({ name: nextProps.action.name });
     }
     if (nextProps.documentState === 'view') {
-      this.setState({ editing: false });
+      this.setState({
+        editing: false,
+        complementing: false
+      });
     }
   }
 
@@ -71,6 +77,7 @@ export class Action extends React.Component {
             key={key}
             record={this.props.records[records[key]]}
             editRecordForm={this.editRecordForm}
+            complementRecordForm={this.complementRecordForm}
             editRecordAttribute={this.props.editRecordAttribute}
             removeRecord={this.props.removeRecord}
             recordTypes={this.props.recordTypes}
@@ -133,6 +140,25 @@ export class Action extends React.Component {
   cancelRecordEdit () {
     this.setState({
       editing: false,
+      recordId: undefined
+    });
+  }
+
+  complementRecordForm (recordId, recordName, recordAttributes) {
+    this.setState({
+      record: {
+        id: recordId,
+        name: recordName,
+        attributes: recordAttributes
+      }
+    }, () => {
+      this.setState({ complementing: true });
+    });
+  }
+
+  cancelRecordComplement () {
+    this.setState({
+      complementing: false,
       recordId: undefined
     });
   }
@@ -244,7 +270,26 @@ export class Action extends React.Component {
             displayMessage={this.props.displayMessage}
           />
           }
-          { !this.state.editing && !!recordElements.length &&
+          { this.state.complementing &&
+          <EditorForm
+            targetId={this.state.record.id}
+            attributes={this.state.record.attributes}
+            attributeTypes={this.props.attributeTypes}
+            recordConfig={{
+              recordTypes: this.props.recordTypes,
+              recordId: this.state.record.id,
+              recordName: this.state.record.name,
+              editRecordWithForm: this.editRecordWithForm
+            }}
+            editorConfig={{
+              type: 'record',
+              action: 'complement'
+            }}
+            closeEditorForm={this.cancelRecordComplement}
+            displayMessage={this.props.displayMessage}
+          />
+          }
+          { !this.state.editing && !this.state.complementing && !!recordElements.length &&
           <div>
             <span className='col-xs-6 attribute-label'>
             Asiakirjatyypin tarkenne
