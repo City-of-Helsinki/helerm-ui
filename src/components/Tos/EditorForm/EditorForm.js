@@ -289,7 +289,7 @@ export class EditorForm extends React.Component {
 
     switch (type) {
       case 'function':
-        return 'Muokkaa metatietoja';
+        return 'Metatiedot';
       case 'phase':
         return action === 'add' ? 'Uusi käsittelyvaihe' : 'Muokkaa käsittelyvaihetta';
       case 'action':
