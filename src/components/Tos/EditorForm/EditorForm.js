@@ -4,6 +4,8 @@ import update from 'immutability-helper';
 import Select from 'react-select';
 import includes from 'lodash/includes';
 
+import { validateConditionalRules } from '../../../utils/validators';
+
 export class EditorForm extends React.Component {
   constructor (props) {
     super(props);
@@ -95,19 +97,13 @@ export class EditorForm extends React.Component {
     };
 
     for (const attributeType in attributeTypes) {
-      if (attributeTypes[attributeType].required || includes(getAttributeKeys(attributes), attributeType)) {
+      if (attributeTypes[attributeType].required ||
+        includes(getAttributeKeys(attributes), attributeType)) {
         attributesToShow.push(attributeType);
       }
-      if (attributeTypes[attributeType].requiredIf.length) { // if has requiredIf
-        const requiredIf = attributeTypes[attributeType].requiredIf;
-        for (const attribute in newAttributes) { // for each attribute
-          for (const item in requiredIf) { // for each item in requiredIf
-            if (requiredIf[item].key === attribute) { // if requiredIf has attribute
-              if (includes(requiredIf[item].values, newAttributes[attribute].name)) { // if requiredIf has same value as attribute
-                attributesToShow.push(attributeType);
-              }
-            }
-          }
+      if (attributeTypes[attributeType].requiredIf.length) {
+        if (validateConditionalRules(attributeType, attributeTypes, newAttributes)) {
+          attributesToShow.push(attributeType);
         }
       }
     }
