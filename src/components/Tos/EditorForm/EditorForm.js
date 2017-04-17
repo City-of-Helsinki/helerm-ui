@@ -354,7 +354,7 @@ export class EditorForm extends React.Component {
         <h4>{this.resolveLabel()}</h4>
         <form onSubmit={(e) => this.resolveOnSubmit(e, targetId)}
               className='edit-record'>
-          { this.props.editorConfig.type !== 'function' && this.props.editorConfig.action === 'edit'
+          { this.props.editorConfig.type !== 'function' && this.props.editorConfig.action !== 'complement'
             ? this.renderDescriptions()
             : null }
           { attributeElements }
