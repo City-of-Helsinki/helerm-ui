@@ -116,10 +116,10 @@ export class EditorForm extends React.Component {
 
   getComplementAttributes (attributeTypes, attributesToShow) {
     const complementAttributes = [];
-    const unwantedAttributes = ['PhaseType', 'ActionType', 'RecordType'];
 
     for (const key in attributeTypes) {
-      if (!includes(attributesToShow, key) && !includes(unwantedAttributes, key)) {
+      if (!includes(attributesToShow, key) && includes(attributeTypes[key].allowedIn, this.props.editorConfig.type)) {
+        console.log('found a complement attribute ', key);
         complementAttributes.push(key);
       }
     }
