@@ -111,11 +111,19 @@ export class EditorForm extends React.Component {
   }
 
   getComplementAttributes (attributeTypes, attributesToShow) {
+    const { newAttributes } = this.state;
     const complementAttributes = [];
 
     for (const key in attributeTypes) {
-      if (!includes(attributesToShow, key) && includes(attributeTypes[key].allowedIn, this.props.editorConfig.type)) {
-        complementAttributes.push(key);
+      if (!includes(attributesToShow, key) &&
+        includes(attributeTypes[key].allowedIn, this.props.editorConfig.type)) {
+        if (attributeTypes[key].requiredIf.length) {
+          if (validateConditionalRules(key, attributeTypes, newAttributes)) {
+            complementAttributes.push(key);
+          }
+        } else {
+          complementAttributes.push(key);
+        }
       }
     }
     return complementAttributes;
