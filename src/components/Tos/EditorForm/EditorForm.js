@@ -278,7 +278,7 @@ export class EditorForm extends React.Component {
     const { type, action } = this.props.editorConfig;
 
     switch (type) {
-      case 'tos':
+      case 'function':
         return 'Muokkaa metatietoja';
       case 'phase':
         return action === 'add' ? 'Uusi käsittelyvaihe' : 'Muokkaa käsittelyvaihetta';
@@ -293,7 +293,7 @@ export class EditorForm extends React.Component {
     const { action, type } = this.props.editorConfig;
 
     switch (type) {
-      case 'tos':
+      case 'function':
         if (action === 'edit' || action === 'complement') {
           this.editMetaData(e);
         }
@@ -355,7 +355,7 @@ export class EditorForm extends React.Component {
         <h4>{this.resolveLabel()}</h4>
         <form onSubmit={(e) => this.resolveOnSubmit(e, targetId)}
               className='edit-record'>
-          { this.props.editorConfig.type !== 'tos' ? this.renderDescriptions() : null }
+          { this.props.editorConfig.type !== 'function' ? this.renderDescriptions() : null }
           { attributeElements }
           <div className='col-xs-12'>
             <button className='btn btn-primary pull-right edit-record__submit' type='submit'>Valmis</button>
