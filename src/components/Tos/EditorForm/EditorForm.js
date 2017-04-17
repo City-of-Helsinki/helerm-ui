@@ -143,65 +143,72 @@ export class EditorForm extends React.Component {
     }
     const attributeElements = [];
 
-    for (const key in attributeTypes) {
-      if (attributeTypes.hasOwnProperty(key)) {
-        if (includes(attributesToShow, key) && attributeTypes[key].values.length) {
-          const options = this.generateOptions(attributeTypes[key].values);
+    if (attributesToShow.length) {
+      for (const key in attributeTypes) {
+        if (attributeTypes.hasOwnProperty(key)) {
+          if (includes(attributesToShow, key) && attributeTypes[key].values.length) {
+            const options = this.generateOptions(attributeTypes[key].values);
 
-          attributeElements.push(
-            <div key={key} className='col-xs-12 col-lg-6 form-group'>
-              <input
-                type='checkbox'
-                checked={this.getCheckedState(key)}
-                value={this.state.newAttributes[key].checked}
-                onChange={(e) => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}/>
-              <label className='edit-record__label'>
-                {attributeTypes[key].name}
-                { attributeTypes[key].required &&
-                <span className='fa fa-asterisk required-asterisk'/>
-                }
-              </label>
-              <Select
-                placeholder='Valitse...'
-                autoBlur={true}
-                autofocus={false}
-                className='form-control edit-record__select'
-                clearable={true}
-                disabled={!this.state.newAttributes[key].checked}
-                onChange={(option) => this.onChange(option ? option.value : null, key, 'name')}
-                openOnFocus={true}
-                options={options}
-                value={this.getActiveValue(key)}
-              />
-            </div>
-          );
-        } else if (includes(attributesToShow, key) && attributeTypes[key].values.length === 0) {
-          attributeElements.push(
-            <div key={key} className='col-xs-12 col-lg-6 form-group'>
-              <input
-                type='checkbox'
-                checked={this.getCheckedState(key)}
-                value={this.state.newAttributes[key].checked}
-                onChange={(e) => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}
-              />
-              <label className='edit-record__label'>
-                {attributeTypes[key].name}
-                { attributeTypes[key].required &&
-                <span className='fa fa-asterisk required-asterisk'/>
-                }
-              </label>
-              <input
-                className='form-control edit-record__input'
-                value={this.getActiveValue(key)}
-                placeholder={attributeTypes[key].name}
-                onChange={(e) => this.onChange(e.target.value, key, 'name')}
-                disabled={!this.state.newAttributes[key].checked}
-              />
-            </div>
-          );
+            attributeElements.push(
+              <div key={key} className='col-xs-12 col-lg-6 form-group'>
+                <input
+                  type='checkbox'
+                  checked={this.getCheckedState(key)}
+                  value={this.state.newAttributes[key].checked}
+                  onChange={(e) => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}/>
+                <label className='edit-record__label'>
+                  {attributeTypes[key].name}
+                  { attributeTypes[key].required &&
+                  <span className='fa fa-asterisk required-asterisk'/>
+                  }
+                </label>
+                <Select
+                  placeholder='Valitse...'
+                  autoBlur={true}
+                  autofocus={false}
+                  className='form-control edit-record__select'
+                  clearable={true}
+                  disabled={!this.state.newAttributes[key].checked}
+                  onChange={(option) => this.onChange(option ? option.value : null, key, 'name')}
+                  openOnFocus={true}
+                  options={options}
+                  value={this.getActiveValue(key)}
+                />
+              </div>
+            );
+          } else if (includes(attributesToShow, key) && attributeTypes[key].values.length === 0) {
+            attributeElements.push(
+              <div key={key} className='col-xs-12 col-lg-6 form-group'>
+                <input
+                  type='checkbox'
+                  checked={this.getCheckedState(key)}
+                  value={this.state.newAttributes[key].checked}
+                  onChange={(e) => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}
+                />
+                <label className='edit-record__label'>
+                  {attributeTypes[key].name}
+                  { attributeTypes[key].required &&
+                  <span className='fa fa-asterisk required-asterisk'/>
+                  }
+                </label>
+                <input
+                  className='form-control edit-record__input'
+                  value={this.getActiveValue(key)}
+                  placeholder={attributeTypes[key].name}
+                  onChange={(e) => this.onChange(e.target.value, key, 'name')}
+                  disabled={!this.state.newAttributes[key].checked}
+                />
+              </div>
+            );
+          }
         }
       }
+    } else {
+      attributeElements.push(
+        <div key='no-fields' className='no-fields'>Ei täydennettäviä metatietoja</div>
+      );
     }
+
     return attributeElements;
   }
 
