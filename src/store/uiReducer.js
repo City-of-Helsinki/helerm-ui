@@ -18,9 +18,17 @@ export function receiveAttributeTypes (attributes, validationRules) {
   const attributeTypeList = {};
   attributes.results.map(result => {
     if (result.values) {
+      let allowedIn = [];
       let required = false;
       let requiredIn = [];
       let requiredIf = [];
+
+      // Add rules where attribute is allowed to be
+      for (const rule in validationRules) {
+        if (validationRules[rule].properties[result.identifier]) {
+          allowedIn.push(rule);
+        }
+      }
 
       // Add basic required if so
       validationRules.record.required.map(rule => {
@@ -74,6 +82,7 @@ export function receiveAttributeTypes (attributes, validationRules) {
       attributeTypeList[result.identifier] = {
         name: result.name,
         values: result.values,
+        allowedIn,
         requiredIf,
         requiredIn,
         required

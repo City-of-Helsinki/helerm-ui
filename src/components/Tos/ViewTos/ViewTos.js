@@ -472,7 +472,7 @@ export class ViewTOS extends React.Component {
                     attributeTypes={this.props.attributeTypes}
                     editMetaDataWithForm={this.editMetaDataWithForm}
                     editorConfig={{
-                      type: 'tos',
+                      type: 'function',
                       action: 'edit'
                     }}
                     closeEditorForm={this.cancelMetaDataEdit}
@@ -486,7 +486,7 @@ export class ViewTOS extends React.Component {
                     attributeTypes={this.props.attributeTypes}
                     editMetaDataWithForm={this.editMetaDataWithForm}
                     editorConfig={{
-                      type: 'tos',
+                      type: 'function',
                       action: 'complement'
                     }}
                     closeEditorForm={this.cancelMetaDataComplement}

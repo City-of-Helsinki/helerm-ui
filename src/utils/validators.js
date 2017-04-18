@@ -1,6 +1,27 @@
 import includes from 'lodash/includes';
 
 /**
+ * Validate conditional rules
+ * @param key
+ * @param attributeTypes
+ * @param attributes
+ * @returns {Boolean}
+ */
+export const validateConditionalRules = (key, attributeTypes, attributes) => {
+  const requiredIf = attributeTypes[key].requiredIf;
+  for (const attribute in attributes) {                                         // for each attribute
+    for (const item in requiredIf) {                                            // for each item in requiredIf
+      if (requiredIf[item].key === attribute) {                                 // if requiredIf has attribute
+        if (includes(requiredIf[item].values, attributes[attribute].name)) {    // if requiredIf has same value as attribute
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+};
+
+/**
  * Validate TOS against rules
  * @param tos
  * @param rules
