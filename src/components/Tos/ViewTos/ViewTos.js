@@ -30,6 +30,7 @@ export class ViewTOS extends React.Component {
     this.setDocumentState = this.setDocumentState.bind(this);
     this.cancelEdit = this.cancelEdit.bind(this);
     this.cancelMetaDataEdit = this.cancelMetaDataEdit.bind(this);
+    this.cancelMetaDataComplement = this.cancelMetaDataComplement.bind(this);
     this.cancelPhaseCreation = this.cancelPhaseCreation.bind(this);
     this.changeStatus = this.changeStatus.bind(this);
     this.cloneFromTemplate = this.cloneFromTemplate.bind(this);
@@ -89,7 +90,10 @@ export class ViewTOS extends React.Component {
     }
 
     if (nextProps.selectedTOS.documentState === 'view') {
-      this.setState({ editingMetaData: false });
+      this.setState({
+        editingMetaData: false,
+        complementingMetaData: false
+      });
     }
   }
 
@@ -167,6 +171,10 @@ export class ViewTOS extends React.Component {
 
   cancelMetaDataEdit () {
     this.setState({ editingMetaData: false });
+  }
+
+  cancelMetaDataComplement () {
+    this.setState({ complementingMetaData: false });
   }
 
   saveDraft () {
@@ -257,7 +265,10 @@ export class ViewTOS extends React.Component {
   }
 
   editMetaDataWithForm (attributes) {
-    this.setState({ editingMetaData: false });
+    this.setState({
+      editingMetaData: false,
+      complementingMetaData: false
+    });
     this.props.editMetaData(attributes);
   }
 
@@ -362,6 +373,12 @@ export class ViewTOS extends React.Component {
                   action: () => this.setState({ editingMetaData: true })
                 },
                 {
+                  text: 'Täydennä metatietoja',
+                  icon: 'fa-plus-square',
+                  style: 'btn-primary',
+                  action: () => this.setState({ complementingMetaData: true })
+                },
+                {
                   text: 'Tuo kuvaus',
                   icon: 'fa-clone',
                   style: 'btn-primary',
@@ -426,7 +443,6 @@ export class ViewTOS extends React.Component {
       const phasesOrder = Object.keys(selectedTOS.phases);
       const phaseElements = this.generatePhases(selectedTOS.phases, phasesOrder);
       const TOSMetaData = this.generateMetaData(attributeTypes, selectedTOS.attributes);
-
       return (
         <div>
           <StickyContainer className='col-xs-12 single-tos-container'>
@@ -456,14 +472,28 @@ export class ViewTOS extends React.Component {
                     attributeTypes={this.props.attributeTypes}
                     editMetaDataWithForm={this.editMetaDataWithForm}
                     editorConfig={{
-                      type: 'tos',
+                      type: 'function',
                       action: 'edit'
                     }}
                     closeEditorForm={this.cancelMetaDataEdit}
                     displayMessage={this.props.displayMessage}
                   />
                   }
-                  {!this.state.editingMetaData &&
+                  {this.state.complementingMetaData &&
+                  <EditorForm
+                    targetId={this.props.selectedTOS.id}
+                    attributes={this.props.selectedTOS.attributes}
+                    attributeTypes={this.props.attributeTypes}
+                    editMetaDataWithForm={this.editMetaDataWithForm}
+                    editorConfig={{
+                      type: 'function',
+                      action: 'complement'
+                    }}
+                    closeEditorForm={this.cancelMetaDataComplement}
+                    displayMessage={this.props.displayMessage}
+                  />
+                  }
+                  {(!this.state.editingMetaData && !this.state.complementingMetaData) &&
                   <div className='version-details col-xs-12'>
                     { TOSMetaData }
                   </div>

@@ -2,6 +2,9 @@ import React from 'react';
 import './EditorForm.scss';
 import update from 'immutability-helper';
 import Select from 'react-select';
+import includes from 'lodash/includes';
+
+import { validateConditionalRules } from '../../../utils/validators';
 
 export class EditorForm extends React.Component {
   constructor (props) {
@@ -82,6 +85,50 @@ export class EditorForm extends React.Component {
     }
   }
 
+  getAttributesToShow (attributeTypes, attributes) {
+    const { newAttributes } = this.state;
+    const attributesToShow = [];
+    const getAttributeKeys = (attributes) => {
+      const attributeKeys = [];
+      for (const key in attributes) {
+        attributeKeys.push(key);
+      }
+      return attributeKeys;
+    };
+
+    for (const attributeType in attributeTypes) {
+      if (attributeTypes[attributeType].required ||
+        includes(getAttributeKeys(attributes), attributeType)) {
+        attributesToShow.push(attributeType);
+      }
+      if (attributeTypes[attributeType].requiredIf.length) {
+        if (validateConditionalRules(attributeType, attributeTypes, newAttributes)) {
+          attributesToShow.push(attributeType);
+        }
+      }
+    }
+    return attributesToShow;
+  }
+
+  getComplementAttributes (attributeTypes, attributesToShow) {
+    const { newAttributes } = this.state;
+    const complementAttributes = [];
+
+    for (const key in attributeTypes) {
+      if (!includes(attributesToShow, key) &&
+        includes(attributeTypes[key].allowedIn, this.props.editorConfig.type)) {
+        if (attributeTypes[key].requiredIf.length) {
+          if (validateConditionalRules(key, attributeTypes, newAttributes)) {
+            complementAttributes.push(key);
+          }
+        } else {
+          complementAttributes.push(key);
+        }
+      }
+    }
+    return complementAttributes;
+  }
+
   generateOptions (array) {
     return array.map(item => ({
       value: item.value,
@@ -90,66 +137,78 @@ export class EditorForm extends React.Component {
   }
 
   generateAttributeElements (attributeTypes) {
+    let attributesToShow = this.getAttributesToShow(attributeTypes, this.props.attributes);
+    if (this.props.editorConfig.action === 'complement') {
+      attributesToShow = this.getComplementAttributes(attributeTypes, attributesToShow);
+    }
     const attributeElements = [];
-    for (const key in attributeTypes) {
-      if (attributeTypes.hasOwnProperty(key)) {
-        if (attributeTypes[key].values.length) {
-          const options = this.generateOptions(attributeTypes[key].values);
 
-          attributeElements.push(
-            <div key={key} className='col-xs-12 col-lg-6 form-group'>
-              <input
-                type='checkbox'
-                checked={this.getCheckedState(key)}
-                value={this.state.newAttributes[key].checked}
-                onChange={(e) => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}/>
-              <label className='edit-record__label'>
-                {attributeTypes[key].name}
-                { attributeTypes[key].required &&
-                <span className='fa fa-asterisk required-asterisk'/>
-                }
-              </label>
-              <Select
-                placeholder='Valitse...'
-                autoBlur={true}
-                autofocus={false}
-                className='form-control edit-record__select'
-                clearable={true}
-                disabled={!this.state.newAttributes[key].checked}
-                onChange={(option) => this.onChange(option ? option.value : null, key, 'name')}
-                openOnFocus={true}
-                options={options}
-                value={this.getActiveValue(key)}
-              />
-            </div>
-          );
-        } else if (attributeTypes[key].values.length === 0) {
-          attributeElements.push(
-            <div key={key} className='col-xs-12 col-lg-6 form-group'>
-              <input
-                type='checkbox'
-                checked={this.getCheckedState(key)}
-                value={this.state.newAttributes[key].checked}
-                onChange={(e) => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}
-              />
-              <label className='edit-record__label'>
-                {attributeTypes[key].name}
-                { attributeTypes[key].required &&
-                <span className='fa fa-asterisk required-asterisk'/>
-                }
-              </label>
-              <input
-                className='form-control edit-record__input'
-                value={this.getActiveValue(key)}
-                placeholder={attributeTypes[key].name}
-                onChange={(e) => this.onChange(e.target.value, key, 'name')}
-                disabled={!this.state.newAttributes[key].checked}
-              />
-            </div>
-          );
+    if (attributesToShow.length) {
+      for (const key in attributeTypes) {
+        if (attributeTypes.hasOwnProperty(key)) {
+          if (includes(attributesToShow, key) && attributeTypes[key].values.length) {
+            const options = this.generateOptions(attributeTypes[key].values);
+
+            attributeElements.push(
+              <div key={key} className='col-xs-12 col-lg-6 form-group'>
+                <input
+                  type='checkbox'
+                  checked={this.getCheckedState(key)}
+                  value={this.state.newAttributes[key].checked}
+                  onChange={(e) => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}/>
+                <label className='edit-record__label'>
+                  {attributeTypes[key].name}
+                  { attributeTypes[key].required &&
+                  <span className='fa fa-asterisk required-asterisk'/>
+                  }
+                </label>
+                <Select
+                  placeholder='Valitse...'
+                  autoBlur={true}
+                  autofocus={false}
+                  className='form-control edit-record__select'
+                  clearable={true}
+                  disabled={!this.state.newAttributes[key].checked}
+                  onChange={(option) => this.onChange(option ? option.value : null, key, 'name')}
+                  openOnFocus={true}
+                  options={options}
+                  value={this.getActiveValue(key)}
+                />
+              </div>
+            );
+          } else if (includes(attributesToShow, key) && attributeTypes[key].values.length === 0) {
+            attributeElements.push(
+              <div key={key} className='col-xs-12 col-lg-6 form-group'>
+                <input
+                  type='checkbox'
+                  checked={this.getCheckedState(key)}
+                  value={this.state.newAttributes[key].checked}
+                  onChange={(e) => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}
+                />
+                <label className='edit-record__label'>
+                  {attributeTypes[key].name}
+                  { attributeTypes[key].required &&
+                  <span className='fa fa-asterisk required-asterisk'/>
+                  }
+                </label>
+                <input
+                  className='form-control edit-record__input'
+                  value={this.getActiveValue(key)}
+                  placeholder={attributeTypes[key].name}
+                  onChange={(e) => this.onChange(e.target.value, key, 'name')}
+                  disabled={!this.state.newAttributes[key].checked}
+                />
+              </div>
+            );
+          }
         }
       }
+    } else {
+      attributeElements.push(
+        <div key='no-fields' className='no-fields'>Ei täydennettäviä metatietoja</div>
+      );
     }
+
     return attributeElements;
   }
 
@@ -229,14 +288,14 @@ export class EditorForm extends React.Component {
     const { type, action } = this.props.editorConfig;
 
     switch (type) {
-      case 'tos':
-        return 'Muokkaa metatietoja';
+      case 'function':
+        return 'Metatiedot';
       case 'phase':
-        return action === 'edit' ? 'Muokkaa käsittelyvaihetta' : 'Uusi käsittelyvaihe';
+        return action === 'add' ? 'Uusi käsittelyvaihe' : 'Muokkaa käsittelyvaihetta';
       case 'action':
-        return action === 'edit' ? 'Muokkaa toimenpidettä' : 'Uusi toimenpide';
+        return action === 'add' ? 'Uusi toimenpide' : 'Muokkaa toimenpidettä';
       case 'record':
-        return action === 'edit' ? 'Muokkaa asiakirjaa' : 'Uusi asiakirja';
+        return action === 'add' ? 'Uusi asiakirja' : 'Muokkaa asiakirjaa';
     }
   }
 
@@ -244,24 +303,18 @@ export class EditorForm extends React.Component {
     const { action, type } = this.props.editorConfig;
 
     switch (type) {
-      case 'tos':
-        if (action === 'edit') {
+      case 'function':
+        if (action === 'edit' || action === 'complement') {
           this.editMetaData(e);
         }
         break;
       case 'phase':
-        if (action === 'add') {
-          // this.addPhase(e, targetId);
-        }
-        if (action === 'edit') {
+        if (action === 'edit' || action === 'complement') {
           // this.editPhase(e, targetId);
         }
         break;
       case 'action':
-        if (action === 'add') {
-          // this.addAction(e, targetId);
-        }
-        if (action === 'edit') {
+        if (action === 'edit' || action === 'complement') {
           // this.editAction(e, targetId);
         }
         break;
@@ -269,7 +322,7 @@ export class EditorForm extends React.Component {
         if (action === 'add') {
           this.addRecord(e, targetId);
         }
-        if (action === 'edit') {
+        if (action === 'edit' || action === 'complement') {
           this.editRecord(e, targetId);
         }
     }
@@ -312,7 +365,9 @@ export class EditorForm extends React.Component {
         <h4>{this.resolveLabel()}</h4>
         <form onSubmit={(e) => this.resolveOnSubmit(e, targetId)}
               className='edit-record'>
-          { this.props.editorConfig.type !== 'tos' ? this.renderDescriptions() : null }
+          { this.props.editorConfig.type !== 'function' && this.props.editorConfig.action !== 'complement'
+            ? this.renderDescriptions()
+            : null }
           { attributeElements }
           <div className='col-xs-12'>
             <button className='btn btn-primary pull-right edit-record__submit' type='submit'>Valmis</button>
@@ -340,7 +395,7 @@ EditorForm.propTypes = {
   }),
   recordConfig: React.PropTypes.shape({
     editRecordWithForm: React.PropTypes.func,
-    recordTypes: React.PropTypes.object,
+    recordTypes: React.PropTypes.object.isRequired,
     createRecord: React.PropTypes.func,
     recordId: React.PropTypes.string,
     recordName: React.PropTypes.string

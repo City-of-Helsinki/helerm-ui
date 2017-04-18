@@ -70,7 +70,6 @@ export const SET_DOCUMENT_STATE = 'setDocumentStateAction';
 // ------------------------------------
 // Actions
 // ------------------------------------
-
 export function receiveTOS (tos) {
   tos = normalizeTosFromApi(tos);
   const data = Object.assign({}, tos, { receivedAt: Date.now() });
