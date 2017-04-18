@@ -3,6 +3,7 @@ import './EditorForm.scss';
 import update from 'immutability-helper';
 import Select from 'react-select';
 import includes from 'lodash/includes';
+import sortBy from 'lodash/sortBy';
 
 import { validateConditionalRules } from '../../../utils/validators';
 
@@ -107,7 +108,11 @@ export class EditorForm extends React.Component {
         }
       }
     }
-    return attributesToShow;
+
+    const sortedAttributes = sortBy(attributesToShow, (attribute) => (
+      attributeTypes[attribute].index
+    ));
+    return sortedAttributes;
   }
 
   getComplementAttributes (attributeTypes, attributesToShow) {
@@ -126,7 +131,11 @@ export class EditorForm extends React.Component {
         }
       }
     }
-    return complementAttributes;
+
+    const sortedAttributes = sortBy(complementAttributes, (attribute) => (
+      attributeTypes[attribute].index
+    ));
+    return sortedAttributes;
   }
 
   generateOptions (array) {
