@@ -154,7 +154,6 @@ export class EditorForm extends React.Component {
 
     if (attributesToShow.length) {
       for (const key of attributesToShow) {
-        console.log(key);
         if (attributeTypes.hasOwnProperty(key)) {
           if (attributeTypes[key].values.length) {
             const options = this.generateOptions(attributeTypes[key].values);
