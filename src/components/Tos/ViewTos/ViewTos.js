@@ -325,8 +325,8 @@ export class ViewTOS extends React.Component {
         />
       );
     });
-    for (const key in attributes) {
-      if (attributes.hasOwnProperty(key)) {
+    for (const key in attributeTypes) {
+      if (attributes.hasOwnProperty(key) && attributes[key]) {
         attributeElements.push(
           <Attribute
             key={key}
