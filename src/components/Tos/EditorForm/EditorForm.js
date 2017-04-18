@@ -153,9 +153,10 @@ export class EditorForm extends React.Component {
     const attributeElements = [];
 
     if (attributesToShow.length) {
-      for (const key in attributeTypes) {
+      for (const key of attributesToShow) {
+        console.log(key);
         if (attributeTypes.hasOwnProperty(key)) {
-          if (includes(attributesToShow, key) && attributeTypes[key].values.length) {
+          if (attributeTypes[key].values.length) {
             const options = this.generateOptions(attributeTypes[key].values);
 
             attributeElements.push(
@@ -185,7 +186,7 @@ export class EditorForm extends React.Component {
                 />
               </div>
             );
-          } else if (includes(attributesToShow, key) && attributeTypes[key].values.length === 0) {
+          } else if (attributeTypes[key].values.length === 0) {
             attributeElements.push(
               <div key={key} className='col-xs-12 col-lg-6 form-group'>
                 <input
