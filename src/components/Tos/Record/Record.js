@@ -108,9 +108,11 @@ export class Record extends React.Component {
   }
 
   generateAttributes (attributes, recordName, recordType) {
+    const { attributeTypes } = this.props;
     const attributeElements = [];
-    for (const key in attributes) {
-      if (attributes.hasOwnProperty(key) && this.props.attributeTypes[key]) {
+
+    for (const key in attributeTypes) {
+      if (attributes.hasOwnProperty(key) && attributes[key] && attributeTypes[key]) {
         attributeElements.push(
           <Attribute
             key={key}

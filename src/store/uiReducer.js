@@ -80,6 +80,7 @@ export function receiveAttributeTypes (attributes, validationRules) {
       });
 
       attributeTypeList[result.identifier] = {
+        index: result.index,
         name: result.name,
         values: result.values,
         allowedIn,
