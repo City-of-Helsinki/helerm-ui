@@ -120,8 +120,7 @@ export class EditorForm extends React.Component {
     const complementAttributes = [];
 
     for (const key in attributeTypes) {
-      if (!includes(attributesToShow, key) &&
-        includes(attributeTypes[key].allowedIn, this.props.editorConfig.type)) {
+      if (includes(attributeTypes[key].allowedIn, this.props.editorConfig.type)) {
         if (attributeTypes[key].requiredIf.length) {
           if (validateConditionalRules(key, attributeTypes, newAttributes)) {
             complementAttributes.push(key);
@@ -374,9 +373,7 @@ export class EditorForm extends React.Component {
         <h4>{this.resolveLabel()}</h4>
         <form onSubmit={(e) => this.resolveOnSubmit(e, targetId)}
               className='edit-record'>
-          { this.props.editorConfig.type !== 'function' && this.props.editorConfig.action !== 'complement'
-            ? this.renderDescriptions()
-            : null }
+          { this.props.editorConfig.type !== 'function' ? this.renderDescriptions() : null }
           { attributeElements }
           <div className='col-xs-12'>
             <button className='btn btn-primary pull-right edit-record__submit' type='submit'>Valmis</button>
