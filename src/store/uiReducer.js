@@ -105,7 +105,7 @@ export function fetchAttributeTypes () {
     return api.get('attribute/schemas')
       .then(response => response.json())
       .then(validationRules => {
-        return api.get('attribute')
+        return api.get('attribute', { page_size: 999 })
           .then(response => response.json())
           .then(json =>
             dispatch(receiveAttributeTypes(json, validationRules)));
