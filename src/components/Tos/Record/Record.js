@@ -5,8 +5,6 @@ import DeleteView from '../DeleteView/DeleteView';
 import Dropdown from 'components/Dropdown';
 import Popup from 'components/Popup';
 
-// import { validateRecord } from '../../../utils/validators';
-
 export class Record extends React.Component {
   constructor (props) {
     super(props);
@@ -28,19 +26,6 @@ export class Record extends React.Component {
   setMode (value) {
     this.setState({ mode: value });
   }
-
-  // editRecord () {
-  //   this.setMode('edit');
-  //   this.setState({ showAttributes: true });
-  // }
-
-  // saveRecord () {
-  //   this.setMode('view');
-  // }
-
-  // cancelRecordEdit () {
-  //   this.setMode('view');
-  // }
 
   toggleAttributeVisibility () {
     const currentVisibility = this.state.showAttributes;
@@ -148,8 +133,6 @@ export class Record extends React.Component {
     const recordAttributes = this.generateRecordAttributes(recordObjects);
     const attributes = this.generateAttributes(record.attributes);
 
-    // const isValidRecord = validateRecord(record, this.props.attributeTypes);
-    // console.log(isValidRecord);
 
     return (
       <div className={'record col-xs-12 ' + (this.state.showAttributes ? 'record-open' : '')}>
