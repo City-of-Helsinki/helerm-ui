@@ -38,19 +38,19 @@ export class Attribute extends React.Component {
   submit (event) {
     event.preventDefault();
     if (this.props.attributeIndex === '') {
-      this.props.updateRecordName(this.state.attribute, this.props.recordId);
+      this.props.updateName(this.state.attribute, this.props.recordId);
     } else if (this.props.attributeIndex === this.props.attribute) {
-      this.props.updateRecordType(
+      this.props.updateType(
         this.state.attribute,
         this.props.recordId
       );
     } else if (this.props.tosAttribute) {
-      this.props.updateTOSAttribute(
+      this.props.updateFunctionAttribute(
         this.state.attribute,
         this.props.attributeIndex
       );
     } else {
-      this.props.updateRecordAttribute(
+      this.props.updateAttribute(
         this.state.attribute,
         this.props.attributeIndex,
         this.props.recordId
@@ -201,10 +201,10 @@ Attribute.propTypes = {
   showAttributes: React.PropTypes.bool.isRequired,
   tosAttribute: React.PropTypes.bool,
   type: React.PropTypes.string.isRequired,
-  updateRecordAttribute: React.PropTypes.func,
-  updateRecordName: React.PropTypes.func,
-  updateRecordType: React.PropTypes.func,
-  updateTOSAttribute: React.PropTypes.func
+  updateAttribute: React.PropTypes.func,
+  updateFunctionAttribute: React.PropTypes.func,
+  updateName: React.PropTypes.func,
+  updateType: React.PropTypes.func
 };
 
 export default Attribute;

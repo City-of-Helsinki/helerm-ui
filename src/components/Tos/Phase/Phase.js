@@ -19,7 +19,7 @@ export class Phase extends React.Component {
     this.createNewAction = this.createNewAction.bind(this);
     this.addAction = this.addAction.bind(this);
     this.editPhaseTitle = this.editPhaseTitle.bind(this);
-    this.savePhaseTitle = this.savePhaseTitle.bind(this);
+    this.savePhase = this.savePhase.bind(this);
     this.toggleImportView = this.toggleImportView.bind(this);
     this.cancelActionCreation = this.cancelActionCreation.bind(this);
     this.state = {
@@ -44,7 +44,7 @@ export class Phase extends React.Component {
     }
   }
 
-  savePhaseTitle (event) {
+  savePhase (event) {
     event.preventDefault();
     const updatedPhase = {
       id: this.props.phase.id,
@@ -181,12 +181,12 @@ export class Phase extends React.Component {
     if (this.state.mode === 'edit') {
       phaseTitle = (
         <div className='phase-title-input row'>
-          <form className='col-md-10 col-xs-12' onSubmit={this.savePhaseTitle}>
+          <form className='col-md-10 col-xs-12' onSubmit={this.savePhase}>
             <input
               className='input-title form-control'
               value={this.state.name}
               onChange={this.onChange}
-              onBlur={this.savePhaseTitle}
+              onBlur={this.savePhase}
               autoFocus={true}
             />
           </form>

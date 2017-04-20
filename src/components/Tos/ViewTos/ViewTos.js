@@ -43,7 +43,7 @@ export class ViewTOS extends React.Component {
     this.routerWillLeave = this.routerWillLeave.bind(this);
     this.saveDraft = this.saveDraft.bind(this);
     this.setPhaseVisibility = this.setPhaseVisibility.bind(this);
-    this.updateTOSAttribute = this.updateTOSAttribute.bind(this);
+    this.updateFunctionAttribute = this.updateFunctionAttribute.bind(this);
     this.setValidationVisibility = this.setValidationVisibility.bind(this);
     this.review = this.review.bind(this);
 
@@ -256,7 +256,7 @@ export class ViewTOS extends React.Component {
     this.setState({ newPhaseName: event.target.value });
   }
 
-  updateTOSAttribute (attribute, attributeIndex) {
+  updateFunctionAttribute (attribute, attributeIndex) {
     const updatedTOSAttribute = {
       tosAttribute: attribute,
       attributeIndex
@@ -341,7 +341,7 @@ export class ViewTOS extends React.Component {
             editRecord={this.props.editRecord}
             showAttributes={this.state.showMetadata}
             tosAttribute={true}
-            updateTOSAttribute={this.updateTOSAttribute}
+            updateFunctionAttribute={this.updateFunctionAttribute}
           />
         );
       }
