@@ -107,7 +107,7 @@ export class Record extends React.Component {
     });
   }
 
-  generateAttributes (attributes, recordName, recordType) {
+  generateAttributes (attributes) {
     const { attributeTypes } = this.props;
     const attributeElements = [];
 
@@ -193,18 +193,6 @@ export class Record extends React.Component {
           }
           { recordAttributes }
           { attributes }
-          {/* { this.state.mode === 'edit' &&
-           <div className='col-xs-12'>
-           <button className='btn btn-primary pull-right edit-record__submit'
-           onClick={() => this.saveRecord()}>
-           Valmis
-           </button>
-           <button className='btn btn-default pull-right edit-record__cancel'
-           onClick={() => this.cancelRecordEdit()}>
-           Peruuta
-           </button>
-           </div>
-           } */}
         </div>
         { this.state.deleting &&
         <Popup
