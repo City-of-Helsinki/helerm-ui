@@ -12,7 +12,7 @@ export const Attributes = ({
   type,
   typeOptions,
   updateAttribute,
-  updateName,
+  updateTypeSpecifier,
   updateType
 }) => {
   function generateDescriptions (element) {
@@ -63,7 +63,7 @@ export const Attributes = ({
           mode={mode}
           type={'record'}
           editable={true}
-          updateName={updateName}
+          updateTypeSpecifier={updateTypeSpecifier}
           updateType={updateType}
           updateAttribute={updateAttribute}
           showAttributes={true}
@@ -121,8 +121,8 @@ Attributes.propTypes = {
   type: React.PropTypes.string.isRequired,
   typeOptions: React.PropTypes.object,
   updateAttribute: React.PropTypes.func,
-  updateName: React.PropTypes.func,
-  updateType: React.PropTypes.func
+  updateType: React.PropTypes.func,
+  updateTypeSpecifier: React.PropTypes.func
 };
 
 export default Attributes;

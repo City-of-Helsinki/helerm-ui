@@ -38,7 +38,7 @@ export class Attribute extends React.Component {
   submit (event) {
     event.preventDefault();
     if (this.props.attributeIndex === '') {
-      this.props.updateName(this.state.attribute, this.props.recordId);
+      this.props.updateTypeSpecifier(this.state.attribute, this.props.recordId);
     } else if (this.props.attributeIndex === this.props.attribute) {
       this.props.updateType(
         this.state.attribute,
@@ -203,8 +203,8 @@ Attribute.propTypes = {
   type: React.PropTypes.string.isRequired,
   updateAttribute: React.PropTypes.func,
   updateFunctionAttribute: React.PropTypes.func,
-  updateName: React.PropTypes.func,
-  updateType: React.PropTypes.func
+  updateType: React.PropTypes.func,
+  updateTypeSpecifier: React.PropTypes.func
 };
 
 export default Attribute;

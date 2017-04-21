@@ -11,7 +11,7 @@ export class Record extends React.Component {
 
     this.renderRecordButtons = this.renderRecordButtons.bind(this);
     this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
-    this.updateRecordName = this.updateRecordName.bind(this);
+    this.updateTypeSpecifier = this.updateTypeSpecifier.bind(this);
     this.updateRecordType = this.updateRecordType.bind(this);
     this.updateRecordAttribute = this.updateRecordAttribute.bind(this);
     this.state = {
@@ -34,15 +34,15 @@ export class Record extends React.Component {
     this.setState({ showAttributes: newVisibility });
   }
 
-  updateRecordName (recordName, recordId) {
+  updateTypeSpecifier (typeSpecifier, recordId) {
     this.setState({
-      name: recordName
+      name: typeSpecifier
     });
-    const updatedRecordName = {
-      name: recordName,
+    const updatedTypeSpecifier = {
+      name: typeSpecifier,
       recordId: recordId
     };
-    this.props.editRecordAttribute(updatedRecordName);
+    this.props.editRecordAttribute(updatedTypeSpecifier);
   }
 
   updateRecordType (attribute, recordId) {
@@ -134,7 +134,7 @@ export class Record extends React.Component {
           attributeTypes={attributeTypes}
           typeOptions={recordTypes}
           renderButtons={this.renderRecordButtons}
-          updateName={this.updateRecordName}
+          updateTypeSpecifier={this.updateTypeSpecifier}
           updateType={this.updateRecordType}
           updateAttribute={this.updateRecordAttribute}
           showAttributes={this.state.showAttributes}
