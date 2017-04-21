@@ -200,7 +200,7 @@ export class EditorForm extends React.Component {
                   }
                 </label>
                 <input
-                  className='form-control edit-record__input'
+                  className='form-control edit-attribute__input'
                   value={this.getActiveValue(key)}
                   placeholder={attributeTypes[key].name}
                   onChange={(e) => this.onChange(e.target.value, key, 'name')}
@@ -350,7 +350,7 @@ export class EditorForm extends React.Component {
           <label className='edit-record__label'>Tarkenne</label>
           <span className='fa fa-asterisk required-asterisk'/>
           <input
-            className='col-xs-6 form-control edit-record__input'
+            className='col-xs-6 form-control edit-attribute__input'
             placeholder='Tarkenne'
             value={this.state.recordName.value}
             onChange={(e) => this.onBaseAttributeChange(e.target.value, 'recordName', 'value')}/>

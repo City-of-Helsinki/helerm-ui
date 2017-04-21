@@ -54,14 +54,14 @@ export const Attributes = ({
       return (
         <Attribute
           key={index}
-          recordId={element.id}
+          elementId={element.id}
           attributeIndex={description.type}
           attributeKey=''
           attribute={description.name}
           documentState={documentState}
-          attributeTypes={typeOptions}
+          typeOptions={typeOptions}
           mode={mode}
-          type={'record'}
+          type={'basic'}
           editable={true}
           updateTypeSpecifier={updateTypeSpecifier}
           updateType={updateType}
@@ -80,7 +80,7 @@ export const Attributes = ({
         attributeElements.push(
           <Attribute
             key={key}
-            recordId={element.id}
+            elementId={element.id}
             attributeIndex={key}
             attributeKey={attributeTypes[key].name}
             attribute={attributes[key]}
