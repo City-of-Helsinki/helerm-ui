@@ -45,9 +45,12 @@ export class Record extends React.Component {
     this.props.editRecordAttribute(updatedTypeSpecifier);
   }
 
-  updateRecordType (attribute, recordId) {
+  updateRecordType (type, recordId) {
+    this.setState({
+      type: type
+    });
     const updatedRecordType = {
-      type: attribute,
+      type: type,
       recordId: recordId
     };
     this.props.editRecordAttribute(updatedRecordType);
