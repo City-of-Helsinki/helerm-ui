@@ -7,6 +7,7 @@ export const Attributes = ({
   element,
   documentState,
   mode,
+  renderBasicAttributes,
   renderButtons,
   showAttributes,
   type,
@@ -97,15 +98,16 @@ export const Attributes = ({
     return attributeElements;
   }
 
-  const buttons = renderButtons();
-  const descriptions = generateDescriptions(element);
-  const basicAttributes = generateBasicAttributes(descriptions);
+  const buttons = renderButtons ? renderButtons() : null;
+  const basicAttributes = renderBasicAttributes
+    ? renderBasicAttributes()
+    : generateBasicAttributes(generateDescriptions(element));
   const attributes = generateAttributes(element.attributes);
 
   return (
     <div className='list-group'>
-      { buttons }
       { basicAttributes }
+      { buttons }
       { attributes }
     </div>
   );
@@ -116,7 +118,8 @@ Attributes.propTypes = {
   documentState: React.PropTypes.string.isRequired,
   element: React.PropTypes.object.isRequired,
   mode: React.PropTypes.string.isRequired,
-  renderButtons: React.PropTypes.func.isRequired,
+  renderBasicAttributes: React.PropTypes.func,
+  renderButtons: React.PropTypes.func,
   showAttributes: React.PropTypes.bool.isRequired,
   type: React.PropTypes.string.isRequired,
   typeOptions: React.PropTypes.object,
