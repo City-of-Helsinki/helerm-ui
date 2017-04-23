@@ -334,6 +334,7 @@ Phase.propTypes = {
   documentState: React.PropTypes.string.isRequired,
   editAction: React.PropTypes.func.isRequired,
   editPhase: React.PropTypes.func.isRequired,
+  editPhaseAttribute: React.PropTypes.func.isRequired,
   editRecord: React.PropTypes.func.isRequired,
   editRecordAttribute: React.PropTypes.func.isRequired,
   importItems: React.PropTypes.func.isRequired,

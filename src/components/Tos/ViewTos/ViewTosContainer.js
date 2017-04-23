@@ -24,6 +24,7 @@ import {
 import {
   addPhase,
   editPhase,
+  editPhaseAttribute,
   removePhase,
   setPhasesVisibility,
   setPhaseVisibility
@@ -56,6 +57,7 @@ const mapDispatchToProps = (dispatch) => {
     editAction: bindActionCreators(editAction, dispatch),
     editMetaData: bindActionCreators(editMetaData, dispatch),
     editPhase: bindActionCreators(editPhase, dispatch),
+    editPhaseAttribute: bindActionCreators(editPhaseAttribute, dispatch),
     editRecord: bindActionCreators(editRecord, dispatch),
     editRecordAttribute: bindActionCreators(editRecordAttribute, dispatch),
     fetchTOS: bindActionCreators(fetchTOS, dispatch),
