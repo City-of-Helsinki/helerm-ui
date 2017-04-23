@@ -26,7 +26,7 @@ export class Phase extends React.Component {
     this.toggleImportView = this.toggleImportView.bind(this);
     this.cancelActionCreation = this.cancelActionCreation.bind(this);
     this.state = {
-      name: this.props.phase.name,
+      typeSpecifier: this.props.phase.attributes.TypeSpecifier,
       newActionName: '',
       mode: 'view',
       deleting: false,
@@ -37,8 +37,8 @@ export class Phase extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.phase.name) {
-      this.setState({ name: nextProps.phase.name });
+    if (nextProps.phase.attributes.TypeSpecifier) {
+      this.setState({ typeSpecifier: nextProps.phase.attributes.TypeSpecifier });
     }
   }
 
@@ -61,7 +61,7 @@ export class Phase extends React.Component {
   }
 
   onChange (event) {
-    this.setState({ name: event.target.value });
+    this.setState({ typeSpecifier: event.target.value });
   }
 
   onNewChange (event) {
@@ -108,6 +108,12 @@ export class Phase extends React.Component {
       this.props.removeAction(action, this.props.phase.id);
     });
     this.props.removePhase(this.props.phase.id);
+  }
+
+  activateEditMode () {
+    if (this.props.documentState === 'edit') {
+      this.setState({ mode: 'edit' });
+    }
   }
 
   generateActions (actions) {
@@ -208,12 +214,12 @@ export class Phase extends React.Component {
   }
 
   renderBasicAttributes () {
-    let phaseTitle;
+    let typeSpecifier;
 
     if (this.state.mode !== 'edit') {
-      phaseTitle =
-        (<span onClick={this.editPhaseTitle}>
-          <i className='fa fa-info-circle' aria-hidden='true'/> {this.state.name}
+      typeSpecifier =
+        (<span className='col-md-6 basic-attribute' onClick={this.activateEditMode}>
+          <i className='fa fa-info-circle' aria-hidden='true'/> {this.state.typeSpecifier}
         </span>
         );
     }
@@ -277,7 +283,7 @@ export class Phase extends React.Component {
             content={
               <DeleteView
                 type='phase'
-                target={this.state.name}
+                target={this.state.typeSpecifier}
                 action={() => this.delete()}
                 cancel={() => this.cancelDeletion()}
               />
@@ -295,7 +301,7 @@ export class Phase extends React.Component {
                 values={this.props.actions}
                 changeOrder={this.props.changeOrder}
                 parent={phaseIndex}
-                parentName={this.state.name}
+                parentName={this.state.typeSpecifier}
               />
             }
             closePopup={() => this.toggleReorderView()}
@@ -308,7 +314,7 @@ export class Phase extends React.Component {
                 level='action'
                 toggleImportView={this.toggleImportView}
                 title='toimenpiteitä'
-                targetText={'käsittelyvaiheeseen "' + phase.name + '"'}
+                targetText={'käsittelyvaiheeseen "' + phase.attributes.TypeSpecifier + '"'}
                 itemsToImportText='toimenpiteet'
                 phasesOrder={this.props.phasesOrder}
                 phases={this.props.phases}
