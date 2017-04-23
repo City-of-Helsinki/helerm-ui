@@ -38,12 +38,12 @@ export const Attributes = ({
 
     descriptions.push({
       descriptionKey: `${elementDescription} tarkenne`,
-      name: element.name,
+      typeSpecifier: element.attributes.TypeSpecifier,
       type: ''
     });
     descriptions.push({
       descriptionKey: 'Tyyppi',
-      name: element.attributes[`${elementType}`],
+      typeSpecifier: element.attributes[`${elementType}`],
       type: element.attributes[`${elementType}`]
     });
 
@@ -58,7 +58,7 @@ export const Attributes = ({
           elementId={element.id}
           attributeIndex={description.type}
           attributeKey=''
-          attribute={description.name}
+          attribute={description.typeSpecifier}
           documentState={documentState}
           typeOptions={typeOptions}
           mode={mode}
@@ -105,7 +105,7 @@ export const Attributes = ({
   const attributes = generateAttributes(element.attributes);
 
   return (
-    <div className={classnames('list-group', type)}>
+    <div className={classnames('list-group', `${type}-attributes`)}>
       { basicAttributes }
       { buttons }
       { attributes }
