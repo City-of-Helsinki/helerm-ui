@@ -1,5 +1,5 @@
 import React from 'react';
-
+import classnames from 'classnames';
 import Attribute from './Attribute';
 
 export const Attributes = ({
@@ -105,7 +105,7 @@ export const Attributes = ({
   const attributes = generateAttributes(element.attributes);
 
   return (
-    <div className='list-group'>
+    <div className={classnames('list-group', type)}>
       { basicAttributes }
       { buttons }
       { attributes }
