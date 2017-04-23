@@ -19,15 +19,17 @@ export class Phase extends React.Component {
     this.onNewChange = this.onNewChange.bind(this);
     this.createNewAction = this.createNewAction.bind(this);
     this.addAction = this.addAction.bind(this);
-    this.editPhaseTitle = this.editPhaseTitle.bind(this);
     this.activateEditMode = this.activateEditMode.bind(this);
+    this.updateTypeSpecifier = this.updateTypeSpecifier.bind(this);
+    this.updatePhaseType = this.updatePhaseType.bind(this);
     this.renderPhaseButtons = this.renderPhaseButtons.bind(this);
     this.renderBasicAttributes = this.renderBasicAttributes.bind(this);
-    this.savePhase = this.savePhase.bind(this);
     this.toggleImportView = this.toggleImportView.bind(this);
     this.cancelActionCreation = this.cancelActionCreation.bind(this);
     this.state = {
       typeSpecifier: this.props.phase.attributes.TypeSpecifier,
+      type: this.props.phase.attributes.PhaseType,
+      attributes: this.props.phase.attributes,
       newActionName: '',
       mode: 'view',
       deleting: false,
@@ -43,23 +45,6 @@ export class Phase extends React.Component {
     }
   }
 
-  editPhaseTitle () {
-    if (this.props.documentState === 'edit') {
-      this.setState({ mode: 'edit' });
-    }
-  }
-
-  savePhase (event) {
-    event.preventDefault();
-    const updatedPhase = {
-      id: this.props.phase.id,
-      name: this.state.name
-    };
-    this.props.editPhase(updatedPhase);
-    if (this.state.name.length > 0) {
-      this.setState({ mode: 'view' });
-    }
-  }
 
   onChange (event) {
     this.setState({ typeSpecifier: event.target.value });
@@ -115,6 +100,27 @@ export class Phase extends React.Component {
     if (this.props.documentState === 'edit') {
       this.setState({ mode: 'edit' });
     }
+  }
+
+  updateTypeSpecifier (event) {
+    event.preventDefault();
+    const updatedTypeSpecifier = {
+      typeSpecifier: this.state.typeSpecifier,
+      phaseId: this.props.phase.id
+    };
+    this.props.editPhaseAttribute(updatedTypeSpecifier);
+    if (this.state.typeSpecifier.length > 0) {
+      this.setState({ mode: 'view' });
+    }
+  }
+
+  updatePhaseType (event) {
+    event.preventDefault();
+    const updatedPhaseType = {
+      type: this.state.type,
+      phaseId: this.props.phase.id
+    };
+    this.props.editPhaseAttribute(updatedPhaseType);
   }
 
   generateActions (actions) {
@@ -225,14 +231,14 @@ export class Phase extends React.Component {
         );
     }
     if (this.state.mode === 'edit') {
-      phaseTitle = (
+      typeSpecifier = (
         <div className='phase-title-input row'>
-          <form className='col-md-10 col-xs-12' onSubmit={this.savePhase}>
+          <form className='col-md-10 col-xs-12' onSubmit={this.updateTypeSpecifier}>
             <input
               className='input-title form-control'
-              value={this.state.name}
+              value={this.state.typeSpecifier}
               onChange={this.onChange}
-              onBlur={this.savePhase}
+              onBlur={this.updateTypeSpecifier}
               autoFocus={true}
             />
           </form>
@@ -240,7 +246,16 @@ export class Phase extends React.Component {
       );
     }
 
-    return phaseTitle;
+    const phaseType = (
+      <span className='col-md-6 basic-attribute'>---</span>
+    );
+
+    return (
+      <div className='basic-attributes'>
+        {typeSpecifier}
+        {phaseType}
+      </div>
+    );
   }
 
   render () {
@@ -249,7 +264,7 @@ export class Phase extends React.Component {
 
     return (
       <div>
-        <span className='col-xs-12 box phase'>
+        <div className='col-xs-12 box phase'>
           <StickyContainer>
             <Sticky className={'phase-title ' + (this.props.phase.is_open ? 'open' : 'closed')}>
               <Attributes
@@ -261,7 +276,7 @@ export class Phase extends React.Component {
                 typeOptions={this.props.phaseTypes}
                 renderBasicAttributes={this.renderBasicAttributes}
                 renderButtons={this.renderPhaseButtons}
-                updateTypeSpecifier={this.updatePhaseName}
+                updateTypeSpecifier={this.updateTypeSpecifier}
                 updateType={this.updatePhaseType}
                 updateAttribute={this.updatePhaseAttribute}
                 showAttributes={this.state.showAttributes}
@@ -334,7 +349,7 @@ export class Phase extends React.Component {
            remove once firefox issue is fixed
            */}
           <div className='update'>{ update }</div>
-        </span>
+        </div>
       </div>
     );
   }
