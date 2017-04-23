@@ -7,7 +7,7 @@ export const EDIT_RECORD = 'editRecordAction';
 export const EDIT_RECORD_ATTRIBUTE = 'editRecordAttributeAction';
 export const REMOVE_RECORD = 'removeRecordAction';
 
-export function addRecord (actionIndex, recordName, recordType, attributes) {
+export function addRecord (actionIndex, typeSpecifier, recordType, attributes) {
   const recordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
   const newAttributes = {};
   for (const key in attributes) {
@@ -22,12 +22,14 @@ export function addRecord (actionIndex, recordName, recordType, attributes) {
     id: recordId,
     action: actionIndex,
     attributes: newAttributes,
-    name: recordName,
     is_open: false
   });
 
   if (recordType) {
     newRecord.attributes.RecordType = recordType;
+  }
+  if (typeSpecifier) {
+    newRecord.attributes.TypeSpecifier = typeSpecifier;
   }
 
   return createAction(ADD_RECORD)({ actionIndex, recordId, newRecord });
@@ -85,9 +87,6 @@ export const editRecordAction = (state, { payload }) => {
   return update(state, {
     records: {
       [payload.recordId]: {
-        name: {
-          $set: payload.editedRecord.name
-        },
         attributes: {
           $set: payload.editedRecord.attributes
         }
@@ -97,12 +96,14 @@ export const editRecordAction = (state, { payload }) => {
 };
 
 export const editRecordAttributeAction = (state, { payload }) => {
-  if (payload.name) {
+  if (payload.typeSpecifier) {
     return update(state, {
       records: {
         [payload.recordId]: {
-          name: {
-            $set: payload.name
+          attributes: {
+            TypeSpecifier: {
+              $set: payload.typeSpecifier
+            }
           }
         }
       }
