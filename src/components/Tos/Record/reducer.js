@@ -35,7 +35,7 @@ export function addRecord (actionIndex, typeSpecifier, recordType, attributes) {
   return createAction(ADD_RECORD)({ actionIndex, recordId, newRecord });
 }
 
-export function editRecord (recordId, recordName, recordType, attributes) {
+export function editRecord (recordId, attributes) {
   let editedAttributes = {};
 
   for (const key in attributes) {
@@ -47,13 +47,8 @@ export function editRecord (recordId, recordName, recordType, attributes) {
   }
 
   const editedRecord = Object.assign({}, {
-    attributes: editedAttributes,
-    name: recordName
+    attributes: editedAttributes
   });
-
-  if (recordType) {
-    editedRecord.attributes.RecordType = recordType;
-  }
 
   return createAction(EDIT_RECORD)({ editedRecord, recordId });
 }
