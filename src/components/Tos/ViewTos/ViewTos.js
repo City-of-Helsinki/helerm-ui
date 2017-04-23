@@ -411,7 +411,9 @@ export class ViewTOS extends React.Component {
               phasesOrder={phasesOrder}
               setPhaseVisibility={this.setPhaseVisibility}
               actions={this.props.selectedTOS.actions}
+              actionTypes={this.props.actionTypes}
               phases={this.props.selectedTOS.phases}
+              phaseTypes={this.props.phaseTypes}
               records={this.props.selectedTOS.records}
               recordTypes={this.props.recordTypes}
               documentState={this.props.selectedTOS.documentState}
@@ -607,6 +609,7 @@ export class ViewTOS extends React.Component {
 }
 
 ViewTOS.propTypes = {
+  actionTypes: React.PropTypes.object.isRequired,
   addAction: React.PropTypes.func.isRequired,
   addPhase: React.PropTypes.func.isRequired,
   addRecord: React.PropTypes.func.isRequired,
@@ -625,6 +628,7 @@ ViewTOS.propTypes = {
   importItems: React.PropTypes.func.isRequired,
   isFetching: React.PropTypes.bool.isRequired,
   params: React.PropTypes.object.isRequired,
+  phaseTypes: React.PropTypes.object.isRequired,
   push: React.PropTypes.func.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
   removeAction: React.PropTypes.func.isRequired,

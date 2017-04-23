@@ -97,6 +97,7 @@ export class Phase extends React.Component {
             records={this.props.records}
             phases={this.props.phases}
             phasesOrder={this.props.phasesOrder}
+            actionTypes={this.props.actionTypes}
             recordTypes={this.props.recordTypes}
             attributeTypes={this.props.attributeTypes}
             documentState={this.props.documentState}
@@ -323,6 +324,7 @@ export class Phase extends React.Component {
 }
 
 Phase.propTypes = {
+  actionTypes: React.PropTypes.object.isRequired,
   actions: React.PropTypes.object.isRequired,
   addAction: React.PropTypes.func.isRequired,
   addRecord: React.PropTypes.func.isRequired,
@@ -337,6 +339,7 @@ Phase.propTypes = {
   importItems: React.PropTypes.func.isRequired,
   phase: React.PropTypes.object.isRequired,
   phaseIndex: React.PropTypes.string.isRequired,
+  phaseTypes: React.PropTypes.object.isRequired,
   phases: React.PropTypes.object.isRequired || React.PropTypes.array.isRequired,
   phasesOrder: React.PropTypes.array.isRequired,
   recordTypes: React.PropTypes.object.isRequired,

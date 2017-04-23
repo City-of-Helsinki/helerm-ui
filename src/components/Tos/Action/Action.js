@@ -362,6 +362,7 @@ export class Action extends React.Component {
 
 Action.propTypes = {
   action: React.PropTypes.object.isRequired,
+  actionTypes: React.PropTypes.object.isRequired,
   actions: React.PropTypes.object.isRequired,
   addRecord: React.PropTypes.func.isRequired,
   attributeTypes: React.PropTypes.object.isRequired,

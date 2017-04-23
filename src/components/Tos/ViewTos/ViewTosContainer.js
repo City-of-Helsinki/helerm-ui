@@ -76,9 +76,11 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
   return {
+    actionTypes: state.ui.actionTypes,
     attributeTypes: state.ui.attributeTypes,
     isFetching: state.ui.isFetching || state.selectedTOS.isFetching,
     items: state.navigation.items,
+    phaseTypes: state.ui.phaseTypes,
     recordTypes: state.ui.recordTypes,
     selectedTOS: state.selectedTOS,
     templates: state.ui.templates
