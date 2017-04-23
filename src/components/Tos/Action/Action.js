@@ -125,11 +125,10 @@ export class Action extends React.Component {
     this.setState({ creating: false });
   }
 
-  editRecordForm (recordId, recordName, recordAttributes) {
+  editRecordForm (recordId, recordAttributes) {
     this.setState({
       record: {
         id: recordId,
-        name: recordName,
         attributes: recordAttributes
       }
     }, () => {
@@ -144,11 +143,10 @@ export class Action extends React.Component {
     });
   }
 
-  complementRecordForm (recordId, recordName, recordAttributes) {
+  complementRecordForm (recordId, recordAttributes) {
     this.setState({
       record: {
         id: recordId,
-        name: recordName,
         attributes: recordAttributes
       }
     }, () => {
@@ -163,12 +161,12 @@ export class Action extends React.Component {
     });
   }
 
-  editRecordWithForm (actionId, name, type, attributes) {
+  editRecordWithForm (actionId, attributes) {
     this.setState({
       editing: false,
       recordId: undefined
     });
-    this.props.editRecord(actionId, name, type, attributes);
+    this.props.editRecord(actionId, attributes);
   }
 
   delete () {
@@ -180,9 +178,9 @@ export class Action extends React.Component {
     this.setState({ deleting: false });
   }
 
-  createRecord (actionId, name, type, attributes) {
+  createRecord (actionId, typeSpecifier, type, attributes) {
     this.setState({ creating: false });
-    this.props.addRecord(actionId, name, type, attributes);
+    this.props.addRecord(actionId, typeSpecifier, type, attributes);
   }
 
   toggleReorderView () {
@@ -239,8 +237,8 @@ export class Action extends React.Component {
             targetId={this.props.action.id}
             attributes={{}}
             attributeTypes={this.props.attributeTypes}
-            recordConfig={{
-              recordTypes: this.props.recordTypes,
+            elementConfig={{
+              elementTypes: this.props.recordTypes,
               createRecord: this.createRecord
             }}
             editorConfig={{
@@ -256,11 +254,11 @@ export class Action extends React.Component {
             targetId={this.state.record.id}
             attributes={this.state.record.attributes}
             attributeTypes={this.props.attributeTypes}
-            recordConfig={{
-              recordTypes: this.props.recordTypes,
-              recordId: this.state.record.id,
-              recordName: this.state.record.name,
-              editRecordWithForm: this.editRecordWithForm
+            elementConfig={{
+              elementTypes: this.props.recordTypes,
+              elementId: this.state.record.id,
+              typeSpecifier: this.state.record.attributes.TypeSpecifier,
+              editWithForm: this.editRecordWithForm
             }}
             editorConfig={{
               type: 'record',
@@ -275,11 +273,11 @@ export class Action extends React.Component {
             targetId={this.state.record.id}
             attributes={this.state.record.attributes}
             attributeTypes={this.props.attributeTypes}
-            recordConfig={{
-              recordTypes: this.props.recordTypes,
-              recordId: this.state.record.id,
-              recordName: this.state.record.name,
-              editRecordWithForm: this.editRecordWithForm
+            elementConfig={{
+              elementTypes: this.props.recordTypes,
+              elementId: this.state.record.id,
+              typeSpecifier: this.state.record.attributes.TypeSpecifier,
+              editWithForm: this.editRecordWithForm
             }}
             editorConfig={{
               type: 'record',

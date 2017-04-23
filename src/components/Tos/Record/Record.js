@@ -18,7 +18,7 @@ export class Record extends React.Component {
       showAttributes: false,
       mode: 'view',
       deleting: false,
-      name: this.props.record.name,
+      typeSpecifier: this.props.record.attributes.TypeSpecifier,
       type: this.props.record.attributes.RecordType,
       attributes: this.props.record.attributes
     };
@@ -36,10 +36,10 @@ export class Record extends React.Component {
 
   updateTypeSpecifier (typeSpecifier, recordId) {
     this.setState({
-      name: typeSpecifier
+      typeSpecifier: typeSpecifier
     });
     const updatedTypeSpecifier = {
-      name: typeSpecifier,
+      typeSpecifier: typeSpecifier,
       recordId: recordId
     };
     this.props.editRecordAttribute(updatedTypeSpecifier);
@@ -85,7 +85,7 @@ export class Record extends React.Component {
                 style: 'btn-primary',
                 action: () => this.props.editRecordForm(
                   this.props.record.id,
-                  this.state.name,
+                  this.state.typeSpecifier,
                   this.state.attributes
                 )
               },
@@ -95,7 +95,7 @@ export class Record extends React.Component {
                 style: 'btn-primary',
                 action: () => this.props.complementRecordForm(
                   this.props.record.id,
-                  this.state.name,
+                  this.state.typeSpecifier,
                   this.state.attributes
                 )
               },
@@ -144,7 +144,7 @@ export class Record extends React.Component {
           content={
             <DeleteView
               type='record'
-              target={record.name}
+              target={record.attributes.TypeSpecifier}
               action={() => this.delete()}
               cancel={() => this.cancelDeletion()}
             />
