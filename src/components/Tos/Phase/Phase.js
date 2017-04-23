@@ -78,6 +78,38 @@ export class Phase extends React.Component {
     this.setState({ showImportView: !current });
   }
 
+  createNewAction () {
+    this.setState({ mode: 'add' });
+  }
+
+  addAction (event) {
+    event.preventDefault();
+    this.props.setPhaseVisibility(this.props.phaseIndex, true);
+    this.props.addAction(this.props.phaseIndex, this.state.newActionName);
+    this.setState({ mode: 'view', newActionName: '' });
+    this.props.displayMessage({
+      title: 'Toimenpide',
+      body: 'Toimenpiteen lisäys onnistui!'
+    });
+  }
+
+  cancelActionCreation (event) {
+    event.preventDefault();
+    this.setState({ newActionName: '', mode: 'view' });
+  }
+
+  cancelDeletion () {
+    this.setState({ deleting: false });
+  }
+
+  delete () {
+    this.setState({ deleting: false });
+    forEach(this.props.phase.actions, (action) => {
+      this.props.removeAction(action, this.props.phase.id);
+    });
+    this.props.removePhase(this.props.phase.id);
+  }
+
   generateActions (actions) {
     const elements = [];
     for (const key in actions) {
@@ -137,38 +169,6 @@ export class Phase extends React.Component {
         action: () => this.setState({ deleting: true })
       }
     ];
-  }
-
-  createNewAction () {
-    this.setState({ mode: 'add' });
-  }
-
-  addAction (event) {
-    event.preventDefault();
-    this.props.setPhaseVisibility(this.props.phaseIndex, true);
-    this.props.addAction(this.props.phaseIndex, this.state.newActionName);
-    this.setState({ mode: 'view', newActionName: '' });
-    this.props.displayMessage({
-      title: 'Toimenpide',
-      body: 'Toimenpiteen lisäys onnistui!'
-    });
-  }
-
-  cancelActionCreation (event) {
-    event.preventDefault();
-    this.setState({ newActionName: '', mode: 'view' });
-  }
-
-  cancelDeletion () {
-    this.setState({ deleting: false });
-  }
-
-  delete () {
-    this.setState({ deleting: false });
-    forEach(this.props.phase.actions, (action) => {
-      this.props.removeAction(action, this.props.phase.id);
-    });
-    this.props.removePhase(this.props.phase.id);
   }
 
   renderPhaseButtons () {
