@@ -6,6 +6,8 @@ import { default as api } from '../utils/api';
 
 const initialState = {
   isFetching: false,
+  phaseTypes: {},
+  actionTypes: {},
   recordTypes: {},
   attributeTypes: {},
   templates: []
