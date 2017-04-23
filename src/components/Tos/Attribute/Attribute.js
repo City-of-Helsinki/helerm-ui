@@ -193,7 +193,7 @@ Attribute.propTypes = {
   attribute: React.PropTypes.string,
   attributeIndex: React.PropTypes.string,
   attributeKey: React.PropTypes.string.isRequired,
-  attributeTypes: React.PropTypes.object.isRequired,
+  attributeTypes: React.PropTypes.object,
   documentState: React.PropTypes.string.isRequired,
   editable: React.PropTypes.bool.isRequired,
   elementId: React.PropTypes.string,
