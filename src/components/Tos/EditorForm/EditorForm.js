@@ -16,11 +16,11 @@ export class EditorForm extends React.Component {
     this.closeEditorForm = this.closeEditorForm.bind(this);
     this.state = {
       newAttributes: this.initializeAttributes(this.props.attributeTypes),
-      recordName: {
-        value: this.props.recordConfig ? this.props.recordConfig.recordName : '',
+      typeSpecifier: {
+        value: this.props.elementConfig ? this.props.elementConfig.typeSpecifier : '',
         checked: true
       },
-      recordType: {
+      elementType: {
         value: this.props.attributes.RecordType || '',
         checked: true
       }
@@ -42,13 +42,6 @@ export class EditorForm extends React.Component {
     }
     return initialState;
   }
-
-  // findRecordTypeFromList (recordType) {
-  //   const correctType = find(this.props.recordTypes, (type) => (
-  //     type.name === recordType
-  //   ));
-  //   return correctType;
-  // }
 
   onChange (value, key, field) {
     this.setState(update(this.state, {
@@ -220,9 +213,9 @@ export class EditorForm extends React.Component {
     return attributeElements;
   }
 
-  generateDropdown (recordTypes) {
-    const optionsRaw = Object.keys(recordTypes).map(record => {
-      return { value: recordTypes[record].name, label: recordTypes[record].name };
+  generateDropdown (elementTypes) {
+    const optionsRaw = Object.keys(elementTypes).map(type => {
+      return { value: elementTypes[type].name, label: elementTypes[type].name };
     });
     const options = this.generateOptions(optionsRaw);
 
@@ -233,10 +226,10 @@ export class EditorForm extends React.Component {
         autofocus={false}
         className='form-control col-xs-6'
         clearable={true}
-        onChange={(option) => this.onBaseAttributeChange(option ? option.value : null, 'recordType', 'value')}
+        onChange={(option) => this.onBaseAttributeChange(option ? option.value : null, 'elementType', 'value')}
         openOnFocus={true}
         options={options}
-        value={this.state.recordType.value}
+        value={this.state.elementType.value}
       />
     );
   }
@@ -263,12 +256,12 @@ export class EditorForm extends React.Component {
 
   addRecord (e, targetId) {
     e.preventDefault();
-    const { recordName, recordType, newAttributes } = this.state;
+    const { typeSpecifier, elementType, newAttributes } = this.state;
 
-    this.props.recordConfig.createRecord(
+    this.props.elementConfig.createRecord(
       targetId,
-      recordName.value,
-      recordType.value,
+      typeSpecifier.value,
+      elementType.value,
       this.filterAttributes(newAttributes)
     );
     this.props.displayMessage({
@@ -277,19 +270,15 @@ export class EditorForm extends React.Component {
     });
   }
 
-  editRecord (e, targetId) {
+  editElement (e, targetId) {
     e.preventDefault();
-    const { recordName, recordType, newAttributes } = this.state;
-    this.props.recordConfig.editRecordWithForm(
+    const { typeSpecifier, elementType, newAttributes } = this.state;
+    this.props.elementConfig.editWithForm(
       targetId,
-      recordName.value,
-      recordType.value,
+      typeSpecifier.value,
+      elementType.value,
       this.filterAttributes(newAttributes)
     );
-    this.props.displayMessage({
-      title: 'Asiakirja',
-      body: 'Asiakirjan muokkaus onnistui!'
-    });
   }
 
   resolveLabel () {
@@ -318,12 +307,20 @@ export class EditorForm extends React.Component {
         break;
       case 'phase':
         if (action === 'edit' || action === 'complement') {
-          // this.editPhase(e, targetId);
+          this.editElement(e, targetId);
+          this.props.displayMessage({
+            title: 'Käsittelyvaihe',
+            body: 'Käsittelyvaiheen muokkaus onnistui!'
+          });
         }
         break;
       case 'action':
         if (action === 'edit' || action === 'complement') {
-          // this.editAction(e, targetId);
+          this.editElement(e, targetId);
+          this.props.displayMessage({
+            title: 'Toimenpide',
+            body: 'Toimenpiteen muokkaus onnistui!'
+          });
         }
         break;
       case 'record':
@@ -331,7 +328,11 @@ export class EditorForm extends React.Component {
           this.addRecord(e, targetId);
         }
         if (action === 'edit' || action === 'complement') {
-          this.editRecord(e, targetId);
+          this.editElement(e, targetId);
+          this.props.displayMessage({
+            title: 'Asiakirja',
+            body: 'Asiakirjan muokkaus onnistui!'
+          });
         }
     }
   }
@@ -342,7 +343,7 @@ export class EditorForm extends React.Component {
   }
 
   renderDescriptions () {
-    const typeDropdown = this.generateDropdown(this.props.recordConfig.recordTypes);
+    const typeDropdown = this.generateDropdown(this.props.elementConfig.elementTypes);
 
     return (
       <div>
@@ -352,8 +353,8 @@ export class EditorForm extends React.Component {
           <input
             className='col-xs-6 form-control edit-attribute__input'
             placeholder='Tarkenne'
-            value={this.state.recordName.value}
-            onChange={(e) => this.onBaseAttributeChange(e.target.value, 'recordName', 'value')}/>
+            value={this.state.typeSpecifier.value}
+            onChange={(e) => this.onBaseAttributeChange(e.target.value, 'typeSpecifier', 'value')}/>
         </div>
         <div className='col-xs-12 col-lg-6 form-group'>
           <label className='edit-record__label'>Tyyppi</label>
@@ -399,12 +400,12 @@ EditorForm.propTypes = {
     type: React.PropTypes.string.isRequired,
     action: React.PropTypes.string.isRequired
   }),
-  recordConfig: React.PropTypes.shape({
-    editRecordWithForm: React.PropTypes.func,
-    recordTypes: React.PropTypes.object.isRequired,
-    createRecord: React.PropTypes.func,
-    recordId: React.PropTypes.string,
-    recordName: React.PropTypes.string
+  elementConfig: React.PropTypes.shape({
+    editWithForm: React.PropTypes.func,
+    elementTypes: React.PropTypes.object.isRequired,
+    createRecord: React.PropTypes.func, // only records created with editorform
+    elementId: React.PropTypes.string,
+    typeSpecifier: React.PropTypes.string
   }),
   targetId: React.PropTypes.string
 };
