@@ -4,6 +4,7 @@ import { StickyContainer, Sticky } from 'react-sticky';
 import './Phase.scss';
 
 import Action from '../Action/Action';
+import Attributes from '../Attribute/Attributes';
 import CreateActionForm from '../Action/CreateActionForm';
 import DeleteView from '../DeleteView/DeleteView';
 import Popup from 'components/Popup';
@@ -19,6 +20,8 @@ export class Phase extends React.Component {
     this.createNewAction = this.createNewAction.bind(this);
     this.addAction = this.addAction.bind(this);
     this.editPhaseTitle = this.editPhaseTitle.bind(this);
+    this.renderPhaseButtons = this.renderPhaseButtons.bind(this);
+    this.renderBasicAttributes = this.renderBasicAttributes.bind(this);
     this.savePhase = this.savePhase.bind(this);
     this.toggleImportView = this.toggleImportView.bind(this);
     this.cancelActionCreation = this.cancelActionCreation.bind(this);
@@ -28,7 +31,8 @@ export class Phase extends React.Component {
       mode: 'view',
       deleting: false,
       showReorderView: false,
-      showImportView: false
+      showImportView: false,
+      showAttributes: false
     };
   }
 
@@ -166,11 +170,35 @@ export class Phase extends React.Component {
     this.props.removePhase(this.props.phase.id);
   }
 
-  render () {
-    const { phase, phaseIndex, update } = this.props;
-    const actionElements = this.generateActions(phase.actions);
+  renderPhaseButtons () {
     const phaseDropdownItems = this.generateDropdownItems();
+
+    return (
+      <span className='phase-buttons'>
+        { this.props.phase.actions.length !== 0 &&
+          <button
+            type='button'
+            className='btn btn-info btn-sm pull-right'
+            title={this.props.phase.is_open ? 'Pienennä' : 'Laajenna'}
+            onClick={() => this.props.setPhaseVisibility(this.props.phaseIndex, !this.props.phase.is_open)}>
+            <span
+              className={'fa ' + (this.props.phase.is_open ? 'fa-minus' : 'fa-plus')}
+              aria-hidden='true'
+            />
+          </button>
+        }
+        { this.props.documentState === 'edit' &&
+        <span className='pull-right'>
+          <Dropdown children={phaseDropdownItems} small={true}/>
+        </span>
+      }
+      </span>
+    );
+  }
+
+  renderBasicAttributes () {
     let phaseTitle;
+
     if (this.state.mode !== 'edit') {
       phaseTitle =
         (<span onClick={this.editPhaseTitle}>
@@ -193,31 +221,33 @@ export class Phase extends React.Component {
         </div>
       );
     }
+
+    return phaseTitle;
+  }
+
+  render () {
+    const { phase, phaseIndex, update } = this.props;
+    const actionElements = this.generateActions(phase.actions);
+
     return (
       <div>
         <span className='col-xs-12 box phase'>
           <StickyContainer>
             <Sticky className={'phase-title ' + (this.props.phase.is_open ? 'open' : 'closed')}>
-              { phaseTitle }
-              <span className='phase-buttons'>
-                { phase.actions.length !== 0 &&
-                <button
-                  type='button'
-                  className='btn btn-info btn-sm pull-right'
-                  title={phase.is_open ? 'Pienennä' : 'Laajenna'}
-                  onClick={() => this.props.setPhaseVisibility(phaseIndex, !phase.is_open)}>
-                  <span
-                    className={'fa ' + (phase.is_open ? 'fa-minus' : 'fa-plus')}
-                    aria-hidden='true'
-                  />
-                </button>
-                }
-                { this.props.documentState === 'edit' &&
-                <span className='pull-right'>
-                  <Dropdown children={phaseDropdownItems} small={true}/>
-                </span>
-                }
-              </span>
+              <Attributes
+                element={phase}
+                documentState={this.props.documentState}
+                mode={this.state.mode}
+                type={'phase'}
+                attributeTypes={this.props.attributeTypes}
+                typeOptions={this.props.phaseTypes}
+                renderBasicAttributes={this.renderBasicAttributes}
+                renderButtons={this.renderPhaseButtons}
+                updateTypeSpecifier={this.updatePhaseName}
+                updateType={this.updatePhaseType}
+                updateAttribute={this.updatePhaseAttribute}
+                showAttributes={this.state.showAttributes}
+              />
             </Sticky>
             { this.state.mode === 'add' &&
             <CreateActionForm
