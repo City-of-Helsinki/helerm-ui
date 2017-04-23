@@ -22,9 +22,11 @@ export class Phase extends React.Component {
     this.activateEditMode = this.activateEditMode.bind(this);
     this.updateTypeSpecifier = this.updateTypeSpecifier.bind(this);
     this.updatePhaseType = this.updatePhaseType.bind(this);
+    // this.updatePhaseAttribute = this.updatePhaseAttribute.bind(this);
     this.renderPhaseButtons = this.renderPhaseButtons.bind(this);
     this.renderBasicAttributes = this.renderBasicAttributes.bind(this);
     this.toggleImportView = this.toggleImportView.bind(this);
+    // this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
     this.cancelActionCreation = this.cancelActionCreation.bind(this);
     this.state = {
       typeSpecifier: this.props.phase.attributes.TypeSpecifier,
@@ -45,6 +47,11 @@ export class Phase extends React.Component {
     }
   }
 
+  // toggleAttributeVisibility () {
+  //   const currentVisibility = this.state.showAttributes;
+  //   const newVisibility = !currentVisibility;
+  //   this.setState({ showAttributes: newVisibility });
+  // }
 
   onChange (event) {
     this.setState({ typeSpecifier: event.target.value });
@@ -122,6 +129,16 @@ export class Phase extends React.Component {
     };
     this.props.editPhaseAttribute(updatedPhaseType);
   }
+
+  // updatePhaseAttribute (attribute, attributeIndex, phaseId) {
+  //   this.setState({
+  //     attributes: {
+  //       [attributeIndex]: attribute
+  //     }
+  //   });
+  //   const updatedPhaseAttribute = { attribute, attributeIndex, phaseId };
+  //   this.props.editPhaseAttribute(updatedPhaseAttribute);
+  // }
 
   generateActions (actions) {
     const elements = [];
