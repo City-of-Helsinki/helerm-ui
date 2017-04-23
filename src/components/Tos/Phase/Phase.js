@@ -148,6 +148,16 @@ export class Phase extends React.Component {
   generateDropdownItems (phase) {
     return [
       {
+        text: 'Muokkaa käsittelyvaihetta',
+        icon: 'fa-pencil',
+        style: 'btn-primary',
+        action: () => null
+      }, {
+        text: 'Täydennä metatietoja',
+        icon: 'fa-plus-square',
+        style: 'btn-primary',
+        action: () => null
+      }, {
         text: 'Uusi toimenpide',
         icon: 'fa-file-text',
         style: 'btn-primary',
