@@ -20,6 +20,7 @@ export class Phase extends React.Component {
     this.createNewAction = this.createNewAction.bind(this);
     this.addAction = this.addAction.bind(this);
     this.editPhaseTitle = this.editPhaseTitle.bind(this);
+    this.activateEditMode = this.activateEditMode.bind(this);
     this.renderPhaseButtons = this.renderPhaseButtons.bind(this);
     this.renderBasicAttributes = this.renderBasicAttributes.bind(this);
     this.savePhase = this.savePhase.bind(this);
