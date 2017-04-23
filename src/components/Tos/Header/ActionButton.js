@@ -1,13 +1,13 @@
 import React, { PropTypes } from 'react';
-import classname from 'classnames';
+import classnames from 'classnames';
 
 const ActionButton = ({ type, action, label, style, ...rest }) => (
   <button
     disabled={rest.disabled}
     style={style}
-    className={classname('btn', `btn-${type}`, `${rest.className}`)}
+    className={classnames('btn', `btn-${type}`, `${rest.className}`)}
     onClick={action}>
-    {rest.icon && <i className={classname('fa', `${rest.icon}`)}/>} {label}
+    {rest.icon && <i className={classnames('fa', `${rest.icon}`)}/>} {label}
   </button>
 );
 

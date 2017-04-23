@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Select from 'react-select';
-import className from 'classnames';
+import classnames from 'classnames';
 import SearchInput from './searchInput';
 import NestedObjects from 'nested-objects';
 import _get from 'lodash/get';
@@ -352,12 +352,12 @@ export default class InfinityMenu extends Component {
     const bodyContent = this.renderBody(displayTree);
 
     return (
-      <div className={className('navigation-menu', { 'navigation-open': this.props.isOpen })}>
+      <div className={classnames('navigation-menu', { 'navigation-open': this.props.isOpen })}>
         {!!this.props.path.length &&
         <div className='navigation-header clearfix'>
           <ol className='breadcrumb' onClick={this.props.toggleNavigationVisibility}>
             {this.props.path.map((item, index) => (
-              <li className={className({ 'active': index === this.props.path.length })}
+              <li className={classnames({ 'active': index === this.props.path.length })}
                   key={index}>{item}</li>
             ))}
           </ol>

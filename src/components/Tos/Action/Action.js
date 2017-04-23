@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from 'classnames';
+import classnames from 'classnames';
 import './Action.scss';
 import Record from '../Record/Record';
 import EditorForm from '../EditorForm/EditorForm';
@@ -298,7 +298,7 @@ export class Action extends React.Component {
             Tyyppi
             </span>
             <div
-              className={classNames('col-xs-12 records', { 'records-editing': this.props.documentState === 'edit' })}>
+              className={classnames('col-xs-12 records', { 'records-editing': this.props.documentState === 'edit' })}>
               { recordElements }
             </div>
           </div>
