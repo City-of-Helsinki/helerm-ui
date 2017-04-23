@@ -76,7 +76,7 @@ export class Record extends React.Component {
     if (this.state.mode === 'view') {
       return (
         <div className='record-button-group'>
-          { this.state.documentState === 'edit' &&
+          { this.props.documentState === 'edit' &&
           <Dropdown
             children={[
               {
