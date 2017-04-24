@@ -249,8 +249,8 @@ export class Phase extends React.Component {
     }
     if (this.state.mode === 'edit') {
       typeSpecifier = (
-        <div className='phase-title-input row'>
-          <form className='col-md-10 col-xs-12' onSubmit={this.updateTypeSpecifier}>
+        <div className='col-md-6 phase-title-input row'>
+          <form onSubmit={this.updateTypeSpecifier}>
             <input
               className='input-title form-control'
               value={this.state.typeSpecifier}
