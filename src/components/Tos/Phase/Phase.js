@@ -1,6 +1,8 @@
 import React from 'react';
 import forEach from 'lodash/forEach';
+import Select from 'react-select';
 import { StickyContainer, Sticky } from 'react-sticky';
+import update from 'immutability-helper';
 import './Phase.scss';
 
 import Action from '../Action/Action';
@@ -15,11 +17,15 @@ import ImportView from '../ImportView/ImportView';
 export class Phase extends React.Component {
   constructor (props) {
     super(props);
-    this.onChange = this.onChange.bind(this);
     this.onNewChange = this.onNewChange.bind(this);
+    this.onTypeChange = this.onTypeChange.bind(this);
+    this.onTypeSpecifierChange = this.onTypeSpecifierChange.bind(this);
+    this.generateTypeDropdown = this.generateTypeDropdown.bind(this);
     this.createNewAction = this.createNewAction.bind(this);
     this.addAction = this.addAction.bind(this);
-    this.activateEditMode = this.activateEditMode.bind(this);
+    this.editTypeSpecifier = this.editTypeSpecifier.bind(this);
+    this.editType = this.editType.bind(this);
+    this.disableEditMode = this.disableEditMode.bind(this);
     this.updateTypeSpecifier = this.updateTypeSpecifier.bind(this);
     this.updatePhaseType = this.updatePhaseType.bind(this);
     // this.updatePhaseAttribute = this.updatePhaseAttribute.bind(this);
@@ -30,10 +36,12 @@ export class Phase extends React.Component {
     this.cancelActionCreation = this.cancelActionCreation.bind(this);
     this.state = {
       typeSpecifier: this.props.phase.attributes.TypeSpecifier,
-      type: this.props.phase.attributes.PhaseType,
+      type: this.props.phase.attributes.PhaseType || '---',
       attributes: this.props.phase.attributes,
       newActionName: '',
       mode: 'view',
+      editingTypeSpecifier: false,
+      editingType: false,
       deleting: false,
       showReorderView: false,
       showImportView: false,
@@ -45,6 +53,9 @@ export class Phase extends React.Component {
     if (nextProps.phase.attributes.TypeSpecifier) {
       this.setState({ typeSpecifier: nextProps.phase.attributes.TypeSpecifier });
     }
+    if (nextProps.phase.attributes.PhaseType) {
+      this.setState({ type: nextProps.phase.attributes.PhaseType });
+    }
   }
 
   // toggleAttributeVisibility () {
@@ -52,14 +63,6 @@ export class Phase extends React.Component {
   //   const newVisibility = !currentVisibility;
   //   this.setState({ showAttributes: newVisibility });
   // }
-
-  onChange (event) {
-    this.setState({ typeSpecifier: event.target.value });
-  }
-
-  onNewChange (event) {
-    this.setState({ newActionName: event.target.value });
-  }
 
   toggleReorderView () {
     const current = this.state.showReorderView;
@@ -71,6 +74,26 @@ export class Phase extends React.Component {
     this.setState({ showImportView: !current });
   }
 
+  editTypeSpecifier () {
+    if (this.props.documentState === 'edit') {
+      this.setState({ editingTypeSpecifier: true, mode: 'edit' });
+    }
+  }
+
+  editType () {
+    if (this.props.documentState === 'edit') {
+      this.setState({ editingType: true, mode: 'edit' });
+    }
+  }
+
+  disableEditMode () {
+    this.setState({
+      editingTypeSpecifier: false,
+      editingType: false,
+      mode: 'view'
+    });
+  }
+
   createNewAction () {
     this.setState({ mode: 'add' });
   }
@@ -79,7 +102,8 @@ export class Phase extends React.Component {
     event.preventDefault();
     this.props.setPhaseVisibility(this.props.phaseIndex, true);
     this.props.addAction(this.props.phaseIndex, this.state.newActionName);
-    this.setState({ mode: 'view', newActionName: '' });
+    this.setState({ newActionName: '' });
+    this.disableEditMode();
     this.props.displayMessage({
       title: 'Toimenpide',
       body: 'Toimenpiteen lisäys onnistui!'
@@ -88,7 +112,8 @@ export class Phase extends React.Component {
 
   cancelActionCreation (event) {
     event.preventDefault();
-    this.setState({ newActionName: '', mode: 'view' });
+    this.setState({ newActionName: '' });
+    this.disableEditMode();
   }
 
   cancelDeletion () {
@@ -103,10 +128,20 @@ export class Phase extends React.Component {
     this.props.removePhase(this.props.phase.id);
   }
 
-  activateEditMode () {
-    if (this.props.documentState === 'edit') {
-      this.setState({ mode: 'edit' });
-    }
+  onNewChange (event) {
+    this.setState({ newActionName: event.target.value });
+  }
+
+  onTypeSpecifierChange (event) {
+    this.setState({ typeSpecifier: event.target.value });
+  }
+
+  onTypeChange (value) {
+    this.setState(update(this.state, {
+      type: {
+        $set: value
+      }
+    }));
   }
 
   updateTypeSpecifier (event) {
@@ -117,7 +152,7 @@ export class Phase extends React.Component {
     };
     this.props.editPhaseAttribute(updatedTypeSpecifier);
     if (this.state.typeSpecifier.length > 0) {
-      this.setState({ mode: 'view' });
+      this.disableEditMode();
     }
   }
 
@@ -128,6 +163,7 @@ export class Phase extends React.Component {
       phaseId: this.props.phase.id
     };
     this.props.editPhaseAttribute(updatedPhaseType);
+    this.disableEditMode();
   }
 
   // updatePhaseAttribute (attribute, attributeIndex, phaseId) {
@@ -211,6 +247,36 @@ export class Phase extends React.Component {
     ];
   }
 
+  generateTypeDropdown (typeOptions) {
+    const options = [];
+    for (const key in typeOptions) {
+      if (typeOptions.hasOwnProperty(key)) {
+        options.push({
+          label: typeOptions[key].name,
+          value: typeOptions[key].name
+        });
+      }
+    }
+
+    return (
+      <div className='col-md-5'>
+        <form onSubmit={this.updatePhaseType}>
+          <Select
+            autoBlur={false}
+            openOnFocus={true}
+            className='form-control edit-phase__input'
+            clearable={false}
+            value={this.state.type}
+            onChange={(option) => this.onTypeChange(option ? option.value : null)}
+            onBlur={this.updatePhaseType}
+            autofocus={true}
+            options={options}
+          />
+        </form>
+      </div>
+    );
+  }
+
   renderPhaseButtons () {
     const phaseDropdownItems = this.generateDropdownItems();
 
@@ -238,34 +304,37 @@ export class Phase extends React.Component {
   }
 
   renderBasicAttributes () {
-    let typeSpecifier;
-
-    if (this.state.mode !== 'edit') {
-      typeSpecifier =
-        (<span className='col-md-6 basic-attribute' onClick={this.activateEditMode}>
-          <i className='fa fa-info-circle' aria-hidden='true'/> {this.state.typeSpecifier}
-        </span>
-        );
-    }
-    if (this.state.mode === 'edit') {
-      typeSpecifier = (
-        <div className='col-md-6 phase-title-input row'>
-          <form onSubmit={this.updateTypeSpecifier}>
-            <input
-              className='input-title form-control'
-              value={this.state.typeSpecifier}
-              onChange={this.onChange}
-              onBlur={this.updateTypeSpecifier}
-              autoFocus={true}
-            />
-          </form>
-        </div>
-      );
-    }
-
-    const phaseType = (
-      <span className='col-md-6 basic-attribute'>---</span>
+    let typeSpecifier =
+      (<span className='col-md-6 basic-attribute' onClick={() => this.editTypeSpecifier()}>
+        <i className='fa fa-info-circle' aria-hidden='true'/> {this.state.typeSpecifier}
+      </span>
     );
+    let phaseType =
+      (<span className='col-md-6 basic-attribute' onClick={() => this.editType()}>
+        {this.state.type}
+      </span>
+    );
+
+    if (this.state.mode === 'edit') {
+      if (this.state.editingTypeSpecifier) {
+        typeSpecifier = (
+          <div className='col-md-6 phase-title-input row'>
+            <form onSubmit={this.updateTypeSpecifier}>
+              <input
+                className='input-title form-control'
+                value={this.state.typeSpecifier}
+                onChange={this.onTypeSpecifierChange}
+                onBlur={this.updateTypeSpecifier}
+                autoFocus={true}
+              />
+            </form>
+          </div>
+        );
+      }
+      if (this.state.editingType) {
+        phaseType = this.generateTypeDropdown(this.props.phaseTypes);
+      }
+    }
 
     return (
       <div className='basic-attributes'>
