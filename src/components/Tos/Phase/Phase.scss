@@ -18,6 +18,9 @@
   }
   &-input {
     margin-right: 15px;
+    .form-control {
+      height: 34px;
+    }
   }
 }
 .phase-title.sticky {
@@ -43,7 +46,10 @@
   margin-left: 8px;
 }
 .input-title {
-  font-size: 1.1em;
+  font-size: 1em;
+}
+.input-type {
+  font-size: 1em;
 }
 // this is a hack to fix firefox specific issue of re-rendering phases
 // remove once firefox issue is fixed
@@ -66,6 +72,7 @@
 .edit-phase__input {
   &.form-control {
     padding: 0;
+    height: 34px;
   }
   margin-bottom: -10px;
   height: 31px;

@@ -281,7 +281,7 @@ export class Action extends React.Component {
           <Select
             autoBlur={false}
             openOnFocus={true}
-            className='form-control edit-action__input'
+            className='form-control edit-action-type__input'
             clearable={false}
             value={this.state.type}
             onChange={(option) => this.onTypeChange(option ? option.value : null)}
