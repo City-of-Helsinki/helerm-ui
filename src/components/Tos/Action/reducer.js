@@ -6,13 +6,13 @@ export const ADD_ACTION = 'addActionAction';
 export const EDIT_ACTION = 'editActionAction';
 export const REMOVE_ACTION = 'removeActionAction';
 
-export function addAction (phaseIndex, name) {
+export function addAction (typeSpecifier, phaseIndex) {
   const actionId = Math.random().toString(36).replace(/[^a-z]+/g, '');
   const newAction = {
     id: actionId,
-    name: name,
     phase: phaseIndex,
-    records: []
+    records: [],
+    attributes: { TypeSpecifier: typeSpecifier }
   };
   return createAction(ADD_ACTION)(newAction);
 }
