@@ -1,5 +1,5 @@
 import React, { PropTypes, createElement } from 'react';
-import classNames from 'classnames';
+import classnames from 'classnames';
 
 import './CloneView.scss';
 import NavigationContainer from '../../Navigation/NavigationContainer';
@@ -76,11 +76,11 @@ export class CloneView extends React.Component {
       <div className='row clone__view'>
         <ul className='nav nav-tabs disabled'>
           <li role='presentation'
-              className={classNames({ 'disabled': hasSelectedItem, 'active': selectedMethod === METHOD_TEMPLATE })}>
+              className={classnames({ 'disabled': hasSelectedItem, 'active': selectedMethod === METHOD_TEMPLATE })}>
             <a onClick={() => this.selectMethod(METHOD_TEMPLATE)}>Tuo kuvaus templatesta</a>
           </li>
           <li role='presentation'
-              className={classNames({ 'disabled': hasSelectedItem, 'active': selectedMethod === METHOD_FUNCTION })}>
+              className={classnames({ 'disabled': hasSelectedItem, 'active': selectedMethod === METHOD_FUNCTION })}>
             <a onClick={() => this.selectMethod(METHOD_FUNCTION)}>Tuo kuvaus toisesta kuvauksesta</a>
           </li>
         </ul>
@@ -91,7 +91,7 @@ export class CloneView extends React.Component {
             {templates.map(({ name, id }) => (
               <button key={id}
                       type='button'
-                      className={classNames('list-group-item', { 'active': selectedItem.id === id })}
+                      className={classnames('list-group-item', { 'active': selectedItem.id === id })}
                       onClick={() => this.selectItem({ id, name })}>
                 {name}
               </button>

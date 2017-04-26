@@ -5,12 +5,14 @@ import { map } from 'lodash';
 import {
   addActionAction,
   editActionAction,
+  editActionAttributeAction,
   removeActionAction
 } from './Action/reducer';
 
 import {
   addPhaseAction,
   editPhaseAction,
+  editPhaseAttributeAction,
   removePhaseAction,
   setPhaseVisibilityAction,
   setPhasesVisibilityAction
@@ -269,7 +271,9 @@ export default handleActions({
   addPhaseAction,
   addRecordAction,
   editActionAction,
+  editActionAttributeAction,
   editPhaseAction,
+  editPhaseAttributeAction,
   editRecordAction,
   editRecordAttributeAction,
   editMetaDataAction,

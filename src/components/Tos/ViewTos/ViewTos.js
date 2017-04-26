@@ -3,7 +3,7 @@ import { withRouter, routerShape } from 'react-router';
 import { StickyContainer } from 'react-sticky';
 
 import Phase from 'components/Tos/Phase/Phase';
-import CreatePhaseForm from 'components/Tos/Phase/CreatePhaseForm';
+import AddElementInput from 'components/Tos/AddElementInput/AddElementInput';
 import Attribute from 'components/Tos/Attribute/Attribute';
 import ReorderView from 'components/Tos/Reorder/ReorderView';
 import ImportView from 'components/Tos/ImportView/ImportView';
@@ -43,13 +43,13 @@ export class ViewTOS extends React.Component {
     this.routerWillLeave = this.routerWillLeave.bind(this);
     this.saveDraft = this.saveDraft.bind(this);
     this.setPhaseVisibility = this.setPhaseVisibility.bind(this);
-    this.updateTOSAttribute = this.updateTOSAttribute.bind(this);
+    this.updateFunctionAttribute = this.updateFunctionAttribute.bind(this);
     this.setValidationVisibility = this.setValidationVisibility.bind(this);
     this.review = this.review.bind(this);
 
     this.state = {
       createPhaseMode: false,
-      newPhaseName: '',
+      phaseTypeSpecifier: '',
       originalTos: {},
       isDirty: false,
       showCloneView: false,
@@ -220,9 +220,9 @@ export class ViewTOS extends React.Component {
 
   createNewPhase (event) {
     event.preventDefault();
-    if (this.state.newPhaseName.length > 0) {
-      this.props.addPhase(this.state.newPhaseName, this.props.selectedTOS.id);
-      this.setState({ createPhaseMode: false, newPhaseName: '' });
+    if (this.state.phaseTypeSpecifier.length > 0) {
+      this.props.addPhase(this.state.phaseTypeSpecifier, this.props.selectedTOS.id);
+      this.setState({ createPhaseMode: false, phaseTypeSpecifier: '' });
     }
     this.props.displayMessage({
       title: 'Käsittelyvaihe',
@@ -232,7 +232,7 @@ export class ViewTOS extends React.Component {
 
   cancelPhaseCreation (event) {
     event.preventDefault();
-    this.setState({ newPhaseName: '', createPhaseMode: false });
+    this.setState({ phaseTypeSpecifier: '', createPhaseMode: false });
   }
 
   cloneFromTemplate (selectedMethod, id) {
@@ -253,10 +253,10 @@ export class ViewTOS extends React.Component {
   }
 
   onChange (event) {
-    this.setState({ newPhaseName: event.target.value });
+    this.setState({ phaseTypeSpecifier: event.target.value });
   }
 
-  updateTOSAttribute (attribute, attributeIndex) {
+  updateFunctionAttribute (attribute, attributeIndex) {
     const updatedTOSAttribute = {
       tosAttribute: attribute,
       attributeIndex
@@ -317,7 +317,6 @@ export class ViewTOS extends React.Component {
           attribute={metadata.name}
           documentState={documentState}
           attributeTypes={attributeTypes}
-          mode='view'
           type='attribute'
           editable={false}
           editRecord={editRecord}
@@ -333,7 +332,6 @@ export class ViewTOS extends React.Component {
             attributeIndex={key}
             attributeKey={this.props.attributeTypes[key].name}
             attribute={attributes[key]}
-            mode='view'
             type='attribute'
             attributeTypes={attributeTypes}
             documentState={documentState}
@@ -341,7 +339,7 @@ export class ViewTOS extends React.Component {
             editRecord={this.props.editRecord}
             showAttributes={this.state.showMetadata}
             tosAttribute={true}
-            updateTOSAttribute={this.updateTOSAttribute}
+            updateFunctionAttribute={this.updateFunctionAttribute}
           />
         );
       }
@@ -411,7 +409,9 @@ export class ViewTOS extends React.Component {
               phasesOrder={phasesOrder}
               setPhaseVisibility={this.setPhaseVisibility}
               actions={this.props.selectedTOS.actions}
+              actionTypes={this.props.actionTypes}
               phases={this.props.selectedTOS.phases}
+              phaseTypes={this.props.phaseTypes}
               records={this.props.selectedTOS.records}
               recordTypes={this.props.recordTypes}
               documentState={this.props.selectedTOS.documentState}
@@ -419,7 +419,9 @@ export class ViewTOS extends React.Component {
               addAction={this.props.addAction}
               addRecord={this.props.addRecord}
               editAction={this.props.editAction}
+              editActionAttribute={this.props.editActionAttribute}
               editPhase={this.props.editPhase}
+              editPhaseAttribute={this.props.editPhaseAttribute}
               editRecord={this.props.editRecord}
               editRecordAttribute={this.props.editRecordAttribute}
               removeAction={this.props.removeAction}
@@ -538,8 +540,9 @@ export class ViewTOS extends React.Component {
                 </div>
                 <div className='col-xs-12'>
                   { this.state.createPhaseMode &&
-                  <CreatePhaseForm
-                    newPhaseName={this.state.newPhaseName}
+                  <AddElementInput
+                    type='phase'
+                    newTypeSpecifier={this.state.phaseTypeSpecifier}
                     onChange={this.onChange}
                     submit={this.createNewPhase}
                     cancel={this.cancelPhaseCreation}
@@ -607,6 +610,7 @@ export class ViewTOS extends React.Component {
 }
 
 ViewTOS.propTypes = {
+  actionTypes: React.PropTypes.object.isRequired,
   addAction: React.PropTypes.func.isRequired,
   addPhase: React.PropTypes.func.isRequired,
   addRecord: React.PropTypes.func.isRequired,
@@ -617,14 +621,17 @@ ViewTOS.propTypes = {
   cloneFromTemplate: React.PropTypes.func.isRequired,
   displayMessage: React.PropTypes.func.isRequired,
   editAction: React.PropTypes.func.isRequired,
+  editActionAttribute: React.PropTypes.func.isRequired,
   editMetaData: React.PropTypes.func.isRequired,
   editPhase: React.PropTypes.func.isRequired,
+  editPhaseAttribute: React.PropTypes.func.isRequired,
   editRecord: React.PropTypes.func.isRequired,
   editRecordAttribute: React.PropTypes.func.isRequired,
   fetchTOS: React.PropTypes.func.isRequired,
   importItems: React.PropTypes.func.isRequired,
   isFetching: React.PropTypes.bool.isRequired,
   params: React.PropTypes.object.isRequired,
+  phaseTypes: React.PropTypes.object.isRequired,
   push: React.PropTypes.func.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
   removeAction: React.PropTypes.func.isRequired,

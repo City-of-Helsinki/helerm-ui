@@ -18,12 +18,14 @@ import {
 import {
   addAction,
   editAction,
+  editActionAttribute,
   removeAction
 } from '../Action/reducer';
 
 import {
   addPhase,
   editPhase,
+  editPhaseAttribute,
   removePhase,
   setPhasesVisibility,
   setPhaseVisibility
@@ -53,9 +55,11 @@ const mapDispatchToProps = (dispatch) => {
     clearTOS: bindActionCreators(clearTOS, dispatch),
     cloneFromTemplate: bindActionCreators(cloneFromTemplate, dispatch),
     displayMessage: (msg, opts) => displayMessage(msg, opts),
-    editAction: bindActionCreators(editAction, dispatch),
     editMetaData: bindActionCreators(editMetaData, dispatch),
     editPhase: bindActionCreators(editPhase, dispatch),
+    editPhaseAttribute: bindActionCreators(editPhaseAttribute, dispatch),
+    editAction: bindActionCreators(editAction, dispatch),
+    editActionAttribute: bindActionCreators(editActionAttribute, dispatch),
     editRecord: bindActionCreators(editRecord, dispatch),
     editRecordAttribute: bindActionCreators(editRecordAttribute, dispatch),
     fetchTOS: bindActionCreators(fetchTOS, dispatch),
@@ -76,9 +80,11 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
   return {
+    actionTypes: state.ui.actionTypes,
     attributeTypes: state.ui.attributeTypes,
     isFetching: state.ui.isFetching || state.selectedTOS.isFetching,
     items: state.navigation.items,
+    phaseTypes: state.ui.phaseTypes,
     recordTypes: state.ui.recordTypes,
     selectedTOS: state.selectedTOS,
     templates: state.ui.templates

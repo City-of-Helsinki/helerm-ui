@@ -16,6 +16,12 @@
   * {
     pointer-events:all;
   }
+  &-input {
+    margin-right: 15px;
+    .form-control {
+      height: 34px;
+    }
+  }
 }
 .phase-title.sticky {
   background-color: #f2f2f2;
@@ -40,7 +46,10 @@
   margin-left: 8px;
 }
 .input-title {
-  font-size: 1.1em;
+  font-size: 1em;
+}
+.input-type {
+  font-size: 1em;
 }
 // this is a hack to fix firefox specific issue of re-rendering phases
 // remove once firefox issue is fixed
@@ -60,13 +69,19 @@
 .phase-buttons button {
   margin: 0px 1px;
 }
-.add-action-buttons {
-  padding: 0px;
-  button {
-    max-width: 90px;
-    margin: 0px 2px;
+.edit-phase__input {
+  &.form-control {
+    padding: 0;
+    height: 34px;
   }
-}
-.add-action {
-  padding: 10px 20px;
+  margin-bottom: -10px;
+  height: 31px;
+  padding: 0;
+  border: 0;
+  z-index: 999;
+
+  .Select-control {
+    height: 31px;
+    border-radius: 2px;
+  }
 }

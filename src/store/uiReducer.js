@@ -6,6 +6,8 @@ import { default as api } from '../utils/api';
 
 const initialState = {
   isFetching: false,
+  phaseTypes: {},
+  actionTypes: {},
   recordTypes: {},
   attributeTypes: {},
   templates: []
@@ -131,18 +133,30 @@ const requestFromApiAction = (state) => {
 };
 
 const receiveAttributeTypesAction = (state, { payload }) => {
+  const phaseTypes = payload.PhaseType;
+  const actionTypes = payload.ActionType;
   const recordTypes = payload.RecordType;
+  const phaseTypeList = {};
+  const actionTypeList = {};
   const recordTypeList = {};
-  recordTypes.values.map(result => {
-    const trimmedResult = result.id.replace(/-/g, '');
-    recordTypeList[trimmedResult] = {
-      id: result.id,
-      name: result.value
-    };
-  });
+
+  const trimList = (types, list) => {
+    types.values.map(result => {
+      const trimmedResult = result.id.replace(/-/g, '');
+      list[trimmedResult] = {
+        id: result.id,
+        name: result.value
+      };
+    });
+  };
+  trimList(phaseTypes, phaseTypeList);
+  trimList(actionTypes, actionTypeList);
+  trimList(recordTypes, recordTypeList);
   delete payload.RecordType;
   return update(state, {
     attributeTypes: { $set: payload },
+    phaseTypes: { $set: phaseTypeList },
+    actionTypes: { $set: actionTypeList },
     recordTypes: { $set: recordTypeList },
     isFetching: { $set: false }
   });

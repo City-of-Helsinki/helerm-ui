@@ -9,7 +9,7 @@ export class Attribute extends React.Component {
     this.submit = this.submit.bind(this);
     this.state = {
       attribute: this.props.attribute,
-      mode: this.props.mode
+      mode: 'view'
     };
   }
 
@@ -38,22 +38,22 @@ export class Attribute extends React.Component {
   submit (event) {
     event.preventDefault();
     if (this.props.attributeIndex === '') {
-      this.props.updateRecordName(this.state.attribute, this.props.recordId);
+      this.props.updateTypeSpecifier(this.state.attribute, this.props.elementId);
     } else if (this.props.attributeIndex === this.props.attribute) {
-      this.props.updateRecordType(
+      this.props.updateType(
         this.state.attribute,
-        this.props.recordId
+        this.props.elementId
       );
     } else if (this.props.tosAttribute) {
-      this.props.updateTOSAttribute(
+      this.props.updateFunctionAttribute(
         this.state.attribute,
         this.props.attributeIndex
       );
     } else {
-      this.props.updateRecordAttribute(
+      this.props.updateAttribute(
         this.state.attribute,
         this.props.attributeIndex,
-        this.props.recordId
+        this.props.elementId
       );
     }
 
@@ -74,7 +74,7 @@ export class Attribute extends React.Component {
         <Select
           autoBlur={false}
           openOnFocus={true}
-          className='form-control edit-record__input'
+          className='form-control edit-attribute__input'
           clearable={false}
           value={this.state.attribute}
           onChange={({ value }) => this.onChange(value)}
@@ -87,7 +87,7 @@ export class Attribute extends React.Component {
       return (
         <form onSubmit={this.submit}>
           <input
-            className='col-xs-6 form-control edit-record__input'
+            className='col-xs-6 form-control edit-attribute__input'
             value={this.state.attribute}
             onChange={({ target: { value } }) => this.onChange(value)}
             onBlur={this.submit}
@@ -100,12 +100,12 @@ export class Attribute extends React.Component {
     }
   }
 
-  generateRecordInput (type, name) {
+  generateBasicAttributeInput (type, name) {
     if (type === '') {
       return (
         <form onSubmit={this.submit}>
           <input
-            className='col-xs-6 form-control edit-record__input'
+            className='col-xs-6 form-control edit-attribute__input'
             value={this.state.attribute}
             onChange={({ target: { value } }) => this.onChange(value)}
             onBlur={this.submit}
@@ -114,17 +114,17 @@ export class Attribute extends React.Component {
         </form>
       );
     } else {
-      return this.generateRecordDropdown(this.props.attributeTypes, type);
+      return this.generateBasicAttributeDropdown(this.props.typeOptions, type);
     }
   }
 
-  generateRecordDropdown (recordTypes, activeRecord) {
+  generateBasicAttributeDropdown (typeOptions, activeElement) {
     const options = [];
-    for (const key in recordTypes) {
-      if (recordTypes.hasOwnProperty(key)) {
+    for (const key in typeOptions) {
+      if (typeOptions.hasOwnProperty(key)) {
         options.push({
-          label: recordTypes[key].name,
-          value: recordTypes[key].name
+          label: typeOptions[key].name,
+          value: typeOptions[key].name
         });
       }
     }
@@ -133,7 +133,7 @@ export class Attribute extends React.Component {
         <Select
           autoBlur={false}
           openOnFocus={true}
-          className='col-xs-6 form-control edit-record__input'
+          className='col-xs-6 form-control edit-attribute__input'
           clearable={false}
           value={this.state.attribute}
           onChange={({ value }) => this.onChange(value)}
@@ -163,8 +163,8 @@ export class Attribute extends React.Component {
       if (type === 'attribute') {
         attributeValue = this.generateAttributeInput(attributeTypes[attributeIndex], attribute);
       }
-      if (type === 'record') {
-        attributeValue = this.generateRecordInput(attributeIndex, attribute);
+      if (type === 'basic') {
+        attributeValue = this.generateBasicAttributeInput(attributeIndex, attribute);
       }
     }
 
@@ -193,18 +193,18 @@ Attribute.propTypes = {
   attribute: React.PropTypes.string,
   attributeIndex: React.PropTypes.string,
   attributeKey: React.PropTypes.string.isRequired,
-  attributeTypes: React.PropTypes.object.isRequired,
+  attributeTypes: React.PropTypes.object,
   documentState: React.PropTypes.string.isRequired,
   editable: React.PropTypes.bool.isRequired,
-  mode: React.PropTypes.string.isRequired,
-  recordId: React.PropTypes.string,
+  elementId: React.PropTypes.string,
   showAttributes: React.PropTypes.bool.isRequired,
   tosAttribute: React.PropTypes.bool,
   type: React.PropTypes.string.isRequired,
-  updateRecordAttribute: React.PropTypes.func,
-  updateRecordName: React.PropTypes.func,
-  updateRecordType: React.PropTypes.func,
-  updateTOSAttribute: React.PropTypes.func
+  typeOptions: React.PropTypes.object,
+  updateAttribute: React.PropTypes.func,
+  updateFunctionAttribute: React.PropTypes.func,
+  updateType: React.PropTypes.func,
+  updateTypeSpecifier: React.PropTypes.func
 };
 
 export default Attribute;

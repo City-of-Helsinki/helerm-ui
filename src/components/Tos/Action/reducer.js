@@ -4,21 +4,26 @@ import { createAction } from 'redux-actions';
 
 export const ADD_ACTION = 'addActionAction';
 export const EDIT_ACTION = 'editActionAction';
+export const EDIT_ACTION_ATTRIBUTE = 'editActionAttributeAction';
 export const REMOVE_ACTION = 'removeActionAction';
 
-export function addAction (phaseIndex, name) {
+export function addAction (typeSpecifier, phaseIndex) {
   const actionId = Math.random().toString(36).replace(/[^a-z]+/g, '');
   const newAction = {
     id: actionId,
-    name: name,
     phase: phaseIndex,
-    records: []
+    records: [],
+    attributes: { TypeSpecifier: typeSpecifier }
   };
   return createAction(ADD_ACTION)(newAction);
 }
 
 export function editAction (editedAction) {
   return createAction(EDIT_ACTION)(editedAction);
+}
+
+export function editActionAttribute (editedActionAttribute) {
+  return createAction(EDIT_ACTION_ATTRIBUTE)(editedActionAttribute);
 }
 
 export function removeAction (actionToRemove, phaseId) {
@@ -46,12 +51,52 @@ export const editActionAction = (state, { payload }) => {
   return update(state, {
     actions: {
       [payload.id]: {
-        name: {
-          $set: payload.name
+        attributes: {
+          $set: payload.attributes
         }
       }
     }
   });
+};
+
+export const editActionAttributeAction = (state, { payload }) => {
+  if (payload.typeSpecifier) {
+    return update(state, {
+      actions: {
+        [payload.actionId]: {
+          attributes: {
+            TypeSpecifier: {
+              $set: payload.typeSpecifier
+            }
+          }
+        }
+      }
+    });
+  } else if (payload.type) {
+    return update(state, {
+      actions: {
+        [payload.actionId]: {
+          attributes: {
+            ActionType: {
+              $set: payload.type
+            }
+          }
+        }
+      }
+    });
+  } else {
+    return update(state, {
+      actions: {
+        [payload.actionId]: {
+          attributes: {
+            [payload.attributeIndex]: {
+              $set: payload.attribute
+            }
+          }
+        }
+      }
+    });
+  }
 };
 
 export const removeActionAction = (state, { payload }) => {

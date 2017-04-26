@@ -11,7 +11,12 @@
   font-weight: 600;
   width: 100%;
   padding: 1px 0 7px;
-
+  &-input {
+    margin-right: 15px;
+    .form-control {
+      height: 34px;
+    }
+  }
 }
 .action-title.sticky {
   z-index: 1;
@@ -36,4 +41,20 @@
   position: absolute;
   right: 25px;
   top: 4px;
+}
+.edit-action-type__input {
+  &.form-control {
+    padding: 0;
+    height: 34px;
+  }
+  margin-bottom: -10px;
+  height: 31px;
+  padding: 0;
+  border: 0;
+  z-index: 999;
+
+  .Select-control {
+    height: 31px;
+    border-radius: 2px;
+  }
 }

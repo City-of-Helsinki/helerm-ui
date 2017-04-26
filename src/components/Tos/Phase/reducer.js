@@ -3,18 +3,18 @@ import { createAction } from 'redux-actions';
 
 export const ADD_PHASE = 'addPhaseAction';
 export const EDIT_PHASE = 'editPhaseAction';
+export const EDIT_PHASE_ATTRIBUTE = 'editPhaseAttributeAction';
 export const REMOVE_PHASE = 'removePhaseAction';
 export const SET_PHASE_VISIBILITY = 'setPhaseVisibilityAction';
 export const SET_PHASES_VISIBILITY = 'setPhasesVisibilityAction';
 
-export function addPhase (name, parent) {
+export function addPhase (typeSpecifier, parent) {
   const phaseId = Math.random().toString(36).replace(/[^a-z]+/g, '');
   const newPhase = {
-    name: name,
     id: phaseId,
     function: parent,
     actions: [],
-    attributes: {},
+    attributes: { TypeSpecifier: typeSpecifier },
     is_open: false
   };
 
@@ -23,6 +23,10 @@ export function addPhase (name, parent) {
 
 export function editPhase (editedPhase) {
   return createAction(EDIT_PHASE)(editedPhase);
+}
+
+export function editPhaseAttribute (editedPhaseAttribute) {
+  return createAction(EDIT_PHASE_ATTRIBUTE)(editedPhaseAttribute);
 }
 
 export function removePhase (phaseToRemove) {
@@ -61,12 +65,52 @@ export const editPhaseAction = (state, { payload }) => {
   return update(state, {
     phases: {
       [payload.id]: {
-        name: {
-          $set: payload.name
+        attributes: {
+          $set: payload.attributes
         }
       }
     }
   });
+};
+
+export const editPhaseAttributeAction = (state, { payload }) => {
+  if (payload.typeSpecifier) {
+    return update(state, {
+      phases: {
+        [payload.phaseId]: {
+          attributes: {
+            TypeSpecifier: {
+              $set: payload.typeSpecifier
+            }
+          }
+        }
+      }
+    });
+  } else if (payload.type) {
+    return update(state, {
+      phases: {
+        [payload.phaseId]: {
+          attributes: {
+            PhaseType: {
+              $set: payload.type
+            }
+          }
+        }
+      }
+    });
+  } else {
+    return update(state, {
+      phases: {
+        [payload.phaseId]: {
+          attributes: {
+            [payload.attributeIndex]: {
+              $set: payload.attribute
+            }
+          }
+        }
+      }
+    });
+  }
 };
 
 export const removePhaseAction = (state, { payload }) => {
