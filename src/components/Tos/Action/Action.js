@@ -1,7 +1,12 @@
 import React from 'react';
 import classnames from 'classnames';
+import update from 'immutability-helper';
+import { StickyContainer, Sticky } from 'react-sticky';
+import Select from 'react-select';
 import './Action.scss';
+
 import Record from '../Record/Record';
+import Attributes from '../Attribute/Attributes';
 import EditorForm from '../EditorForm/EditorForm';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
@@ -9,12 +14,11 @@ import DeleteView from '../DeleteView/DeleteView';
 import ReorderView from '../Reorder/ReorderView';
 import ImportView from '../ImportView/ImportView';
 
-import { StickyContainer, Sticky } from 'react-sticky';
-
 export class Action extends React.Component {
   constructor (props) {
     super(props);
-    this.saveActionTitle = this.saveActionTitle.bind(this);
+    this.onTypeChange = this.onTypeChange.bind(this);
+    this.onTypeSpecifierChange = this.onTypeSpecifierChange.bind(this);
     this.createRecord = this.createRecord.bind(this);
     this.cancelRecordCreation = this.cancelRecordCreation.bind(this);
     this.editRecordForm = this.editRecordForm.bind(this);
@@ -22,21 +26,34 @@ export class Action extends React.Component {
     this.editRecordWithForm = this.editRecordWithForm.bind(this);
     this.cancelRecordEdit = this.cancelRecordEdit.bind(this);
     this.cancelRecordComplement = this.cancelRecordComplement.bind(this);
+    this.updateTypeSpecifier = this.updateTypeSpecifier.bind(this);
+    this.updateActionType = this.updateActionType.bind(this);
+    this.renderActionButtons = this.renderActionButtons.bind(this);
+    this.renderBasicAttributes = this.renderBasicAttributes.bind(this);
+    this.disableEditMode = this.disableEditMode.bind(this);
     this.state = {
+      typeSpecifier: this.props.action.attributes.TypeSpecifier || '(ei tarkennetta)',
+      type: this.props.action.attributes.ActionType || '---',
+      attributes: this.props.action.attributes,
       mode: 'view',
-      name: this.props.action ? this.props.action.name : 'ERROR',
+      editingTypeSpecifier: false,
+      editingType: false,
       creating: false,
       editing: false,
       complementing: false,
       deleting: false,
       showReorderView: false,
-      showImportView: false
+      showImportView: false,
+      showAttributes: false
     };
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.action && nextProps.action.name) {
-      this.setState({ name: nextProps.action.name });
+    if (nextProps.action && nextProps.action.attributes.TypeSpecifier) {
+      this.setState({ typeSpecifier: nextProps.action.attributes.TypeSpecifier });
+    }
+    if (nextProps.action && nextProps.action.attributes.ActionType) {
+      this.setState({ type: nextProps.action.attributes.ActionType });
     }
     if (nextProps.documentState === 'view') {
       this.setState({
@@ -46,26 +63,62 @@ export class Action extends React.Component {
     }
   }
 
-  editActionTitle () {
+  editTypeSpecifier () {
     if (this.props.documentState === 'edit') {
-      this.setState({ mode: 'edit' });
+      this.setState({ editingTypeSpecifier: true, mode: 'edit' });
     }
   }
 
-  saveActionTitle (event) {
-    event.preventDefault();
-    const updatedAction = {
-      id: this.props.action.id,
-      name: this.state.name
-    };
-    this.props.editAction(updatedAction);
-    if (this.state.name.length > 0) {
-      this.setState({ mode: 'view' });
+  editType () {
+    if (this.props.documentState === 'edit') {
+      this.setState({ editingType: true, mode: 'edit' });
     }
+  }
+
+  disableEditMode () {
+    this.setState({
+      editingTypeSpecifier: false,
+      editingType: false,
+      mode: 'view'
+    });
   }
 
   onChange (e) {
     this.setState({ name: e.target.value });
+  }
+
+  onTypeSpecifierChange (event) {
+    this.setState({ typeSpecifier: event.target.value });
+  }
+
+  onTypeChange (value) {
+    this.setState(update(this.state, {
+      type: {
+        $set: value
+      }
+    }));
+  }
+
+  updateTypeSpecifier (event) {
+    event.preventDefault();
+    const updatedTypeSpecifier = {
+      typeSpecifier: this.state.typeSpecifier,
+      actionId: this.props.action.id
+    };
+    this.props.editActionAttribute(updatedTypeSpecifier);
+    if (this.state.typeSpecifier.length > 0) {
+      this.disableEditMode();
+    }
+  }
+
+  updateActionType (event) {
+    event.preventDefault();
+    const updatedActionType = {
+      type: this.state.type,
+      actionId: this.props.action.id
+    };
+    this.props.editActionAttribute(updatedActionType);
+    this.disableEditMode();
   }
 
   generateRecords (records) {
@@ -89,32 +142,6 @@ export class Action extends React.Component {
       }
     }
     return elements;
-  }
-
-  generateDropdownItems () {
-    return [
-      {
-        text: 'Uusi asiakirja',
-        icon: 'fa-file-text',
-        style: 'btn-primary',
-        action: () => this.createNewRecord()
-      }, {
-        text: 'Järjestä asiakirjoja',
-        icon: 'fa-th-list',
-        style: 'btn-primary',
-        action: () => this.toggleReorderView()
-      }, {
-        text: 'Tuo asiakirjoja',
-        icon: 'fa-download',
-        style: 'btn-primary',
-        action: () => this.toggleImportView()
-      }, {
-        text: 'Poista toimenpide',
-        icon: 'fa-trash',
-        style: 'btn-delete',
-        action: () => this.setState({ deleting: true })
-      }
-    ];
   }
 
   createNewRecord () {
@@ -193,44 +220,139 @@ export class Action extends React.Component {
     this.setState({ showImportView: !current });
   }
 
+  generateDropdownItems () {
+    return [
+      {
+        text: 'Uusi asiakirja',
+        icon: 'fa-file-text',
+        style: 'btn-primary',
+        action: () => this.createNewRecord()
+      }, {
+        text: 'Järjestä asiakirjoja',
+        icon: 'fa-th-list',
+        style: 'btn-primary',
+        action: () => this.toggleReorderView()
+      }, {
+        text: 'Tuo asiakirjoja',
+        icon: 'fa-download',
+        style: 'btn-primary',
+        action: () => this.toggleImportView()
+      }, {
+        text: 'Poista toimenpide',
+        icon: 'fa-trash',
+        style: 'btn-delete',
+        action: () => this.setState({ deleting: true })
+      }
+    ];
+  }
+
+  generateTypeDropdown (typeOptions) {
+    const options = [];
+    for (const key in typeOptions) {
+      if (typeOptions.hasOwnProperty(key)) {
+        options.push({
+          label: typeOptions[key].name,
+          value: typeOptions[key].name
+        });
+      }
+    }
+
+    return (
+      <div className='col-md-5'>
+        <form onSubmit={this.updateActionType}>
+          <Select
+            autoBlur={false}
+            openOnFocus={true}
+            className='form-control edit-action__input'
+            clearable={false}
+            value={this.state.type}
+            onChange={(option) => this.onTypeChange(option ? option.value : null)}
+            onBlur={this.updateActionType}
+            autofocus={true}
+            options={options}
+          />
+        </form>
+      </div>
+    );
+  }
+
+  renderActionButtons () {
+    const actionDropdownItems = this.generateDropdownItems();
+
+    return (
+      <span className='action-buttons'>
+        { this.props.documentState === 'edit' &&
+        <span className='action-dropdown-button'>
+          <Dropdown children={actionDropdownItems} extraSmall={true}/>
+        </span>
+        }
+      </span>
+    );
+  }
+
+  renderBasicAttributes () {
+    let typeSpecifier =
+      (<span className='col-md-6 basic-attribute' onClick={() => this.editTypeSpecifier()}>
+        {this.state.typeSpecifier}
+      </span>
+    );
+    let actionType =
+      (<span className='col-md-6 basic-attribute' onClick={() => this.editType()}>
+        {this.state.type}
+      </span>
+    );
+
+    if (this.state.mode === 'edit') {
+      if (this.state.editingTypeSpecifier) {
+        typeSpecifier = (
+          <div className='col-md-6 action-title-input row'>
+            <form onSubmit={this.updateTypeSpecifier}>
+              <input
+                className='input-title form-control col-xs-11'
+                value={this.state.typeSpecifier}
+                onChange={this.onTypeSpecifierChange}
+                onBlur={this.updateTypeSpecifier}
+                autoFocus={true}
+              />
+            </form>
+          </div>
+        );
+      }
+      if (this.state.editingType) {
+        actionType = this.generateTypeDropdown(this.props.actionTypes);
+      }
+    }
+
+    return (
+      <div className='basic-attributes'>
+        {typeSpecifier}
+        {actionType}
+      </div>
+    );
+  }
+
   render () {
     // TODO: Handle errors where we don't have an valid action (i.e 400 error from API)
     const { action } = this.props;
     const recordElements = action && action.records ? this.generateRecords(action.records) : [];
-    const dropdownItems = this.generateDropdownItems();
-    let actionTitle;
-    if (this.state.mode === 'view') {
-      actionTitle = (
-        <span>
-          <span onClick={() => this.editActionTitle()}>
-            {this.state.name}
-          </span>
-          { this.props.documentState === 'edit' &&
-          <span className='action-dropdown-button'>
-            <Dropdown children={dropdownItems} extraSmall={true}/>
-          </span>
-          }
-        </span>
-      );
-    }
-    if (this.state.mode === 'edit') {
-      actionTitle = (
-        <form onSubmit={this.saveActionTitle}>
-          <input
-            className='input-title form-control col-xs-11'
-            value={this.state.name}
-            onChange={(e) => this.onChange(e)}
-            onBlur={this.saveActionTitle}
-            autoFocus={true}
-          />
-        </form>
-      );
-    }
+
     return (
       <div>
         <StickyContainer className='row box action'>
           <Sticky className='action-title'>
-            { actionTitle }
+            <Attributes
+              element={action}
+              documentState={this.props.documentState}
+              type={'action'}
+              attributeTypes={this.props.attributeTypes}
+              typeOptions={this.props.actionTypes}
+              renderBasicAttributes={this.renderBasicAttributes}
+              renderButtons={this.renderActionButtons}
+              updateTypeSpecifier={this.updateTypeSpecifier}
+              updateType={this.updateActionType}
+              updateAttribute={this.updateActionAttribute}
+              showAttributes={this.state.showAttributes}
+            />
           </Sticky>
           { this.state.creating &&
           <EditorForm
@@ -307,7 +429,7 @@ export class Action extends React.Component {
             content={
               <DeleteView
                 type='action'
-                target={this.state.name}
+                target={this.state.typeSpecifier}
                 action={() => this.delete()}
                 cancel={() => this.cancelDeletion()}
               />
@@ -325,7 +447,7 @@ export class Action extends React.Component {
                 values={this.props.records}
                 changeOrder={this.props.changeOrder}
                 parent={this.props.action.id}
-                parentName={this.state.name}
+                parentName={this.state.typeSpecifier}
               />
             }
             closePopup={() => this.toggleReorderView()}
