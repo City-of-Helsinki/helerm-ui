@@ -7,7 +7,7 @@ import './Phase.scss';
 
 import Action from '../Action/Action';
 import Attributes from '../Attribute/Attributes';
-import CreateActionForm from '../Action/CreateActionForm';
+import AddElementInput from '../AddElementInput/AddElementInput';
 import DeleteView from '../DeleteView/DeleteView';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
@@ -368,7 +368,8 @@ export class Phase extends React.Component {
               />
             </Sticky>
             { this.state.mode === 'add' &&
-            <CreateActionForm
+            <AddElementInput
+              type='action'
               newTypeSpecifier={this.state.actionTypeSpecifier}
               submit={this.addAction}
               onChange={this.onNewChange}

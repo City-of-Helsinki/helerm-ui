@@ -3,7 +3,7 @@ import { withRouter, routerShape } from 'react-router';
 import { StickyContainer } from 'react-sticky';
 
 import Phase from 'components/Tos/Phase/Phase';
-import CreatePhaseForm from 'components/Tos/Phase/CreatePhaseForm';
+import AddElementInput from 'components/Tos/AddElementInput/AddElementInput';
 import Attribute from 'components/Tos/Attribute/Attribute';
 import ReorderView from 'components/Tos/Reorder/ReorderView';
 import ImportView from 'components/Tos/ImportView/ImportView';
@@ -539,7 +539,8 @@ export class ViewTOS extends React.Component {
                 </div>
                 <div className='col-xs-12'>
                   { this.state.createPhaseMode &&
-                  <CreatePhaseForm
+                  <AddElementInput
+                    type='phase'
                     newTypeSpecifier={this.state.phaseTypeSpecifier}
                     onChange={this.onChange}
                     submit={this.createNewPhase}
