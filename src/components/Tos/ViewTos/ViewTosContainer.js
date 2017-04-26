@@ -18,6 +18,7 @@ import {
 import {
   addAction,
   editAction,
+  editActionAttribute,
   removeAction
 } from '../Action/reducer';
 
@@ -54,10 +55,11 @@ const mapDispatchToProps = (dispatch) => {
     clearTOS: bindActionCreators(clearTOS, dispatch),
     cloneFromTemplate: bindActionCreators(cloneFromTemplate, dispatch),
     displayMessage: (msg, opts) => displayMessage(msg, opts),
-    editAction: bindActionCreators(editAction, dispatch),
     editMetaData: bindActionCreators(editMetaData, dispatch),
     editPhase: bindActionCreators(editPhase, dispatch),
     editPhaseAttribute: bindActionCreators(editPhaseAttribute, dispatch),
+    editAction: bindActionCreators(editAction, dispatch),
+    editActionAttribute: bindActionCreators(editActionAttribute, dispatch),
     editRecord: bindActionCreators(editRecord, dispatch),
     editRecordAttribute: bindActionCreators(editRecordAttribute, dispatch),
     fetchTOS: bindActionCreators(fetchTOS, dispatch),

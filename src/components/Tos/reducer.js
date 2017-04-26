@@ -5,6 +5,7 @@ import { map } from 'lodash';
 import {
   addActionAction,
   editActionAction,
+  editActionAttributeAction,
   removeActionAction
 } from './Action/reducer';
 
@@ -270,6 +271,7 @@ export default handleActions({
   addPhaseAction,
   addRecordAction,
   editActionAction,
+  editActionAttributeAction,
   editPhaseAction,
   editPhaseAttributeAction,
   editRecordAction,
