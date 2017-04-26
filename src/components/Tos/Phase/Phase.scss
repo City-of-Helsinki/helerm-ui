@@ -73,3 +73,18 @@
 .add-action {
   padding: 10px 20px;
 }
+.edit-phase__input {
+  &.form-control {
+    padding: 0;
+  }
+  margin-bottom: -10px;
+  height: 31px;
+  padding: 0;
+  border: 0;
+  z-index: 999;
+
+  .Select-control {
+    height: 31px;
+    border-radius: 2px;
+  }
+}
