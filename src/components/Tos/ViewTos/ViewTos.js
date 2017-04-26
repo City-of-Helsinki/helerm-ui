@@ -317,7 +317,6 @@ export class ViewTOS extends React.Component {
           attribute={metadata.name}
           documentState={documentState}
           attributeTypes={attributeTypes}
-          mode='view'
           type='attribute'
           editable={false}
           editRecord={editRecord}
@@ -333,7 +332,6 @@ export class ViewTOS extends React.Component {
             attributeIndex={key}
             attributeKey={this.props.attributeTypes[key].name}
             attribute={attributes[key]}
-            mode='view'
             type='attribute'
             attributeTypes={attributeTypes}
             documentState={documentState}

@@ -287,7 +287,6 @@ export class Phase extends React.Component {
               <Attributes
                 element={phase}
                 documentState={this.props.documentState}
-                mode={this.state.mode}
                 type={'phase'}
                 attributeTypes={this.props.attributeTypes}
                 typeOptions={this.props.phaseTypes}

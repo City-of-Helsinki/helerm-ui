@@ -6,7 +6,6 @@ export const Attributes = ({
   attributeTypes,
   element,
   documentState,
-  mode,
   renderBasicAttributes,
   renderButtons,
   showAttributes,
@@ -61,7 +60,6 @@ export const Attributes = ({
           attribute={description.typeSpecifier}
           documentState={documentState}
           typeOptions={typeOptions}
-          mode={mode}
           type={'basic'}
           editable={true}
           updateTypeSpecifier={updateTypeSpecifier}
@@ -87,7 +85,6 @@ export const Attributes = ({
             attribute={attributes[key]}
             attributeTypes={attributeTypes}
             documentState={documentState}
-            mode={mode}
             type={'attribute'}
             editable={true}
             updateAttribute={updateAttribute}
@@ -117,7 +114,6 @@ Attributes.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
   documentState: React.PropTypes.string.isRequired,
   element: React.PropTypes.object.isRequired,
-  mode: React.PropTypes.string.isRequired,
   renderBasicAttributes: React.PropTypes.func,
   renderButtons: React.PropTypes.func,
   showAttributes: React.PropTypes.bool.isRequired,

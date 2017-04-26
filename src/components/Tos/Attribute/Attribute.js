@@ -9,7 +9,7 @@ export class Attribute extends React.Component {
     this.submit = this.submit.bind(this);
     this.state = {
       attribute: this.props.attribute,
-      mode: this.props.mode
+      mode: 'view'
     };
   }
 
@@ -197,7 +197,6 @@ Attribute.propTypes = {
   documentState: React.PropTypes.string.isRequired,
   editable: React.PropTypes.bool.isRequired,
   elementId: React.PropTypes.string,
-  mode: React.PropTypes.string.isRequired,
   showAttributes: React.PropTypes.bool.isRequired,
   tosAttribute: React.PropTypes.bool,
   type: React.PropTypes.string.isRequired,
