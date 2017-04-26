@@ -26,8 +26,8 @@ export function editPhase (editedPhase) {
   return createAction(EDIT_PHASE)(editedPhase);
 }
 
-export function editPhaseAttribute (editedPhase) {
-  return createAction(EDIT_PHASE_ATTRIBUTE)(editedPhase);
+export function editPhaseAttribute (editedPhaseAttribute) {
+  return createAction(EDIT_PHASE_ATTRIBUTE)(editedPhaseAttribute);
 }
 
 export function removePhase (phaseToRemove) {

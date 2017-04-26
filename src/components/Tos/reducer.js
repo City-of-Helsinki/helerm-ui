@@ -11,6 +11,7 @@ import {
 import {
   addPhaseAction,
   editPhaseAction,
+  editPhaseAttributeAction,
   removePhaseAction,
   setPhaseVisibilityAction,
   setPhasesVisibilityAction
@@ -270,6 +271,7 @@ export default handleActions({
   addRecordAction,
   editActionAction,
   editPhaseAction,
+  editPhaseAttributeAction,
   editRecordAction,
   editRecordAttributeAction,
   editMetaDataAction,
