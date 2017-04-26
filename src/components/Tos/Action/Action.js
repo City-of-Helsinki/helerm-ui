@@ -65,6 +65,16 @@ export class Action extends React.Component {
     }
   }
 
+  toggleReorderView () {
+    const current = this.state.showReorderView;
+    this.setState({ showReorderView: !current });
+  }
+
+  toggleImportView () {
+    const current = this.state.showImportView;
+    this.setState({ showImportView: !current });
+  }
+
   // toggleAttributeVisibility () {
   //   const currentVisibility = this.state.showAttributes;
   //   const newVisibility = !currentVisibility;
@@ -139,29 +149,6 @@ export class Action extends React.Component {
   //   this.props.editActionAttribute(updatedActionAttribute);
   // }
 
-  generateRecords (records) {
-    const elements = [];
-    for (const key in records) {
-      if (records.hasOwnProperty(key)) {
-        elements.push(
-          <Record
-            key={key}
-            record={this.props.records[records[key]]}
-            editRecordForm={this.editRecordForm}
-            complementRecordForm={this.complementRecordForm}
-            editRecordAttribute={this.props.editRecordAttribute}
-            removeRecord={this.props.removeRecord}
-            recordTypes={this.props.recordTypes}
-            documentState={this.props.documentState}
-            attributeTypes={this.props.attributeTypes}
-            displayMessage={this.props.displayMessage}
-          />
-        );
-      }
-    }
-    return elements;
-  }
-
   createNewRecord () {
     this.setState({ creating: true });
   }
@@ -228,14 +215,27 @@ export class Action extends React.Component {
     this.props.addRecord(actionId, typeSpecifier, type, attributes);
   }
 
-  toggleReorderView () {
-    const current = this.state.showReorderView;
-    this.setState({ showReorderView: !current });
-  }
-
-  toggleImportView () {
-    const current = this.state.showImportView;
-    this.setState({ showImportView: !current });
+  generateRecords (records) {
+    const elements = [];
+    for (const key in records) {
+      if (records.hasOwnProperty(key)) {
+        elements.push(
+          <Record
+            key={key}
+            record={this.props.records[records[key]]}
+            editRecordForm={this.editRecordForm}
+            complementRecordForm={this.complementRecordForm}
+            editRecordAttribute={this.props.editRecordAttribute}
+            removeRecord={this.props.removeRecord}
+            recordTypes={this.props.recordTypes}
+            documentState={this.props.documentState}
+            attributeTypes={this.props.attributeTypes}
+            displayMessage={this.props.displayMessage}
+          />
+        );
+      }
+    }
+    return elements;
   }
 
   generateDropdownItems () {
