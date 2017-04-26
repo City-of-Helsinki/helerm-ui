@@ -28,8 +28,10 @@ export class Action extends React.Component {
     this.cancelRecordComplement = this.cancelRecordComplement.bind(this);
     this.updateTypeSpecifier = this.updateTypeSpecifier.bind(this);
     this.updateActionType = this.updateActionType.bind(this);
+    // this.updateActionAttribute = this.updateActionAttribute.bind(this);
     this.renderActionButtons = this.renderActionButtons.bind(this);
     this.renderBasicAttributes = this.renderBasicAttributes.bind(this);
+    // this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
     this.disableEditMode = this.disableEditMode.bind(this);
     this.state = {
       typeSpecifier: this.props.action.attributes.TypeSpecifier || '(ei tarkennetta)',
@@ -62,6 +64,12 @@ export class Action extends React.Component {
       });
     }
   }
+
+  // toggleAttributeVisibility () {
+  //   const currentVisibility = this.state.showAttributes;
+  //   const newVisibility = !currentVisibility;
+  //   this.setState({ showAttributes: newVisibility });
+  // }
 
   editTypeSpecifier () {
     if (this.props.documentState === 'edit') {
@@ -120,6 +128,16 @@ export class Action extends React.Component {
     this.props.editActionAttribute(updatedActionType);
     this.disableEditMode();
   }
+
+  // updateActionAttribute (attribute, attributeIndex, actionId) {
+  //   this.setState({
+  //     attributes: {
+  //       [attributeIndex]: attribute
+  //     }
+  //   });
+  //   const updatedActionAttribute = { attribute, attributeIndex, actionId };
+  //   this.props.editActionAttribute(updatedActionAttribute);
+  // }
 
   generateRecords (records) {
     const elements = [];
