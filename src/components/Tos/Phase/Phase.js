@@ -1,6 +1,5 @@
 import React from 'react';
 import forEach from 'lodash/forEach';
-import Select from 'react-select';
 import { StickyContainer, Sticky } from 'react-sticky';
 import update from 'immutability-helper';
 import './Phase.scss';
@@ -11,6 +10,7 @@ import AddElementInput from '../AddElementInput/AddElementInput';
 import DeleteView from '../DeleteView/DeleteView';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
+import DropdownInput from 'components/DropdownInput/DropdownInput';
 import ReorderView from '../Reorder/ReorderView';
 import ImportView from '../ImportView/ImportView';
 
@@ -20,7 +20,6 @@ export class Phase extends React.Component {
     this.onNewChange = this.onNewChange.bind(this);
     this.onTypeChange = this.onTypeChange.bind(this);
     this.onTypeSpecifierChange = this.onTypeSpecifierChange.bind(this);
-    this.generateTypeDropdown = this.generateTypeDropdown.bind(this);
     this.createNewAction = this.createNewAction.bind(this);
     this.addAction = this.addAction.bind(this);
     this.editTypeSpecifier = this.editTypeSpecifier.bind(this);
@@ -144,6 +143,10 @@ export class Phase extends React.Component {
     }));
   }
 
+  onTypeInputChange (event) {
+    this.setState({ type: event.target.value });
+  }
+
   updateTypeSpecifier (event) {
     event.preventDefault();
     const updatedTypeSpecifier = {
@@ -248,36 +251,6 @@ export class Phase extends React.Component {
     ];
   }
 
-  generateTypeDropdown (typeOptions) {
-    const options = [];
-    for (const key in typeOptions) {
-      if (typeOptions.hasOwnProperty(key)) {
-        options.push({
-          label: typeOptions[key].name,
-          value: typeOptions[key].name
-        });
-      }
-    }
-
-    return (
-      <div className='col-md-5'>
-        <form onSubmit={this.updatePhaseType}>
-          <Select
-            autoBlur={false}
-            openOnFocus={true}
-            className='form-control edit-phase__input'
-            clearable={false}
-            value={this.state.type}
-            onChange={(option) => this.onTypeChange(option ? option.value : null)}
-            onBlur={this.updatePhaseType}
-            autofocus={true}
-            options={options}
-          />
-        </form>
-      </div>
-    );
-  }
-
   renderPhaseButtons () {
     const phaseDropdownItems = this.generateDropdownItems();
 
@@ -333,7 +306,16 @@ export class Phase extends React.Component {
         );
       }
       if (this.state.editingType) {
-        phaseType = this.generateTypeDropdown(this.props.phaseTypes);
+        phaseType = (
+          <DropdownInput
+            type={'phase'}
+            typeState={this.state.type}
+            typeOptions={this.props.phaseTypes}
+            onChange={this.onTypeChange}
+            onInputChange={this.onTypeInputChange}
+            onSubmit={this.updatePhaseType}
+          />
+        );
       }
     }
 

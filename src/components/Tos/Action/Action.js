@@ -2,7 +2,6 @@ import React from 'react';
 import classnames from 'classnames';
 import update from 'immutability-helper';
 import { StickyContainer, Sticky } from 'react-sticky';
-import Select from 'react-select';
 import './Action.scss';
 
 import Record from '../Record/Record';
@@ -10,6 +9,7 @@ import Attributes from '../Attribute/Attributes';
 import EditorForm from '../EditorForm/EditorForm';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
+import DropdownInput from 'components/DropdownInput/DropdownInput';
 import DeleteView from '../DeleteView/DeleteView';
 import ReorderView from '../Reorder/ReorderView';
 import ImportView from '../ImportView/ImportView';
@@ -18,6 +18,7 @@ export class Action extends React.Component {
   constructor (props) {
     super(props);
     this.onTypeChange = this.onTypeChange.bind(this);
+    this.onTypeInputChange = this.onTypeInputChange.bind(this);
     this.onTypeSpecifierChange = this.onTypeSpecifierChange.bind(this);
     this.createRecord = this.createRecord.bind(this);
     this.cancelRecordCreation = this.cancelRecordCreation.bind(this);
@@ -115,6 +116,10 @@ export class Action extends React.Component {
         $set: value
       }
     }));
+  }
+
+  onTypeInputChange (event) {
+    this.setState({ type: event.target.value });
   }
 
   updateTypeSpecifier (event) {
@@ -264,36 +269,6 @@ export class Action extends React.Component {
     ];
   }
 
-  generateTypeDropdown (typeOptions) {
-    const options = [];
-    for (const key in typeOptions) {
-      if (typeOptions.hasOwnProperty(key)) {
-        options.push({
-          label: typeOptions[key].name,
-          value: typeOptions[key].name
-        });
-      }
-    }
-
-    return (
-      <div className='col-md-5'>
-        <form onSubmit={this.updateActionType}>
-          <Select
-            autoBlur={false}
-            openOnFocus={true}
-            className='form-control edit-action-type__input'
-            clearable={false}
-            value={this.state.type}
-            onChange={(option) => this.onTypeChange(option ? option.value : null)}
-            onBlur={this.updateActionType}
-            autofocus={true}
-            options={options}
-          />
-        </form>
-      </div>
-    );
-  }
-
   renderActionButtons () {
     const actionDropdownItems = this.generateDropdownItems();
 
@@ -337,7 +312,16 @@ export class Action extends React.Component {
         );
       }
       if (this.state.editingType) {
-        actionType = this.generateTypeDropdown(this.props.actionTypes);
+        actionType = (
+          <DropdownInput
+            type={'action'}
+            typeState={this.state.type}
+            typeOptions={this.props.actionTypes}
+            onChange={this.onTypeChange}
+            onInputChange={this.onTypeInputChange}
+            onSubmit={this.updateActionType}
+          />
+        );
       }
     }
 
