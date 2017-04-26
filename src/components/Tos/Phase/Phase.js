@@ -212,7 +212,7 @@ export class Phase extends React.Component {
     return elements;
   }
 
-  generateDropdownItems (phase) {
+  generateDropdownItems () {
     return [
       {
         text: 'Muokkaa käsittelyvaihetta',
