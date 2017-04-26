@@ -1,18 +1,17 @@
 import React from 'react';
 import KeyStrokeSupport from '../../../decorators/key-stroke-support';
 
-export const CreatePhaseForm = ({ submit, newPhaseName, onChange, cancel }) => (
+export const CreatePhaseForm = ({ submit, newTypeSpecifier, onChange, cancel }) => (
   <form onSubmit={submit} className='col-xs-12 phase-form'>
     <h5>Uusi käsittelyvaihe</h5>
     <div className='col-xs-12 col-md-6'>
       <input
         type='text'
         className='form-control'
-        value={newPhaseName}
+        value={newTypeSpecifier}
         onChange={onChange}
         onSubmit={submit}
-        placeholder='Käsittelyvaiheen nimi'
-      />
+        placeholder='Käsittelyvaiheen nimi'/>
     </div>
     <div className='col-xs-12 col-md-4'>
       <button
@@ -27,7 +26,7 @@ export const CreatePhaseForm = ({ submit, newPhaseName, onChange, cancel }) => (
 
 CreatePhaseForm.propTypes = {
   cancel: React.PropTypes.func.isRequired,
-  newPhaseName: React.PropTypes.string.isRequired,
+  newTypeSpecifier: React.PropTypes.string.isRequired,
   onChange: React.PropTypes.func.isRequired,
   submit: React.PropTypes.func.isRequired
 };

@@ -49,7 +49,7 @@ export class ViewTOS extends React.Component {
 
     this.state = {
       createPhaseMode: false,
-      newPhaseName: '',
+      newTypeSpecifier: '',
       originalTos: {},
       isDirty: false,
       showCloneView: false,
@@ -220,9 +220,9 @@ export class ViewTOS extends React.Component {
 
   createNewPhase (event) {
     event.preventDefault();
-    if (this.state.newPhaseName.length > 0) {
-      this.props.addPhase(this.state.newPhaseName, this.props.selectedTOS.id);
-      this.setState({ createPhaseMode: false, newPhaseName: '' });
+    if (this.state.newTypeSpecifier.length > 0) {
+      this.props.addPhase(this.state.newTypeSpecifier, this.props.selectedTOS.id);
+      this.setState({ createPhaseMode: false, newTypeSpecifier: '' });
     }
     this.props.displayMessage({
       title: 'Käsittelyvaihe',
@@ -232,7 +232,7 @@ export class ViewTOS extends React.Component {
 
   cancelPhaseCreation (event) {
     event.preventDefault();
-    this.setState({ newPhaseName: '', createPhaseMode: false });
+    this.setState({ newTypeSpecifier: '', createPhaseMode: false });
   }
 
   cloneFromTemplate (selectedMethod, id) {
@@ -253,7 +253,7 @@ export class ViewTOS extends React.Component {
   }
 
   onChange (event) {
-    this.setState({ newPhaseName: event.target.value });
+    this.setState({ newTypeSpecifier: event.target.value });
   }
 
   updateFunctionAttribute (attribute, attributeIndex) {
@@ -540,7 +540,7 @@ export class ViewTOS extends React.Component {
                 <div className='col-xs-12'>
                   { this.state.createPhaseMode &&
                   <CreatePhaseForm
-                    newPhaseName={this.state.newPhaseName}
+                    newTypeSpecifier={this.state.newTypeSpecifier}
                     onChange={this.onChange}
                     submit={this.createNewPhase}
                     cancel={this.cancelPhaseCreation}

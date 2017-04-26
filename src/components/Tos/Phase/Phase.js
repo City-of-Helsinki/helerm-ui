@@ -38,7 +38,7 @@ export class Phase extends React.Component {
       typeSpecifier: this.props.phase.attributes.TypeSpecifier,
       type: this.props.phase.attributes.PhaseType || '---',
       attributes: this.props.phase.attributes,
-      newActionName: '',
+      newTypeSpecifier: '',
       mode: 'view',
       editingTypeSpecifier: false,
       editingType: false,
@@ -101,8 +101,8 @@ export class Phase extends React.Component {
   addAction (event) {
     event.preventDefault();
     this.props.setPhaseVisibility(this.props.phaseIndex, true);
-    this.props.addAction(this.props.phaseIndex, this.state.newActionName);
-    this.setState({ newActionName: '' });
+    this.props.addAction(this.props.phaseIndex, this.state.newTypeSpecifier);
+    this.setState({ newTypeSpecifier: '' });
     this.disableEditMode();
     this.props.displayMessage({
       title: 'Toimenpide',
@@ -112,7 +112,7 @@ export class Phase extends React.Component {
 
   cancelActionCreation (event) {
     event.preventDefault();
-    this.setState({ newActionName: '' });
+    this.setState({ newTypeSpecifier: '' });
     this.disableEditMode();
   }
 
@@ -129,7 +129,7 @@ export class Phase extends React.Component {
   }
 
   onNewChange (event) {
-    this.setState({ newActionName: event.target.value });
+    this.setState({ newTypeSpecifier: event.target.value });
   }
 
   onTypeSpecifierChange (event) {
@@ -369,7 +369,7 @@ export class Phase extends React.Component {
             </Sticky>
             { this.state.mode === 'add' &&
             <CreateActionForm
-              newActionName={this.state.newActionName}
+              newTypeSpecifier={this.state.newTypeSpecifier}
               submit={this.addAction}
               onChange={this.onNewChange}
               cancel={this.cancelActionCreation}
