@@ -74,16 +74,21 @@ export class EditorForm extends React.Component {
     };
 
     for (const attributeType in attributeTypes) {
-      if (attributeTypes[attributeType].required ||
-        includes(getAttributeKeys(attributes), attributeType)) {
-        attributesToShow.push(attributeType);
-      }
-      if (attributeTypes[attributeType].requiredIf.length) {
-        if (validateConditionalRules(attributeType, attributeTypes, newAttributes)) {
+      if (includes(attributeTypes[attributeType].allowedIn, this.props.editorConfig.type)) {
+        if (attributeTypes[attributeType].required ||
+          includes(getAttributeKeys(attributes), attributeType)) {
           attributesToShow.push(attributeType);
+        }
+        if (attributeTypes[attributeType].requiredIf.length) {
+          if (validateConditionalRules(attributeType, attributeTypes, newAttributes)) {
+            attributesToShow.push(attributeType);
+          }
         }
       }
     }
+
+    attributesToShow.splice(attributesToShow.indexOf(`${capitalize(this.props.editorConfig.type)}Type`), 1);
+    attributesToShow.splice(attributesToShow.indexOf('TypeSpecifier'), 1);
 
     const sortedAttributes = sortBy(attributesToShow, (attribute) => (
       attributeTypes[attribute].index
@@ -357,7 +362,11 @@ export class EditorForm extends React.Component {
           { this.props.editorConfig.type !== 'function' ? this.renderDescriptions() : null }
           { attributeElements }
           <div className='col-xs-12'>
-            <button className='btn btn-primary pull-right edit-record__submit' type='submit'>Valmis</button>
+            <button
+              className='btn btn-primary pull-right edit-record__submit'
+              type='submit'>
+              Valmis
+            </button>
             <button
               className='btn btn-danger pull-right edit-record__cancel'
               onClick={(e) => this.closeEditorForm(e)}>
