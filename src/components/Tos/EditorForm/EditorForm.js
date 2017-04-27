@@ -3,6 +3,7 @@ import './EditorForm.scss';
 import update from 'immutability-helper';
 import Select from 'react-select';
 import includes from 'lodash/includes';
+import capitalize from 'lodash/capitalize';
 import sortBy from 'lodash/sortBy';
 
 import { validateConditionalRules } from '../../../utils/validators';
@@ -15,15 +16,7 @@ export class EditorForm extends React.Component {
     this.getCheckedState = this.getCheckedState.bind(this);
     this.closeEditorForm = this.closeEditorForm.bind(this);
     this.state = {
-      newAttributes: this.initializeAttributes(this.props.attributeTypes),
-      typeSpecifier: {
-        value: this.props.elementConfig ? this.props.elementConfig.typeSpecifier : '',
-        checked: true
-      },
-      elementType: {
-        value: this.props.attributes.RecordType || '',
-        checked: true
-      }
+      newAttributes: this.initializeAttributes(this.props.attributeTypes)
     };
   }
 
@@ -50,16 +43,6 @@ export class EditorForm extends React.Component {
           [field]: {
             $set: value
           }
-        }
-      }
-    }));
-  }
-
-  onBaseAttributeChange (value, key, field) {
-    this.setState(update(this.state, {
-      [key]: {
-        [field]: {
-          $set: value
         }
       }
     }));
@@ -214,6 +197,7 @@ export class EditorForm extends React.Component {
   }
 
   generateDropdown (elementTypes) {
+    const type = [`${capitalize(this.props.editorConfig.type)}Type`];
     const optionsRaw = Object.keys(elementTypes).map(type => {
       return { value: elementTypes[type].name, label: elementTypes[type].name };
     });
@@ -226,10 +210,10 @@ export class EditorForm extends React.Component {
         autofocus={false}
         className='form-control col-xs-6'
         clearable={true}
-        onChange={(option) => this.onBaseAttributeChange(option ? option.value : null, 'elementType', 'value')}
+        onChange={(option) => this.onChange(option ? option.value : null, type, 'value')}
         openOnFocus={true}
         options={options}
-        value={this.state.elementType.value}
+        value={this.state.newAttributes[type] ? this.state.newAttributes[type].value : '---'}
       />
     );
   }
@@ -256,13 +240,11 @@ export class EditorForm extends React.Component {
 
   addRecord (e, targetId) {
     e.preventDefault();
-    const { typeSpecifier, elementType, newAttributes } = this.state;
+    const { newAttributes } = this.state;
 
     this.props.elementConfig.createRecord(
-      targetId,
-      typeSpecifier.value,
-      elementType.value,
-      this.filterAttributes(newAttributes)
+      this.filterAttributes(newAttributes),
+      targetId
     );
     this.props.displayMessage({
       title: 'Asiakirja',
@@ -272,12 +254,10 @@ export class EditorForm extends React.Component {
 
   editElement (e, targetId) {
     e.preventDefault();
-    const { typeSpecifier, elementType, newAttributes } = this.state;
+    const { newAttributes } = this.state;
     this.props.elementConfig.editWithForm(
-      targetId,
-      typeSpecifier.value,
-      elementType.value,
-      this.filterAttributes(newAttributes)
+      this.filterAttributes(newAttributes),
+      targetId
     );
   }
 
@@ -353,8 +333,8 @@ export class EditorForm extends React.Component {
           <input
             className='col-xs-6 form-control edit-attribute__input'
             placeholder='Tarkenne'
-            value={this.state.typeSpecifier.value}
-            onChange={(e) => this.onBaseAttributeChange(e.target.value, 'typeSpecifier', 'value')}/>
+            value={this.state.newAttributes.TypeSpecifier.value}
+            onChange={(e) => this.onChange(e.target.value, 'TypeSpecifier', 'value')}/>
         </div>
         <div className='col-xs-12 col-lg-6 form-group'>
           <label className='edit-record__label'>Tyyppi</label>

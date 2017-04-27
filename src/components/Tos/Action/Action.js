@@ -198,12 +198,12 @@ export class Action extends React.Component {
     });
   }
 
-  editRecordWithForm (actionId, attributes) {
+  editRecordWithForm (attributes, recordId) {
     this.setState({
       editing: false,
       recordId: undefined
     });
-    this.props.editRecord(actionId, attributes);
+    this.props.editRecord(attributes, recordId);
   }
 
   delete () {
@@ -215,9 +215,9 @@ export class Action extends React.Component {
     this.setState({ deleting: false });
   }
 
-  createRecord (actionId, typeSpecifier, type, attributes) {
+  createRecord (attributes, actionId) {
     this.setState({ creating: false });
-    this.props.addRecord(actionId, typeSpecifier, type, attributes);
+    this.props.addRecord(attributes, actionId);
   }
 
   generateRecords (records) {

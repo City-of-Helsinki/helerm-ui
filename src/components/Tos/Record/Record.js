@@ -88,7 +88,6 @@ export class Record extends React.Component {
                 style: 'btn-primary',
                 action: () => this.props.editRecordForm(
                   this.props.record.id,
-                  this.state.typeSpecifier,
                   this.state.attributes
                 )
               },
@@ -98,7 +97,6 @@ export class Record extends React.Component {
                 style: 'btn-primary',
                 action: () => this.props.complementRecordForm(
                   this.props.record.id,
-                  this.state.typeSpecifier,
                   this.state.attributes
                 )
               },
