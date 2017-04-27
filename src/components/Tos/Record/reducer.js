@@ -13,7 +13,7 @@ export function addRecord (actionIndex, typeSpecifier, recordType, attributes) {
   for (const key in attributes) {
     if (attributes.hasOwnProperty(key)) {
       if (attributes[key].checked === true) {
-        newAttributes[key] = attributes[key].name;
+        newAttributes[key] = attributes[key].value;
       }
     }
   }
@@ -41,7 +41,7 @@ export function editRecord (recordId, attributes) {
   for (const key in attributes) {
     if (attributes.hasOwnProperty(key)) {
       if (attributes[key].checked === true) {
-        editedAttributes[key] = attributes[key].name;
+        editedAttributes[key] = attributes[key].value;
       }
     }
   }

@@ -34,7 +34,7 @@ export class EditorForm extends React.Component {
       if (attributeTypes.hasOwnProperty(key)) {
         initialState = Object.assign({}, initialState, {
           [key]: {
-            name: attributes[key] ? attributes[key] : null,
+            value: attributes[key] ? attributes[key] : null,
             checked: true
           }
         });
@@ -66,13 +66,13 @@ export class EditorForm extends React.Component {
   }
 
   getActiveValue (key) {
-    if (this.state.newAttributes[key].name) {
-      return this.state.newAttributes[key].name;
+    if (this.state.newAttributes[key].value) {
+      return this.state.newAttributes[key].value;
     }
   }
 
   getCheckedState (key) {
-    if (this.props.editorConfig.action === 'edit' && !this.state.newAttributes[key].name) {
+    if (this.props.editorConfig.action === 'edit' && !this.state.newAttributes[key].value) {
       return false;
     } else {
       return this.state.newAttributes[key].checked;
@@ -170,7 +170,7 @@ export class EditorForm extends React.Component {
                   className='form-control edit-record__select'
                   clearable={true}
                   disabled={!this.state.newAttributes[key].checked}
-                  onChange={(option) => this.onChange(option ? option.value : null, key, 'name')}
+                  onChange={(option) => this.onChange(option ? option.value : null, key, 'value')}
                   openOnFocus={true}
                   options={options}
                   value={this.getActiveValue(key)}
@@ -196,7 +196,7 @@ export class EditorForm extends React.Component {
                   className='form-control edit-attribute__input'
                   value={this.getActiveValue(key)}
                   placeholder={attributeTypes[key].name}
-                  onChange={(e) => this.onChange(e.target.value, key, 'name')}
+                  onChange={(e) => this.onChange(e.target.value, key, 'value')}
                   disabled={!this.state.newAttributes[key].checked}
                 />
               </div>
@@ -237,7 +237,7 @@ export class EditorForm extends React.Component {
   filterAttributes (attributes) {
     const filteredAttributes = Object.assign({}, attributes);
     for (const key in filteredAttributes) {
-      if (!filteredAttributes[key].name) {
+      if (!filteredAttributes[key].value) {
         delete filteredAttributes[key];
       }
     }
