@@ -152,7 +152,7 @@ const receiveAttributeTypesAction = (state, { payload }) => {
   trimList(phaseTypes, phaseTypeList);
   trimList(actionTypes, actionTypeList);
   trimList(recordTypes, recordTypeList);
-  delete payload.RecordType;
+
   return update(state, {
     attributeTypes: { $set: payload },
     phaseTypes: { $set: phaseTypeList },
