@@ -1,7 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
 
-export const DropdownInput = ({ type, typeState, typeOptions, onChange, onInputChange, onSubmit }) => {
+export const TypeDropdown = ({ type, typeState, typeOptions, onChange, onInputChange, onSubmit }) => {
   const options = [];
 
   if (Object.keys(typeOptions).length === 0) {
@@ -47,7 +47,7 @@ export const DropdownInput = ({ type, typeState, typeOptions, onChange, onInputC
   );
 };
 
-DropdownInput.propTypes = {
+TypeDropdown.propTypes = {
   onChange: React.PropTypes.func.isRequired,
   onInputChange: React.PropTypes.func.isRequired,
   onSubmit: React.PropTypes.func.isRequired,
@@ -56,4 +56,4 @@ DropdownInput.propTypes = {
   typeState: React.PropTypes.string.isRequired
 };
 
-export default DropdownInput;
+export default TypeDropdown;

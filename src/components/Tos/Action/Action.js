@@ -9,7 +9,7 @@ import Attributes from '../Attribute/Attributes';
 import EditorForm from '../EditorForm/EditorForm';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
-import DropdownInput from 'components/DropdownInput/DropdownInput';
+import TypeDropdown from '../TypeDropdown/TypeDropdown';
 import DeleteView from '../DeleteView/DeleteView';
 import ReorderView from '../Reorder/ReorderView';
 import ImportView from '../ImportView/ImportView';
@@ -336,7 +336,7 @@ export class Action extends React.Component {
       }
       if (this.state.editingType) {
         actionType = (
-          <DropdownInput
+          <TypeDropdown
             type={'action'}
             typeState={this.state.type}
             typeOptions={this.props.actionTypes}

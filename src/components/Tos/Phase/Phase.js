@@ -10,7 +10,7 @@ import AddElementInput from '../AddElementInput/AddElementInput';
 import DeleteView from '../DeleteView/DeleteView';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
-import DropdownInput from 'components/DropdownInput/DropdownInput';
+import TypeDropdown from '../TypeDropdown/TypeDropdown';
 import ReorderView from '../Reorder/ReorderView';
 import ImportView from '../ImportView/ImportView';
 import EditorForm from '../EditorForm/EditorForm';
@@ -321,7 +321,7 @@ export class Phase extends React.Component {
       }
       if (this.state.editingType) {
         phaseType = (
-          <DropdownInput
+          <TypeDropdown
             type={'phase'}
             typeState={this.state.type}
             typeOptions={this.props.phaseTypes}
