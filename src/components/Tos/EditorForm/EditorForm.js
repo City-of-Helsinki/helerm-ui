@@ -145,7 +145,7 @@ export class EditorForm extends React.Component {
                   checked={this.getCheckedState(key)}
                   value={this.state.newAttributes[key].checked}
                   onChange={(e) => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}/>
-                <label className='edit-record__label'>
+                <label className='editor-form__label'>
                   {attributeTypes[key].name}
                   { attributeTypes[key].required &&
                   <span className='fa fa-asterisk required-asterisk'/>
@@ -155,7 +155,7 @@ export class EditorForm extends React.Component {
                   placeholder='Valitse...'
                   autoBlur={true}
                   autofocus={false}
-                  className='form-control edit-record__select'
+                  className='form-control editor-form__select'
                   clearable={true}
                   disabled={!this.state.newAttributes[key].checked}
                   onChange={(option) => this.onChange(option ? option.value : null, key, 'value')}
@@ -174,7 +174,7 @@ export class EditorForm extends React.Component {
                   value={this.state.newAttributes[key].checked}
                   onChange={(e) => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}
                 />
-                <label className='edit-record__label'>
+                <label className='editor-form__label'>
                   {attributeTypes[key].name}
                   { attributeTypes[key].required &&
                   <span className='fa fa-asterisk required-asterisk'/>
@@ -333,7 +333,7 @@ export class EditorForm extends React.Component {
     return (
       <div>
         <div className='col-xs-12 col-lg-6 form-group'>
-          <label className='edit-record__label'>Tarkenne</label>
+          <label className='editor-form__label'>Tarkenne</label>
           <span className='fa fa-asterisk required-asterisk'/>
           <input
             className='col-xs-6 form-control edit-attribute__input'
@@ -342,7 +342,7 @@ export class EditorForm extends React.Component {
             onChange={(e) => this.onChange(e.target.value, 'TypeSpecifier', 'value')}/>
         </div>
         <div className='col-xs-12 col-lg-6 form-group'>
-          <label className='edit-record__label'>Tyyppi</label>
+          <label className='editor-form__label'>Tyyppi</label>
           <span className='fa fa-asterisk required-asterisk'/>
           { typeDropdown }
         </div>
@@ -355,20 +355,20 @@ export class EditorForm extends React.Component {
     const attributeElements = this.generateAttributeElements(attributeTypes);
 
     return (
-      <div className='action add-box col-xs-12'>
+      <div className='add-box col-xs-12'>
         <h4>{this.resolveLabel()}</h4>
         <form onSubmit={(e) => this.resolveOnSubmit(e, targetId)}
-              className='edit-record'>
+              className='editor-form'>
           { this.props.editorConfig.type !== 'function' ? this.renderDescriptions() : null }
           { attributeElements }
           <div className='col-xs-12'>
             <button
-              className='btn btn-primary pull-right edit-record__submit'
+              className='btn btn-primary pull-right editor-form__submit'
               type='submit'>
               Valmis
             </button>
             <button
-              className='btn btn-danger pull-right edit-record__cancel'
+              className='btn btn-danger pull-right editor-form__cancel'
               onClick={(e) => this.closeEditorForm(e)}>
               Peruuta
             </button>
