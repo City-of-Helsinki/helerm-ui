@@ -347,7 +347,7 @@ export class Phase extends React.Component {
 
     return (
       <div>
-        <div className='col-xs-12 box phase'>
+        <div className='phase box col-xs-12'>
           { this.state.mode === 'form' &&
             <EditorForm
               targetId={this.props.phase.id}

@@ -362,164 +362,166 @@ export class Action extends React.Component {
     const recordElements = action && action.records ? this.generateRecords(action.records) : [];
 
     return (
-      <div className='action'>
-        { this.state.mode === 'form' &&
-          <EditorForm
-            targetId={this.props.action.id}
-            attributes={this.props.action.attributes}
-            attributeTypes={this.props.attributeTypes}
-            elementConfig={{
-              elementTypes: this.props.actionTypes,
-              elementId: this.props.action.id,
-              typeSpecifier: this.props.action.attributes.TypeSpecifier,
-              editWithForm: this.editActionWithForm
-            }}
-            editorConfig={{
-              type: 'action',
-              action: 'edit'
-            }}
-            closeEditorForm={this.disableEditMode}
-            displayMessage={this.props.displayMessage}
-          />
-        }
-        { this.state.mode !== 'form' &&
-          <StickyContainer className='row box action'>
-            <Sticky className='action-title'>
-              <Attributes
-                element={action}
-                documentState={this.props.documentState}
-                type={'action'}
-                attributeTypes={this.props.attributeTypes}
-                typeOptions={this.props.actionTypes}
-                renderBasicAttributes={this.renderBasicAttributes}
-                renderButtons={this.renderActionButtons}
-                updateTypeSpecifier={this.updateTypeSpecifier}
-                updateType={this.updateActionType}
-                updateAttribute={this.updateActionAttribute}
-                showAttributes={this.state.showAttributes}
-              />
-            </Sticky>
-            { this.state.creating &&
+      <div>
+        <div className='action row'>
+          { this.state.mode === 'form' &&
             <EditorForm
               targetId={this.props.action.id}
-              attributes={{}}
+              attributes={this.props.action.attributes}
               attributeTypes={this.props.attributeTypes}
               elementConfig={{
-                elementTypes: this.props.recordTypes,
-                createRecord: this.createRecord
+                elementTypes: this.props.actionTypes,
+                elementId: this.props.action.id,
+                typeSpecifier: this.props.action.attributes.TypeSpecifier,
+                editWithForm: this.editActionWithForm
               }}
               editorConfig={{
-                type: 'record',
-                action: 'add'
-              }}
-              closeEditorForm={this.cancelRecordCreation}
-              displayMessage={this.props.displayMessage}
-            />
-            }
-            { this.state.editing &&
-            <EditorForm
-              targetId={this.state.record.id}
-              attributes={this.state.record.attributes}
-              attributeTypes={this.props.attributeTypes}
-              elementConfig={{
-                elementTypes: this.props.recordTypes,
-                elementId: this.state.record.id,
-                typeSpecifier: this.state.record.attributes.TypeSpecifier,
-                editWithForm: this.editRecordWithForm
-              }}
-              editorConfig={{
-                type: 'record',
+                type: 'action',
                 action: 'edit'
               }}
-              closeEditorForm={this.cancelRecordEdit}
+              closeEditorForm={this.disableEditMode}
               displayMessage={this.props.displayMessage}
             />
-            }
-            { this.state.complementing &&
-            <EditorForm
-              targetId={this.state.record.id}
-              attributes={this.state.record.attributes}
-              attributeTypes={this.props.attributeTypes}
-              elementConfig={{
-                elementTypes: this.props.recordTypes,
-                elementId: this.state.record.id,
-                typeSpecifier: this.state.record.attributes.TypeSpecifier,
-                editWithForm: this.editRecordWithForm
-              }}
-              editorConfig={{
-                type: 'record',
-                action: 'complement'
-              }}
-              closeEditorForm={this.cancelRecordComplement}
-              displayMessage={this.props.displayMessage}
-            />
-            }
-            { !this.state.editing && !this.state.complementing && !!recordElements.length &&
-            <div>
-              <span className='col-xs-6 attribute-label'>
-              Asiakirjatyypin tarkenne
-              </span>
-              <span className='col-xs-6 attribute-label'>
-              Tyyppi
-              </span>
-              <div
-                className={classnames('col-xs-12 records', { 'records-editing': this.props.documentState === 'edit' })}>
-                { recordElements }
+          }
+          { this.state.mode !== 'form' &&
+            <StickyContainer className='action row box'>
+              <Sticky className='action-title'>
+                <Attributes
+                  element={action}
+                  documentState={this.props.documentState}
+                  type={'action'}
+                  attributeTypes={this.props.attributeTypes}
+                  typeOptions={this.props.actionTypes}
+                  renderBasicAttributes={this.renderBasicAttributes}
+                  renderButtons={this.renderActionButtons}
+                  updateTypeSpecifier={this.updateTypeSpecifier}
+                  updateType={this.updateActionType}
+                  updateAttribute={this.updateActionAttribute}
+                  showAttributes={this.state.showAttributes}
+                />
+              </Sticky>
+              { this.state.creating &&
+              <EditorForm
+                targetId={this.props.action.id}
+                attributes={{}}
+                attributeTypes={this.props.attributeTypes}
+                elementConfig={{
+                  elementTypes: this.props.recordTypes,
+                  createRecord: this.createRecord
+                }}
+                editorConfig={{
+                  type: 'record',
+                  action: 'add'
+                }}
+                closeEditorForm={this.cancelRecordCreation}
+                displayMessage={this.props.displayMessage}
+              />
+              }
+              { this.state.editing &&
+              <EditorForm
+                targetId={this.state.record.id}
+                attributes={this.state.record.attributes}
+                attributeTypes={this.props.attributeTypes}
+                elementConfig={{
+                  elementTypes: this.props.recordTypes,
+                  elementId: this.state.record.id,
+                  typeSpecifier: this.state.record.attributes.TypeSpecifier,
+                  editWithForm: this.editRecordWithForm
+                }}
+                editorConfig={{
+                  type: 'record',
+                  action: 'edit'
+                }}
+                closeEditorForm={this.cancelRecordEdit}
+                displayMessage={this.props.displayMessage}
+              />
+              }
+              { this.state.complementing &&
+              <EditorForm
+                targetId={this.state.record.id}
+                attributes={this.state.record.attributes}
+                attributeTypes={this.props.attributeTypes}
+                elementConfig={{
+                  elementTypes: this.props.recordTypes,
+                  elementId: this.state.record.id,
+                  typeSpecifier: this.state.record.attributes.TypeSpecifier,
+                  editWithForm: this.editRecordWithForm
+                }}
+                editorConfig={{
+                  type: 'record',
+                  action: 'complement'
+                }}
+                closeEditorForm={this.cancelRecordComplement}
+                displayMessage={this.props.displayMessage}
+              />
+              }
+              { !this.state.editing && !this.state.complementing && !!recordElements.length &&
+              <div>
+                <span className='col-xs-6 attribute-label'>
+                Asiakirjatyypin tarkenne
+                </span>
+                <span className='col-xs-6 attribute-label'>
+                Tyyppi
+                </span>
+                <div
+                  className={classnames('col-xs-12 records', { 'records-editing': this.props.documentState === 'edit' })}>
+                  { recordElements }
+                </div>
               </div>
-            </div>
-            }
-          </StickyContainer>
-        }
-        { this.state.deleting &&
-          <Popup
-            content={
-              <DeleteView
-                type='action'
-                target={this.state.typeSpecifier}
-                action={() => this.delete()}
-                cancel={() => this.cancelDeletion()}
-              />
-            }
-            closePopup={() => this.cancelDeletion()}
-          />
-        }
-        { this.state.showReorderView &&
-          <Popup
-            content={
-              <ReorderView
-                target='record'
-                toggleReorderView={() => this.toggleReorderView()}
-                keys={this.props.action.records}
-                values={this.props.records}
-                changeOrder={this.props.changeOrder}
-                parent={this.props.action.id}
-                parentName={this.state.typeSpecifier}
-              />
-            }
-            closePopup={() => this.toggleReorderView()}
-          />
-        }
-        { this.state.showImportView &&
-          <Popup
-            content={
-              <ImportView
-                level='record'
-                toggleImportView={() => this.toggleImportView()}
-                title='asiakirjoja'
-                targetText={'toimenpiteeseen ' + action.name}
-                itemsToImportText='asiakirjat'
-                phasesOrder={this.props.phasesOrder}
-                phases={this.props.phases}
-                actions={this.props.actions}
-                records={this.props.records}
-                importItems={this.props.importItems}
-                parent={action.id}
-                parentName={action.name}
-              />
-            }
-            closePopup={() => this.toggleImportView()}
-          />
-        }
+              }
+            </StickyContainer>
+          }
+          { this.state.deleting &&
+            <Popup
+              content={
+                <DeleteView
+                  type='action'
+                  target={this.state.typeSpecifier}
+                  action={() => this.delete()}
+                  cancel={() => this.cancelDeletion()}
+                />
+              }
+              closePopup={() => this.cancelDeletion()}
+            />
+          }
+          { this.state.showReorderView &&
+            <Popup
+              content={
+                <ReorderView
+                  target='record'
+                  toggleReorderView={() => this.toggleReorderView()}
+                  keys={this.props.action.records}
+                  values={this.props.records}
+                  changeOrder={this.props.changeOrder}
+                  parent={this.props.action.id}
+                  parentName={this.state.typeSpecifier}
+                />
+              }
+              closePopup={() => this.toggleReorderView()}
+            />
+          }
+          { this.state.showImportView &&
+            <Popup
+              content={
+                <ImportView
+                  level='record'
+                  toggleImportView={() => this.toggleImportView()}
+                  title='asiakirjoja'
+                  targetText={'toimenpiteeseen ' + action.name}
+                  itemsToImportText='asiakirjat'
+                  phasesOrder={this.props.phasesOrder}
+                  phases={this.props.phases}
+                  actions={this.props.actions}
+                  records={this.props.records}
+                  importItems={this.props.importItems}
+                  parent={action.id}
+                  parentName={action.name}
+                />
+              }
+              closePopup={() => this.toggleImportView()}
+            />
+          }
+        </div>
       </div>
     );
   }

@@ -1,4 +1,8 @@
 .action {
+  &.box {
+    margin: 0;
+  }
+  margin: 10px 0;
   border-top-color: #658fcd;
   border-top-width: 4px;
   background-color: white;
