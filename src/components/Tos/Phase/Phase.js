@@ -13,6 +13,7 @@ import Dropdown from 'components/Dropdown';
 import DropdownInput from 'components/DropdownInput/DropdownInput';
 import ReorderView from '../Reorder/ReorderView';
 import ImportView from '../ImportView/ImportView';
+import EditorForm from '../EditorForm/EditorForm';
 
 export class Phase extends React.Component {
   constructor (props) {
@@ -24,6 +25,8 @@ export class Phase extends React.Component {
     this.addAction = this.addAction.bind(this);
     this.editTypeSpecifier = this.editTypeSpecifier.bind(this);
     this.editType = this.editType.bind(this);
+    this.editPhaseForm = this.editPhaseForm.bind(this);
+    this.editPhaseWithForm = this.editPhaseWithForm.bind(this);
     this.disableEditMode = this.disableEditMode.bind(this);
     this.updateTypeSpecifier = this.updateTypeSpecifier.bind(this);
     this.updatePhaseType = this.updatePhaseType.bind(this);
@@ -82,6 +85,12 @@ export class Phase extends React.Component {
   editType () {
     if (this.props.documentState === 'edit') {
       this.setState({ editingType: true, mode: 'edit' });
+    }
+  }
+
+  editPhaseForm () {
+    if (this.props.documentState === 'edit') {
+      this.setState({ mode: 'form' });
     }
   }
 
@@ -179,6 +188,11 @@ export class Phase extends React.Component {
   //   this.props.editPhaseAttribute(updatedPhaseAttribute);
   // }
 
+  editPhaseWithForm (attributes, phaseId) {
+    this.props.editPhase(attributes, phaseId);
+    this.disableEditMode();
+  }
+
   generateActions (actions) {
     const elements = [];
     for (const key in actions) {
@@ -218,20 +232,20 @@ export class Phase extends React.Component {
   generateDropdownItems () {
     return [
       {
+        text: 'Uusi toimenpide',
+        icon: 'fa-file-text',
+        style: 'btn-primary',
+        action: () => this.createNewAction()
+      }, {
         text: 'Muokkaa käsittelyvaihetta',
         icon: 'fa-pencil',
         style: 'btn-primary',
-        action: () => null
+        action: () => this.editPhaseForm()
       }, {
         text: 'Täydennä metatietoja',
         icon: 'fa-plus-square',
         style: 'btn-primary',
         action: () => null
-      }, {
-        text: 'Uusi toimenpide',
-        icon: 'fa-file-text',
-        style: 'btn-primary',
-        action: () => this.createNewAction()
       }, {
         text: 'Järjestä toimenpiteitä',
         icon: 'fa-th-list',
@@ -334,35 +348,56 @@ export class Phase extends React.Component {
     return (
       <div>
         <div className='col-xs-12 box phase'>
-          <StickyContainer>
-            <Sticky className={'phase-title ' + (this.props.phase.is_open ? 'open' : 'closed')}>
-              <Attributes
-                element={phase}
-                documentState={this.props.documentState}
-                type={'phase'}
-                attributeTypes={this.props.attributeTypes}
-                typeOptions={this.props.phaseTypes}
-                renderBasicAttributes={this.renderBasicAttributes}
-                renderButtons={this.renderPhaseButtons}
-                updateTypeSpecifier={this.updateTypeSpecifier}
-                updateType={this.updatePhaseType}
-                updateAttribute={this.updatePhaseAttribute}
-                showAttributes={this.state.showAttributes}
-              />
-            </Sticky>
-            { this.state.mode === 'add' &&
-            <AddElementInput
-              type='action'
-              newTypeSpecifier={this.state.actionTypeSpecifier}
-              submit={this.addAction}
-              onChange={this.onNewChange}
-              cancel={this.cancelActionCreation}
+          { this.state.mode === 'form' &&
+            <EditorForm
+              targetId={this.props.phase.id}
+              attributes={this.props.phase.attributes}
+              attributeTypes={this.props.attributeTypes}
+              elementConfig={{
+                elementTypes: this.props.phaseTypes,
+                elementId: this.props.phase.id,
+                typeSpecifier: this.props.phase.attributes.TypeSpecifier,
+                editWithForm: this.editPhaseWithForm
+              }}
+              editorConfig={{
+                type: 'phase',
+                action: 'edit'
+              }}
+              closeEditorForm={this.disableEditMode}
+              displayMessage={this.props.displayMessage}
             />
-            }
-            <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>
-              { actionElements }
-            </div>
-          </StickyContainer>
+          }
+          { this.state.mode !== 'form' &&
+            <StickyContainer>
+              <Sticky className={'phase-title ' + (this.props.phase.is_open ? 'open' : 'closed')}>
+                <Attributes
+                  element={phase}
+                  documentState={this.props.documentState}
+                  type={'phase'}
+                  attributeTypes={this.props.attributeTypes}
+                  typeOptions={this.props.phaseTypes}
+                  renderBasicAttributes={this.renderBasicAttributes}
+                  renderButtons={this.renderPhaseButtons}
+                  updateTypeSpecifier={this.updateTypeSpecifier}
+                  updateType={this.updatePhaseType}
+                  updateAttribute={this.updatePhaseAttribute}
+                  showAttributes={this.state.showAttributes}
+                />
+              </Sticky>
+              { this.state.mode === 'add' &&
+              <AddElementInput
+                type='action'
+                newTypeSpecifier={this.state.actionTypeSpecifier}
+                submit={this.addAction}
+                onChange={this.onNewChange}
+                cancel={this.cancelActionCreation}
+              />
+              }
+              <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>
+                { actionElements }
+              </div>
+            </StickyContainer>
+          }
           { this.state.deleting &&
           <Popup
             content={
@@ -435,7 +470,7 @@ Phase.propTypes = {
   documentState: React.PropTypes.string.isRequired,
   editAction: React.PropTypes.func.isRequired,
   editActionAttribute: React.PropTypes.func.isRequired,
-  // editPhase: React.PropTypes.func.isRequired,
+  editPhase: React.PropTypes.func.isRequired,
   editPhaseAttribute: React.PropTypes.func.isRequired,
   editRecord: React.PropTypes.func.isRequired,
   editRecordAttribute: React.PropTypes.func.isRequired,
