@@ -43,9 +43,11 @@ export class Action extends React.Component {
       mode: 'view',
       editingTypeSpecifier: false,
       editingType: false,
-      creating: false,
-      editing: false,
-      complementing: false,
+      creatingRecord: false,
+      editingRecord: false,
+      complementingRecord: false,
+      editingAction: false,
+      complementingAction: false,
       deleting: false,
       showReorderView: false,
       showImportView: false,
@@ -62,8 +64,8 @@ export class Action extends React.Component {
     }
     if (nextProps.documentState === 'view') {
       this.setState({
-        editing: false,
-        complementing: false
+        editingRecord: false,
+        complementingRecord: false
       });
     }
   }
@@ -98,7 +100,7 @@ export class Action extends React.Component {
 
   editActionForm () {
     if (this.props.documentState === 'edit') {
-      this.setState({ mode: 'form' });
+      this.setState({ mode: 'editingAction' });
     }
   }
 
@@ -168,11 +170,11 @@ export class Action extends React.Component {
   }
 
   createNewRecord () {
-    this.setState({ creating: true });
+    this.setState({ creatingRecord: true });
   }
 
   cancelRecordCreation () {
-    this.setState({ creating: false });
+    this.setState({ creatingRecord: false });
   }
 
   editRecordForm (recordId, recordAttributes) {
@@ -182,13 +184,13 @@ export class Action extends React.Component {
         attributes: recordAttributes
       }
     }, () => {
-      this.setState({ editing: true });
+      this.setState({ editingRecord: true });
     });
   }
 
   cancelRecordEdit () {
     this.setState({
-      editing: false,
+      editingRecord: false,
       recordId: undefined
     });
   }
@@ -200,20 +202,20 @@ export class Action extends React.Component {
         attributes: recordAttributes
       }
     }, () => {
-      this.setState({ complementing: true });
+      this.setState({ complementingRecord: true });
     });
   }
 
   cancelRecordComplement () {
     this.setState({
-      complementing: false,
+      complementingRecord: false,
       recordId: undefined
     });
   }
 
   editRecordWithForm (attributes, recordId) {
     this.setState({
-      editing: false,
+      editingRecord: false,
       recordId: undefined
     });
     this.props.editRecord(attributes, recordId);
@@ -229,7 +231,7 @@ export class Action extends React.Component {
   }
 
   createRecord (attributes, actionId) {
-    this.setState({ creating: false });
+    this.setState({ creatingRecord: false });
     this.props.addRecord(attributes, actionId);
   }
 
@@ -364,7 +366,7 @@ export class Action extends React.Component {
     return (
       <div>
         <div className='action row'>
-          { this.state.mode === 'form' &&
+          { this.state.mode === 'editingAction' &&
             <EditorForm
               targetId={this.props.action.id}
               attributes={this.props.action.attributes}
@@ -383,7 +385,7 @@ export class Action extends React.Component {
               displayMessage={this.props.displayMessage}
             />
           }
-          { this.state.mode !== 'form' &&
+          { this.state.mode !== 'editingAction' &&
             <StickyContainer className='action row box'>
               <Sticky className='action-title'>
                 <Attributes
@@ -400,7 +402,7 @@ export class Action extends React.Component {
                   showAttributes={this.state.showAttributes}
                 />
               </Sticky>
-              { this.state.creating &&
+              { this.state.creatingRecord &&
               <EditorForm
                 targetId={this.props.action.id}
                 attributes={{}}
@@ -417,7 +419,7 @@ export class Action extends React.Component {
                 displayMessage={this.props.displayMessage}
               />
               }
-              { this.state.editing &&
+              { this.state.editingRecord &&
               <EditorForm
                 targetId={this.state.record.id}
                 attributes={this.state.record.attributes}
@@ -436,7 +438,7 @@ export class Action extends React.Component {
                 displayMessage={this.props.displayMessage}
               />
               }
-              { this.state.complementing &&
+              { this.state.complementingRecord &&
               <EditorForm
                 targetId={this.state.record.id}
                 attributes={this.state.record.attributes}
@@ -455,7 +457,7 @@ export class Action extends React.Component {
                 displayMessage={this.props.displayMessage}
               />
               }
-              { !this.state.editing && !this.state.complementing && !!recordElements.length &&
+              { !this.state.editingRecord && !this.state.complementingRecord && !!recordElements.length &&
               <div>
                 <span className='col-xs-6 attribute-label'>
                 Asiakirjatyypin tarkenne
