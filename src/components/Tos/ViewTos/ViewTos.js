@@ -447,7 +447,7 @@ export class ViewTOS extends React.Component {
       const TOSMetaData = this.generateMetaData(attributeTypes, selectedTOS.attributes);
       return (
         <div>
-          <StickyContainer className='col-xs-12 single-tos-container'> // TODO: Fix broken Stickys
+          <StickyContainer className='col-xs-12 single-tos-container'>
 
             <TosHeader
               cancelEdit={this.cancelEdit}

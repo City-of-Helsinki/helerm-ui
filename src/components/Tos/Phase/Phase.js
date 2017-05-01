@@ -61,10 +61,7 @@ export class Phase extends React.Component {
       this.setState({ type: nextProps.phase.attributes.PhaseType });
     }
     if (nextProps.documentState === 'view') {
-      this.setState({
-        editingPhase: false,
-        complementingPhase: false
-      });
+      this.disableEditMode();
     }
   }
 
@@ -98,7 +95,7 @@ export class Phase extends React.Component {
 
   editPhaseForm () {
     if (this.props.documentState === 'edit') {
-      this.setState({ mode: 'editingPhase' });
+      this.setState({ editingPhase: true, mode: 'edit' });
     }
   }
 
@@ -106,6 +103,8 @@ export class Phase extends React.Component {
     this.setState({
       editingTypeSpecifier: false,
       editingType: false,
+      editingPhase: false,
+      complementingPhase: false,
       mode: 'view'
     });
   }
@@ -356,7 +355,7 @@ export class Phase extends React.Component {
     return (
       <div>
         <div className='phase box col-xs-12'>
-          { this.state.mode === 'editingPhase' &&
+          { this.state.mode === 'edit' && this.state.editingPhase &&
             <EditorForm
               targetId={this.props.phase.id}
               attributes={this.props.phase.attributes}
@@ -375,7 +374,7 @@ export class Phase extends React.Component {
               displayMessage={this.props.displayMessage}
             />
           }
-          { this.state.mode !== 'editingPhase' &&
+          { !this.state.editingPhase &&
             <StickyContainer>
               <Sticky className={'phase-title ' + (this.props.phase.is_open ? 'open' : 'closed')}>
                 <Attributes

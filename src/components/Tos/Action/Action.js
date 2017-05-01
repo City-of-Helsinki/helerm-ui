@@ -63,10 +63,7 @@ export class Action extends React.Component {
       this.setState({ type: nextProps.action.attributes.ActionType });
     }
     if (nextProps.documentState === 'view') {
-      this.setState({
-        editingRecord: false,
-        complementingRecord: false
-      });
+      this.disableEditMode();
     }
   }
 
@@ -100,7 +97,7 @@ export class Action extends React.Component {
 
   editActionForm () {
     if (this.props.documentState === 'edit') {
-      this.setState({ mode: 'editingAction' });
+      this.setState({ editingAction: true, mode: 'edit' });
     }
   }
 
@@ -108,6 +105,10 @@ export class Action extends React.Component {
     this.setState({
       editingTypeSpecifier: false,
       editingType: false,
+      editingAction: false,
+      complementingAction: false,
+      editingRecord: false,
+      complementingRecord: false,
       mode: 'view'
     });
   }
@@ -366,7 +367,7 @@ export class Action extends React.Component {
     return (
       <div>
         <div className='action row'>
-          { this.state.mode === 'editingAction' &&
+          { this.state.mode === 'edit' && this.state.editingAction &&
             <EditorForm
               targetId={this.props.action.id}
               attributes={this.props.action.attributes}
@@ -385,7 +386,7 @@ export class Action extends React.Component {
               displayMessage={this.props.displayMessage}
             />
           }
-          { this.state.mode !== 'editingAction' &&
+          { !this.state.editingAction &&
             <StickyContainer className='action row box'>
               <Sticky className='action-title'>
                 <Attributes
