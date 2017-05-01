@@ -99,6 +99,12 @@ export class Phase extends React.Component {
     }
   }
 
+  complementPhaseForm () {
+    if (this.props.documentState === 'edit') {
+      this.setState({ complementingPhase: true, mode: 'edit' });
+    }
+  }
+
   disableEditMode () {
     this.setState({
       editingTypeSpecifier: false,
@@ -252,7 +258,7 @@ export class Phase extends React.Component {
         text: 'Täydennä metatietoja',
         icon: 'fa-plus-square',
         style: 'btn-primary',
-        action: () => null
+        action: () => this.complementPhaseForm()
       }, {
         text: 'Järjestä toimenpiteitä',
         icon: 'fa-th-list',
@@ -369,6 +375,25 @@ export class Phase extends React.Component {
               editorConfig={{
                 type: 'phase',
                 action: 'edit'
+              }}
+              closeEditorForm={this.disableEditMode}
+              displayMessage={this.props.displayMessage}
+            />
+          }
+          { this.state.mode === 'edit' && this.state.complementingPhase &&
+            <EditorForm
+              targetId={this.props.phase.id}
+              attributes={this.props.phase.attributes}
+              attributeTypes={this.props.attributeTypes}
+              elementConfig={{
+                elementTypes: this.props.phaseTypes,
+                elementId: this.props.phase.id,
+                typeSpecifier: this.props.phase.attributes.TypeSpecifier,
+                editWithForm: this.editPhaseWithForm
+              }}
+              editorConfig={{
+                type: 'phase',
+                action: 'complement'
               }}
               closeEditorForm={this.disableEditMode}
               displayMessage={this.props.displayMessage}

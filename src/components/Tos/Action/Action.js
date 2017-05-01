@@ -101,6 +101,12 @@ export class Action extends React.Component {
     }
   }
 
+  complementActionForm () {
+    if (this.props.documentState === 'edit') {
+      this.setState({ complementingAction: true, mode: 'edit' });
+    }
+  }
+
   disableEditMode () {
     this.setState({
       editingTypeSpecifier: false,
@@ -275,7 +281,7 @@ export class Action extends React.Component {
         text: 'Täydennä metatietoja',
         icon: 'fa-plus-square',
         style: 'btn-primary',
-        action: () => null
+        action: () => this.complementActionForm()
       }, {
         text: 'Järjestä asiakirjoja',
         icon: 'fa-th-list',
@@ -381,6 +387,25 @@ export class Action extends React.Component {
               editorConfig={{
                 type: 'action',
                 action: 'edit'
+              }}
+              closeEditorForm={this.disableEditMode}
+              displayMessage={this.props.displayMessage}
+            />
+          }
+          { this.state.mode === 'edit' && this.state.complementingAction &&
+            <EditorForm
+              targetId={this.props.action.id}
+              attributes={this.props.action.attributes}
+              attributeTypes={this.props.attributeTypes}
+              elementConfig={{
+                elementTypes: this.props.actionTypes,
+                elementId: this.props.action.id,
+                typeSpecifier: this.props.action.attributes.TypeSpecifier,
+                editWithForm: this.editActionWithForm
+              }}
+              editorConfig={{
+                type: 'action',
+                action: 'complement'
               }}
               closeEditorForm={this.disableEditMode}
               displayMessage={this.props.displayMessage}
