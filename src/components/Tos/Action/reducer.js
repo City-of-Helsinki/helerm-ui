@@ -64,7 +64,7 @@ export const addActionAction = (state, { payload }) => {
 export const editActionAction = (state, { payload }) => {
   return update(state, {
     actions: {
-      [payload.id]: {
+      [payload.actionId]: {
         attributes: {
           $set: payload.editedAction.attributes
         }
