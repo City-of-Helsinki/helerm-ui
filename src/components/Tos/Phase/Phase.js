@@ -399,7 +399,7 @@ export class Phase extends React.Component {
               displayMessage={this.props.displayMessage}
             />
           }
-          { !this.state.editingPhase &&
+          { !this.state.editingPhase && !this.state.complementingPhase &&
             <StickyContainer>
               <Sticky className={'phase-title ' + (this.props.phase.is_open ? 'open' : 'closed')}>
                 <Attributes

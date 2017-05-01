@@ -411,7 +411,7 @@ export class Action extends React.Component {
               displayMessage={this.props.displayMessage}
             />
           }
-          { !this.state.editingAction &&
+          { !this.state.editingAction && !this.state.complementingAction &&
             <StickyContainer className='action row box'>
               <Sticky className='action-title'>
                 <Attributes
