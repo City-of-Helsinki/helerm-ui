@@ -37,8 +37,8 @@ export class Phase extends React.Component {
     this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
     this.cancelActionCreation = this.cancelActionCreation.bind(this);
     this.state = {
-      typeSpecifier: this.props.phase.attributes.TypeSpecifier || '(ei tarkennetta)',
-      type: this.props.phase.attributes.PhaseType || '---',
+      typeSpecifier: this.props.phase.attributes.TypeSpecifier,
+      type: this.props.phase.attributes.PhaseType,
       attributes: this.props.phase.attributes,
       actionTypeSpecifier: '',
       mode: 'view',

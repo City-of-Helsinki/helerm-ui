@@ -37,8 +37,8 @@ export class Action extends React.Component {
     this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
     this.disableEditMode = this.disableEditMode.bind(this);
     this.state = {
-      typeSpecifier: this.props.action.attributes.TypeSpecifier || '(ei tarkennetta)',
-      type: this.props.action.attributes.ActionType || '---',
+      typeSpecifier: this.props.action.attributes.TypeSpecifier,
+      type: this.props.action.attributes.ActionType,
       attributes: this.props.action.attributes,
       mode: 'view',
       editingTypeSpecifier: false,
