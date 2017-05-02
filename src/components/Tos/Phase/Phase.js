@@ -282,7 +282,7 @@ export class Phase extends React.Component {
     const phaseDropdownItems = this.generateDropdownItems();
 
     return (
-      <span className='phase-buttons'>
+      <div className='phase-buttons'>
         { this.props.phase.actions.length !== 0 &&
           <button
             type='button'
@@ -299,8 +299,16 @@ export class Phase extends React.Component {
         <span className='pull-right'>
           <Dropdown children={phaseDropdownItems} small={true}/>
         </span>
-      }
-      </span>
+        }
+        <button
+          className='btn btn-info btn-xs record-button pull-right'
+          onClick={this.toggleAttributeVisibility}>
+          <span
+            className={'fa ' + (this.state.showAttributes ? 'fa-minus' : 'fa-plus')}
+            aria-hidden='true'
+          />
+        </button>
+      </div>
     );
   }
 
