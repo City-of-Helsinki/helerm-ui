@@ -26,9 +26,9 @@
   margin-left: 0;
   width: 100% !important;
   border-bottom: 1px solid #cfcfcf;
-  .action-dropdown-button {
-    right: 53px;
-  }
+  // .action-dropdown-button {
+  //   right: 53px;
+  // }
 }
 .records {
   padding: 1px 10px 26px;
@@ -38,9 +38,10 @@
   font-size: 0.8em;
 }
 .action-dropdown-button {
-  position: absolute;
-  right: 25px;
-  top: 4px;
+  // position: absolute;
+  // right: 25px;
+  // top: 4px;
+  position: relative;
 }
 .edit-action-type__input {
   &.form-control {
@@ -56,5 +57,28 @@
   .Select-control {
     height: 31px;
     border-radius: 2px;
+  }
+}
+
+.action-buttons {
+  position: absolute;
+  right: 8px;
+  top: 4px;
+  font-size: 14px;
+}
+.action-attributes {
+  margin-bottom: 10px;
+  overflow: auto;
+  .table-key {
+    font-weight: 400;
+  }
+}
+
+.action-open {
+  .basic-attributes {
+    height: 50px;
+  }
+  .list-group-item {
+    padding: 10px 15px;
   }
 }
