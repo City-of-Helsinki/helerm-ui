@@ -2,6 +2,10 @@
   border-top: 0px;
   background-color: #f2f2f2;
   padding: 0px 0px 10px 0px;
+
+  &.box {
+    padding-bottom: 10px;
+  }
 }
 .phase > div:first-child {
   border-top: 4px solid salmon;
@@ -24,11 +28,11 @@
   background-color: #f2f2f2;
   z-index: 3;
 }
-.phase-title.closed.sticky {
+.phase-title.phase-closed.sticky {
   padding: 7px 21px 2px;
   margin-left: 0px;
 }
-.phase-title.open.sticky {
+.phase-title.phase-open.sticky {
   padding: 7px 37px 2px;
   left: 0px !important;
   width: 100% !important;
@@ -80,5 +84,24 @@
   .Select-control {
     height: 31px;
     border-radius: 2px;
+  }
+}
+
+.phase-attributes {
+  display: inline-block;
+  width: 100%;
+
+  .basic-attributes {
+    height: 40px;
+  }
+
+  .attribute {
+    font-size: 15px;
+    height: 80px;
+    border: 3px solid #f2f2f2;
+  }
+
+  .edit-attribute__input {
+    border: 1px solid #aaa;
   }
 }
