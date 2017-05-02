@@ -421,7 +421,7 @@ export class Action extends React.Component {
           }
           { !this.state.editingAction && !this.state.complementingAction &&
             <StickyContainer className='action row box'>
-              <Sticky className={'action-title ' + (this.state.showAttributes ? 'action-open' : '')}>
+              <Sticky className={'action-title ' + (this.state.showAttributes ? 'action-open' : 'action-closed')}>
                 <Attributes
                   element={action}
                   documentState={this.props.documentState}
