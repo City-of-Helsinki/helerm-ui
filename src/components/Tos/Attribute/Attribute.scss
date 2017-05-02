@@ -40,6 +40,28 @@ $attribute-input-height: 31px;
   margin-bottom: -4px;
 }
 
-.Select-menu-outer {
-  z-index: 3;
+.Select-menu {
+  height: 12em;
+  overflow: scroll;
+}
+
+.no-attributes {
+  display: none;
+}
+
+.phase-open,
+.action-open,
+.record-open {
+  .basic-attributes {
+    padding-bottom: 0;
+  }
+  .no-attributes {
+    display: inline-block;
+    padding: 10px;
+    font-weight: 600;
+    & > span {
+      border: 1px solid #aaa;
+      padding: 5px;
+    }
+  }
 }

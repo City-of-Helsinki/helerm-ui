@@ -1,5 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
+import includes from 'lodash/includes';
 import Attribute from './Attribute';
 
 export const Attributes = ({
@@ -73,9 +74,10 @@ export const Attributes = ({
 
   function generateAttributes (attributes) {
     const attributeElements = [];
+    const unwantedAttributes = ['TypeSpecifier', 'RecordType', 'ActionType', 'PhaseType'];
 
     for (const key in attributeTypes) {
-      if (attributes.hasOwnProperty(key) && attributes[key] && attributeTypes[key]) {
+      if (attributes.hasOwnProperty(key) && attributes[key] && attributeTypes[key] && !includes(unwantedAttributes, key)) {
         attributeElements.push(
           <Attribute
             key={key}
@@ -91,6 +93,14 @@ export const Attributes = ({
             showAttributes={showAttributes}
           />);
       }
+    }
+
+    if (attributeElements.length === 0) {
+      return (
+        <div className='no-attributes'>
+          <span>Ei metatietoja. Täydennä metatietoja nähdäksesi ne täällä.</span>
+        </div>
+      );
     }
     return attributeElements;
   }

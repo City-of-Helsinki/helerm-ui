@@ -31,14 +31,14 @@ export class Action extends React.Component {
     this.cancelRecordComplement = this.cancelRecordComplement.bind(this);
     this.updateTypeSpecifier = this.updateTypeSpecifier.bind(this);
     this.updateActionType = this.updateActionType.bind(this);
-    // this.updateActionAttribute = this.updateActionAttribute.bind(this);
+    this.updateActionAttribute = this.updateActionAttribute.bind(this);
     this.renderActionButtons = this.renderActionButtons.bind(this);
     this.renderBasicAttributes = this.renderBasicAttributes.bind(this);
-    // this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
+    this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
     this.disableEditMode = this.disableEditMode.bind(this);
     this.state = {
-      typeSpecifier: this.props.action.attributes.TypeSpecifier || '(ei tarkennetta)',
-      type: this.props.action.attributes.ActionType || '---',
+      typeSpecifier: this.props.action.attributes.TypeSpecifier,
+      type: this.props.action.attributes.ActionType,
       attributes: this.props.action.attributes,
       mode: 'view',
       editingTypeSpecifier: false,
@@ -77,11 +77,11 @@ export class Action extends React.Component {
     this.setState({ showImportView: !current });
   }
 
-  // toggleAttributeVisibility () {
-  //   const currentVisibility = this.state.showAttributes;
-  //   const newVisibility = !currentVisibility;
-  //   this.setState({ showAttributes: newVisibility });
-  // }
+  toggleAttributeVisibility () {
+    const currentVisibility = this.state.showAttributes;
+    const newVisibility = !currentVisibility;
+    this.setState({ showAttributes: newVisibility });
+  }
 
   editTypeSpecifier () {
     if (this.props.documentState === 'edit') {
@@ -98,6 +98,12 @@ export class Action extends React.Component {
   editActionForm () {
     if (this.props.documentState === 'edit') {
       this.setState({ editingAction: true, mode: 'edit' });
+    }
+  }
+
+  complementActionForm () {
+    if (this.props.documentState === 'edit') {
+      this.setState({ complementingAction: true, mode: 'edit' });
     }
   }
 
@@ -155,15 +161,15 @@ export class Action extends React.Component {
     this.disableEditMode();
   }
 
-  // updateActionAttribute (attribute, attributeIndex, actionId) {
-  //   this.setState({
-  //     attributes: {
-  //       [attributeIndex]: attribute
-  //     }
-  //   });
-  //   const updatedActionAttribute = { attribute, attributeIndex, actionId };
-  //   this.props.editActionAttribute(updatedActionAttribute);
-  // }
+  updateActionAttribute (attribute, attributeIndex, actionId) {
+    this.setState({
+      attributes: {
+        [attributeIndex]: attribute
+      }
+    });
+    const updatedActionAttribute = { attribute, attributeIndex, actionId };
+    this.props.editActionAttribute(updatedActionAttribute);
+  }
 
   editActionWithForm (attributes, actionId) {
     this.props.editAction(attributes, actionId);
@@ -275,7 +281,7 @@ export class Action extends React.Component {
         text: 'Täydennä metatietoja',
         icon: 'fa-plus-square',
         style: 'btn-primary',
-        action: () => null
+        action: () => this.complementActionForm()
       }, {
         text: 'Järjestä asiakirjoja',
         icon: 'fa-th-list',
@@ -299,13 +305,21 @@ export class Action extends React.Component {
     const actionDropdownItems = this.generateDropdownItems();
 
     return (
-      <span className='action-buttons'>
+      <div className='action-buttons'>
         { this.props.documentState === 'edit' &&
         <span className='action-dropdown-button'>
           <Dropdown children={actionDropdownItems} extraSmall={true}/>
         </span>
         }
-      </span>
+        <button
+          className='btn btn-info btn-xs record-button pull-right'
+          onClick={this.toggleAttributeVisibility}>
+          <span
+            className={'fa ' + (this.state.showAttributes ? 'fa-minus' : 'fa-plus')}
+            aria-hidden='true'
+          />
+        </button>
+      </div>
     );
   }
 
@@ -386,9 +400,28 @@ export class Action extends React.Component {
               displayMessage={this.props.displayMessage}
             />
           }
-          { !this.state.editingAction &&
+          { this.state.mode === 'edit' && this.state.complementingAction &&
+            <EditorForm
+              targetId={this.props.action.id}
+              attributes={this.props.action.attributes}
+              attributeTypes={this.props.attributeTypes}
+              elementConfig={{
+                elementTypes: this.props.actionTypes,
+                elementId: this.props.action.id,
+                typeSpecifier: this.props.action.attributes.TypeSpecifier,
+                editWithForm: this.editActionWithForm
+              }}
+              editorConfig={{
+                type: 'action',
+                action: 'complement'
+              }}
+              closeEditorForm={this.disableEditMode}
+              displayMessage={this.props.displayMessage}
+            />
+          }
+          { !this.state.editingAction && !this.state.complementingAction &&
             <StickyContainer className='action row box'>
-              <Sticky className='action-title'>
+              <Sticky className={'action-title ' + (this.state.showAttributes ? 'action-open' : 'action-closed')}>
                 <Attributes
                   element={action}
                   documentState={this.props.documentState}
@@ -460,12 +493,14 @@ export class Action extends React.Component {
               }
               { !this.state.editingRecord && !this.state.complementingRecord && !!recordElements.length &&
               <div>
-                <span className='col-xs-6 attribute-label'>
-                Asiakirjatyypin tarkenne
-                </span>
-                <span className='col-xs-6 attribute-label'>
-                Tyyppi
-                </span>
+                <div className='attribute-labels'>
+                  <span className='col-xs-6 attribute-label'>
+                  Asiakirjatyypin tarkenne
+                  </span>
+                  <span className='col-xs-6 attribute-label'>
+                  Tyyppi
+                  </span>
+                </div>
                 <div
                   className={classnames('col-xs-12 records', { 'records-editing': this.props.documentState === 'edit' })}>
                   { recordElements }

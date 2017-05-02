@@ -30,15 +30,15 @@ export class Phase extends React.Component {
     this.disableEditMode = this.disableEditMode.bind(this);
     this.updateTypeSpecifier = this.updateTypeSpecifier.bind(this);
     this.updatePhaseType = this.updatePhaseType.bind(this);
-    // this.updatePhaseAttribute = this.updatePhaseAttribute.bind(this);
+    this.updatePhaseAttribute = this.updatePhaseAttribute.bind(this);
     this.renderPhaseButtons = this.renderPhaseButtons.bind(this);
     this.renderBasicAttributes = this.renderBasicAttributes.bind(this);
     this.toggleImportView = this.toggleImportView.bind(this);
-    // this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
+    this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
     this.cancelActionCreation = this.cancelActionCreation.bind(this);
     this.state = {
-      typeSpecifier: this.props.phase.attributes.TypeSpecifier || '(ei tarkennetta)',
-      type: this.props.phase.attributes.PhaseType || '---',
+      typeSpecifier: this.props.phase.attributes.TypeSpecifier,
+      type: this.props.phase.attributes.PhaseType,
       attributes: this.props.phase.attributes,
       actionTypeSpecifier: '',
       mode: 'view',
@@ -65,11 +65,11 @@ export class Phase extends React.Component {
     }
   }
 
-  // toggleAttributeVisibility () {
-  //   const currentVisibility = this.state.showAttributes;
-  //   const newVisibility = !currentVisibility;
-  //   this.setState({ showAttributes: newVisibility });
-  // }
+  toggleAttributeVisibility () {
+    const currentVisibility = this.state.showAttributes;
+    const newVisibility = !currentVisibility;
+    this.setState({ showAttributes: newVisibility });
+  }
 
   toggleReorderView () {
     const current = this.state.showReorderView;
@@ -96,6 +96,12 @@ export class Phase extends React.Component {
   editPhaseForm () {
     if (this.props.documentState === 'edit') {
       this.setState({ editingPhase: true, mode: 'edit' });
+    }
+  }
+
+  complementPhaseForm () {
+    if (this.props.documentState === 'edit') {
+      this.setState({ complementingPhase: true, mode: 'edit' });
     }
   }
 
@@ -185,15 +191,15 @@ export class Phase extends React.Component {
     this.disableEditMode();
   }
 
-  // updatePhaseAttribute (attribute, attributeIndex, phaseId) {
-  //   this.setState({
-  //     attributes: {
-  //       [attributeIndex]: attribute
-  //     }
-  //   });
-  //   const updatedPhaseAttribute = { attribute, attributeIndex, phaseId };
-  //   this.props.editPhaseAttribute(updatedPhaseAttribute);
-  // }
+  updatePhaseAttribute (attribute, attributeIndex, phaseId) {
+    this.setState({
+      attributes: {
+        [attributeIndex]: attribute
+      }
+    });
+    const updatedPhaseAttribute = { attribute, attributeIndex, phaseId };
+    this.props.editPhaseAttribute(updatedPhaseAttribute);
+  }
 
   editPhaseWithForm (attributes, phaseId) {
     this.props.editPhase(attributes, phaseId);
@@ -252,7 +258,7 @@ export class Phase extends React.Component {
         text: 'Täydennä metatietoja',
         icon: 'fa-plus-square',
         style: 'btn-primary',
-        action: () => null
+        action: () => this.complementPhaseForm()
       }, {
         text: 'Järjestä toimenpiteitä',
         icon: 'fa-th-list',
@@ -276,7 +282,7 @@ export class Phase extends React.Component {
     const phaseDropdownItems = this.generateDropdownItems();
 
     return (
-      <span className='phase-buttons'>
+      <div className='phase-buttons'>
         { this.props.phase.actions.length !== 0 &&
           <button
             type='button'
@@ -293,8 +299,16 @@ export class Phase extends React.Component {
         <span className='pull-right'>
           <Dropdown children={phaseDropdownItems} small={true}/>
         </span>
-      }
-      </span>
+        }
+        <button
+          className='btn btn-info btn-xs record-button pull-right'
+          onClick={this.toggleAttributeVisibility}>
+          <span
+            className={'fa ' + (this.state.showAttributes ? 'fa-minus' : 'fa-plus')}
+            aria-hidden='true'
+          />
+        </button>
+      </div>
     );
   }
 
@@ -374,9 +388,28 @@ export class Phase extends React.Component {
               displayMessage={this.props.displayMessage}
             />
           }
-          { !this.state.editingPhase &&
+          { this.state.mode === 'edit' && this.state.complementingPhase &&
+            <EditorForm
+              targetId={this.props.phase.id}
+              attributes={this.props.phase.attributes}
+              attributeTypes={this.props.attributeTypes}
+              elementConfig={{
+                elementTypes: this.props.phaseTypes,
+                elementId: this.props.phase.id,
+                typeSpecifier: this.props.phase.attributes.TypeSpecifier,
+                editWithForm: this.editPhaseWithForm
+              }}
+              editorConfig={{
+                type: 'phase',
+                action: 'complement'
+              }}
+              closeEditorForm={this.disableEditMode}
+              displayMessage={this.props.displayMessage}
+            />
+          }
+          { !this.state.editingPhase && !this.state.complementingPhase &&
             <StickyContainer>
-              <Sticky className={'phase-title ' + (this.props.phase.is_open ? 'open' : 'closed')}>
+              <Sticky className={'phase-title ' + (this.state.showAttributes ? 'phase-open' : 'phase-closed')}>
                 <Attributes
                   element={phase}
                   documentState={this.props.documentState}

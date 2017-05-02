@@ -6,7 +6,7 @@ export const TypeDropdown = ({ type, typeState, typeOptions, onChange, onInputCh
 
   if (Object.keys(typeOptions).length === 0) {
     return (
-      <div className='col-md-5'>
+      <div className='type-dropdown col-md-5'>
         <form onSubmit={onSubmit}>
           <input
             className='input-type form-control col-xs-11'
@@ -29,7 +29,7 @@ export const TypeDropdown = ({ type, typeState, typeOptions, onChange, onInputCh
     }
   }
   return (
-    <div className='col-md-5'>
+    <div className='type-dropdown col-md-5'>
       <form onSubmit={onSubmit}>
         <Select
           autoBlur={false}
