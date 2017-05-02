@@ -30,11 +30,11 @@ export class Phase extends React.Component {
     this.disableEditMode = this.disableEditMode.bind(this);
     this.updateTypeSpecifier = this.updateTypeSpecifier.bind(this);
     this.updatePhaseType = this.updatePhaseType.bind(this);
-    // this.updatePhaseAttribute = this.updatePhaseAttribute.bind(this);
+    this.updatePhaseAttribute = this.updatePhaseAttribute.bind(this);
     this.renderPhaseButtons = this.renderPhaseButtons.bind(this);
     this.renderBasicAttributes = this.renderBasicAttributes.bind(this);
     this.toggleImportView = this.toggleImportView.bind(this);
-    // this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
+    this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
     this.cancelActionCreation = this.cancelActionCreation.bind(this);
     this.state = {
       typeSpecifier: this.props.phase.attributes.TypeSpecifier || '(ei tarkennetta)',
@@ -65,11 +65,11 @@ export class Phase extends React.Component {
     }
   }
 
-  // toggleAttributeVisibility () {
-  //   const currentVisibility = this.state.showAttributes;
-  //   const newVisibility = !currentVisibility;
-  //   this.setState({ showAttributes: newVisibility });
-  // }
+  toggleAttributeVisibility () {
+    const currentVisibility = this.state.showAttributes;
+    const newVisibility = !currentVisibility;
+    this.setState({ showAttributes: newVisibility });
+  }
 
   toggleReorderView () {
     const current = this.state.showReorderView;
@@ -191,15 +191,15 @@ export class Phase extends React.Component {
     this.disableEditMode();
   }
 
-  // updatePhaseAttribute (attribute, attributeIndex, phaseId) {
-  //   this.setState({
-  //     attributes: {
-  //       [attributeIndex]: attribute
-  //     }
-  //   });
-  //   const updatedPhaseAttribute = { attribute, attributeIndex, phaseId };
-  //   this.props.editPhaseAttribute(updatedPhaseAttribute);
-  // }
+  updatePhaseAttribute (attribute, attributeIndex, phaseId) {
+    this.setState({
+      attributes: {
+        [attributeIndex]: attribute
+      }
+    });
+    const updatedPhaseAttribute = { attribute, attributeIndex, phaseId };
+    this.props.editPhaseAttribute(updatedPhaseAttribute);
+  }
 
   editPhaseWithForm (attributes, phaseId) {
     this.props.editPhase(attributes, phaseId);
