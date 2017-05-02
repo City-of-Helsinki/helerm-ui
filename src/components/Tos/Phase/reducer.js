@@ -21,8 +21,22 @@ export function addPhase (typeSpecifier, parent) {
   return createAction(ADD_PHASE)(newPhase);
 }
 
-export function editPhase (editedPhase) {
-  return createAction(EDIT_PHASE)(editedPhase);
+export function editPhase (attributes, phaseId) {
+  let editedAttributes = {};
+
+  for (const key in attributes) {
+    if (attributes.hasOwnProperty(key)) {
+      if (attributes[key].checked === true) {
+        editedAttributes[key] = attributes[key].value;
+      }
+    }
+  }
+
+  const editedPhase = Object.assign({}, {
+    attributes: editedAttributes
+  });
+
+  return createAction(EDIT_PHASE)({ editedPhase, phaseId });
 }
 
 export function editPhaseAttribute (editedPhaseAttribute) {
@@ -64,9 +78,9 @@ export const addPhaseAction = (state, { payload }) => {
 export const editPhaseAction = (state, { payload }) => {
   return update(state, {
     phases: {
-      [payload.id]: {
+      [payload.phaseId]: {
         attributes: {
-          $set: payload.attributes
+          $set: payload.editedPhase.attributes
         }
       }
     }

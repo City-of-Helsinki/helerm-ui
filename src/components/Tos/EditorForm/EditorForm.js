@@ -3,6 +3,7 @@ import './EditorForm.scss';
 import update from 'immutability-helper';
 import Select from 'react-select';
 import includes from 'lodash/includes';
+import capitalize from 'lodash/capitalize';
 import sortBy from 'lodash/sortBy';
 
 import { validateConditionalRules } from '../../../utils/validators';
@@ -15,15 +16,7 @@ export class EditorForm extends React.Component {
     this.getCheckedState = this.getCheckedState.bind(this);
     this.closeEditorForm = this.closeEditorForm.bind(this);
     this.state = {
-      newAttributes: this.initializeAttributes(this.props.attributeTypes),
-      typeSpecifier: {
-        value: this.props.elementConfig ? this.props.elementConfig.typeSpecifier : '',
-        checked: true
-      },
-      elementType: {
-        value: this.props.attributes.RecordType || '',
-        checked: true
-      }
+      newAttributes: this.initializeAttributes(this.props.attributeTypes)
     };
   }
 
@@ -34,7 +27,7 @@ export class EditorForm extends React.Component {
       if (attributeTypes.hasOwnProperty(key)) {
         initialState = Object.assign({}, initialState, {
           [key]: {
-            name: attributes[key] ? attributes[key] : null,
+            value: attributes[key] ? attributes[key] : null,
             checked: true
           }
         });
@@ -55,24 +48,14 @@ export class EditorForm extends React.Component {
     }));
   }
 
-  onBaseAttributeChange (value, key, field) {
-    this.setState(update(this.state, {
-      [key]: {
-        [field]: {
-          $set: value
-        }
-      }
-    }));
-  }
-
   getActiveValue (key) {
-    if (this.state.newAttributes[key].name) {
-      return this.state.newAttributes[key].name;
+    if (this.state.newAttributes[key].value) {
+      return this.state.newAttributes[key].value;
     }
   }
 
   getCheckedState (key) {
-    if (this.props.editorConfig.action === 'edit' && !this.state.newAttributes[key].name) {
+    if (this.props.editorConfig.action === 'edit' && !this.state.newAttributes[key].value) {
       return false;
     } else {
       return this.state.newAttributes[key].checked;
@@ -91,16 +74,21 @@ export class EditorForm extends React.Component {
     };
 
     for (const attributeType in attributeTypes) {
-      if (attributeTypes[attributeType].required ||
-        includes(getAttributeKeys(attributes), attributeType)) {
-        attributesToShow.push(attributeType);
-      }
-      if (attributeTypes[attributeType].requiredIf.length) {
-        if (validateConditionalRules(attributeType, attributeTypes, newAttributes)) {
+      if (includes(attributeTypes[attributeType].allowedIn, this.props.editorConfig.type)) {
+        if (attributeTypes[attributeType].required ||
+          includes(getAttributeKeys(attributes), attributeType)) {
           attributesToShow.push(attributeType);
+        }
+        if (attributeTypes[attributeType].requiredIf.length) {
+          if (validateConditionalRules(attributeType, attributeTypes, newAttributes)) {
+            attributesToShow.push(attributeType);
+          }
         }
       }
     }
+
+    attributesToShow.splice(attributesToShow.indexOf(`${capitalize(this.props.editorConfig.type)}Type`), 1);
+    attributesToShow.splice(attributesToShow.indexOf('TypeSpecifier'), 1);
 
     const sortedAttributes = sortBy(attributesToShow, (attribute) => (
       attributeTypes[attribute].index
@@ -157,7 +145,7 @@ export class EditorForm extends React.Component {
                   checked={this.getCheckedState(key)}
                   value={this.state.newAttributes[key].checked}
                   onChange={(e) => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}/>
-                <label className='edit-record__label'>
+                <label className='editor-form__label'>
                   {attributeTypes[key].name}
                   { attributeTypes[key].required &&
                   <span className='fa fa-asterisk required-asterisk'/>
@@ -167,10 +155,10 @@ export class EditorForm extends React.Component {
                   placeholder='Valitse...'
                   autoBlur={true}
                   autofocus={false}
-                  className='form-control edit-record__select'
+                  className='form-control editor-form__select'
                   clearable={true}
                   disabled={!this.state.newAttributes[key].checked}
-                  onChange={(option) => this.onChange(option ? option.value : null, key, 'name')}
+                  onChange={(option) => this.onChange(option ? option.value : null, key, 'value')}
                   openOnFocus={true}
                   options={options}
                   value={this.getActiveValue(key)}
@@ -186,7 +174,7 @@ export class EditorForm extends React.Component {
                   value={this.state.newAttributes[key].checked}
                   onChange={(e) => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}
                 />
-                <label className='edit-record__label'>
+                <label className='editor-form__label'>
                   {attributeTypes[key].name}
                   { attributeTypes[key].required &&
                   <span className='fa fa-asterisk required-asterisk'/>
@@ -196,7 +184,7 @@ export class EditorForm extends React.Component {
                   className='form-control edit-attribute__input'
                   value={this.getActiveValue(key)}
                   placeholder={attributeTypes[key].name}
-                  onChange={(e) => this.onChange(e.target.value, key, 'name')}
+                  onChange={(e) => this.onChange(e.target.value, key, 'value')}
                   disabled={!this.state.newAttributes[key].checked}
                 />
               </div>
@@ -214,6 +202,7 @@ export class EditorForm extends React.Component {
   }
 
   generateDropdown (elementTypes) {
+    const type = [`${capitalize(this.props.editorConfig.type)}Type`];
     const optionsRaw = Object.keys(elementTypes).map(type => {
       return { value: elementTypes[type].name, label: elementTypes[type].name };
     });
@@ -226,10 +215,10 @@ export class EditorForm extends React.Component {
         autofocus={false}
         className='form-control col-xs-6'
         clearable={true}
-        onChange={(option) => this.onBaseAttributeChange(option ? option.value : null, 'elementType', 'value')}
+        onChange={(option) => this.onChange(option ? option.value : null, type, 'value')}
         openOnFocus={true}
         options={options}
-        value={this.state.elementType.value}
+        value={this.state.newAttributes[type] ? this.state.newAttributes[type].value : '---'}
       />
     );
   }
@@ -237,7 +226,7 @@ export class EditorForm extends React.Component {
   filterAttributes (attributes) {
     const filteredAttributes = Object.assign({}, attributes);
     for (const key in filteredAttributes) {
-      if (!filteredAttributes[key].name) {
+      if (!filteredAttributes[key].value) {
         delete filteredAttributes[key];
       }
     }
@@ -256,13 +245,11 @@ export class EditorForm extends React.Component {
 
   addRecord (e, targetId) {
     e.preventDefault();
-    const { typeSpecifier, elementType, newAttributes } = this.state;
+    const { newAttributes } = this.state;
 
     this.props.elementConfig.createRecord(
-      targetId,
-      typeSpecifier.value,
-      elementType.value,
-      this.filterAttributes(newAttributes)
+      this.filterAttributes(newAttributes),
+      targetId
     );
     this.props.displayMessage({
       title: 'Asiakirja',
@@ -272,12 +259,10 @@ export class EditorForm extends React.Component {
 
   editElement (e, targetId) {
     e.preventDefault();
-    const { typeSpecifier, elementType, newAttributes } = this.state;
+    const { newAttributes } = this.state;
     this.props.elementConfig.editWithForm(
-      targetId,
-      typeSpecifier.value,
-      elementType.value,
-      this.filterAttributes(newAttributes)
+      this.filterAttributes(newAttributes),
+      targetId
     );
   }
 
@@ -348,16 +333,16 @@ export class EditorForm extends React.Component {
     return (
       <div>
         <div className='col-xs-12 col-lg-6 form-group'>
-          <label className='edit-record__label'>Tarkenne</label>
+          <label className='editor-form__label'>Tarkenne</label>
           <span className='fa fa-asterisk required-asterisk'/>
           <input
             className='col-xs-6 form-control edit-attribute__input'
             placeholder='Tarkenne'
-            value={this.state.typeSpecifier.value}
-            onChange={(e) => this.onBaseAttributeChange(e.target.value, 'typeSpecifier', 'value')}/>
+            value={this.state.newAttributes.TypeSpecifier.value}
+            onChange={(e) => this.onChange(e.target.value, 'TypeSpecifier', 'value')}/>
         </div>
         <div className='col-xs-12 col-lg-6 form-group'>
-          <label className='edit-record__label'>Tyyppi</label>
+          <label className='editor-form__label'>Tyyppi</label>
           <span className='fa fa-asterisk required-asterisk'/>
           { typeDropdown }
         </div>
@@ -370,16 +355,20 @@ export class EditorForm extends React.Component {
     const attributeElements = this.generateAttributeElements(attributeTypes);
 
     return (
-      <div className='action add-box col-xs-12'>
+      <div className='add-box col-xs-12'>
         <h4>{this.resolveLabel()}</h4>
         <form onSubmit={(e) => this.resolveOnSubmit(e, targetId)}
-              className='edit-record'>
+              className='editor-form'>
           { this.props.editorConfig.type !== 'function' ? this.renderDescriptions() : null }
           { attributeElements }
           <div className='col-xs-12'>
-            <button className='btn btn-primary pull-right edit-record__submit' type='submit'>Valmis</button>
             <button
-              className='btn btn-danger pull-right edit-record__cancel'
+              className='btn btn-primary pull-right editor-form__submit'
+              type='submit'>
+              Valmis
+            </button>
+            <button
+              className='btn btn-danger pull-right editor-form__cancel'
               onClick={(e) => this.closeEditorForm(e)}>
               Peruuta
             </button>

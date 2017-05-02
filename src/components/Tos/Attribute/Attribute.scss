@@ -10,6 +10,12 @@ $attribute-input-height: 31px;
   }
 }
 
+.basic-attributes {
+  .form-control {
+    height: 34px;
+  }
+}
+
 .edit-attribute__input {
   margin-bottom: -10px;
   height: $attribute-input-height;

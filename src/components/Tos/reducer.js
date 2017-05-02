@@ -89,10 +89,11 @@ export function resetTOS (originalTos) {
 
 export function editMetaData (attributes) {
   let editedMetaData = {};
+
   for (const key in attributes) {
     if (attributes.hasOwnProperty(key)) {
       if (attributes[key].checked === true) {
-        editedMetaData = Object.assign({}, editedMetaData, { [key]: attributes[key].name });
+        editedMetaData = Object.assign({}, editedMetaData, { [key]: attributes[key].value });
       }
     }
   }

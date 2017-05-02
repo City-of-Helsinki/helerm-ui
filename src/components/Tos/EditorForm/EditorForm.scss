@@ -5,7 +5,11 @@
   margin: 25px 0px;
 }
 
-.edit-record {
+.action > .add-box {
+  margin: 0;
+}
+
+.editor-form {
   &__checkbox {
     position: absolute;
     left: 0;

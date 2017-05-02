@@ -1,6 +1,5 @@
 import React from 'react';
 import forEach from 'lodash/forEach';
-import Select from 'react-select';
 import { StickyContainer, Sticky } from 'react-sticky';
 import update from 'immutability-helper';
 import './Phase.scss';
@@ -11,8 +10,10 @@ import AddElementInput from '../AddElementInput/AddElementInput';
 import DeleteView from '../DeleteView/DeleteView';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
+import TypeDropdown from '../TypeDropdown/TypeDropdown';
 import ReorderView from '../Reorder/ReorderView';
 import ImportView from '../ImportView/ImportView';
+import EditorForm from '../EditorForm/EditorForm';
 
 export class Phase extends React.Component {
   constructor (props) {
@@ -20,11 +21,12 @@ export class Phase extends React.Component {
     this.onNewChange = this.onNewChange.bind(this);
     this.onTypeChange = this.onTypeChange.bind(this);
     this.onTypeSpecifierChange = this.onTypeSpecifierChange.bind(this);
-    this.generateTypeDropdown = this.generateTypeDropdown.bind(this);
     this.createNewAction = this.createNewAction.bind(this);
     this.addAction = this.addAction.bind(this);
     this.editTypeSpecifier = this.editTypeSpecifier.bind(this);
     this.editType = this.editType.bind(this);
+    this.editPhaseForm = this.editPhaseForm.bind(this);
+    this.editPhaseWithForm = this.editPhaseWithForm.bind(this);
     this.disableEditMode = this.disableEditMode.bind(this);
     this.updateTypeSpecifier = this.updateTypeSpecifier.bind(this);
     this.updatePhaseType = this.updatePhaseType.bind(this);
@@ -42,6 +44,8 @@ export class Phase extends React.Component {
       mode: 'view',
       editingTypeSpecifier: false,
       editingType: false,
+      editingPhase: false,
+      complementingPhase: false,
       deleting: false,
       showReorderView: false,
       showImportView: false,
@@ -55,6 +59,9 @@ export class Phase extends React.Component {
     }
     if (nextProps.phase.attributes.PhaseType) {
       this.setState({ type: nextProps.phase.attributes.PhaseType });
+    }
+    if (nextProps.documentState === 'view') {
+      this.disableEditMode();
     }
   }
 
@@ -86,10 +93,18 @@ export class Phase extends React.Component {
     }
   }
 
+  editPhaseForm () {
+    if (this.props.documentState === 'edit') {
+      this.setState({ editingPhase: true, mode: 'edit' });
+    }
+  }
+
   disableEditMode () {
     this.setState({
       editingTypeSpecifier: false,
       editingType: false,
+      editingPhase: false,
+      complementingPhase: false,
       mode: 'view'
     });
   }
@@ -144,6 +159,10 @@ export class Phase extends React.Component {
     }));
   }
 
+  onTypeInputChange (event) {
+    this.setState({ type: event.target.value });
+  }
+
   updateTypeSpecifier (event) {
     event.preventDefault();
     const updatedTypeSpecifier = {
@@ -175,6 +194,11 @@ export class Phase extends React.Component {
   //   const updatedPhaseAttribute = { attribute, attributeIndex, phaseId };
   //   this.props.editPhaseAttribute(updatedPhaseAttribute);
   // }
+
+  editPhaseWithForm (attributes, phaseId) {
+    this.props.editPhase(attributes, phaseId);
+    this.disableEditMode();
+  }
 
   generateActions (actions) {
     const elements = [];
@@ -215,20 +239,20 @@ export class Phase extends React.Component {
   generateDropdownItems () {
     return [
       {
+        text: 'Uusi toimenpide',
+        icon: 'fa-file-text',
+        style: 'btn-primary',
+        action: () => this.createNewAction()
+      }, {
         text: 'Muokkaa käsittelyvaihetta',
         icon: 'fa-pencil',
         style: 'btn-primary',
-        action: () => null
+        action: () => this.editPhaseForm()
       }, {
         text: 'Täydennä metatietoja',
         icon: 'fa-plus-square',
         style: 'btn-primary',
         action: () => null
-      }, {
-        text: 'Uusi toimenpide',
-        icon: 'fa-file-text',
-        style: 'btn-primary',
-        action: () => this.createNewAction()
       }, {
         text: 'Järjestä toimenpiteitä',
         icon: 'fa-th-list',
@@ -246,36 +270,6 @@ export class Phase extends React.Component {
         action: () => this.setState({ deleting: true })
       }
     ];
-  }
-
-  generateTypeDropdown (typeOptions) {
-    const options = [];
-    for (const key in typeOptions) {
-      if (typeOptions.hasOwnProperty(key)) {
-        options.push({
-          label: typeOptions[key].name,
-          value: typeOptions[key].name
-        });
-      }
-    }
-
-    return (
-      <div className='col-md-5'>
-        <form onSubmit={this.updatePhaseType}>
-          <Select
-            autoBlur={false}
-            openOnFocus={true}
-            className='form-control edit-phase__input'
-            clearable={false}
-            value={this.state.type}
-            onChange={(option) => this.onTypeChange(option ? option.value : null)}
-            onBlur={this.updatePhaseType}
-            autofocus={true}
-            options={options}
-          />
-        </form>
-      </div>
-    );
   }
 
   renderPhaseButtons () {
@@ -333,7 +327,16 @@ export class Phase extends React.Component {
         );
       }
       if (this.state.editingType) {
-        phaseType = this.generateTypeDropdown(this.props.phaseTypes);
+        phaseType = (
+          <TypeDropdown
+            type={'phase'}
+            typeState={this.state.type}
+            typeOptions={this.props.phaseTypes}
+            onChange={this.onTypeChange}
+            onInputChange={this.onTypeInputChange}
+            onSubmit={this.updatePhaseType}
+          />
+        );
       }
     }
 
@@ -351,36 +354,57 @@ export class Phase extends React.Component {
 
     return (
       <div>
-        <div className='col-xs-12 box phase'>
-          <StickyContainer>
-            <Sticky className={'phase-title ' + (this.props.phase.is_open ? 'open' : 'closed')}>
-              <Attributes
-                element={phase}
-                documentState={this.props.documentState}
-                type={'phase'}
-                attributeTypes={this.props.attributeTypes}
-                typeOptions={this.props.phaseTypes}
-                renderBasicAttributes={this.renderBasicAttributes}
-                renderButtons={this.renderPhaseButtons}
-                updateTypeSpecifier={this.updateTypeSpecifier}
-                updateType={this.updatePhaseType}
-                updateAttribute={this.updatePhaseAttribute}
-                showAttributes={this.state.showAttributes}
-              />
-            </Sticky>
-            { this.state.mode === 'add' &&
-            <AddElementInput
-              type='action'
-              newTypeSpecifier={this.state.actionTypeSpecifier}
-              submit={this.addAction}
-              onChange={this.onNewChange}
-              cancel={this.cancelActionCreation}
+        <div className='phase box col-xs-12'>
+          { this.state.mode === 'edit' && this.state.editingPhase &&
+            <EditorForm
+              targetId={this.props.phase.id}
+              attributes={this.props.phase.attributes}
+              attributeTypes={this.props.attributeTypes}
+              elementConfig={{
+                elementTypes: this.props.phaseTypes,
+                elementId: this.props.phase.id,
+                typeSpecifier: this.props.phase.attributes.TypeSpecifier,
+                editWithForm: this.editPhaseWithForm
+              }}
+              editorConfig={{
+                type: 'phase',
+                action: 'edit'
+              }}
+              closeEditorForm={this.disableEditMode}
+              displayMessage={this.props.displayMessage}
             />
-            }
-            <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>
-              { actionElements }
-            </div>
-          </StickyContainer>
+          }
+          { !this.state.editingPhase &&
+            <StickyContainer>
+              <Sticky className={'phase-title ' + (this.props.phase.is_open ? 'open' : 'closed')}>
+                <Attributes
+                  element={phase}
+                  documentState={this.props.documentState}
+                  type={'phase'}
+                  attributeTypes={this.props.attributeTypes}
+                  typeOptions={this.props.phaseTypes}
+                  renderBasicAttributes={this.renderBasicAttributes}
+                  renderButtons={this.renderPhaseButtons}
+                  updateTypeSpecifier={this.updateTypeSpecifier}
+                  updateType={this.updatePhaseType}
+                  updateAttribute={this.updatePhaseAttribute}
+                  showAttributes={this.state.showAttributes}
+                />
+              </Sticky>
+              { this.state.mode === 'add' &&
+              <AddElementInput
+                type='action'
+                newTypeSpecifier={this.state.actionTypeSpecifier}
+                submit={this.addAction}
+                onChange={this.onNewChange}
+                cancel={this.cancelActionCreation}
+              />
+              }
+              <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>
+                { actionElements }
+              </div>
+            </StickyContainer>
+          }
           { this.state.deleting &&
           <Popup
             content={
@@ -453,7 +477,7 @@ Phase.propTypes = {
   documentState: React.PropTypes.string.isRequired,
   editAction: React.PropTypes.func.isRequired,
   editActionAttribute: React.PropTypes.func.isRequired,
-  // editPhase: React.PropTypes.func.isRequired,
+  editPhase: React.PropTypes.func.isRequired,
   editPhaseAttribute: React.PropTypes.func.isRequired,
   editRecord: React.PropTypes.func.isRequired,
   editRecordAttribute: React.PropTypes.func.isRequired,

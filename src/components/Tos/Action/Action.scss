@@ -1,8 +1,11 @@
 .action {
+  &.box {
+    margin: 0;
+  }
+  margin: 10px 0;
   border-top-color: #658fcd;
   border-top-width: 4px;
   background-color: white;
-  padding: 8px 0px 0px;
 }
 .action-title {
   margin-left: 10px;
@@ -13,9 +16,6 @@
   padding: 1px 0 7px;
   &-input {
     margin-right: 15px;
-    .form-control {
-      height: 34px;
-    }
   }
 }
 .action-title.sticky {
