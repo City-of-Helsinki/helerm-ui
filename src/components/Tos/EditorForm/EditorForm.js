@@ -87,13 +87,7 @@ export class EditorForm extends React.Component {
       }
     }
 
-    attributesToShow.splice(attributesToShow.indexOf(`${capitalize(this.props.editorConfig.type)}Type`), 1);
-    attributesToShow.splice(attributesToShow.indexOf('TypeSpecifier'), 1);
-
-    const sortedAttributes = sortBy(attributesToShow, (attribute) => (
-      attributeTypes[attribute].index
-    ));
-    return sortedAttributes;
+    return this.prepareAttributes(attributesToShow);
   }
 
   getComplementAttributes (attributeTypes, attributesToShow) {
@@ -112,9 +106,17 @@ export class EditorForm extends React.Component {
       }
     }
 
-    const sortedAttributes = sortBy(complementAttributes, (attribute) => (
-      attributeTypes[attribute].index
+    return this.prepareAttributes(complementAttributes);
+  }
+
+  prepareAttributes (attributesToShow) {
+    attributesToShow.splice(attributesToShow.indexOf(`${capitalize(this.props.editorConfig.type)}Type`), 1);
+    attributesToShow.splice(attributesToShow.indexOf('TypeSpecifier'), 1);
+
+    const sortedAttributes = sortBy(attributesToShow, (attribute) => (
+      this.props.attributeTypes[attribute].index
     ));
+
     return sortedAttributes;
   }
 
