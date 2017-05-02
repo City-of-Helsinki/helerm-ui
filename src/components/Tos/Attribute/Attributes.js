@@ -94,6 +94,14 @@ export const Attributes = ({
           />);
       }
     }
+
+    if (attributeElements.length === 0) {
+      return (
+        <div className='no-attributes'>
+          <span>Ei metatietoja. Täydennä metatietoja nähdäksesi ne täällä.</span>
+        </div>
+      );
+    }
     return attributeElements;
   }
 
