@@ -34,7 +34,7 @@ export class Action extends React.Component {
     // this.updateActionAttribute = this.updateActionAttribute.bind(this);
     this.renderActionButtons = this.renderActionButtons.bind(this);
     this.renderBasicAttributes = this.renderBasicAttributes.bind(this);
-    // this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
+    this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
     this.disableEditMode = this.disableEditMode.bind(this);
     this.state = {
       typeSpecifier: this.props.action.attributes.TypeSpecifier || '(ei tarkennetta)',
@@ -77,11 +77,11 @@ export class Action extends React.Component {
     this.setState({ showImportView: !current });
   }
 
-  // toggleAttributeVisibility () {
-  //   const currentVisibility = this.state.showAttributes;
-  //   const newVisibility = !currentVisibility;
-  //   this.setState({ showAttributes: newVisibility });
-  // }
+  toggleAttributeVisibility () {
+    const currentVisibility = this.state.showAttributes;
+    const newVisibility = !currentVisibility;
+    this.setState({ showAttributes: newVisibility });
+  }
 
   editTypeSpecifier () {
     if (this.props.documentState === 'edit') {
@@ -305,13 +305,21 @@ export class Action extends React.Component {
     const actionDropdownItems = this.generateDropdownItems();
 
     return (
-      <span className='action-buttons'>
+      <div className='action-buttons'>
         { this.props.documentState === 'edit' &&
         <span className='action-dropdown-button'>
           <Dropdown children={actionDropdownItems} extraSmall={true}/>
         </span>
         }
-      </span>
+        <button
+          className='btn btn-info btn-xs record-button pull-right'
+          onClick={this.toggleAttributeVisibility}>
+          <span
+            className={'fa ' + (this.state.showAttributes ? 'fa-minus' : 'fa-plus')}
+            aria-hidden='true'
+          />
+        </button>
+      </div>
     );
   }
 
@@ -413,7 +421,7 @@ export class Action extends React.Component {
           }
           { !this.state.editingAction && !this.state.complementingAction &&
             <StickyContainer className='action row box'>
-              <Sticky className='action-title'>
+              <Sticky className={'action-title ' + (this.state.showAttributes ? 'action-open' : '')}>
                 <Attributes
                   element={action}
                   documentState={this.props.documentState}
@@ -485,12 +493,14 @@ export class Action extends React.Component {
               }
               { !this.state.editingRecord && !this.state.complementingRecord && !!recordElements.length &&
               <div>
-                <span className='col-xs-6 attribute-label'>
-                Asiakirjatyypin tarkenne
-                </span>
-                <span className='col-xs-6 attribute-label'>
-                Tyyppi
-                </span>
+                <div className='attribute-labels'>
+                  <span className='col-xs-6 attribute-label'>
+                  Asiakirjatyypin tarkenne
+                  </span>
+                  <span className='col-xs-6 attribute-label'>
+                  Tyyppi
+                  </span>
+                </div>
                 <div
                   className={classnames('col-xs-12 records', { 'records-editing': this.props.documentState === 'edit' })}>
                   { recordElements }
