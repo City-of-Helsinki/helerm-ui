@@ -187,9 +187,7 @@ export class Phase extends React.Component {
       phaseId: this.props.phase.id
     };
     this.props.editPhaseAttribute(updatedTypeSpecifier);
-    if (this.state.typeSpecifier.length > 0) {
-      this.disableEditMode();
-    }
+    this.disableEditMode();
   }
 
   updatePhaseType (event) {
