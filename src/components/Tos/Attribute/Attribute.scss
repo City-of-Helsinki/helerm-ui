@@ -45,9 +45,9 @@ $attribute-input-height: 31px;
   overflow: scroll;
 }
 
-.no-attributes {
-  display: none;
-}
+// .no-attributes {
+//   display: none;
+// }
 
 .phase-open,
 .action-open,
@@ -55,13 +55,13 @@ $attribute-input-height: 31px;
   .basic-attributes {
     padding-bottom: 0;
   }
-  .no-attributes {
-    display: inline-block;
-    padding: 10px;
-    font-weight: 600;
-    & > span {
-      border: 1px solid #aaa;
-      padding: 5px;
-    }
-  }
+  // .no-attributes {
+  //   display: inline-block;
+  //   padding: 10px;
+  //   font-weight: 600;
+  //   & > span {
+  //     border: 1px solid #aaa;
+  //     padding: 5px;
+  //   }
+  // }
 }
