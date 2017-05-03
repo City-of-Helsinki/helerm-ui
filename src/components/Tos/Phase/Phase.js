@@ -376,8 +376,6 @@ export class Phase extends React.Component {
               attributeTypes={this.props.attributeTypes}
               elementConfig={{
                 elementTypes: this.props.phaseTypes,
-                elementId: this.props.phase.id,
-                typeSpecifier: this.props.phase.attributes.TypeSpecifier,
                 editWithForm: this.editPhaseWithForm
               }}
               editorConfig={{
@@ -395,8 +393,6 @@ export class Phase extends React.Component {
               attributeTypes={this.props.attributeTypes}
               elementConfig={{
                 elementTypes: this.props.phaseTypes,
-                elementId: this.props.phase.id,
-                typeSpecifier: this.props.phase.attributes.TypeSpecifier,
                 editWithForm: this.editPhaseWithForm
               }}
               editorConfig={{

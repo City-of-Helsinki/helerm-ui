@@ -422,8 +422,8 @@ EditorForm.propTypes = {
     editWithForm: React.PropTypes.func,
     elementTypes: React.PropTypes.object.isRequired,
     createRecord: React.PropTypes.func, // only records created with editorform
-    elementId: React.PropTypes.string,
-    typeSpecifier: React.PropTypes.string
+    elementTypes: React.PropTypes.object,
+    createRecord: React.PropTypes.func // only records created with editorform
   }),
   targetId: React.PropTypes.string
 };

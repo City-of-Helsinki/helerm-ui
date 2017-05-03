@@ -388,8 +388,6 @@ export class Action extends React.Component {
               attributeTypes={this.props.attributeTypes}
               elementConfig={{
                 elementTypes: this.props.actionTypes,
-                elementId: this.props.action.id,
-                typeSpecifier: this.props.action.attributes.TypeSpecifier,
                 editWithForm: this.editActionWithForm
               }}
               editorConfig={{
@@ -407,8 +405,6 @@ export class Action extends React.Component {
               attributeTypes={this.props.attributeTypes}
               elementConfig={{
                 elementTypes: this.props.actionTypes,
-                elementId: this.props.action.id,
-                typeSpecifier: this.props.action.attributes.TypeSpecifier,
                 editWithForm: this.editActionWithForm
               }}
               editorConfig={{
@@ -460,8 +456,6 @@ export class Action extends React.Component {
                 attributeTypes={this.props.attributeTypes}
                 elementConfig={{
                   elementTypes: this.props.recordTypes,
-                  elementId: this.state.record.id,
-                  typeSpecifier: this.state.record.attributes.TypeSpecifier,
                   editWithForm: this.editRecordWithForm
                 }}
                 editorConfig={{
@@ -479,8 +473,6 @@ export class Action extends React.Component {
                 attributeTypes={this.props.attributeTypes}
                 elementConfig={{
                   elementTypes: this.props.recordTypes,
-                  elementId: this.state.record.id,
-                  typeSpecifier: this.state.record.attributes.TypeSpecifier,
                   editWithForm: this.editRecordWithForm
                 }}
                 editorConfig={{
