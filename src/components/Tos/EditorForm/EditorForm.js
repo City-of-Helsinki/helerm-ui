@@ -421,8 +421,6 @@ EditorForm.propTypes = {
   elementConfig: React.PropTypes.shape({
     editWithForm: React.PropTypes.func,
     elementTypes: React.PropTypes.object.isRequired,
-    createRecord: React.PropTypes.func, // only records created with editorform
-    elementTypes: React.PropTypes.object,
     createRecord: React.PropTypes.func // only records created with editorform
   }),
   targetId: React.PropTypes.string
