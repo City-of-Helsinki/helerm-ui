@@ -125,7 +125,7 @@ export class Phase extends React.Component {
   addAction (event) {
     event.preventDefault();
     this.props.setPhaseVisibility(this.props.phaseIndex, true);
-    this.props.addAction(this.state.actionTypeSpecifier, this.state.actionType, this.props.phaseIndex);
+    this.props.addAction(this.state.actionTypeSpecifier || '', this.state.actionType || '', this.props.phaseIndex);
     this.setState({ actionTypeSpecifier: '', actionType: '' });
     this.disableEditMode();
     this.props.displayMessage({
@@ -215,6 +215,21 @@ export class Phase extends React.Component {
   editPhaseWithForm (attributes, phaseId) {
     this.props.editPhase(attributes, phaseId);
     this.disableEditMode();
+  }
+
+  generateTypeOptions (typeOptions) {
+    const options = [];
+
+    for (const key in typeOptions) {
+      if (typeOptions.hasOwnProperty(key)) {
+        options.push({
+          label: typeOptions[key].name,
+          value: typeOptions[key].name
+        });
+      }
+    }
+
+    return options;
   }
 
   generateActions (actions) {
@@ -435,7 +450,7 @@ export class Phase extends React.Component {
               <AddElementInput
                 type='action'
                 submit={this.addAction}
-                typeOptions={this.props.actionTypes}
+                typeOptions={this.generateTypeOptions(this.props.actionTypes)}
                 newTypeSpecifier={this.state.actionTypeSpecifier}
                 newType={this.state.actionType}
                 onTypeSpecifierChange={this.onActionTypeSpecifierChange}

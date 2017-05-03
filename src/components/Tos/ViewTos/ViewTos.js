@@ -34,12 +34,12 @@ export class ViewTOS extends React.Component {
     this.cancelPhaseCreation = this.cancelPhaseCreation.bind(this);
     this.changeStatus = this.changeStatus.bind(this);
     this.cloneFromTemplate = this.cloneFromTemplate.bind(this);
-    this.saveDraft = this.saveDraft.bind(this);
-    this.onChange = this.onChange.bind(this);
     this.createNewPhase = this.createNewPhase.bind(this);
     this.editMetaDataWithForm = this.editMetaDataWithForm.bind(this);
     this.fetchTOS = this.fetchTOS.bind(this);
-    this.onChange = this.onChange.bind(this);
+    this.onPhaseTypeChange = this.onPhaseTypeChange.bind(this);
+    this.onPhaseTypeInputChange = this.onPhaseTypeInputChange.bind(this);
+    this.onPhaseTypeSpecifierChange = this.onPhaseTypeSpecifierChange.bind(this);
     this.routerWillLeave = this.routerWillLeave.bind(this);
     this.saveDraft = this.saveDraft.bind(this);
     this.setPhaseVisibility = this.setPhaseVisibility.bind(this);
@@ -50,6 +50,7 @@ export class ViewTOS extends React.Component {
     this.state = {
       createPhaseMode: false,
       phaseTypeSpecifier: '',
+      phaseType: '',
       originalTos: {},
       isDirty: false,
       showCloneView: false,
@@ -220,10 +221,8 @@ export class ViewTOS extends React.Component {
 
   createNewPhase (event) {
     event.preventDefault();
-    if (this.state.phaseTypeSpecifier.length > 0) {
-      this.props.addPhase(this.state.phaseTypeSpecifier, this.props.selectedTOS.id);
-      this.setState({ createPhaseMode: false, phaseTypeSpecifier: '' });
-    }
+    this.props.addPhase(this.state.phaseTypeSpecifier || '', this.state.phaseType || '', this.props.selectedTOS.id);
+    this.setState({ createPhaseMode: false, phaseTypeSpecifier: '', phaseType: '' });
     this.props.displayMessage({
       title: 'Käsittelyvaihe',
       body: 'Käsittelyvaiheen lisäys onnistui!'
@@ -252,8 +251,16 @@ export class ViewTOS extends React.Component {
       });
   }
 
-  onChange (event) {
+  onPhaseTypeSpecifierChange (event) {
     this.setState({ phaseTypeSpecifier: event.target.value });
+  }
+
+  onPhaseTypeChange (value) {
+    this.setState({ phaseType: value });
+  }
+
+  onPhaseTypeInputChange (event) {
+    this.setState({ phaseType: event.target.value });
   }
 
   updateFunctionAttribute (attribute, attributeIndex) {
@@ -295,6 +302,21 @@ export class ViewTOS extends React.Component {
   toggleCloneView () {
     const current = this.state.showCloneView;
     this.setState({ showCloneView: !current });
+  }
+
+  generateTypeOptions (typeOptions) {
+    const options = [];
+
+    for (const key in typeOptions) {
+      if (typeOptions.hasOwnProperty(key)) {
+        options.push({
+          label: typeOptions[key].name,
+          value: typeOptions[key].name
+        });
+      }
+    }
+
+    return options;
   }
 
   generateMetaData (attributeTypes, attributes) {
@@ -542,9 +564,13 @@ export class ViewTOS extends React.Component {
                   { this.state.createPhaseMode &&
                   <AddElementInput
                     type='phase'
-                    newTypeSpecifier={this.state.phaseTypeSpecifier}
-                    onChange={this.onChange}
                     submit={this.createNewPhase}
+                    typeOptions={this.generateTypeOptions(this.props.phaseTypes)}
+                    newTypeSpecifier={this.state.phaseTypeSpecifier}
+                    newType={this.state.phaseType}
+                    onTypeSpecifierChange={this.onPhaseTypeSpecifierChange}
+                    onTypeChange={this.onPhaseTypeChange}
+                    onTypeInputChange={this.onPhaseTypeInputChange}
                     cancel={this.cancelPhaseCreation}
                   />
                   }

@@ -44,16 +44,16 @@ export const AddElementInput = ({
         placeholder={'Tarkenne'}/>
     </div>
     <div className='col-xs-12 col-md-4'>
-      { Object.keys(typeOptions).length !== 0
+      { typeOptions.length !== 0
         ? <Select
-            autoBlur={false}
+            autoBlur={true}
             openOnFocus={true}
             className={`form-control edit-${type}-type__input`}
             clearable={false}
             value={newType}
             onChange={(option) => onTypeChange(option ? option.value : null)}
-            onBlur={(option) => onTypeChange(option ? option.value : null)}
-            autofocus={true}
+            onBlur={() => null}
+            autofocus={false}
             options={typeOptions}
           />
         : <input
@@ -85,7 +85,7 @@ AddElementInput.propTypes = {
   onTypeSpecifierChange: React.PropTypes.func.isRequired,
   submit: React.PropTypes.func.isRequired,
   type: React.PropTypes.string.isRequired,
-  typeOptions: React.PropTypes.object.isRequired
+  typeOptions: React.PropTypes.array.isRequired
 };
 
 export default KeyStrokeSupport(AddElementInput);
