@@ -479,20 +479,20 @@ export class Action extends React.Component {
               />
               }
               { !this.state.editingRecord && !this.state.complementingRecord && !!recordElements.length &&
-              <div>
-                <div className='attribute-labels'>
-                  <span className='col-xs-6 attribute-label'>
-                    {this.props.attributeTypes.TypeSpecifier.name}
-                  </span>
-                  <span className='col-xs-6 attribute-label'>
-                    {this.props.attributeTypes.RecordType.name}
-                  </span>
+                <div>
+                  <div className='attribute-labels'>
+                    <span className='col-xs-6 attribute-label'>
+                      {'Asiakirjatyypin tarkenne'}
+                    </span>
+                    <span className='col-xs-6 attribute-label'>
+                      {'Tyyppi'}
+                    </span>
+                  </div>
+                  <div
+                    className={classnames('col-xs-12 records', { 'records-editing': this.props.documentState === 'edit' })}>
+                    { recordElements }
+                  </div>
                 </div>
-                <div
-                  className={classnames('col-xs-12 records', { 'records-editing': this.props.documentState === 'edit' })}>
-                  { recordElements }
-                </div>
-              </div>
               }
             </StickyContainer>
           }
