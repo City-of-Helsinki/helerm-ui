@@ -368,13 +368,16 @@ export class EditorForm extends React.Component {
   }
 
   renderDescriptions () {
+    const { attributeTypes } = this.props;
     const typeDropdown = this.generateDropdown(this.props.elementConfig.elementTypes);
-    const typeName = this.props.attributeTypes[`${capitalize(this.props.editorConfig.type)}Type`].name;
+    const typeName = attributeTypes
+    ? attributeTypes[`${capitalize(this.props.editorConfig.type)}Type`].name
+    : '';
 
     return (
       <div>
         <div className='col-xs-12 col-lg-6 form-group'>
-          <label className='editor-form__label'>{this.props.attributeTypes.TypeSpecifier.name}</label>
+          <label className='editor-form__label'>{attributeTypes ? attributeTypes.TypeSpecifier.name : ''}</label>
           <span className='fa fa-asterisk required-asterisk'/>
           <input
             className='col-xs-6 form-control edit-attribute__input'

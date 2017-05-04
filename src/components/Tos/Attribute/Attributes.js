@@ -19,17 +19,29 @@ export const Attributes = ({
 }) => {
   function generateDescriptions (element) {
     const descriptions = [];
-    const typeString = `${capitalize(type)}Type`;
+    let elementType;
+
+    switch (type) {
+      case 'phase':
+        elementType = 'Käsittelyvaiheen tyyppi';
+        break;
+      case 'action':
+        elementType = 'Toimenpiteen tyyppi';
+        break;
+      case 'record':
+        elementType = 'Asiakirjan tyyppi';
+        break;
+    }
 
     descriptions.push({
-      descriptionKey: attributeTypes[typeString].name,
+      descriptionKey: 'Tarkenne',
       typeSpecifier: element.attributes.TypeSpecifier,
       type: ''
     });
     descriptions.push({
-      descriptionKey: attributeTypes.TypeSpecifier.name,
-      typeSpecifier: element.attributes[typeString],
-      type: element.attributes[typeString]
+      descriptionKey: `${elementType} tarkenne`,
+      typeSpecifier: element.attributes[`${elementType}`],
+      type: element.attributes[`${elementType}`]
     });
 
     return descriptions;
@@ -88,6 +100,7 @@ export const Attributes = ({
     ? renderBasicAttributes()
     : generateBasicAttributes(generateDescriptions(element));
   const attributes = generateAttributes(element.attributes);
+
   return (
     <div className={classnames('list-group', `${type}-attributes`)}>
       { basicAttributes }
