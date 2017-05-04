@@ -182,13 +182,22 @@ export class EditorForm extends React.Component {
                   <span className='fa fa-asterisk required-asterisk'/>
                   }
                 </label>
-                <input
-                  className='form-control edit-attribute__input'
-                  value={this.getActiveValue(key)}
-                  placeholder={attributeTypes[key].name}
-                  onChange={(e) => this.onChange(e.target.value, key, 'value')}
-                  disabled={!this.state.newAttributes[key].checked}
-                />
+                { key === 'AdditionalInformation'
+                  ? <textarea
+                      className='form-control edit-record__input'
+                      value={this.getActiveValue(key)}
+                      placeholder={attributeTypes[key].name}
+                      onChange={(e) => this.onChange(e.target.value, key, 'value')}
+                      disabled={!this.state.newAttributes[key].checked}
+                    />
+                  : <input
+                      className='form-control edit-record__input'
+                      value={this.getActiveValue(key)}
+                      placeholder={attributeTypes[key].name}
+                      onChange={(e) => this.onChange(e.target.value, key, 'value')}
+                      disabled={!this.state.newAttributes[key].checked}
+                    />
+                }
               </div>
             );
           }
