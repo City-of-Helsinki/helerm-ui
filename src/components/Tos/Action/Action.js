@@ -146,9 +146,7 @@ export class Action extends React.Component {
       actionId: this.props.action.id
     };
     this.props.editActionAttribute(updatedTypeSpecifier);
-    if (this.state.typeSpecifier.length > 0) {
-      this.disableEditMode();
-    }
+    this.disableEditMode();
   }
 
   updateActionType (event) {
@@ -226,6 +224,7 @@ export class Action extends React.Component {
       recordId: undefined
     });
     this.props.editRecord(attributes, recordId);
+    this.disableEditMode();
   }
 
   delete () {
