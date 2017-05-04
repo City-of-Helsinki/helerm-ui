@@ -75,14 +75,16 @@ export class EditorForm extends React.Component {
 
     for (const attributeType in attributeTypes) {
       if (includes(attributeTypes[attributeType].allowedIn, this.props.editorConfig.type)) {
-        if (attributeTypes[attributeType].required ||
-          includes(getAttributeKeys(attributes), attributeType)) {
-          attributesToShow.push(attributeType);
-        }
         if (attributeTypes[attributeType].requiredIf.length) {
           if (validateConditionalRules(attributeType, attributeTypes, newAttributes)) {
             attributesToShow.push(attributeType);
+            continue;
           }
+        }
+        if (attributeTypes[attributeType].required ||
+          includes(getAttributeKeys(attributes), attributeType)) {
+          attributesToShow.push(attributeType);
+          continue;
         }
       }
     }
@@ -182,13 +184,22 @@ export class EditorForm extends React.Component {
                   <span className='fa fa-asterisk required-asterisk'/>
                   }
                 </label>
-                <input
-                  className='form-control edit-attribute__input'
-                  value={this.getActiveValue(key)}
-                  placeholder={attributeTypes[key].name}
-                  onChange={(e) => this.onChange(e.target.value, key, 'value')}
-                  disabled={!this.state.newAttributes[key].checked}
-                />
+                { key === 'AdditionalInformation'
+                  ? <textarea
+                      className='form-control edit-record__input'
+                      value={this.getActiveValue(key)}
+                      placeholder={attributeTypes[key].name}
+                      onChange={(e) => this.onChange(e.target.value, key, 'value')}
+                      disabled={!this.state.newAttributes[key].checked}
+                    />
+                  : <input
+                      className='form-control edit-record__input'
+                      value={this.getActiveValue(key)}
+                      placeholder={attributeTypes[key].name}
+                      onChange={(e) => this.onChange(e.target.value, key, 'value')}
+                      disabled={!this.state.newAttributes[key].checked}
+                    />
+                }
               </div>
             );
           }
@@ -357,21 +368,25 @@ export class EditorForm extends React.Component {
   }
 
   renderDescriptions () {
+    const { attributeTypes } = this.props;
     const typeDropdown = this.generateDropdown(this.props.elementConfig.elementTypes);
+    const typeName = attributeTypes
+    ? attributeTypes[`${capitalize(this.props.editorConfig.type)}Type`].name
+    : '';
 
     return (
       <div>
         <div className='col-xs-12 col-lg-6 form-group'>
-          <label className='editor-form__label'>Tarkenne</label>
+          <label className='editor-form__label'>{attributeTypes ? attributeTypes.TypeSpecifier.name : ''}</label>
           <span className='fa fa-asterisk required-asterisk'/>
           <input
             className='col-xs-6 form-control edit-attribute__input'
             placeholder='Tarkenne'
-            value={this.state.newAttributes.TypeSpecifier.value}
+            value={this.state.newAttributes.TypeSpecifier.value || ''}
             onChange={(e) => this.onChange(e.target.value, 'TypeSpecifier', 'value')}/>
         </div>
         <div className='col-xs-12 col-lg-6 form-group'>
-          <label className='editor-form__label'>Tyyppi</label>
+          <label className='editor-form__label'>{typeName}</label>
           <span className='fa fa-asterisk required-asterisk'/>
           { typeDropdown }
         </div>
@@ -421,9 +436,7 @@ EditorForm.propTypes = {
   elementConfig: React.PropTypes.shape({
     editWithForm: React.PropTypes.func,
     elementTypes: React.PropTypes.object.isRequired,
-    createRecord: React.PropTypes.func, // only records created with editorform
-    elementId: React.PropTypes.string,
-    typeSpecifier: React.PropTypes.string
+    createRecord: React.PropTypes.func // only records created with editorform
   }),
   targetId: React.PropTypes.string
 };

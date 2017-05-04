@@ -125,12 +125,12 @@ export class Record extends React.Component {
 
   render () {
     const { attributeTypes, recordTypes, record, documentState } = this.props;
+
     return (
       <div className={'record col-xs-12 ' + (this.state.showAttributes ? 'record-open' : 'record-closed')}>
         <Attributes
           element={record}
           documentState={documentState}
-          mode={this.state.mode}
           type={'record'}
           attributeTypes={attributeTypes}
           typeOptions={recordTypes}

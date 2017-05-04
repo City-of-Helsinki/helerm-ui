@@ -12,7 +12,7 @@ export const validateConditionalRules = (key, attributeTypes, attributes) => {
   for (const attribute in attributes) {                                         // for each attribute
     for (const item in requiredIf) {                                            // for each item in requiredIf
       if (requiredIf[item].key === attribute) {                                 // if requiredIf has attribute
-        if (includes(requiredIf[item].values, attributes[attribute].name)) {    // if requiredIf has same value as attribute
+        if (includes(requiredIf[item].values, attributes[attribute].value)) {   // if requiredIf has same value as attribute
           return true;
         }
       }

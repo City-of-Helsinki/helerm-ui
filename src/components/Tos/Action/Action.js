@@ -119,10 +119,6 @@ export class Action extends React.Component {
     });
   }
 
-  onChange (e) {
-    this.setState({ name: e.target.value });
-  }
-
   onTypeSpecifierChange (event) {
     this.setState({ typeSpecifier: event.target.value });
   }
@@ -146,9 +142,7 @@ export class Action extends React.Component {
       actionId: this.props.action.id
     };
     this.props.editActionAttribute(updatedTypeSpecifier);
-    if (this.state.typeSpecifier.length > 0) {
-      this.disableEditMode();
-    }
+    this.disableEditMode();
   }
 
   updateActionType (event) {
@@ -226,6 +220,7 @@ export class Action extends React.Component {
       recordId: undefined
     });
     this.props.editRecord(attributes, recordId);
+    this.disableEditMode();
   }
 
   delete () {
@@ -388,8 +383,6 @@ export class Action extends React.Component {
               attributeTypes={this.props.attributeTypes}
               elementConfig={{
                 elementTypes: this.props.actionTypes,
-                elementId: this.props.action.id,
-                typeSpecifier: this.props.action.attributes.TypeSpecifier,
                 editWithForm: this.editActionWithForm
               }}
               editorConfig={{
@@ -407,8 +400,6 @@ export class Action extends React.Component {
               attributeTypes={this.props.attributeTypes}
               elementConfig={{
                 elementTypes: this.props.actionTypes,
-                elementId: this.props.action.id,
-                typeSpecifier: this.props.action.attributes.TypeSpecifier,
                 editWithForm: this.editActionWithForm
               }}
               editorConfig={{
@@ -460,8 +451,6 @@ export class Action extends React.Component {
                 attributeTypes={this.props.attributeTypes}
                 elementConfig={{
                   elementTypes: this.props.recordTypes,
-                  elementId: this.state.record.id,
-                  typeSpecifier: this.state.record.attributes.TypeSpecifier,
                   editWithForm: this.editRecordWithForm
                 }}
                 editorConfig={{
@@ -479,8 +468,6 @@ export class Action extends React.Component {
                 attributeTypes={this.props.attributeTypes}
                 elementConfig={{
                   elementTypes: this.props.recordTypes,
-                  elementId: this.state.record.id,
-                  typeSpecifier: this.state.record.attributes.TypeSpecifier,
                   editWithForm: this.editRecordWithForm
                 }}
                 editorConfig={{
@@ -492,20 +479,20 @@ export class Action extends React.Component {
               />
               }
               { !this.state.editingRecord && !this.state.complementingRecord && !!recordElements.length &&
-              <div>
-                <div className='attribute-labels'>
-                  <span className='col-xs-6 attribute-label'>
-                  Asiakirjatyypin tarkenne
-                  </span>
-                  <span className='col-xs-6 attribute-label'>
-                  Tyyppi
-                  </span>
+                <div>
+                  <div className='attribute-labels'>
+                    <span className='col-xs-6 attribute-label'>
+                      {'Asiakirjatyypin tarkenne'}
+                    </span>
+                    <span className='col-xs-6 attribute-label'>
+                      {'Tyyppi'}
+                    </span>
+                  </div>
+                  <div
+                    className={classnames('col-xs-12 records', { 'records-editing': this.props.documentState === 'edit' })}>
+                    { recordElements }
+                  </div>
                 </div>
-                <div
-                  className={classnames('col-xs-12 records', { 'records-editing': this.props.documentState === 'edit' })}>
-                  { recordElements }
-                </div>
-              </div>
               }
             </StickyContainer>
           }

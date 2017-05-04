@@ -18,7 +18,9 @@ import EditorForm from '../EditorForm/EditorForm';
 export class Phase extends React.Component {
   constructor (props) {
     super(props);
-    this.onNewChange = this.onNewChange.bind(this);
+    this.onActionTypeChange = this.onActionTypeChange.bind(this);
+    this.onActionTypeInputChange = this.onActionTypeInputChange.bind(this);
+    this.onActionTypeSpecifierChange = this.onActionTypeSpecifierChange.bind(this);
     this.onTypeChange = this.onTypeChange.bind(this);
     this.onTypeSpecifierChange = this.onTypeSpecifierChange.bind(this);
     this.createNewAction = this.createNewAction.bind(this);
@@ -41,6 +43,7 @@ export class Phase extends React.Component {
       type: this.props.phase.attributes.PhaseType,
       attributes: this.props.phase.attributes,
       actionTypeSpecifier: '',
+      actionType: '',
       mode: 'view',
       editingTypeSpecifier: false,
       editingType: false,
@@ -122,8 +125,8 @@ export class Phase extends React.Component {
   addAction (event) {
     event.preventDefault();
     this.props.setPhaseVisibility(this.props.phaseIndex, true);
-    this.props.addAction(this.state.actionTypeSpecifier, this.props.phaseIndex);
-    this.setState({ actionTypeSpecifier: '' });
+    this.props.addAction(this.state.actionTypeSpecifier || '', this.state.actionType || '', this.props.phaseIndex);
+    this.setState({ actionTypeSpecifier: '', actionType: '' });
     this.disableEditMode();
     this.props.displayMessage({
       title: 'Toimenpide',
@@ -149,8 +152,16 @@ export class Phase extends React.Component {
     this.props.removePhase(this.props.phase.id);
   }
 
-  onNewChange (event) {
+  onActionTypeSpecifierChange (event) {
     this.setState({ actionTypeSpecifier: event.target.value });
+  }
+
+  onActionTypeInputChange (event) {
+    this.setState({ actionType: event.target.value });
+  }
+
+  onActionTypeChange (value) {
+    this.setState({ actionType: value });
   }
 
   onTypeSpecifierChange (event) {
@@ -176,9 +187,7 @@ export class Phase extends React.Component {
       phaseId: this.props.phase.id
     };
     this.props.editPhaseAttribute(updatedTypeSpecifier);
-    if (this.state.typeSpecifier.length > 0) {
-      this.disableEditMode();
-    }
+    this.disableEditMode();
   }
 
   updatePhaseType (event) {
@@ -204,6 +213,21 @@ export class Phase extends React.Component {
   editPhaseWithForm (attributes, phaseId) {
     this.props.editPhase(attributes, phaseId);
     this.disableEditMode();
+  }
+
+  generateTypeOptions (typeOptions) {
+    const options = [];
+
+    for (const key in typeOptions) {
+      if (typeOptions.hasOwnProperty(key)) {
+        options.push({
+          label: typeOptions[key].name,
+          value: typeOptions[key].name
+        });
+      }
+    }
+
+    return options;
   }
 
   generateActions (actions) {
@@ -376,8 +400,6 @@ export class Phase extends React.Component {
               attributeTypes={this.props.attributeTypes}
               elementConfig={{
                 elementTypes: this.props.phaseTypes,
-                elementId: this.props.phase.id,
-                typeSpecifier: this.props.phase.attributes.TypeSpecifier,
                 editWithForm: this.editPhaseWithForm
               }}
               editorConfig={{
@@ -395,8 +417,6 @@ export class Phase extends React.Component {
               attributeTypes={this.props.attributeTypes}
               elementConfig={{
                 elementTypes: this.props.phaseTypes,
-                elementId: this.props.phase.id,
-                typeSpecifier: this.props.phase.attributes.TypeSpecifier,
                 editWithForm: this.editPhaseWithForm
               }}
               editorConfig={{
@@ -427,9 +447,13 @@ export class Phase extends React.Component {
               { this.state.mode === 'add' &&
               <AddElementInput
                 type='action'
-                newTypeSpecifier={this.state.actionTypeSpecifier}
                 submit={this.addAction}
-                onChange={this.onNewChange}
+                typeOptions={this.generateTypeOptions(this.props.actionTypes)}
+                newTypeSpecifier={this.state.actionTypeSpecifier}
+                newType={this.state.actionType}
+                onTypeSpecifierChange={this.onActionTypeSpecifierChange}
+                onTypeChange={this.onActionTypeChange}
+                onTypeInputChange={this.onActionTypeInputChange}
                 cancel={this.cancelActionCreation}
               />
               }
