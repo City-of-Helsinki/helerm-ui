@@ -77,14 +77,13 @@ export const editActionAction = (state, { payload }) => {
 };
 
 export const editActionAttributeAction = (state, { payload }) => {
-  if (payload.typeSpecifier) {
+  if (payload.hasOwnProperty('typeSpecifier')) {
+    const newAttribute = payload.typeSpecifier ? { TypeSpecifier: payload.typeSpecifier } : {};
     return update(state, {
       actions: {
         [payload.actionId]: {
           attributes: {
-            TypeSpecifier: {
-              $set: payload.typeSpecifier
-            }
+            $set: newAttribute
           }
         }
       }
