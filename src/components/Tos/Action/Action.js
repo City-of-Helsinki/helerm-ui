@@ -486,10 +486,10 @@ export class Action extends React.Component {
               <div>
                 <div className='attribute-labels'>
                   <span className='col-xs-6 attribute-label'>
-                  Asiakirjatyypin tarkenne
+                    {this.props.attributeTypes.TypeSpecifier.name}
                   </span>
                   <span className='col-xs-6 attribute-label'>
-                  Tyyppi
+                    {this.props.attributeTypes.RecordType.name}
                   </span>
                 </div>
                 <div

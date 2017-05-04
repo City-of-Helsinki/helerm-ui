@@ -367,20 +367,21 @@ export class EditorForm extends React.Component {
 
   renderDescriptions () {
     const typeDropdown = this.generateDropdown(this.props.elementConfig.elementTypes);
+    const typeName = this.props.attributeTypes[`${capitalize(this.props.editorConfig.type)}Type`].name;
 
     return (
       <div>
         <div className='col-xs-12 col-lg-6 form-group'>
-          <label className='editor-form__label'>Tarkenne</label>
+          <label className='editor-form__label'>{this.props.attributeTypes.TypeSpecifier.name}</label>
           <span className='fa fa-asterisk required-asterisk'/>
           <input
             className='col-xs-6 form-control edit-attribute__input'
             placeholder='Tarkenne'
-            value={this.state.newAttributes.TypeSpecifier.value}
+            value={this.state.newAttributes.TypeSpecifier.value || ''}
             onChange={(e) => this.onChange(e.target.value, 'TypeSpecifier', 'value')}/>
         </div>
         <div className='col-xs-12 col-lg-6 form-group'>
-          <label className='editor-form__label'>Tyyppi</label>
+          <label className='editor-form__label'>{typeName}</label>
           <span className='fa fa-asterisk required-asterisk'/>
           { typeDropdown }
         </div>

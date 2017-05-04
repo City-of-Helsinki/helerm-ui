@@ -1,6 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 import includes from 'lodash/includes';
+import capitalize from 'lodash/capitalize';
 import Attribute from './Attribute';
 
 export const Attributes = ({
@@ -18,33 +19,17 @@ export const Attributes = ({
 }) => {
   function generateDescriptions (element) {
     const descriptions = [];
-    let elementDescription;
-    let elementType;
-
-    switch (type) {
-      case 'phase':
-        elementDescription = 'Käsittelyvaihetyypin';
-        elementType = 'PhaseType';
-        break;
-      case 'action':
-        elementDescription = 'Toimenpidetyypin';
-        elementType = 'ActionType';
-        break;
-      case 'record':
-        elementDescription = 'Asiakirjatyypin';
-        elementType = 'RecordType';
-        break;
-    }
+    const typeString = `${capitalize(type)}Type`;
 
     descriptions.push({
-      descriptionKey: `${elementDescription} tarkenne`,
+      descriptionKey: attributeTypes[typeString].name,
       typeSpecifier: element.attributes.TypeSpecifier,
       type: ''
     });
     descriptions.push({
-      descriptionKey: 'Tyyppi',
-      typeSpecifier: element.attributes[`${elementType}`],
-      type: element.attributes[`${elementType}`]
+      descriptionKey: attributeTypes.TypeSpecifier.name,
+      typeSpecifier: element.attributes[typeString],
+      type: element.attributes[typeString]
     });
 
     return descriptions;
@@ -103,7 +88,7 @@ export const Attributes = ({
     ? renderBasicAttributes()
     : generateBasicAttributes(generateDescriptions(element));
   const attributes = generateAttributes(element.attributes);
-
+  console.log('Attributes being rendered');
   return (
     <div className={classnames('list-group', `${type}-attributes`)}>
       { basicAttributes }

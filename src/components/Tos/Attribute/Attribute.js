@@ -147,6 +147,7 @@ export class Attribute extends React.Component {
 
   render () {
     const { attribute, attributeIndex, showAttributes, attributeKey, attributeTypes, editable, type } = this.props;
+    console.log('Rendered Attribute component');
     let attributeValue;
     if (editable === false && attribute !== null) {
       return (
