@@ -389,7 +389,6 @@ export class Phase extends React.Component {
   render () {
     const { phase, phaseIndex, update } = this.props;
     const actionElements = this.generateActions(phase.actions);
-    console.log('Phase rendering starts');
 
     return (
       <div>
@@ -444,7 +443,6 @@ export class Phase extends React.Component {
                   updateAttribute={this.updatePhaseAttribute}
                   showAttributes={this.state.showAttributes}
                 />
-                {console.log('Attributes was rendered in Phase')}
               </Sticky>
               { this.state.mode === 'add' &&
               <AddElementInput

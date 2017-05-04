@@ -88,7 +88,6 @@ export const Attributes = ({
     ? renderBasicAttributes()
     : generateBasicAttributes(generateDescriptions(element));
   const attributes = generateAttributes(element.attributes);
-  console.log('Attributes being rendered');
   return (
     <div className={classnames('list-group', `${type}-attributes`)}>
       { basicAttributes }
