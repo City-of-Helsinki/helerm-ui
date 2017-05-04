@@ -75,14 +75,16 @@ export class EditorForm extends React.Component {
 
     for (const attributeType in attributeTypes) {
       if (includes(attributeTypes[attributeType].allowedIn, this.props.editorConfig.type)) {
-        if (attributeTypes[attributeType].required ||
-          includes(getAttributeKeys(attributes), attributeType)) {
-          attributesToShow.push(attributeType);
-        }
         if (attributeTypes[attributeType].requiredIf.length) {
           if (validateConditionalRules(attributeType, attributeTypes, newAttributes)) {
             attributesToShow.push(attributeType);
+            continue;
           }
+        }
+        if (attributeTypes[attributeType].required ||
+          includes(getAttributeKeys(attributes), attributeType)) {
+          attributesToShow.push(attributeType);
+          continue;
         }
       }
     }
