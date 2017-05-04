@@ -119,10 +119,6 @@ export class Action extends React.Component {
     });
   }
 
-  onChange (e) {
-    this.setState({ name: e.target.value });
-  }
-
   onTypeSpecifierChange (event) {
     this.setState({ typeSpecifier: event.target.value });
   }
