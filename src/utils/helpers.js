@@ -100,7 +100,8 @@ export function normalizeTosFromApi (tos) {
  */
 export function normalizeTosForApi (tos) {
   // TODO: needs some serious refactoring...
-  const finalTos = Object.assign({}, tos);
+  const tosCopy = Object.assign({}, tos);
+  const finalTos = trimAttributes(tosCopy);
   const phases = map(finalTos.phases, phase => Object.assign({}, phase));
   const finalPhases = [];
 
@@ -117,6 +118,30 @@ export function normalizeTosForApi (tos) {
   });
 
   return finalPhases;
+}
+
+/**
+ * Remove empty attributes for API
+ * @param tosCopy
+ * @returns {*}
+ */
+export function trimAttributes (tosCopy) {
+  for (const phase in tosCopy.phases) {
+    for (const attribute in tosCopy.phases[phase].attributes) {
+      if (tosCopy.phases[phase].attributes[attribute] === '') {
+        delete tosCopy.phases[phase].attributes[attribute];
+      }
+    }
+  }
+  for (const action in tosCopy.actions) {
+    for (const attribute in tosCopy.actions[action].attributes) {
+      if (tosCopy.actions[action].attributes[attribute] === '') {
+        delete tosCopy.actions[action].attributes[attribute];
+      }
+    }
+  }
+
+  return tosCopy;
 }
 
 /**
