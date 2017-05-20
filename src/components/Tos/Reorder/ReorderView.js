@@ -64,7 +64,7 @@ export class ReorderView extends React.Component {
               key={values[key].index}
               index={index.toString()}
               id={values[key].index}
-              name={values[key].name || '[EI TARKENNETTA]'}
+              name={values[key].attributes.TypeSpecifier || '[EI TARKENNETTA]'}
               moveItem={this.moveItem}
               target={target}
             />
