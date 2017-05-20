@@ -386,6 +386,13 @@ export class Phase extends React.Component {
     );
   }
 
+  getTargetText (value) {
+    if (value === undefined) {
+      return '[EI TARKENNETTA]';
+    }
+    return value;
+  }
+
   render () {
     const { phase, phaseIndex, update } = this.props;
     const actionElements = this.generateActions(phase.actions);
@@ -498,7 +505,7 @@ export class Phase extends React.Component {
                 level='action'
                 toggleImportView={this.toggleImportView}
                 title='toimenpiteitä'
-                targetText={'käsittelyvaiheeseen "' + phase.attributes.TypeSpecifier + '"'}
+                targetText={'käsittelyvaiheeseen "' + this.getTargetText(phase.attributes.TypeSpecifier) + '"'}
                 itemsToImportText='toimenpiteet'
                 phasesOrder={this.props.phasesOrder}
                 phases={this.props.phases}

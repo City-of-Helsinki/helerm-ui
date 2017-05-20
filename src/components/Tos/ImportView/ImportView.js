@@ -45,7 +45,7 @@ export class ImportView extends React.Component {
       const actionElements = this.generateLinks(this.props.actions, phases[phase].actions);
       return (
         <div key={phases[phase].id} className='col-xs-12'>
-          <span>{phases[phase].name}</span>
+          <span>{phases[phase].name || '[EI TARKENNETTA]'}</span>
           { actionElements }
         </div>
       );
@@ -62,7 +62,7 @@ export class ImportView extends React.Component {
             const recordElements = this.generateLinks(this.props.records, actions[action].records);
             return (
               <div key={actions[action].id} className='import-action-record-wrapper'>
-                <span className='import-row-title import-action-title'>{actions[action].name}</span>
+                <span className='import-row-title import-action-title'>{actions[action].name || '[EI TARKENNETTA]'}</span>
                 { recordElements }
               </div>
             );
@@ -71,7 +71,7 @@ export class ImportView extends React.Component {
       }
       let phaseTitle;
       if (phases[phase].actions.length > 0) {
-        phaseTitle = <span className='import-row-title import-phase-title'>{phases[phase].name}</span>;
+        phaseTitle = <span className='import-row-title import-phase-title'>{phases[phase].name || '[EI TARKENNETTA]'}</span>;
       }
       return (
         <div key={phases[phase].id} className='import-wrapper'>
@@ -96,7 +96,7 @@ export class ImportView extends React.Component {
               key={key}
               href=''
               onClick={(e) => this.selectForImport(e, values[itemsInArray[key]].id)}>
-              {values[itemsInArray[key]].name}
+              {values[itemsInArray[key]].name || '[EI TARKENNETTA]'}
             </a>
           </div>
         );

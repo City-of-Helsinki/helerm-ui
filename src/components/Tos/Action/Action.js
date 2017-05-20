@@ -368,6 +368,13 @@ export class Action extends React.Component {
     );
   }
 
+  getTargetText (value) {
+    if (value === undefined) {
+      return '[EI TARKENNETTA]';
+    }
+    return value;
+  }
+
   render () {
     // TODO: Handle errors where we don't have an valid action (i.e 400 error from API)
     const { action } = this.props;
@@ -532,7 +539,7 @@ export class Action extends React.Component {
                   level='record'
                   toggleImportView={() => this.toggleImportView()}
                   title='asiakirjoja'
-                  targetText={'toimenpiteeseen ' + action.name}
+                  targetText={'toimenpiteeseen "' + this.getTargetText(action.attributes.TypeSpecifier) + '"'}
                   itemsToImportText='asiakirjat'
                   phasesOrder={this.props.phasesOrder}
                   phases={this.props.phases}
