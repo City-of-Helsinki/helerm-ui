@@ -302,6 +302,19 @@ export class Phase extends React.Component {
     ];
   }
 
+  showAttributeButton (attributes) {
+    const actualAttributes = [];
+    for (const key in attributes) {
+      if (key !== 'TypeSpecifier' && key !== 'PhaseType') {
+        actualAttributes.push(key);
+      }
+    }
+    if (actualAttributes.length) {
+      return true;
+    }
+    return false;
+  }
+
   renderPhaseButtons () {
     const phaseDropdownItems = this.generateDropdownItems();
 
@@ -324,14 +337,16 @@ export class Phase extends React.Component {
           <Dropdown children={phaseDropdownItems} small={true}/>
         </span>
         }
-        <button
-          className='btn btn-info btn-xs record-button pull-right'
-          onClick={this.toggleAttributeVisibility}>
-          <span
-            className={'fa ' + (this.state.showAttributes ? 'fa-minus' : 'fa-plus')}
-            aria-hidden='true'
-          />
-        </button>
+        { this.showAttributeButton(this.props.phase.attributes) &&
+          <button
+            className='btn btn-info btn-xs record-button pull-right'
+            onClick={this.toggleAttributeVisibility}>
+            <span
+              className={'fa ' + (this.state.showAttributes ? 'fa-minus' : 'fa-plus')}
+              aria-hidden='true'
+            />
+          </button>
+        }
       </div>
     );
   }

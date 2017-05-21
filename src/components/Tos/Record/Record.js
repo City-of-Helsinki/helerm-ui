@@ -75,6 +75,19 @@ export class Record extends React.Component {
     this.props.removeRecord(this.props.record.id, this.props.record.action);
   }
 
+  showAttributeButton (attributes) {
+    const actualAttributes = [];
+    for (const key in attributes) {
+      if (key !== 'TypeSpecifier' && key !== 'RecordType') {
+        actualAttributes.push(key);
+      }
+    }
+    if (actualAttributes.length) {
+      return true;
+    }
+    return false;
+  }
+
   renderRecordButtons () {
     if (this.state.mode === 'view') {
       return (
@@ -110,14 +123,16 @@ export class Record extends React.Component {
             extraSmall={true}
           />
           }
-          <button
-            className='btn btn-info btn-xs record-button pull-right'
-            onClick={this.toggleAttributeVisibility}>
-            <span
-              className={'fa ' + (this.state.showAttributes ? 'fa-minus' : 'fa-plus')}
-              aria-hidden='true'
-            />
-          </button>
+          { this.showAttributeButton(this.props.record.attributes) &&
+            <button
+              className='btn btn-info btn-xs record-button pull-right'
+              onClick={this.toggleAttributeVisibility}>
+              <span
+                className={'fa ' + (this.state.showAttributes ? 'fa-minus' : 'fa-plus')}
+                aria-hidden='true'
+              />
+            </button>
+          }
         </div>
       );
     }
