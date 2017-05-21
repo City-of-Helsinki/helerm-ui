@@ -89,12 +89,13 @@ export const editPhaseAction = (state, { payload }) => {
 
 export const editPhaseAttributeAction = (state, { payload }) => {
   if (payload.hasOwnProperty('typeSpecifier')) {
-    const newAttribute = payload.typeSpecifier ? { TypeSpecifier: payload.typeSpecifier } : {};
     return update(state, {
       phases: {
         [payload.phaseId]: {
           attributes: {
-            $set: newAttribute
+            TypeSpecifier: {
+              $set: payload.typeSpecifier
+            }
           }
         }
       }
