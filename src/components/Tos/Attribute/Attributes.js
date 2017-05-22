@@ -40,8 +40,8 @@ export const Attributes = ({
     });
     descriptions.push({
       descriptionKey: `${elementType} tarkenne`,
-      typeSpecifier: element.attributes[`${elementType}`],
-      type: element.attributes[`${elementType}`]
+      typeSpecifier: element.attributes[`${capitalize(type)}Type`],
+      type: element.attributes[`${capitalize(type)}Type`]
     });
 
     return descriptions;

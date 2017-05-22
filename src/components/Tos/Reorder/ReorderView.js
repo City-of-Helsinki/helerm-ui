@@ -53,10 +53,10 @@ export class ReorderView extends React.Component {
       <div className='row'>
         <h3 className='col-xs-12'>Järjestä</h3>
         { target === 'phase' &&
-        <span className='col-xs-12 reorder-subtext'>Järjestä TOS:n <strong className='reorder-subtext-highlight'>{parentName}</strong> käsittelyvaiheita</span>
+        <span className='col-xs-12 reorder-subtext'>Järjestä TOS:n <strong className='reorder-subtext-highlight'>{parentName || '[EI TARKENNETTA]'}</strong> käsittelyvaiheita</span>
         }
         { target === 'action' &&
-        <span className='col-xs-12 reorder-subtext'>Järjestä käsittelyvaiheen <strong className='reorder-subtext-highlight'>{parentName}</strong> toimenpiteet</span>
+        <span className='col-xs-12 reorder-subtext'>Järjestä käsittelyvaiheen <strong className='reorder-subtext-highlight'>{parentName || '[EI TARKENNETTA]'}</strong> toimenpiteet</span>
         }
         <div className='col-xs-12 reorder-list'>
           { keys.map((key, index) => (
@@ -64,7 +64,7 @@ export class ReorderView extends React.Component {
               key={values[key].index}
               index={index.toString()}
               id={values[key].index}
-              name={values[key].name}
+              name={values[key].attributes.TypeSpecifier || '[EI TARKENNETTA]'}
               moveItem={this.moveItem}
               target={target}
             />
@@ -87,7 +87,7 @@ ReorderView.propTypes = {
   changeOrder: React.PropTypes.func.isRequired,
   keys: React.PropTypes.array.isRequired,
   parent: React.PropTypes.string,
-  parentName: React.PropTypes.string.isRequired,
+  parentName: React.PropTypes.string,
   target: React.PropTypes.string.isRequired,
   toggleReorderView: React.PropTypes.func.isRequired,
   values: React.PropTypes.object.isRequired

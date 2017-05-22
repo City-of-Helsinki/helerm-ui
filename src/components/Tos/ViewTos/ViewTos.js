@@ -179,6 +179,7 @@ export class ViewTOS extends React.Component {
   }
 
   saveDraft () {
+    this.setState({ isDirty: false });
     return this.props.saveDraft()
       .then(() => {
         return this.props.displayMessage({
