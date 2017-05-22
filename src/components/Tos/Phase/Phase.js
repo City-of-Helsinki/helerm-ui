@@ -211,6 +211,11 @@ export class Phase extends React.Component {
   }
 
   editPhaseWithForm (attributes, phaseId) {
+    this.setState({
+      attributes: attributes,
+      typeSpecifier: attributes.TypeSpecifier,
+      type: attributes.PhaseType
+    });
     this.props.editPhase(attributes, phaseId);
     this.disableEditMode();
   }

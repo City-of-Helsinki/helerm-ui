@@ -166,6 +166,11 @@ export class Action extends React.Component {
   }
 
   editActionWithForm (attributes, actionId) {
+    this.setState({
+      attributes: attributes,
+      typeSpecifier: attributes.TypeSpecifier,
+      type: attributes.ActionType
+    });
     this.props.editAction(attributes, actionId);
     this.disableEditMode();
   }
