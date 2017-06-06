@@ -41,7 +41,7 @@ export function executeImport (newItem, level, itemParent, currentState) {
   }
   const newIndex = indexes.length > 0 ? Math.max.apply(null, indexes) + 1 : 1;
   const newName = currentItems[newItem].name + ' (KOPIO)';
-  const newCopy = Object.assign({}, currentItems[newItem], { id: newId }, { index: newIndex }, { name: newName });
+  const newCopy = Object.assign({}, currentItems[newItem], { id: newId }, { index: newIndex }, { name: newName }, { attributes: { TypeSpecifier: newName } });
   const newItems = Object.assign({}, currentItems, { [newId]: newCopy });
 
   return createAction(EXECUTE_IMPORT)({ level, itemParent, parentLevel, itemLevel, newId, newItems });
