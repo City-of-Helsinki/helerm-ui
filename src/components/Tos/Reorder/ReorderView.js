@@ -1,6 +1,7 @@
 import React from 'react';
 import ReorderItem from './ReorderItem';
 import './ReorderView.scss';
+import capitalize from 'lodash/capitalize';
 import update from 'immutability-helper';
 
 import { DragDropContext } from 'react-dnd';
@@ -53,10 +54,10 @@ export class ReorderView extends React.Component {
       <div className='row'>
         <h3 className='col-xs-12'>Järjestä</h3>
         { target === 'phase' &&
-        <span className='col-xs-12 reorder-subtext'>Järjestä TOS:n <strong className='reorder-subtext-highlight'>{parentName || '[EI TARKENNETTA]'}</strong> käsittelyvaiheita</span>
+        <span className='col-xs-12 reorder-subtext'>Järjestä TOS:n <strong className='reorder-subtext-highlight'>{parentName || ''}</strong> käsittelyvaiheita</span>
         }
         { target === 'action' &&
-        <span className='col-xs-12 reorder-subtext'>Järjestä käsittelyvaiheen <strong className='reorder-subtext-highlight'>{parentName || '[EI TARKENNETTA]'}</strong> toimenpiteet</span>
+        <span className='col-xs-12 reorder-subtext'>Järjestä käsittelyvaiheen <strong className='reorder-subtext-highlight'>{parentName || ''}</strong> toimenpiteet</span>
         }
         <div className='col-xs-12 reorder-list'>
           { keys.map((key, index) => (
@@ -64,7 +65,7 @@ export class ReorderView extends React.Component {
               key={values[key].index}
               index={index.toString()}
               id={values[key].index}
-              name={values[key].attributes.TypeSpecifier || '[EI TARKENNETTA]'}
+              name={values[key].attributes.TypeSpecifier || values[key].attributes[`${capitalize(target)}Type`] || '-'}
               moveItem={this.moveItem}
               target={target}
             />

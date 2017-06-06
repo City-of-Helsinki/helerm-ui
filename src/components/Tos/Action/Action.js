@@ -390,7 +390,7 @@ export class Action extends React.Component {
 
   getTargetText (value) {
     if (value === undefined) {
-      return '[EI TARKENNETTA]';
+      return '';
     }
     return value;
   }
@@ -546,7 +546,7 @@ export class Action extends React.Component {
                   values={this.props.records}
                   changeOrder={this.props.changeOrder}
                   parent={this.props.action.id}
-                  parentName={this.state.typeSpecifier}
+                  parentName={this.state.typeSpecifier || this.state.type}
                 />
               }
               closePopup={() => this.toggleReorderView()}

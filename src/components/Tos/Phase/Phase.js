@@ -408,7 +408,7 @@ export class Phase extends React.Component {
 
   getTargetText (value) {
     if (value === undefined) {
-      return '[EI TARKENNETTA]';
+      return '-';
     }
     return value;
   }
@@ -512,7 +512,7 @@ export class Phase extends React.Component {
                 values={this.props.actions}
                 changeOrder={this.props.changeOrder}
                 parent={phaseIndex}
-                parentName={this.state.typeSpecifier}
+                parentName={this.state.typeSpecifier || this.state.type}
               />
             }
             closePopup={() => this.toggleReorderView()}
