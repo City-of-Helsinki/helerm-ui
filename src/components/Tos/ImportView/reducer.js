@@ -82,6 +82,21 @@ export function executeImport (newItem, level, itemParent, currentState) {
       importRecords = Object.assign({}, importRecords, newRecords);
       break;
     case 'record':
+      let recordIndexes = [];
+      for (const key in importRecords) {
+        if (importRecords.hasOwnProperty(key)) {
+          recordIndexes.push(importRecords[key].index);
+        }
+      }
+      const newRecordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+
+      const newRecordIndex = recordIndexes.length > 0 ? Math.max.apply(null, recordIndexes) + 1 : 1;
+      const newRecordName = (importRecords[newItem].name || '') + ' (KOPIO)';
+      const newRecordAttributes = Object.assign({}, importRecords[newItem].attributes, { TypeSpecifier: newRecordName });
+      const newRecord = Object.assign({}, importRecords[newItem], { id: newRecordId }, { action: itemParent }, { index: newRecordIndex }, { name: newRecordName }, { attributes: newRecordAttributes });
+
+      importActions[itemParent].records.push(newRecordId);
+      importRecords[newRecordId] = newRecord;
       break;
     default:
       break;
