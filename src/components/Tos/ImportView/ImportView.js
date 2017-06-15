@@ -45,7 +45,7 @@ export class ImportView extends React.Component {
       const actionElements = this.generateLinks(this.props.actions, phases[phase].actions);
       return (
         <div key={phases[phase].id} className='col-xs-12'>
-          <span>{phases[phase].attributes.TypeSpecifier || '[EI TARKENNETTA]'}</span>
+          <span>{phases[phase].attributes.TypeSpecifier || phases[phase].attributes.PhaseType || ''}</span>
           { actionElements }
         </div>
       );
@@ -62,7 +62,7 @@ export class ImportView extends React.Component {
             const recordElements = this.generateLinks(this.props.records, actions[action].records);
             return (
               <div key={actions[action].id} className='import-action-record-wrapper'>
-                <span className='import-row-title import-action-title'>{actions[action].attributes.TypeSpecifier || '[EI TARKENNETTA]'}</span>
+                <span className='import-row-title import-action-title'>{actions[action].attributes.TypeSpecifier || actions[action].attributes.ActionType || ''}</span>
                 { recordElements }
               </div>
             );
@@ -71,7 +71,7 @@ export class ImportView extends React.Component {
       }
       let phaseTitle;
       if (phases[phase].actions.length > 0) {
-        phaseTitle = <span className='import-row-title import-phase-title'>{phases[phase].attributes.TypeSpecifier || '[EI TARKENNETTA]'}</span>;
+        phaseTitle = <span className='import-row-title import-phase-title'>{phases[phase].attributes.TypeSpecifier || phases[phase].attributes.PhaseType || ''}</span>;
       }
       return (
         <div key={phases[phase].id} className='import-wrapper'>
@@ -96,7 +96,7 @@ export class ImportView extends React.Component {
               key={key}
               href=''
               onClick={(e) => this.selectForImport(e, values[itemsInArray[key]].id)}>
-              {values[itemsInArray[key]].attributes.TypeSpecifier || '[EI TARKENNETTA]'}
+              {values[itemsInArray[key]].attributes.TypeSpecifier || values[itemsInArray[key]].attributes[`${_.capitalize(this.props.level)}Type`] || '-'}
             </a>
           </div>
         );
@@ -161,7 +161,7 @@ export class ImportView extends React.Component {
                   href=''
                   onClick={(e) => this.removeFromImport(e, index)}
                   className='col-xs-12'>
-                  {this.state.values[element].attributes.TypeSpecifier || '[EI TARKENNETTA]'}
+                  {this.state.values[element].attributes.TypeSpecifier || this.state.values[element].attributes[`${_.capitalize(this.props.level)}Type`] || '-'}
                 </a>
               ))}
             </div>

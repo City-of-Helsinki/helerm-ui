@@ -2,6 +2,7 @@ import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
 import { map } from 'lodash';
 
+import { fetchNavigation } from '../Navigation/reducer';
 import {
   addActionAction,
   editActionAction,
@@ -153,7 +154,8 @@ export function changeStatus (status) {
         }
         return res.json();
       })
-      .then(json => dispatch(receiveTOS(json)));
+      .then(json => dispatch(receiveTOS(json)))
+      .then(dispatch(fetchNavigation()));
   };
 }
 
