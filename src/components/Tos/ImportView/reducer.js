@@ -14,6 +14,8 @@ export function executeImport (newItem, level, itemParent, currentState) {
   let importPhases = JSON.parse(JSON.stringify(currentState.selectedTOS.phases));
   let importActions = JSON.parse(JSON.stringify(currentState.selectedTOS.actions));
   let importRecords = JSON.parse(JSON.stringify(currentState.selectedTOS.records));
+  const newActions = {};
+  const newRecords = {};
 
   switch (level) {
     case 'phase':
@@ -25,8 +27,6 @@ export function executeImport (newItem, level, itemParent, currentState) {
       }
       const newPhaseId = Math.random().toString(36).replace(/[^a-z]+/g, '');
 
-      const newActions = {};
-      const newRecords = {};
       if (importPhases[newItem].actions) {
         for (const childAction of importPhases[newItem].actions) {
           const newActionId = Math.random().toString(36).replace(/[^a-z]+/g, '');
@@ -58,10 +58,10 @@ export function executeImport (newItem, level, itemParent, currentState) {
     case 'record':
       break;
     default:
-      return currentState;
+      break;
   }
 
-  return createAction(EXECUTE_IMPORT)({ level, importPhases, importActions, importRecords });
+  return createAction(EXECUTE_IMPORT)({ importPhases, importActions, importRecords });
 }
 
 export const executeImportAction = (state, { payload }) => {
