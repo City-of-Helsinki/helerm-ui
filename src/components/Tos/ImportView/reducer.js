@@ -54,6 +54,30 @@ export function executeImport (newItem, level, itemParent, currentState) {
       importRecords = Object.assign({}, importRecords, newRecords);
       break;
     case 'action':
+      let actionIndexes = [];
+      for (const key in importActions) {
+        if (importActions.hasOwnProperty(key)) {
+          actionIndexes.push(importActions[key].index);
+        }
+      }
+      const newActionId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+      const newActionRecords = [];
+
+      if (importActions[newItem].records) {
+        for (const childRecord of importActions[newItem].records) {
+          const newRecordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+          const newRecord = Object.assign({}, importRecords[childRecord], { id: newRecordId }, { action: newActionId });
+          newActionRecords.push(newRecordId);
+          newRecords[newRecordId] = newRecord;
+        }
+      }
+      const newActionIndex = actionIndexes.length > 0 ? Math.max.apply(null, actionIndexes) + 1 : 1;
+      const newActionName = (importActions[newItem].name || '') + ' (KOPIO)';
+      const newAction = Object.assign({}, importActions[newItem], { id: newActionId }, { phase: itemParent }, { index: newActionIndex }, { name: newActionName }, { records: newActionRecords }, { attributes: { TypeSpecifier: newActionName } });
+
+      importPhases[itemParent].actions.push(newActionId);
+      importActions[newActionId] = newAction;
+      importRecords = Object.assign({}, importRecords, newRecords);
       break;
     case 'record':
       break;
