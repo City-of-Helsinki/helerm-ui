@@ -47,7 +47,8 @@ export function executeImport (newItem, level, itemParent, currentState) {
       }
       const newPhaseIndex = phaseIndexes.length > 0 ? Math.max.apply(null, phaseIndexes) + 1 : 1;
       const newPhaseName = (importPhases[newItem].name || '') + ' (KOPIO)';
-      const newPhase = Object.assign({}, importPhases[newItem], { id: newPhaseId }, { index: newPhaseIndex }, { name: newPhaseName }, { actions: map(newActions, (newAction) => newAction.id) }, { attributes: { TypeSpecifier: newPhaseName } });
+      const newPhaseAttributes = Object.assign({}, importPhases[newItem].attributes, { TypeSpecifier: newPhaseName });
+      const newPhase = Object.assign({}, importPhases[newItem], { id: newPhaseId }, { index: newPhaseIndex }, { name: newPhaseName }, { actions: map(newActions, (newAction) => newAction.id) }, { attributes: newPhaseAttributes });
 
       importPhases[newPhaseId] = newPhase;
       importActions = Object.assign({}, importActions, newActions);
@@ -73,7 +74,8 @@ export function executeImport (newItem, level, itemParent, currentState) {
       }
       const newActionIndex = actionIndexes.length > 0 ? Math.max.apply(null, actionIndexes) + 1 : 1;
       const newActionName = (importActions[newItem].name || '') + ' (KOPIO)';
-      const newAction = Object.assign({}, importActions[newItem], { id: newActionId }, { phase: itemParent }, { index: newActionIndex }, { name: newActionName }, { records: newActionRecords }, { attributes: { TypeSpecifier: newActionName } });
+      const newActionAttributes = Object.assign({}, importActions[newItem].attributes, { TypeSpecifier: newActionName });
+      const newAction = Object.assign({}, importActions[newItem], { id: newActionId }, { phase: itemParent }, { index: newActionIndex }, { name: newActionName }, { records: newActionRecords }, { attributes: newActionAttributes });
 
       importPhases[itemParent].actions.push(newActionId);
       importActions[newActionId] = newAction;
