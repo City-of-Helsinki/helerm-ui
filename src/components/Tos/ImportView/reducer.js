@@ -11,9 +11,9 @@ export function importItems (newItem, level, itemParent) {
 }
 
 export function executeImport (newItem, level, itemParent, currentState) {
-  let importPhases = Object.assign({}, currentState.selectedTOS.phases);
-  let importActions = Object.assign({}, currentState.selectedTOS.actions);
-  let importRecords = Object.assign({}, currentState.selectedTOS.records);
+  let importPhases = JSON.parse(JSON.stringify(currentState.selectedTOS.phases));
+  let importActions = JSON.parse(JSON.stringify(currentState.selectedTOS.actions));
+  let importRecords = JSON.parse(JSON.stringify(currentState.selectedTOS.records));
 
   switch (level) {
     case 'phase':
