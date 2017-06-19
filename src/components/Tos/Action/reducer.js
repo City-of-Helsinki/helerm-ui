@@ -65,6 +65,7 @@ export const addActionAction = (state, { payload }) => {
 };
 
 export const editActionAction = (state, { payload }) => {
+  console.log(payload);
   return update(state, {
     actions: {
       [payload.actionId]: {

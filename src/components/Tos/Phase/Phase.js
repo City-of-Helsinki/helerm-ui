@@ -10,7 +10,7 @@ import AddElementInput from '../AddElementInput/AddElementInput';
 import DeleteView from '../DeleteView/DeleteView';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
-import TypeDropdown from '../TypeDropdown/TypeDropdown';
+import DropdownInput from '../DropdownInput/DropdownInput';
 import ReorderView from '../Reorder/ReorderView';
 import ImportView from '../ImportView/ImportView';
 import EditorForm from '../EditorForm/EditorForm';
@@ -39,8 +39,8 @@ export class Phase extends React.Component {
     this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
     this.cancelActionCreation = this.cancelActionCreation.bind(this);
     this.state = {
-      typeSpecifier: this.props.phase.attributes.TypeSpecifier,
-      type: this.props.phase.attributes.PhaseType,
+      typeSpecifier: this.props.phase.attributes.TypeSpecifier || null,
+      type: this.props.phase.attributes.PhaseType || null,
       attributes: this.props.phase.attributes,
       actionTypeSpecifier: '',
       actionType: '',
@@ -386,14 +386,18 @@ export class Phase extends React.Component {
       }
       if (this.state.editingType) {
         phaseType = (
-          <TypeDropdown
-            type={'phase'}
-            typeState={this.state.type}
-            typeOptions={this.props.phaseTypes}
-            onChange={this.onTypeChange}
-            onInputChange={this.onTypeInputChange}
-            onSubmit={this.updatePhaseType}
-          />
+          <div className='col-md-5'>
+            <form onSubmit={this.updatePhaseType}>
+              <DropdownInput
+                type={'phase'}
+                valueState={this.state.type}
+                options={this.props.phaseTypes}
+                onChange={this.onTypeChange}
+                onInputChange={this.onTypeInputChange}
+                onSubmit={this.updatePhaseType}
+              />
+            </form>
+          </div>
         );
       }
     }

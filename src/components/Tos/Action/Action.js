@@ -9,7 +9,7 @@ import Attributes from '../Attribute/Attributes';
 import EditorForm from '../EditorForm/EditorForm';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
-import TypeDropdown from '../TypeDropdown/TypeDropdown';
+import DropdownInput from '../DropdownInput/DropdownInput';
 import DeleteView from '../DeleteView/DeleteView';
 import ReorderView from '../Reorder/ReorderView';
 import ImportView from '../ImportView/ImportView';
@@ -37,8 +37,8 @@ export class Action extends React.Component {
     this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
     this.disableEditMode = this.disableEditMode.bind(this);
     this.state = {
-      typeSpecifier: this.props.action.attributes.TypeSpecifier,
-      type: this.props.action.attributes.ActionType,
+      typeSpecifier: this.props.action.attributes.TypeSpecifier || null,
+      type: this.props.action.attributes.ActionType || null,
       attributes: this.props.action.attributes,
       mode: 'view',
       editingTypeSpecifier: false,
@@ -368,14 +368,18 @@ export class Action extends React.Component {
       }
       if (this.state.editingType) {
         actionType = (
-          <TypeDropdown
-            type={'action'}
-            typeState={this.state.type}
-            typeOptions={this.props.actionTypes}
-            onChange={this.onTypeChange}
-            onInputChange={this.onTypeInputChange}
-            onSubmit={this.updateActionType}
-          />
+          <div className='col-md-5'>
+            <form onSubmit={this.updateActionType}>
+              <DropdownInput
+                type={'action'}
+                valueState={this.state.type}
+                options={this.props.actionTypes}
+                onChange={this.onTypeChange}
+                onInputChange={this.onTypeInputChange}
+                onSubmit={this.updateActionType}
+              />
+            </form>
+          </div>
         );
       }
     }

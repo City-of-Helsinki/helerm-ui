@@ -145,7 +145,7 @@ const receiveAttributeTypesAction = (state, { payload }) => {
       const trimmedResult = result.id.replace(/-/g, '');
       list[trimmedResult] = {
         id: result.id,
-        name: result.value
+        value: result.value
       };
     });
   };
