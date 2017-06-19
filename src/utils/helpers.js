@@ -240,3 +240,20 @@ export function displayMessage (message, opts = { type: 'success' }) {
 export function formatDateTime (dateTime, format = 'DD.MM.YYYY HH:mm') {
   return moment(dateTime).format(format);
 }
+
+/**
+ * Return array of base values in order
+ * @param attributeTypes
+ * @param type
+ * @returns {Array}
+ */
+export function getBaseValues (attributeTypes, type) {
+  const baseValues = [
+    { index: attributeTypes['PhaseType'].index, type: 'PhaseType' },
+    { index: attributeTypes['RecordType'].index, type: 'RecordType' },
+    { index: attributeTypes['ActionType'].index, type: 'ActionType' },
+    { index: attributeTypes['TypeSpecifier'].index, type: 'TypeSpecifier' }
+  ];
+  const orderedBaseValues = orderBy(baseValues, ['index']);
+  return orderedBaseValues.map((baseValue) => baseValue.type);
+}
