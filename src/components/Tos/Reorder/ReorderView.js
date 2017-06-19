@@ -7,6 +7,8 @@ import update from 'immutability-helper';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
+import { getBaseValues } from '../../../utils/helpers';
+
 @DragDropContext(HTML5Backend)
 export class ReorderView extends React.Component {
   constructor (props) {
@@ -41,6 +43,17 @@ export class ReorderView extends React.Component {
         ]
       }
     }));
+  }
+
+  getValues (attributes, target) {
+    const values = [];
+    const baseValues = getBaseValues(this.props.attributeTypes, target);
+    for (const value of baseValues) {
+      if ((value === 'TypeSpecifier' || value === `${capitalize(target)}Type`) && attributes[value] !== undefined) {
+        values.push(attributes[value]);
+      }
+    }
+    return values;
   }
 
   stop (e) {
