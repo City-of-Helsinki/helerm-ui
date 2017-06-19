@@ -85,6 +85,7 @@ export class ReorderView extends React.Component {
 }
 
 ReorderView.propTypes = {
+  attributeTypes: React.PropTypes.object,
   changeOrder: React.PropTypes.func.isRequired,
   keys: React.PropTypes.array.isRequired,
   parent: React.PropTypes.string,
