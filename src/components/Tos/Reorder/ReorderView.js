@@ -7,6 +7,8 @@ import update from 'immutability-helper';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
+import { getBaseValues } from '../../../utils/helpers';
+
 @DragDropContext(HTML5Backend)
 export class ReorderView extends React.Component {
   constructor (props) {
@@ -43,6 +45,17 @@ export class ReorderView extends React.Component {
     }));
   }
 
+  getValues (attributes, target) {
+    const values = [];
+    const baseValues = getBaseValues(this.props.attributeTypes, target);
+    for (const value of baseValues) {
+      if ((value === 'TypeSpecifier' || value === `${capitalize(target)}Type`) && attributes[value] !== undefined) {
+        values.push(attributes[value]);
+      }
+    }
+    return values;
+  }
+
   stop (e) {
     e.stopPropagation();
   }
@@ -65,7 +78,7 @@ export class ReorderView extends React.Component {
               key={values[key].index}
               index={index.toString()}
               id={values[key].index}
-              name={values[key].attributes.TypeSpecifier || values[key].attributes[`${capitalize(target)}Type`] || '-'}
+              labels={this.getValues(values[key].attributes, target)}
               moveItem={this.moveItem}
               target={target}
             />
@@ -85,6 +98,7 @@ export class ReorderView extends React.Component {
 }
 
 ReorderView.propTypes = {
+  attributeTypes: React.PropTypes.object,
   changeOrder: React.PropTypes.func.isRequired,
   keys: React.PropTypes.array.isRequired,
   parent: React.PropTypes.string,

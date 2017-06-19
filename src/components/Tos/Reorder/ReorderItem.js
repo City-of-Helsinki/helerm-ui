@@ -75,8 +75,18 @@ const itemTarget = {
 }))
 
 export class ReorderItem extends React.Component {
+  getLabels (labels) {
+    const elements = [];
+    for (const label of labels) {
+      elements.push(
+        <span key={label} className='reorder-label'>{label}</span>
+      );
+    }
+    return elements;
+  }
+
   render () {
-    const { name, isDragging, connectDragSource, connectDropTarget, target } = this.props;
+    const { isDragging, connectDragSource, connectDropTarget, labels, target } = this.props;
     const opacity = isDragging ? 0 : 1;
     let border;
     switch (target) {
@@ -91,7 +101,9 @@ export class ReorderItem extends React.Component {
     }
     return connectDragSource(connectDropTarget(
       <div style={{ ...style, opacity, border }}>
-        <i className='fa fa-arrows' aria-hidden='true' /> {name}
+        <i className='fa fa-arrows' aria-hidden='true' />
+        {' '}
+        {this.getLabels(labels)}
       </div>
     ));
   }
@@ -101,7 +113,7 @@ ReorderItem.propTypes = {
   connectDragSource: React.PropTypes.func,
   connectDropTarget: React.PropTypes.func,
   isDragging: React.PropTypes.bool,
-  name: React.PropTypes.string.isRequired,
+  labels: React.PropTypes.array,
   target: React.PropTypes.string.isRequired
 };
 
