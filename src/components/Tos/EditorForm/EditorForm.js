@@ -16,7 +16,7 @@ export class EditorForm extends React.Component {
     this.getCheckedState = this.getCheckedState.bind(this);
     this.closeEditorForm = this.closeEditorForm.bind(this);
     this.onChange = this.onChange.bind(this);
-    this.onInputChange = this.onInputChange.bind(this);
+    this.onFormInputChange = this.onFormInputChange.bind(this);
     this.state = {
       newAttributes: this.initializeAttributes(this.props.attributeTypes)
     };
@@ -51,12 +51,12 @@ export class EditorForm extends React.Component {
     }));
   }
 
-  onInputChange (event, key, field) {
+  onFormInputChange (value, key, field) {
     this.setState(update(this.state, {
       newAttributes: {
         [key]: {
           [field]: {
-            $set: event.target.value
+            $set: value
           }
         }
       }
@@ -178,7 +178,7 @@ export class EditorForm extends React.Component {
                   valueState={this.getActiveValue(key)}
                   options={options}
                   onChange={this.onChange}
-                  onInputChange={this.onInputChange}
+                  onInputChange={this.onFormInputChange}
                   onSubmit={() => null}
                 />
               </div>
@@ -240,7 +240,7 @@ export class EditorForm extends React.Component {
         valueState={this.state.newAttributes[type] ? this.state.newAttributes[type].value : ''}
         options={elementTypes}
         onChange={this.onChange}
-        onInputChange={this.onInputChange}
+        onInputChange={this.onFormInputChange}
         onSubmit={() => null}
       />
     );

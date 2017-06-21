@@ -17,15 +17,30 @@ export const DropdownInput = ({
   console.log('➡️ Incoming options to DropdownInput', options);
   console.log('➡️ Incoming value...', valueState);
   if (Object.keys(options).length === 0) {
-    return (
-      <input
-        className={inputClassName}
-        value={valueState || ''}
-        // autoFocus={true}
-        onChange={type === 'form' ? () => onInputChange(event, keyValue, 'value') : onInputChange}
-        onBlur={onSubmit}
-      />
-    );
+    if (type === 'form') {
+      const onFormInputChange = (event) => {
+        onInputChange(event.target.value, keyValue, 'value');
+      };
+      return (
+        <input
+          className={inputClassName}
+          value={valueState || ''}
+          onChange={onFormInputChange}
+          onBlur={onSubmit}
+          placeholder={'Tyyppi'}
+        />
+      );
+    } else {
+      return (
+        <input
+          className={inputClassName}
+          value={valueState || ''}
+          autoFocus={true}
+          onChange={onInputChange}
+          onBlur={onSubmit}
+        />
+      );
+    }
   }
 
   for (const key in options) {
