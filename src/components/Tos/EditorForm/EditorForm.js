@@ -1,11 +1,11 @@
 import React from 'react';
 import './EditorForm.scss';
 import update from 'immutability-helper';
-import Select from 'react-select';
 import includes from 'lodash/includes';
 import capitalize from 'lodash/capitalize';
 import sortBy from 'lodash/sortBy';
 
+import DropdownInput from '../DropdownInput/DropdownInput';
 import { validateConditionalRules } from '../../../utils/validators';
 
 export class EditorForm extends React.Component {
@@ -15,6 +15,8 @@ export class EditorForm extends React.Component {
     this.getActiveValue = this.getActiveValue.bind(this);
     this.getCheckedState = this.getCheckedState.bind(this);
     this.closeEditorForm = this.closeEditorForm.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.onFormInputChange = this.onFormInputChange.bind(this);
     this.state = {
       newAttributes: this.initializeAttributes(this.props.attributeTypes)
     };
@@ -37,6 +39,18 @@ export class EditorForm extends React.Component {
   }
 
   onChange (value, key, field) {
+    this.setState(update(this.state, {
+      newAttributes: {
+        [key]: {
+          [field]: {
+            $set: value
+          }
+        }
+      }
+    }));
+  }
+
+  onFormInputChange (value, key, field) {
     this.setState(update(this.state, {
       newAttributes: {
         [key]: {
@@ -122,7 +136,7 @@ export class EditorForm extends React.Component {
     return sortedAttributes;
   }
 
-  generateOptions (array) {
+  mapOptions (array) {
     return array.map(item => ({
       value: item.value,
       label: item.value
@@ -140,8 +154,7 @@ export class EditorForm extends React.Component {
       for (const key of attributesToShow) {
         if (attributeTypes.hasOwnProperty(key)) {
           if (attributeTypes[key].values.length) {
-            const options = this.generateOptions(attributeTypes[key].values);
-
+            const options = this.mapOptions(attributeTypes[key].values);
             attributeElements.push(
               <div key={key} className='col-xs-12 col-lg-6 form-group'>
                 <input
@@ -155,17 +168,17 @@ export class EditorForm extends React.Component {
                   <span className='fa fa-asterisk required-asterisk'/>
                   }
                 </label>
-                <Select
-                  placeholder='Valitse...'
-                  autoBlur={true}
-                  autofocus={false}
-                  className='form-control editor-form__select'
-                  clearable={true}
+                <DropdownInput
+                  keyValue={key}
+                  type={'form'}
+                  selectClassName={'form-control editor-form__select'}
+                  inputClassName={'form-control edit-attribute__input'}
                   disabled={!this.state.newAttributes[key].checked}
-                  onChange={(option) => this.onChange(option ? option.value : null, key, 'value')}
-                  openOnFocus={true}
+                  valueState={this.getActiveValue(key)}
                   options={options}
-                  value={this.getActiveValue(key)}
+                  onChange={this.onChange}
+                  onInputChange={this.onFormInputChange}
+                  onSubmit={() => null}
                 />
               </div>
             );
@@ -215,23 +228,19 @@ export class EditorForm extends React.Component {
   }
 
   generateDropdown (elementTypes) {
-    const type = [`${capitalize(this.props.editorConfig.type)}Type`];
-    const optionsRaw = Object.keys(elementTypes).map(type => {
-      return { value: elementTypes[type].name, label: elementTypes[type].name };
-    });
-    const options = this.generateOptions(optionsRaw);
+    const type = `${capitalize(this.props.editorConfig.type)}Type`;
 
     return (
-      <Select
-        placeholder='Valitse...'
-        autoBlur={true}
-        autofocus={false}
-        className='form-control col-xs-6'
-        clearable={true}
-        onChange={(option) => this.onChange(option ? option.value : null, type, 'value')}
-        openOnFocus={true}
-        options={options}
-        value={this.state.newAttributes[type] ? this.state.newAttributes[type].value : '---'}
+      <DropdownInput
+        keyValue={type}
+        type={'form'}
+        selectClassName={'form-control col-xs-6'}
+        inputClassName={'form-control edit-attribute__input'}
+        valueState={this.state.newAttributes[type] ? this.state.newAttributes[type].value : ''}
+        options={elementTypes}
+        onChange={this.onChange}
+        onInputChange={this.onFormInputChange}
+        onSubmit={() => null}
       />
     );
   }
@@ -323,7 +332,6 @@ export class EditorForm extends React.Component {
 
   resolveOnSubmit (e, targetId) {
     const { action, type } = this.props.editorConfig;
-
     switch (type) {
       case 'function':
         if (action === 'edit' || action === 'complement') {
@@ -369,10 +377,10 @@ export class EditorForm extends React.Component {
 
   renderDescriptions () {
     const { attributeTypes } = this.props;
-    const typeDropdown = this.generateDropdown(this.props.elementConfig.elementTypes);
     const typeName = attributeTypes
-    ? attributeTypes[`${capitalize(this.props.editorConfig.type)}Type`].name
-    : '';
+      ? attributeTypes[`${capitalize(this.props.editorConfig.type)}Type`].name
+      : '';
+    const dropdownInput = this.generateDropdown(this.props.elementConfig.elementTypes);
 
     return (
       <div>
@@ -388,7 +396,7 @@ export class EditorForm extends React.Component {
         <div className='col-xs-12 col-lg-6 form-group'>
           <label className='editor-form__label'>{typeName}</label>
           <span className='fa fa-asterisk required-asterisk'/>
-          { typeDropdown }
+          { dropdownInput }
         </div>
       </div>
     );

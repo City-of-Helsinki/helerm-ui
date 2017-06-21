@@ -89,7 +89,7 @@ export const editActionAttributeAction = (state, { payload }) => {
         }
       }
     });
-  } else if (payload.type) {
+  } else if (payload.hasOwnProperty('type')) {
     return update(state, {
       actions: {
         [payload.actionId]: {
