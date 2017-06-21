@@ -39,7 +39,6 @@ export class EditorForm extends React.Component {
   }
 
   onChange (value, key, field) {
-    console.log(value, key, field);
     this.setState(update(this.state, {
       newAttributes: {
         [key]: {
@@ -333,7 +332,6 @@ export class EditorForm extends React.Component {
 
   resolveOnSubmit (e, targetId) {
     const { action, type } = this.props.editorConfig;
-    console.log(this.state);
     switch (type) {
       case 'function':
         if (action === 'edit' || action === 'complement') {

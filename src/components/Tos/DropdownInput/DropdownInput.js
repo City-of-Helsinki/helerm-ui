@@ -14,8 +14,6 @@ export const DropdownInput = ({
   selectClassName = `form-control edit-${type}-type__input`
 }) => {
   const optionsArray = [];
-  console.log('➡️ Incoming options to DropdownInput', options);
-  console.log('➡️ Incoming value...', valueState);
   if (Object.keys(options).length === 0) {
     if (type === 'form') {
       const onFormInputChange = (event) => {
