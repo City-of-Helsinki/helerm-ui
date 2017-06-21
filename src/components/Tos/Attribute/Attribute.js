@@ -123,11 +123,12 @@ export class Attribute extends React.Component {
     for (const key in typeOptions) {
       if (typeOptions.hasOwnProperty(key)) {
         options.push({
-          label: typeOptions[key].name,
-          value: typeOptions[key].name
+          label: typeOptions[key].value,
+          value: typeOptions[key].value
         });
       }
     }
+
     return (
       <form onSubmit={this.submit}>
         <Select
