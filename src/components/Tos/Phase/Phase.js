@@ -1,4 +1,5 @@
 import React from 'react';
+import classnames from 'classnames';
 import forEach from 'lodash/forEach';
 import { StickyContainer, Sticky } from 'react-sticky';
 import update from 'immutability-helper';
@@ -357,13 +358,14 @@ export class Phase extends React.Component {
   }
 
   renderBasicAttributes () {
+    const classNames = classnames(['col-md-6', 'basic-attribute', this.props.documentState === 'edit' ? 'editable' : null]);
     let typeSpecifier =
-      (<span className='col-md-6 basic-attribute' onClick={() => this.editTypeSpecifier()}>
+      (<span className={classNames} onClick={() => this.editTypeSpecifier()}>
         <i className='fa fa-info-circle' aria-hidden='true'/> {this.state.typeSpecifier}
       </span>
     );
     let phaseType =
-      (<span className='col-md-6 basic-attribute' onClick={() => this.editType()}>
+      (<span className={classNames} onClick={() => this.editType()}>
         {this.state.type}
       </span>
     );

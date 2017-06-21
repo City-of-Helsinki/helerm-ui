@@ -339,13 +339,14 @@ export class Action extends React.Component {
   }
 
   renderBasicAttributes () {
+    const classNames = classnames(['col-md-6', 'basic-attribute', this.props.documentState === 'edit' ? 'editable' : null]);
     let typeSpecifier =
-      (<span className='col-md-6 basic-attribute' onClick={() => this.editTypeSpecifier()}>
+      (<span className={classNames} onClick={() => this.editTypeSpecifier()}>
         {this.state.typeSpecifier}
       </span>
     );
     let actionType =
-      (<span className='col-md-6 basic-attribute' onClick={() => this.editType()}>
+      (<span className={classNames} onClick={() => this.editType()}>
         {this.state.type}
       </span>
     );

@@ -12,8 +12,15 @@ $attribute-input-height: 31px;
 }
 
 .basic-attributes {
+  // width: 90%;
   .form-control {
     height: 34px;
+  }
+
+  .basic-attribute {
+    // &.editable:hover {
+    //   border: 1px solid #aaa;
+    // }
   }
 }
 
