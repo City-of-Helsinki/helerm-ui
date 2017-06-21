@@ -550,6 +550,7 @@ export class Action extends React.Component {
                   values={this.props.records}
                   changeOrder={this.props.changeOrder}
                   parent={this.props.action.id}
+                  attributeTypes={this.props.attributeTypes}
                   parentName={this.state.typeSpecifier || this.state.type}
                 />
               }

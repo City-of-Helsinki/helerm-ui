@@ -586,6 +586,7 @@ export class ViewTOS extends React.Component {
                         values={selectedTOS.phases}
                         changeOrder={this.props.changeOrder}
                         parent={null}
+                        attributeTypes={this.props.attributeTypes}
                         parentName={selectedTOS.function_id + ' ' + selectedTOS.name}
                       />
                     }

@@ -516,6 +516,7 @@ export class Phase extends React.Component {
                 values={this.props.actions}
                 changeOrder={this.props.changeOrder}
                 parent={phaseIndex}
+                attributeTypes={this.props.attributeTypes}
                 parentName={this.state.typeSpecifier || this.state.type}
               />
             }
