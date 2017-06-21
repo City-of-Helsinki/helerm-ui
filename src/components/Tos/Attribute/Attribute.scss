@@ -21,7 +21,7 @@ $attribute-input-height: 31px;
   margin-bottom: -10px;
   height: $attribute-input-height;
   padding: 0;
-  border: 0;
+  border: 1px solid #dce4ec;
 
   .Select-control {
     height: $attribute-input-height;
