@@ -14,7 +14,16 @@ export const DropdownInput = ({
   selectClassName = `form-control edit-${type}-type__input`
 }) => {
   const optionsArray = [];
-  if (Object.keys(options).length === 0) {
+  const validation = () => {
+    if (options instanceof Object) {
+      if (options instanceof Array) {
+        return options.length === 0;
+      }
+      return Object.keys(options).length === 0;
+    }
+  };
+
+  if (validation()) {
     if (type === 'form') {
       const onFormInputChange = (event) => {
         onInputChange(event.target.value, keyValue, 'value');
@@ -75,7 +84,10 @@ DropdownInput.propTypes = {
   onChange: React.PropTypes.func.isRequired,
   onInputChange: React.PropTypes.func.isRequired,
   onSubmit: React.PropTypes.func.isRequired,
-  options: React.PropTypes.object.isRequired,
+  options: React.PropTypes.oneOfType([
+    React.PropTypes.object,
+    React.PropTypes.array
+  ]).isRequired,
   selectClassName: React.PropTypes.string,
   type: React.PropTypes.string.isRequired,
   valueState: React.PropTypes.string
