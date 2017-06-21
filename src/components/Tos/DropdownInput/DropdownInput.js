@@ -39,33 +39,33 @@ export const DropdownInput = ({
         />
       );
     }
-  }
-
-  for (const key in options) {
-    if (options.hasOwnProperty(key)) {
-      optionsArray.push({
-        label: options[key].value,
-        value: options[key].value
-      });
+  } else {
+    for (const key in options) {
+      if (options.hasOwnProperty(key)) {
+        optionsArray.push({
+          label: options[key].value,
+          value: options[key].value
+        });
+      }
     }
+    return (
+      <Select
+        className={selectClassName}
+        placeholder='Valitse...'
+        value={valueState}
+        disabled={disabled}
+        autoBlur={false}
+        autofocus={!(type === 'form')}
+        openOnFocus={true}
+        clearable={true}
+        options={optionsArray}
+        onChange={(option) => type === 'form'
+          ? onChange(option ? option.value : null, keyValue, 'value')
+          : onChange(option ? option.value : null)}
+        onBlur={onSubmit}
+      />
+    );
   }
-  return (
-    <Select
-      className={selectClassName}
-      placeholder='Valitse...'
-      value={valueState}
-      disabled={disabled}
-      autoBlur={false}
-      // autofocus={true}
-      openOnFocus={true}
-      clearable={true}
-      options={optionsArray}
-      onChange={(option) => type === 'form'
-        ? onChange(option ? option.value : null, keyValue, 'value')
-        : onChange(option ? option.value : null)}
-      onBlur={onSubmit}
-    />
-  );
 };
 
 DropdownInput.propTypes = {
