@@ -34,14 +34,14 @@ export const Attributes = ({
     }
 
     descriptions.push({
-      descriptionKey: 'Tarkenne',
-      typeSpecifier: element.attributes.TypeSpecifier,
-      type: ''
-    });
-    descriptions.push({
       descriptionKey: `${elementType} tarkenne`,
       typeSpecifier: element.attributes[`${capitalize(type)}Type`],
       type: element.attributes[`${capitalize(type)}Type`]
+    });
+    descriptions.push({
+      descriptionKey: 'Tarkenne',
+      typeSpecifier: element.attributes.TypeSpecifier,
+      type: ''
     });
 
     return descriptions;
