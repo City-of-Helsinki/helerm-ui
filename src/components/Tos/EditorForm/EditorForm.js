@@ -220,7 +220,8 @@ export class EditorForm extends React.Component {
       }
     } else {
       attributeElements.push(
-        <div key='no-fields' className='no-fields'>Ei täydennettäviä metatietoja</div>
+        // <div key='no-fields' className='no-fields'>Ei täydennettäviä metatietoja</div>
+        <div/>
       );
     }
 
@@ -385,6 +386,11 @@ export class EditorForm extends React.Component {
     return (
       <div>
         <div className='col-xs-12 col-lg-6 form-group'>
+          <label className='editor-form__label'>{typeName}</label>
+          <span className='fa fa-asterisk required-asterisk'/>
+          { dropdownInput }
+        </div>
+        <div className='col-xs-12 col-lg-6 form-group'>
           <label className='editor-form__label'>{attributeTypes ? attributeTypes.TypeSpecifier.name : ''}</label>
           <span className='fa fa-asterisk required-asterisk'/>
           <input
@@ -392,12 +398,7 @@ export class EditorForm extends React.Component {
             placeholder='Tarkenne'
             value={this.state.newAttributes.TypeSpecifier.value || ''}
             onChange={(e) => this.onChange(e.target.value, 'TypeSpecifier', 'value')}/>
-        </div>
-        <div className='col-xs-12 col-lg-6 form-group'>
-          <label className='editor-form__label'>{typeName}</label>
-          <span className='fa fa-asterisk required-asterisk'/>
-          { dropdownInput }
-        </div>
+          </div>
       </div>
     );
   }
