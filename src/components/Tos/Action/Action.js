@@ -369,7 +369,7 @@ export class Action extends React.Component {
       }
       if (this.state.editingType) {
         actionType = (
-          <div className='col-md-5'>
+          <div className='col-md-6'>
             <form onSubmit={this.updateActionType}>
               <DropdownInput
                 type={'action'}
@@ -387,8 +387,8 @@ export class Action extends React.Component {
 
     return (
       <div className='basic-attributes'>
-        {typeSpecifier}
         {actionType}
+        {typeSpecifier}
       </div>
     );
   }
@@ -514,10 +514,10 @@ export class Action extends React.Component {
                 <div>
                   <div className='attribute-labels'>
                     <span className='col-xs-6 attribute-label'>
-                      {'Asiakirjatyypin tarkenne'}
+                      {'Tyyppi'}
                     </span>
                     <span className='col-xs-6 attribute-label'>
-                      {'Tyyppi'}
+                      {'Asiakirjatyypin tarkenne'}
                     </span>
                   </div>
                   <div

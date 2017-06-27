@@ -388,7 +388,7 @@ export class Phase extends React.Component {
       }
       if (this.state.editingType) {
         phaseType = (
-          <div className='col-md-5'>
+          <div className='col-md-6'>
             <form onSubmit={this.updatePhaseType}>
               <DropdownInput
                 type={'phase'}
@@ -406,8 +406,8 @@ export class Phase extends React.Component {
 
     return (
       <div className='basic-attributes'>
-        {typeSpecifier}
         {phaseType}
+        {typeSpecifier}
       </div>
     );
   }
