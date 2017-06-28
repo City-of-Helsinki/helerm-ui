@@ -75,9 +75,9 @@ export class Attribute extends React.Component {
           autoBlur={false}
           openOnFocus={true}
           className='form-control edit-attribute__input'
-          clearable={false}
+          clearable={true}
           value={this.state.attribute}
-          onChange={({ value }) => this.onChange(value)}
+          onChange={(option) => this.onChange(option ? option.value : null)}
           onBlur={this.submit}
           autofocus={true}
           options={options}
@@ -135,9 +135,9 @@ export class Attribute extends React.Component {
           autoBlur={false}
           openOnFocus={true}
           className='col-xs-6 form-control edit-attribute__input'
-          clearable={false}
+          clearable={true}
           value={this.state.attribute}
-          onChange={({ value }) => this.onChange(value)}
+          onChange={(option) => this.onChange(option ? option.value : null)}
           onBlur={this.submit}
           autofocus={true}
           options={options}
@@ -169,7 +169,7 @@ export class Attribute extends React.Component {
       }
     }
 
-    if (attribute !== null) {
+    if (attribute !== null || (attribute === null && type === 'basic')) {
       return (
         <a
           onClick={() => this.activateEditMode()}
