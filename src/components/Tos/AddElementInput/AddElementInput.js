@@ -43,15 +43,6 @@ export const AddElementInput = ({
 }) => (
   <form onSubmit={submit} className='row add-element'>
     <h5 className='col-xs-12'>{resolveHeader(type)}</h5>
-    <div className='col-xs-12 col-md-4'>
-      <input
-        type='text'
-        className='form-control'
-        value={newTypeSpecifier}
-        onChange={onTypeSpecifierChange}
-        onSubmit={submit}
-        placeholder={resolvePlaceHolder(type)}/>
-    </div>
     {/* ActionType disabled for now. */}
     { type !== 'action' &&
       <div className='col-xs-12 col-md-4'>
@@ -78,6 +69,15 @@ export const AddElementInput = ({
         }
       </div>
     }
+    <div className='col-xs-12 col-md-4'>
+      <input
+      type='text'
+      className='form-control'
+      value={newTypeSpecifier}
+      onChange={onTypeSpecifierChange}
+      onSubmit={submit}
+      placeholder={resolvePlaceHolder(type)}/>
+    </div>
     <div className='col-xs-12 col-md-4 add-element-buttons'>
       <button
         className='btn btn-danger col-xs-6'
