@@ -221,7 +221,7 @@ export class EditorForm extends React.Component {
     } else {
       attributeElements.push(
         // <div key='no-fields' className='no-fields'>Ei täydennettäviä metatietoja</div>
-        <div/>
+        <div key='no-fields' />
       );
     }
 
