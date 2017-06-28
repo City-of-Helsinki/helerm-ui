@@ -164,9 +164,9 @@ export class EditorForm extends React.Component {
                   onChange={(e) => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}/>
                 <label className='editor-form__label'>
                   {attributeTypes[key].name}
-                  { attributeTypes[key].required &&
+                  {/* { attributeTypes[key].required &&
                   <span className='fa fa-asterisk required-asterisk'/>
-                  }
+                  } */}
                 </label>
                 <DropdownInput
                   keyValue={key}
@@ -193,9 +193,9 @@ export class EditorForm extends React.Component {
                 />
                 <label className='editor-form__label'>
                   {attributeTypes[key].name}
-                  { attributeTypes[key].required &&
+                  {/* { attributeTypes[key].required &&
                   <span className='fa fa-asterisk required-asterisk'/>
-                  }
+                  } */}
                 </label>
                 { key === 'AdditionalInformation'
                   ? <textarea
@@ -331,6 +331,32 @@ export class EditorForm extends React.Component {
     }
   }
 
+  resolveTypeDescription () {
+    const { type } = this.props.editorConfig;
+
+    switch (type) {
+      case 'phase':
+        return 'Käsittelyvaihe';
+      // case 'action':
+      //   return '';
+      case 'record':
+        return 'Asiakirjatyyppi';
+    }
+  }
+
+  resolveSpecifierDescription () {
+    const { type } = this.props.editorConfig;
+
+    switch (type) {
+      case 'phase':
+        return 'Muu käsittelyvaihe';
+      case 'action':
+        return 'Toimenpide';
+      case 'record':
+        return 'Tarkenne';
+    }
+  }
+
   resolveOnSubmit (e, targetId) {
     const { action, type } = this.props.editorConfig;
     switch (type) {
@@ -377,28 +403,29 @@ export class EditorForm extends React.Component {
   }
 
   renderDescriptions () {
-    const { attributeTypes } = this.props;
-    const typeName = attributeTypes
-      ? attributeTypes[`${capitalize(this.props.editorConfig.type)}Type`].name
-      : '';
+    // const { attributeTypes } = this.props;
+    // const typeName = attributeTypes ? attributeTypes[`${capitalize(this.props.editorConfig.type)}Type`].name : '';
+    // const specifierName = attributeTypes ? attributeTypes.TypeSpecifier.name : '';
     const dropdownInput = this.generateDropdown(this.props.elementConfig.elementTypes);
 
     return (
       <div>
+        { this.props.editorConfig.type !== 'action' &&
+          <div className='col-xs-12 col-lg-6 form-group'>
+            <label className='editor-form__label'>{this.resolveTypeDescription()}</label>
+            {/* <span className='fa fa-asterisk required-asterisk'/> */}
+            { dropdownInput }
+          </div>
+      }
         <div className='col-xs-12 col-lg-6 form-group'>
-          <label className='editor-form__label'>{typeName}</label>
-          <span className='fa fa-asterisk required-asterisk'/>
-          { dropdownInput }
-        </div>
-        <div className='col-xs-12 col-lg-6 form-group'>
-          <label className='editor-form__label'>{attributeTypes ? attributeTypes.TypeSpecifier.name : ''}</label>
-          <span className='fa fa-asterisk required-asterisk'/>
+          <label className='editor-form__label'>{this.resolveSpecifierDescription()}</label>
+          {/* <span className='fa fa-asterisk required-asterisk'/> */}
           <input
             className='col-xs-6 form-control edit-attribute__input'
             placeholder='Tarkenne'
             value={this.state.newAttributes.TypeSpecifier.value || ''}
             onChange={(e) => this.onChange(e.target.value, 'TypeSpecifier', 'value')}/>
-          </div>
+        </div>
       </div>
     );
   }
