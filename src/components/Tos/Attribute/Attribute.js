@@ -106,7 +106,7 @@ export class Attribute extends React.Component {
         <form onSubmit={this.submit}>
           <input
             className='col-xs-6 form-control edit-attribute__input'
-            value={this.state.attribute}
+            value={this.state.attribute || ''}
             onChange={({ target: { value } }) => this.onChange(value)}
             onBlur={this.submit}
             autoFocus={true}

@@ -358,7 +358,7 @@ export class Action extends React.Component {
             <form onSubmit={this.updateTypeSpecifier}>
               <input
                 className='input-title form-control col-xs-11'
-                value={this.state.typeSpecifier}
+                value={this.state.typeSpecifier || ''}
                 onChange={this.onTypeSpecifierChange}
                 onBlur={this.updateTypeSpecifier}
                 autoFocus={true}

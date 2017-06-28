@@ -377,7 +377,7 @@ export class Phase extends React.Component {
             <form onSubmit={this.updateTypeSpecifier}>
               <input
                 className='input-title form-control'
-                value={this.state.typeSpecifier}
+                value={this.state.typeSpecifier || ''}
                 onChange={this.onTypeSpecifierChange}
                 onBlur={this.updateTypeSpecifier}
                 autoFocus={true}
