@@ -361,7 +361,7 @@ export class Phase extends React.Component {
     const classNames = classnames(['col-md-6', 'basic-attribute', this.props.documentState === 'edit' ? 'editable' : null]);
     let typeSpecifier =
       (<span className={classNames} onClick={() => this.editTypeSpecifier()}>
-        <i className='fa fa-info-circle' aria-hidden='true'/> {this.state.typeSpecifier}
+        {this.state.typeSpecifier}
       </span>
     );
     let phaseType =
@@ -373,11 +373,11 @@ export class Phase extends React.Component {
     if (this.state.mode === 'edit') {
       if (this.state.editingTypeSpecifier) {
         typeSpecifier = (
-          <div className='col-md-6 phase-title-input row'>
+          <div className='col-md-5 phase-title-input row'>
             <form onSubmit={this.updateTypeSpecifier}>
               <input
                 className='input-title form-control'
-                value={this.state.typeSpecifier}
+                value={this.state.typeSpecifier || ''}
                 onChange={this.onTypeSpecifierChange}
                 onBlur={this.updateTypeSpecifier}
                 autoFocus={true}

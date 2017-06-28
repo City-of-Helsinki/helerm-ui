@@ -27,6 +27,12 @@ $attribute-input-height: 31px;
   }
 }
 
+.list-group-item {
+  &.attribute {
+    min-height: 62px;
+  }
+}
+
 .edit-attribute__input {
   margin-bottom: -10px;
   height: $attribute-input-height;
