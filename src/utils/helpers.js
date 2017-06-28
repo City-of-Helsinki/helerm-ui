@@ -128,21 +128,21 @@ export function normalizeTosForApi (tos) {
 export function trimAttributes (tosCopy) {
   for (const phase in tosCopy.phases) {
     for (const attribute in tosCopy.phases[phase].attributes) {
-      if (tosCopy.phases[phase].attributes[attribute] === ('' || null)) {
+      if (tosCopy.phases[phase].attributes[attribute] === '' || tosCopy.phases[phase].attributes[attribute] === null) {
         delete tosCopy.phases[phase].attributes[attribute];
       }
     }
   }
   for (const action in tosCopy.actions) {
     for (const attribute in tosCopy.actions[action].attributes) {
-      if (tosCopy.actions[action].attributes[attribute] === ('' || null)) {
+      if (tosCopy.actions[action].attributes[attribute] === '' || tosCopy.actions[action].attributes[attribute] === null) {
         delete tosCopy.actions[action].attributes[attribute];
       }
     }
   }
   for (const record in tosCopy.records) {
     for (const attribute in tosCopy.records[record].attributes) {
-      if (tosCopy.records[record].attributes[attribute] === ('' || null)) {
+      if (tosCopy.records[record].attributes[attribute] === '' || tosCopy.records[record].attributes[attribute] === null) {
         delete tosCopy.records[record].attributes[attribute];
       }
     }
