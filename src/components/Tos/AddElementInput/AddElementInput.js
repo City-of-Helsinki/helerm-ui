@@ -12,12 +12,21 @@ function resolveHeader (type) {
   }
 }
 
-function resolvePlaceHolder (type) {
+function resolveTypePlaceHolder (type) {
   if (type === 'phase') {
     return 'Käsittelyvaiheen tyyppi';
   }
   if (type === 'action') {
     return 'Toimenpiteen tyyppi';
+  }
+}
+
+function resolvePlaceHolder (type) {
+  if (type === 'phase') {
+    return 'Käsittelyvaihe';
+  }
+  if (type === 'action') {
+    return 'Toimenpide';
   }
 }
 
@@ -41,11 +50,13 @@ export const AddElementInput = ({
         value={newTypeSpecifier}
         onChange={onTypeSpecifierChange}
         onSubmit={submit}
-        placeholder={'Tarkenne'}/>
+        placeholder={resolvePlaceHolder(type)}/>
     </div>
-    <div className='col-xs-12 col-md-4'>
-      { typeOptions.length !== 0
-        ? <Select
+    {/* ActionType disabled for now. */}
+    { type !== 'action' &&
+      <div className='col-xs-12 col-md-4'>
+        { typeOptions.length !== 0
+          ? <Select
             autoBlur={true}
             openOnFocus={true}
             className={`form-control edit-${type}-type__input`}
@@ -56,15 +67,17 @@ export const AddElementInput = ({
             autofocus={false}
             options={typeOptions}
           />
-        : <input
-          type='text'
-          className='form-control'
-          value={newType}
-          onChange={onTypeInputChange}
-          onSubmit={submit}
-          placeholder={resolvePlaceHolder(type)}/>
-      }
-    </div>
+          : <input
+            type='text'
+            className='form-control'
+            value={newType}
+            onChange={onTypeInputChange}
+            onSubmit={submit}
+            placeholder={resolveTypePlaceHolder(type)}
+          />
+        }
+      </div>
+    }
     <div className='col-xs-12 col-md-4 add-element-buttons'>
       <button
         className='btn btn-danger col-xs-6'
