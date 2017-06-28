@@ -22,6 +22,15 @@
     margin-left: 10px;
   }
 
+  .descriptions {
+    min-height: 90px;
+  }
+
+  .edit-record__input:not(.additional-information) {
+    height: 36px;
+    margin-bottom: 10px;
+  }
+
   .Select {
     padding: 0;
     border: none;

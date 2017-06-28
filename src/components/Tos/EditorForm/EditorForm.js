@@ -199,7 +199,7 @@ export class EditorForm extends React.Component {
                 </label>
                 { key === 'AdditionalInformation'
                   ? <textarea
-                      className='form-control edit-record__input'
+                      className='form-control edit-record__input additional-information'
                       value={this.getActiveValue(key)}
                       placeholder={attributeTypes[key].name}
                       onChange={(e) => this.onChange(e.target.value, key, 'value')}
@@ -409,7 +409,7 @@ export class EditorForm extends React.Component {
     const dropdownInput = this.generateDropdown(this.props.elementConfig.elementTypes);
 
     return (
-      <div>
+      <div className='descriptions'>
         { this.props.editorConfig.type !== 'action' &&
           <div className='col-xs-12 col-lg-6 form-group'>
             <label className='editor-form__label'>{this.resolveTypeDescription()}</label>
@@ -421,7 +421,7 @@ export class EditorForm extends React.Component {
           <label className='editor-form__label'>{this.resolveSpecifierDescription()}</label>
           {/* <span className='fa fa-asterisk required-asterisk'/> */}
           <input
-            className='col-xs-6 form-control edit-attribute__input'
+            className='col-xs-6 form-control edit-record__input'
             placeholder='Tarkenne'
             value={this.state.newAttributes.TypeSpecifier.value || ''}
             onChange={(e) => this.onChange(e.target.value, 'TypeSpecifier', 'value')}/>
