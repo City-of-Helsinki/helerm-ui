@@ -84,7 +84,7 @@ export const editRecordAction = (state, { payload }) => {
 };
 
 export const editRecordAttributeAction = (state, { payload }) => {
-  if (payload.typeSpecifier) {
+  if (payload.hasOwnProperty('typeSpecifier')) {
     return update(state, {
       records: {
         [payload.recordId]: {
@@ -96,7 +96,7 @@ export const editRecordAttributeAction = (state, { payload }) => {
         }
       }
     });
-  } else if (payload.type) {
+  } else if (payload.hasOwnProperty('type')) {
     return update(state, {
       records: {
         [payload.recordId]: {
@@ -108,7 +108,7 @@ export const editRecordAttributeAction = (state, { payload }) => {
         }
       }
     });
-  } else if (payload.tosAttribute) {
+  } else if (payload.hasOwnProperty('tosAttribute')) {
     return update(state, {
       attributes: {
         [payload.attributeIndex]: {

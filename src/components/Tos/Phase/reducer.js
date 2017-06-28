@@ -100,7 +100,7 @@ export const editPhaseAttributeAction = (state, { payload }) => {
         }
       }
     });
-  } else if (payload.type) {
+  } else if (payload.hasOwnProperty('type')) {
     return update(state, {
       phases: {
         [payload.phaseId]: {
