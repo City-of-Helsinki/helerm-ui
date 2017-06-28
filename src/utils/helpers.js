@@ -128,14 +128,14 @@ export function normalizeTosForApi (tos) {
 export function trimAttributes (tosCopy) {
   for (const phase in tosCopy.phases) {
     for (const attribute in tosCopy.phases[phase].attributes) {
-      if (tosCopy.phases[phase].attributes[attribute] === '') {
+      if (tosCopy.phases[phase].attributes[attribute] === ('' || null)) {
         delete tosCopy.phases[phase].attributes[attribute];
       }
     }
   }
   for (const action in tosCopy.actions) {
     for (const attribute in tosCopy.actions[action].attributes) {
-      if (tosCopy.actions[action].attributes[attribute] === '') {
+      if (tosCopy.actions[action].attributes[attribute] === ('' || null)) {
         delete tosCopy.actions[action].attributes[attribute];
       }
     }
