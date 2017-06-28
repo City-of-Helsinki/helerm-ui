@@ -140,6 +140,13 @@ export function trimAttributes (tosCopy) {
       }
     }
   }
+  for (const record in tosCopy.records) {
+    for (const attribute in tosCopy.records[record].attributes) {
+      if (tosCopy.records[record].attributes[attribute] === ('' || null)) {
+        delete tosCopy.records[record].attributes[attribute];
+      }
+    }
+  }
 
   return tosCopy;
 }
