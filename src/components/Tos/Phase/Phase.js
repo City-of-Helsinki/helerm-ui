@@ -361,7 +361,7 @@ export class Phase extends React.Component {
     const classNames = classnames(['col-md-6', 'basic-attribute', this.props.documentState === 'edit' ? 'editable' : null]);
     let typeSpecifier =
       (<span className={classNames} onClick={() => this.editTypeSpecifier()}>
-        <i className='fa fa-info-circle' aria-hidden='true'/> {this.state.typeSpecifier}
+        {this.state.typeSpecifier}
       </span>
     );
     let phaseType =
