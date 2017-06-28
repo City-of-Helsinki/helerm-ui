@@ -12,12 +12,21 @@ function resolveHeader (type) {
   }
 }
 
-function resolvePlaceHolder (type) {
+function resolveTypePlaceHolder (type) {
   if (type === 'phase') {
     return 'Käsittelyvaiheen tyyppi';
   }
   if (type === 'action') {
     return 'Toimenpiteen tyyppi';
+  }
+}
+
+function resolvePlaceHolder (type) {
+  if (type === 'phase') {
+    return 'Käsittelyvaihe';
+  }
+  if (type === 'action') {
+    return 'Toimenpide';
   }
 }
 
@@ -34,18 +43,11 @@ export const AddElementInput = ({
 }) => (
   <form onSubmit={submit} className='row add-element'>
     <h5 className='col-xs-12'>{resolveHeader(type)}</h5>
-    <div className='col-xs-12 col-md-4'>
-      <input
-        type='text'
-        className='form-control'
-        value={newTypeSpecifier}
-        onChange={onTypeSpecifierChange}
-        onSubmit={submit}
-        placeholder={'Tarkenne'}/>
-    </div>
-    <div className='col-xs-12 col-md-4'>
-      { typeOptions.length !== 0
-        ? <Select
+    {/* ActionType disabled for now. */}
+    { type !== 'action' &&
+      <div className='col-xs-12 col-md-4'>
+        { typeOptions.length !== 0
+          ? <Select
             autoBlur={true}
             openOnFocus={true}
             className={`form-control edit-${type}-type__input`}
@@ -56,14 +58,25 @@ export const AddElementInput = ({
             autofocus={false}
             options={typeOptions}
           />
-        : <input
-          type='text'
-          className='form-control'
-          value={newType}
-          onChange={onTypeInputChange}
-          onSubmit={submit}
-          placeholder={resolvePlaceHolder(type)}/>
-      }
+          : <input
+            type='text'
+            className='form-control'
+            value={newType}
+            onChange={onTypeInputChange}
+            onSubmit={submit}
+            placeholder={resolveTypePlaceHolder(type)}
+          />
+        }
+      </div>
+    }
+    <div className='col-xs-12 col-md-4'>
+      <input
+      type='text'
+      className='form-control'
+      value={newTypeSpecifier}
+      onChange={onTypeSpecifierChange}
+      onSubmit={submit}
+      placeholder={resolvePlaceHolder(type)}/>
     </div>
     <div className='col-xs-12 col-md-4 add-element-buttons'>
       <button

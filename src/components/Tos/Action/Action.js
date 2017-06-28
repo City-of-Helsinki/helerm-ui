@@ -345,11 +345,11 @@ export class Action extends React.Component {
         {this.state.typeSpecifier}
       </span>
     );
-    let actionType =
-      (<span className={classNames} onClick={() => this.editType()}>
-        {this.state.type}
-      </span>
-    );
+    // let actionType =
+    //   (<span className={classNames} onClick={() => this.editType()}>
+    //     {this.state.type}
+    //   </span>
+    // );
 
     if (this.state.mode === 'edit') {
       if (this.state.editingTypeSpecifier) {
@@ -367,27 +367,27 @@ export class Action extends React.Component {
           </div>
         );
       }
-      if (this.state.editingType) {
-        actionType = (
-          <div className='col-md-6'>
-            <form onSubmit={this.updateActionType}>
-              <DropdownInput
-                type={'action'}
-                valueState={this.state.type}
-                options={this.props.actionTypes}
-                onChange={this.onTypeChange}
-                onInputChange={this.onTypeInputChange}
-                onSubmit={this.updateActionType}
-              />
-            </form>
-          </div>
-        );
-      }
+      // if (this.state.editingType) {
+      //   actionType = (
+      //     <div className='col-md-6'>
+      //       <form onSubmit={this.updateActionType}>
+      //         <DropdownInput
+      //           type={'action'}
+      //           valueState={this.state.type}
+      //           options={this.props.actionTypes}
+      //           onChange={this.onTypeChange}
+      //           onInputChange={this.onTypeInputChange}
+      //           onSubmit={this.updateActionType}
+      //         />
+      //       </form>
+      //     </div>
+      //   );
+      // }
     }
 
     return (
       <div className='basic-attributes'>
-        {actionType}
+        {/* {actionType} */}
         {typeSpecifier}
       </div>
     );
