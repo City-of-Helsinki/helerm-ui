@@ -9,7 +9,7 @@ import Attributes from '../Attribute/Attributes';
 import EditorForm from '../EditorForm/EditorForm';
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
-import DropdownInput from '../DropdownInput/DropdownInput';
+// import DropdownInput from '../DropdownInput/DropdownInput';
 import DeleteView from '../DeleteView/DeleteView';
 import ReorderView from '../Reorder/ReorderView';
 import ImportView from '../ImportView/ImportView';
