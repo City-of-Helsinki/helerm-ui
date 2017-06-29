@@ -126,8 +126,12 @@ export class EditorForm extends React.Component {
   }
 
   prepareAttributes (attributesToShow) {
-    attributesToShow.splice(attributesToShow.indexOf(`${capitalize(this.props.editorConfig.type)}Type`), 1);
-    attributesToShow.splice(attributesToShow.indexOf('TypeSpecifier'), 1);
+    if (attributesToShow.includes(`${capitalize(this.props.editorConfig.type)}Type`)) {
+      attributesToShow.splice(attributesToShow.indexOf(`${capitalize(this.props.editorConfig.type)}Type`), 1);
+    }
+    if (attributesToShow.includes('TypeSpecifier')) {
+      attributesToShow.splice(attributesToShow.indexOf('TypeSpecifier'), 1);
+    }
 
     const sortedAttributes = sortBy(attributesToShow, (attribute) => (
       this.props.attributeTypes[attribute].index
