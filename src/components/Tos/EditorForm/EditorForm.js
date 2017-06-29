@@ -126,10 +126,10 @@ export class EditorForm extends React.Component {
   }
 
   prepareAttributes (attributesToShow) {
-    if (attributesToShow.includes(`${capitalize(this.props.editorConfig.type)}Type`)) {
+    if (includes(attributesToShow, `${capitalize(this.props.editorConfig.type)}Type`)) {
       attributesToShow.splice(attributesToShow.indexOf(`${capitalize(this.props.editorConfig.type)}Type`), 1);
     }
-    if (attributesToShow.includes('TypeSpecifier')) {
+    if (includes(attributesToShow, 'TypeSpecifier')) {
       attributesToShow.splice(attributesToShow.indexOf('TypeSpecifier'), 1);
     }
 
