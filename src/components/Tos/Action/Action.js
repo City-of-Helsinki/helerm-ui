@@ -514,7 +514,7 @@ export class Action extends React.Component {
                 <div>
                   <div className='attribute-labels'>
                     <span className='col-xs-6 attribute-label'>
-                      {'Tyyppi'}
+                      {'Asiakirjatyyppi'}
                     </span>
                     <span className='col-xs-6 attribute-label'>
                       {'Asiakirjatyypin tarkenne'}
