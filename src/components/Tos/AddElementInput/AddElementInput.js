@@ -21,12 +21,21 @@ function resolveTypePlaceHolder (type) {
   }
 }
 
-function resolvePlaceHolder (type) {
+function resolveSpecifierPlaceHolder (type) {
   if (type === 'phase') {
-    return 'Käsittelyvaihe';
+    return 'Muu käsittelyvaihe';
   }
   if (type === 'action') {
     return 'Toimenpide';
+  }
+}
+
+function resolveSelectPlaceHolder (type) {
+  if (type === 'phase') {
+    return 'Valitse käsittelyvaihe...';
+  }
+  if (type === 'action') {
+    return 'Valitse toimenpide...';
   }
 }
 
@@ -57,6 +66,7 @@ export const AddElementInput = ({
             onBlur={() => null}
             autofocus={false}
             options={typeOptions}
+            placeholder={resolveSelectPlaceHolder(type)}
           />
           : <input
             type='text'
@@ -76,7 +86,7 @@ export const AddElementInput = ({
       value={newTypeSpecifier}
       onChange={onTypeSpecifierChange}
       onSubmit={submit}
-      placeholder={resolvePlaceHolder(type)}/>
+      placeholder={resolveSpecifierPlaceHolder(type)}/>
     </div>
     <div className='col-xs-12 col-md-4 add-element-buttons'>
       <button
