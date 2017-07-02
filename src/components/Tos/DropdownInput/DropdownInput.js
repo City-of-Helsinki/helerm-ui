@@ -1,9 +1,33 @@
 import React from 'react';
 import Select from 'react-select';
 
+function resolvePlaceholder (type, formType) {
+  switch (type) {
+    case 'phase':
+      return 'Valitse käsittelyvaihe...';
+    // case 'action':
+    //   return '';
+    // case 'record':
+    //   return '';
+    case 'form':
+      if (formType) {
+        if (formType === 'phase') {
+          return 'Valitse käsittelyvaihe...';
+        }
+        if (formType === 'record') {
+          return 'Valitse asiakirjatyyppi...';
+        }
+      }
+      break;
+    default:
+      return null;
+  }
+}
+
 export const DropdownInput = ({
   keyValue,
   type,
+  formType,
   disabled = false,
   valueState,
   options,
@@ -60,7 +84,7 @@ export const DropdownInput = ({
     return (
       <Select
         className={selectClassName}
-        placeholder='Valitse...'
+        placeholder={resolvePlaceholder(type, formType) || 'Valitse...'}
         value={valueState}
         disabled={disabled}
         autoBlur={false}
@@ -79,6 +103,7 @@ export const DropdownInput = ({
 
 DropdownInput.propTypes = {
   disabled: React.PropTypes.bool,
+  formType: React.PropTypes.string,
   inputClassName: React.PropTypes.string,
   keyValue: React.PropTypes.string,
   onChange: React.PropTypes.func.isRequired,
