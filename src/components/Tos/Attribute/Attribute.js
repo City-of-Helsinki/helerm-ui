@@ -62,6 +62,21 @@ export class Attribute extends React.Component {
     );
   }
 
+  resolveBaseAttributePlaceholder () {
+    const { parentType } = this.props;
+
+    switch (parentType) {
+      case 'phase':
+        return 'Valitse käsittelyvaihe...';
+      // case 'action':
+      //   return '';
+      case 'record':
+        return 'Valitse asiakirjatyyppi...';
+      default:
+        return null;
+    }
+  }
+
   generateAttributeInput (attribute, currentAttribute) {
     if (attribute.values && attribute.values.length) {
       const options = attribute.values.map(option => {
@@ -141,6 +156,7 @@ export class Attribute extends React.Component {
           onBlur={this.submit}
           autofocus={true}
           options={options}
+          placeholder={this.resolveBaseAttributePlaceholder() || 'Valitse...'}
         />
       </form>
     );
@@ -198,6 +214,7 @@ Attribute.propTypes = {
   documentState: React.PropTypes.string.isRequired,
   editable: React.PropTypes.bool.isRequired,
   elementId: React.PropTypes.string,
+  parentType: React.PropTypes.string,
   showAttributes: React.PropTypes.bool.isRequired,
   tosAttribute: React.PropTypes.bool,
   type: React.PropTypes.string.isRequired,

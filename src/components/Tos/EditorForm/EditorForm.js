@@ -239,6 +239,7 @@ export class EditorForm extends React.Component {
       <DropdownInput
         keyValue={type}
         type={'form'}
+        formType={this.props.editorConfig.type}
         selectClassName={'form-control col-xs-6'}
         inputClassName={'form-control edit-attribute__input'}
         valueState={this.state.newAttributes[type] ? this.state.newAttributes[type].value : ''}
@@ -357,7 +358,20 @@ export class EditorForm extends React.Component {
       case 'action':
         return 'Toimenpide';
       case 'record':
-        return 'Tarkenne';
+        return 'Asiakirjatyypin tarkenne';
+    }
+  }
+
+  resolveSpecifierPlaceholder () {
+    const { type } = this.props.editorConfig;
+
+    switch (type) {
+      case 'phase':
+        return 'Muu käsittelyvaihe';
+      case 'action':
+        return 'Toimenpide';
+      case 'record':
+        return 'Asiakirjatyypin tarkenne';
     }
   }
 
@@ -426,7 +440,7 @@ export class EditorForm extends React.Component {
           {/* <span className='fa fa-asterisk required-asterisk'/> */}
           <input
             className='col-xs-6 form-control edit-record__input'
-            placeholder='Tarkenne'
+            placeholder={this.resolveSpecifierPlaceholder()}
             value={this.state.newAttributes.TypeSpecifier.value || ''}
             onChange={(e) => this.onChange(e.target.value, 'TypeSpecifier', 'value')}/>
         </div>
