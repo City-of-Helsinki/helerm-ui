@@ -42,9 +42,9 @@ const ActionButtons = ({
           action={editMode ? cancelEdit : () => setDocumentState('edit')}
           label={editMode ? 'Peruuta muokkaus' : 'Muokkaustila'}
         />
-        {editMode &&
+        {/* {editMode &&
         <span className='fa fa-asterisk required-asterisk required-legend'> = Pakollinen tieto</span>
-        }
+        } */}
       </span>
     </IsAllowed>
   );
