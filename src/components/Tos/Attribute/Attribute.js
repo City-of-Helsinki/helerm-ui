@@ -192,11 +192,11 @@ export class Attribute extends React.Component {
           className={'list-group-item col-xs-6 attribute ' + (showAttributes ? 'visible' : 'hidden')}>
           <span className='table-key'>
             { attributeKey }
-            { type === 'attribute' &&
+            {/* { type === 'attribute' &&
             this.props.documentState === 'edit' &&
             attributeTypes[attributeIndex].required &&
             <span className='fa fa-asterisk required-asterisk'/>
-            }
+            } */}
           </span>
           { attributeValue }
         </a>

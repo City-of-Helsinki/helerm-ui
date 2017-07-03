@@ -412,11 +412,12 @@ export class Phase extends React.Component {
     );
   }
 
-  getTargetText (value) {
-    if (value === undefined) {
-      return '-';
-    }
-    return value;
+  getTargetName () {
+    const hasType = this.state.type && this.state.type.length;
+    const hasTypeSpecifier = this.state.typeSpecifier && this.state.typeSpecifier.length;
+    const slash = hasType && hasTypeSpecifier ? ' / ' : '';
+
+    return (this.state.type || '') + slash + (this.state.typeSpecifier || '');
   }
 
   render () {
@@ -519,7 +520,7 @@ export class Phase extends React.Component {
                 changeOrder={this.props.changeOrder}
                 parent={phaseIndex}
                 attributeTypes={this.props.attributeTypes}
-                parentName={this.state.typeSpecifier || this.state.type}
+                parentName={this.getTargetName()}
               />
             }
             closePopup={() => this.toggleReorderView()}
@@ -532,7 +533,7 @@ export class Phase extends React.Component {
                 level='action'
                 toggleImportView={this.toggleImportView}
                 title='toimenpiteitä'
-                targetText={'käsittelyvaiheeseen "' + this.getTargetText(phase.attributes.TypeSpecifier) + '"'}
+                targetText={'käsittelyvaiheeseen "' + this.getTargetName() + '"'}
                 itemsToImportText='toimenpiteet'
                 phasesOrder={this.props.phasesOrder}
                 phases={this.props.phases}
