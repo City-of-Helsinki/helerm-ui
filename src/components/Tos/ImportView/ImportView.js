@@ -21,6 +21,14 @@ export class ImportView extends React.Component {
     document.body.classList.remove('noscroll');
   }
 
+  getTargetName (specifier, type) {
+    const hasType = type && type.length;
+    const hasTypeSpecifier = specifier && specifier.length;
+    const slash = hasType && hasTypeSpecifier ? ' / ' : '';
+
+    return (type || '') + slash + (specifier || '');
+  }
+
   generateImportableElements (level) {
     let elements;
     switch (level) {
@@ -45,7 +53,7 @@ export class ImportView extends React.Component {
       const actionElements = this.generateLinks(this.props.actions, phases[phase].actions);
       return (
         <div key={phases[phase].id} className='col-xs-12'>
-          <span>{phases[phase].attributes.TypeSpecifier || phases[phase].attributes.PhaseType || ''}</span>
+          <span>{this.getTargetName(phases[phase].attributes.TypeSpecifier, phases[phase].attributes.PhaseType)}</span>
           { actionElements }
         </div>
       );
@@ -62,7 +70,7 @@ export class ImportView extends React.Component {
             const recordElements = this.generateLinks(this.props.records, actions[action].records);
             return (
               <div key={actions[action].id} className='import-action-record-wrapper'>
-                <span className='import-row-title import-action-title'>{actions[action].attributes.TypeSpecifier || actions[action].attributes.ActionType || ''}</span>
+                <span className='import-row-title import-action-title'>{this.getTargetName(actions[action].attributes.TypeSpecifier, actions[action].attributes.ActionType)}</span>
                 { recordElements }
               </div>
             );
@@ -71,7 +79,7 @@ export class ImportView extends React.Component {
       }
       let phaseTitle;
       if (phases[phase].actions.length > 0) {
-        phaseTitle = <span className='import-row-title import-phase-title'>{phases[phase].attributes.TypeSpecifier || phases[phase].attributes.PhaseType || ''}</span>;
+        phaseTitle = <span className='import-row-title import-phase-title'>{this.getTargetName(phases[phase].attributes.TypeSpecifier, phases[phase].attributes.PhaseType)}</span>;
       }
       return (
         <div key={phases[phase].id} className='import-wrapper'>
@@ -96,7 +104,7 @@ export class ImportView extends React.Component {
               key={key}
               href=''
               onClick={(e) => this.selectForImport(e, values[itemsInArray[key]].id)}>
-              {values[itemsInArray[key]].attributes.TypeSpecifier || values[itemsInArray[key]].attributes[`${_.capitalize(this.props.level)}Type`] || '-'}
+              {this.getTargetName(values[itemsInArray[key]].attributes.TypeSpecifier, values[itemsInArray[key]].attributes[`${_.capitalize(this.props.level)}Type`])}
             </a>
           </div>
         );
