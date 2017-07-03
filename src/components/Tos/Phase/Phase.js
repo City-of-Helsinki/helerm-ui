@@ -417,7 +417,7 @@ export class Phase extends React.Component {
     const hasTypeSpecifier = this.state.typeSpecifier && this.state.typeSpecifier.length;
     const slash = hasType && hasTypeSpecifier ? ' / ' : '';
 
-    return this.state.type + slash + this.state.typeSpecifier;
+    return (this.state.type || '') + slash + (this.state.typeSpecifier || '');
   }
 
   render () {
