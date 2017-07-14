@@ -4,6 +4,12 @@ import { browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import createStore from './store/createStore';
 import AppContainer from './containers/AppContainer';
+var Raven = require('raven-js');
+
+// Sentry config
+if (SENTRY_DSN) {
+  Raven.config(SENTRY_DSN).install();
+}
 
 // ========================================================
 // Store Instantiation
@@ -59,4 +65,13 @@ if (__DEV__) {
 // ========================================================
 // Go!
 // ========================================================
-render();
+try {
+  render();
+} catch (err) {
+  if (Raven.isSetup()) {
+    Raven.captureException(err);
+    Raven.showReportDialog();
+  } else {
+    throw err;
+  }
+}
