@@ -101,7 +101,7 @@ config.globals = {
   'API_URL': JSON.stringify(process.env.API_URL),
   'API_VERSION': JSON.stringify(process.env.API_VERSION),
   'SENTRY_DSN': JSON.stringify(process.env.SENTRY_DSN),
-  'SENTRY_REPORT_DIALOG': JSON.stringify(process.env.SENTRY_REPORT_DIALOG),
+  'SENTRY_REPORT_DIALOG': process.env.SENTRY_REPORT_DIALOG,
   'RESULTS_PER_PAGE': JSON.stringify(process.env.RESULTS_PER_PAGE),
   'STORAGE_PREFIX': JSON.stringify(process.env.STORAGE_PREFIX || 'HELERM')
 };
