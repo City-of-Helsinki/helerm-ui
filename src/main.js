@@ -68,7 +68,7 @@ if (__DEV__) {
 try {
   render();
 } catch (err) {
-  if (Raven.isSetup()) {
+  if (Raven.isSetup() && SENTRY_REPORT_DIALOG) {
     Raven.captureException(err);
     Raven.showReportDialog();
   } else {
