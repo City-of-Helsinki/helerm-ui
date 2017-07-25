@@ -14,19 +14,19 @@
     "browser": true
   },
   "globals": {
-    "API_URL"           : false,
-    "API_VERSION"       : false,
-    "RESULTS_PER_PAGE"  : false,
-    "STORAGE_PREFIX"    : false,
-    "VERSION"           : false,
-    "GIT_VERSION"       : false,
-    "GIT_COMMIT_HASH"   : false,
-    "SENTRY_REPORT_DIALOG": false,
-    "SENTRY_DSN"        : false,
-    "__DEV__"           : false,
-    "__TEST__"          : false,
-    "__PROD__"          : false,
-    "__COVERAGE__"      : false
+    "API_URL"               : false,
+    "API_VERSION"           : false,
+    "RESULTS_PER_PAGE"      : false,
+    "STORAGE_PREFIX"        : false,
+    "VERSION"               : false,
+    "GIT_VERSION"           : false,
+    "GIT_COMMIT_HASH"       : false,
+    "SENTRY_REPORT_DIALOG"  : false,
+    "SENTRY_DSN"            : false,
+    "__DEV__"               : false,
+    "__TEST__"              : false,
+    "__PROD__"              : false,
+    "__COVERAGE__"          : false
   },
   "rules": {
     "key-spacing": 0,
