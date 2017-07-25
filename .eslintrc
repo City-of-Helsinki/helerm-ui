@@ -21,6 +21,8 @@
     "VERSION"           : false,
     "GIT_VERSION"       : false,
     "GIT_COMMIT_HASH"   : false,
+    "SENTRY_REPORT_DIALOG": false,
+    "SENTRY_DSN"        : false,
     "__DEV__"           : false,
     "__TEST__"          : false,
     "__PROD__"          : false,
