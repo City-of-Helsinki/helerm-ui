@@ -1,3 +1,6 @@
+[![Build status](https://travis-ci.org/City-of-Helsinki/helerm-ui.svg)](https://travis-ci.org/City-of-Helsinki/helerm-ui)
+[![codecov](https://codecov.io/gh/City-of-Helsinki/helerm-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/City-of-Helsinki/helerm-ui)
+
 # HELERM UI
 
 This is a front-end project for Helsinki Electronic Records Management Classification System.
