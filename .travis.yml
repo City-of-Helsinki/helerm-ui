@@ -1,4 +1,8 @@
+# Travis has pretty old gcc on precise and
+# newer node causes dependencies to need C++11 compilers
 sudo: false
+dist: trusty
+
 language: node_js
 node_js:
   - "lts/*"
