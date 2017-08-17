@@ -1,4 +1,4 @@
-[![Build status](https://travis-ci.org/City-of-Helsinki/helerm-ui.svg)](https://travis-ci.org/City-of-Helsinki/helerm-ui)
+[![Build status](https://travis-ci.org/City-of-Helsinki/helerm-ui.svg?branch=master)](https://travis-ci.org/City-of-Helsinki/helerm-ui)
 [![codecov](https://codecov.io/gh/City-of-Helsinki/helerm-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/City-of-Helsinki/helerm-ui)
 
 # HELERM UI
