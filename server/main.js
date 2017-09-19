@@ -5,7 +5,7 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cookieSession from 'cookie-session';
 
-import webpackConfig from '../build/webpack.config';
+import webpackConfig from '../config/webpack.config';
 import config from '../config';
 import authRoutes from './routes/auth';
 import { passport } from './controllers/authController';
