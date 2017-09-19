@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
 const debug = require('debug')('app:bin:compile');
-const webpackCompiler = require('../build/webpack-compiler');
-const webpackConfig = require('../build/webpack.config');
+const webpackCompiler = require('../config/webpack-compiler');
+const webpackConfig = require('../config/webpack.config');
 const config = require('../config');
 
 const paths = config.utils_paths;
