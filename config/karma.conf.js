@@ -54,7 +54,10 @@ const karmaConfig = {
     noInfo : true
   },
   coverageReporter : {
-    reporters : config.coverage_reporters
+    reporters : [
+      { type: 'text-summary' },
+      { type: 'lcov', dir: 'coverage' }
+    ]
   }
 };
 
@@ -62,7 +65,7 @@ if (config.globals.__COVERAGE__) {
   karmaConfig.reporters.push('coverage');
   karmaConfig.webpack.module.preLoaders = [{
     test    : /\.(js|jsx)$/,
-    include : new RegExp(config.dir_client),
+    include : new RegExp('src'),
     loader  : 'babel',
     query   : Object.assign({}, config.compiler_babel, {
       plugins : (config.compiler_babel.plugins || []).concat('istanbul')

@@ -18,13 +18,6 @@ debug('Creating default configuration.');
 const config = {
   env: process.env.NODE_ENV || 'development',
 
-  // ----------------------------------
-  // Project Structure
-  // ----------------------------------
-  path_base: path.resolve(__dirname, '..'),
-  dir_client: 'src',
-  dir_dist: 'dist',
-  dir_server: 'server',
   dir_test: 'tests',
 
   // ----------------------------------
@@ -41,30 +34,7 @@ const config = {
     plugins: ['transform-runtime', 'transform-decorators-legacy'],
     presets: ['es2015', 'react', 'stage-0']
   },
-  compiler_devtool: 'source-map',
-  compiler_hash_type: 'hash',
-  compiler_fail_on_warning: false,
-  compiler_quiet: false,
   compiler_public_path: '/',
-  compiler_stats: {
-    chunks: false,
-    chunkModules: false,
-    colors: true
-  },
-  compiler_vendors: [
-    'react',
-    'react-redux',
-    'react-router',
-    'redux'
-  ],
-
-  // ----------------------------------
-  // Test Configuration
-  // ----------------------------------
-  coverage_reporters: [
-    { type: 'text-summary' },
-    { type: 'lcov', dir: 'coverage' }
-  ]
 };
 
 /************************************************
@@ -104,36 +74,6 @@ config.globals = {
   'SENTRY_REPORT_DIALOG': process.env.SENTRY_REPORT_DIALOG,
   'RESULTS_PER_PAGE': JSON.stringify(process.env.RESULTS_PER_PAGE),
   'STORAGE_PREFIX': JSON.stringify(process.env.STORAGE_PREFIX || 'HELERM')
-};
-
-// ------------------------------------
-// Validate Vendor Dependencies
-// ------------------------------------
-const pkg = require('../package.json');
-
-config.compiler_vendors = config.compiler_vendors
-  .filter((dep) => {
-    if (pkg.dependencies[dep]) return true;
-
-    debug(
-      `Package "${dep}" was not found as an npm dependency in package.json; ` +
-      `it won't be included in the webpack vendor bundle.
-       Consider removing it from \`compiler_vendors\` in ~/config/index.js`
-    );
-  });
-
-// ------------------------------------
-// Utilities
-// ------------------------------------
-function base () {
-  const args = [config.path_base].concat([].slice.call(arguments));
-  return path.resolve.apply(path, args);
-}
-
-config.utils_paths = {
-  base: base,
-  client: base.bind(null, config.dir_client),
-  dist: base.bind(null, config.dir_dist)
 };
 
 // ========================================================
