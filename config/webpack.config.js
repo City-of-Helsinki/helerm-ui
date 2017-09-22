@@ -3,83 +3,87 @@ const cssnano = require('cssnano');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const DashboardPlugin = require('webpack-dashboard/plugin');
+const path = require('path');
 const config = require('../config');
 const debug = require('debug')('app:webpack:config');
 
-const paths = config.utils_paths;
 const __DEV__ = config.globals.__DEV__;
 const __PROD__ = config.globals.__PROD__;
 const __TEST__ = config.globals.__TEST__;
-const APP_ENTRY = paths.client('main.js');
 
 debug('Creating configuration.');
 const webpackConfig = {
-  name    : 'client',
-  target  : 'web',
-  devtool : config.compiler_devtool,
+  devtool : __DEV__ ? 'source-map' : null,
   resolve : {
-    root       : paths.client(),
+    root       : path.resolve('./src'),
     extensions : ['', '.js', '.jsx', '.json']
   },
-  module : {loaders: [
-    {
-      test    : /\.(js|jsx)$/,
-      exclude : /node_modules/,
-      loader  : 'babel',
-      query   : config.compiler_babel
-    },
-    {
-      test   : /\.json$/,
-      loader : 'json'
-    },
-    {
-      test    : /\.scss$/,
-      exclude : null,
-      loaders : [
-        'style',
-        // We use cssnano with the postcss loader, so we tell
-        // css-loader not to duplicate minimization.
-        'css?sourceMap&-minimize',
-        'postcss',
-        'sass?sourceMap'
-      ]
-    },
-    {
-      test    : /\.css$/,
-      exclude : null,
-      loaders : [
-        'style',
-        // We use cssnano with the postcss loader, so we tell
-        // css-loader not to duplicate minimization.
-        'css?sourceMap&-minimize',
-        'postcss'
-      ]
-    },
-    { test: /\.woff(\?.*)?$/,loader: 'url?prefix=fonts/&name=assets/[name].[ext]&limit=10000&mimetype=application/font-woff' },
-    { test: /\.woff2(\?.*)?$/, loader: 'url?prefix=fonts/&name=assets/[name].[ext]&limit=10000&mimetype=application/font-woff2' },
-    { test: /\.otf(\?.*)?$/, loader: 'file?prefix=fonts/&name=assets/[name].[ext]&limit=10000&mimetype=font/opentype' },
-    { test: /\.ttf(\?.*)?$/, loader: 'url?prefix=fonts/&name=assets/[name].[ext]&limit=10000&mimetype=application/octet-stream' },
-    { test: /\.eot(\?.*)?$/, loader: 'file?prefix=fonts/&name=assets/[name].[ext]' },
-    { test: /\.svg(\?.*)?$/, loader: 'url?prefix=fonts/&name=assets/[name].[ext]&limit=10000&mimetype=image/svg+xml' },
-    { test: /\.(png|jpg)$/, loader: 'url?name=assets/[name].[ext]&limit=8192' }
-  ]},
   entry: {
     app : __DEV__
-      ? [APP_ENTRY].concat(`webpack-hot-middleware/client?path=${config.compiler_public_path}__webpack_hmr`)
-      : [APP_ENTRY],
-    vendor : config.compiler_vendors
+      ? [path.resolve('./src/main.js'), `webpack-hot-middleware/client?path=${config.compiler_public_path}__webpack_hmr`]
+      : [path.resolve('./src/main.js')],
+    vendor : [
+      'react',
+      'react-redux',
+      'react-router',
+      'redux'
+    ]
   },
   output: {
-    filename   : `[name].[${config.compiler_hash_type}].js`,
-    path       : paths.dist(),
+    filename   : __DEV__ ? '[name].js' : '[name].[chunkhash].js',
+    path       : path.resolve('./dist'),
     publicPath : config.compiler_public_path
+  },
+  module : {
+    loaders: [
+      {
+        test    : /\.(js|jsx)$/,
+        exclude : /node_modules/,
+        loader  : 'babel',
+        query   : config.compiler_babel
+      },
+      {
+        test   : /\.json$/,
+        loader : 'json'
+      },
+      {
+        test    : /\.scss$/,
+        exclude : null,
+        loaders : [
+          'style',
+          // We use cssnano with the postcss loader, so we tell
+          // css-loader not to duplicate minimization.
+          'css?sourceMap&-minimize',
+          'postcss',
+          'sass?sourceMap'
+        ]
+      },
+      {
+        test    : /\.css$/,
+        exclude : null,
+        loaders : [
+          'style',
+          // We use cssnano with the postcss loader, so we tell
+          // css-loader not to duplicate minimization.
+          'css?sourceMap&-minimize',
+          'postcss'
+        ]
+      },
+      { test: /\.woff(\?.*)?$/,loader: 'url?prefix=fonts/&name=assets/[name].[ext]&limit=10000&mimetype=application/font-woff' },
+      { test: /\.woff2(\?.*)?$/, loader: 'url?prefix=fonts/&name=assets/[name].[ext]&limit=10000&mimetype=application/font-woff2' },
+      { test: /\.otf(\?.*)?$/, loader: 'file?prefix=fonts/&name=assets/[name].[ext]&limit=10000&mimetype=font/opentype' },
+      { test: /\.ttf(\?.*)?$/, loader: 'url?prefix=fonts/&name=assets/[name].[ext]&limit=10000&mimetype=application/octet-stream' },
+      { test: /\.eot(\?.*)?$/, loader: 'file?prefix=fonts/&name=assets/[name].[ext]' },
+      { test: /\.svg(\?.*)?$/, loader: 'url?prefix=fonts/&name=assets/[name].[ext]&limit=10000&mimetype=image/svg+xml' },
+      { test: /\.(png|jpg)$/, loader: 'url?name=assets/[name].[ext]&limit=8192' }
+    ]
   },
   plugins: [
     new webpack.DefinePlugin(config.globals),
     new HtmlWebpackPlugin({
-      template : paths.client('index.html'),
+      template : path.resolve('./src/index.html'),
       hash     : false,
-      favicon  : paths.client('static/favicon.ico'),
+      favicon  : path.resolve('./src/static/favicon.ico'),
       filename : 'index.html',
       inject   : 'body',
       minify   : {
@@ -92,7 +96,7 @@ const webpackConfig = {
 };
 
 webpackConfig.sassLoader = {
-  includePaths : paths.client('styles')
+  includePaths : path.resolve('./src/styles'),
 };
 
 webpackConfig.postcss = [

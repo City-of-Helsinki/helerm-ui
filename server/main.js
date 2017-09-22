@@ -4,6 +4,7 @@ import webpack from 'webpack';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cookieSession from 'cookie-session';
+import path from 'path';
 
 import webpackConfig from '../config/webpack.config';
 import config from '../config';
@@ -12,7 +13,6 @@ import { passport } from './controllers/authController';
 
 const debug = _debug('app:server');
 const app = express();
-const paths = config.utils_paths;
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -36,12 +36,12 @@ if (config.env === 'development') {
   debug('Enable webpack dev and HMR middleware');
   app.use(require('webpack-dev-middleware')(compiler, {
     publicPath: webpackConfig.output.publicPath,
-    contentBase: paths.client(),
+    contentBase: path.resolve('./src'),
     hot: true,
-    quiet: config.compiler_quiet,
-    noInfo: config.compiler_quiet,
+    quiet: false,
+    noInfo: false,
     lazy: false,
-    stats: config.compiler_stats
+    stats: "normal",
   }));
 
   app.use(require('webpack-hot-middleware')(compiler));
@@ -50,15 +50,15 @@ if (config.env === 'development') {
   // these files. This middleware doesn't need to be enabled outside
   // of development since this directory will be copied into ~/dist
   // when the application is compiled.
-  app.use(express.static(paths.client('static')));
+  app.use(express.static(path.resolve('./src/static')));
 } else {
   // Serving ~/dist by default. Ideally these files should be served by
   // the web server and not the app server, but this helps to demo the
   // server in production.
-  app.use(express.static(paths.dist()));
+  app.use(express.static(path.resolve('./dist')));
 
   app.get('*', function (req, res) {
-    res.sendFile(`${paths.dist()}/index.html`);
+    res.sendFile(path.resolve('./dist/index.html'));
   });
 }
 
