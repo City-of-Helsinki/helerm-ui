@@ -33,7 +33,7 @@ export class Dropdown extends React.Component {
     const { children, small, extraSmall } = this.props;
     const dropdownRows = this.generateRows(children);
     return (
-      <span className='dropdown-wrapper' onBlur={() => setTimeout(() => this.setState({ open: false }), 180)}>
+      <span className='dropdown-wrapper' >
         <button
           className={classnames('btn btn-primary', { 'btn-sm': small }, { 'btn-xs': extraSmall })}
           onClick={() => this.setState({ open: !this.state.open })}
