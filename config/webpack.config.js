@@ -1,5 +1,4 @@
 const webpack = require('webpack');
-const cssnano = require('cssnano');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const DashboardPlugin = require('webpack-dashboard/plugin');
@@ -11,12 +10,18 @@ const __DEV__ = config.globals.__DEV__;
 const __PROD__ = config.globals.__PROD__;
 const __TEST__ = config.globals.__TEST__;
 
+const extractStyles = new ExtractTextPlugin({
+  filename: 'styles/[name].[contenthash].css',
+  allChunks: true,
+  disable: __DEV__,
+})
+
 debug('Creating configuration.');
 const webpackConfig = {
-  devtool : __DEV__ ? 'source-map' : null,
+  devtool : __DEV__ ? 'source-map' : false,
   resolve : {
-    root       : path.resolve('./src'),
-    extensions : ['', '.js', '.jsx', '.json']
+    modules    : [path.resolve('src'), 'node_modules'],
+    extensions : ['*', '.js', '.jsx', '.json']
   },
   entry: {
     app : __DEV__
@@ -35,47 +40,105 @@ const webpackConfig = {
     publicPath : config.compiler_public_path
   },
   module : {
-    loaders: [
+    rules: [
       {
         test    : /\.(js|jsx)$/,
         exclude : /node_modules/,
-        loader  : 'babel',
-        query   : config.compiler_babel
+        loader  : 'babel-loader',
+        options : config.compiler_babel
       },
       {
-        test   : /\.json$/,
-        loader : 'json'
+        test: /\.(sass|scss)$/,
+        loader: extractStyles.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: true,
+                minimize: {
+                  autoprefixer: {
+                    add: true,
+                    remove: true,
+                    browsers: ['last 2 versions'],
+                  },
+                  discardComments: {
+                    removeAll : true,
+                  },
+                  discardUnused: false,
+                  mergeIdents: false,
+                  reduceIdents: false,
+                  safe: true,
+                  sourcemap: true,
+                },
+              },
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: true,
+                includePaths: [
+                  'src/styles',
+                ],
+              },
+            }
+          ],
+        })
       },
-      {
-        test    : /\.scss$/,
-        exclude : null,
-        loaders : [
-          'style',
-          // We use cssnano with the postcss loader, so we tell
-          // css-loader not to duplicate minimization.
-          'css?sourceMap&-minimize',
-          'postcss',
-          'sass?sourceMap'
-        ]
+      { test: /\.woff(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          name: 'fonts/[name].[ext]',
+          limit: 10000,
+          mimetype: 'application/font-woff'
+        },
       },
-      {
-        test    : /\.css$/,
-        exclude : null,
-        loaders : [
-          'style',
-          // We use cssnano with the postcss loader, so we tell
-          // css-loader not to duplicate minimization.
-          'css?sourceMap&-minimize',
-          'postcss'
-        ]
+      { test: /\.woff2(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          name: 'fonts/[name].[ext]',
+          limit: 10000,
+          mimetype: 'application/font-woff2'
+        },
       },
-      { test: /\.woff(\?.*)?$/,loader: 'url?prefix=fonts/&name=assets/[name].[ext]&limit=10000&mimetype=application/font-woff' },
-      { test: /\.woff2(\?.*)?$/, loader: 'url?prefix=fonts/&name=assets/[name].[ext]&limit=10000&mimetype=application/font-woff2' },
-      { test: /\.otf(\?.*)?$/, loader: 'file?prefix=fonts/&name=assets/[name].[ext]&limit=10000&mimetype=font/opentype' },
-      { test: /\.ttf(\?.*)?$/, loader: 'url?prefix=fonts/&name=assets/[name].[ext]&limit=10000&mimetype=application/octet-stream' },
-      { test: /\.eot(\?.*)?$/, loader: 'file?prefix=fonts/&name=assets/[name].[ext]' },
-      { test: /\.svg(\?.*)?$/, loader: 'url?prefix=fonts/&name=assets/[name].[ext]&limit=10000&mimetype=image/svg+xml' },
-      { test: /\.(png|jpg)$/, loader: 'url?name=assets/[name].[ext]&limit=8192' }
+      { test: /\.otf(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          name: 'fonts/[name].[ext]',
+          limit: 10000,
+          mimetype: 'application/font-otf'
+        },
+      },
+      { test: /\.ttf(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          name: 'fonts/[name].[ext]',
+          limit: 10000,
+          mimetype: 'application/font-ttf'
+        },
+      },
+      { test: /\.eot(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          name: 'fonts/[name].[ext]',
+          limit: 10000,
+          mimetype: 'application/font-eot'
+        },
+      },
+      { test: /\.svg(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          name: 'fonts/[name].[ext]',
+          limit: 10000,
+          mimetype: 'application/font-svg'
+        },
+      },
+      { test: /\.(png|jpg|gif)$/,
+        loader: 'url-loader',
+        options: {
+          limit: 8192,
+        },
+      },
     ]
   },
   plugins: [
@@ -91,44 +154,22 @@ const webpackConfig = {
       },
       VERSION: config.globals.GIT_VERSION,
       HASH: config.globals.GIT_COMMIT_HASH
-    })
+    }),
+    extractStyles,
   ],
 };
-
-webpackConfig.sassLoader = {
-  includePaths : path.resolve('./src/styles'),
-};
-
-webpackConfig.postcss = [
-  cssnano({
-    autoprefixer : {
-      add      : true,
-      remove   : true,
-      browsers : ['last 2 versions']
-    },
-    discardComments : {
-      removeAll : true
-    },
-    discardUnused : false,
-    mergeIdents   : false,
-    reduceIdents  : false,
-    safe          : true,
-    sourcemap     : true
-  })
-];
 
 if (__DEV__) {
   debug('Enable plugins for live development (HMR, NoErrors).');
   webpackConfig.plugins.push(
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
     new DashboardPlugin()
   );
 } else if (__PROD__) {
-  debug('Enable plugins for production (OccurenceOrder, Dedupe & UglifyJS).');
+  debug('Enable plugins for production (OccurenceOrder & UglifyJS).');
   webpackConfig.plugins.push(
     new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.optimize.DedupePlugin(),
     new webpack.optimize.UglifyJsPlugin({
       compress : {
         unused    : true,
@@ -144,30 +185,6 @@ if (!__TEST__) {
   webpackConfig.plugins.push(
     new webpack.optimize.CommonsChunkPlugin({
       names : ['vendor']
-    })
-  );
-}
-
-// ------------------------------------
-// Finalize Configuration
-// ------------------------------------
-// when we don't know the public path (we know it only when HMR is enabled [in development]) we
-// need to use the extractTextPlugin to fix this issue:
-// http://stackoverflow.com/questions/34133808/webpack-ots-parsing-error-loading-fonts/34133809#34133809
-if (!__DEV__) {
-  debug('Apply ExtractTextPlugin to CSS loaders.');
-  webpackConfig.module.loaders.filter((loader) =>
-    loader.loaders && loader.loaders.find((name) => /css/.test(name.split('?')[0]))
-  ).forEach((loader) => {
-    const first = loader.loaders[0];
-    const rest = loader.loaders.slice(1);
-    loader.loader = ExtractTextPlugin.extract(first, rest.join('!'));
-    delete loader.loaders;
-  });
-
-  webpackConfig.plugins.push(
-    new ExtractTextPlugin('[name].[contenthash].css', {
-      allChunks : true
     })
   );
 }
