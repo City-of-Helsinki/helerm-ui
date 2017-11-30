@@ -37,7 +37,7 @@ export const validateTOS = (tos, rules) => {
     }
     if (rules[key].requiredIf.length) {
       for (const item of rules[key].requiredIf) {
-        if (tos.attributes[item.key] && includes(item.values, tos.attributes[item.key])) {
+        if (tos.attributes[item.key] && includes(item.values, tos.attributes[item.key]) && !tos.attributes[key]) {
           errors.push(key);
         }
       }
@@ -86,7 +86,7 @@ export const validateRecord = (record, rules) => {
     }
     if (rules[key].requiredIf.length) {
       for (const item of rules[key].requiredIf) {
-        if (record.attributes[item.key] && includes(item.values, record.attributes[item.key])) {
+        if (record.attributes[item.key] && includes(item.values, record.attributes[item.key]) && !record.attributes[key]) {
           errors.push(key);
         }
       }
