@@ -11,6 +11,7 @@ const initialState = {};
 
 export const RECEIVE_USERDATA = 'receiveUserDataAction';
 export const CLEAR_USERDATA = 'clearUserDataAction';
+export const LOGIN = 'login';
 
 export function receiveUserData (user) {
   return createAction(RECEIVE_USERDATA)(user);
@@ -61,30 +62,8 @@ export function retrieveUserFromSession () {
 }
 
 export function login () {
-  return window.location.assign('/auth/login/helsinki');
-  // return function (dispatch) {
-  //   return new Promise((resolve) => {
-  //     const loginPopup = centeredPopUp(
-  //       '/auth/login/helsinki',
-  //       'helermLoginWindow',
-  //       720,
-  //       600
-  //     );
-  //
-  //     const wait = function wait () {
-  //       if (!loginPopup || loginPopup.closed) {
-  //         resolve(true);
-  //         return;
-  //       }
-  //       setTimeout(wait, 500); // Try again in a bit...
-  //     };
-  //
-  //     wait();
-  //   })
-  //     .then(() => {
-  //       return dispatch(retrieveUserFromSession());
-  //     });
-  // };
+  window.location.assign('/auth/login/helsinki');
+  return createAction(LOGIN);
 }
 
 export function logout () {
