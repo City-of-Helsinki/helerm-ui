@@ -12,7 +12,11 @@ import {
 } from '../../../utils/validators';
 
 const styles = {
+  root: {
+    position: 'relative'
+  },
   sidebar: {
+    position: 'fixed',
     width: 300,
     height: '100%',
     padding: '10px 0 0 20px',
@@ -30,7 +34,8 @@ const styles = {
     backgroundColor: '#757575'
   },
   content: {
-    height: '100%'
+    height: '100%',
+    position: 'relative'
   }
 };
 
