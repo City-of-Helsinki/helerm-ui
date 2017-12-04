@@ -12,6 +12,7 @@ const initialState = {};
 export const RECEIVE_USERDATA = 'receiveUserDataAction';
 export const CLEAR_USERDATA = 'clearUserDataAction';
 export const LOGIN = 'login';
+export const LOGOUT = 'logout';
 
 export function receiveUserData (user) {
   return createAction(RECEIVE_USERDATA)(user);
@@ -23,36 +24,30 @@ export function clearUserData () {
 
 export function retrieveUserFromSession () {
   return function (dispatch) {
-    return fetch(`/auth/me?${+new Date()}`, { method: 'GET', credentials: 'same-origin' })
-      .then((res) => {
+    return fetch(`/auth/me?${+new Date()}`, {
+      method: 'GET',
+      credentials: 'same-origin'
+    })
+      .then(res => {
         return res.json();
       })
-      .then((user) => {
+      .then(user => {
         if (isString(user.token) && !isEmpty(user.token)) {
           setStorageItem('token', user.token);
           const url = `user/${user.id}`;
-          return api.get(url)
-            .then((helermUserData) => {
+          return api
+            .get(url)
+            .then(helermUserData => {
               if (helermUserData.status === 401) {
-                return fetch('/auth/logout', {
-                  method: 'POST',
-                  credentials: 'same-origin',
-                  mode: 'no-cors'
-                })
-                  .then(() => {
-                    removeStorageItem('token');
-                    dispatch(clearUserData());
-                    return window.location.reload();
-                  });
+                return logout()(dispatch);
               }
               return helermUserData.json();
             })
-            .then((helermUser) => {
+            .then(helermUser => {
               const permissions = get(helermUser, 'permissions', []);
-              const userWithPermissions = Object.assign({},
-                user,
-                { permissions: permissions }
-              );
+              const userWithPermissions = Object.assign({}, user, {
+                permissions: permissions
+              });
               return dispatch(receiveUserData(userWithPermissions));
             });
         }
@@ -68,15 +63,10 @@ export function login () {
 
 export function logout () {
   return function (dispatch) {
-    return fetch('/auth/logout', {
-      method: 'POST',
-      credentials: 'same-origin',
-      mode: 'no-cors'
-    })
-      .then(() => {
-        removeStorageItem('token');
-        dispatch(clearUserData());
-      });
+    dispatch(createAction(LOGOUT));
+    removeStorageItem('token');
+    dispatch(clearUserData());
+    window.location.assign(`/auth/logout?next=${window.location.href}`);
   };
 }
 
@@ -86,13 +76,16 @@ const receiveUserDataAction = (state, { payload }) => {
   });
 };
 
-const clearUserDataAction = (state) => {
+const clearUserDataAction = state => {
   return update(state, {
     $set: initialState
   });
 };
 
-export default handleActions({
-  receiveUserDataAction,
-  clearUserDataAction
-}, initialState);
+export default handleActions(
+  {
+    receiveUserDataAction,
+    clearUserDataAction
+  },
+  initialState
+);
