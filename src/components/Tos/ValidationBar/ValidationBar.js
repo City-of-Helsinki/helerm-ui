@@ -35,7 +35,8 @@ const styles = {
   },
   content: {
     height: '100%',
-    position: 'relative'
+    position: 'relative',
+    overflow: 'auto'
   }
 };
 
