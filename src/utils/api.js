@@ -1,11 +1,10 @@
 import fetch from 'isomorphic-fetch';
 import Promise from 'promise-polyfill';
-import {
-  forEach,
-  merge
-} from 'lodash';
+import { forEach, merge } from 'lodash';
+import { store } from '../main.js';
+import { logout } from '../components/Login/reducer';
 
-import { getStorageItem, removeStorageItem } from './storage';
+import { getStorageItem } from './storage';
 
 /**
  * Which actions are allowed without authentication
@@ -16,6 +15,17 @@ const ALLOWED_METHODS_WITHOUT_AUTHENTICATION = ['GET'];
 // Add Promise to window if not supported...
 if (!window.Promise) {
   window.Promise = Promise;
+}
+
+/**
+ * Custom error to throw when 401 is received
+ * @extends Error
+ */
+class Unauthorized extends Error {
+  constructor (message) {
+    super(message);
+    this.name = 'Unauthorized';
+  }
 }
 
 /**
@@ -123,16 +133,14 @@ export function callApi (endpoint, params, options = {}) {
   }
 
   finalOptions.headers = defaultHeaders;
-  return fetch(url, finalOptions)
-    .then(res => {
-      // TODO: Remove me & use refresh token
-      if (res.status === 401) {
-        removeStorageItem('token', () => {
-          return window.location.reload();
-        });
-      }
-      return res;
-    });
+  return fetch(url, finalOptions).then(res => {
+    // TODO: Remove me & use refresh token
+    if (res.status === 401) {
+      logout()(store.dispatch);
+      throw new Unauthorized(url);
+    }
+    return res;
+  });
 }
 
 /**

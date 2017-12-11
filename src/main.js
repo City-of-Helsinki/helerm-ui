@@ -15,7 +15,7 @@ if (SENTRY_DSN) {
 // Store Instantiation
 // ========================================================
 const initialState = window.___INITIAL_STATE__;
-const store = createStore(initialState);
+export const store = createStore(initialState);
 const history = syncHistoryWithStore(browserHistory, store);
 
 // ========================================================
