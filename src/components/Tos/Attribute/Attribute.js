@@ -1,6 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
 import './Attribute.scss';
+import { includes, forEach, find, map } from 'lodash';
 
 export class Attribute extends React.Component {
   constructor (props) {
@@ -25,8 +26,13 @@ export class Attribute extends React.Component {
     }
   }
 
-  onChange (val) {
-    this.setState({ attribute: val });
+  onChange (option) {
+    if (option instanceof Array) {
+      const values = option.length ? map(option, 'value') : null;
+      this.setState({ attribute: values && values.length === 1 ? values[0] : values });
+    } else {
+      this.setState({ attribute: option && option.value ? option.value : option });
+    }
   }
 
   changeState (newState) {
@@ -77,6 +83,10 @@ export class Attribute extends React.Component {
     }
   }
 
+  onPromptCreate (label) {
+    return `Lisää "${label}"`;
+  }
+
   generateAttributeInput (attribute, currentAttribute) {
     if (attribute.values && attribute.values.length) {
       const options = attribute.values.map(option => {
@@ -85,17 +95,30 @@ export class Attribute extends React.Component {
           label: option.value
         };
       });
+      if (this.state.attribute) {
+        const valueArray = this.state.attribute instanceof Array ? this.state.attribute : [this.state.attribute];
+        forEach(valueArray, function(value) {
+          if (!find(options, function(option) { return option.value === value; })) {
+            options.push({
+              label: value,
+              value: value
+            });
+          }
+        });
+      }
       return (
-        <Select
+        <Select.Creatable
           autoBlur={false}
           openOnFocus={true}
           className='form-control edit-attribute__input'
           clearable={true}
           value={this.state.attribute}
-          onChange={(option) => this.onChange(option ? option.value : null)}
+          onChange={this.onChange}
           onBlur={this.submit}
-          autofocus={true}
+          autoFocus={true}
           options={options}
+          multi={includes(attribute.multiIn, this.props.parentType)}
+          promptTextCreator={this.onPromptCreate}
         />
       );
     } else if (attribute.values.length === 0 || attribute.type) {
@@ -143,10 +166,21 @@ export class Attribute extends React.Component {
         });
       }
     }
+    if (this.state.attribute) {
+      const valueArray = this.state.attribute instanceof Array ? this.state.attribute : [this.state.attribute];
+      forEach(valueArray, function(value) {
+        if (!find(options, function(option) { return option.value === value; })) {
+          options.push({
+            label: value,
+            value: value
+          });
+        }
+      });
+    }
 
     return (
       <form onSubmit={this.submit}>
-        <Select
+        <Select.Creatable
           autoBlur={false}
           openOnFocus={true}
           className='col-xs-6 form-control edit-attribute__input'
@@ -154,9 +188,10 @@ export class Attribute extends React.Component {
           value={this.state.attribute}
           onChange={(option) => this.onChange(option ? option.value : null)}
           onBlur={this.submit}
-          autofocus={true}
+          autoFocus={true}
           options={options}
           placeholder={this.resolveBaseAttributePlaceholder() || 'Valitse...'}
+          promptTextCreator={this.onPromptCreate}
         />
       </form>
     );
@@ -174,7 +209,7 @@ export class Attribute extends React.Component {
       );
     }
     if (this.state.mode === 'view') {
-      attributeValue = <div className='table-value'>{this.state.attribute}</div>;
+      attributeValue = <div className='table-value'>{this.state.attribute instanceof Array ? this.state.attribute.join(", ") : this.state.attribute}</div>;
     }
     if (this.state.mode === 'edit') {
       if (type === 'attribute') {
@@ -207,7 +242,10 @@ export class Attribute extends React.Component {
 }
 
 Attribute.propTypes = {
-  attribute: React.PropTypes.string,
+  attribute: React.PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.array
+  ]),
   attributeIndex: React.PropTypes.string,
   attributeKey: React.PropTypes.string.isRequired,
   attributeTypes: React.PropTypes.object,

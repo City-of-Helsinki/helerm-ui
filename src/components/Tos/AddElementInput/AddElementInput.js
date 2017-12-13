@@ -64,7 +64,7 @@ export const AddElementInput = ({
             value={newType}
             onChange={(option) => onTypeChange(option ? option.value : null)}
             onBlur={() => null}
-            autofocus={false}
+            autoFocus={false}
             options={typeOptions}
             placeholder={resolveSelectPlaceHolder(type)}
           />

@@ -183,6 +183,7 @@ export class EditorForm extends React.Component {
                   onChange={this.onChange}
                   onInputChange={this.onFormInputChange}
                   onSubmit={() => null}
+                  multi={includes(attributeTypes[key].multiIn, this.props.editorConfig.type)}
                 />
               </div>
             );

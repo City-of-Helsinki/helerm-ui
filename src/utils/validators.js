@@ -1,4 +1,4 @@
-import includes from 'lodash/includes';
+import { includes, findIndex } from 'lodash';
 
 /**
  * Validate conditional rules
@@ -42,6 +42,15 @@ export const validateTOS = (tos, rules) => {
         }
       }
     }
+    if (tos.attributes[key] && rules[key].values.length) {
+      const values = tos.attributes[key] instanceof Array ? tos.attributes[key] : [tos.attributes[key]];
+      for (const value in values) {
+        if (findIndex(rules[key].values, (ruleValue) => { return ruleValue.value === values[value]; }) < 0) {
+          errors.push(key);
+          break;
+        }
+      }
+    }
   }
   return errors;
 };
@@ -54,7 +63,17 @@ export const validateTOS = (tos, rules) => {
  */
 export const validatePhase = (phase, rules) => {
   const errors = [];
-  // TODO: implementation
+  for (const key in rules) {
+    if (phase.attributes[key] && rules[key].values.length) {
+      const values = phase.attributes[key] instanceof Array ? phase.attributes[key] : [phase.attributes[key]];
+      for (const value in values) {
+        if (findIndex(rules[key].values, (ruleValue) => { return ruleValue.value === values[value]; }) < 0) {
+          errors.push(key);
+          break;
+        }
+      }
+    }
+  }
   return errors;
 };
 
@@ -66,7 +85,17 @@ export const validatePhase = (phase, rules) => {
  */
 export const validateAction = (action, rules) => {
   const errors = [];
-  // TODO: implementation
+  for (const key in rules) {
+    if (action.attributes[key] && rules[key].values.length) {
+      const values = action.attributes[key] instanceof Array ? action.attributes[key] : [action.attributes[key]];
+      for (const value in values) {
+        if (findIndex(rules[key].values, (ruleValue) => { return ruleValue.value === values[value]; }) < 0) {
+          errors.push(key);
+          break;
+        }
+      }
+    }
+  }
   return errors;
 };
 
@@ -88,6 +117,15 @@ export const validateRecord = (record, rules) => {
       for (const item of rules[key].requiredIf) {
         if (record.attributes[item.key] && includes(item.values, record.attributes[item.key]) && !record.attributes[key]) {
           errors.push(key);
+        }
+      }
+    }
+    if (record.attributes[key] && rules[key].values.length) {
+      const values = record.attributes[key] instanceof Array ? record.attributes[key] : [record.attributes[key]];
+      for (const value in values) {
+        if (findIndex(rules[key].values, (ruleValue) => { return ruleValue.value === values[value]; }) < 0) {
+          errors.push(key);
+          break;
         }
       }
     }
