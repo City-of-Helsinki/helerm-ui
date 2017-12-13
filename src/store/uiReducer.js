@@ -24,6 +24,7 @@ export function receiveAttributeTypes (attributes, validationRules) {
       let required = false;
       let requiredIn = [];
       let requiredIf = [];
+      let multiIn = [];
 
       // Add rules where attribute is allowed to be
       for (const rule in validationRules) {
@@ -36,6 +37,18 @@ export function receiveAttributeTypes (attributes, validationRules) {
       validationRules.record.required.map(rule => {
         if (rule === result.identifier) {
           required = true;
+        }
+      });
+
+      // Add rules where multi selection is allowed
+      Object.keys(validationRules).map(key => {
+        if (validationRules[key].properties[result.identifier] && validationRules[key].properties[result.identifier].anyOf) {
+          const anyOfArray = find(validationRules[key].properties[result.identifier].anyOf, (anyOf) => {
+            return anyOf.type === 'array';
+          });
+          if (anyOfArray) {
+            multiIn.push(key);
+          }
         }
       });
 
@@ -86,6 +99,7 @@ export function receiveAttributeTypes (attributes, validationRules) {
         name: result.name,
         values: result.values,
         allowedIn,
+        multiIn,
         requiredIf,
         requiredIn,
         required

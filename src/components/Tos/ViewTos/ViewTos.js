@@ -344,6 +344,7 @@ export class ViewTOS extends React.Component {
           editable={false}
           editRecord={editRecord}
           showAttributes={true}
+          parentType='function'
         />
       );
     });
@@ -363,6 +364,7 @@ export class ViewTOS extends React.Component {
             showAttributes={this.state.showMetadata}
             tosAttribute={true}
             updateFunctionAttribute={this.updateFunctionAttribute}
+            parentType='function'
           />
         );
       }

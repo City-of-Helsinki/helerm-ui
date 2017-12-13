@@ -1,5 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
+import { map, find, forEach } from 'lodash';
 
 function resolvePlaceholder (type, formType) {
   switch (type) {
@@ -24,11 +25,16 @@ function resolvePlaceholder (type, formType) {
   }
 }
 
+function onPromptCreate (label) {
+  return `Lisää "${label}"`;
+}
+
 export const DropdownInput = ({
   keyValue,
   type,
   formType,
   disabled = false,
+  multi = false,
   valueState,
   options,
   onChange,
@@ -73,6 +79,15 @@ export const DropdownInput = ({
       );
     }
   } else {
+    const onFieldChange = (option) => {
+      if (option instanceof Array) {
+        const values = option.length ? map(option, 'value') : null;
+        const value = values && values.length === 1 ? values[0] : values;
+        type === 'form' ? onChange(value, keyValue, 'value') : onChange(value);
+      } else {
+        type === 'form' ? onChange(option ? option.value : null, keyValue, 'value') : onChange(option ? option.value : null);
+      }
+    }
     for (const key in options) {
       if (options.hasOwnProperty(key)) {
         optionsArray.push({
@@ -81,21 +96,31 @@ export const DropdownInput = ({
         });
       }
     }
+    const valueArray = valueState instanceof Array ? valueState : [valueState];
+    forEach(valueArray, function(value) {
+      if (!find(optionsArray, function(option) { return option.value === value; })) {
+        optionsArray.push({
+          label: value,
+          value: value
+        });
+      }
+    });
     return (
-      <Select
+      <Select.Creatable
         className={selectClassName}
         placeholder={resolvePlaceholder(type, formType) || 'Valitse...'}
         value={valueState}
         disabled={disabled}
         autoBlur={false}
-        autofocus={!(type === 'form')}
+        autoFocus={!(type === 'form')}
         openOnFocus={true}
         clearable={true}
         options={optionsArray}
-        onChange={(option) => type === 'form'
-          ? onChange(option ? option.value : null, keyValue, 'value')
-          : onChange(option ? option.value : null)}
+        onChange={onFieldChange}
         onBlur={onSubmit}
+        promptTextCreator={onPromptCreate}
+        multi={multi}
+        removeSelected={false}
       />
     );
   }
@@ -103,6 +128,7 @@ export const DropdownInput = ({
 
 DropdownInput.propTypes = {
   disabled: React.PropTypes.bool,
+  multi: React.PropTypes.bool,
   formType: React.PropTypes.string,
   inputClassName: React.PropTypes.string,
   keyValue: React.PropTypes.string,
@@ -115,7 +141,10 @@ DropdownInput.propTypes = {
   ]).isRequired,
   selectClassName: React.PropTypes.string,
   type: React.PropTypes.string.isRequired,
-  valueState: React.PropTypes.string
+  valueState: React.PropTypes.oneOfType([
+    React.PropTypes.string,
+    React.PropTypes.array
+  ])
 };
 
 export default DropdownInput;
