@@ -137,7 +137,18 @@ export function saveDraft () {
         }
         return res.json();
       })
-      .then(json => dispatch(receiveTOS(json)));
+      .then(json => {
+        if (json.version !== currentVersion + 1) {
+          alert(
+            `Muokkasit luonnoksen versiota ${currentVersion}, ` +
+              `mutta tallennettaessa versionumero kasvoi enemmän ` +
+              `kuin yhdellä. Tarkistathan, että tallentamasi luonnoksen (versio ${
+                json.version
+              }) tiedot ovat ajantasalla.`
+          );
+        }
+        dispatch(receiveTOS(json));
+      });
   };
 }
 
