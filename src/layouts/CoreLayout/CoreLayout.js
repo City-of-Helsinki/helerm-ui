@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Header from '../../components/Header';
 import NavigationContainer from '../../components/Navigation/NavigationContainer';
 import ValidationBarContainer from '../../components/Tos/ValidationBar/ValidationBarContainer';
@@ -10,15 +11,13 @@ export const CoreLayout = ({ children }) => (
     <ValidationBarContainer>
       <Header />
       <NavigationContainer />
-      <div className='container-fluid'>
-        {children}
-      </div>
+      <div className='container-fluid'>{children}</div>
     </ValidationBarContainer>
   </div>
 );
 
 CoreLayout.propTypes = {
-  children: React.PropTypes.element
+  children: PropTypes.element
 };
 
 export default CoreLayout;
