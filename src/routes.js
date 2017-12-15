@@ -12,7 +12,7 @@ export default () => (
     <Route path='/'>
       <IndexRoute component={CoreLayout} />
       <Route path='view-tos/' component={CoreLayout}>
-        <Route path=':id'>
+        <Route path=':id(/version/:version)'>
           <IndexRoute component={ViewTOSContainer} />
           <Route path='print' component={PrintTOS} />
         </Route>

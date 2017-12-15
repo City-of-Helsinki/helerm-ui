@@ -66,10 +66,14 @@ export class ViewTOS extends React.Component {
   }
 
   componentDidMount () {
-    const { params: { id }, router, route } = this.props;
+    const { params: { id, version }, router, route } = this.props;
     router.setRouteLeaveHook(route, this.routerWillLeave);
+    let params = {};
+    if (typeof version !== 'undefined') {
+      params.version = version;
+    }
 
-    this.fetchTOS(id);
+    this.fetchTOS(id, params);
   }
 
   componentWillReceiveProps (nextProps) {
@@ -85,8 +89,12 @@ export class ViewTOS extends React.Component {
     }
 
     if (nextProps.params.id !== this.props.params.id) {
-      const { id } = nextProps.params;
-      this.fetchTOS(id);
+      const { id, version } = nextProps.params;
+      const params = {};
+      if (typeof version !== 'undefined') {
+        params.version = version;
+      }
+      this.fetchTOS(id, params);
     }
 
     if (route && route.path === 'view-tos/:id') {

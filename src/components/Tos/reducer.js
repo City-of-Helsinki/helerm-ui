@@ -128,6 +128,7 @@ export function saveDraft () {
     const newTos = Object.assign({}, tos);
     const finalPhases = normalizeTosForApi(newTos);
     const denormalizedTos = update(tos, { phases: { $set: finalPhases } });
+    const currentVersion = tos.version;
 
     return api.put(`function/${tos.id}`, denormalizedTos)
       .then(res => {
