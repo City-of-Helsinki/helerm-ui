@@ -1,13 +1,21 @@
 import React from 'react';
-import { Route } from 'react-router';
+import { IndexRoute, Route } from 'react-router';
 import CoreLayout from './layouts/CoreLayout/CoreLayout';
+import InfoLayout from './layouts/InfoLayout/InfoLayout';
 import ViewTOSContainer from './components/Tos/ViewTos/ViewTosContainer';
+import ViewInfo from './components/Info/ViewInfo';
 import NotFound from './components/NotFound/NotFound';
 
 export default () => (
   <div>
-    <Route path='/' component={CoreLayout}>
-      <Route path='view-tos/:id' component={ViewTOSContainer} />
+    <Route path='/'>
+      <IndexRoute component={CoreLayout} />
+      <Route path='view-tos/' component={CoreLayout}>
+        <Route path=':id' component={ViewTOSContainer} />
+      </Route>
+      <Route path='info' component={InfoLayout}>
+        <IndexRoute component={ViewInfo} />
+      </Route>
     </Route>
     <Route path='*' component={NotFound} />
   </div>

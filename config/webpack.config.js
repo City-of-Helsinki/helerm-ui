@@ -142,6 +142,10 @@ const webpackConfig = {
           limit: 8192,
         },
       },
+      {
+        test: /\.(md|txt)$/,
+        loader: 'raw-loader'
+      }
     ]
   },
   plugins: [
