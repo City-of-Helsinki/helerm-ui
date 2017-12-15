@@ -1,6 +1,6 @@
 # Tietoa palvelusta
 
-Lorem ipsum. Linkki [Helsingin kaupungin sivuille](https://helsinki.fi).
+Lorem ipsum. Linkki [Helsingin kaupungin sivuille](https://hel.fi).
 
 ### Väliotsikko
 

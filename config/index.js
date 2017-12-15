@@ -34,7 +34,7 @@ const config = {
     plugins: ['transform-runtime', 'transform-decorators-legacy'],
     presets: ['es2015', 'react', 'stage-0']
   },
-  compiler_public_path: '/',
+  compiler_public_path: '/'
 };
 
 /************************************************
@@ -52,28 +52,29 @@ const config = {
 // N.B.: globals added here must _also_ be added to .eslintrc
 config.globals = {
   'process.env': {
-    'NODE_ENV': JSON.stringify(config.env)
+    NODE_ENV: JSON.stringify(config.env)
   },
-  'NODE_ENV': config.env,
-  '__DEV__': config.env === 'development',
-  '__PROD__': config.env === 'production',
-  '__TEST__': config.env === 'test',
-  '__COVERAGE__': !argv.watch && config.env === 'test',
-  '__BASENAME__': JSON.stringify(process.env.BASENAME || ''),
-  'CLIENT_ID': process.env.CLIENT_ID,
-  'CLIENT_SECRET': process.env.CLIENT_SECRET,
-  'CLIENT_AUDIENCE': process.env.CLIENT_AUDIENCE || null,
-  'VERSION': JSON.stringify(pkgVersion),
-  'GIT_VERSION': JSON.stringify(gitRevisionPlugin.version()),
-  'GIT_COMMIT_HASH': JSON.stringify(gitRevisionPlugin.commithash()),
-  'JWT_TOKEN': process.env.JWT_TOKEN,
-  'APP_URL': process.env.APP_URL,
-  'API_URL': JSON.stringify(process.env.API_URL),
-  'API_VERSION': JSON.stringify(process.env.API_VERSION),
-  'SENTRY_DSN': JSON.stringify(process.env.SENTRY_DSN),
-  'SENTRY_REPORT_DIALOG': process.env.SENTRY_REPORT_DIALOG,
-  'RESULTS_PER_PAGE': JSON.stringify(process.env.RESULTS_PER_PAGE),
-  'STORAGE_PREFIX': JSON.stringify(process.env.STORAGE_PREFIX || 'HELERM')
+  NODE_ENV: config.env,
+  __DEV__: config.env === 'development',
+  __PROD__: config.env === 'production',
+  __TEST__: config.env === 'test',
+  __COVERAGE__: !argv.watch && config.env === 'test',
+  __BASENAME__: JSON.stringify(process.env.BASENAME || ''),
+  CLIENT_ID: process.env.CLIENT_ID,
+  CLIENT_SECRET: process.env.CLIENT_SECRET,
+  CLIENT_AUDIENCE: process.env.CLIENT_AUDIENCE || null,
+  VERSION: JSON.stringify(pkgVersion),
+  GIT_VERSION: JSON.stringify(gitRevisionPlugin.version()),
+  GIT_COMMIT_HASH: JSON.stringify(gitRevisionPlugin.commithash()),
+  JWT_TOKEN: process.env.JWT_TOKEN,
+  APP_URL: process.env.APP_URL,
+  API_URL: JSON.stringify(process.env.API_URL),
+  API_VERSION: JSON.stringify(process.env.API_VERSION),
+  SENTRY_DSN: JSON.stringify(process.env.SENTRY_DSN),
+  SENTRY_REPORT_DIALOG: process.env.SENTRY_REPORT_DIALOG,
+  RESULTS_PER_PAGE: JSON.stringify(process.env.RESULTS_PER_PAGE),
+  STORAGE_PREFIX: JSON.stringify(process.env.STORAGE_PREFIX || 'HELERM'),
+  FEEDBACK_EMAIL: JSON.stringify(process.env.FEEDBACK_EMAIL)
 };
 
 // ========================================================
