@@ -1,4 +1,4 @@
-import { includes, findIndex } from 'lodash';
+import { includes, difference } from 'lodash';
 
 /**
  * Validate conditional rules
@@ -42,14 +42,8 @@ export const validateTOS = (tos, rules) => {
         }
       }
     }
-    if (tos.attributes[key] && rules[key].values.length) {
-      const values = tos.attributes[key] instanceof Array ? tos.attributes[key] : [tos.attributes[key]];
-      for (const value in values) {
-        if (findIndex(rules[key].values, (ruleValue) => { return ruleValue.value === values[value]; }) < 0) {
-          errors.push(key);
-          break;
-        }
-      }
+    if (tos.attributes[key] && rules[key].values.length && !isValueValidOption(tos.attributes[key], rules[key].values)) {
+      errors.push(key);
     }
   }
   return errors;
@@ -64,14 +58,8 @@ export const validateTOS = (tos, rules) => {
 export const validatePhase = (phase, rules) => {
   const errors = [];
   for (const key in rules) {
-    if (phase.attributes[key] && rules[key].values.length) {
-      const values = phase.attributes[key] instanceof Array ? phase.attributes[key] : [phase.attributes[key]];
-      for (const value in values) {
-        if (findIndex(rules[key].values, (ruleValue) => { return ruleValue.value === values[value]; }) < 0) {
-          errors.push(key);
-          break;
-        }
-      }
+    if (phase.attributes[key] && rules[key].values.length && !isValueValidOption(phase.attributes[key], rules[key].values)) {
+      errors.push(key);
     }
   }
   return errors;
@@ -86,14 +74,8 @@ export const validatePhase = (phase, rules) => {
 export const validateAction = (action, rules) => {
   const errors = [];
   for (const key in rules) {
-    if (action.attributes[key] && rules[key].values.length) {
-      const values = action.attributes[key] instanceof Array ? action.attributes[key] : [action.attributes[key]];
-      for (const value in values) {
-        if (findIndex(rules[key].values, (ruleValue) => { return ruleValue.value === values[value]; }) < 0) {
-          errors.push(key);
-          break;
-        }
-      }
+    if (action.attributes[key] && rules[key].values.length && !isValueValidOption(action.attributes[key], rules[key].values)) {
+      errors.push(key);
     }
   }
   return errors;
@@ -120,15 +102,15 @@ export const validateRecord = (record, rules) => {
         }
       }
     }
-    if (record.attributes[key] && rules[key].values.length) {
-      const values = record.attributes[key] instanceof Array ? record.attributes[key] : [record.attributes[key]];
-      for (const value in values) {
-        if (findIndex(rules[key].values, (ruleValue) => { return ruleValue.value === values[value]; }) < 0) {
-          errors.push(key);
-          break;
-        }
-      }
+    if (record.attributes[key] && rules[key].values.length && !isValueValidOption(record.attributes[key], rules[key].values)) {
+      errors.push(key);
     }
   }
   return errors;
+};
+
+const isValueValidOption = (value, options) => {
+  const valueArray = value instanceof Array ? value : [value];
+  const optionValues = options.map(option => { return option.value; });
+  return difference(valueArray, optionValues).length ? false : true;
 };
