@@ -4,6 +4,7 @@ import CoreLayout from './layouts/CoreLayout/CoreLayout';
 import InfoLayout from './layouts/InfoLayout/InfoLayout';
 import ViewTOSContainer from './components/Tos/ViewTos/ViewTosContainer';
 import ViewInfo from './components/Info/ViewInfo';
+import PrintTOS from 'components/Tos/Print/PrintView';
 import NotFound from './components/NotFound/NotFound';
 
 export default () => (
@@ -11,7 +12,10 @@ export default () => (
     <Route path='/'>
       <IndexRoute component={CoreLayout} />
       <Route path='view-tos/' component={CoreLayout}>
-        <Route path=':id' component={ViewTOSContainer} />
+        <Route path=':id'>
+          <IndexRoute component={ViewTOSContainer} />
+          <Route path='print' component={PrintTOS} />
+        </Route>
       </Route>
       <Route path='info' component={InfoLayout}>
         <IndexRoute component={ViewInfo} />

@@ -1,4 +1,6 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 
 import IsAllowed from 'components/IsAllowed/IsAllowed';
 import ActionButton from './ActionButton';
@@ -110,21 +112,30 @@ const ActionButtons = ({
 
   return (
     <div>
-      { status === DRAFT && editable }
-      { status === SENT_FOR_REVIEW && reviewable }
-      { status === WAITING_FOR_APPROVAL && approvable }
-      { status === APPROVED && draftable }
-      { status !== APPROVED &&
-      <div className='validation-button'>
-        <ActionButton
-          className='btn-sm pull-right'
-          style={{ marginRight: '15px' }}
-          type='success'
-          action={() => setValidationVisibility(true)}
-          label={'Esitarkasta'}
-          icon={'fa-check-circle-o'}
-        />
-      </div>}
+      {status === DRAFT && editable}
+      {status === SENT_FOR_REVIEW && reviewable}
+      {status === WAITING_FOR_APPROVAL && approvable}
+      {status === APPROVED && draftable}
+      {status !== APPROVED && (
+        <div className='validation-button'>
+          <ActionButton
+            className='btn-sm pull-right'
+            style={{ marginRight: '15px' }}
+            type='success'
+            action={() => setValidationVisibility(true)}
+            label={'Esitarkasta'}
+            icon={'fa-check-circle-o'}
+          />
+        </div>
+      )}
+      <span>
+        <Link
+          className='btn btn-sm btn-primary'
+          to={`/view-tos/${tosId}/print`}
+        >
+          Tulosta
+        </Link>
+      </span>
     </div>
   );
 };
