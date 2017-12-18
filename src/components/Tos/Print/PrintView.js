@@ -72,28 +72,26 @@ class PrintView extends React.Component {
             {TOS.function_id} {TOS.name}
           </h1>
         </header>
-        <main>
-          <MetaDataTable
-            rows={[
-              ['Versionumero', TOS.version.toString()],
-              ['Tila', getStatusLabel(TOS.status)],
-              ['Muokkausajankohta', formatDateTime(TOS.modified_at)],
-              ['Muokkaaja', TOS.modified_by],
-              ...sortAttributeKeys(Object.keys(TOS.attributes)).map(key => [
-                getAttributeName(key),
-                TOS.attributes[key]
-              ])
-            ]}
+        <MetaDataTable
+          rows={[
+            ['Versionumero', TOS.version.toString()],
+            ['Tila', getStatusLabel(TOS.status)],
+            ['Muokkausajankohta', formatDateTime(TOS.modified_at)],
+            ['Muokkaaja', TOS.modified_by],
+            ...sortAttributeKeys(Object.keys(TOS.attributes)).map(key => [
+              getAttributeName(key),
+              TOS.attributes[key]
+            ])
+          ]}
+        />
+        {Object.keys(TOS.phases).map(key => (
+          <PrintPhase
+            key={TOS.phases[key].id}
+            phase={TOS.phases[key]}
+            getAttributeName={getAttributeName}
+            sortAttributeKeys={sortAttributeKeys}
           />
-          {Object.keys(TOS.phases).map(key => (
-            <PrintPhase
-              key={TOS.phases[key].id}
-              phase={TOS.phases[key]}
-              getAttributeName={getAttributeName}
-              sortAttributeKeys={sortAttributeKeys}
-            />
-          ))}
-        </main>
+        ))}
       </article>
     );
   }

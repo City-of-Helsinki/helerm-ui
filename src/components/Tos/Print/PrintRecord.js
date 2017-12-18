@@ -15,14 +15,12 @@ const PrintRecord = ({
       <div className='breadscrumbs'>{breadscrumbs}</div>
       <h4>{upperFirst(record.name)}</h4>
     </header>
-    <main>
-      <MetaDataTable
-        rows={sortAttributeKeys(Object.keys(record.attributes)).map(key => [
-          getAttributeName(key),
-          record.attributes[key]
-        ])}
-      />
-    </main>
+    <MetaDataTable
+      rows={sortAttributeKeys(Object.keys(record.attributes)).map(key => [
+        getAttributeName(key),
+        record.attributes[key]
+      ])}
+    />
   </section>
 );
 

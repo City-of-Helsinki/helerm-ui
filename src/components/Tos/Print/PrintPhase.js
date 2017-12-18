@@ -14,18 +14,16 @@ const PrintPhase = ({ phase, getAttributeName, sortAttributeKeys }) => {
       <header>
         <h2>{phase.name}</h2>
       </header>
-      <main>
-        <MetaDataTable rows={metaData} />
-        {phase.actions.map(action => (
-          <PrintAction
-            key={action.id}
-            action={action}
-            phaseName={phase.name}
-            getAttributeName={getAttributeName}
-            sortAttributeKeys={sortAttributeKeys}
-          />
-        ))}
-      </main>
+      <MetaDataTable rows={metaData} />
+      {phase.actions.map(action => (
+        <PrintAction
+          key={action.id}
+          action={action}
+          phaseName={phase.name}
+          getAttributeName={getAttributeName}
+          sortAttributeKeys={sortAttributeKeys}
+        />
+      ))}
     </section>
   );
 };
