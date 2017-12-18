@@ -22,7 +22,7 @@ export const validateConditionalRules = (key, attributeTypes, attributes) => {
 };
 
 /**
- * Validate TOS against rules
+ * Validate TOS against required rules
  * @param tos
  * @param rules
  * @returns {Array}
@@ -42,6 +42,19 @@ export const validateTOS = (tos, rules) => {
         }
       }
     }
+  }
+  return errors;
+};
+
+/**
+ * Validate TOS against warning rules
+ * @param tos
+ * @param rules
+ * @returns {Array}
+ */
+export const validateTOSWarnings = (tos, rules) => {
+  const errors = [];
+  for (const key in rules) {
     if (tos.attributes[key] && rules[key].values.length && !isValueValidOption(tos.attributes[key], rules[key].values)) {
       errors.push(key);
     }
@@ -50,12 +63,24 @@ export const validateTOS = (tos, rules) => {
 };
 
 /**
- * Validate Phase against rules
+ * Validate Phase against required rules
  * @param phase
  * @param rules
  * @returns {Array}
  */
 export const validatePhase = (phase, rules) => {
+  const errors = [];
+  // TODO: implementation
+  return errors;
+};
+
+/**
+ * Validate Phase against warning rules
+ * @param phase
+ * @param rules
+ * @returns {Array}
+ */
+export const validatePhaseWarnings = (phase, rules) => {
   const errors = [];
   for (const key in rules) {
     if (phase.attributes[key] && rules[key].values.length && !isValueValidOption(phase.attributes[key], rules[key].values)) {
@@ -66,12 +91,24 @@ export const validatePhase = (phase, rules) => {
 };
 
 /**
- * Validate Action against rules
+ * Validate Action against required rules
  * @param action
  * @param rules
  * @returns {Array}
  */
 export const validateAction = (action, rules) => {
+  const errors = [];
+  // TODO: implementation
+  return errors;
+};
+
+/**
+ * Validate Action against warning rules
+ * @param action
+ * @param rules
+ * @returns {Array}
+ */
+export const validateActionWarnings = (action, rules) => {
   const errors = [];
   for (const key in rules) {
     if (action.attributes[key] && rules[key].values.length && !isValueValidOption(action.attributes[key], rules[key].values)) {
@@ -82,7 +119,7 @@ export const validateAction = (action, rules) => {
 };
 
 /**
- * Validate Record against rules
+ * Validate Record against required rules
  * @param record
  * @param rules
  * @returns {Array}
@@ -102,6 +139,19 @@ export const validateRecord = (record, rules) => {
         }
       }
     }
+  }
+  return errors;
+};
+
+/**
+ * Validate Record against warn rules
+ * @param record
+ * @param rules
+ * @returns {Array}
+ */
+export const validateRecordWarnings = (record, rules) => {
+  const errors = [];
+  for (const key in rules) {
     if (record.attributes[key] && rules[key].values.length && !isValueValidOption(record.attributes[key], rules[key].values)) {
       errors.push(key);
     }
