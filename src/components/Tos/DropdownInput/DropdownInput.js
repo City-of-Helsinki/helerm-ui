@@ -1,6 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
-import { map, find, forEach } from 'lodash';
+import { map, difference } from 'lodash';
 
 function resolvePlaceholder (type, formType) {
   switch (type) {
@@ -28,6 +28,12 @@ function resolvePlaceholder (type, formType) {
 function onPromptCreate (label) {
   return `Lisää "${label}"`;
 }
+
+function getMissingValueOptions(value, options) {
+  const valueArray = value instanceof Array ? value : [value];
+  const optionValues = map(options, 'value');
+  return difference(valueArray, optionValues);
+};
 
 export const DropdownInput = ({
   keyValue,
@@ -96,15 +102,13 @@ export const DropdownInput = ({
         });
       }
     }
-    const valueArray = valueState instanceof Array ? valueState : [valueState];
-    forEach(valueArray, function(value) {
-      if (!find(optionsArray, function(option) { return option.value === value; })) {
-        optionsArray.push({
-          label: value,
-          value: value
-        });
-      }
-    });
+    const missingOptions = getMissingValueOptions(valueState, optionsArray);
+    for (const key in missingOptions) {
+      optionsArray.push({
+        label: missingOptions[key],
+        value: missingOptions[key]
+      });
+    }
     return (
       <Select.Creatable
         className={selectClassName}
