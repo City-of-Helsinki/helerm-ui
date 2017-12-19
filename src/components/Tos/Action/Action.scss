@@ -6,11 +6,11 @@
   border-top-color: #658fcd;
   border-top-width: 4px;
   background-color: white;
+  position: relative;
 }
 .action-title {
   margin-left: 10px;
   position: relative;
-  z-index: 1;
   font-weight: 600;
   width: 100%;
   padding: 1px 0 7px;
@@ -68,7 +68,8 @@
 }
 .action-attributes {
   margin-bottom: 10px;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   .table-key {
     font-weight: 400;
   }
