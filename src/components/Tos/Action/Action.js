@@ -386,10 +386,12 @@ export class Action extends React.Component {
     }
 
     return (
-      <div className='basic-attributes'>
-        {/* {actionType} */}
-        {typeSpecifier}
-      </div>
+      <Sticky className={'action-title ' + (this.state.showAttributes ? 'action-open' : 'action-closed')}>
+        <div className='basic-attributes'>
+          {/* {actionType} */}
+          {typeSpecifier}
+        </div>
+      </Sticky>
     );
   }
 
@@ -444,21 +446,19 @@ export class Action extends React.Component {
           }
           { !this.state.editingAction && !this.state.complementingAction &&
             <StickyContainer className='action row box'>
-              <Sticky className={'action-title ' + (this.state.showAttributes ? 'action-open' : 'action-closed')}>
-                <Attributes
-                  element={action}
-                  documentState={this.props.documentState}
-                  type={'action'}
-                  attributeTypes={this.props.attributeTypes}
-                  typeOptions={this.props.actionTypes}
-                  renderBasicAttributes={this.renderBasicAttributes}
-                  renderButtons={this.renderActionButtons}
-                  updateTypeSpecifier={this.updateTypeSpecifier}
-                  updateType={this.updateActionType}
-                  updateAttribute={this.updateActionAttribute}
-                  showAttributes={this.state.showAttributes}
-                />
-              </Sticky>
+              <Attributes
+                element={action}
+                documentState={this.props.documentState}
+                type={'action'}
+                attributeTypes={this.props.attributeTypes}
+                typeOptions={this.props.actionTypes}
+                renderBasicAttributes={this.renderBasicAttributes}
+                renderButtons={this.renderActionButtons}
+                updateTypeSpecifier={this.updateTypeSpecifier}
+                updateType={this.updateActionType}
+                updateAttribute={this.updateActionAttribute}
+                showAttributes={this.state.showAttributes}
+              />
               { this.state.creatingRecord &&
               <EditorForm
                 targetId={this.props.action.id}

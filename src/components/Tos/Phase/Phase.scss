@@ -68,7 +68,8 @@
 .phase-buttons {
   position: absolute;
   right: 17px;
-  top: 5px;
+  top: 17px;
+  z-index: 2;
 }
 .phase-buttons button {
   margin: 0px 1px;

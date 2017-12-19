@@ -405,10 +405,12 @@ export class Phase extends React.Component {
     }
 
     return (
-      <div className='basic-attributes'>
-        {phaseType}
-        {typeSpecifier}
-      </div>
+      <Sticky className={'phase-title ' + (this.state.showAttributes ? 'phase-open' : 'phase-closed')}>
+        <div className='basic-attributes'>
+          {phaseType}
+          {typeSpecifier}
+        </div>
+      </Sticky>
     );
   }
 
@@ -463,21 +465,19 @@ export class Phase extends React.Component {
           }
           { !this.state.editingPhase && !this.state.complementingPhase &&
             <StickyContainer>
-              <Sticky className={'phase-title ' + (this.state.showAttributes ? 'phase-open' : 'phase-closed')}>
-                <Attributes
-                  element={phase}
-                  documentState={this.props.documentState}
-                  type={'phase'}
-                  attributeTypes={this.props.attributeTypes}
-                  typeOptions={this.props.phaseTypes}
-                  renderBasicAttributes={this.renderBasicAttributes}
-                  renderButtons={this.renderPhaseButtons}
-                  updateTypeSpecifier={this.updateTypeSpecifier}
-                  updateType={this.updatePhaseType}
-                  updateAttribute={this.updatePhaseAttribute}
-                  showAttributes={this.state.showAttributes}
-                />
-              </Sticky>
+              <Attributes
+                element={phase}
+                documentState={this.props.documentState}
+                type={'phase'}
+                attributeTypes={this.props.attributeTypes}
+                typeOptions={this.props.phaseTypes}
+                renderBasicAttributes={this.renderBasicAttributes}
+                renderButtons={this.renderPhaseButtons}
+                updateTypeSpecifier={this.updateTypeSpecifier}
+                updateType={this.updatePhaseType}
+                updateAttribute={this.updatePhaseAttribute}
+                showAttributes={this.state.showAttributes}
+              />
               { this.state.mode === 'add' &&
               <AddElementInput
                 type='action'
