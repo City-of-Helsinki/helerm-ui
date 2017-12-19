@@ -149,7 +149,7 @@ export class ValidationBar extends Component {
         invalidRecordAttributes.length > 0) {
       return (
         <div>
-          <h4>Puutteelliset metatiedot</h4>
+          <h4>Esitarkastus</h4>
           {invalidTOSAttributes &&
             <h5>Asian metatiedot</h5>}
           {invalidTOSAttributes}
