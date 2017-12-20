@@ -1,4 +1,4 @@
-import { includes, difference } from 'lodash';
+import { includes, difference, uniq } from 'lodash';
 
 /**
  * Validate conditional rules
@@ -58,8 +58,15 @@ export const validateTOSWarnings = (tos, rules) => {
     if (tos.attributes[key] && rules[key].values.length && !isValueValidOption(tos.attributes[key], rules[key].values)) {
       errors.push(key);
     }
+    if (rules[key].requiredIf.length) {
+      for (const item of rules[key].requiredIf) {
+        if (tos.attributes[item.key] && !includes(item.values, tos.attributes[item.key]) && tos.attributes[key]) {
+          errors.push(key);
+        }
+      }
+    }
   }
-  return errors;
+  return uniq(errors);
 };
 
 /**
@@ -155,12 +162,19 @@ export const validateRecordWarnings = (record, rules) => {
     if (record.attributes[key] && rules[key].values.length && !isValueValidOption(record.attributes[key], rules[key].values)) {
       errors.push(key);
     }
+    if (rules[key].requiredIf.length) {
+      for (const item of rules[key].requiredIf) {
+        if (record.attributes[item.key] && !includes(item.values, record.attributes[item.key]) && record.attributes[key]) {
+          errors.push(key);
+        }
+      }
+    }
   }
-  return errors;
+  return uniq(errors);
 };
 
 const isValueValidOption = (value, options) => {
   const valueArray = value instanceof Array ? value : [value];
   const optionValues = options.map(option => { return option.value; });
-  return difference(valueArray, optionValues).length ? false : true;
+  return difference(valueArray, optionValues).length === 0;
 };
