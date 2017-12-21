@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { withRouter, routerShape } from 'react-router';
 import { StickyContainer } from 'react-sticky';
 
@@ -39,7 +40,9 @@ export class ViewTOS extends React.Component {
     this.fetchTOS = this.fetchTOS.bind(this);
     this.onPhaseTypeChange = this.onPhaseTypeChange.bind(this);
     this.onPhaseTypeInputChange = this.onPhaseTypeInputChange.bind(this);
-    this.onPhaseTypeSpecifierChange = this.onPhaseTypeSpecifierChange.bind(this);
+    this.onPhaseTypeSpecifierChange = this.onPhaseTypeSpecifierChange.bind(
+      this
+    );
     this.routerWillLeave = this.routerWillLeave.bind(this);
     this.saveDraft = this.saveDraft.bind(this);
     this.setPhaseVisibility = this.setPhaseVisibility.bind(this);
@@ -74,8 +77,8 @@ export class ViewTOS extends React.Component {
     // If we have selectedTOS & selectedTOS hasn't change during receiveProps
     // => cache it to state to be able to discard changes
     if (
-      (this.props.selectedTOS.id || nextProps.selectedTOS.id) &&
-      nextProps.selectedTOS.id !== this.props.selectedTOS.id ||
+      ((this.props.selectedTOS.id || nextProps.selectedTOS.id) &&
+        nextProps.selectedTOS.id !== this.props.selectedTOS.id) ||
       nextProps.selectedTOS.version !== this.props.selectedTOS.version
     ) {
       this.setState({ originalTos: nextProps.selectedTOS });
@@ -113,9 +116,10 @@ export class ViewTOS extends React.Component {
   }
 
   fetchTOS (id, params = {}) {
-    this.props.fetchTOS(id, params)
+    this.props
+      .fetchTOS(id, params)
       .then(() => this.props.setNavigationVisibility(false))
-      .catch((err) => {
+      .catch(err => {
         if (err instanceof URIError) {
           // We have a 404 from API
           this.props.push(`/404?tos-id=${id}`);
@@ -134,17 +138,36 @@ export class ViewTOS extends React.Component {
 
   validateAttributes () {
     const { selectedTOS, attributeTypes } = this.props;
-    const invalidTOSAttributes = validateTOS(selectedTOS, attributeTypes).length > 0;
-    const invalidPhaseAttributes = !this.evaluateAttributes(selectedTOS.phases, validatePhase, attributeTypes);
-    const invalidActionAttributes = !this.evaluateAttributes(selectedTOS.actions, validateAction, attributeTypes);
-    const invalidRecordAttributes = !this.evaluateAttributes(selectedTOS.records, validateRecord, attributeTypes);
-    return !invalidTOSAttributes && !invalidPhaseAttributes && !invalidActionAttributes && !invalidRecordAttributes;
+    const invalidTOSAttributes =
+      validateTOS(selectedTOS, attributeTypes).length > 0;
+    const invalidPhaseAttributes = !this.evaluateAttributes(
+      selectedTOS.phases,
+      validatePhase,
+      attributeTypes
+    );
+    const invalidActionAttributes = !this.evaluateAttributes(
+      selectedTOS.actions,
+      validateAction,
+      attributeTypes
+    );
+    const invalidRecordAttributes = !this.evaluateAttributes(
+      selectedTOS.records,
+      validateRecord,
+      attributeTypes
+    );
+    return (
+      !invalidTOSAttributes &&
+      !invalidPhaseAttributes &&
+      !invalidActionAttributes &&
+      !invalidRecordAttributes
+    );
   }
 
   evaluateAttributes (items, validate, attributeTypes) {
     if (Object.keys(items).length > 0) {
       for (const item in items) {
-        const validAttributes = validate(items[item], attributeTypes).length === 0;
+        const validAttributes =
+          validate(items[item], attributeTypes).length === 0;
         if (!validAttributes) {
           return false;
         }
@@ -180,7 +203,8 @@ export class ViewTOS extends React.Component {
 
   saveDraft () {
     this.setState({ isDirty: false });
-    return this.props.saveDraft()
+    return this.props
+      .saveDraft()
       .then(() => {
         return this.props.displayMessage({
           title: 'Luonnos',
@@ -188,16 +212,20 @@ export class ViewTOS extends React.Component {
         });
       })
       .catch(err => {
-        return this.props.displayMessage({
-          title: 'Virhe',
-          body: `"${err.message}"`
-        }, { type: 'error' });
+        return this.props.displayMessage(
+          {
+            title: 'Virhe',
+            body: `"${err.message}"`
+          },
+          { type: 'error' }
+        );
       });
   }
 
   changeStatus (status) {
     const { state } = this.props.selectedTOS;
-    return this.props.changeStatus(status)
+    return this.props
+      .changeStatus(status)
       .then(() => {
         return this.props.displayMessage({
           title: 'Tila vaihdettu!',
@@ -205,10 +233,13 @@ export class ViewTOS extends React.Component {
         });
       })
       .catch(err => {
-        return this.props.displayMessage({
-          title: 'Virhe',
-          body: `"${err.message}"`
-        }, { type: 'error' });
+        return this.props.displayMessage(
+          {
+            title: 'Virhe',
+            body: `"${err.message}"`
+          },
+          { type: 'error' }
+        );
       });
   }
 
@@ -222,8 +253,16 @@ export class ViewTOS extends React.Component {
 
   createNewPhase (event) {
     event.preventDefault();
-    this.props.addPhase(this.state.phaseTypeSpecifier || '', this.state.phaseType || '', this.props.selectedTOS.id);
-    this.setState({ createPhaseMode: false, phaseTypeSpecifier: '', phaseType: '' });
+    this.props.addPhase(
+      this.state.phaseTypeSpecifier || '',
+      this.state.phaseType || '',
+      this.props.selectedTOS.id
+    );
+    this.setState({
+      createPhaseMode: false,
+      phaseTypeSpecifier: '',
+      phaseType: ''
+    });
     this.props.displayMessage({
       title: 'Käsittelyvaihe',
       body: 'Käsittelyvaiheen lisäys onnistui!'
@@ -244,11 +283,14 @@ export class ViewTOS extends React.Component {
           body: 'Kuvauksen tuonti onnistui!'
         });
       })
-      .catch((err) => {
-        return this.props.displayMessage({
-          title: 'Virhe',
-          body: `"${err.message}"`
-        }, { type: 'warning' });
+      .catch(err => {
+        return this.props.displayMessage(
+          {
+            title: 'Virhe',
+            body: `"${err.message}"`
+          },
+          { type: 'warning' }
+        );
       });
   }
 
@@ -272,11 +314,13 @@ export class ViewTOS extends React.Component {
     this.props.editRecordAttribute(updatedTOSAttribute);
   }
 
-  editMetaDataWithForm (attributes) {
-    this.setState({
-      editingMetaData: false,
-      complementingMetaData: false
-    });
+  editMetaDataWithForm (attributes, stopEditing = true) {
+    if (stopEditing) {
+      this.setState({
+        editingMetaData: false,
+        complementingMetaData: false
+      });
+    }
     this.props.editMetaData(attributes);
   }
 
@@ -285,7 +329,9 @@ export class ViewTOS extends React.Component {
    remove once firefox issue is fixed
    */
   setPhaseVisibility (x, y) {
-    const newString = Math.random().toString(36).replace(/[^a-z]+/g, '');
+    const newString = Math.random()
+      .toString(36)
+      .replace(/[^a-z]+/g, '');
     this.setState({ update: newString });
     this.props.setPhaseVisibility(x, y);
   }
@@ -321,7 +367,14 @@ export class ViewTOS extends React.Component {
   }
 
   generateMetaData (attributeTypes, attributes) {
-    const { modified_at, documentState, editRecord, version, state, modified_by } = this.props.selectedTOS;
+    const {
+      modified_at,
+      documentState,
+      editRecord,
+      version,
+      state,
+      modified_by
+    } = this.props.selectedTOS;
     const formattedDateTime = formatDateTime(modified_at);
 
     const attributeElements = [];
@@ -379,41 +432,51 @@ export class ViewTOS extends React.Component {
             type='button'
             className='btn btn-info btn-sm'
             title={this.state.showMetadata ? 'Pienennä' : 'Laajenna'}
-            onClick={() => this.toggleMetadataVisibility(this.state.showMetadata)}>
+            onClick={() =>
+              this.toggleMetadataVisibility(this.state.showMetadata)
+            }
+          >
             <span
-              className={'fa ' + (this.state.showMetadata ? 'fa-minus' : 'fa-plus')}
+              className={
+                'fa ' + (this.state.showMetadata ? 'fa-minus' : 'fa-plus')
+              }
               aria-hidden='true'
             />
           </button>
-          {this.props.selectedTOS.documentState === 'edit' &&
-          <span className='action-dropdown-button'>
-            <Dropdown
-              children={[
-                {
-                  text: 'Muokkaa metatietoja',
-                  icon: 'fa-pencil',
-                  style: 'btn-primary',
-                  action: () => this.setState({ editingMetaData: true })
-                },
-                {
-                  text: 'Täydennä metatietoja',
-                  icon: 'fa-plus-square',
-                  style: 'btn-primary',
-                  action: () => this.setState({ complementingMetaData: true })
-                },
-                {
-                  text: 'Tuo kuvaus',
-                  icon: 'fa-clone',
-                  style: 'btn-primary',
-                  action: () => this.toggleCloneView()
-                }
-              ]}
-              small={true}
-            />
-          </span>
-          }
+          {this.props.selectedTOS.documentState === 'edit' && (
+            <span className='action-dropdown-button'>
+              <Dropdown
+                children={[
+                  {
+                    text: 'Muokkaa metatietoja',
+                    icon: 'fa-pencil',
+                    style: 'btn-primary',
+                    action: () => this.setState({ editingMetaData: true })
+                  },
+                  {
+                    text: 'Täydennä metatietoja',
+                    icon: 'fa-plus-square',
+                    style: 'btn-primary',
+                    action: () => this.setState({ complementingMetaData: true })
+                  },
+                  {
+                    text: 'Tuo kuvaus',
+                    icon: 'fa-clone',
+                    style: 'btn-primary',
+                    action: () => this.toggleCloneView()
+                  }
+                ]}
+                small={true}
+              />
+            </span>
+          )}
         </div>
-        <div className={'metadata-data-row__secondary ' + (this.state.showMetadata ? '' : 'hidden')}>
+        <div
+          className={
+            'metadata-data-row__secondary ' +
+            (this.state.showMetadata ? '' : 'hidden')
+          }
+        >
           {attributeElements.slice(2)}
         </div>
       </div>
@@ -468,12 +531,17 @@ export class ViewTOS extends React.Component {
     const { attributeTypes, selectedTOS, isFetching, templates } = this.props;
     if (!isFetching && selectedTOS.id) {
       const phasesOrder = Object.keys(selectedTOS.phases);
-      const phaseElements = this.generatePhases(selectedTOS.phases, phasesOrder);
-      const TOSMetaData = this.generateMetaData(attributeTypes, selectedTOS.attributes);
+      const phaseElements = this.generatePhases(
+        selectedTOS.phases,
+        phasesOrder
+      );
+      const TOSMetaData = this.generateMetaData(
+        attributeTypes,
+        selectedTOS.attributes
+      );
       return (
         <div>
           <StickyContainer className='col-xs-12 single-tos-container'>
-
             <TosHeader
               cancelEdit={this.cancelEdit}
               changeStatus={this.changeStatus}
@@ -482,7 +550,7 @@ export class ViewTOS extends React.Component {
               functionId={selectedTOS.function_id}
               name={selectedTOS.name}
               state={selectedTOS.state}
-              setDocumentState={(state) => this.setDocumentState(state)}
+              setDocumentState={state => this.setDocumentState(state)}
               setValidationVisibility={this.setValidationVisibility}
               review={this.review}
               saveDraft={this.saveDraft}
@@ -492,141 +560,159 @@ export class ViewTOS extends React.Component {
             <div className='single-tos-content'>
               <div className='row'>
                 <div className='general-info space-between'>
-                  {this.state.editingMetaData &&
-                  <EditorForm
-                    targetId={this.props.selectedTOS.id}
-                    attributes={this.props.selectedTOS.attributes}
-                    attributeTypes={this.props.attributeTypes}
-                    editMetaDataWithForm={this.editMetaDataWithForm}
-                    editorConfig={{
-                      type: 'function',
-                      action: 'edit'
-                    }}
-                    closeEditorForm={this.cancelMetaDataEdit}
-                    displayMessage={this.props.displayMessage}
-                  />
-                  }
-                  {this.state.complementingMetaData &&
-                  <EditorForm
-                    targetId={this.props.selectedTOS.id}
-                    attributes={this.props.selectedTOS.attributes}
-                    attributeTypes={this.props.attributeTypes}
-                    editMetaDataWithForm={this.editMetaDataWithForm}
-                    editorConfig={{
-                      type: 'function',
-                      action: 'complement'
-                    }}
-                    closeEditorForm={this.cancelMetaDataComplement}
-                    displayMessage={this.props.displayMessage}
-                  />
-                  }
-                  {(!this.state.editingMetaData && !this.state.complementingMetaData) &&
-                  <div className='version-details col-xs-12'>
-                    { TOSMetaData }
-                  </div>
-                  }
+                  {this.state.editingMetaData && (
+                    <EditorForm
+                      targetId={this.props.selectedTOS.id}
+                      attributes={this.props.selectedTOS.attributes}
+                      attributeTypes={this.props.attributeTypes}
+                      editMetaDataWithForm={this.editMetaDataWithForm}
+                      editorConfig={{
+                        type: 'function',
+                        action: 'edit'
+                      }}
+                      closeEditorForm={this.cancelMetaDataEdit}
+                      displayMessage={this.props.displayMessage}
+                    />
+                  )}
+                  {this.state.complementingMetaData && (
+                    <EditorForm
+                      targetId={this.props.selectedTOS.id}
+                      attributes={this.props.selectedTOS.attributes}
+                      attributeTypes={this.props.attributeTypes}
+                      editMetaDataWithForm={this.editMetaDataWithForm}
+                      editorConfig={{
+                        type: 'function',
+                        action: 'complement'
+                      }}
+                      closeEditorForm={this.cancelMetaDataComplement}
+                      displayMessage={this.props.displayMessage}
+                    />
+                  )}
+                  {!this.state.editingMetaData &&
+                    !this.state.complementingMetaData && (
+                      <div className='version-details col-xs-12'>
+                        {TOSMetaData}
+                      </div>
+                    )}
                 </div>
                 <div className='col-xs-12 button-row'>
-                  { selectedTOS.documentState === 'edit' && !this.state.createPhaseMode &&
-                  <span className='pull-right'>
-                    <Dropdown
-                      children={[
-                        {
-                          text: 'Uusi käsittelyvaihe',
-                          icon: 'fa-file-text',
-                          style: 'btn-primary',
-                          action: () => this.addPhase()
-                        }, {
-                          text: 'Tuo käsittelyvaihe',
-                          icon: 'fa-download',
-                          style: 'btn-primary',
-                          action: () => this.toggleImportView()
-                        }, {
-                          text: 'Järjestä käsittelyvaiheita',
-                          icon: 'fa-th-list',
-                          style: 'btn-primary',
-                          action: () => this.toggleReorderView()
-                        }
-                      ]}
-                      small={true}
-                    />
-                    </span>
-                  }
+                  {selectedTOS.documentState === 'edit' &&
+                    !this.state.createPhaseMode && (
+                      <span className='pull-right'>
+                        <Dropdown
+                          children={[
+                            {
+                              text: 'Uusi käsittelyvaihe',
+                              icon: 'fa-file-text',
+                              style: 'btn-primary',
+                              action: () => this.addPhase()
+                            },
+                            {
+                              text: 'Tuo käsittelyvaihe',
+                              icon: 'fa-download',
+                              style: 'btn-primary',
+                              action: () => this.toggleImportView()
+                            },
+                            {
+                              text: 'Järjestä käsittelyvaiheita',
+                              icon: 'fa-th-list',
+                              style: 'btn-primary',
+                              action: () => this.toggleReorderView()
+                            }
+                          ]}
+                          small={true}
+                        />
+                      </span>
+                    )}
                   <button
                     className='btn btn-default btn-sm pull-right'
-                    onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, true)}>
+                    onClick={() =>
+                      this.props.setPhasesVisibility(selectedTOS.phases, true)
+                    }
+                  >
                     Avaa kaikki
                   </button>
                   <button
                     className='btn btn-default btn-sm pull-right'
-                    onClick={() => this.props.setPhasesVisibility(selectedTOS.phases, false)}>
+                    onClick={() =>
+                      this.props.setPhasesVisibility(selectedTOS.phases, false)
+                    }
+                  >
                     Pienennä kaikki
                   </button>
                 </div>
                 <div className='col-xs-12'>
-                  { this.state.createPhaseMode &&
-                  <AddElementInput
-                    type='phase'
-                    submit={this.createNewPhase}
-                    typeOptions={this.generateTypeOptions(this.props.phaseTypes)}
-                    newTypeSpecifier={this.state.phaseTypeSpecifier}
-                    newType={this.state.phaseType}
-                    onTypeSpecifierChange={this.onPhaseTypeSpecifierChange}
-                    onTypeChange={this.onPhaseTypeChange}
-                    onTypeInputChange={this.onPhaseTypeInputChange}
-                    cancel={this.cancelPhaseCreation}
-                  />
-                  }
-                  { phaseElements }
-                  { this.state.showReorderView &&
-                  <Popup
-                    content={
-                      <ReorderView
-                        target='phase'
-                        toggleReorderView={() => this.toggleReorderView()}
-                        keys={Object.keys(selectedTOS.phases)}
-                        values={selectedTOS.phases}
-                        changeOrder={this.props.changeOrder}
-                        parent={null}
-                        attributeTypes={this.props.attributeTypes}
-                        parentName={selectedTOS.function_id + ' ' + selectedTOS.name}
-                      />
-                    }
-                    closePopup={() => this.toggleReorderView()}
-                  />
-                  }
-                  { this.state.showImportView &&
-                  <Popup
-                    content={
-                      <ImportView
-                        level='phase'
-                        toggleImportView={() => this.toggleImportView()}
-                        phases={selectedTOS.phases}
-                        phasesOrder={phasesOrder}
-                        actions={selectedTOS.actions}
-                        records={selectedTOS.records}
-                        importItems={this.props.importItems}
-                        title='käsittelyvaiheita'
-                        targetText={'Tos-kuvaukseen ' + selectedTOS.name}
-                        itemsToImportText='käsittelyvaiheet'
-                      />
-                    }
-                    closePopup={() => this.toggleImportView()}
-                  />
-                  }
-                  { this.state.showCloneView &&
-                  <Popup
-                    content={
-                      <CloneView
-                        cloneFromTemplate={(selectedMethod, id) => this.cloneFromTemplate(selectedMethod, id)}
-                        setNavigationVisibility={this.props.setNavigationVisibility}
-                        templates={templates}
-                        toggleCloneView={() => this.toggleCloneView()}
-                      />
-                    }
-                    closePopup={() => this.toggleCloneView()}
-                  />
-                  }
+                  {this.state.createPhaseMode && (
+                    <AddElementInput
+                      type='phase'
+                      submit={this.createNewPhase}
+                      typeOptions={this.generateTypeOptions(
+                        this.props.phaseTypes
+                      )}
+                      newTypeSpecifier={this.state.phaseTypeSpecifier}
+                      newType={this.state.phaseType}
+                      onTypeSpecifierChange={this.onPhaseTypeSpecifierChange}
+                      onTypeChange={this.onPhaseTypeChange}
+                      onTypeInputChange={this.onPhaseTypeInputChange}
+                      cancel={this.cancelPhaseCreation}
+                    />
+                  )}
+                  {phaseElements}
+                  {this.state.showReorderView && (
+                    <Popup
+                      content={
+                        <ReorderView
+                          target='phase'
+                          toggleReorderView={() => this.toggleReorderView()}
+                          keys={Object.keys(selectedTOS.phases)}
+                          values={selectedTOS.phases}
+                          changeOrder={this.props.changeOrder}
+                          parent={null}
+                          attributeTypes={this.props.attributeTypes}
+                          parentName={
+                            selectedTOS.function_id + ' ' + selectedTOS.name
+                          }
+                        />
+                      }
+                      closePopup={() => this.toggleReorderView()}
+                    />
+                  )}
+                  {this.state.showImportView && (
+                    <Popup
+                      content={
+                        <ImportView
+                          level='phase'
+                          toggleImportView={() => this.toggleImportView()}
+                          phases={selectedTOS.phases}
+                          phasesOrder={phasesOrder}
+                          actions={selectedTOS.actions}
+                          records={selectedTOS.records}
+                          importItems={this.props.importItems}
+                          title='käsittelyvaiheita'
+                          targetText={'Tos-kuvaukseen ' + selectedTOS.name}
+                          itemsToImportText='käsittelyvaiheet'
+                        />
+                      }
+                      closePopup={() => this.toggleImportView()}
+                    />
+                  )}
+                  {this.state.showCloneView && (
+                    <Popup
+                      content={
+                        <CloneView
+                          cloneFromTemplate={(selectedMethod, id) =>
+                            this.cloneFromTemplate(selectedMethod, id)
+                          }
+                          setNavigationVisibility={
+                            this.props.setNavigationVisibility
+                          }
+                          templates={templates}
+                          toggleCloneView={() => this.toggleCloneView()}
+                        />
+                      }
+                      closePopup={() => this.toggleCloneView()}
+                    />
+                  )}
                 </div>
               </div>
             </div>
@@ -640,44 +726,44 @@ export class ViewTOS extends React.Component {
 }
 
 ViewTOS.propTypes = {
-  actionTypes: React.PropTypes.object.isRequired,
-  addAction: React.PropTypes.func.isRequired,
-  addPhase: React.PropTypes.func.isRequired,
-  addRecord: React.PropTypes.func.isRequired,
-  attributeTypes: React.PropTypes.object.isRequired,
-  changeOrder: React.PropTypes.func.isRequired,
-  changeStatus: React.PropTypes.func.isRequired,
-  clearTOS: React.PropTypes.func.isRequired,
-  cloneFromTemplate: React.PropTypes.func.isRequired,
-  displayMessage: React.PropTypes.func.isRequired,
-  editAction: React.PropTypes.func.isRequired,
-  editActionAttribute: React.PropTypes.func.isRequired,
-  editMetaData: React.PropTypes.func.isRequired,
-  editPhase: React.PropTypes.func.isRequired,
-  editPhaseAttribute: React.PropTypes.func.isRequired,
-  editRecord: React.PropTypes.func.isRequired,
-  editRecordAttribute: React.PropTypes.func.isRequired,
-  fetchTOS: React.PropTypes.func.isRequired,
-  importItems: React.PropTypes.func.isRequired,
-  isFetching: React.PropTypes.bool.isRequired,
-  params: React.PropTypes.object.isRequired,
-  phaseTypes: React.PropTypes.object.isRequired,
-  push: React.PropTypes.func.isRequired,
-  recordTypes: React.PropTypes.object.isRequired,
-  removeAction: React.PropTypes.func.isRequired,
-  removePhase: React.PropTypes.func.isRequired,
-  removeRecord: React.PropTypes.func.isRequired,
-  resetTOS: React.PropTypes.func.isRequired,
-  route: React.PropTypes.object.isRequired,
+  actionTypes: PropTypes.object.isRequired,
+  addAction: PropTypes.func.isRequired,
+  addPhase: PropTypes.func.isRequired,
+  addRecord: PropTypes.func.isRequired,
+  attributeTypes: PropTypes.object.isRequired,
+  changeOrder: PropTypes.func.isRequired,
+  changeStatus: PropTypes.func.isRequired,
+  clearTOS: PropTypes.func.isRequired,
+  cloneFromTemplate: PropTypes.func.isRequired,
+  displayMessage: PropTypes.func.isRequired,
+  editAction: PropTypes.func.isRequired,
+  editActionAttribute: PropTypes.func.isRequired,
+  editMetaData: PropTypes.func.isRequired,
+  editPhase: PropTypes.func.isRequired,
+  editPhaseAttribute: PropTypes.func.isRequired,
+  editRecord: PropTypes.func.isRequired,
+  editRecordAttribute: PropTypes.func.isRequired,
+  fetchTOS: PropTypes.func.isRequired,
+  importItems: PropTypes.func.isRequired,
+  isFetching: PropTypes.bool.isRequired,
+  params: PropTypes.object.isRequired,
+  phaseTypes: PropTypes.object.isRequired,
+  push: PropTypes.func.isRequired,
+  recordTypes: PropTypes.object.isRequired,
+  removeAction: PropTypes.func.isRequired,
+  removePhase: PropTypes.func.isRequired,
+  removeRecord: PropTypes.func.isRequired,
+  resetTOS: PropTypes.func.isRequired,
+  route: PropTypes.object.isRequired,
   router: routerShape.isRequired,
-  saveDraft: React.PropTypes.func.isRequired,
-  selectedTOS: React.PropTypes.object.isRequired,
-  setDocumentState: React.PropTypes.func.isRequired,
-  setNavigationVisibility: React.PropTypes.func.isRequired,
-  setPhaseVisibility: React.PropTypes.func.isRequired,
-  setPhasesVisibility: React.PropTypes.func.isRequired,
-  setValidationVisibility: React.PropTypes.func.isRequired,
-  templates: React.PropTypes.array.isRequired
+  saveDraft: PropTypes.func.isRequired,
+  selectedTOS: PropTypes.object.isRequired,
+  setDocumentState: PropTypes.func.isRequired,
+  setNavigationVisibility: PropTypes.func.isRequired,
+  setPhaseVisibility: PropTypes.func.isRequired,
+  setPhasesVisibility: PropTypes.func.isRequired,
+  setValidationVisibility: PropTypes.func.isRequired,
+  templates: PropTypes.array.isRequired
 };
 
 export default withRouter(ViewTOS);

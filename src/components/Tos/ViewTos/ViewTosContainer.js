@@ -45,50 +45,49 @@ import { setValidationVisibility } from '../ValidationBar/reducer';
 
 import ViewTOS from './ViewTos';
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    addAction: bindActionCreators(addAction, dispatch),
-    addPhase: bindActionCreators(addPhase, dispatch),
-    addRecord: bindActionCreators(addRecord, dispatch),
-    changeOrder: bindActionCreators(changeOrder, dispatch),
-    changeStatus: bindActionCreators(changeStatus, dispatch),
-    clearTOS: bindActionCreators(clearTOS, dispatch),
-    cloneFromTemplate: bindActionCreators(cloneFromTemplate, dispatch),
-    displayMessage: (msg, opts) => displayMessage(msg, opts),
-    editMetaData: bindActionCreators(editMetaData, dispatch),
-    editPhase: bindActionCreators(editPhase, dispatch),
-    editPhaseAttribute: bindActionCreators(editPhaseAttribute, dispatch),
-    editAction: bindActionCreators(editAction, dispatch),
-    editActionAttribute: bindActionCreators(editActionAttribute, dispatch),
-    editRecord: bindActionCreators(editRecord, dispatch),
-    editRecordAttribute: bindActionCreators(editRecordAttribute, dispatch),
-    fetchTOS: bindActionCreators(fetchTOS, dispatch),
-    importItems: bindActionCreators(importItems, dispatch),
-    push: (path) => dispatch(push(path)),
-    removeAction: bindActionCreators(removeAction, dispatch),
-    removePhase: bindActionCreators(removePhase, dispatch),
-    removeRecord: bindActionCreators(removeRecord, dispatch),
-    resetTOS: bindActionCreators(resetTOS, dispatch),
-    saveDraft: bindActionCreators(saveDraft, dispatch),
-    setDocumentState: bindActionCreators(setDocumentState, dispatch),
-    setNavigationVisibility: bindActionCreators(setNavigationVisibility, dispatch),
-    setPhasesVisibility: bindActionCreators(setPhasesVisibility, dispatch),
-    setPhaseVisibility: bindActionCreators(setPhaseVisibility, dispatch),
-    setValidationVisibility: bindActionCreators(setValidationVisibility, dispatch)
-  };
-};
+const mapDispatchToProps = dispatch => ({
+  addAction: bindActionCreators(addAction, dispatch),
+  addPhase: bindActionCreators(addPhase, dispatch),
+  addRecord: bindActionCreators(addRecord, dispatch),
+  changeOrder: bindActionCreators(changeOrder, dispatch),
+  changeStatus: bindActionCreators(changeStatus, dispatch),
+  clearTOS: bindActionCreators(clearTOS, dispatch),
+  cloneFromTemplate: bindActionCreators(cloneFromTemplate, dispatch),
+  displayMessage: (msg, opts) => displayMessage(msg, opts),
+  editMetaData: bindActionCreators(editMetaData, dispatch),
+  editPhase: bindActionCreators(editPhase, dispatch),
+  editPhaseAttribute: bindActionCreators(editPhaseAttribute, dispatch),
+  editAction: bindActionCreators(editAction, dispatch),
+  editActionAttribute: bindActionCreators(editActionAttribute, dispatch),
+  editRecord: bindActionCreators(editRecord, dispatch),
+  editRecordAttribute: bindActionCreators(editRecordAttribute, dispatch),
+  fetchTOS: bindActionCreators(fetchTOS, dispatch),
+  importItems: bindActionCreators(importItems, dispatch),
+  push: path => dispatch(push(path)),
+  removeAction: bindActionCreators(removeAction, dispatch),
+  removePhase: bindActionCreators(removePhase, dispatch),
+  removeRecord: bindActionCreators(removeRecord, dispatch),
+  resetTOS: bindActionCreators(resetTOS, dispatch),
+  saveDraft: bindActionCreators(saveDraft, dispatch),
+  setDocumentState: bindActionCreators(setDocumentState, dispatch),
+  setNavigationVisibility: bindActionCreators(
+    setNavigationVisibility,
+    dispatch
+  ),
+  setPhasesVisibility: bindActionCreators(setPhasesVisibility, dispatch),
+  setPhaseVisibility: bindActionCreators(setPhaseVisibility, dispatch),
+  setValidationVisibility: bindActionCreators(setValidationVisibility, dispatch)
+});
 
-const mapStateToProps = (state) => {
-  return {
-    actionTypes: state.ui.actionTypes,
-    attributeTypes: state.ui.attributeTypes,
-    isFetching: state.ui.isFetching || state.selectedTOS.isFetching,
-    items: state.navigation.items,
-    phaseTypes: state.ui.phaseTypes,
-    recordTypes: state.ui.recordTypes,
-    selectedTOS: state.selectedTOS,
-    templates: state.ui.templates
-  };
-};
+const mapStateToProps = state => ({
+  actionTypes: state.ui.actionTypes,
+  attributeTypes: state.ui.attributeTypes,
+  isFetching: state.ui.isFetching || state.selectedTOS.isFetching,
+  items: state.navigation.items,
+  phaseTypes: state.ui.phaseTypes,
+  recordTypes: state.ui.recordTypes,
+  selectedTOS: state.selectedTOS,
+  templates: state.ui.templates
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ViewTOS);
