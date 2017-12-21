@@ -14,7 +14,9 @@ export default () => (
       </a>
     </Banner.Element>
     <Banner.Element background='#ddd'>
-      <Link to='/info'>Tietoa palvelusta</Link>
+      <Link to='/info' target='_blank' rel='noopener norefer'>
+        Tietoa palvelusta
+      </Link>
     </Banner.Element>
   </Banner>
 );
