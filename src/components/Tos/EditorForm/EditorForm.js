@@ -62,7 +62,6 @@ export class EditorForm extends React.Component {
    * @return {void}
    */
   onBlur (value, key, field) {
-    console.log('On Blur!', { value, key, field });
     this.setState(
       state => update(state, this.createUpdate(value, key, field)),
       () =>
@@ -474,7 +473,6 @@ export class EditorForm extends React.Component {
    */
   resolveOnSubmit (e, targetId, stopEditing = true) {
     const { action, type } = this.props.editorConfig;
-    console.log({ action, type, stopEditing });
 
     const displayMessage = stopEditing ? this.props.displayMessage : () => {};
 
@@ -595,7 +593,7 @@ export class EditorForm extends React.Component {
               className='btn btn-primary pull-right editor-form__submit'
               type='submit'
             >
-              Sulje
+              OK
             </button>
             <button
               className='btn btn-danger pull-right editor-form__cancel'

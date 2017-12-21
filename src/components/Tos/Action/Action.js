@@ -238,10 +238,8 @@ export class Action extends React.Component {
     });
     this.props.editRecord(attributes, recordId);
     if (disableEditMode) {
-      console.log('disabling edit mode here');
       this.disableEditMode();
     }
-    console.log('ending the editing');
   }
 
   delete () {
