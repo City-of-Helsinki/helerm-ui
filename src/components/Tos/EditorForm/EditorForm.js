@@ -90,7 +90,7 @@ export class EditorForm extends React.Component {
     for (const attributeType in attributeTypes) {
       if (includes(attributeTypes[attributeType].allowedIn, this.props.editorConfig.type)) {
         if (attributeTypes[attributeType].requiredIf.length) {
-          if (validateConditionalRules(attributeType, attributeTypes, newAttributes)) {
+          if (validateConditionalRules(attributeType, attributeTypes, newAttributes) || newAttributes[attributeType].value) {
             attributesToShow.push(attributeType);
             continue;
           }
@@ -113,7 +113,7 @@ export class EditorForm extends React.Component {
     for (const key in attributeTypes) {
       if (includes(attributeTypes[key].allowedIn, this.props.editorConfig.type)) {
         if (attributeTypes[key].requiredIf.length) {
-          if (validateConditionalRules(key, attributeTypes, newAttributes)) {
+          if (validateConditionalRules(key, attributeTypes, newAttributes) || newAttributes[key].value) {
             complementAttributes.push(key);
           }
         } else {
