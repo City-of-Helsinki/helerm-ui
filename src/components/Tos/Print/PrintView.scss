@@ -1,0 +1,36 @@
+body.helerm-tos-print-view {
+  .navigation-menu {
+    display: none;
+  }
+
+  table td,
+  table th {
+    padding: 0.5em;
+    border: 1px solid #ddd;
+  }
+
+  section {
+    padding: 1em;
+    margin: 1em auto;
+  }
+
+  section section {
+    border: 1px solid #999;
+  }
+
+  div.breadscrumbs {
+    margin-bottom: 0;
+
+    & + h3,
+    & + h4 {
+      margin-top: 0;
+    }
+  }
+
+  @media print {
+    .no-print,
+    .helerm-banner {
+      display: none;
+    }
+  }
+}
