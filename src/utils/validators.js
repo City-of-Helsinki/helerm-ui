@@ -9,10 +9,14 @@ import { includes, difference, uniq } from 'lodash';
  */
 export const validateConditionalRules = (key, attributeTypes, attributes) => {
   const requiredIf = attributeTypes[key].requiredIf;
-  for (const attribute in attributes) {                                         // for each attribute
-    for (const item in requiredIf) {                                            // for each item in requiredIf
-      if (requiredIf[item].key === attribute) {                                 // if requiredIf has attribute
-        if (includes(requiredIf[item].values, attributes[attribute].value)) {   // if requiredIf has same value as attribute
+  for (const attribute in attributes) {
+    // for each attribute
+    for (const item in requiredIf) {
+      // for each item in requiredIf
+      if (requiredIf[item].key === attribute) {
+        // if requiredIf has attribute
+        if (includes(requiredIf[item].values, attributes[attribute].value)) {
+          // if requiredIf has same value as attribute
           return true;
         }
       }
@@ -37,7 +41,11 @@ export const validateTOS = (tos, rules) => {
     }
     if (rules[key].requiredIf.length) {
       for (const item of rules[key].requiredIf) {
-        if (tos.attributes[item.key] && includes(item.values, tos.attributes[item.key]) && !tos.attributes[key]) {
+        if (
+          tos.attributes[item.key] &&
+          includes(item.values, tos.attributes[item.key]) &&
+          !tos.attributes[key]
+        ) {
           errors.push(key);
         }
       }
@@ -55,12 +63,20 @@ export const validateTOS = (tos, rules) => {
 export const validateTOSWarnings = (tos, rules) => {
   const errors = [];
   for (const key in rules) {
-    if (tos.attributes[key] && rules[key].values.length && !isValueValidOption(tos.attributes[key], rules[key].values)) {
+    if (
+      tos.attributes[key] &&
+      rules[key].values.length &&
+      !isValueValidOption(tos.attributes[key], rules[key].values)
+    ) {
       errors.push(key);
     }
     if (rules[key].requiredIf.length) {
       for (const item of rules[key].requiredIf) {
-        if (tos.attributes[item.key] && !includes(item.values, tos.attributes[item.key]) && tos.attributes[key]) {
+        if (
+          tos.attributes[item.key] &&
+          !includes(item.values, tos.attributes[item.key]) &&
+          tos.attributes[key]
+        ) {
           errors.push(key);
         }
       }
@@ -90,7 +106,11 @@ export const validatePhase = (phase, rules) => {
 export const validatePhaseWarnings = (phase, rules) => {
   const errors = [];
   for (const key in rules) {
-    if (phase.attributes[key] && rules[key].values.length && !isValueValidOption(phase.attributes[key], rules[key].values)) {
+    if (
+      phase.attributes[key] &&
+      rules[key].values.length &&
+      !isValueValidOption(phase.attributes[key], rules[key].values)
+    ) {
       errors.push(key);
     }
   }
@@ -118,7 +138,11 @@ export const validateAction = (action, rules) => {
 export const validateActionWarnings = (action, rules) => {
   const errors = [];
   for (const key in rules) {
-    if (action.attributes[key] && rules[key].values.length && !isValueValidOption(action.attributes[key], rules[key].values)) {
+    if (
+      action.attributes[key] &&
+      rules[key].values.length &&
+      !isValueValidOption(action.attributes[key], rules[key].values)
+    ) {
       errors.push(key);
     }
   }
@@ -141,7 +165,11 @@ export const validateRecord = (record, rules) => {
     }
     if (rules[key].requiredIf.length) {
       for (const item of rules[key].requiredIf) {
-        if (record.attributes[item.key] && includes(item.values, record.attributes[item.key]) && !record.attributes[key]) {
+        if (
+          record.attributes[item.key] &&
+          includes(item.values, record.attributes[item.key]) &&
+          !record.attributes[key]
+        ) {
           errors.push(key);
         }
       }
@@ -159,12 +187,20 @@ export const validateRecord = (record, rules) => {
 export const validateRecordWarnings = (record, rules) => {
   const errors = [];
   for (const key in rules) {
-    if (record.attributes[key] && rules[key].values.length && !isValueValidOption(record.attributes[key], rules[key].values)) {
+    if (
+      record.attributes[key] &&
+      rules[key].values.length &&
+      !isValueValidOption(record.attributes[key], rules[key].values)
+    ) {
       errors.push(key);
     }
     if (rules[key].requiredIf.length) {
       for (const item of rules[key].requiredIf) {
-        if (record.attributes[item.key] && !includes(item.values, record.attributes[item.key]) && record.attributes[key]) {
+        if (
+          record.attributes[item.key] &&
+          !includes(item.values, record.attributes[item.key]) &&
+          record.attributes[key]
+        ) {
           errors.push(key);
         }
       }
@@ -175,6 +211,8 @@ export const validateRecordWarnings = (record, rules) => {
 
 const isValueValidOption = (value, options) => {
   const valueArray = value instanceof Array ? value : [value];
-  const optionValues = options.map(option => { return option.value; });
+  const optionValues = options.map(option => {
+    return option.value;
+  });
   return difference(valueArray, optionValues).length === 0;
 };
