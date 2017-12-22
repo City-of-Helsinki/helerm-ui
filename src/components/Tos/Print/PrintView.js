@@ -127,7 +127,11 @@ const mapStateToProps = state => ({
   TOS: denormalizeTOS(state.selectedTOS),
   getAttributeName: key => get(state.ui.attributeTypes, [key, 'name'], key),
   sortAttributeKeys: keys =>
-    keys.sort(key => get(state.ui.attributeTypes, [key, 'index'], Infinity))
+    keys.sort(
+      (a, b) =>
+        get(state.ui.attributeTypes, [a, 'index'], Infinity) -
+        get(state.ui.attributeTypes, [b, 'index'], Infinity)
+    )
 });
 
 const mapDispatchToProps = dispatch =>
