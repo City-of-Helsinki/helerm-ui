@@ -14,6 +14,7 @@ import TosHeader from 'components/Tos/Header/TosHeader';
 
 import Popup from 'components/Popup';
 import Dropdown from 'components/Dropdown';
+import VersionSelector from '../VersionSelector/VersionSelector';
 
 import { formatDateTime, getStatusLabel } from '../../../utils/helpers';
 import {
@@ -66,10 +67,14 @@ export class ViewTOS extends React.Component {
   }
 
   componentDidMount () {
-    const { params: { id }, router, route } = this.props;
+    const { params: { id, version }, router, route } = this.props;
     router.setRouteLeaveHook(route, this.routerWillLeave);
+    let params = {};
+    if (typeof version !== 'undefined') {
+      params.version = version;
+    }
 
-    this.fetchTOS(id);
+    this.fetchTOS(id, params);
   }
 
   componentWillReceiveProps (nextProps) {
@@ -84,9 +89,16 @@ export class ViewTOS extends React.Component {
       this.setState({ originalTos: nextProps.selectedTOS });
     }
 
-    if (nextProps.params.id !== this.props.params.id) {
-      const { id } = nextProps.params;
-      this.fetchTOS(id);
+    if (
+      nextProps.params.id !== this.props.params.id ||
+      nextProps.params.version !== this.props.params.version
+    ) {
+      const { id, version } = nextProps.params;
+      const params = {};
+      if (typeof version !== 'undefined') {
+        params.version = version;
+      }
+      this.fetchTOS(id, params);
     }
 
     if (route && route.path === 'view-tos/:id') {
@@ -528,7 +540,13 @@ export class ViewTOS extends React.Component {
   }
 
   render () {
-    const { attributeTypes, selectedTOS, isFetching, templates } = this.props;
+    const {
+      attributeTypes,
+      selectedTOS,
+      isFetching,
+      templates,
+      params: { id, version }
+    } = this.props;
     if (!isFetching && selectedTOS.id) {
       const phasesOrder = Object.keys(selectedTOS.phases);
       const phaseElements = this.generatePhases(
@@ -540,7 +558,7 @@ export class ViewTOS extends React.Component {
         selectedTOS.attributes
       );
       return (
-        <div>
+        <div key={`${id}.${version}`}>
           <StickyContainer className='col-xs-12 single-tos-container'>
             <TosHeader
               cancelEdit={this.cancelEdit}
@@ -558,6 +576,15 @@ export class ViewTOS extends React.Component {
             />
 
             <div className='single-tos-content'>
+              <div className='row'>
+                <div className='col-md-6'>
+                  <VersionSelector
+                    tosId={selectedTOS.id}
+                    currentVersion={selectedTOS.version}
+                    versions={selectedTOS.version_history}
+                  />
+                </div>
+              </div>
               <div className='row'>
                 <div className='general-info space-between'>
                   {this.state.editingMetaData && (

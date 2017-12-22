@@ -2,15 +2,7 @@ import LTT from 'list-to-tree';
 import { normalize, schema } from 'normalizr';
 import { toastr } from 'react-redux-toastr';
 import moment from 'moment';
-import {
-  filter,
-  find,
-  flatten,
-  includes,
-  isEmpty,
-  map,
-  orderBy
-} from 'lodash';
+import { filter, find, flatten, includes, isEmpty, map, orderBy } from 'lodash';
 
 import {
   DRAFT,
@@ -27,7 +19,10 @@ export function convertToTree (itemList) {
   // ------------------------------------
   itemList.results.map(item => {
     item.name = item.function_id + ' ' + item.name;
-    item.sort_id = item.function_id.substring(item.function_id.length - 2, item.function_id.length);
+    item.sort_id = item.function_id.substring(
+      item.function_id.length - 2,
+      item.function_id.length
+    );
     item.path = [];
   });
   const ltt = new LTT(itemList.results, {
@@ -109,10 +104,15 @@ export function normalizeTosForApi (tos) {
     finalPhases.push(Object.assign({}, phase));
     return phase.actions.map((action, actionIndex) => {
       const actionId = typeof action === 'string' ? action : action.id;
-      Object.assign(finalPhases[phaseIndex].actions, { [actionIndex]: finalTos.actions[actionId] });
+      Object.assign(finalPhases[phaseIndex].actions, {
+        [actionIndex]: finalTos.actions[actionId]
+      });
       return finalTos.actions[actionId].records.map((record, recordsIndex) => {
         const recordId = typeof record === 'string' ? record : record.id;
-        return Object.assign(finalPhases[phaseIndex].actions[actionIndex].records, { [recordsIndex]: finalTos.records[recordId] });
+        return Object.assign(
+          finalPhases[phaseIndex].actions[actionIndex].records,
+          { [recordsIndex]: finalTos.records[recordId] }
+        );
       });
     });
   });
@@ -128,21 +128,30 @@ export function normalizeTosForApi (tos) {
 export function trimAttributes (tosCopy) {
   for (const phase in tosCopy.phases) {
     for (const attribute in tosCopy.phases[phase].attributes) {
-      if (tosCopy.phases[phase].attributes[attribute] === '' || tosCopy.phases[phase].attributes[attribute] === null) {
+      if (
+        tosCopy.phases[phase].attributes[attribute] === '' ||
+        tosCopy.phases[phase].attributes[attribute] === null
+      ) {
         delete tosCopy.phases[phase].attributes[attribute];
       }
     }
   }
   for (const action in tosCopy.actions) {
     for (const attribute in tosCopy.actions[action].attributes) {
-      if (tosCopy.actions[action].attributes[attribute] === '' || tosCopy.actions[action].attributes[attribute] === null) {
+      if (
+        tosCopy.actions[action].attributes[attribute] === '' ||
+        tosCopy.actions[action].attributes[attribute] === null
+      ) {
         delete tosCopy.actions[action].attributes[attribute];
       }
     }
   }
   for (const record in tosCopy.records) {
     for (const attribute in tosCopy.records[record].attributes) {
-      if (tosCopy.records[record].attributes[attribute] === '' || tosCopy.records[record].attributes[attribute] === null) {
+      if (
+        tosCopy.records[record].attributes[attribute] === '' ||
+        tosCopy.records[record].attributes[attribute] === null
+      ) {
         delete tosCopy.records[record].attributes[attribute];
       }
     }
@@ -158,11 +167,11 @@ export function trimAttributes (tosCopy) {
  * @returns {*}
  */
 export function itemById (items, id) {
-  let searchResult = find(items, (item) => (item.id === id));
+  let searchResult = find(items, item => item.id === id);
 
   if (!searchResult) {
-    let filteredItems = filter(items, (item) => (item.children));
-    let subset = flatten(map(filteredItems, (item) => (item.children)));
+    let filteredItems = filter(items, item => item.children);
+    let subset = flatten(map(filteredItems, item => item.children));
 
     if (subset.length !== 0) {
       return itemById(subset, id);
@@ -181,8 +190,8 @@ export function itemById (items, id) {
  * @returns {Window}
  */
 export function centeredPopUp (url, title, w, h) {
-  const left = (screen.width / 2) - (w / 2);
-  const top = (screen.height / 2) - (h / 2);
+  const left = screen.width / 2 - w / 2;
+  const top = screen.height / 2 - h / 2;
   return window.open(
     url,
     title,
@@ -195,7 +204,8 @@ export function centeredPopUp (url, title, w, h) {
     resizable=no,
     copyhistory=no,
     width=${w}, height=${h}, top=${top}, left=${left}
-  `);
+  `
+  );
 }
 
 /**
@@ -262,5 +272,43 @@ export function getBaseValues (attributeTypes, type) {
     { index: attributeTypes['TypeSpecifier'].index, type: 'TypeSpecifier' }
   ];
   const orderedBaseValues = orderBy(baseValues, ['index']);
-  return orderedBaseValues.map((baseValue) => baseValue.type);
+  return orderedBaseValues.map(baseValue => baseValue.type);
+}
+
+/**
+ * Calculate new absolute path given current absolute path and relative path.
+ * @param  {string} absolutePath
+ * @param  {string} relativePath
+ * @return {string}
+ */
+export function getNewPath (absolutePath, relativePath) {
+  const pathParts = absolutePath.split('/').filter(Boolean);
+  const relativeParts = relativePath.split('/').filter(Boolean);
+
+  // Assume that all relative paths start with any other character than '/'.
+  const isRelativeRelative = relativePath.charAt(0) !== '/';
+
+  if (!isRelativeRelative) {
+    // Assume that supposed relative path is aboslute if it's not relative.
+    return relativePath;
+  }
+
+  return (
+    '/' +
+    relativeParts
+      .reduce((absoluteParts, part) => {
+        switch (part) {
+          case '..': {
+            return absoluteParts.slice(0, absoluteParts.length - 1);
+          }
+          case '.': {
+            return absoluteParts;
+          }
+          default: {
+            return [...absoluteParts, part];
+          }
+        }
+      }, pathParts)
+      .join('/')
+  );
 }

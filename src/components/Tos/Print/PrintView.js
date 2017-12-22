@@ -7,7 +7,7 @@ import get from 'lodash/get';
 
 import { fetchTOS } from 'components/Tos/reducer';
 import { setValidationVisibility } from 'components/Tos/ValidationBar/reducer';
-import { getStatusLabel, formatDateTime } from 'utils/helpers';
+import { getStatusLabel, formatDateTime, getNewPath } from 'utils/helpers';
 
 import MetaDataTable from './MetaDataTable';
 import PrintPhase from './PrintPhase';
@@ -18,13 +18,22 @@ class PrintView extends React.Component {
   static BODY_CLASS = 'helerm-tos-print-view';
 
   componentDidMount () {
-    const { fetchTOS, TOS, hideNavigation, params: { id } } = this.props;
+    const {
+      fetchTOS,
+      TOS,
+      hideNavigation,
+      params: { id, version }
+    } = this.props;
     this.addBodyClass();
     hideNavigation();
 
-    const tosAvailable = TOS.id === id;
+    const tosAvailable = TOS.id === id && (!version || TOS.version === version);
     if (!tosAvailable) {
-      fetchTOS(id);
+      let params = {};
+      if (typeof version !== 'undefined') {
+        params.version = version;
+      }
+      fetchTOS(id, params);
     }
   }
 
@@ -56,7 +65,7 @@ class PrintView extends React.Component {
           <div className='no-print btn-group'>
             <Link
               className='btn btn-primary'
-              to={location.pathname.replace('/print', '')}
+              to={getNewPath(location.pathname, '..')}
             >
               Takaisin <i className='fa fa-close' />
             </Link>
