@@ -64,7 +64,11 @@ export class Navigation extends React.Component {
   }
 
   onLeafMouseClick (event, leaf) {
-    this.props.push(`/view-tos/${leaf.id}`);
+    if (leaf.function) {
+      this.props.push(`/view-tos/${leaf.function}`);
+    } else if (leaf.parent) {
+      this.props.push(`/view-classification/${leaf.id}`);
+    }
     this.toggleNavigationVisibility();
   }
 
@@ -86,7 +90,7 @@ export class Navigation extends React.Component {
       if (item.children) {
         this.filter(item.children, filterStatuses);
       }
-      if ((!item.children && !includes(filterStatuses, item.state)) ||
+      if ((!item.children && !includes(filterStatuses, item.function_state)) ||
         (item.children && !item.children.length)) {
         if (item.children && !item.children.length) {
         }

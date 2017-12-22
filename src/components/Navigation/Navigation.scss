@@ -323,6 +323,10 @@ ul:last-child {
   }
 }
 
+.infinity-menu-leaf-container.new-leaf {
+  color: $text-muted;
+}
+
 .infinity-menu-leaf-container:hover {
   color: $link-hover-color;
 }
