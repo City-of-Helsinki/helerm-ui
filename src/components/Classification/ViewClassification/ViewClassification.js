@@ -1,21 +1,7 @@
 import React from 'react';
-import { withRouter, routerShape } from 'react-router';
+import PropTypes from 'prop-types';
 
-import Phase from 'components/Tos/Phase/Phase';
-import AddElementInput from 'components/Tos/AddElementInput/AddElementInput';
-import Attribute from 'components/Tos/Attribute/Attribute';
 import ClassificationHeader from '../Header/ClassificationHeader';
-
-import Popup from 'components/Popup';
-import Dropdown from 'components/Dropdown';
-
-import { formatDateTime, getStatusLabel } from '../../../utils/helpers';
-import {
-  validateTOS,
-  validatePhase,
-  validateAction,
-  validateRecord
-} from '../../../utils/validators';
 
 import './ViewClassification.scss';
 
@@ -24,12 +10,10 @@ export class ViewClassification extends React.Component {
     super(props);
     this.createTos = this.createTos.bind(this);
     this.fetchClassification = this.fetchClassification.bind(this);
-
-    this.state = { };
   }
 
   componentDidMount () {
-    const { params: { id }, router, route } = this.props;
+    const { params: { id } } = this.props;
 
     this.fetchClassification(id);
   }
@@ -53,9 +37,10 @@ export class ViewClassification extends React.Component {
 
   fetchClassification (id, params = {}) {
     if (id) {
-      this.props.fetchClassification(id, params)
+      this.props
+        .fetchClassification(id, params)
         .then(() => this.props.setNavigationVisibility(false))
-        .catch((err) => {
+        .catch(err => {
           if (err instanceof URIError) {
             // We have a 404 from API
             this.props.push(`/404?classification-id=${id}`);
@@ -65,25 +50,29 @@ export class ViewClassification extends React.Component {
   }
 
   createTos () {
-    return this.props.createTos()
-      .then((tos) => {
-        this.props.push(`/view-tos/${tos.payload.id}`);
+    return this.props
+      .createTos()
+      .then(action => {
+        this.props.push(`/view-tos/${action.payload.id}`);
         return this.props.displayMessage({
           title: 'Luonnos',
           body: 'Luonnos tallennettu!'
         });
       })
       .catch(err => {
-        return this.props.displayMessage({
-          title: 'Virhe',
-          body: `"${err.message}"`
-        }, { type: 'error' });
+        return this.props.displayMessage(
+          {
+            title: 'Virhe',
+            body: `"${err.message}"`
+          },
+          { type: 'error' }
+        );
       });
   }
 
   renderClassificationData (label, value) {
     return (
-      <div className="list-group-item col-xs-6">
+      <div className='list-group-item col-xs-6'>
         <strong>{label}</strong>
         <div>{value || '\u00A0'}</div>
       </div>
@@ -93,14 +82,25 @@ export class ViewClassification extends React.Component {
   render () {
     const { classification } = this.props;
     if (classification && classification.id) {
-      const descriptionInternal = this.renderClassificationData('Sisäinen kuvaus', classification.description);
-      const description = this.renderClassificationData('Kuvaus', classification.description);
-      const relatedClassification = this.renderClassificationData('Liittyviä luokituksia', classification.related_classification);
-      const additionalInformation = this.renderClassificationData('Lisätietoa', classification.additional_information);
+      const descriptionInternal = this.renderClassificationData(
+        'Sisäinen kuvaus',
+        classification.description_internal
+      );
+      const description = this.renderClassificationData(
+        'Kuvaus',
+        classification.description
+      );
+      const relatedClassification = this.renderClassificationData(
+        'Liittyviä luokituksia',
+        classification.related_classification
+      );
+      const additionalInformation = this.renderClassificationData(
+        'Lisätietoa',
+        classification.additional_information
+      );
       return (
         <div>
           <div className='col-xs-12 single-classification-container'>
-
             <ClassificationHeader
               code={classification.code}
               title={classification.title}
@@ -111,10 +111,10 @@ export class ViewClassification extends React.Component {
               <div className='row'>
                 <div className='general-info space-between'>
                   <div className='classification-details col-xs-12'>
-                      {description}
-                      {descriptionInternal}
-                      {relatedClassification}
-                      {additionalInformation}
+                    {description}
+                    {descriptionInternal}
+                    {relatedClassification}
+                    {additionalInformation}
                   </div>
                 </div>
               </div>
@@ -128,15 +128,15 @@ export class ViewClassification extends React.Component {
 }
 
 ViewClassification.propTypes = {
-  isFetching: React.PropTypes.bool.isRequired,
-  push: React.PropTypes.func.isRequired,
-  route: React.PropTypes.object.isRequired,
-  router: routerShape.isRequired,
-  createTos: React.PropTypes.func.isRequired,
-  fetchClassification: React.PropTypes.func.isRequired,
-  clearClassification: React.PropTypes.func.isRequired,
-  setNavigationVisibility: React.PropTypes.func.isRequired,
-  displayMessage: React.PropTypes.func.isRequired
+  classification: PropTypes.object,
+  clearClassification: PropTypes.func.isRequired,
+  createTos: PropTypes.func.isRequired,
+  displayMessage: PropTypes.func.isRequired,
+  fetchClassification: PropTypes.func.isRequired,
+  params: PropTypes.object.isRequired,
+  push: PropTypes.func.isRequired,
+  route: PropTypes.object.isRequired,
+  setNavigationVisibility: PropTypes.func.isRequired
 };
 
-export default withRouter(ViewClassification);
+export default ViewClassification;

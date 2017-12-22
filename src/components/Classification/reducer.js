@@ -1,11 +1,7 @@
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
-import { map } from 'lodash';
-
-import { fetchNavigation } from '../Navigation/reducer';
 
 import { default as api } from '../../utils/api';
-import { normalizeTosFromApi, normalizeTosForApi } from '../../utils/helpers';
 
 const initialState = {
   id: null,
@@ -45,7 +41,8 @@ export function receiveClassification (classification) {
 export function fetchClassification (classificationId, params = {}) {
   return function (dispatch) {
     dispatch(createAction(REQUEST_CLASSIFICATION)());
-    return api.get(`classification/${classificationId}`, params)
+    return api
+      .get(`classification/${classificationId}`, params)
       .then(res => {
         if (!res.ok) {
           dispatch(createAction(CLASSIFICATION_ERROR)());
@@ -65,11 +62,15 @@ export function createTos () {
   return function (dispatch, getState) {
     dispatch(createAction(CREATE_TOS)());
     const classification = Object.assign({}, getState().classification);
-    const newTos = Object.assign({}, {
-      classification: classification.id
-    });
+    const newTos = Object.assign(
+      {},
+      {
+        classification: classification.id
+      }
+    );
 
-    return api.post('function', newTos)
+    return api
+      .post('function', newTos)
       .then(res => {
         if (!res.ok) {
           dispatch(createAction(TOS_ERROR)());
@@ -90,7 +91,7 @@ export function receiveNewTOS (tos) {
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
-const requestClassificationAction = (state) => {
+const requestClassificationAction = state => {
   return update(state, {
     isFetching: {
       $set: true
@@ -108,13 +109,13 @@ const clearClassificationAction = () => {
   return initialState;
 };
 
-const classificationErrorAction = (state) => {
+const classificationErrorAction = state => {
   return update(state, {
     classification: { $set: null }
   });
 };
 
-const createTosAction = (state) => {
+const createTosAction = state => {
   return update(state, {
     isFetching: {
       $set: true
@@ -130,7 +131,7 @@ const receiveNewTosAction = (state, { payload }) => {
   });
 };
 
-const tosErrorAction = (state) => {
+const tosErrorAction = state => {
   return update(state, {
     function: {
       $set: null
@@ -138,12 +139,15 @@ const tosErrorAction = (state) => {
   });
 };
 
-export default handleActions({
-  requestClassificationAction,
-  receiveClassificationAction,
-  clearClassificationAction,
-  classificationErrorAction,
-  createTosAction,
-  receiveNewTosAction,
-  tosErrorAction
-}, initialState);
+export default handleActions(
+  {
+    requestClassificationAction,
+    receiveClassificationAction,
+    clearClassificationAction,
+    classificationErrorAction,
+    createTosAction,
+    receiveNewTosAction,
+    tosErrorAction
+  },
+  initialState
+);

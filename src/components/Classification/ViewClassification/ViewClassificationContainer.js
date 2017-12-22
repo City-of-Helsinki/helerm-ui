@@ -11,24 +11,24 @@ import {
   clearClassification
 } from '../reducer';
 
-import { setValidationVisibility } from 'components/Tos/ValidationBar/reducer';
-
 import ViewClassification from './ViewClassification';
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     displayMessage: (msg, opts) => displayMessage(msg, opts),
-    push: (path) => dispatch(push(path)),
+    push: path => dispatch(push(path)),
     createTos: bindActionCreators(createTos, dispatch),
     fetchClassification: bindActionCreators(fetchClassification, dispatch),
     clearClassification: bindActionCreators(clearClassification, dispatch),
-    setNavigationVisibility: bindActionCreators(setNavigationVisibility, dispatch)
+    setNavigationVisibility: bindActionCreators(
+      setNavigationVisibility,
+      dispatch
+    )
   };
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    isFetching: state.ui.isFetching || state.classification.isFetching,
     classification: state.classification
   };
 };
