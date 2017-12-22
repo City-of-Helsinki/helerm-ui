@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
+import { getNewPath } from 'utils/helpers';
 
 import IsAllowed from 'components/IsAllowed/IsAllowed';
 import ActionButton from './ActionButton';
@@ -131,7 +132,7 @@ const ActionButtons = ({
       <span>
         <Link
           className='btn btn-sm btn-primary'
-          to={`/view-tos/${tosId}/print`}
+          to={getNewPath(window.location.pathname, 'print')}
         >
           Tulosta
         </Link>

@@ -7,7 +7,7 @@ import get from 'lodash/get';
 
 import { fetchTOS } from 'components/Tos/reducer';
 import { setValidationVisibility } from 'components/Tos/ValidationBar/reducer';
-import { getStatusLabel, formatDateTime } from 'utils/helpers';
+import { getStatusLabel, formatDateTime, getNewPath } from 'utils/helpers';
 
 import MetaDataTable from './MetaDataTable';
 import PrintPhase from './PrintPhase';
@@ -56,7 +56,7 @@ class PrintView extends React.Component {
           <div className='no-print btn-group'>
             <Link
               className='btn btn-primary'
-              to={location.pathname.replace('/print', '')}
+              to={getNewPath(location.pathname, '..')}
             >
               Takaisin <i className='fa fa-close' />
             </Link>
