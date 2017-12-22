@@ -119,6 +119,7 @@ export class Attribute extends React.Component {
           options={options}
           multi={includes(attribute.multiIn, this.props.parentType)}
           promptTextCreator={this.onPromptCreate}
+          delimiter=';'
         />
       );
     } else if (attribute.values.length === 0 || attribute.type) {
@@ -192,6 +193,7 @@ export class Attribute extends React.Component {
           options={options}
           placeholder={this.resolveBaseAttributePlaceholder() || 'Valitse...'}
           promptTextCreator={this.onPromptCreate}
+          delimiter=';'
         />
       </form>
     );

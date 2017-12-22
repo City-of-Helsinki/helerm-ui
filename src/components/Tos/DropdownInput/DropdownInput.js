@@ -125,6 +125,7 @@ export const DropdownInput = ({
         promptTextCreator={onPromptCreate}
         multi={multi}
         removeSelected={false}
+        delimiter=';'
       />
     );
   }
