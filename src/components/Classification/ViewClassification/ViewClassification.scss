@@ -1,0 +1,32 @@
+.single-classification-container {
+  border: 1px solid grey;
+  border-radius: 4px;
+  background-color: white;
+  padding: 15px 0;
+  margin-bottom: 50px;
+}
+.single-classification-header {
+  padding: 10px 15px;
+  background: white;
+  z-index: 4;
+}
+.single-classification-content {
+  padding: 15px;
+}
+.single-classification-header h4 {
+  margin: 0 0 10px;
+  transition: 0.3s ease-out all;
+}
+.general-info {
+  margin-bottom: 40px;
+}
+.space-between {
+  display: flex;
+  justify-content: space-between;
+}
+.classification-details {
+  flex-direction: column;
+  margin: 10px 15px;
+  padding:10px 15px;
+  border: 1px solid #ddd;
+}

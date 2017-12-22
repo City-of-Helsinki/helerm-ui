@@ -30,7 +30,7 @@ export function setNavigationVisibility (value) {
 export function fetchNavigation () {
   return function (dispatch) {
     dispatch(requestNavigation());
-    return api.get('function', { page_size: RESULTS_PER_PAGE })
+    return api.get('classification', { page_size: RESULTS_PER_PAGE })
       .then(response => response.json())
       .then(json =>
         dispatch(receiveNavigation(json))

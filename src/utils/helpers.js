@@ -18,10 +18,10 @@ export function convertToTree (itemList) {
   // Give each item in the navigation a level specific id for sorting
   // ------------------------------------
   itemList.results.map(item => {
-    item.name = item.function_id + ' ' + item.name;
-    item.sort_id = item.function_id.substring(
-      item.function_id.length - 2,
-      item.function_id.length
+    item.name = item.code + ' ' + item.title;
+    item.sort_id = item.code.substring(
+      item.code.length - 2,
+      item.code.length
     );
     item.path = [];
   });

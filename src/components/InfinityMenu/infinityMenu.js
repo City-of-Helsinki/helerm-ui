@@ -203,12 +203,12 @@ export default class InfinityMenu extends Component {
         } else {
           prevs.push(
             <li key={itemKey}
-                className='infinity-menu-leaf-container'
+                className={'infinity-menu-leaf-container' + (!curr.function ? ' new-leaf' : '')}
                 onMouseDown={(e) => this.props.onLeafMouseDown ? this.props.onLeafMouseDown(e, curr) : null}
                 onMouseUp={(e) => this.props.onLeafMouseUp ? this.props.onLeafMouseUp(e, curr) : null}
                 onClick={(e) => this.props.onLeafMouseClick ? this.props.onLeafMouseClick(e, curr) : null}
             >
-              <span>{curr.name}</span>
+              <span> {curr.name}</span>
             </li>
           );
         }

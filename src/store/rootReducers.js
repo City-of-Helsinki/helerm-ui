@@ -7,6 +7,7 @@ import { default as ui } from './uiReducer';
 import { default as selectedTOS } from '../components/Tos/reducer';
 import { default as navigation } from '../components/Navigation/reducer';
 import { default as validation } from '../components/Tos/ValidationBar/reducer';
+import { default as classification } from '../components/Classification/reducer';
 
 export const makeRootReducer = () => {
   return combineReducers({
@@ -14,6 +15,7 @@ export const makeRootReducer = () => {
     validation,
     routing,
     selectedTOS,
+    classification,
     toastr,
     user,
     ui

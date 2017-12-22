@@ -18,8 +18,8 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state, ownProps) => {
   const { items } = state.navigation;
-  const { selectedTOS } = state;
-  const tos = selectedTOS.id ? itemById(items, selectedTOS.id) : null;
+  const { selectedTOS, classification } = state;
+  const tos = selectedTOS.classification ? itemById(items, selectedTOS.classification) : classification.id ? itemById(items, classification.id) : null;
   const tosPath = ownProps.tosPath ? ownProps.tosPath : tos ? tos.path : [];
 
   return {
