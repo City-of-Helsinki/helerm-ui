@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 
 import ClassificationHeader from '../Header/ClassificationHeader';
 
@@ -105,6 +106,7 @@ export class ViewClassification extends React.Component {
               code={classification.code}
               title={classification.title}
               createTos={this.createTos}
+              hasFunction={!!classification.function}
             />
 
             <div className='single-classification-content'>
@@ -117,6 +119,15 @@ export class ViewClassification extends React.Component {
                     {additionalInformation}
                   </div>
                 </div>
+                {classification.function
+                  ? (
+                    <div className='classification-details col-xs-12'>
+                      <Link to={`/view-tos/${classification.function}`}>
+                          Käsittelyprosessi &raquo;
+                        </Link>
+                    </div>
+                  )
+                  : null}
               </div>
             </div>
           </div>
