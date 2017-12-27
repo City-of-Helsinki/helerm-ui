@@ -49,7 +49,6 @@ const requestNavigationAction = (state) => {
 const receiveNavigationAction = (state, { payload }) => {
   return update(state, {
     items: { $set: payload },
-    is_open: { $set: true },
     isFetching: { $set: false }
   });
 };

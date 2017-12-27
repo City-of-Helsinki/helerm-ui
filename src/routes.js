@@ -2,6 +2,7 @@ import React from 'react';
 import { IndexRoute, Route } from 'react-router';
 import CoreLayout from './layouts/CoreLayout/CoreLayout';
 import InfoLayout from './layouts/InfoLayout/InfoLayout';
+import IndexPage from './components/Index';
 import ViewTOSContainer from './components/Tos/ViewTos/ViewTosContainer';
 import ViewClassificationContainer from './components/Classification/ViewClassification/ViewClassificationContainer';
 import ViewInfo from './components/Info/ViewInfo';
@@ -11,7 +12,13 @@ import NotFound from './components/NotFound/NotFound';
 export default () => (
   <div>
     <Route path='/'>
-      <IndexRoute component={CoreLayout} />
+      <IndexRoute
+        component={() => (
+          <CoreLayout>
+            <IndexPage />
+          </CoreLayout>
+        )}
+      />
       <Route path='view-tos/' component={CoreLayout}>
         <Route path=':id(/version/:version)'>
           <IndexRoute component={ViewTOSContainer} />

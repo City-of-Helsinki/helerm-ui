@@ -42,14 +42,10 @@ export class Navigation extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    const { items, tosPath } = nextProps;
-    this.setState({
+    const { items } = nextProps;
+    this.setState(() => ({
       tree: items
-    }, () => {
-      if (!tosPath.length) {
-        this.props.setNavigationVisibility(true);
-      }
-    });
+    }));
   }
 
   toggleNavigationVisibility () {
