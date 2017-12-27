@@ -121,7 +121,7 @@ export class Navigation extends React.Component {
     }
 
     return (
-      <div className='container-fluid'>
+      <div className='container-fluid helerm-navigation'>
         <InfinityMenu
           filterStatuses={filterStatuses}
           handleStatusFilterChange={this.handleStatusFilterChange}
