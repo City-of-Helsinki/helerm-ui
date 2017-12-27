@@ -1,430 +1,441 @@
 @import '../../styles/vendor/hel-components/variables';
+.helerm-navigation {
+  // Give some space for filter dropdown
+  padding-bottom: 100px;
 
-.navigation-menu {
-  position: relative;
-  background-color: white;
-  padding: 15px 15px 0 15px;
-  border: 1px solid $black50;
-  border-radius: $border-radius-base;
-
-  &.navigation-open {
-    padding-bottom: 15px;
-  }
-
-  .navigation-header  {
-    padding-bottom: 15px;
-  }
-
-  .breadcrumb {
+  .navigation-menu {
+    position: relative;
+    background-color: white;
+    padding: 15px 15px 0 15px;
+    border: 1px solid $black50;
     border-radius: $border-radius-base;
-    float: left;
-    width: 95%;
-    margin-bottom: 0;
-  }
 
-  .nav-button {
-    border-radius: $border-radius-base;
-    padding: 8px 12px;
-  }
+    &.navigation-open {
+      padding-bottom: 15px;
+    }
 
-  .navigation-filters {
-    padding-bottom: 15px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid;
+    .navigation-header  {
+      padding-bottom: 15px;
+    }
 
-    .Select {
-      width: 100%;
+    .breadcrumb {
+      border-radius: $border-radius-base;
+      float: left;
+      width: 95%;
+      margin-bottom: 0;
+    }
 
-      &-control {
-        border: 2px solid #dce4ec;
-        border-radius: $border-radius-base;
-        margin: 0;
-        height: 43px;
-      }
+    .nav-button {
+      border-radius: $border-radius-base;
+      padding: 8px 12px;
+    }
 
-      &-placeholder {
-        line-height: 40px;
+    .navigation-filters {
+      padding-bottom: 15px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid;
+
+      .Select {
+        width: 100%;
+
+        &-control {
+          border: 2px solid #dce4ec;
+          border-radius: $border-radius-base;
+          margin: 0;
+          height: 43px;
+        }
+
+        &-placeholder {
+          line-height: 40px;
+        }
+
+        &-menu-outer {
+          z-index: 9999 !important;
+        }
       }
     }
   }
-}
 
-.navigation-menu-items {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  position: relative;
-}
-
-.nav-title {
-  font-size: 1.8rem;
-  letter-spacing: 0.03rem;
-  text-decoration: underline;
-  margin: 0 0 0.5rem 35px;
-  line-height: 3.4rem;
-  display: block;
-  position: relative;
-}
-
-.nav-title:after {
-  content: '';
-  width: 9px;
-  height: 9px;
-  position: absolute;
-  left: -15px;
-  border-radius: 50%;
-  background: $black90;
-  top: 50%;
-  margin-top: -5px;
-}
-
-.nav-title:before {
-  left: -35px;
-  position: absolute;
-  content: '';
-  border-left: 1px solid $black90;
-  border-bottom: 1px solid $black90;
-  top: -50%;
-  width: 20px;
-  height: 100%;
-}
-
-.nav-main-title {
-  padding: 0 0 0 10px;
-  position: relative;
-}
-
-.nav-main-title:before {
-  content: '';
-  left: 0;
-  top: 20px;
-  border-left: 1px solid $black90;
-  position: absolute;
-  height: 20px;
-}
-
-.nav-main-title:after {
-  width: 9px;
-  height: 9px;
-  position: absolute;
-  left: -4px;
-  top: 14px;
-  content: '';
-  border-radius: 50%;
-  background: $black90;
-}
-
-.nav-section {
-  margin: -1.7rem 0 -1.7rem 24px;
-  padding: 1.7rem 0;
-  position: relative;
-}
-
-.nav-section:after {
-  position: absolute;
-  left: -24px;
-  border-left: 1px solid $black90;
-  height: 100%;
-  content: '';
-  top: 0;
-}
-
-.react-infinity-menu-default-search-input {
-  display: block;
-  position: relative;
-  //z-index: 1;
-  width: 100%;
-  height: $input-height-base; // Make inputs at least the height of their button counterpart (base line-height + padding + border)
-  padding: $padding-base-vertical $padding-base-horizontal;
-  font-size: $font-size-base;
-  line-height: $line-height-base;
-  color: $input-color;
-  background-color: $input-bg;
-  background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
-  border: 2px solid $input-border;
-  border-radius: $input-border-radius; // Note: This has no effect on <select>s in some browsers, due to the limited stylability of <select>s in CSS.
-  &::placeholder, &::-webkit-input-placeholder, &:-ms-input-placeholder {
-
+  .navigation-menu-items {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    position: relative;
   }
 
-  // Unstyle the caret on `<select>`s in IE10+.
-  &::-ms-expand {
-    border: 0;
-    background-color: transparent;
+  .nav-title {
+    font-size: 1.8rem;
+    letter-spacing: 0.03rem;
+    text-decoration: underline;
+    margin: 0 0 0.5rem 35px;
+    line-height: 3.4rem;
+    display: block;
+    position: relative;
   }
 
-  // Disabled and read-only inputs
-  //
-  // HTML5 says that controls under a fieldset > legend:first-child won't be
-  // disabled if the fieldset is disabled. Due to implementation difficulty, we
-  // don't honor that edge case; we style them as disabled anyway.
-  &[disabled],
-  &[readonly],
-  fieldset[disabled] & {
-    background-color: $input-bg-disabled;
-    opacity: 1; // iOS fix for unreadable disabled content; see https://github.com/twbs/bootstrap/issues/11655
+  .nav-title:after {
+    content: '';
+    width: 9px;
+    height: 9px;
+    position: absolute;
+    left: -15px;
+    border-radius: 50%;
+    background: $black90;
+    top: 50%;
+    margin-top: -5px;
   }
 
-  &[disabled],
-  fieldset[disabled] & {
-    cursor: $cursor-disabled;
+  .nav-title:before {
+    left: -35px;
+    position: absolute;
+    content: '';
+    border-left: 1px solid $black90;
+    border-bottom: 1px solid $black90;
+    top: -50%;
+    width: 20px;
+    height: 100%;
   }
 
-  // [converter] extracted textarea& to textarea.form-control
-}
+  .nav-main-title {
+    padding: 0 0 0 10px;
+    position: relative;
+  }
 
-.infinity-menu-node-container {
-  font-size: 1.5rem;
-  letter-spacing: 0.03rem;
-  color: $link-color;
-  width: 99%;
-  left: 1px;
-  padding-left: 35px;
-  line-height: 3.4rem;
-  display: block;
-  position: relative;
-  z-index: 1;
-  &:hover {
+  .nav-main-title:before {
+    content: '';
+    left: 0;
+    top: 20px;
+    border-left: 1px solid $black90;
+    position: absolute;
+    height: 20px;
+  }
+
+  .nav-main-title:after {
+    width: 9px;
+    height: 9px;
+    position: absolute;
+    left: -4px;
+    top: 14px;
+    content: '';
+    border-radius: 50%;
+    background: $black90;
+  }
+
+  .nav-section {
+    margin: -1.7rem 0 -1.7rem 24px;
+    padding: 1.7rem 0;
+    position: relative;
+  }
+
+  .nav-section:after {
+    position: absolute;
+    left: -24px;
+    border-left: 1px solid $black90;
+    height: 100%;
+    content: '';
+    top: 0;
+  }
+
+  .react-infinity-menu-default-search-input {
+    display: block;
+    position: relative;
+    //z-index: 1;
+    width: 100%;
+    height: $input-height-base; // Make inputs at least the height of their button counterpart (base line-height + padding + border)
+    padding: $padding-base-vertical $padding-base-horizontal;
+    font-size: $font-size-base;
+    line-height: $line-height-base;
+    color: $input-color;
+    background-color: $input-bg;
+    background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
+    border: 2px solid $input-border;
+    border-radius: $input-border-radius; // Note: This has no effect on <select>s in some browsers, due to the limited stylability of <select>s in CSS.
+    &::placeholder,
+    &::-webkit-input-placeholder,
+    &:-ms-input-placeholder {
+    }
+
+    // Unstyle the caret on `<select>`s in IE10+.
+    &::-ms-expand {
+      border: 0;
+      background-color: transparent;
+    }
+
+    // Disabled and read-only inputs
+    //
+    // HTML5 says that controls under a fieldset > legend:first-child won't be
+    // disabled if the fieldset is disabled. Due to implementation difficulty, we
+    // don't honor that edge case; we style them as disabled anyway.
+    &[disabled],
+    &[readonly],
+    fieldset[disabled] & {
+      background-color: $input-bg-disabled;
+      opacity: 1; // iOS fix for unreadable disabled content; see https://github.com/twbs/bootstrap/issues/11655
+    }
+
+    &[disabled],
+    fieldset[disabled] & {
+      cursor: $cursor-disabled;
+    }
+
+    // [converter] extracted textarea& to textarea.form-control
+  }
+
+  .infinity-menu-node-container {
+    font-size: 1.5rem;
+    letter-spacing: 0.03rem;
+    color: $link-color;
+    width: 99%;
+    left: 1px;
+    padding-left: 35px;
+    line-height: 3.4rem;
+    display: block;
+    position: relative;
+    z-index: 1;
+    &:hover {
+      background: #f2f2f2;
+    }
+    & a:hover {
+      color: lighten($link-color, 10);
+    }
+  }
+
+  .infinity-menu-node-container:hover:after {
     background: #f2f2f2;
   }
-  & a:hover {
-    color: lighten($link-color, 10);
+
+  .infinity-menu-node-container label {
+    margin-bottom: 0;
+    cursor: pointer;
   }
-}
 
-.infinity-menu-node-container:hover:after {
-  background: #f2f2f2;
-}
+  .infinity-menu-display-tree-container > .infinity-menu-node-container {
+    text-transform: uppercase;
+  }
 
-.infinity-menu-node-container label {
-  margin-bottom: 0;
-  cursor: pointer;
-}
+  .infinity-menu-node-container:hover {
+    color: $link-hover-color;
+    cursor: pointer;
+  }
 
-.infinity-menu-display-tree-container > .infinity-menu-node-container {
-  text-transform: uppercase;
-}
+  .infinity-menu-display-tree-container {
+    padding-top: 0.25rem;
+    z-index: 0;
+    position: relative;
+  }
 
-.infinity-menu-node-container:hover {
-  color: $link-hover-color;
-  cursor: pointer;
-}
+  .infinity-menu-display-tree-container ul {
+    padding: 0 0 0 24px;
+    -webkit-padding-before: 0;
+    position: relative;
+    &:before {
+      content: '-';
+      height: 26px;
+      width: 15px;
+      margin-top: 10px;
+      color: #191919;
+      background-color: #fff;
+      font-size: 27px;
+      font-weight: 500;
+      border-bottom: 0px;
+      position: absolute;
+      left: 17px;
+      top: -30px;
+      z-index: 2;
+      pointer-events: none;
+    }
+  }
 
-.infinity-menu-display-tree-container {
-  padding-top: 0.25rem;
-  z-index: 0;
-  position: relative;
-}
+  .infinity-menu-node-container:hover + ul:before {
+    background-color: #f2f2f2;
+  }
 
-.infinity-menu-display-tree-container ul {
-  padding: 0 0 0 24px;
-  -webkit-padding-before: 0;
-  position: relative;
-  &:before {
-    content: '-';
-    height: 26px;
-    width: 15px;
-    margin-top: 10px;
-    color: #191919;
-    background-color: #fff;
-    font-size: 27px;
-    font-weight: 500;
-    border-bottom: 0px;
+  .infinity-menu-display-tree-container ul:nth-last-child(n + 2) {
+    border-left: 1px solid $black90;
+    margin-top: -20px;
+    padding-top: 20px;
+  }
+
+  ul:last-child {
+    top: -20px;
+    padding-top: 20px;
+  }
+
+  .infinity-menu-display-tree-container > .infinity-menu-node-container {
+    left: 1px;
+  }
+
+  .infinity-menu-leaf-container:after {
+    content: '';
+    width: 9px;
+    height: 9px;
     position: absolute;
-    left: 17px;
-    top: -30px;
+    left: 20px;
+    border-radius: 50%;
+    background: $black90;
+    top: 50%;
+    margin-top: -5px;
+    pointer-events: none;
+  }
+
+  .infinity-menu-node-container:after {
+    content: '+';
+    height: 23px;
+    width: 10px;
+    color: #191919;
+    border-bottom: 0px;
+    background-color: white;
+    font-size: 25px;
+    font-weight: 500;
+    position: absolute;
+    left: 15px;
+    top: -3px;
     z-index: 2;
     pointer-events: none;
   }
-}
 
-.infinity-menu-node-container:hover + ul:before {
-  background-color: #f2f2f2;
-}
-
-.infinity-menu-display-tree-container ul:nth-last-child(n+2) {
-  border-left: 1px solid $black90;
-  margin-top: -20px;
-  padding-top: 20px;
-}
-
-ul:last-child {
-  top: -20px;
-  padding-top: 20px;
-}
-
-.infinity-menu-display-tree-container > .infinity-menu-node-container {
-  left: 1px;
-}
-
-.infinity-menu-leaf-container:after {
-  content: '';
-  width: 9px;
-  height: 9px;
-  position: absolute;
-  left: 20px;
-  border-radius: 50%;
-  background: $black90;
-  top: 50%;
-  margin-top: -5px;
-  pointer-events: none;
-}
-
-.infinity-menu-node-container:after {
-  content: '+';
-  height: 23px;
-  width: 10px;
-  color: #191919;
-  border-bottom: 0px;
-  background-color: white;
-  font-size: 25px;
-  font-weight: 500;
-  position: absolute;
-  left: 15px;
-  top: -3px;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.react-infinity-menu-default-search-input:focus {
-  z-index: 2;
-}
-
-.infinity-menu-node-container:before, .infinity-menu-leaf-container:before {
-  left: -1px;
-  position: absolute;
-  content: '';
-  border-left: 1px solid $black90;
-  border-bottom: 1px solid $black90;
-  top: -50%;
-  width: 20px;
-  height: 100%;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.infinity-menu-display-tree-container > .infinity-menu-node-container:first-child:before {
-  border-left: none;
-}
-
-.infinity-menu-leaf-container {
-  font-size: 1.5rem;
-  letter-spacing: 0.03rem;
-  padding: 2px 0px 0px 35px;
-  font-weight: 400;
-  color: $link-color;
-  background: white;
-  line-height: 3.4rem;
-  display: block;
-  position: relative;
-  cursor: pointer;
-  left: 1px;
-  top: 3px;
-  &:hover {
-    background: #f2f2f2;
+  .react-infinity-menu-default-search-input:focus {
+    z-index: 2;
   }
-  & a:hover {
-    color: lighten($link-color, 10);
+
+  .infinity-menu-node-container:before,
+  .infinity-menu-leaf-container:before {
+    left: -1px;
+    position: absolute;
+    content: '';
+    border-left: 1px solid $black90;
+    border-bottom: 1px solid $black90;
+    top: -50%;
+    width: 20px;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
   }
-}
 
-.infinity-menu-leaf-container.new-leaf {
-  color: $text-muted;
-}
+  .infinity-menu-display-tree-container
+    > .infinity-menu-node-container:first-child:before {
+    border-left: none;
+  }
 
-.infinity-menu-leaf-container:hover {
-  color: $link-hover-color;
-}
+  .infinity-menu-leaf-container {
+    font-size: 1.5rem;
+    letter-spacing: 0.03rem;
+    padding: 2px 0px 0px 35px;
+    font-weight: 400;
+    color: $link-color;
+    background: white;
+    line-height: 3.4rem;
+    display: block;
+    position: relative;
+    cursor: pointer;
+    left: 1px;
+    top: 3px;
+    &:hover {
+      background: #f2f2f2;
+    }
+    & a:hover {
+      color: lighten($link-color, 10);
+    }
+  }
 
-.navigation-menu-items {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  position: relative;
-}
+  .infinity-menu-leaf-container.new-leaf {
+    color: $text-muted;
+  }
 
-.nav-title {
-  font-size: 1.8rem;
-  letter-spacing: 0.03rem;
-  margin-bottom: 0.5rem;
-  text-decoration: underline;
-  margin: 0 0 0 35px;
-  line-height: 3.4rem;
-  display: block;
-  position: relative;
-}
-
-.nav-title:after {
-  content: '';
-  width: 9px;
-  height: 9px;
-  position: absolute;
-  left: 0px;
-  border-radius: 50%;
-  background: $black90;
-  margin-top: 1.2rem;
-}
-
-.nav-title:before {
-  left: -35px;
-  position: absolute;
-  content: '';
-  border-left: 1px solid $black90;
-  border-bottom: 1px solid $black90;
-  top: -50%;
-  width: 20px;
-  height: 100%;
-}
-
-.nav-main-title {
-  padding: 0 0 0 10px;
-  position: relative;
-}
-
-.nav-main-title:before {
-  content: '';
-  left: 0;
-  top: 20px;
-  border-left: 1px solid $black90;
-  position: absolute;
-  height: 20px;
-}
-
-.nav-main-title:after {
-  width: 9px;
-  height: 9px;
-  position: absolute;
-  left: -4px;
-  top: 14px;
-  content: '';
-  border-radius: 50%;
-  background: $black90;
-}
-
-.nav-section {
-  margin: -1.7rem 0 -1.7rem 24px;
-  padding: 1.7rem 0;
-  position: relative;
-}
-
-.nav-section:after {
-  position: absolute;
-  left: -24px;
-  border-left: 1px solid $black90;
-  height: 100%;
-  content: '';
-  top: 0;
-}
-
-.nav-path-list {
-  cursor: pointer;
-  line-height: 33px;
-}
-
-.nav-path-list:hover {
-  div {
+  .infinity-menu-leaf-container:hover {
     color: $link-hover-color;
+  }
+
+  .navigation-menu-items {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    position: relative;
+  }
+
+  .nav-title {
+    font-size: 1.8rem;
+    letter-spacing: 0.03rem;
+    margin-bottom: 0.5rem;
+    text-decoration: underline;
+    margin: 0 0 0 35px;
+    line-height: 3.4rem;
+    display: block;
+    position: relative;
+  }
+
+  .nav-title:after {
+    content: '';
+    width: 9px;
+    height: 9px;
+    position: absolute;
+    left: 0px;
+    border-radius: 50%;
+    background: $black90;
+    margin-top: 1.2rem;
+  }
+
+  .nav-title:before {
+    left: -35px;
+    position: absolute;
+    content: '';
+    border-left: 1px solid $black90;
+    border-bottom: 1px solid $black90;
+    top: -50%;
+    width: 20px;
+    height: 100%;
+  }
+
+  .nav-main-title {
+    padding: 0 0 0 10px;
+    position: relative;
+  }
+
+  .nav-main-title:before {
+    content: '';
+    left: 0;
+    top: 20px;
+    border-left: 1px solid $black90;
+    position: absolute;
+    height: 20px;
+  }
+
+  .nav-main-title:after {
+    width: 9px;
+    height: 9px;
+    position: absolute;
+    left: -4px;
+    top: 14px;
+    content: '';
+    border-radius: 50%;
+    background: $black90;
+  }
+
+  .nav-section {
+    margin: -1.7rem 0 -1.7rem 24px;
+    padding: 1.7rem 0;
+    position: relative;
+  }
+
+  .nav-section:after {
+    position: absolute;
+    left: -24px;
+    border-left: 1px solid $black90;
+    height: 100%;
+    content: '';
+    top: 0;
+  }
+
+  .nav-path-list {
+    cursor: pointer;
+    line-height: 33px;
+  }
+
+  .nav-path-list:hover {
+    div {
+      color: $link-hover-color;
+    }
   }
 }
