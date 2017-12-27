@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import Select from 'react-select';
 import classnames from 'classnames';
 import SearchInput from './searchInput';
+import ClassificationLink from './classificationLink';
 import NestedObjects from 'nested-objects';
 import _get from 'lodash/get';
 
@@ -208,7 +209,10 @@ export default class InfinityMenu extends Component {
                 onMouseUp={(e) => this.props.onLeafMouseUp ? this.props.onLeafMouseUp(e, curr) : null}
                 onClick={(e) => this.props.onLeafMouseClick ? this.props.onLeafMouseClick(e, curr) : null}
             >
-              <span> {curr.name}</span>
+              <span>
+                {curr.name}{' '}
+                <ClassificationLink id={curr.id}/>
+              </span>
             </li>
           );
         }
@@ -254,7 +258,10 @@ export default class InfinityMenu extends Component {
                    onClick={(e) => this.onNodeClick(tree, curr, keyPath, e)}
                    className='infinity-menu-node-container'
               >
-                <label>{nodeName}</label>
+                <label>
+                  {nodeName}{' '}
+                  <ClassificationLink id={curr.id} />
+                </label>
               </div>
             );
           }
@@ -279,7 +286,9 @@ export default class InfinityMenu extends Component {
                    onClick={(e) => this.onNodeClick(tree, curr, keyPath, e)}
                    className='infinity-menu-node-container'
               >
-                <label>{nodeName}</label>
+                <label>{nodeName}{' '}
+                  <ClassificationLink id={curr.id} />
+                </label>
               </div>
             );
           }

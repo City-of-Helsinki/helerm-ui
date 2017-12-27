@@ -188,6 +188,9 @@
   &:hover {
     background: #f2f2f2;
   }
+  & a:hover {
+    color: lighten($link-color, 10);
+  }
 }
 
 .infinity-menu-node-container:hover:after {
@@ -320,6 +323,9 @@ ul:last-child {
   top: 3px;
   &:hover {
     background: #f2f2f2;
+  }
+  & a:hover {
+    color: lighten($link-color, 10);
   }
 }
 
