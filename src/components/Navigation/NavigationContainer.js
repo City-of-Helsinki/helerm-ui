@@ -26,7 +26,7 @@ const mapStateToProps = (state, ownProps) => {
     tosPath,
     is_open: state.navigation.is_open,
     isFetching: state.navigation.isFetching,
-    items,
+    items: JSON.parse(JSON.stringify(items)), // TODO: Unhack this when Navigation doesn't mutate state
     selectedTOS
   };
 };
