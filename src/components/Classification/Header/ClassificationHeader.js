@@ -5,9 +5,9 @@ import { EDIT } from '../../../../config/constants';
 import IsAllowed from 'components/IsAllowed/IsAllowed';
 import ClassificationButton from './ClassificationButton';
 
-const ClassificationHeader = ({ code, title, createTos }) => {
+const ClassificationHeader = ({ code, title, createTos, hasFunction }) => {
   const classificationName = `${code} ${title}`;
-  const creatable = (
+  const creatable = !hasFunction ? (
     <IsAllowed to={EDIT}>
       <span>
         <ClassificationButton
@@ -18,7 +18,7 @@ const ClassificationHeader = ({ code, title, createTos }) => {
         />
       </span>
     </IsAllowed>
-  );
+  ) : null;
 
   return (
     <div className='single-classification-header'>
@@ -33,7 +33,12 @@ const ClassificationHeader = ({ code, title, createTos }) => {
 ClassificationHeader.propTypes = {
   code: PropTypes.string.isRequired,
   createTos: PropTypes.func.isRequired,
+  hasFunction: PropTypes.bool,
   title: PropTypes.string.isRequired
+};
+
+ClassificationHeader.defaultProps = {
+  hasFunction: false
 };
 
 export default ClassificationHeader;
