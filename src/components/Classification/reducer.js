@@ -2,6 +2,7 @@ import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
 
 import { default as api } from '../../utils/api';
+import { fetchNavigation } from '../Navigation/reducer';
 
 const initialState = {
   id: null,
@@ -78,7 +79,10 @@ export function createTos () {
         }
         return res.json();
       })
-      .then(json => dispatch(receiveNewTOS(json)));
+      .then(json => {
+        dispatch(fetchNavigation());
+        return dispatch(receiveNewTOS(json));
+      });
   };
 }
 
