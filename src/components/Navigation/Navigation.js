@@ -142,6 +142,8 @@ export class Navigation extends React.Component {
 Navigation.propTypes = {
   fetchNavigation: PropTypes.func.isRequired,
   is_open: PropTypes.bool.isRequired,
+  // One does not simply mutate props unless one is Navigation and the prop is `items`.
+  // Sorry, didn't find out where the devil is doing the mutations :'(
   items: PropTypes.array.isRequired,
   onLeafMouseClick: PropTypes.func,
   push: PropTypes.func.isRequired,
