@@ -1,4 +1,4 @@
-import { validateTOS } from 'utils/validators';
+import { validateTOS, validateTOSWarnings } from 'utils/validators';
 
 import attributeRules from './attributeRules.json';
 import validTOS from './validTOS.json';
@@ -91,6 +91,80 @@ describe('(TOS validation)', () => {
 
       it('The error should be RetentionPeriodStart', () => {
         expect(errors[0]).to.equal('RetentionPeriodStart');
+      });
+    });
+    describe('InformationSystem has value outside of allowed values', () => {
+      const errors = validateTOS(
+        {
+          ...validTOS,
+          attributes: {
+            ...validTOS.attributes,
+            InformationSystem: 'Muu järjestelmä'
+          }
+        },
+        attributeRules
+      );
+
+      it('Should return an array', () => {
+        expect(Array.isArray(errors)).to.equal(true);
+      });
+
+      it('Should have no errors', () => {
+        expect(errors.length).to.equal(0);
+      });
+    });
+  });
+
+  describe('(TOS validation warnings) Warning validation', () => {
+    describe('No warnings', () => {
+      const warnings = validateTOSWarnings(validTOS, attributeRules);
+
+      it('Should return an array', () => {
+        expect(Array.isArray(warnings)).to.equal(true);
+      });
+
+      it('Should not have warnings', () => {
+        expect(warnings.length).to.equal(0);
+      });
+    });
+
+    describe('InformationSystem has value outside of allowed values', () => {
+      const warnings = validateTOSWarnings(
+        {
+          ...validTOS,
+          attributes: {
+            ...validTOS.attributes,
+            InformationSystem: 'Muu järjestelmä'
+          }
+        },
+        attributeRules
+      );
+
+      it('Should return an array', () => {
+        expect(Array.isArray(warnings)).to.equal(true);
+      });
+
+      it('Should have one warning', () => {
+        expect(warnings.length).to.equal(1);
+      });
+
+      it('The warning should be "InformationSystem"', () => {
+        expect(warnings[0]).to.equal('InformationSystem');
+      });
+    });
+
+    describe('PublicityClass has value outside of allowed values', () => {
+      const warnings = validateTOSWarnings(
+        unallowedPublicityClassTOS,
+        attributeRules
+      );
+
+      it('Should return an array', () => {
+        expect(Array.isArray(warnings)).to.equal(true);
+      });
+
+      it('Should have no warnings', () => {
+        expect(warnings.length).to.equal(0);
       });
     });
   });
