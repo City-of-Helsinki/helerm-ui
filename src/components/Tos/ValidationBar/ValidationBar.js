@@ -45,12 +45,12 @@ const styles = {
   }
 };
 
-const FILTER_VALUE_MISSING = 'missing';
-const FILTER_VALUE_WARN = 'warn';
+const FILTER_VALUE_ERROR = 'error';
+const FILTER_VALUE_WARN = 'warning';
 
 const filterStatuses = [
-  { value: FILTER_VALUE_MISSING, label: 'Puuttuvat' },
-  { value: FILTER_VALUE_WARN, label: 'Virheelliset' }
+  { value: FILTER_VALUE_ERROR, label: 'Virheet' },
+  { value: FILTER_VALUE_WARN, label: 'Huomautukset' }
 ];
 
 export class ValidationBar extends Component {
@@ -64,7 +64,7 @@ export class ValidationBar extends Component {
   }
 
   generateInvalidAttributes (validate, validateWarn, values) {
-    const showInvalidAttributes = this.getFilterByStatus(FILTER_VALUE_MISSING);
+    const showInvalidAttributes = this.getFilterByStatus(FILTER_VALUE_ERROR);
     const showWarnAttributes = this.getFilterByStatus(FILTER_VALUE_WARN);
     const invalidAttributes = showInvalidAttributes ? validate(values, this.props.attributeTypes) : [];
     const warnAttributes = showWarnAttributes ? validateWarn(values, this.props.attributeTypes) : [];
@@ -91,7 +91,7 @@ export class ValidationBar extends Component {
 
   generateAttributeSection (validateRequired, validateWarn, elements) {
     const { attributeTypes } = this.props;
-    const showInvalidAttributes = this.getFilterByStatus(FILTER_VALUE_MISSING);
+    const showInvalidAttributes = this.getFilterByStatus(FILTER_VALUE_ERROR);
     const showWarnAttributes = this.getFilterByStatus(FILTER_VALUE_WARN);
     const mappedAttributeSections = map(elements, (element, index) => {
       const invalidAttributes = showInvalidAttributes ? validateRequired(element, attributeTypes) : [];
