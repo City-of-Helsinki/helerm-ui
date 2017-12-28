@@ -1,5 +1,7 @@
 import { includes, difference, uniq } from 'lodash';
 
+import { VALIDATION_SPECIAL_CASES } from '../../config/constants';
+
 /**
  * Validate conditional rules
  * @param key
@@ -34,17 +36,37 @@ export const validateConditionalRules = (key, attributeTypes, attributes) => {
 export const validateTOS = (tos, rules) => {
   const errors = [];
   for (const key in rules) {
-    if (rules[key].required && includes(rules[key].requiredIn, 'function')) {
-      if (!tos.attributes[key]) {
-        errors.push(key);
-      }
+    const rule = rules[key];
+    const isRequired = rules[key].required;
+    const isRequiredInFunction = includes(rule.requiredIn, 'function');
+    const tosHasRuleAttribute = !!tos.attributes[key];
+    const isValid = includes(
+      rule.values.map(obj => obj.value),
+      tos.attributes[key]
+    );
+    const allowValuesOutsideChoices = includes(
+      VALIDATION_SPECIAL_CASES.function.allow_values_outside_choices,
+      key
+    );
+
+    if (
+      (isRequired && isRequiredInFunction && !tosHasRuleAttribute) ||
+      (tosHasRuleAttribute && !isValid && !allowValuesOutsideChoices)
+    ) {
+      errors.push(key);
     }
-    if (rules[key].requiredIf.length) {
-      for (const item of rules[key].requiredIf) {
+
+    const isConditionallyRequired = rule.requiredIf.length !== 0;
+    if (isConditionallyRequired) {
+      for (const item of rule.requiredIf) {
+        const predicateValue = tos.attributes[item.key];
+        const hasPredicate = typeof predicateValue === 'string';
+        const isRequired =
+          hasPredicate && includes(item.values, predicateValue);
+
         if (
-          tos.attributes[item.key] &&
-          includes(item.values, tos.attributes[item.key]) &&
-          !tos.attributes[key]
+          (isRequired && !tosHasRuleAttribute) ||
+          (!isRequired && tosHasRuleAttribute)
         ) {
           errors.push(key);
         }
