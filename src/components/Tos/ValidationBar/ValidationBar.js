@@ -39,6 +39,7 @@ const styles = {
   },
   content: {
     height: '100%',
+    minHeight: '400px',
     position: 'relative',
     overflow: 'auto'
   }
@@ -194,7 +195,7 @@ export class ValidationBar extends Component {
     const sidebarContent = selectedTOS.id ? this.renderContent() : <div/>;
 
     return (
-      <div>
+      <div className='helerm-validation-bar'>
         <SideBar
           sidebar={sidebarContent}
           open={this.props.is_open}
