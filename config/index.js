@@ -57,7 +57,7 @@ config.globals = {
   __DEV__: config.env === 'development',
   __PROD__: config.env === 'production',
   __TEST__: config.env === 'test',
-  __COVERAGE__: false, //!argv.watch && config.env === 'test',
+  __COVERAGE__: !argv.watch && config.env === 'test',
   __BASENAME__: JSON.stringify(process.env.BASENAME || ''),
   CLIENT_ID: process.env.CLIENT_ID,
   CLIENT_SECRET: process.env.CLIENT_SECRET,
