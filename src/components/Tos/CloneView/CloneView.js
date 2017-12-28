@@ -73,8 +73,8 @@ export class CloneView extends React.Component {
     const treeViewProps = {
       tosPath: [],
       onLeafMouseClick: (event, leaf) => {
-        const { id, name } = leaf;
-        return this.selectItem({ id, name });
+        const { name } = leaf;
+        return this.selectItem({ id: leaf.function, name });
       }
     };
 
