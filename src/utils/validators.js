@@ -83,14 +83,22 @@ export const validateTOS = (tos, rules) => {
  * @returns {Array}
  */
 export const validateTOSWarnings = (tos, rules) => {
-  const errors = [];
+  const warnings = [];
   for (const key in rules) {
+    const rule = rules[key];
+    const attributeValue = tos.attributes[key];
+    const allowOutsideValues = includes(
+      VALIDATION_SPECIAL_CASES.function.allow_values_outside_choices,
+      key
+    );
+
     if (
-      tos.attributes[key] &&
-      rules[key].values.length &&
-      !isValueValidOption(tos.attributes[key], rules[key].values)
+      attributeValue &&
+      rule.values.length &&
+      !isValueValidOption(attributeValue, rule.values) &&
+      allowOutsideValues
     ) {
-      errors.push(key);
+      warnings.push(key);
     }
     if (rules[key].requiredIf.length) {
       for (const item of rules[key].requiredIf) {
@@ -99,12 +107,12 @@ export const validateTOSWarnings = (tos, rules) => {
           !includes(item.values, tos.attributes[item.key]) &&
           tos.attributes[key]
         ) {
-          errors.push(key);
+          warnings.push(key);
         }
       }
     }
   }
-  return uniq(errors);
+  return uniq(warnings);
 };
 
 /**
