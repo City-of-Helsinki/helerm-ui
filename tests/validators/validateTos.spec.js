@@ -4,6 +4,7 @@ import attributeRules from './attributeRules.json';
 import validTOS from './validTOS.json';
 import TOSmissingSSN from './TOSmissingSSN.json';
 import unallowedPublicityClassTOS from './unallowedPublicityClassTOS';
+import errorsAndWarningsTOS from './errorsAndWarningsTOS';
 
 describe('(TOS validation)', () => {
   describe('(TOS validation errors) Error validation', () => {
@@ -165,6 +166,38 @@ describe('(TOS validation)', () => {
 
       it('Should have no warnings', () => {
         expect(warnings.length).to.equal(0);
+      });
+    });
+  });
+
+  describe('(TOS validation errors & warnings)', () => {
+    describe('(Errors)', () => {
+      const errors = validateTOS(errorsAndWarningsTOS, attributeRules);
+
+      it('Should have two errors', () => {
+        expect(errors.length).to.equal(2);
+      });
+
+      it('Should have PublicityClass error', () => {
+        expect(errors.includes('PublicityClass'));
+      });
+      it('Should have RetentionPeriodStart error', () => {
+        expect(errors.includes('RetentionPeriodStart'));
+      });
+    });
+
+    describe('(Warnings)', () => {
+      const warnings = validateTOSWarnings(
+        errorsAndWarningsTOS,
+        attributeRules
+      );
+      console.log(JSON.stringify([...warnings], null, 2));
+      it('Should have 1 warning', () => {
+        expect(warnings.length).to.equal(1);
+      });
+
+      it('Should have InformationSystem warning', () => {
+        expect(warnings.includes('InformationSystem'));
       });
     });
   });
