@@ -40,10 +40,9 @@ export const validateTOS = (tos, rules) => {
     const isRequired = rules[key].required;
     const isRequiredInFunction = includes(rule.requiredIn, 'function');
     const tosHasRuleAttribute = !!tos.attributes[key];
-    const isValid = includes(
-      rule.values.map(obj => obj.value),
-      tos.attributes[key]
-    );
+    const isValid =
+      includes(rule.values.map(obj => obj.value), tos.attributes[key]) ||
+      rule.values.length === 0;
     const allowValuesOutsideChoices = includes(
       VALIDATION_SPECIAL_CASES.function.allow_values_outside_choices,
       key
@@ -91,6 +90,22 @@ export const validateTOSWarnings = (tos, rules) => {
       VALIDATION_SPECIAL_CASES.function.allow_values_outside_choices,
       key
     );
+    if (key === 'RetentionPeriodStart') {
+      console.log(
+        JSON.stringify(
+          {
+            key,
+            rule: rule.name,
+            attributeValue,
+            allowOutsideValues,
+            ruleValues: rule.values.map(obj => obj.value),
+            isValueValidOption: isValueValidOption(attributeValue, rule.values)
+          },
+          null,
+          2
+        )
+      );
+    }
 
     if (
       attributeValue &&
@@ -99,17 +114,6 @@ export const validateTOSWarnings = (tos, rules) => {
       allowOutsideValues
     ) {
       warnings.push(key);
-    }
-    if (rules[key].requiredIf.length) {
-      for (const item of rules[key].requiredIf) {
-        if (
-          tos.attributes[item.key] &&
-          !includes(item.values, tos.attributes[item.key]) &&
-          tos.attributes[key]
-        ) {
-          warnings.push(key);
-        }
-      }
     }
   }
   return uniq(warnings);

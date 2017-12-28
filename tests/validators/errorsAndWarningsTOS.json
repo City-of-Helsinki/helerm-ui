@@ -1,0 +1,655 @@
+{
+  "id": "6f134634c4dd448a9a4c3c2574f5200c",
+  "attributes": {
+    "SocialSecurityNumber": "Sisältää henkilötunnuksen",
+    "RetentionPeriod": "-1",
+    "RetentionPeriodStart": "Asiakirjan päivämäärä",
+    "InformationSystem": ["Ahjo", "Tietojärjestelmä"],
+    "PersonalData": "Sisältää henkilötietoja",
+    "RetentionReason":
+      "Ei sp:Taloushallinto 2 - kunnallisten asiakirjojen säilytysaikasuositus",
+    "PublicityClass": "Not_allowed_outside_value_list",
+    "AdditionalInformation": "aasdfjasdfffffasdf fff"
+  },
+  "phases": [
+    {
+      "id": "2cbd0bcc4b934c0297d6ecac25dea836",
+      "attributes": {
+        "TypeSpecifier": "asdfsadfsdf",
+        "InformationSystem": ["Lupapiste", "Muu järjestelmä"],
+        "AdditionalInformation": "asdf foobar asdf ",
+        "PhaseType": "Vireillepano/-tulo"
+      },
+      "name": "asdfsadfsdf",
+      "function": "6f134634c4dd448a9a4c3c2574f5200c",
+      "actions": [
+        {
+          "id": "2bbf1f3169224214bd8bb739bca3d39c",
+          "attributes": {
+            "TypeSpecifier": "Testaus",
+            "InformationSystem": ["Muu järjestelmä", "Ahjo"],
+            "ActionType": "Oletusarvo"
+          },
+          "name": "Testaus",
+          "phase": "2cbd0bcc4b934c0297d6ecac25dea836",
+          "records": [
+            {
+              "id": "d6917dea422742bea19c48f30d005246",
+              "attributes": {
+                "SocialSecurityNumber": "Ei sisällä henkilötunnusta",
+                "TypeSpecifier": "Testaus",
+                "RetentionPeriodStart": "Asiakirjan päivämäärä",
+                "InformationSystem": [
+                  "Lupapiste",
+                  "Ahjo",
+                  "Muu tietojärjestelmä"
+                ],
+                "RecordType": "arviointi",
+                "PersonalData": "Sisältää henkilötietoja",
+                "RetentionPeriod": "0",
+                "PublicityClass": "Ei-julkinen",
+                "RetentionReason":
+                  "Ei sp:Taloushallinto 2 - kunnallisten asiakirjojen säilytysaikasuositus"
+              },
+              "name": "Testaus",
+              "action": "2bbf1f3169224214bd8bb739bca3d39c",
+              "parent": null,
+              "created_at": "2017-12-28T14:46:05.253211Z",
+              "modified_at": "2017-12-28T14:46:05.253227Z",
+              "index": 1
+            }
+          ],
+          "created_at": "2017-12-28T14:46:05.249616Z",
+          "modified_at": "2017-12-28T14:46:05.249633Z",
+          "index": 1
+        }
+      ],
+      "created_at": "2017-12-28T14:46:05.246281Z",
+      "modified_at": "2017-12-28T14:46:05.246302Z",
+      "index": 1
+    },
+    {
+      "id": "be3b145f629541c39ca30ff815deb96d",
+      "attributes": {
+        "InformationSystem": "Ahjo",
+        "PhaseType": "Vireillepano/-tulo"
+      },
+      "name": "Vireillepano/-tulo",
+      "function": "6f134634c4dd448a9a4c3c2574f5200c",
+      "actions": [],
+      "created_at": "2017-12-28T14:46:05.258569Z",
+      "modified_at": "2017-12-28T14:46:05.258586Z",
+      "index": 2
+    }
+  ],
+  "version": 112,
+  "state": "draft",
+  "classification_code": "00 00 01",
+  "classification_title": "Vaalien järjestäminen",
+  "function_id": "00 00 01",
+  "name": "Vaalien järjestäminen",
+  "parent": "3093acdfb5274601ab146ec474c184a8",
+  "classification": "edd201136e2a405a98a51801108abea5",
+  "version_history": [
+    {
+      "version": 2,
+      "state": "draft",
+      "modified_at": "2017-06-06T05:47:57.013400Z"
+    },
+    {
+      "version": 3,
+      "state": "draft",
+      "modified_at": "2017-06-06T06:57:28.581738Z"
+    },
+    {
+      "version": 4,
+      "state": "draft",
+      "modified_at": "2017-06-06T06:58:00.564603Z"
+    },
+    {
+      "version": 5,
+      "state": "draft",
+      "modified_at": "2017-06-06T06:58:44.334575Z"
+    },
+    {
+      "version": 6,
+      "state": "draft",
+      "modified_at": "2017-06-06T07:00:44.289239Z"
+    },
+    {
+      "version": 7,
+      "state": "draft",
+      "modified_at": "2017-06-06T09:37:30.884036Z"
+    },
+    {
+      "version": 8,
+      "state": "draft",
+      "modified_at": "2017-06-06T11:42:48.233259Z"
+    },
+    {
+      "version": 9,
+      "state": "draft",
+      "modified_at": "2017-06-06T11:43:27.598901Z"
+    },
+    {
+      "version": 10,
+      "state": "draft",
+      "modified_at": "2017-06-06T11:56:12.691121Z"
+    },
+    {
+      "version": 11,
+      "state": "draft",
+      "modified_at": "2017-06-06T11:57:01.086895Z"
+    },
+    {
+      "version": 12,
+      "state": "draft",
+      "modified_at": "2017-06-06T12:55:43.590533Z"
+    },
+    {
+      "version": 13,
+      "state": "draft",
+      "modified_at": "2017-06-06T13:04:10.542850Z"
+    },
+    {
+      "version": 14,
+      "state": "draft",
+      "modified_at": "2017-06-07T07:46:49.413733Z"
+    },
+    {
+      "version": 15,
+      "state": "draft",
+      "modified_at": "2017-06-14T10:57:24.171498Z"
+    },
+    {
+      "version": 16,
+      "state": "draft",
+      "modified_at": "2017-06-14T10:57:42.770508Z"
+    },
+    {
+      "version": 17,
+      "state": "draft",
+      "modified_at": "2017-06-14T11:19:20.876902Z"
+    },
+    {
+      "version": 18,
+      "state": "draft",
+      "modified_at": "2017-06-14T11:31:19.058690Z"
+    },
+    {
+      "version": 19,
+      "state": "draft",
+      "modified_at": "2017-06-15T08:01:24.244650Z"
+    },
+    {
+      "version": 20,
+      "state": "draft",
+      "modified_at": "2017-06-15T08:04:29.856328Z"
+    },
+    {
+      "version": 21,
+      "state": "draft",
+      "modified_at": "2017-06-15T08:14:13.883974Z"
+    },
+    {
+      "version": 22,
+      "state": "draft",
+      "modified_at": "2017-06-15T09:00:17.177716Z"
+    },
+    {
+      "version": 23,
+      "state": "draft",
+      "modified_at": "2017-06-15T09:38:16.341587Z"
+    },
+    {
+      "version": 24,
+      "state": "draft",
+      "modified_at": "2017-06-15T09:42:21.022753Z"
+    },
+    {
+      "version": 25,
+      "state": "draft",
+      "modified_at": "2017-06-15T09:51:55.733142Z"
+    },
+    {
+      "version": 26,
+      "state": "draft",
+      "modified_at": "2017-06-15T09:52:26.208451Z"
+    },
+    {
+      "version": 27,
+      "state": "draft",
+      "modified_at": "2017-06-15T10:16:13.108652Z"
+    },
+    {
+      "version": 28,
+      "state": "draft",
+      "modified_at": "2017-06-15T10:24:22.916653Z"
+    },
+    {
+      "version": 29,
+      "state": "draft",
+      "modified_at": "2017-06-19T07:48:08.443869Z"
+    },
+    {
+      "version": 30,
+      "state": "draft",
+      "modified_at": "2017-06-19T08:02:34.963997Z"
+    },
+    {
+      "version": 31,
+      "state": "draft",
+      "modified_at": "2017-06-19T08:57:28.824979Z"
+    },
+    {
+      "version": 32,
+      "state": "draft",
+      "modified_at": "2017-06-19T16:20:41.444506Z"
+    },
+    {
+      "version": 33,
+      "state": "draft",
+      "modified_at": "2017-06-19T16:32:40.975891Z"
+    },
+    {
+      "version": 34,
+      "state": "draft",
+      "modified_at": "2017-06-21T13:11:09.892313Z"
+    },
+    {
+      "version": 35,
+      "state": "draft",
+      "modified_at": "2017-06-21T13:18:24.242991Z"
+    },
+    {
+      "version": 36,
+      "state": "draft",
+      "modified_at": "2017-06-21T14:28:56.068763Z"
+    },
+    {
+      "version": 37,
+      "state": "draft",
+      "modified_at": "2017-06-21T14:35:37.749520Z"
+    },
+    {
+      "version": 38,
+      "state": "draft",
+      "modified_at": "2017-06-21T15:07:35.655698Z"
+    },
+    {
+      "version": 39,
+      "state": "draft",
+      "modified_at": "2017-06-21T15:17:28.399703Z"
+    },
+    {
+      "version": 40,
+      "state": "draft",
+      "modified_at": "2017-06-21T15:34:40.890544Z"
+    },
+    {
+      "version": 41,
+      "state": "draft",
+      "modified_at": "2017-06-21T15:34:51.294513Z"
+    },
+    {
+      "version": 42,
+      "state": "draft",
+      "modified_at": "2017-06-21T15:35:09.361959Z"
+    },
+    {
+      "version": 43,
+      "state": "draft",
+      "modified_at": "2017-06-21T15:35:19.475461Z"
+    },
+    {
+      "version": 44,
+      "state": "draft",
+      "modified_at": "2017-06-21T15:39:23.328624Z"
+    },
+    {
+      "version": 45,
+      "state": "draft",
+      "modified_at": "2017-06-21T15:39:30.550460Z"
+    },
+    {
+      "version": 46,
+      "state": "draft",
+      "modified_at": "2017-06-21T15:39:37.520978Z"
+    },
+    {
+      "version": 47,
+      "state": "draft",
+      "modified_at": "2017-06-21T15:41:50.038570Z"
+    },
+    {
+      "version": 48,
+      "state": "draft",
+      "modified_at": "2017-06-21T15:49:18.717194Z"
+    },
+    {
+      "version": 49,
+      "state": "draft",
+      "modified_at": "2017-06-21T15:51:21.172864Z"
+    },
+    {
+      "version": 50,
+      "state": "draft",
+      "modified_at": "2017-06-21T15:54:08.987340Z"
+    },
+    {
+      "version": 51,
+      "state": "draft",
+      "modified_at": "2017-06-21T16:00:03.592772Z"
+    },
+    {
+      "version": 52,
+      "state": "draft",
+      "modified_at": "2017-06-21T16:03:45.777039Z"
+    },
+    {
+      "version": 53,
+      "state": "draft",
+      "modified_at": "2017-06-21T16:27:46.715879Z"
+    },
+    {
+      "version": 54,
+      "state": "draft",
+      "modified_at": "2017-06-21T16:27:57.236370Z"
+    },
+    {
+      "version": 55,
+      "state": "draft",
+      "modified_at": "2017-06-21T16:28:05.573304Z"
+    },
+    {
+      "version": 56,
+      "state": "draft",
+      "modified_at": "2017-06-21T16:28:39.701154Z"
+    },
+    {
+      "version": 57,
+      "state": "draft",
+      "modified_at": "2017-06-21T16:28:45.291435Z"
+    },
+    {
+      "version": 58,
+      "state": "draft",
+      "modified_at": "2017-06-21T16:28:59.886185Z"
+    },
+    {
+      "version": 59,
+      "state": "draft",
+      "modified_at": "2017-06-21T16:29:08.572340Z"
+    },
+    {
+      "version": 60,
+      "state": "draft",
+      "modified_at": "2017-06-21T16:30:28.304149Z"
+    },
+    {
+      "version": 61,
+      "state": "draft",
+      "modified_at": "2017-06-21T16:30:33.962807Z"
+    },
+    {
+      "version": 62,
+      "state": "draft",
+      "modified_at": "2017-06-27T08:26:15.739734Z"
+    },
+    {
+      "version": 63,
+      "state": "draft",
+      "modified_at": "2017-06-27T10:12:25.060693Z"
+    },
+    {
+      "version": 64,
+      "state": "draft",
+      "modified_at": "2017-06-27T11:52:36.402140Z"
+    },
+    {
+      "version": 65,
+      "state": "draft",
+      "modified_at": "2017-06-28T12:48:16.028694Z"
+    },
+    {
+      "version": 66,
+      "state": "draft",
+      "modified_at": "2017-06-28T12:48:32.659039Z"
+    },
+    {
+      "version": 67,
+      "state": "draft",
+      "modified_at": "2017-06-28T12:49:23.286955Z"
+    },
+    {
+      "version": 68,
+      "state": "draft",
+      "modified_at": "2017-06-28T12:49:48.016129Z"
+    },
+    {
+      "version": 69,
+      "state": "draft",
+      "modified_at": "2017-06-28T12:49:53.298157Z"
+    },
+    {
+      "version": 70,
+      "state": "draft",
+      "modified_at": "2017-06-28T12:54:48.133739Z"
+    },
+    {
+      "version": 71,
+      "state": "draft",
+      "modified_at": "2017-06-28T12:56:13.479309Z"
+    },
+    {
+      "version": 72,
+      "state": "draft",
+      "modified_at": "2017-06-28T12:56:45.800566Z"
+    },
+    {
+      "version": 73,
+      "state": "draft",
+      "modified_at": "2017-06-28T13:03:06.549966Z"
+    },
+    {
+      "version": 74,
+      "state": "draft",
+      "modified_at": "2017-06-28T13:21:16.618762Z"
+    },
+    {
+      "version": 75,
+      "state": "draft",
+      "modified_at": "2017-06-28T13:21:43.921983Z"
+    },
+    {
+      "version": 76,
+      "state": "draft",
+      "modified_at": "2017-06-28T13:21:48.380227Z"
+    },
+    {
+      "version": 77,
+      "state": "draft",
+      "modified_at": "2017-06-28T13:21:56.032112Z"
+    },
+    {
+      "version": 78,
+      "state": "draft",
+      "modified_at": "2017-06-28T13:22:00.957114Z"
+    },
+    {
+      "version": 79,
+      "state": "draft",
+      "modified_at": "2017-06-28T13:22:10.104436Z"
+    },
+    {
+      "version": 80,
+      "state": "draft",
+      "modified_at": "2017-06-28T13:22:19.405066Z"
+    },
+    {
+      "version": 81,
+      "state": "draft",
+      "modified_at": "2017-06-28T13:31:26.353218Z"
+    },
+    {
+      "version": 82,
+      "state": "draft",
+      "modified_at": "2017-06-28T13:59:00.820343Z"
+    },
+    {
+      "version": 83,
+      "state": "draft",
+      "modified_at": "2017-06-29T11:37:30.079224Z"
+    },
+    {
+      "version": 84,
+      "state": "draft",
+      "modified_at": "2017-09-11T10:30:07.098677Z"
+    },
+    {
+      "version": 85,
+      "state": "draft",
+      "modified_at": "2017-11-29T11:04:20.275911Z"
+    },
+    {
+      "version": 86,
+      "state": "draft",
+      "modified_at": "2017-12-14T07:27:42.295799Z"
+    },
+    {
+      "version": 87,
+      "state": "draft",
+      "modified_at": "2017-12-14T07:27:50.523395Z"
+    },
+    {
+      "version": 88,
+      "state": "draft",
+      "modified_at": "2017-12-14T07:28:17.448889Z"
+    },
+    {
+      "version": 89,
+      "state": "draft",
+      "modified_at": "2017-12-14T07:28:29.433033Z"
+    },
+    {
+      "version": 90,
+      "state": "draft",
+      "modified_at": "2017-12-14T07:31:40.383236Z"
+    },
+    {
+      "version": 91,
+      "state": "draft",
+      "modified_at": "2017-12-14T07:33:41.962650Z"
+    },
+    {
+      "version": 92,
+      "state": "draft",
+      "modified_at": "2017-12-14T07:33:56.730823Z"
+    },
+    {
+      "version": 93,
+      "state": "draft",
+      "modified_at": "2017-12-14T07:35:25.033081Z"
+    },
+    {
+      "version": 94,
+      "state": "draft",
+      "modified_at": "2017-12-14T07:35:33.044703Z"
+    },
+    {
+      "version": 95,
+      "state": "draft",
+      "modified_at": "2017-12-14T08:16:54.053489Z"
+    },
+    {
+      "version": 96,
+      "state": "draft",
+      "modified_at": "2017-12-14T08:33:32.628107Z"
+    },
+    {
+      "version": 97,
+      "state": "draft",
+      "modified_at": "2017-12-14T14:48:26.396168Z"
+    },
+    {
+      "version": 98,
+      "state": "draft",
+      "modified_at": "2017-12-14T15:39:32.460644Z"
+    },
+    {
+      "version": 99,
+      "state": "draft",
+      "modified_at": "2017-12-14T15:39:45.293432Z"
+    },
+    {
+      "version": 100,
+      "state": "draft",
+      "modified_at": "2017-12-27T12:36:00.128310Z"
+    },
+    {
+      "version": 101,
+      "state": "draft",
+      "modified_at": "2017-12-27T12:38:48.673812Z"
+    },
+    {
+      "version": 102,
+      "state": "draft",
+      "modified_at": "2017-12-27T12:39:52.667245Z"
+    },
+    {
+      "version": 103,
+      "state": "draft",
+      "modified_at": "2017-12-27T12:43:31.079005Z"
+    },
+    {
+      "version": 104,
+      "state": "draft",
+      "modified_at": "2017-12-27T15:40:33.017689Z"
+    },
+    {
+      "version": 105,
+      "state": "draft",
+      "modified_at": "2017-12-27T16:03:26.464783Z"
+    },
+    {
+      "version": 106,
+      "state": "draft",
+      "modified_at": "2017-12-27T16:08:06.578117Z"
+    },
+    {
+      "version": 107,
+      "state": "draft",
+      "modified_at": "2017-12-27T16:11:41.144098Z"
+    },
+    {
+      "version": 108,
+      "state": "draft",
+      "modified_at": "2017-12-27T16:12:27.546273Z"
+    },
+    {
+      "version": 109,
+      "state": "draft",
+      "modified_at": "2017-12-28T07:28:23.699869Z"
+    },
+    {
+      "version": 110,
+      "state": "draft",
+      "modified_at": "2017-12-28T12:07:37.164256Z"
+    },
+    {
+      "version": 111,
+      "state": "draft",
+      "modified_at": "2017-12-28T12:21:52.676456Z"
+    },
+    {
+      "version": 112,
+      "state": "draft",
+      "modified_at": "2017-12-28T14:46:05.241686Z"
+    }
+  ],
+  "created_at": "2017-12-28T14:46:05.241659Z",
+  "modified_at": "2017-12-28T14:46:05.241686Z",
+  "error_count": 0,
+  "valid_from": null,
+  "valid_to": null
+}
