@@ -31,6 +31,14 @@ export class CloneView extends React.Component {
     };
   }
 
+  componentDidMount () {
+    this.props.setNavigationVisibility(true);
+  }
+
+  componentWillUnmount () {
+    this.props.setNavigationVisibility(false);
+  }
+
   cloneFromTemplate (id) {
     const { selectedMethod } = this.state;
     const { toggleCloneView, cloneFromTemplate, setNavigationVisibility } = this.props;
