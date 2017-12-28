@@ -1,0 +1,2376 @@
+{
+  "PhaseType": {
+    "index": 1,
+    "name": "Käsittelyvaiheen tyyppi",
+    "values": [
+      {
+        "id": "d728a0f5533f48c2a1656f55363077e5",
+        "created_at": "2017-04-20T08:16:22.866797Z",
+        "modified_at": "2017-04-21T10:32:58.009099Z",
+        "value": "Neuvonta/Ohjaus",
+        "index": 1
+      },
+      {
+        "id": "3cef2d70a33242209be4b6f2587ebd3c",
+        "created_at": "2017-04-20T08:16:22.871024Z",
+        "modified_at": "2017-04-21T10:32:58.007101Z",
+        "value": "Vireillepano/-tulo",
+        "index": 2
+      },
+      {
+        "id": "6edcb9a2755a4427a7d6968d7a870d6a",
+        "created_at": "2017-04-20T08:16:22.871981Z",
+        "modified_at": "2017-04-21T10:32:58.007727Z",
+        "value": "Valmistelu/Käsittely",
+        "index": 3
+      },
+      {
+        "id": "c89d551680104d52a85266e28c353327",
+        "created_at": "2017-04-20T08:16:22.872935Z",
+        "modified_at": "2017-04-21T10:32:58.008400Z",
+        "value": "Päätöksenteko",
+        "index": 4
+      },
+      {
+        "id": "fa8ddb74e5af4e62b77aaee179913abc",
+        "created_at": "2017-04-20T08:16:22.873905Z",
+        "modified_at": "2017-04-21T10:32:58.009727Z",
+        "value": "Toimeenpano",
+        "index": 5
+      },
+      {
+        "id": "217dd16923e14020a83cd5f07dbe16e9",
+        "created_at": "2017-04-20T08:16:22.874817Z",
+        "modified_at": "2017-04-21T10:32:58.005006Z",
+        "value": "Tiedoksianto",
+        "index": 6
+      },
+      {
+        "id": "25a31bf1eccb408cbaecced1555ff2c8",
+        "created_at": "2017-04-20T08:16:22.875700Z",
+        "modified_at": "2017-04-21T10:32:58.006483Z",
+        "value": "Muutoksenhaku",
+        "index": 7
+      },
+      {
+        "id": "06077a7da25c45aeaf15a30c94983f9d",
+        "created_at": "2017-04-20T08:16:22.876628Z",
+        "modified_at": "2017-04-21T10:32:58.004335Z",
+        "value": "Seuranta/Valvonta",
+        "index": 8
+      },
+      {
+        "id": "25125e2b542f467cbeeb05806adcba74",
+        "created_at": "2017-04-20T08:16:22.877509Z",
+        "modified_at": "2017-04-21T10:32:58.005706Z",
+        "value": "Prosessi päättyy",
+        "index": 9
+      }
+    ],
+    "allowedIn": ["phase"],
+    "multiIn": [],
+    "requiredIf": [],
+    "requiredIn": [],
+    "required": false
+  },
+  "ActionType": {
+    "index": 2,
+    "name": "Toimenpidetyyppi",
+    "values": [],
+    "allowedIn": ["action"],
+    "multiIn": [],
+    "requiredIf": [],
+    "requiredIn": [],
+    "required": false
+  },
+  "RecordType": {
+    "index": 3,
+    "name": "Asiakirjatyyppi",
+    "values": [
+      {
+        "id": "56dd42a6fbfe434cab52191f00f164f8",
+        "created_at": "2017-03-01T12:32:37.659631Z",
+        "modified_at": "2017-03-01T12:32:37.659641Z",
+        "value": "aloite",
+        "index": 1
+      },
+      {
+        "id": "7bd6faeae0f74be9835c52640e7120ba",
+        "created_at": "2017-03-01T12:32:37.660966Z",
+        "modified_at": "2017-03-01T12:32:37.660976Z",
+        "value": "arviointi",
+        "index": 2
+      },
+      {
+        "id": "5938e56b30464e9f9fa5735b5b25b02d",
+        "created_at": "2017-03-01T12:32:37.662265Z",
+        "modified_at": "2017-03-01T12:32:37.662275Z",
+        "value": "asetus",
+        "index": 3
+      },
+      {
+        "id": "d43cd89efb6d4f5ba0faf1b2043339f0",
+        "created_at": "2017-03-01T12:32:37.663557Z",
+        "modified_at": "2017-03-01T12:32:37.663568Z",
+        "value": "ehdotus",
+        "index": 4
+      },
+      {
+        "id": "2235ac7c8a3d46e0b0490aeb76c1f3ed",
+        "created_at": "2017-03-01T12:32:37.664888Z",
+        "modified_at": "2017-03-01T12:32:37.664898Z",
+        "value": "esite",
+        "index": 5
+      },
+      {
+        "id": "c7a2e1785d8a493a80c45af8f136b857",
+        "created_at": "2017-03-01T12:32:37.666186Z",
+        "modified_at": "2017-03-31T11:26:12.259360Z",
+        "value": "esitys",
+        "index": 6
+      },
+      {
+        "id": "ebc80ad821e84fa8a8f34e8bb77a3ca4",
+        "created_at": "2017-03-01T12:32:37.667528Z",
+        "modified_at": "2017-03-01T12:32:37.667538Z",
+        "value": "esityslista",
+        "index": 7
+      },
+      {
+        "id": "9cc67ce51b6d48af9806cf0f91378813",
+        "created_at": "2017-03-01T12:32:37.668862Z",
+        "modified_at": "2017-03-01T12:32:37.668873Z",
+        "value": "EU-tosite",
+        "index": 8
+      },
+      {
+        "id": "e236e6450fea407db0aed7d1e29577d5",
+        "created_at": "2017-03-01T12:32:37.670167Z",
+        "modified_at": "2017-03-01T12:32:37.670177Z",
+        "value": "hakemus",
+        "index": 9
+      },
+      {
+        "id": "1e965c74512549c983b2fdab0cdcb3bd",
+        "created_at": "2017-03-01T12:32:37.671481Z",
+        "modified_at": "2017-03-01T12:32:37.671492Z",
+        "value": "hankintaoikaisu",
+        "index": 10
+      },
+      {
+        "id": "c24f48e782e04e4fa13d4df38e6f4533",
+        "created_at": "2017-03-01T12:32:37.672818Z",
+        "modified_at": "2017-03-01T12:32:37.672828Z",
+        "value": "hinnasto",
+        "index": 11
+      },
+      {
+        "id": "2ae510d9247a47858bfae42bb328bce4",
+        "created_at": "2017-03-01T12:32:37.674139Z",
+        "modified_at": "2017-03-01T12:32:37.674150Z",
+        "value": "ilmoitus",
+        "index": 12
+      },
+      {
+        "id": "164d73aed03b4e519136e4044408eb08",
+        "created_at": "2017-03-01T12:32:37.675438Z",
+        "modified_at": "2017-03-01T12:32:37.675448Z",
+        "value": "julkaisu",
+        "index": 13
+      },
+      {
+        "id": "7ea1f9af9b314b0b8e9d80eb35b4c896",
+        "created_at": "2017-03-01T12:32:37.676778Z",
+        "modified_at": "2017-03-01T12:32:37.676789Z",
+        "value": "kannanotto",
+        "index": 14
+      },
+      {
+        "id": "cf9a9e8b70ef4690869faa7f034c6a4d",
+        "created_at": "2017-03-01T12:32:37.678085Z",
+        "modified_at": "2017-03-01T12:32:37.678095Z",
+        "value": "kantelu",
+        "index": 15
+      },
+      {
+        "id": "c02dbea2422c488d8aaac753c9399f2d",
+        "created_at": "2017-03-01T12:32:37.679392Z",
+        "modified_at": "2017-03-01T12:32:37.679402Z",
+        "value": "kartta",
+        "index": 16
+      },
+      {
+        "id": "a90bad84aebf4e07947692a01f2950b8",
+        "created_at": "2017-03-01T12:32:37.680723Z",
+        "modified_at": "2017-03-01T12:32:37.680733Z",
+        "value": "katsaus",
+        "index": 17
+      },
+      {
+        "id": "488e14e01e934d7ca3ec7232f0d0ddfb",
+        "created_at": "2017-03-01T12:32:37.682027Z",
+        "modified_at": "2017-03-01T12:32:37.682037Z",
+        "value": "kauppakirja",
+        "index": 18
+      },
+      {
+        "id": "acbe72bbdfd44b77bc606c972f3731f3",
+        "created_at": "2017-03-01T12:32:37.683349Z",
+        "modified_at": "2017-03-01T12:32:37.683359Z",
+        "value": "kehotus",
+        "index": 19
+      },
+      {
+        "id": "328907b76c524c528327110714d03481",
+        "created_at": "2017-03-01T12:32:37.684682Z",
+        "modified_at": "2017-03-01T12:32:37.684695Z",
+        "value": "kertomus",
+        "index": 20
+      },
+      {
+        "id": "a59c8cb02b754ce99018d8443408c1b4",
+        "created_at": "2017-03-01T12:32:37.685987Z",
+        "modified_at": "2017-03-01T12:32:37.685997Z",
+        "value": "kirje",
+        "index": 21
+      },
+      {
+        "id": "63c33834fee64efb80dfa357d552b72e",
+        "created_at": "2017-03-01T12:32:37.687298Z",
+        "modified_at": "2017-03-01T12:32:37.687309Z",
+        "value": "kutsu",
+        "index": 22
+      },
+      {
+        "id": "c52c9cd0e0ac4bb1aa8b5009720a6c09",
+        "created_at": "2017-03-01T12:32:37.688630Z",
+        "modified_at": "2017-03-01T12:32:37.688640Z",
+        "value": "kuulutus",
+        "index": 23
+      },
+      {
+        "id": "6e998f46315546ce8f85c3ee4fac504d",
+        "created_at": "2017-03-01T12:32:37.689947Z",
+        "modified_at": "2017-03-01T12:32:37.689958Z",
+        "value": "kuva",
+        "index": 24
+      },
+      {
+        "id": "db8c647f366f41e99d3e0e6298b4a426",
+        "created_at": "2017-03-01T12:32:37.691253Z",
+        "modified_at": "2017-03-01T12:32:37.691263Z",
+        "value": "kysely",
+        "index": 25
+      },
+      {
+        "id": "e964a3adcfe340308f98ba5efbdc9833",
+        "created_at": "2017-03-01T12:32:37.692587Z",
+        "modified_at": "2017-03-01T12:32:37.692597Z",
+        "value": "laki",
+        "index": 26
+      },
+      {
+        "id": "0e710d58901b4ed3b3f66dec1409eba4",
+        "created_at": "2017-03-01T12:32:37.693917Z",
+        "modified_at": "2017-03-01T12:32:37.693927Z",
+        "value": "laskelma",
+        "index": 27
+      },
+      {
+        "id": "4d2cd82171a94aa7abb024d8e98ab492",
+        "created_at": "2017-03-01T12:32:37.695350Z",
+        "modified_at": "2017-03-01T12:32:37.695361Z",
+        "value": "lasku",
+        "index": 28
+      },
+      {
+        "id": "fa3482d87e00479fa7897e558af148ce",
+        "created_at": "2017-03-01T12:32:37.696668Z",
+        "modified_at": "2017-03-01T12:32:37.696689Z",
+        "value": "lausunto",
+        "index": 29
+      },
+      {
+        "id": "807e55c1b10e4254bde220ed302bd6ae",
+        "created_at": "2017-03-01T12:32:37.697991Z",
+        "modified_at": "2017-03-01T12:32:37.698001Z",
+        "value": "lausuntopyyntö",
+        "index": 30
+      },
+      {
+        "id": "c078ac97f3b14d0a90cf7cecd6ef2aa9",
+        "created_at": "2017-03-01T12:32:37.699301Z",
+        "modified_at": "2017-03-01T12:32:37.699312Z",
+        "value": "liite",
+        "index": 31
+      },
+      {
+        "id": "71f55983601a425b94dd0d9aac7b94bc",
+        "created_at": "2017-03-01T12:32:37.700631Z",
+        "modified_at": "2017-03-01T12:32:37.700641Z",
+        "value": "lista",
+        "index": 32
+      },
+      {
+        "id": "4fc9fa5774ee4a399e1488a2940fdd9e",
+        "created_at": "2017-03-01T12:32:37.701948Z",
+        "modified_at": "2017-03-01T12:32:37.701959Z",
+        "value": "lomake",
+        "index": 33
+      },
+      {
+        "id": "8498a4bc72de4832b3179730aa6745a2",
+        "created_at": "2017-03-01T12:32:37.703256Z",
+        "modified_at": "2017-03-01T12:32:37.703266Z",
+        "value": "luettelo",
+        "index": 34
+      },
+      {
+        "id": "0cf5714ac7164d399e6e24867602f9c0",
+        "created_at": "2017-03-01T12:32:37.704619Z",
+        "modified_at": "2017-03-01T12:32:37.704629Z",
+        "value": "lupa",
+        "index": 35
+      },
+      {
+        "id": "e1654b55f05e4604bae12bad06fc0168",
+        "created_at": "2017-03-01T12:32:37.705940Z",
+        "modified_at": "2017-03-01T12:32:37.705950Z",
+        "value": "lähete",
+        "index": 36
+      },
+      {
+        "id": "0842ca8f3ed94a149e78fc0ed0924fb2",
+        "created_at": "2017-03-01T12:32:37.707266Z",
+        "modified_at": "2017-03-01T12:32:37.707276Z",
+        "value": "merkintä",
+        "index": 37
+      },
+      {
+        "id": "bd6b282ddba34cdc80184bbf7cea1503",
+        "created_at": "2017-03-01T12:32:37.708605Z",
+        "modified_at": "2017-03-01T12:32:37.708616Z",
+        "value": "mielipide",
+        "index": 38
+      },
+      {
+        "id": "5df0b3b5da134ba0955467f738089984",
+        "created_at": "2017-03-01T12:32:37.709927Z",
+        "modified_at": "2017-03-01T12:32:37.709938Z",
+        "value": "mietintö",
+        "index": 39
+      },
+      {
+        "id": "2e1765857eaa4534818ea22dc7001550",
+        "created_at": "2017-03-01T12:32:37.711244Z",
+        "modified_at": "2017-03-01T12:32:37.711255Z",
+        "value": "muistio",
+        "index": 40
+      },
+      {
+        "id": "366b3d7c4e8649a1a6cc662f278c3259",
+        "created_at": "2017-03-01T12:32:37.712612Z",
+        "modified_at": "2017-03-01T12:32:37.712623Z",
+        "value": "muistutus",
+        "index": 41
+      },
+      {
+        "id": "cd1f38a6e64e4171a808b0ffaad230e4",
+        "created_at": "2017-03-01T12:32:37.713934Z",
+        "modified_at": "2017-03-01T12:32:37.713944Z",
+        "value": "muun viranomaisen ratkaisu",
+        "index": 42
+      },
+      {
+        "id": "beff4297d711407f88242aa49cc3770b",
+        "created_at": "2017-03-01T12:32:37.715242Z",
+        "modified_at": "2017-03-01T12:32:37.715252Z",
+        "value": "määrittely",
+        "index": 43
+      },
+      {
+        "id": "8065145de4a146bd832460bc43045b8c",
+        "created_at": "2017-03-01T12:32:37.716582Z",
+        "modified_at": "2017-03-01T12:32:37.716593Z",
+        "value": "määräys",
+        "index": 44
+      },
+      {
+        "id": "06140de85d98475c87857c4ac98bb131",
+        "created_at": "2017-03-01T12:32:37.717909Z",
+        "modified_at": "2017-03-01T12:32:37.717920Z",
+        "value": "nimikirja",
+        "index": 45
+      },
+      {
+        "id": "5b96badc0381498eb9a04ec220de9d3d",
+        "created_at": "2017-03-01T12:32:37.719225Z",
+        "modified_at": "2017-03-01T12:32:37.719236Z",
+        "value": "nimittämiskirja",
+        "index": 46
+      },
+      {
+        "id": "dee7192ab5eb4e20946a309a0ae7c3a3",
+        "created_at": "2017-03-01T12:32:37.720560Z",
+        "modified_at": "2017-03-01T12:32:37.720570Z",
+        "value": "ohje",
+        "index": 47
+      },
+      {
+        "id": "72c4572c11354843bae355ffcf09d8f8",
+        "created_at": "2017-03-01T12:32:37.721888Z",
+        "modified_at": "2017-03-01T12:32:37.721899Z",
+        "value": "ohjelma",
+        "index": 48
+      },
+      {
+        "id": "29ed2ec2c09f4b7a815239ff5f50c8ee",
+        "created_at": "2017-03-01T12:32:37.723336Z",
+        "modified_at": "2017-03-01T12:32:37.723346Z",
+        "value": "oikaisuvaatimus",
+        "index": 49
+      },
+      {
+        "id": "e96f6794139e440aad02cebf398565a8",
+        "created_at": "2017-03-01T12:32:37.724689Z",
+        "modified_at": "2017-03-01T12:32:37.724700Z",
+        "value": "ote",
+        "index": 50
+      },
+      {
+        "id": "c3a8a96c747744a986cbcade0342c2ca",
+        "created_at": "2017-03-01T12:32:37.726004Z",
+        "modified_at": "2017-03-01T12:32:37.726014Z",
+        "value": "palaute",
+        "index": 51
+      },
+      {
+        "id": "ff0c8c89a6724e6baf0fdc69b2da9814",
+        "created_at": "2017-03-01T12:32:37.727316Z",
+        "modified_at": "2017-03-01T12:32:37.727326Z",
+        "value": "piirustus",
+        "index": 52
+      },
+      {
+        "id": "21bba4b2c9dc4ea5b09c105002bc80a1",
+        "created_at": "2017-03-01T12:32:37.728656Z",
+        "modified_at": "2017-03-01T12:32:37.728667Z",
+        "value": "pyyntö",
+        "index": 53
+      },
+      {
+        "id": "b330deb000dc4cb8899a6ef72f63e836",
+        "created_at": "2017-03-01T12:32:37.729985Z",
+        "modified_at": "2017-03-01T12:32:37.729995Z",
+        "value": "päätös",
+        "index": 54
+      },
+      {
+        "id": "db927da6da1845198bc3d5ccffc64c78",
+        "created_at": "2017-03-01T12:32:37.731315Z",
+        "modified_at": "2017-03-01T12:32:37.731325Z",
+        "value": "pöytäkirja",
+        "index": 55
+      },
+      {
+        "id": "6c98a0c965d5400ea53b20ff83419abf",
+        "created_at": "2017-03-01T12:32:37.732652Z",
+        "modified_at": "2017-03-01T12:32:37.732662Z",
+        "value": "pöytäkirjapäätös",
+        "index": 56
+      },
+      {
+        "id": "c96a1fbcf8e349cea987f5e88b7ef78a",
+        "created_at": "2017-03-01T12:32:37.733978Z",
+        "modified_at": "2017-03-01T12:32:37.733988Z",
+        "value": "raportti",
+        "index": 57
+      },
+      {
+        "id": "a9dbb6773d6343f7bd64cca79d448e0f",
+        "created_at": "2017-03-01T12:32:37.735294Z",
+        "modified_at": "2017-03-01T12:32:37.735304Z",
+        "value": "rekisteri",
+        "index": 58
+      },
+      {
+        "id": "62db79ac52d94459afb409e63ad9032e",
+        "created_at": "2017-03-01T12:32:37.736637Z",
+        "modified_at": "2017-03-01T12:32:37.736648Z",
+        "value": "reklamaatio",
+        "index": 59
+      },
+      {
+        "id": "eae504fb05324b37b3c0a5f2d8d73cd5",
+        "created_at": "2017-03-01T12:32:37.737964Z",
+        "modified_at": "2017-03-01T12:32:37.737975Z",
+        "value": "salassa pidettävä liite",
+        "index": 60
+      },
+      {
+        "id": "9954285fadbb4ee6a0bdb46bedb8b026",
+        "created_at": "2017-03-01T12:32:37.739377Z",
+        "modified_at": "2017-03-01T12:32:37.739387Z",
+        "value": "seloste",
+        "index": 61
+      },
+      {
+        "id": "d01d283f104f43caa7638482e4a693d4",
+        "created_at": "2017-03-01T12:32:37.740718Z",
+        "modified_at": "2017-03-01T12:32:37.740728Z",
+        "value": "selostus",
+        "index": 62
+      },
+      {
+        "id": "220df4e4ae3b40f1ab20417fd83d1155",
+        "created_at": "2017-03-01T12:32:37.742031Z",
+        "modified_at": "2017-03-01T12:32:37.742041Z",
+        "value": "selvitys",
+        "index": 63
+      },
+      {
+        "id": "4a304582e38449b18332ca5d9955d6f2",
+        "created_at": "2017-03-01T12:32:37.743348Z",
+        "modified_at": "2017-03-01T12:32:37.743359Z",
+        "value": "sopimus",
+        "index": 64
+      },
+      {
+        "id": "ea97be9145a44a35b995facf43f8dc2c",
+        "created_at": "2017-03-01T12:32:37.744688Z",
+        "modified_at": "2017-03-01T12:32:37.744699Z",
+        "value": "strategia",
+        "index": 65
+      },
+      {
+        "id": "48ea913ed76649caab098312fa1b02ba",
+        "created_at": "2017-03-01T12:32:37.746005Z",
+        "modified_at": "2017-03-01T12:32:37.746015Z",
+        "value": "suositus",
+        "index": 66
+      },
+      {
+        "id": "6ade4bb538b14bd98dda6a365381350c",
+        "created_at": "2017-03-01T12:32:37.747323Z",
+        "modified_at": "2017-03-01T12:32:37.747333Z",
+        "value": "suunnitelma",
+        "index": 67
+      },
+      {
+        "id": "bbbdd70dfe3e49f9b8574336c21a5ea8",
+        "created_at": "2017-03-01T12:32:37.748664Z",
+        "modified_at": "2017-03-01T12:32:37.748684Z",
+        "value": "sääntö",
+        "index": 68
+      },
+      {
+        "id": "353d93974542404dbccb0530b74b0994",
+        "created_at": "2017-03-01T12:32:37.749994Z",
+        "modified_at": "2017-03-01T12:32:37.750004Z",
+        "value": "talousarvio",
+        "index": 69
+      },
+      {
+        "id": "3e02ec59f5b44d81aef1b97934fca1f8",
+        "created_at": "2017-03-01T12:32:37.751313Z",
+        "modified_at": "2017-03-01T12:32:37.751324Z",
+        "value": "tarjous",
+        "index": 70
+      },
+      {
+        "id": "ca01f33994c34475ac7e2ee1ca65d0bf",
+        "created_at": "2017-03-01T12:32:37.752757Z",
+        "modified_at": "2017-03-01T12:32:37.752767Z",
+        "value": "tarjouspyyntö",
+        "index": 71
+      },
+      {
+        "id": "c9bb4f25ce574ebeaf05e7180916425c",
+        "created_at": "2017-03-01T12:32:37.754079Z",
+        "modified_at": "2017-03-01T12:32:37.754089Z",
+        "value": "tasekirja",
+        "index": 72
+      },
+      {
+        "id": "792a2102ae924fbaa3eba3466eefb8a5",
+        "created_at": "2017-03-01T12:32:37.755482Z",
+        "modified_at": "2017-03-01T12:32:37.755492Z",
+        "value": "teos",
+        "index": 73
+      },
+      {
+        "id": "81afc3d7c252463897d356c232717aa2",
+        "created_at": "2017-03-01T12:32:37.756827Z",
+        "modified_at": "2017-03-01T12:32:37.756838Z",
+        "value": "tiedote",
+        "index": 74
+      },
+      {
+        "id": "6e9620e7691b48c2829acfdd4ed95f37",
+        "created_at": "2017-03-01T12:32:37.758158Z",
+        "modified_at": "2017-03-01T12:32:37.758169Z",
+        "value": "tietojärjestelmämerkintä",
+        "index": 75
+      },
+      {
+        "id": "dac5464262ea4217b37eed9b7b0a509c",
+        "created_at": "2017-03-01T12:32:37.759481Z",
+        "modified_at": "2017-03-01T12:32:37.759491Z",
+        "value": "tilasto",
+        "index": 76
+      },
+      {
+        "id": "db2eedd60b7340758de33b83a918f808",
+        "created_at": "2017-03-01T12:32:37.760830Z",
+        "modified_at": "2017-03-01T12:32:37.760840Z",
+        "value": "tilaus",
+        "index": 77
+      },
+      {
+        "id": "01af28017e1f40f39727024fe8d4124d",
+        "created_at": "2017-03-01T12:32:37.762158Z",
+        "modified_at": "2017-03-01T12:32:37.762168Z",
+        "value": "tilinpäätös",
+        "index": 78
+      },
+      {
+        "id": "a4b7e317b7e4439595f6c4df2615a069",
+        "created_at": "2017-03-01T12:32:37.763483Z",
+        "modified_at": "2017-03-01T12:32:37.763493Z",
+        "value": "todistus",
+        "index": 79
+      },
+      {
+        "id": "288e06ecb3e24c5886b1c474084f7378",
+        "created_at": "2017-03-01T12:32:37.764884Z",
+        "modified_at": "2017-03-01T12:32:37.764895Z",
+        "value": "tosite",
+        "index": 80
+      },
+      {
+        "id": "add9358266414d00ac0e19587e87a71b",
+        "created_at": "2017-03-01T12:32:37.766247Z",
+        "modified_at": "2017-03-01T12:32:37.766257Z",
+        "value": "täydennys",
+        "index": 81
+      },
+      {
+        "id": "f68bab3c2e4f4347aef04a5718d42986",
+        "created_at": "2017-03-01T12:32:37.767603Z",
+        "modified_at": "2017-03-01T12:32:37.767613Z",
+        "value": "valitus",
+        "index": 82
+      },
+      {
+        "id": "6c8a13da3f0b448a99110d35f4d6abd1",
+        "created_at": "2017-03-01T12:32:37.769007Z",
+        "modified_at": "2017-03-01T12:32:37.769017Z",
+        "value": "valitusosoitus",
+        "index": 83
+      },
+      {
+        "id": "5525336bd1ad492ea567704482222967",
+        "created_at": "2017-03-01T12:32:37.770349Z",
+        "modified_at": "2017-03-01T12:32:37.770360Z",
+        "value": "valtakirja",
+        "index": 84
+      },
+      {
+        "id": "df9c1c10693c42e39f3638f2caee99ef",
+        "created_at": "2017-03-01T12:32:37.771690Z",
+        "modified_at": "2017-03-01T12:32:37.771701Z",
+        "value": "vastine",
+        "index": 85
+      },
+      {
+        "id": "5fa8e251add9463bb3ec82ebfd0974ff",
+        "created_at": "2017-03-01T12:32:37.773274Z",
+        "modified_at": "2017-03-01T12:32:37.773284Z",
+        "value": "yhteenveto",
+        "index": 86
+      },
+      {
+        "id": "2bf79210d032436f817a963883866d2e",
+        "created_at": "2017-03-01T12:34:44.297645Z",
+        "modified_at": "2017-03-01T12:34:44.297658Z",
+        "value": "vastaus",
+        "index": 87
+      }
+    ],
+    "allowedIn": ["record"],
+    "multiIn": [],
+    "requiredIf": [],
+    "requiredIn": ["record"],
+    "required": true
+  },
+  "TypeSpecifier": {
+    "index": 5,
+    "name": "Tarkenne",
+    "values": [],
+    "allowedIn": ["action", "phase", "record"],
+    "multiIn": [],
+    "requiredIf": [],
+    "requiredIn": [],
+    "required": false
+  },
+  "InformationSystem": {
+    "index": 6,
+    "name": "Rekisteröinti/ Tietojärjestelmä",
+    "values": [
+      {
+        "id": "2ca76f2773a347488920815207104a6b",
+        "created_at": "2017-12-08T10:50:04.492237Z",
+        "modified_at": "2017-12-08T10:50:04.492270Z",
+        "value": "Ahjo",
+        "index": 1
+      },
+      {
+        "id": "8128f6b678d54977bd905fe20f17df43",
+        "created_at": "2017-12-08T10:50:04.498312Z",
+        "modified_at": "2017-12-08T10:50:04.498334Z",
+        "value": "Lupapiste",
+        "index": 2
+      },
+      {
+        "id": "39cebdcf48b94fcea16eb9684b0cde65",
+        "created_at": "2017-12-08T10:50:32.998368Z",
+        "modified_at": "2017-12-08T10:50:32.998391Z",
+        "value": "HR",
+        "index": 3
+      }
+    ],
+    "allowedIn": ["action", "phase", "record", "function"],
+    "multiIn": ["action", "phase", "record", "function"],
+    "requiredIf": [],
+    "requiredIn": [],
+    "required": false
+  },
+  "PublicityClass": {
+    "index": 7,
+    "name": "Julkisuusluokka",
+    "values": [
+      {
+        "id": "6c47b56c75164fe291b374e610778af5",
+        "created_at": "2017-03-01T12:32:37.934776Z",
+        "modified_at": "2017-03-01T12:32:37.934786Z",
+        "value": "Julkinen",
+        "index": 1
+      },
+      {
+        "id": "0cf7fed09657442989bb0bff9ac9b8f8",
+        "created_at": "2017-03-01T12:32:37.936066Z",
+        "modified_at": "2017-03-01T12:32:37.936076Z",
+        "value": "Ei-julkinen",
+        "index": 2
+      },
+      {
+        "id": "161b0ed8cdfe451ea894cf57f011ddc5",
+        "created_at": "2017-03-01T12:32:37.937332Z",
+        "modified_at": "2017-03-01T12:32:37.937342Z",
+        "value": "Osittain salassa pidettävä",
+        "index": 3
+      },
+      {
+        "id": "5e4f376ffc06449391a8e376cc88e9e8",
+        "created_at": "2017-03-01T12:32:37.938605Z",
+        "modified_at": "2017-03-01T12:32:37.938621Z",
+        "value": "Salassa pidettävä",
+        "index": 4
+      }
+    ],
+    "allowedIn": ["record", "function"],
+    "multiIn": [],
+    "requiredIf": [],
+    "requiredIn": ["record", "function"],
+    "required": true
+  },
+  "RetentionPeriod": {
+    "index": 8,
+    "name": "Säilytysaika",
+    "values": [
+      {
+        "id": "fb627c0b42fc4435ac122f3663610bda",
+        "created_at": "2017-03-01T12:32:37.780498Z",
+        "modified_at": "2017-03-01T12:32:37.780508Z",
+        "value": "0",
+        "index": 1
+      },
+      {
+        "id": "cbc6b9a967494c0fa8ed605ff4b76762",
+        "created_at": "2017-03-01T12:32:37.781804Z",
+        "modified_at": "2017-03-01T12:32:37.781815Z",
+        "value": "1",
+        "index": 2
+      },
+      {
+        "id": "68cd25d40c2d46a281e16d9bcd7da120",
+        "created_at": "2017-03-01T12:32:37.783040Z",
+        "modified_at": "2017-03-01T12:32:37.783050Z",
+        "value": "2",
+        "index": 3
+      },
+      {
+        "id": "f1297f1233dd4bc095273903cd702f2b",
+        "created_at": "2017-03-01T12:32:37.784302Z",
+        "modified_at": "2017-03-01T12:32:37.784313Z",
+        "value": "3",
+        "index": 4
+      },
+      {
+        "id": "1215126171ea4ed89fc00bdddbc550e8",
+        "created_at": "2017-03-01T12:32:37.785546Z",
+        "modified_at": "2017-03-01T12:32:37.785556Z",
+        "value": "5",
+        "index": 5
+      },
+      {
+        "id": "7e2587d68ead4ff7af5a4214caf22d46",
+        "created_at": "2017-03-01T12:32:37.786809Z",
+        "modified_at": "2017-03-01T12:32:37.786819Z",
+        "value": "6",
+        "index": 6
+      },
+      {
+        "id": "d53f4df100f34ce6afa49d9677b2fed2",
+        "created_at": "2017-03-01T12:32:37.788101Z",
+        "modified_at": "2017-03-01T12:32:37.788111Z",
+        "value": "10",
+        "index": 7
+      },
+      {
+        "id": "b8abc0fa22104545807054ce85b4b1d1",
+        "created_at": "2017-03-01T12:32:37.789373Z",
+        "modified_at": "2017-03-01T12:32:37.789383Z",
+        "value": "11",
+        "index": 8
+      },
+      {
+        "id": "5666b4deb9294b69b3c17dfc57d4c911",
+        "created_at": "2017-03-01T12:32:37.790621Z",
+        "modified_at": "2017-03-01T12:32:37.790631Z",
+        "value": "13",
+        "index": 9
+      },
+      {
+        "id": "f6992ab64f8e45d5ae9da44e9bf0178b",
+        "created_at": "2017-03-01T12:32:37.791939Z",
+        "modified_at": "2017-03-01T12:32:37.791952Z",
+        "value": "20",
+        "index": 10
+      },
+      {
+        "id": "7e325fdb48f045e1956ce92f7b18aede",
+        "created_at": "2017-03-01T12:32:37.793194Z",
+        "modified_at": "2017-03-01T12:32:37.793204Z",
+        "value": "25",
+        "index": 11
+      },
+      {
+        "id": "2d97560a011b47348acba630fa8a0979",
+        "created_at": "2017-03-01T12:32:37.794441Z",
+        "modified_at": "2017-03-01T12:32:37.794451Z",
+        "value": "50",
+        "index": 12
+      },
+      {
+        "id": "d03cf5c7a51348adb5d50db194743356",
+        "created_at": "2017-03-01T12:32:37.795746Z",
+        "modified_at": "2017-03-01T12:32:37.795756Z",
+        "value": "120",
+        "index": 13
+      },
+      {
+        "id": "9a071ef23d61499881188cc22cb31cb6",
+        "created_at": "2017-03-01T12:32:37.797321Z",
+        "modified_at": "2017-03-01T12:32:37.797332Z",
+        "value": "-1",
+        "index": 14
+      },
+      {
+        "id": "19056895e5364263a4ea81a762eb16e6",
+        "created_at": "2017-03-01T12:33:41.705132Z",
+        "modified_at": "2017-03-01T12:33:41.705144Z",
+        "value": "Asiakirjan voimassaoloaika",
+        "index": 15
+      }
+    ],
+    "allowedIn": ["record", "function"],
+    "multiIn": [],
+    "requiredIf": [],
+    "requiredIn": ["record", "function"],
+    "required": true
+  },
+  "SecurityPeriod": {
+    "index": 9,
+    "name": "Salassapitoaika",
+    "values": [
+      {
+        "id": "1ca6aa20be9a45949016e52d17ef8730",
+        "created_at": "2017-03-01T12:32:37.950827Z",
+        "modified_at": "2017-03-01T12:32:37.950837Z",
+        "value": "25",
+        "index": 1
+      },
+      {
+        "id": "cb990a293895499ab528190937494356",
+        "created_at": "2017-03-01T12:32:37.952095Z",
+        "modified_at": "2017-03-01T12:32:37.952105Z",
+        "value": "50",
+        "index": 2
+      },
+      {
+        "id": "349f8f7a43fc4cc2a0b551a3620c5828",
+        "created_at": "2017-03-01T12:32:37.953355Z",
+        "modified_at": "2017-03-01T12:32:37.953365Z",
+        "value": "100",
+        "index": 3
+      }
+    ],
+    "allowedIn": ["record", "function"],
+    "multiIn": [],
+    "requiredIf": [
+      {
+        "key": "PublicityClass",
+        "values": ["Salassa pidettävä", "Osittain salassa pidettävä"]
+      }
+    ],
+    "requiredIn": [],
+    "required": false
+  },
+  "RetentionReason": {
+    "index": 10,
+    "name": "Säilytysajan peruste",
+    "values": [
+      {
+        "id": "6b9e9bb5edcf4189bd417ef80ad48b06",
+        "created_at": "2017-03-01T12:32:37.850939Z",
+        "modified_at": "2017-03-01T12:32:37.850949Z",
+        "value":
+          "Ei sp: Yleishallinto 1 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "index": 1
+      },
+      {
+        "id": "73c4d5f3ad514c3ead8da35f8e2df3aa",
+        "created_at": "2017-03-01T12:32:37.852240Z",
+        "modified_at": "2017-03-01T12:32:37.852250Z",
+        "value":
+          "Ei sp:Taloushallinto 2 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "index": 2
+      },
+      {
+        "id": "ccd23a9a1fad461fb7f5baedb4f15e8a",
+        "created_at": "2017-03-01T12:32:37.853560Z",
+        "modified_at": "2017-03-01T12:32:37.853570Z",
+        "value":
+          "Ei sp: Henkilöstö ja luottamushenkilöt  3 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "index": 3
+      },
+      {
+        "id": "83566ba3b2af4e75bf01d5a5e5ecc6ee",
+        "created_at": "2017-03-01T12:32:37.854837Z",
+        "modified_at": "2017-03-01T12:32:37.854847Z",
+        "value":
+          "Ei sp: Materiaalitoimi/logistiikka, ruokahuolto ja tekstiili- ja vaatehuolto 4 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "index": 4
+      },
+      {
+        "id": "f3d7eb04bc61486e8e782f977d9e8b1f",
+        "created_at": "2017-03-01T12:32:37.856147Z",
+        "modified_at": "2017-03-01T12:32:37.856157Z",
+        "value":
+          "Ei sp: Kiinteistötoimi ja rakentaminen 5- kunnallisten asiakirjojen säilytysaikasuositus",
+        "index": 5
+      },
+      {
+        "id": "4c7f52a084f54ee1bb4f603b3d166b35",
+        "created_at": "2017-03-01T12:32:37.857421Z",
+        "modified_at": "2017-03-01T12:32:37.857431Z",
+        "value":
+          "Ei sp: Aluekehitys, maakuntakaavoitus ja maakunnallinen edunvalvonta 6 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "index": 6
+      },
+      {
+        "id": "54212ff8689c4071bb52b3872cd57a7e",
+        "created_at": "2017-03-01T12:32:37.858692Z",
+        "modified_at": "2017-03-01T12:32:37.858702Z",
+        "value":
+          "Ei sp: Asuntotoimi 7 -  kunnallisten asiakirjojen säilytysaikasuositus",
+        "index": 7
+      },
+      {
+        "id": "f4431a70126a425bb7e098672b8542fb",
+        "created_at": "2017-03-01T12:32:37.859971Z",
+        "modified_at": "2017-03-01T12:32:37.859982Z",
+        "value":
+          "Ei sp:: Elinkeinotoimi 8 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "index": 8
+      },
+      {
+        "id": "729c3b4edc764c0b86e2aba19edd364f",
+        "created_at": "2017-03-01T12:32:37.861321Z",
+        "modified_at": "2017-03-01T12:32:37.861331Z",
+        "value":
+          "Ei sp:: Kuluttajaneuvonta 9 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "index": 9
+      },
+      {
+        "id": "23076fcdc6ba4036b0bc586f8eb79ce4",
+        "created_at": "2017-03-01T12:32:37.862597Z",
+        "modified_at": "2017-03-01T12:32:37.862607Z",
+        "value":
+          "Ei sp: Lomituspalvelut 10 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "index": 10
+      },
+      {
+        "id": "75635d32aa76403a9c7d26983f6385e5",
+        "created_at": "2017-03-01T12:32:37.863889Z",
+        "modified_at": "2017-03-01T12:32:37.863899Z",
+        "value":
+          "Ei sp: Maaseutuelinkeinopalvelut 11 kunnallisten asiakirjojen säilytysaikasuositus",
+        "index": 11
+      },
+      {
+        "id": "da9c6d6a5b8f4ad9add35912337b0af1",
+        "created_at": "2017-03-01T12:32:37.865211Z",
+        "modified_at": "2017-03-01T12:32:37.865221Z",
+        "value":
+          "Ei sp: Opetustoimi 12 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "index": 12
+      },
+      {
+        "id": "4303a470e00b44cf88638444d43cb539",
+        "created_at": "2017-03-01T12:32:37.866471Z",
+        "modified_at": "2017-03-01T12:32:37.866481Z",
+        "value":
+          "Ei sp: Sivistystoimi 13 kunnallisten asiakirjojen säilytysaikasuositus",
+        "index": 13
+      },
+      {
+        "id": "39bcbbc7e9e74ab09c652d0ed9fb9c15",
+        "created_at": "2017-03-01T12:32:37.867809Z",
+        "modified_at": "2017-03-01T12:32:37.867819Z",
+        "value":
+          "Ei sp: Tekniset palvelut 14A - kunnallisten asiakirjojen säilytysaikasuositus",
+        "index": 14
+      },
+      {
+        "id": "fc5aac07775044578efd7f95d78ba19a",
+        "created_at": "2017-03-01T12:32:37.869104Z",
+        "modified_at": "2017-03-01T12:32:37.869115Z",
+        "value":
+          "Ei sp: Tekniset palvelut 14B - kunnallisten asiakirjojen säilytysaikasuositus",
+        "index": 15
+      },
+      {
+        "id": "38648da13d724bbcbd88d29e46672a51",
+        "created_at": "2017-03-01T12:32:37.870463Z",
+        "modified_at": "2017-03-01T12:32:37.870473Z",
+        "value":
+          "Ei sp: Ympäristönsuojelu 15 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "index": 16
+      },
+      {
+        "id": "8f22727827a54481bbb922fc38c14d29",
+        "created_at": "2017-03-01T12:32:37.871900Z",
+        "modified_at": "2017-03-01T12:32:37.871910Z",
+        "value":
+          "Ei sp: Ympäristöterveydenhuolto 16 -kunnallisten asiakirjojen säilytysaikasuositus",
+        "index": 17
+      },
+      {
+        "id": "4edc8ab895574c6b850855fecbbfb4ce",
+        "created_at": "2017-03-01T12:32:37.873257Z",
+        "modified_at": "2017-03-01T12:32:37.873267Z",
+        "value": "Ei sp: Arvonlisäverolaki 209 q §",
+        "index": 18
+      },
+      {
+        "id": "03903435ecb74614abcc12f41ba3e147",
+        "created_at": "2017-03-01T12:32:37.874550Z",
+        "modified_at": "2017-03-01T12:32:37.874560Z",
+        "value": "Ei sp: Jätelaki 646/2011 121§",
+        "index": 19
+      },
+      {
+        "id": "ccab4d9140df42209a09cf98fe7165f6",
+        "created_at": "2017-03-01T12:32:37.875842Z",
+        "modified_at": "2017-03-01T12:32:37.875852Z",
+        "value":
+          "Ei sp: Laki tilaajan selvitysvelvollisuudesta ja vastuusta ulkopuolista työvoimaa käytettäessä 1233/2006 5§",
+        "index": 20
+      },
+      {
+        "id": "92cf1564eae84a028aa3020c50a399f0",
+        "created_at": "2017-03-01T12:32:37.877222Z",
+        "modified_at": "2017-03-01T12:32:37.877232Z",
+        "value": "Ei sp: Laki verotusmenettelystä 15 b § 4 mom",
+        "index": 21
+      },
+      {
+        "id": "c40c620543f24edcaf0160133a63352b",
+        "created_at": "2017-03-01T12:32:37.878499Z",
+        "modified_at": "2017-03-01T12:32:37.878509Z",
+        "value": "Ei sp: Laki yksityisyyden suojasta työelämässä 759/2004 17§",
+        "index": 22
+      },
+      {
+        "id": "e79c1c4d77d049be8a0c9262ca85fcc9",
+        "created_at": "2017-03-01T12:32:37.879794Z",
+        "modified_at": "2017-03-01T12:32:37.879804Z",
+        "value": "Ei sp: Laki yksityisistä turvallisuuspalveluista 282/2002",
+        "index": 23
+      },
+      {
+        "id": "921bfbef981a40d1968bc62a85bc77ee",
+        "created_at": "2017-03-01T12:32:37.881106Z",
+        "modified_at": "2017-03-01T12:32:37.881116Z",
+        "value":
+          "Ei sp: Liikenteen turvallisuusviraston määräys kaupunkiraideliikenteestä 2015, kohta 6",
+        "index": 24
+      },
+      {
+        "id": "0aeac03c677b4a7d96f06918acbff1ec",
+        "created_at": "2017-03-01T12:32:37.882396Z",
+        "modified_at": "2017-03-01T12:32:37.882406Z",
+        "value": "Ei sp: Merilaki 674/1994 1 luku 3 §",
+        "index": 25
+      },
+      {
+        "id": "54e01988c5424b1e9cfa914df54084c2",
+        "created_at": "2017-03-01T12:32:37.883719Z",
+        "modified_at": "2017-03-01T12:32:37.883729Z",
+        "value": "Ei sp: Merilaki 674/1994 18 luku 5 §",
+        "index": 26
+      },
+      {
+        "id": "874a1464570647188d13f73658114bcc",
+        "created_at": "2017-03-01T12:32:37.885003Z",
+        "modified_at": "2017-03-01T12:32:37.885013Z",
+        "value": "Ei sp: Tieliikennelaki 267/1981 92 g-i §",
+        "index": 27
+      },
+      {
+        "id": "63ed288460ac4c2b829a6d501be5cb89",
+        "created_at": "2017-03-01T12:32:37.886261Z",
+        "modified_at": "2017-03-01T12:32:37.886271Z",
+        "value":
+          "Ei sp: Valtiokonttorin määräys kirjanpitoaineistojen säilytysajoista 2005",
+        "index": 28
+      },
+      {
+        "id": "24b5f33b782542e6889ca4ba7492a52c",
+        "created_at": "2017-03-01T12:32:37.887506Z",
+        "modified_at": "2017-03-31T11:24:06.493775Z",
+        "value": "Ei sp: Hallintokunnan oma esitys",
+        "index": 29
+      },
+      {
+        "id": "2d23c8b1908749898123ee95c724632e",
+        "created_at": "2017-03-01T12:32:37.888788Z",
+        "modified_at": "2017-03-31T11:24:06.495827Z",
+        "value":
+          "Sekä ei-sp että sp-asiakirjoille:Sosiaali- ja terveysministeriön asetus potilasasiakirjoista.",
+        "index": 30
+      },
+      {
+        "id": "842baedf26df47889c2a16b0a4e10fb4",
+        "created_at": "2017-03-01T12:32:37.890046Z",
+        "modified_at": "2017-03-01T12:32:37.890057Z",
+        "value":
+          "Sekä ei-sp että sp-asiakirjoille: Valtionarkiston päätös kunnallisten asiakirjojen hävittämisestä 1989. Osa 5. Sosiaalihuollon ja holhoustoimen asiakirjat.",
+        "index": 31
+      },
+      {
+        "id": "64db331871a34383b4f2a30d26f44d09",
+        "created_at": "2017-03-01T12:32:37.891313Z",
+        "modified_at": "2017-03-01T12:32:37.891323Z",
+        "value":
+          "Sp-asiakirjoille: Helsingin kaupungin asiakirjatietojen pysyvä säilytys 9.5.2016",
+        "index": 32
+      },
+      {
+        "id": "df42d45b248c4acbbae2ff4f14610619",
+        "created_at": "2017-03-01T12:32:37.892638Z",
+        "modified_at": "2017-03-01T12:32:37.892648Z",
+        "value":
+          "Sp-asiakirjoille: Kunnallisten lomituspalvelujen pysyvästi säilytettävät asiakirjat 2002",
+        "index": 33
+      },
+      {
+        "id": "0ed3e6c7927a4d57979d519710fd89a6",
+        "created_at": "2017-03-01T12:32:37.893940Z",
+        "modified_at": "2017-03-01T12:32:37.893950Z",
+        "value":
+          "Sp-asiakirjoille: Kunnallisten maaseutuelinkeinopalvelujen pysyvästi säilytettävät asiakirjat 2002",
+        "index": 34
+      },
+      {
+        "id": "cecd1d03cd7742d8b62208616725c6ca",
+        "created_at": "2017-03-01T12:32:37.895253Z",
+        "modified_at": "2017-03-01T12:32:37.895264Z",
+        "value": "Sp-asiakirjoille:Potilasasiakirjojen pysyvä säilytys 2009",
+        "index": 35
+      },
+      {
+        "id": "ba5c088e0e4049258df1877ecdc471b8",
+        "created_at": "2017-03-01T12:32:37.896556Z",
+        "modified_at": "2017-03-01T12:32:37.896566Z",
+        "value":
+          "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset asuntotoimen asiakirjat 2001",
+        "index": 36
+      },
+      {
+        "id": "95733a3f198d4d44b663bd0b17499076",
+        "created_at": "2017-03-01T12:32:37.897900Z",
+        "modified_at": "2017-03-01T12:32:37.897911Z",
+        "value":
+          "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset elinkeinotoimen, kuluttajaneuvonnan, talous- ja velkaneuvonnan ja kotitalous- ja käsityöneuvonnan asiakirjat 17.10.2005",
+        "index": 37
+      },
+      {
+        "id": "97ba98e4b8534828bc5b7f48cba557b4",
+        "created_at": "2017-03-01T12:32:37.899260Z",
+        "modified_at": "2017-03-01T12:32:37.899270Z",
+        "value":
+          "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset kiinteistönmuodostuksen, mittaus- ja karttapalvelujen ja asiamiespalvelujen asiakirjat 4.9.2008",
+        "index": 38
+      },
+      {
+        "id": "8ed34d44cc014b829524eaa2bed77d0f",
+        "created_at": "2017-03-01T12:32:37.900696Z",
+        "modified_at": "2017-03-01T12:32:37.900707Z",
+        "value":
+          "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset maankäytön, kaavoituksen ja maapolitiikan asiakirjat 4.9.2008",
+        "index": 39
+      },
+      {
+        "id": "ce8fae631adc4390a657045d19fc8ecf",
+        "created_at": "2017-03-01T12:32:37.902022Z",
+        "modified_at": "2017-03-01T12:32:37.902032Z",
+        "value":
+          "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset opetustoimen asiakirjat 2003",
+        "index": 40
+      },
+      {
+        "id": "8a87dfa674474795b2f30b4b7b6aea81",
+        "created_at": "2017-03-01T12:32:37.903351Z",
+        "modified_at": "2017-03-01T12:32:37.903367Z",
+        "value":
+          "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset tuki- ja ylläpitotehtävien asiakirjat 2001",
+        "index": 41
+      },
+      {
+        "id": "1c91075693394415ba69542727286413",
+        "created_at": "2017-03-01T12:32:37.904706Z",
+        "modified_at": "2017-03-01T12:32:37.904717Z",
+        "value":
+          "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset ympäristöterveydenhuollon asiakirjat 2003",
+        "index": 42
+      },
+      {
+        "id": "c61549fda02d4500bcd7d9034bfbe4f0",
+        "created_at": "2017-03-01T12:32:37.906037Z",
+        "modified_at": "2017-03-01T12:32:37.906047Z",
+        "value":
+          "Sp-asiakirjoille: Pysyvästi säilytettävät ympäristönsuojelun asiakirjat 2002",
+        "index": 43
+      },
+      {
+        "id": "92cadd99749a41f589b86feccc7b20e8",
+        "created_at": "2017-03-01T12:32:37.907365Z",
+        "modified_at": "2017-03-01T12:32:37.907375Z",
+        "value":
+          "Sp-asiakirjoille: Säilytettävät kunnalliset rakennusvalvonnan asiakirjat 2008",
+        "index": 44
+      },
+      {
+        "id": "eaacb9594498490db02a7501c1806a96",
+        "created_at": "2017-03-01T12:32:37.908701Z",
+        "modified_at": "2017-03-01T12:32:37.908712Z",
+        "value":
+          "Sp-asiakirjoille: Säilytettävät kunnalliset sivistystoimen asiakirjat 2004",
+        "index": 45
+      },
+      {
+        "id": "36489bf206e64731aa0ad0aef419d911",
+        "created_at": "2017-03-01T12:32:37.910004Z",
+        "modified_at": "2017-03-01T12:32:37.910014Z",
+        "value":
+          "Sp-asiakirjoille: Valtion virastojen ja laitosten kirjanpitoaineistojen pysyvä säilytys 2004",
+        "index": 46
+      },
+      {
+        "id": "dad48a37d39f407a8b09b0ef392b741d",
+        "created_at": "2017-03-01T12:32:37.911320Z",
+        "modified_at": "2017-03-01T12:32:37.911330Z",
+        "value":
+          "Sp-asiakirjoille: Pysyvästi säilytettävät kunnallista yhdyskuntatekniikkaa ja yhdyskuntarakentamista koskevien palvelujen sekä kunnallisen liiketoiminnan ja pelastustoimen asiakirjat 2013.",
+        "index": 47
+      },
+      {
+        "id": "f3d4802ea84c4b888c7c828ec8c90196",
+        "created_at": "2017-03-01T12:33:41.723604Z",
+        "modified_at": "2017-03-01T12:33:41.723616Z",
+        "value": "Ei sp: Arvonlisäverolaki 209 m §",
+        "index": 48
+      },
+      {
+        "id": "6bcc9cb3f4834b3cb13d5b44af2d7bbf",
+        "created_at": "2017-03-01T12:33:41.743752Z",
+        "modified_at": "2017-03-01T12:33:41.743764Z",
+        "value":
+          "Sp-asiakirjoille: Valtionarkiston päätös kunnallisten asiakirjojen hävittämisestä 1989. Osa 5. Sosiaalihuollon ja holhoustoimen asiakirjat.",
+        "index": 49
+      },
+      {
+        "id": "31118001b3c8440995d7e92cd6168b91",
+        "created_at": "2017-03-01T12:33:41.745168Z",
+        "modified_at": "2017-03-01T12:33:41.745178Z",
+        "value":
+          "Sp-asiakirjoille: Sp-asiakirjoille: Valtion virastojen ja laitosten kirjanpitoaineistojen pysyvä säilytys 2004",
+        "index": 50
+      },
+      {
+        "id": "64910924f32443918e2c6dc2662c9def",
+        "created_at": "2017-03-01T12:34:25.003522Z",
+        "modified_at": "2017-03-01T12:34:25.003536Z",
+        "value":
+          "Sp-asiakirjoille: Helsingin kaupungin asiakirjatietojen pysyvä säilytys 9.5.2016.",
+        "index": 51
+      },
+      {
+        "id": "171be5d6ee0c47559600bac633c4d07d",
+        "created_at": "2017-06-05T09:23:42.425854Z",
+        "modified_at": "2017-06-05T09:23:42.425895Z",
+        "value":
+          "Ei sp: Henkilöstö ja luottamushenkilöt 3 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "index": 52
+      },
+      {
+        "id": "1bc12d315e614ee7bbd2517f6c0075f9",
+        "created_at": "2017-06-05T09:23:42.433397Z",
+        "modified_at": "2017-06-05T09:23:42.433433Z",
+        "value":
+          "Ei sp: Asuntotoimi 7 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "index": 53
+      }
+    ],
+    "allowedIn": ["record", "function"],
+    "multiIn": [],
+    "requiredIf": [],
+    "requiredIn": ["record", "function"],
+    "required": true
+  },
+  "SecurityReason": {
+    "index": 11,
+    "name": "Salassapitoperuste",
+    "values": [
+      {
+        "id": "2e56d32c67ba451384a01cc79f971df2",
+        "created_at": "2017-03-01T12:32:37.800350Z",
+        "modified_at": "2017-03-01T12:32:37.800360Z",
+        "value": "JulkL 24.1 § 1 kohta",
+        "index": 1
+      },
+      {
+        "id": "add230505e1d4401982243c60a161411",
+        "created_at": "2017-03-01T12:32:37.801627Z",
+        "modified_at": "2017-03-01T12:32:37.801637Z",
+        "value": "JulkL 24.1 § 2 kohta",
+        "index": 2
+      },
+      {
+        "id": "bcc9a3fd23a148089b116ae452b3390f",
+        "created_at": "2017-03-01T12:32:37.803016Z",
+        "modified_at": "2017-03-01T12:32:37.803026Z",
+        "value": "JulkL 24.1 § 3 kohta",
+        "index": 3
+      },
+      {
+        "id": "d1204bf6c1eb4491b6a73483b4091bb4",
+        "created_at": "2017-03-01T12:32:37.804330Z",
+        "modified_at": "2017-03-01T12:32:37.804340Z",
+        "value": "JulkL 24.1 § 4 kohta",
+        "index": 4
+      },
+      {
+        "id": "db58c1d32b924f2e901390dec2073c35",
+        "created_at": "2017-03-01T12:32:37.805613Z",
+        "modified_at": "2017-03-01T12:32:37.805623Z",
+        "value": "JulkL 24.1 § 5 kohta",
+        "index": 5
+      },
+      {
+        "id": "7cbb5ce781f746deb47881da3a3b560c",
+        "created_at": "2017-03-01T12:32:37.806910Z",
+        "modified_at": "2017-03-01T12:32:37.806920Z",
+        "value": "JulkL 24.1 § 6 kohta",
+        "index": 6
+      },
+      {
+        "id": "3596e538ca074aa89ba08ae458bf12a8",
+        "created_at": "2017-03-01T12:32:37.808218Z",
+        "modified_at": "2017-03-01T12:32:37.808228Z",
+        "value": "JulkL 24.1 § 7 kohta",
+        "index": 7
+      },
+      {
+        "id": "15070d455ac443ed9d2692dea9d7a436",
+        "created_at": "2017-03-01T12:32:37.809555Z",
+        "modified_at": "2017-03-01T12:32:37.809565Z",
+        "value": "JulkL 24.1 § 8 kohta",
+        "index": 8
+      },
+      {
+        "id": "a0ff6e8b6f7e44428a55e3287a5697d1",
+        "created_at": "2017-03-01T12:32:37.810962Z",
+        "modified_at": "2017-03-01T12:32:37.810972Z",
+        "value": "JulkL 24.1 § 9 kohta",
+        "index": 9
+      },
+      {
+        "id": "1334a6d0ab3645dba373b4821dccad02",
+        "created_at": "2017-03-01T12:32:37.812347Z",
+        "modified_at": "2017-03-01T12:32:37.812357Z",
+        "value": "JulkL 24.1 § 10 kohta",
+        "index": 10
+      },
+      {
+        "id": "ac3fe8c4cf9f42178baf226fb10d057e",
+        "created_at": "2017-03-01T12:32:37.813661Z",
+        "modified_at": "2017-03-01T12:32:37.813680Z",
+        "value": "JulkL 24.1 § 11 kohta",
+        "index": 11
+      },
+      {
+        "id": "8e5ff51af767489c9cf1048960dead63",
+        "created_at": "2017-03-01T12:32:37.815092Z",
+        "modified_at": "2017-03-01T12:32:37.815102Z",
+        "value": "JulkL 24.1 § 12 kohta",
+        "index": 12
+      },
+      {
+        "id": "8bd4e605cf0642e2a3f00e62eaa76460",
+        "created_at": "2017-03-01T12:32:37.816468Z",
+        "modified_at": "2017-03-01T12:32:37.816478Z",
+        "value": "JulkL 24.1 § 13 kohta",
+        "index": 13
+      },
+      {
+        "id": "49962487c4124a318dd7e3a9521719f8",
+        "created_at": "2017-03-01T12:32:37.817890Z",
+        "modified_at": "2017-03-01T12:32:37.817907Z",
+        "value": "JulkL 24.1 § 14 kohta",
+        "index": 14
+      },
+      {
+        "id": "0f284e4c8bd2484fb99a5d1cad452244",
+        "created_at": "2017-03-01T12:32:37.819312Z",
+        "modified_at": "2017-03-01T12:32:37.819322Z",
+        "value": "JulkL 24.1 § 15 kohta",
+        "index": 15
+      },
+      {
+        "id": "3593956af1284fe2820d380855b427ea",
+        "created_at": "2017-03-01T12:32:37.820727Z",
+        "modified_at": "2017-03-01T12:32:37.820738Z",
+        "value": "JulkL 24.1 § 16 kohta",
+        "index": 16
+      },
+      {
+        "id": "52cdecf0d2e24b86b8440dd98b19d84b",
+        "created_at": "2017-03-01T12:32:37.822062Z",
+        "modified_at": "2017-03-01T12:32:37.822073Z",
+        "value": "JulkL 24.1 § 17 kohta",
+        "index": 17
+      },
+      {
+        "id": "7b7eb9b0f4e54a6888699123af688ac9",
+        "created_at": "2017-03-01T12:32:37.823406Z",
+        "modified_at": "2017-03-01T12:32:37.823423Z",
+        "value": "JulkL 24.1 § 18 kohta",
+        "index": 18
+      },
+      {
+        "id": "d475007733cf4b03b60eb55ec5b1d8a6",
+        "created_at": "2017-03-01T12:32:37.824867Z",
+        "modified_at": "2017-03-01T12:32:37.824884Z",
+        "value": "JulkL 24.1 § 19 kohta",
+        "index": 19
+      },
+      {
+        "id": "007f564dd56c42feb896d6e6ec30a9e1",
+        "created_at": "2017-03-01T12:32:37.826272Z",
+        "modified_at": "2017-03-01T12:32:37.826282Z",
+        "value": "JulkL 24.1 § 20 kohta",
+        "index": 20
+      },
+      {
+        "id": "4d6edb91a21f42a6992fa57ffe2cae4c",
+        "created_at": "2017-03-01T12:32:37.827621Z",
+        "modified_at": "2017-03-01T12:32:37.827631Z",
+        "value": "JulkL 24.1 § 21 kohta",
+        "index": 21
+      },
+      {
+        "id": "e65a122071674bb0a4d357a706182947",
+        "created_at": "2017-03-01T12:32:37.828938Z",
+        "modified_at": "2017-03-01T12:32:37.828948Z",
+        "value": "JulkL 24.1 § 22 kohta",
+        "index": 22
+      },
+      {
+        "id": "68fa45184cf74fe7839025444433b9a9",
+        "created_at": "2017-03-01T12:32:37.830264Z",
+        "modified_at": "2017-03-01T12:32:37.830274Z",
+        "value": "JulkL 24.1 § 23 kohta",
+        "index": 23
+      },
+      {
+        "id": "9ddae121cfa6442fb23f16f7bc8a31a4",
+        "created_at": "2017-03-01T12:32:37.831563Z",
+        "modified_at": "2017-03-01T12:32:37.831574Z",
+        "value": "JulkL 24.1 § 24 kohta",
+        "index": 24
+      },
+      {
+        "id": "08bbfd2c577f415a86fa880ef350466b",
+        "created_at": "2017-03-01T12:32:37.832892Z",
+        "modified_at": "2017-03-01T12:32:37.832902Z",
+        "value": "JulkL 24.1 § 25 kohta",
+        "index": 25
+      },
+      {
+        "id": "e959b070182e4babad71fc5b06221e56",
+        "created_at": "2017-03-01T12:32:37.834209Z",
+        "modified_at": "2017-03-01T12:32:37.834219Z",
+        "value": "JulkL 24.1 § 26 kohta",
+        "index": 26
+      },
+      {
+        "id": "914cd0e20e894760aad8588e35bae81a",
+        "created_at": "2017-03-01T12:32:37.835467Z",
+        "modified_at": "2017-03-01T12:32:37.835477Z",
+        "value": "JulkL 24.1 § 27 kohta",
+        "index": 27
+      },
+      {
+        "id": "5831063e8d8f4c4f9e0a46bbadd408f3",
+        "created_at": "2017-03-01T12:32:37.836772Z",
+        "modified_at": "2017-03-01T12:32:37.836782Z",
+        "value": "JulkL 24.1 § 28 kohta",
+        "index": 28
+      },
+      {
+        "id": "ab8ec2a5d8c64eebb91c1a0a146feb92",
+        "created_at": "2017-03-01T12:32:37.838116Z",
+        "modified_at": "2017-03-01T12:32:37.838126Z",
+        "value": "JulkL 24.1 § 29 kohta",
+        "index": 29
+      },
+      {
+        "id": "775d848af6074dbda7f0e2e99ef7f629",
+        "created_at": "2017-03-01T12:32:37.839436Z",
+        "modified_at": "2017-03-01T12:32:37.839446Z",
+        "value": "JulkL 24.1 § 30 kohta",
+        "index": 30
+      },
+      {
+        "id": "5780f1ee82e3401d849d11784568bc3d",
+        "created_at": "2017-03-01T12:32:37.840788Z",
+        "modified_at": "2017-03-01T12:32:37.840798Z",
+        "value": "JulkL 24.1 § 31 kohta",
+        "index": 31
+      },
+      {
+        "id": "5362ce2c15c54cca8584228bdb24693d",
+        "created_at": "2017-03-01T12:32:37.842132Z",
+        "modified_at": "2017-03-01T12:32:37.842143Z",
+        "value": "JulkL 24.1 § 32 kohta",
+        "index": 32
+      },
+      {
+        "id": "3d8875ff27af4ee78f1af9d82a18932d",
+        "created_at": "2017-03-01T12:32:37.843431Z",
+        "modified_at": "2017-03-31T11:23:01.766412Z",
+        "value": "HenkilötietoL 11 §",
+        "index": 33
+      },
+      {
+        "id": "58da68156e334720a7da50d2c49939bc",
+        "created_at": "2017-03-01T12:32:37.844835Z",
+        "modified_at": "2017-03-01T12:32:37.844851Z",
+        "value": "PotilastietoL 13 §",
+        "index": 34
+      },
+      {
+        "id": "0514b838330646cca4df7ff0164247aa",
+        "created_at": "2017-03-01T12:32:37.846229Z",
+        "modified_at": "2017-03-01T12:32:37.846240Z",
+        "value": "SAsiakasL 14 §",
+        "index": 35
+      },
+      {
+        "id": "407be4f3310a4d5d8846f9e7ee3e3620",
+        "created_at": "2017-06-05T09:23:42.399589Z",
+        "modified_at": "2017-06-05T09:23:42.399615Z",
+        "value": "HenkilötietoL 13 §",
+        "index": 36
+      },
+      {
+        "id": "e2a675b5098b45df92d7bbeea73c60df",
+        "created_at": "2017-06-05T09:23:42.404546Z",
+        "modified_at": "2017-06-05T09:23:42.404567Z",
+        "value": "Laki verotustietojen julkisuudesta ja salassapidosta 4 §",
+        "index": 37
+      }
+    ],
+    "allowedIn": ["record", "function"],
+    "multiIn": [],
+    "requiredIf": [
+      {
+        "key": "PublicityClass",
+        "values": ["Salassa pidettävä", "Osittain salassa pidettävä"]
+      }
+    ],
+    "requiredIn": [],
+    "required": false
+  },
+  "RetentionPeriodStart": {
+    "index": 12,
+    "name": "Säilytysajan laskentaperuste",
+    "values": [
+      {
+        "id": "b05eb97b5e1f4963bb4cac582c6d4f06",
+        "created_at": "2017-03-01T12:32:37.977092Z",
+        "modified_at": "2017-03-01T12:32:37.977102Z",
+        "value": "Asian lopullinen ratkaisu",
+        "index": 1
+      },
+      {
+        "id": "828863ad77b04d078c96f2e5ca4f7a41",
+        "created_at": "2017-03-01T12:32:37.978367Z",
+        "modified_at": "2017-03-01T12:32:37.978377Z",
+        "value": "Asiakirjan päivämäärä",
+        "index": 2
+      },
+      {
+        "id": "95e8dfe6fda7497bbd3248db1fc9ed54",
+        "created_at": "2017-03-01T12:32:37.979628Z",
+        "modified_at": "2017-03-01T12:32:37.979638Z",
+        "value": "Asiakirjan voimassaoloaika",
+        "index": 3
+      },
+      {
+        "id": "d5b5291ceea647669b6f2e9502122d6b",
+        "created_at": "2017-03-01T12:32:37.980907Z",
+        "modified_at": "2017-03-01T12:32:37.980918Z",
+        "value": "Henkilön kuolema",
+        "index": 4
+      },
+      {
+        "id": "f33d1450cd1d45bba5546ceaf0681376",
+        "created_at": "2017-03-01T12:32:37.982327Z",
+        "modified_at": "2017-03-01T12:32:37.982337Z",
+        "value": "Hoidon päättyminen",
+        "index": 5
+      },
+      {
+        "id": "1ef74819f6e14841b920c166495edef5",
+        "created_at": "2017-03-01T12:32:37.983653Z",
+        "modified_at": "2017-03-01T12:32:37.983678Z",
+        "value": "Kaluston käytöstä poistaminen",
+        "index": 6
+      },
+      {
+        "id": "38a6b8f5eef6466bbf734e4122015700",
+        "created_at": "2017-03-01T12:32:37.984975Z",
+        "modified_at": "2017-03-01T12:32:37.984985Z",
+        "value": "Lukuvuosi",
+        "index": 7
+      },
+      {
+        "id": "8bcec91175974d2f99962fb4a48d27af",
+        "created_at": "2017-03-01T12:32:37.986276Z",
+        "modified_at": "2017-03-01T12:32:37.986287Z",
+        "value": "Opiskeluaika",
+        "index": 8
+      },
+      {
+        "id": "92f154dcad67418683cbcedca8058050",
+        "created_at": "2017-03-01T12:32:37.987551Z",
+        "modified_at": "2017-03-01T12:32:37.987561Z",
+        "value": "Oppivelvollisuusaika",
+        "index": 9
+      },
+      {
+        "id": "f443df0542bb4b8a9a96bd0230095373",
+        "created_at": "2017-03-01T12:32:37.988854Z",
+        "modified_at": "2017-03-01T12:32:37.988865Z",
+        "value": "Palvelussuhteen päättyminen",
+        "index": 10
+      },
+      {
+        "id": "6c1989db3c214124a2850ce2b8afeb35",
+        "created_at": "2017-03-01T12:32:37.990174Z",
+        "modified_at": "2017-03-01T12:32:37.990184Z",
+        "value": "Projektin päättyminen",
+        "index": 11
+      },
+      {
+        "id": "a85898e884f342b89e8b241a3674243f",
+        "created_at": "2017-03-01T12:32:37.991527Z",
+        "modified_at": "2017-03-01T12:32:37.991537Z",
+        "value": "Rakennuksen purkaminen",
+        "index": 12
+      },
+      {
+        "id": "bfef998ea07c414d844f61b203a031f1",
+        "created_at": "2017-03-01T12:32:37.992841Z",
+        "modified_at": "2017-03-01T12:32:37.992851Z",
+        "value": "Säilytysjärjestelmään siirto",
+        "index": 13
+      },
+      {
+        "id": "a78784efe9f143c0b7ef658b68e9100a",
+        "created_at": "2017-03-01T12:32:37.994096Z",
+        "modified_at": "2017-03-01T12:32:37.994106Z",
+        "value": "Suojelun päättyminen",
+        "index": 14
+      },
+      {
+        "id": "9a2fa77cdd834d68b807f032dec48823",
+        "created_at": "2017-03-01T12:32:37.995374Z",
+        "modified_at": "2017-03-01T12:32:37.995432Z",
+        "value": "Takuuajan päättyminen",
+        "index": 15
+      },
+      {
+        "id": "fcbaeb7ce4e6484ab34d974d731e2051",
+        "created_at": "2017-03-01T12:32:37.996766Z",
+        "modified_at": "2017-03-01T12:32:37.996776Z",
+        "value": "Tilikauden päättyminen",
+        "index": 16
+      },
+      {
+        "id": "053aba6d49f24048a4cd905c726a3748",
+        "created_at": "2017-03-01T12:32:37.998090Z",
+        "modified_at": "2017-03-01T12:32:37.998100Z",
+        "value": "Toimenpiteen päättyminen",
+        "index": 17
+      },
+      {
+        "id": "7367dda7f40646108397dfdca0703030",
+        "created_at": "2017-03-01T12:32:37.999415Z",
+        "modified_at": "2017-03-01T12:32:37.999425Z",
+        "value": "Valvonnan päättyminen",
+        "index": 18
+      },
+      {
+        "id": "e4e180e0d3f340218f6ea6ce9d081e2c",
+        "created_at": "2017-03-01T12:32:38.000832Z",
+        "modified_at": "2017-03-31T11:23:48.445650Z",
+        "value": "Viimeinen päivitys",
+        "index": 19
+      },
+      {
+        "id": "622211bae5294bb88c0da644ed2a3751",
+        "created_at": "2017-03-01T12:32:38.002272Z",
+        "modified_at": "2017-03-01T12:32:38.002283Z",
+        "value": "Voimassaoloaika",
+        "index": 20
+      }
+    ],
+    "allowedIn": ["record", "function"],
+    "multiIn": [],
+    "requiredIf": [
+      {
+        "key": "RetentionPeriod",
+        "values": [
+          "25",
+          "1",
+          "10",
+          "20",
+          "Asiakirjan voimassaoloaika",
+          "2",
+          "11",
+          "13",
+          "0",
+          "3",
+          "6",
+          "50",
+          "120",
+          "5"
+        ]
+      }
+    ],
+    "requiredIn": [],
+    "required": false
+  },
+  "Restriction.SecurityPeriodStart": {
+    "index": 13,
+    "name": "Salassapitoajan laskentaperuste",
+    "values": [
+      {
+        "id": "e4be2baf154d4181838cb93d83c7c756",
+        "created_at": "2017-03-01T12:32:37.963049Z",
+        "modified_at": "2017-03-01T12:32:37.963059Z",
+        "value": "Asian ratkaisu",
+        "index": 1
+      },
+      {
+        "id": "381ffd637ffe46fdaf1fabe3b6750270",
+        "created_at": "2017-03-01T12:32:37.964380Z",
+        "modified_at": "2017-03-01T12:32:37.964390Z",
+        "value": "Asiakirjan päivämäärä",
+        "index": 2
+      },
+      {
+        "id": "d735c832dff649809367b6a8a823ef24",
+        "created_at": "2017-03-01T12:32:37.965651Z",
+        "modified_at": "2017-03-01T12:32:37.965661Z",
+        "value": "Asiakirjan valmistuminen",
+        "index": 3
+      },
+      {
+        "id": "4697e375fab1489d83bcf6150838dd4f",
+        "created_at": "2017-03-01T12:32:37.967001Z",
+        "modified_at": "2017-03-01T12:32:37.967011Z",
+        "value": "Asiakirjan saapumisajankohta",
+        "index": 4
+      },
+      {
+        "id": "4540b0530bd9452ba6be8c4b783e0f5c",
+        "created_at": "2017-03-01T12:32:37.968383Z",
+        "modified_at": "2017-03-01T12:32:37.968393Z",
+        "value": "Henkilön kuolema",
+        "index": 5
+      }
+    ],
+    "allowedIn": ["record", "function"],
+    "multiIn": [],
+    "requiredIf": [
+      {
+        "key": "PublicityClass",
+        "values": ["Salassa pidettävä", "Osittain salassa pidettävä"]
+      }
+    ],
+    "requiredIn": [],
+    "required": false
+  },
+  "PublicityClassChange": {
+    "index": 14,
+    "name": "Julkisuusluokan muutos",
+    "values": [],
+    "allowedIn": ["record"],
+    "multiIn": [],
+    "requiredIf": [],
+    "requiredIn": [],
+    "required": false
+  },
+  "PersonalData": {
+    "index": 15,
+    "name": "Henkilötietoluonne",
+    "values": [
+      {
+        "id": "6ade9d17bdaa46da8a3b2cb8bd62e411",
+        "created_at": "2017-03-01T12:32:37.971521Z",
+        "modified_at": "2017-03-01T12:32:37.971530Z",
+        "value": "Ei sisällä henkilötietoja",
+        "index": 1
+      },
+      {
+        "id": "4527a6e707e343e09b4e60a99ee60b98",
+        "created_at": "2017-03-01T12:32:37.972904Z",
+        "modified_at": "2017-03-01T12:32:37.972914Z",
+        "value": "Sisältää henkilötietoja",
+        "index": 2
+      },
+      {
+        "id": "67de2cef779246e083a4d43ff1fbd063",
+        "created_at": "2017-03-01T12:32:37.974182Z",
+        "modified_at": "2017-03-01T12:32:37.974192Z",
+        "value": "Sisältää arkaluonteisia henkilötietoja",
+        "index": 3
+      }
+    ],
+    "allowedIn": ["record", "function"],
+    "multiIn": [],
+    "requiredIf": [],
+    "requiredIn": ["record", "function"],
+    "required": true
+  },
+  "SocialSecurityNumber": {
+    "index": 16,
+    "name": "Henkilötunnus",
+    "values": [
+      {
+        "id": "a6907f0615484e9daaaeb0c9856e96c8",
+        "created_at": "2017-03-01T12:32:37.776258Z",
+        "modified_at": "2017-03-01T12:32:37.776270Z",
+        "value": "Ei sisällä henkilötunnusta",
+        "index": 1
+      },
+      {
+        "id": "b379e40a6b6a40da87bc122d8fb54c5d",
+        "created_at": "2017-03-01T12:32:37.777601Z",
+        "modified_at": "2017-03-01T12:32:37.777617Z",
+        "value": "Sisältää henkilötunnuksen",
+        "index": 2
+      }
+    ],
+    "allowedIn": ["record", "function"],
+    "multiIn": [],
+    "requiredIf": [],
+    "requiredIn": ["record", "function"],
+    "required": true
+  },
+  "RetentionPeriodOffice": {
+    "index": 17,
+    "name": "Paperiasiakirjojen säilytysaika työpisteessä",
+    "values": [
+      {
+        "id": "0423b12d265147428b8e3af03eb8a03e",
+        "created_at": "2017-03-01T12:32:37.941463Z",
+        "modified_at": "2017-03-01T12:32:37.941473Z",
+        "value": "Säilytetään sähköisesti",
+        "index": 1
+      },
+      {
+        "id": "aab28f9b87da42269e4621652ec1a52e",
+        "created_at": "2017-03-01T12:32:37.942774Z",
+        "modified_at": "2017-03-01T12:32:37.942784Z",
+        "value": "0",
+        "index": 2
+      },
+      {
+        "id": "1d4e851dc3bd444e80262df7d46d28b8",
+        "created_at": "2017-03-01T12:32:37.944087Z",
+        "modified_at": "2017-03-01T12:32:37.944097Z",
+        "value": "1",
+        "index": 3
+      },
+      {
+        "id": "f318d776240e4581b0997e919a0f6db2",
+        "created_at": "2017-03-01T12:32:37.945519Z",
+        "modified_at": "2017-03-01T12:32:37.945530Z",
+        "value": "2",
+        "index": 4
+      },
+      {
+        "id": "fd6697631eac489ca1c771983e589e81",
+        "created_at": "2017-03-01T12:32:37.946819Z",
+        "modified_at": "2017-03-01T12:32:37.946829Z",
+        "value": "Asian käsittelyn ajan",
+        "index": 5
+      },
+      {
+        "id": "dc80fe787ae74d7aa9d53681bce48828",
+        "created_at": "2017-03-01T12:32:37.948099Z",
+        "modified_at": "2017-03-01T12:32:37.948109Z",
+        "value": "Projektin ajan",
+        "index": 6
+      }
+    ],
+    "allowedIn": ["record", "function"],
+    "multiIn": [],
+    "requiredIf": [],
+    "requiredIn": [],
+    "required": false
+  },
+  "StorageLocation": {
+    "index": 18,
+    "name": "Paperiasiakirjojen säilytyspaikka",
+    "values": [],
+    "allowedIn": ["record", "function"],
+    "multiIn": [],
+    "requiredIf": [],
+    "requiredIn": [],
+    "required": false
+  },
+  "StorageOrder": {
+    "index": 19,
+    "name": "Paperiasiakirjojen säilytysjärjestys",
+    "values": [
+      {
+        "id": "636da21064844a979dbb4263636ac274",
+        "created_at": "2017-03-01T12:32:37.648300Z",
+        "modified_at": "2017-03-01T12:32:37.648312Z",
+        "value": "Säilytetään sähköisesti",
+        "index": 1
+      },
+      {
+        "id": "030ce9399d5a4aaeb6c7c8c64f4685d2",
+        "created_at": "2017-03-01T12:32:37.649752Z",
+        "modified_at": "2017-03-01T12:32:37.649763Z",
+        "value": "Aakkosjärjestys",
+        "index": 2
+      },
+      {
+        "id": "62c9d7004500449fab4fb7002743be7f",
+        "created_at": "2017-03-01T12:32:37.651064Z",
+        "modified_at": "2017-03-01T12:32:37.651074Z",
+        "value": "Aikajärjestys",
+        "index": 3
+      },
+      {
+        "id": "0106f814ac2c4b22838b367af626a2c4",
+        "created_at": "2017-03-01T12:32:37.652392Z",
+        "modified_at": "2017-03-01T12:32:37.652402Z",
+        "value": "Asian mukainen järjestys",
+        "index": 4
+      },
+      {
+        "id": "e44168c2563b4421ac460cecb3621b37",
+        "created_at": "2017-03-01T12:32:37.653703Z",
+        "modified_at": "2017-03-01T12:32:37.653713Z",
+        "value": "Diaarinumeron mukainen järjestys",
+        "index": 5
+      },
+      {
+        "id": "697936c60f044841ba0cecd78dc3ff43",
+        "created_at": "2017-03-01T12:32:37.655140Z",
+        "modified_at": "2017-03-01T12:32:37.655150Z",
+        "value": "Numerojärjestys",
+        "index": 6
+      }
+    ],
+    "allowedIn": ["record", "function"],
+    "multiIn": [],
+    "requiredIf": [],
+    "requiredIn": [],
+    "required": false
+  },
+  "StorageAccountable": {
+    "index": 20,
+    "name": "Paperiasiakirjojen säilytyksen vastuuhenkilö",
+    "values": [],
+    "allowedIn": ["record", "function"],
+    "multiIn": [],
+    "requiredIf": [],
+    "requiredIn": [],
+    "required": false
+  },
+  "ProtectionClass": {
+    "index": 21,
+    "name": "Suojeluluokka",
+    "values": [
+      {
+        "id": "f77c543425f5492a94039c238fe2c496",
+        "created_at": "2017-03-01T12:32:37.956155Z",
+        "modified_at": "2017-03-01T12:32:37.956165Z",
+        "value": "Ei suojeluluokkaa, sähköinen asiakirja",
+        "index": 1
+      },
+      {
+        "id": "3a0f55965d734e7f99c17be2ca5ad7e0",
+        "created_at": "2017-03-01T12:32:37.957561Z",
+        "modified_at": "2017-03-01T12:32:37.957571Z",
+        "value": "1 toiminnan jatkumisen kannalta välttämättömät asiakirjat",
+        "index": 2
+      },
+      {
+        "id": "3939842cc20b452ca52571f46e0732c0",
+        "created_at": "2017-03-01T12:32:37.958970Z",
+        "modified_at": "2017-03-01T12:32:37.958980Z",
+        "value":
+          "2 tutkimukselllisista, juridisista tai taloudellisista syistä suojeltavat asiakirjat",
+        "index": 3
+      },
+      {
+        "id": "798effccb16a46a7a79d587664203f85",
+        "created_at": "2017-03-01T12:32:37.960265Z",
+        "modified_at": "2017-03-01T12:32:37.960275Z",
+        "value": "3 muut asiakirjat",
+        "index": 4
+      }
+    ],
+    "allowedIn": ["record", "function"],
+    "multiIn": [],
+    "requiredIf": [],
+    "requiredIn": [],
+    "required": false
+  },
+  "AdditionalInformation": {
+    "index": 22,
+    "name": "Lisätietoja",
+    "values": [],
+    "allowedIn": ["action", "phase", "record", "function"],
+    "multiIn": [],
+    "requiredIf": [],
+    "requiredIn": [],
+    "required": false
+  },
+  "RetentionPeriodTotal": {
+    "index": 23,
+    "name": "Paperiasiakirjojen säilytysaika arkistossa",
+    "values": [
+      {
+        "id": "558446a4917643c89b95bf0c529c83b3",
+        "created_at": "2017-03-01T12:32:37.914303Z",
+        "modified_at": "2017-03-01T12:32:37.914314Z",
+        "value": "Säilytetään sähköisesti",
+        "index": 1
+      },
+      {
+        "id": "78eef4ce8cda4b4696348034356e9af7",
+        "created_at": "2017-03-01T12:32:37.915757Z",
+        "modified_at": "2017-03-01T12:32:37.915768Z",
+        "value":
+          "Ei säilytetä paperisena arkistossa, paperisäilytys työpisteessä",
+        "index": 2
+      },
+      {
+        "id": "40ad77de049b4c6eba06c2752a9c1ea6",
+        "created_at": "2017-03-01T12:32:37.917115Z",
+        "modified_at": "2017-03-01T12:32:37.917125Z",
+        "value": "2",
+        "index": 3
+      },
+      {
+        "id": "009dbda68f594c63bda3068176e2cdd0",
+        "created_at": "2017-03-01T12:32:37.918426Z",
+        "modified_at": "2017-03-01T12:32:37.918436Z",
+        "value": "3",
+        "index": 4
+      },
+      {
+        "id": "d32f04dd50c041cc9e821abaeee65b91",
+        "created_at": "2017-03-01T12:32:37.919790Z",
+        "modified_at": "2017-03-01T12:32:37.919800Z",
+        "value": "5",
+        "index": 5
+      },
+      {
+        "id": "3525704e2c45462a89c9f24419939f08",
+        "created_at": "2017-03-01T12:32:37.921174Z",
+        "modified_at": "2017-03-01T12:32:37.921185Z",
+        "value": "6",
+        "index": 6
+      },
+      {
+        "id": "82136eaf638d4faf9c5aadfb24bd563f",
+        "created_at": "2017-03-01T12:32:37.922533Z",
+        "modified_at": "2017-03-01T12:32:37.922543Z",
+        "value": "10",
+        "index": 7
+      },
+      {
+        "id": "2ddde7d8b48549478cab414b7fab9dc9",
+        "created_at": "2017-03-01T12:32:37.923850Z",
+        "modified_at": "2017-03-01T12:32:37.923860Z",
+        "value": "11",
+        "index": 8
+      },
+      {
+        "id": "d4dc65d6b536452aa33f93fe91b9ed9e",
+        "created_at": "2017-03-01T12:32:37.925202Z",
+        "modified_at": "2017-03-01T12:32:37.925212Z",
+        "value": "13",
+        "index": 9
+      },
+      {
+        "id": "58c93b0eb0c44953a6eab96a462a7d4b",
+        "created_at": "2017-03-01T12:32:37.926536Z",
+        "modified_at": "2017-03-01T12:32:37.926546Z",
+        "value": "20",
+        "index": 10
+      },
+      {
+        "id": "2fda703909e64daca4ca1d58e28bfeca",
+        "created_at": "2017-03-01T12:32:37.927903Z",
+        "modified_at": "2017-03-01T12:32:37.927913Z",
+        "value": "25",
+        "index": 11
+      },
+      {
+        "id": "415aca7c6d2f468983795c08cc365467",
+        "created_at": "2017-03-01T12:32:37.929226Z",
+        "modified_at": "2017-03-01T12:32:37.929237Z",
+        "value": "50",
+        "index": 12
+      },
+      {
+        "id": "a4fd112e133a473384fbf71e11cb1695",
+        "created_at": "2017-03-01T12:32:37.930515Z",
+        "modified_at": "2017-03-01T12:32:37.930525Z",
+        "value": "120",
+        "index": 13
+      },
+      {
+        "id": "2c98c7e1ddb74ca48dd6f40082ebc8a1",
+        "created_at": "2017-03-01T12:32:37.931802Z",
+        "modified_at": "2017-03-01T12:32:37.931812Z",
+        "value": "-1",
+        "index": 14
+      }
+    ],
+    "allowedIn": ["record"],
+    "multiIn": [],
+    "requiredIf": [],
+    "requiredIn": [],
+    "required": false
+  },
+  "DisposePreviousVersions": {
+    "index": 24,
+    "name": "Asiakirjan aiempien versioiden poistaminen",
+    "values": [],
+    "allowedIn": ["record"],
+    "multiIn": [],
+    "requiredIf": [],
+    "requiredIn": [],
+    "required": false
+  },
+  "Restriction.ProtectionLevel": {
+    "index": 25,
+    "name": "Suojaustaso",
+    "values": [
+      {
+        "id": "d528a496d23242e7b6efc2694e0eacf1",
+        "created_at": "2017-03-01T12:33:08.647229Z",
+        "modified_at": "2017-03-01T12:33:08.647240Z",
+        "value": "Ei suojaustasoa",
+        "index": 1
+      },
+      {
+        "id": "e28314f5f9124ce698f9b6d1480d70bc",
+        "created_at": "2017-03-01T12:33:08.648681Z",
+        "modified_at": "2017-03-01T12:33:08.648692Z",
+        "value": "ST IV",
+        "index": 2
+      },
+      {
+        "id": "616ccac09305488ebdfc6f584e5173c6",
+        "created_at": "2017-03-01T12:33:08.649944Z",
+        "modified_at": "2017-03-01T12:33:08.649955Z",
+        "value": "ST III",
+        "index": 3
+      },
+      {
+        "id": "47598b0fd1ce411aa1a86bc0f61d3925",
+        "created_at": "2017-03-01T12:33:08.651196Z",
+        "modified_at": "2017-03-01T12:33:08.651206Z",
+        "value": "ST II",
+        "index": 4
+      },
+      {
+        "id": "0e86477f1be548b1b90921c2e62e37be",
+        "created_at": "2017-03-01T12:33:08.652468Z",
+        "modified_at": "2017-03-01T12:33:08.652479Z",
+        "value": "ST I",
+        "index": 5
+      }
+    ],
+    "allowedIn": ["record", "function"],
+    "multiIn": [],
+    "requiredIf": [],
+    "requiredIn": [],
+    "required": false
+  },
+  "Restriction.SecurityClass": {
+    "index": 26,
+    "name": "Turvallisuusluokka",
+    "values": [
+      {
+        "id": "48b3a82b84ea4a4ba7acf86c14940755",
+        "created_at": "2017-03-01T12:33:08.776340Z",
+        "modified_at": "2017-03-01T12:33:08.776351Z",
+        "value": "Ei turvaluokiteltu",
+        "index": 1
+      },
+      {
+        "id": "989014479f6940b49fb24e2cc9d122ff",
+        "created_at": "2017-03-01T12:33:08.777632Z",
+        "modified_at": "2017-03-01T12:33:08.777642Z",
+        "value": "IV Käyttö rajoitettu",
+        "index": 2
+      },
+      {
+        "id": "2c069f775faf4622a3e077301ec301e3",
+        "created_at": "2017-03-01T12:33:08.778924Z",
+        "modified_at": "2017-03-01T12:33:08.778934Z",
+        "value": "III Luottamuksellinen",
+        "index": 3
+      },
+      {
+        "id": "30723a6b25eb4157983442193a5da292",
+        "created_at": "2017-03-01T12:33:08.780216Z",
+        "modified_at": "2017-03-01T12:33:08.780227Z",
+        "value": "II Salainen",
+        "index": 4
+      },
+      {
+        "id": "551344276d3140dda469027342a310c9",
+        "created_at": "2017-03-01T12:33:08.781494Z",
+        "modified_at": "2017-03-01T12:33:08.781505Z",
+        "value": "I Erittäin salainen",
+        "index": 5
+      }
+    ],
+    "allowedIn": ["record", "function"],
+    "multiIn": [],
+    "requiredIf": [],
+    "requiredIn": [],
+    "required": false
+  },
+  "Subject": {
+    "index": 27,
+    "name": "Asiasana",
+    "values": [],
+    "allowedIn": ["record", "function"],
+    "multiIn": ["record", "function"],
+    "requiredIf": [],
+    "requiredIn": [],
+    "required": false
+  },
+  "Subject.Scheme": {
+    "index": 28,
+    "name": "Käytetty Asiasanasto",
+    "values": [],
+    "allowedIn": ["record", "function"],
+    "multiIn": ["record", "function"],
+    "requiredIf": [],
+    "requiredIn": [],
+    "required": false
+  },
+  "DataGroup": {
+    "index": 29,
+    "name": "Päätietoryhmä",
+    "values": [],
+    "allowedIn": ["record", "function"],
+    "multiIn": ["record", "function"],
+    "requiredIf": [],
+    "requiredIn": [],
+    "required": false
+  },
+  "ProcessOwner": {
+    "index": 30,
+    "name": "Prosessin omistaja",
+    "values": [],
+    "allowedIn": ["function"],
+    "multiIn": ["function"],
+    "requiredIf": [],
+    "requiredIn": [],
+    "required": false
+  },
+  "CollectiveProcessIDSource": {
+    "index": 31,
+    "name": "Kokoavan prosessitunnuksen lähde",
+    "values": [],
+    "allowedIn": ["function"],
+    "multiIn": ["function"],
+    "requiredIf": [],
+    "requiredIn": [],
+    "required": false
+  },
+  "ProcessStatus": {
+    "index": 32,
+    "name": "Käsittelyprosessin tila",
+    "values": [],
+    "allowedIn": ["action", "phase"],
+    "multiIn": [],
+    "requiredIf": [],
+    "requiredIn": [],
+    "required": false
+  }
+}
