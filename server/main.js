@@ -16,7 +16,13 @@ const app = express();
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieSession({ name: 's', secret: config.globals.JWT_TOKEN, maxAge: 86400 * 1000 }));
+app.use(
+  cookieSession({
+    name: 's',
+    secret: config.globals.JWT_TOKEN,
+    maxAge: 86400 * 1000
+  })
+);
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -34,15 +40,17 @@ if (config.env === 'development') {
   app.use(require('connect-history-api-fallback')());
 
   debug('Enable webpack dev and HMR middleware');
-  app.use(require('webpack-dev-middleware')(compiler, {
-    publicPath: webpackConfig.output.publicPath,
-    contentBase: path.resolve('./src'),
-    hot: true,
-    quiet: false,
-    noInfo: false,
-    lazy: false,
-    stats: "normal",
-  }));
+  app.use(
+    require('webpack-dev-middleware')(compiler, {
+      publicPath: webpackConfig.output.publicPath,
+      contentBase: path.resolve('./src'),
+      hot: true,
+      quiet: false,
+      noInfo: false,
+      lazy: false,
+      stats: 'normal'
+    })
+  );
 
   app.use(require('webpack-hot-middleware')(compiler));
 

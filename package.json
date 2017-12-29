@@ -20,7 +20,10 @@
     "deploy": "better-npm-run deploy",
     "deploy:dev": "better-npm-run deploy:dev",
     "deploy:prod": "better-npm-run deploy:prod",
-    "codecov": "cat coverage/*/lcov.info | codecov"
+    "codecov": "cat coverage/*/lcov.info | codecov",
+    "precommit": "npm run lint",
+    "prepush":
+      "concurrently --kill-others-on-fail -n \"LINT,TEST\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run lint\" \"npm run test\""
   },
   "betterScripts": {
     "compile": {
@@ -30,14 +33,16 @@
       }
     },
     "dev": {
-      "command": "nodemon bin/server --ignore dist --ignore coverage --ignore tests --ignore src",
+      "command":
+        "nodemon bin/server --ignore dist --ignore coverage --ignore tests --ignore src",
       "env": {
         "NODE_ENV": "development",
         "DEBUG": "app:*"
       }
     },
     "deploy": {
-      "command": "npm run lint && npm run test && npm run clean && npm run compile",
+      "command":
+        "npm run lint && npm run test && npm run clean && npm run compile",
       "env": {
         "DEBUG": "app:*"
       }
@@ -154,6 +159,7 @@
     "chai-enzyme": "^0.6.1",
     "cheerio": "^0.22.0",
     "codecov": "^1.0.1",
+    "concurrently": "^3.5.1",
     "enzyme": "^2.0.0",
     "eslint": "^3.0.1",
     "eslint-config-standard": "^6.0.0",
@@ -163,6 +169,7 @@
     "eslint-plugin-promise": "^3.3.0",
     "eslint-plugin-react": "^6.10.0",
     "eslint-plugin-standard": "^2.0.0",
+    "husky": "^0.14.3",
     "isomorphic-fetch": "^2.2.1",
     "karma": "^1.0.0",
     "karma-chrome-launcher": "^2.0.0",
@@ -186,13 +193,7 @@
     "webpack-dashboard": "^0.3.0"
   },
   "babel": {
-    "presets": [
-      "react",
-      "es2015",
-      "stage-2"
-    ],
-    "plugins": [
-      "add-module-exports"
-    ]
+    "presets": ["react", "es2015", "stage-2"],
+    "plugins": ["add-module-exports"]
   }
 }

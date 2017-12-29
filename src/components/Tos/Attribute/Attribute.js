@@ -29,9 +29,13 @@ export class Attribute extends React.Component {
   onChange (option) {
     if (option instanceof Array) {
       const values = option.length ? map(option, 'value') : null;
-      this.setState({ attribute: values && values.length === 1 ? values[0] : values });
+      this.setState({
+        attribute: values && values.length === 1 ? values[0] : values
+      });
     } else {
-      this.setState({ attribute: option && option.value ? option.value : option });
+      this.setState({
+        attribute: option && option.value ? option.value : option
+      });
     }
   }
 
@@ -44,12 +48,12 @@ export class Attribute extends React.Component {
   submit (event) {
     event.preventDefault();
     if (this.props.attributeIndex === '') {
-      this.props.updateTypeSpecifier(this.state.attribute, this.props.elementId);
-    } else if (this.props.attributeIndex === this.props.attribute) {
-      this.props.updateType(
+      this.props.updateTypeSpecifier(
         this.state.attribute,
         this.props.elementId
       );
+    } else if (this.props.attributeIndex === this.props.attribute) {
+      this.props.updateType(this.state.attribute, this.props.elementId);
     } else if (this.props.tosAttribute) {
       this.props.updateFunctionAttribute(
         this.state.attribute,
@@ -63,9 +67,7 @@ export class Attribute extends React.Component {
       );
     }
 
-    setTimeout(() => this.changeState('view'),
-      150
-    );
+    setTimeout(() => this.changeState('view'), 150);
   }
 
   resolveBaseAttributePlaceholder () {
@@ -96,9 +98,16 @@ export class Attribute extends React.Component {
         };
       });
       if (this.state.attribute) {
-        const valueArray = this.state.attribute instanceof Array ? this.state.attribute : [this.state.attribute];
-        forEach(valueArray, function(value) {
-          if (!find(options, function(option) { return option.value === value; })) {
+        const valueArray =
+          this.state.attribute instanceof Array
+            ? this.state.attribute
+            : [this.state.attribute];
+        forEach(valueArray, function (value) {
+          if (
+            !find(options, function (option) {
+              return option.value === value;
+            })
+          ) {
             options.push({
               label: value,
               value: value
@@ -168,9 +177,16 @@ export class Attribute extends React.Component {
       }
     }
     if (this.state.attribute) {
-      const valueArray = this.state.attribute instanceof Array ? this.state.attribute : [this.state.attribute];
-      forEach(valueArray, function(value) {
-        if (!find(options, function(option) { return option.value === value; })) {
+      const valueArray =
+        this.state.attribute instanceof Array
+          ? this.state.attribute
+          : [this.state.attribute];
+      forEach(valueArray, function (value) {
+        if (
+          !find(options, function (option) {
+            return option.value === value;
+          })
+        ) {
           options.push({
             label: value,
             value: value
@@ -187,7 +203,7 @@ export class Attribute extends React.Component {
           className='col-xs-6 form-control edit-attribute__input'
           clearable={true}
           value={this.state.attribute}
-          onChange={(option) => this.onChange(option ? option.value : null)}
+          onChange={option => this.onChange(option ? option.value : null)}
           onBlur={this.submit}
           autoFocus={true}
           options={options}
@@ -200,7 +216,15 @@ export class Attribute extends React.Component {
   }
 
   render () {
-    const { attribute, attributeIndex, showAttributes, attributeKey, attributeTypes, editable, type } = this.props;
+    const {
+      attribute,
+      attributeIndex,
+      showAttributes,
+      attributeKey,
+      attributeTypes,
+      editable,
+      type
+    } = this.props;
     let attributeValue;
     if (editable === false && attribute !== null) {
       return (
@@ -211,14 +235,26 @@ export class Attribute extends React.Component {
       );
     }
     if (this.state.mode === 'view') {
-      attributeValue = <div className='table-value'>{this.state.attribute instanceof Array ? this.state.attribute.join(", ") : this.state.attribute}</div>;
+      attributeValue = (
+        <div className='table-value'>
+          {this.state.attribute instanceof Array
+            ? this.state.attribute.join(', ')
+            : this.state.attribute}
+        </div>
+      );
     }
     if (this.state.mode === 'edit') {
       if (type === 'attribute') {
-        attributeValue = this.generateAttributeInput(attributeTypes[attributeIndex], attribute);
+        attributeValue = this.generateAttributeInput(
+          attributeTypes[attributeIndex],
+          attribute
+        );
       }
       if (type === 'basic') {
-        attributeValue = this.generateBasicAttributeInput(attributeIndex, attribute);
+        attributeValue = this.generateBasicAttributeInput(
+          attributeIndex,
+          attribute
+        );
       }
     }
 
@@ -226,16 +262,20 @@ export class Attribute extends React.Component {
       return (
         <a
           onClick={() => this.activateEditMode()}
-          className={'list-group-item col-xs-6 attribute ' + (showAttributes ? 'visible' : 'hidden')}>
+          className={
+            'list-group-item col-xs-6 attribute ' +
+            (showAttributes ? 'visible' : 'hidden')
+          }
+        >
           <span className='table-key'>
-            { attributeKey }
+            {attributeKey}
             {/* { type === 'attribute' &&
             this.props.documentState === 'edit' &&
             attributeTypes[attributeIndex].required &&
             <span className='fa fa-asterisk required-asterisk'/>
             } */}
           </span>
-          { attributeValue }
+          {attributeValue}
         </a>
       );
     }

@@ -1,9 +1,9 @@
 const webpack = require('webpack');
 const debug = require('debug')('app:build:webpack-compiler');
-const config = require('../config');
+require('../config');
 
 function webpackCompiler (webpackConfig, statsFormat) {
-  statsFormat = statsFormat || "normal";
+  statsFormat = statsFormat || 'normal';
 
   return new Promise((resolve, reject) => {
     const compiler = webpack(webpackConfig);

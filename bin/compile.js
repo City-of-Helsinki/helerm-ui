@@ -3,7 +3,7 @@ const path = require('path');
 const debug = require('debug')('app:bin:compile');
 const webpackCompiler = require('../config/webpack-compiler');
 const webpackConfig = require('../config/webpack.config');
-const config = require('../config');
+require('../config');
 
 const compile = () => {
   debug('Starting compiler.');
@@ -16,7 +16,7 @@ const compile = () => {
     .then(() => {
       debug('Compilation completed successfully.');
     })
-    .catch((err) => {
+    .catch(err => {
       debug('Compiler encountered an error.', err);
       process.exit(1);
     });
