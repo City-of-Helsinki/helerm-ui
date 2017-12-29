@@ -85,7 +85,7 @@ export class CloneView extends React.Component {
         <ul className='nav nav-tabs disabled'>
           <li role='presentation'
               className={classnames({ 'disabled': hasSelectedItem, 'active': selectedMethod === METHOD_TEMPLATE })}>
-            <a onClick={() => this.selectMethod(METHOD_TEMPLATE)}>Tuo kuvaus templatesta</a>
+            <a onClick={() => this.selectMethod(METHOD_TEMPLATE)}>Tuo kuvaus moduulista</a>
           </li>
           <li role='presentation'
               className={classnames({ 'disabled': hasSelectedItem, 'active': selectedMethod === METHOD_FUNCTION })}>
