@@ -1,6 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+/**
+ * @param  {string|string[]} value
+ * @return {string}
+ */
+const outputValue = value => (Array.isArray(value) ? value.join(', ') : value);
+
 const Table = ({ rows }) => (
   <table>
     <caption>Metatiedot</caption>
@@ -10,7 +16,9 @@ const Table = ({ rows }) => (
         return (
           <tr key={title}>
             <th scope='row'>{title}</th>
-            {cells.map(value => <td key={`${title}.${value}`}>{value}</td>)}
+            {cells.map(value => (
+              <td key={`${title}.${value}`}>{outputValue(value)}</td>
+            ))}
           </tr>
         );
       })}
@@ -18,8 +26,13 @@ const Table = ({ rows }) => (
   </table>
 );
 
+const valueShape = PropTypes.oneOfType([
+  PropTypes.string,
+  PropTypes.arrayOf(PropTypes.string)
+]);
+
 Table.propTypes = {
-  rows: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string))
+  rows: PropTypes.arrayOf(PropTypes.arrayOf(valueShape))
 };
 
 export default Table;
