@@ -13,42 +13,39 @@ const __TEST__ = config.globals.__TEST__;
 const extractStyles = new ExtractTextPlugin({
   filename: 'styles/[name].[contenthash].css',
   allChunks: true,
-  disable: __DEV__,
-})
+  disable: __DEV__
+});
 
 debug('Creating configuration.');
 const webpackConfig = {
-  devtool : __DEV__ ? 'source-map' : false,
-  resolve : {
-    modules    : [path.resolve('src'), 'node_modules'],
-    extensions : ['*', '.js', '.jsx', '.json']
+  devtool: __DEV__ ? 'source-map' : false,
+  resolve: {
+    modules: [path.resolve('src'), 'node_modules'],
+    extensions: ['*', '.js', '.jsx', '.json']
   },
   entry: {
-    app : __DEV__
+    app: __DEV__
       ? [
-	 path.resolve('./src/main.js'),
-	 `webpack-hot-middleware/client?path=${config.compiler_public_path}__webpack_hmr`]
+        path.resolve('./src/main.js'),
+        `webpack-hot-middleware/client?path=${
+            config.compiler_public_path
+          }__webpack_hmr`
+      ]
       : [path.resolve('./src/main.js')],
-    vendor : [
-      'babel-polyfill',
-      'react',
-      'react-redux',
-      'react-router',
-      'redux'
-    ]
+    vendor: ['babel-polyfill', 'react', 'react-redux', 'react-router', 'redux']
   },
   output: {
-    filename   : __DEV__ ? '[name].js' : '[name].[chunkhash].js',
-    path       : path.resolve('./dist'),
-    publicPath : config.compiler_public_path
+    filename: __DEV__ ? '[name].js' : '[name].[chunkhash].js',
+    path: path.resolve('./dist'),
+    publicPath: config.compiler_public_path
   },
-  module : {
+  module: {
     rules: [
       {
-        test    : /\.(js|jsx)$/,
-        exclude : /node_modules/,
-        loader  : 'babel-loader',
-        options : config.compiler_babel
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        options: config.compiler_babel
       },
       {
         test: /\.(sass|scss)$/,
@@ -63,84 +60,89 @@ const webpackConfig = {
                   autoprefixer: {
                     add: true,
                     remove: true,
-                    browsers: ['last 2 versions'],
+                    browsers: ['last 2 versions']
                   },
                   discardComments: {
-                    removeAll : true,
+                    removeAll: true
                   },
                   discardUnused: false,
                   mergeIdents: false,
                   reduceIdents: false,
                   safe: true,
-                  sourcemap: true,
-                },
-              },
+                  sourcemap: true
+                }
+              }
             },
             {
               loader: 'sass-loader',
               options: {
                 sourceMap: true,
-                includePaths: [
-                  'src/styles',
-                ],
-              },
+                includePaths: ['src/styles']
+              }
             }
-          ],
+          ]
         })
       },
-      { test: /\.woff(\?.*)?$/,
+      {
+        test: /\.woff(\?.*)?$/,
         loader: 'url-loader',
         options: {
           name: 'fonts/[name].[ext]',
           limit: 10000,
           mimetype: 'application/font-woff'
-        },
+        }
       },
-      { test: /\.woff2(\?.*)?$/,
+      {
+        test: /\.woff2(\?.*)?$/,
         loader: 'url-loader',
         options: {
           name: 'fonts/[name].[ext]',
           limit: 10000,
           mimetype: 'application/font-woff2'
-        },
+        }
       },
-      { test: /\.otf(\?.*)?$/,
+      {
+        test: /\.otf(\?.*)?$/,
         loader: 'url-loader',
         options: {
           name: 'fonts/[name].[ext]',
           limit: 10000,
           mimetype: 'application/font-otf'
-        },
+        }
       },
-      { test: /\.ttf(\?.*)?$/,
+      {
+        test: /\.ttf(\?.*)?$/,
         loader: 'url-loader',
         options: {
           name: 'fonts/[name].[ext]',
           limit: 10000,
           mimetype: 'application/font-ttf'
-        },
+        }
       },
-      { test: /\.eot(\?.*)?$/,
+      {
+        test: /\.eot(\?.*)?$/,
         loader: 'url-loader',
         options: {
           name: 'fonts/[name].[ext]',
           limit: 10000,
           mimetype: 'application/font-eot'
-        },
+        }
       },
-      { test: /\.svg(\?.*)?$/,
+      {
+        test: /\.svg(\?.*)?$/,
         loader: 'url-loader',
         options: {
           name: 'fonts/[name].[ext]',
           limit: 10000,
           mimetype: 'application/font-svg'
-        },
+        }
       },
-      { test: /\.(png|jpg|gif)$/,
+      {
+        test: /\.(png|jpg|gif)$/,
         loader: 'url-loader',
         options: {
-          limit: 8192,
-        },
+          limit: 8192
+        }
       },
       {
         test: /\.(md|txt)$/,
@@ -151,19 +153,19 @@ const webpackConfig = {
   plugins: [
     new webpack.DefinePlugin(config.globals),
     new HtmlWebpackPlugin({
-      template : path.resolve('./src/index.html'),
-      hash     : false,
-      favicon  : path.resolve('./src/static/favicon.ico'),
-      filename : 'index.html',
-      inject   : 'body',
-      minify   : {
-        collapseWhitespace : true
+      template: path.resolve('./src/index.html'),
+      hash: false,
+      favicon: path.resolve('./src/static/favicon.ico'),
+      filename: 'index.html',
+      inject: 'body',
+      minify: {
+        collapseWhitespace: true
       },
       VERSION: config.globals.GIT_VERSION,
       HASH: config.globals.GIT_COMMIT_HASH
     }),
-    extractStyles,
-  ],
+    extractStyles
+  ]
 };
 
 if (__DEV__) {
@@ -178,10 +180,10 @@ if (__DEV__) {
   webpackConfig.plugins.push(
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin({
-      compress : {
-        unused    : true,
-        dead_code : true,
-        warnings  : false
+      compress: {
+        unused: true,
+        dead_code: true,
+        warnings: false
       }
     })
   );
@@ -191,7 +193,7 @@ if (__DEV__) {
 if (!__TEST__) {
   webpackConfig.plugins.push(
     new webpack.optimize.CommonsChunkPlugin({
-      names : ['vendor']
+      names: ['vendor']
     })
   );
 }

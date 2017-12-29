@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import SideBar from 'react-sidebar';
 import Select from 'react-select';
-import {map, filter, find } from 'lodash';
+import { map, filter, find } from 'lodash';
 import './ValidationBar.scss';
 
 import {
@@ -66,16 +66,22 @@ export class ValidationBar extends Component {
   generateInvalidAttributes (validate, validateWarn, values) {
     const showInvalidAttributes = this.getFilterByStatus(FILTER_VALUE_ERROR);
     const showWarnAttributes = this.getFilterByStatus(FILTER_VALUE_WARN);
-    const invalidAttributes = showInvalidAttributes ? validate(values, this.props.attributeTypes) : [];
-    const warnAttributes = showWarnAttributes ? validateWarn(values, this.props.attributeTypes) : [];
+    const invalidAttributes = showInvalidAttributes
+      ? validate(values, this.props.attributeTypes)
+      : [];
+    const warnAttributes = showWarnAttributes
+      ? validateWarn(values, this.props.attributeTypes)
+      : [];
     const mappedInvalidAttributes = map(invalidAttributes, (item, index) => (
       <div key={index} className='missing-attribute'>
-        <i className='fa fa-times-circle'></i> {this.props.attributeTypes[item].name}
+        <i className='fa fa-times-circle' />{' '}
+        {this.props.attributeTypes[item].name}
       </div>
     ));
     const mappedWarnAttributes = map(warnAttributes, (item, index) => (
       <div key={index} className='warn-attribute'>
-        <i className='fa fa-exclamation-circle'></i> {this.props.attributeTypes[item].name}
+        <i className='fa fa-exclamation-circle' />{' '}
+        {this.props.attributeTypes[item].name}
       </div>
     ));
 
@@ -94,8 +100,12 @@ export class ValidationBar extends Component {
     const showInvalidAttributes = this.getFilterByStatus(FILTER_VALUE_ERROR);
     const showWarnAttributes = this.getFilterByStatus(FILTER_VALUE_WARN);
     const mappedAttributeSections = map(elements, (element, index) => {
-      const invalidAttributes = showInvalidAttributes ? validateRequired(element, attributeTypes) : [];
-      const warnAttributes = showWarnAttributes ? validateWarn(element, attributeTypes) : [];
+      const invalidAttributes = showInvalidAttributes
+        ? validateRequired(element, attributeTypes)
+        : [];
+      const warnAttributes = showWarnAttributes
+        ? validateWarn(element, attributeTypes)
+        : [];
       if (invalidAttributes.length || warnAttributes.length) {
         return (
           <div key={index}>
@@ -104,14 +114,16 @@ export class ValidationBar extends Component {
               {map(invalidAttributes, (item, key) => {
                 return (
                   <div key={key} className='missing-attribute'>
-                    <i className='fa fa-times-circle'></i> {attributeTypes[item].name}
+                    <i className='fa fa-times-circle' />{' '}
+                    {attributeTypes[item].name}
                   </div>
                 );
               })}
               {map(warnAttributes, (item, key) => {
                 return (
                   <div key={key} className='warn-attribute'>
-                    <i className='fa fa-exclamation-circle'></i> {attributeTypes[item].name}
+                    <i className='fa fa-exclamation-circle' />{' '}
+                    {attributeTypes[item].name}
                   </div>
                 );
               })}
@@ -121,7 +133,7 @@ export class ValidationBar extends Component {
       }
     });
 
-    return filter(mappedAttributeSections, (section) => (section !== undefined));
+    return filter(mappedAttributeSections, section => section !== undefined);
   }
 
   onFilterStatusChange (options) {
@@ -134,41 +146,53 @@ export class ValidationBar extends Component {
     if (!this.state.filterStatus.length) {
       return true;
     }
-    return find(this.state.filterStatus, (item) => (item === filterValue)) ? true : false;
+    return !!find(this.state.filterStatus, item => item === filterValue);
   }
 
   renderInvalidContent () {
     const { selectedTOS } = this.props;
-    const invalidTOSAttributes = this.generateInvalidAttributes(validateTOS, validateTOSWarnings, selectedTOS);
-    const invalidPhaseAttributes = this.generateAttributeSection(validatePhase, validatePhaseWarnings, selectedTOS.phases);
-    const invalidActionAttributes = this.generateAttributeSection(validateAction, validateActionWarnings, selectedTOS.actions);
-    const invalidRecordAttributes = this.generateAttributeSection(validateRecord, validateRecordWarnings, selectedTOS.records);
+    const invalidTOSAttributes = this.generateInvalidAttributes(
+      validateTOS,
+      validateTOSWarnings,
+      selectedTOS
+    );
+    const invalidPhaseAttributes = this.generateAttributeSection(
+      validatePhase,
+      validatePhaseWarnings,
+      selectedTOS.phases
+    );
+    const invalidActionAttributes = this.generateAttributeSection(
+      validateAction,
+      validateActionWarnings,
+      selectedTOS.actions
+    );
+    const invalidRecordAttributes = this.generateAttributeSection(
+      validateRecord,
+      validateRecordWarnings,
+      selectedTOS.records
+    );
 
-    if (invalidTOSAttributes ||
-        invalidPhaseAttributes.length > 0 ||
-        invalidActionAttributes.length > 0 ||
-        invalidRecordAttributes.length > 0) {
+    if (
+      invalidTOSAttributes ||
+      invalidPhaseAttributes.length > 0 ||
+      invalidActionAttributes.length > 0 ||
+      invalidRecordAttributes.length > 0
+    ) {
       return (
         <div>
           <h4>Esitarkastus</h4>
-          {invalidTOSAttributes &&
-            <h5>Asian metatiedot</h5>}
+          {invalidTOSAttributes && <h5>Asian metatiedot</h5>}
           {invalidTOSAttributes}
-          {invalidPhaseAttributes.length > 0 &&
-            <h5>Käsittelyvaiheet</h5>}
+          {invalidPhaseAttributes.length > 0 && <h5>Käsittelyvaiheet</h5>}
           {invalidPhaseAttributes}
-          {invalidActionAttributes.length > 0 &&
-            <h5>Toimenpiteet</h5>}
+          {invalidActionAttributes.length > 0 && <h5>Toimenpiteet</h5>}
           {invalidActionAttributes}
-          {invalidRecordAttributes.length > 0 &&
-            <h5>Asiakirjat</h5>}
+          {invalidRecordAttributes.length > 0 && <h5>Asiakirjat</h5>}
           {invalidRecordAttributes}
         </div>
       );
     }
-    return (
-      <div className='no-missing-attributes fa fa-check-circle'/>
-    );
+    return <div className='no-missing-attributes fa fa-check-circle' />;
   }
 
   renderContent () {
@@ -192,7 +216,7 @@ export class ValidationBar extends Component {
 
   render () {
     const { children, selectedTOS } = this.props;
-    const sidebarContent = selectedTOS.id ? this.renderContent() : <div/>;
+    const sidebarContent = selectedTOS.id ? this.renderContent() : <div />;
 
     return (
       <div className='helerm-validation-bar'>
@@ -201,13 +225,14 @@ export class ValidationBar extends Component {
           open={this.props.is_open}
           onSetOpen={() => this.props.setValidationVisibility(false)}
           pullRight={true}
-          styles={styles}>
+          styles={styles}
+        >
           {children}
         </SideBar>
       </div>
     );
   }
-};
+}
 
 ValidationBar.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,

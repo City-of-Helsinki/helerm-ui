@@ -29,11 +29,11 @@ function onPromptCreate (label) {
   return `Lisää "${label}"`;
 }
 
-function getMissingValueOptions(value, options) {
+function getMissingValueOptions (value, options) {
   const valueArray = value instanceof Array ? value : [value];
   const optionValues = map(options, 'value');
   return difference(valueArray, optionValues);
-};
+}
 
 export const DropdownInput = ({
   keyValue,
@@ -61,7 +61,7 @@ export const DropdownInput = ({
 
   if (validation()) {
     if (type === 'form') {
-      const onFormInputChange = (event) => {
+      const onFormInputChange = event => {
         onInputChange(event.target.value, keyValue, 'value');
       };
       return (
@@ -85,15 +85,17 @@ export const DropdownInput = ({
       );
     }
   } else {
-    const onFieldChange = (option) => {
+    const onFieldChange = option => {
       if (option instanceof Array) {
         const values = option.length ? map(option, 'value') : null;
         const value = values && values.length === 1 ? values[0] : values;
         type === 'form' ? onChange(value, keyValue, 'value') : onChange(value);
       } else {
-        type === 'form' ? onChange(option ? option.value : null, keyValue, 'value') : onChange(option ? option.value : null);
+        type === 'form'
+          ? onChange(option ? option.value : null, keyValue, 'value')
+          : onChange(option ? option.value : null);
       }
-    }
+    };
     for (const key in options) {
       if (options.hasOwnProperty(key)) {
         optionsArray.push({
@@ -133,10 +135,10 @@ export const DropdownInput = ({
 
 DropdownInput.propTypes = {
   disabled: React.PropTypes.bool,
-  multi: React.PropTypes.bool,
   formType: React.PropTypes.string,
   inputClassName: React.PropTypes.string,
   keyValue: React.PropTypes.string,
+  multi: React.PropTypes.bool,
   onChange: React.PropTypes.func.isRequired,
   onInputChange: React.PropTypes.func.isRequired,
   onSubmit: React.PropTypes.func.isRequired,
