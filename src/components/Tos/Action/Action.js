@@ -232,10 +232,6 @@ export class Action extends React.Component {
   }
 
   editRecordWithForm (attributes, recordId, disableEditMode = true) {
-    this.setState({
-      editingRecord: !disableEditMode,
-      recordId: undefined
-    });
     this.props.editRecord(attributes, recordId);
     if (disableEditMode) {
       this.disableEditMode();

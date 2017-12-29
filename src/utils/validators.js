@@ -90,22 +90,6 @@ export const validateTOSWarnings = (tos, rules) => {
       VALIDATION_SPECIAL_CASES.function.allow_values_outside_choices,
       key
     );
-    if (key === 'RetentionPeriodStart') {
-      console.log(
-        JSON.stringify(
-          {
-            key,
-            rule: rule.name,
-            attributeValue,
-            allowOutsideValues,
-            ruleValues: rule.values.map(obj => obj.value),
-            isValueValidOption: isValueValidOption(attributeValue, rule.values)
-          },
-          null,
-          2
-        )
-      );
-    }
 
     if (
       attributeValue &&
