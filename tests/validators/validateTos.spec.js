@@ -191,7 +191,6 @@ describe('(TOS validation)', () => {
         errorsAndWarningsTOS,
         attributeRules
       );
-      console.log(JSON.stringify([...warnings], null, 2));
       it('Should have 1 warning', () => {
         expect(warnings.length).to.equal(1);
       });

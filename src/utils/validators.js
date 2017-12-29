@@ -28,29 +28,30 @@ export const validateConditionalRules = (key, attributeTypes, attributes) => {
 };
 
 /**
- * Validate TOS against required rules
- * @param tos
- * @param rules
- * @returns {Array}
+ * @typedef {function(obj:Object, rules:Object):string[]} Validator
  */
-export const validateTOS = (tos, rules) => {
+/**
+ * @param  {string} type
+ * @return {Validator}]
+ */
+const createValidateErrors = type => (obj, rules) => {
   const errors = [];
   for (const key in rules) {
     const rule = rules[key];
     const isRequired = rules[key].required;
-    const isRequiredInFunction = includes(rule.requiredIn, 'function');
-    const tosHasRuleAttribute = !!tos.attributes[key];
+    const isRequiredInType = includes(rule.requiredIn, type);
+    const objHasRuleAttribute = !!obj.attributes[key];
     const isValid =
-      includes(rule.values.map(obj => obj.value), tos.attributes[key]) ||
+      includes(rule.values.map(obj => obj.value), obj.attributes[key]) ||
       rule.values.length === 0;
     const allowValuesOutsideChoices = includes(
-      VALIDATION_SPECIAL_CASES.function.allow_values_outside_choices,
+      VALIDATION_SPECIAL_CASES[type].allow_values_outside_choices || [],
       key
     );
 
     if (
-      (isRequired && isRequiredInFunction && !tosHasRuleAttribute) ||
-      (tosHasRuleAttribute && !isValid && !allowValuesOutsideChoices)
+      (isRequired && isRequiredInType && !objHasRuleAttribute) ||
+      (objHasRuleAttribute && !isValid && !allowValuesOutsideChoices)
     ) {
       errors.push(key);
     }
@@ -58,14 +59,14 @@ export const validateTOS = (tos, rules) => {
     const isConditionallyRequired = rule.requiredIf.length !== 0;
     if (isConditionallyRequired) {
       for (const item of rule.requiredIf) {
-        const predicateValue = tos.attributes[item.key];
+        const predicateValue = obj.attributes[item.key];
         const hasPredicate = typeof predicateValue === 'string';
         const isRequired =
           hasPredicate && includes(item.values, predicateValue);
 
         if (
-          (isRequired && !tosHasRuleAttribute) ||
-          (!isRequired && tosHasRuleAttribute)
+          (isRequired && !objHasRuleAttribute) ||
+          (!isRequired && objHasRuleAttribute)
         ) {
           errors.push(key);
         }
@@ -76,18 +77,16 @@ export const validateTOS = (tos, rules) => {
 };
 
 /**
- * Validate TOS against warning rules
- * @param tos
- * @param rules
- * @returns {Array}
+ * @param  {string} type
+ * @return {Validator}]
  */
-export const validateTOSWarnings = (tos, rules) => {
+const createValidateWarnings = type => (obj, rules) => {
   const warnings = [];
   for (const key in rules) {
     const rule = rules[key];
-    const attributeValue = tos.attributes[key];
+    const attributeValue = obj.attributes[key];
     const allowOutsideValues = includes(
-      VALIDATION_SPECIAL_CASES.function.allow_values_outside_choices,
+      VALIDATION_SPECIAL_CASES[type].allow_values_outside_choices,
       key
     );
 
@@ -102,6 +101,16 @@ export const validateTOSWarnings = (tos, rules) => {
   }
   return uniq(warnings);
 };
+
+/**
+ * Validate TOS against required rules
+ */
+export const validateTOS = createValidateErrors('function');
+
+/**
+ * Validate TOS against warning rules
+ */
+export const validateTOSWarnings = createValidateWarnings('function');
 
 /**
  * Validate Phase against required rules
@@ -169,63 +178,13 @@ export const validateActionWarnings = (action, rules) => {
 
 /**
  * Validate Record against required rules
- * @param record
- * @param rules
- * @returns {Array}
  */
-export const validateRecord = (record, rules) => {
-  const errors = [];
-  for (const key in rules) {
-    if (rules[key].required && includes(rules[key].requiredIn, 'record')) {
-      if (!record.attributes[key]) {
-        errors.push(key);
-      }
-    }
-    if (rules[key].requiredIf.length) {
-      for (const item of rules[key].requiredIf) {
-        if (
-          record.attributes[item.key] &&
-          includes(item.values, record.attributes[item.key]) &&
-          !record.attributes[key]
-        ) {
-          errors.push(key);
-        }
-      }
-    }
-  }
-  return errors;
-};
+export const validateRecord = createValidateErrors('record');
 
 /**
  * Validate Record against warn rules
- * @param record
- * @param rules
- * @returns {Array}
  */
-export const validateRecordWarnings = (record, rules) => {
-  const errors = [];
-  for (const key in rules) {
-    if (
-      record.attributes[key] &&
-      rules[key].values.length &&
-      !isValueValidOption(record.attributes[key], rules[key].values)
-    ) {
-      errors.push(key);
-    }
-    if (rules[key].requiredIf.length) {
-      for (const item of rules[key].requiredIf) {
-        if (
-          record.attributes[item.key] &&
-          !includes(item.values, record.attributes[item.key]) &&
-          record.attributes[key]
-        ) {
-          errors.push(key);
-        }
-      }
-    }
-  }
-  return uniq(errors);
-};
+export const validateRecordWarnings = createValidateWarnings('record');
 
 const isValueValidOption = (value, options) => {
   const valueArray = value instanceof Array ? value : [value];

@@ -1,0 +1,36 @@
+{
+  "id": "9a9bfcf86a754d1a9ba3163286f61791",
+  "attributes": {
+    "RetentionPeriod": "-1",
+    "InformationSystem": ["Lupapiste", "Ahjo", "Muu tietojärjestelmä"],
+    "Restriction.ProtectionLevel": "ST IV",
+    "Restriction.SecurityClass": "III Luottamuksellinen",
+    "DataGroup": "Päätietoryhmä",
+    "SocialSecurityNumber": "Ei sisällä henkilötunnusta",
+    "RetentionPeriodStart": "Asiakirjan päivämäärä",
+    "PersonalData": "Sisältää henkilötietoja",
+    "StorageAccountable": "Toimistopäällikkö vastuuhenkilönä",
+    "PublicityClass": "Ei-julkinen",
+    "StorageOrder": "Aakkosjärjestys",
+    "RetentionPeriodOffice": "0",
+    "RecordType": "arviointi",
+    "Subject": "Asiasana",
+    "AdditionalInformation": "Lisätietoja",
+    "StorageLocation": "Lähiarkisto paperiasiakirjojen säilytyspaikkana",
+    "TypeSpecifier": "Testaus aiemmin - seuraavat Record issue testejä",
+    "RetentionPeriodTotal": "2",
+    "DisposePreviousVersions": "Poistetaan kun päätetty",
+    "Subject.Scheme": "Finto asiasanasto",
+    "RetentionReason":
+      "Ei sp:Taloushallinto 2 - kunnallisten asiakirjojen säilytysaikasuositus",
+    "ProtectionClass":
+      "1 toiminnan jatkumisen kannalta välttämättömät asiakirjat"
+  },
+  "name": "Testaus aiemmin - seuraavat Record issue testejä",
+  "action": "f36c624f7b084cbca7f2081003a3d7bd",
+  "parent": null,
+  "created_at": "2017-12-29T12:18:18.137049Z",
+  "modified_at": "2017-12-29T12:18:18.137066Z",
+  "index": 1,
+  "is_open": false
+}
