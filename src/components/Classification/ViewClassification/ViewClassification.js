@@ -113,6 +113,7 @@ export class ViewClassification extends React.Component {
               <div className='row'>
                 <div className='general-info space-between'>
                   <div className='classification-details col-xs-12'>
+                    <h5 style={{ marginTop: '0' }}>Tehtäväluokan tiedot</h5>
                     {description}
                     {descriptionInternal}
                     {relatedClassification}
