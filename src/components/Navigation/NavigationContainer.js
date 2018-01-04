@@ -28,7 +28,6 @@ const mapStateToProps = (state, ownProps) => {
     isFetching: state.navigation.isFetching,
     items: JSON.parse(JSON.stringify(items)), // TODO: Unhack this when Navigation doesn't mutate state
     selectedTOS,
-    key: state.routing.locationBeforeTransitions.key
   };
 };
 
