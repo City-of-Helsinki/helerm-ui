@@ -20,6 +20,7 @@ export default class InfinityMenu extends Component {
     handleStatusFilterChange: PropTypes.func,
     headerProps: PropTypes.object,
     isOpen: PropTypes.bool,
+    isSearching: PropTypes.bool,
     loadMoreComponent: PropTypes.func,
     maxLeaves: PropTypes.number,
     onLeafMouseClick: PropTypes.func,
@@ -27,7 +28,11 @@ export default class InfinityMenu extends Component {
     onLeafMouseUp: PropTypes.func,
     onNodeMouseClick: PropTypes.func,
     path: PropTypes.array,
+    searchInput: PropTypes.string.isRequired,
+    setSearchInput: PropTypes.func.isRequired,
+    startSearching: PropTypes.func.isRequired,
     statusValue: PropTypes.array,
+    stopSearching: PropTypes.func.isRequired,
     toggleNavigationVisibility: PropTypes.func,
     tree: PropTypes.array
   };
@@ -49,15 +54,7 @@ export default class InfinityMenu extends Component {
 
   constructor (props) {
     super(props);
-    this.state = {
-      search: {
-        isSearching: false,
-        searchInput: ''
-      }
-    };
-    this.setSearchInput = this.setSearchInput.bind(this);
-    this.stopSearching = this.stopSearching.bind(this);
-    this.startSearching = this.startSearching.bind(this);
+
     this.onNodeClick = this.onNodeClick.bind(this);
     this.onLoadMoreClick = this.onLoadMoreClick.bind(this);
   }
@@ -72,7 +69,7 @@ export default class InfinityMenu extends Component {
 
   onNodeClick (tree, node, keyPath, event) {
     event.preventDefault();
-    if (!this.state.search.isSearching || !this.state.search.searchInput.length) {
+    if (!this.props.isSearching || !this.props.searchInput.length) {
       node.isOpen = !node.isOpen;
       node.maxLeaves = this.props.maxLeaves;
       NestedObjects.set(tree, keyPath, node);
@@ -97,36 +94,9 @@ export default class InfinityMenu extends Component {
     }
   }
 
-  startSearching () {
-    this.setState({
-      search: {
-        isSearching: true,
-        searchInput: ''
-      }
-    });
-  }
-
-  stopSearching () {
-    this.setState({
-      search: {
-        isSearching: false,
-        searchInput: ''
-      }
-    });
-  }
-
-  setSearchInput (event) {
-    this.setState({
-      search: {
-        isSearching: true,
-        searchInput: event.target.value
-      }
-    });
-  }
-
   findFiltered (trees, node, key) {
     if (!node.children) {
-      const nodeMatchesSearchFilter = this.props.filter(node, this.state.search.searchInput);
+      const nodeMatchesSearchFilter = this.props.filter(node, this.props.searchInput);
       if (nodeMatchesSearchFilter) {
         node.isSearchDisplay = true;
         trees[key] = node;
@@ -162,7 +132,7 @@ export default class InfinityMenu extends Component {
     const currLevel = Math.floor(keyPath.length / 2);
     const currCustomComponent = typeof curr.customComponent === 'string' ? this.props.customComponentMappings[curr.customComponent] : curr.customComponent;
     const currCustomloadMoreComponent = (this.props.loadMoreComponent) ? this.props.loadMoreComponent : null;
-    const isSearching = this.state.search.isSearching && this.state.search.searchInput;
+    const isSearching = this.props.isSearching && this.props.searchInput;
     const shouldDisplay = (isSearching && curr.isSearchDisplay) || !isSearching;
     curr.keyPath = keyPath;
 
@@ -332,7 +302,7 @@ export default class InfinityMenu extends Component {
   render () {
     const tree = this.props.tree;
     // find filtered folders base on search, if there no search, return all
-    const filteredTree = this.state.search.isSearching && this.state.search.searchInput ? tree.reduce((prev, curr, key) => {
+    const filteredTree = this.props.isSearching && this.props.searchInput ? tree.reduce((prev, curr, key) => {
       if (key === undefined) {
         return prev;
       }
@@ -350,12 +320,12 @@ export default class InfinityMenu extends Component {
     // header component
     const searchInputProps = {
       ...this.props.headerProps,
-      isSearching: this.state.search.isSearching,
+      isSearching: this.props.isSearching,
       placeholder: 'Etsi...',
-      searchInput: this.state.search.searchInput,
-      setSearchInput: this.setSearchInput,
-      startSearching: this.startSearching,
-      stopSearching: this.stopSearching
+      searchInput: this.props.searchInput,
+      setSearchInput: this.props.setSearchInput,
+      startSearching: this.props.startSearching,
+      stopSearching: this.props.stopSearching
     };
 
     const bodyContent = this.renderBody(displayTree);

@@ -17,7 +17,7 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const { items } = state.navigation;
+  const { items, timestamp } = state.navigation;
   const { selectedTOS, classification } = state;
   const tos = selectedTOS.classification ? itemById(items, selectedTOS.classification) : classification.id ? itemById(items, classification.id) : null;
   const tosPath = ownProps.tosPath ? ownProps.tosPath : tos ? tos.path : [];
@@ -27,7 +27,8 @@ const mapStateToProps = (state, ownProps) => {
     is_open: state.navigation.is_open,
     isFetching: state.navigation.isFetching,
     items: JSON.parse(JSON.stringify(items)), // TODO: Unhack this when Navigation doesn't mutate state
-    selectedTOS,
+    itemsTimestamp: timestamp,
+    selectedTOS
   };
 };
 

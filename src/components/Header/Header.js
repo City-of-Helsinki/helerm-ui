@@ -1,7 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
+import { fetchNavigation } from '../Navigation/reducer';
 import Loader from '../Loader';
 import LoginContainer from '../Login/LoginContainer';
 
@@ -16,7 +19,9 @@ export class Header extends React.Component {
         <nav className='navbar navbar-inverse container-fluid'>
           <Link
             to='/'
-            className='brand-title navbar-brand'>
+            className='brand-title navbar-brand'
+            onClick={this.props.fetchNavigation}
+            >
             Tiedonohjausjärjestelmä v{VERSION}
           </Link>
           <LoginContainer />
@@ -28,7 +33,12 @@ export class Header extends React.Component {
 }
 
 Header.propTypes = {
-  isFetching: React.PropTypes.bool
+  isFetching: PropTypes.bool,
+  fetchNavigation: PropTypes.func
+};
+
+Header.defaultProps = {
+  fetchNavigation: () => {}
 };
 
 const mapStateToProps = (state) => {
@@ -37,4 +47,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(Header);
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  fetchNavigation
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
