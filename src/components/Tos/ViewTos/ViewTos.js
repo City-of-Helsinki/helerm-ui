@@ -562,6 +562,7 @@ export class ViewTOS extends React.Component {
           <StickyContainer className='col-xs-12 single-tos-container'>
             <TosHeader
               cancelEdit={this.cancelEdit}
+              classificationId={selectedTOS.classification}
               changeStatus={this.changeStatus}
               documentState={selectedTOS.documentState}
               fetchTos={this.fetchTOS}
