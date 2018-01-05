@@ -3,6 +3,7 @@
 # TEAM
 
     Ville Ristimäki -- Lead Front-end Developer -- https://github.com/villeristi
+    Ville Vaarala -- Front-end Developer -- https://github.com/vaaralav
     Kalle Mäkynen -- Front-end Developer -- https://github.com/kallemakynen
     Joni Rämö -- Front-end Developer -- https://github.com/jonraem
     Emilia Pesonen -- UI/UX Designer
