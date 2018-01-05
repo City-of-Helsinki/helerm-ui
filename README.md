@@ -7,6 +7,8 @@ This is a front-end project for Helsinki Electronic Records Management Classific
 
 The project structure is based on React Redux Starter Kit (https://github.com/davezuko/react-redux-starter-kit).
 
+Looking for the backend code? It's in this repository: [helerm - Helsinki Electronic Records Management Classification System](https://github.com/City-of-Helsinki/helerm)
+
 ## Requirements
 * node `^4.5.0`
 * npm `^3.0.0`
