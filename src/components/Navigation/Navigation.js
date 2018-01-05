@@ -80,11 +80,11 @@ export class Navigation extends React.Component {
     this.toggleNavigationVisibility();
   }
 
-  startSearching = () => {
+  setSearchInput = (event) => {
     this.setState({
       search: {
         isSearching: true,
-        searchInput: ''
+        searchInput: event.target.value
       }
     });
   }
@@ -94,15 +94,6 @@ export class Navigation extends React.Component {
       search: {
         isSearching: false,
         searchInput: ''
-      }
-    });
-  }
-
-  setSearchInput = (event) => {
-    this.setState({
-      search: {
-        isSearching: true,
-        searchInput: event.target.value
       }
     });
   }
@@ -187,8 +178,6 @@ export class Navigation extends React.Component {
           toggleNavigationVisibility={this.toggleNavigationVisibility}
           tree={this.state.tree}
           setSearchInput={this.setSearchInput}
-          startSearching={this.startSearching}
-          stopSearching={this.stopSearching}
           searchInput={searchInput}
           isSearching={isSearching}
         />
