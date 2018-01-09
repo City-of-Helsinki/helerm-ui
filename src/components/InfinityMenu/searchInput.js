@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react';
 
-const SearchInput = ({ startSearching, setSearchInput, searchInput, placeholder }) => (
+const SearchInput = ({ setSearchInput, searchInput, placeholder, ...inputProps }) => (
   <input className='react-infinity-menu-default-search-input'
-         placeholder={placeholder || '🔍'}
-         onClick={startSearching}
+         {...inputProps}
+         type='search'
+         placeholder={placeholder}
          onChange={setSearchInput}
          value={searchInput}
   />
@@ -12,8 +13,12 @@ const SearchInput = ({ startSearching, setSearchInput, searchInput, placeholder 
 SearchInput.propTypes = {
   placeholder: PropTypes.string,
   searchInput: PropTypes.string,
-  setSearchInput: PropTypes.func,
-  startSearching: PropTypes.func
+  setSearchInput: PropTypes.func.isRequired
+};
+
+SearchInput.defaultProps = {
+  placeholder: '🔍',
+  searchInput: ''
 };
 
 export default SearchInput;

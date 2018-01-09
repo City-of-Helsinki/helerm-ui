@@ -30,9 +30,7 @@ export default class InfinityMenu extends Component {
     path: PropTypes.array,
     searchInput: PropTypes.string.isRequired,
     setSearchInput: PropTypes.func.isRequired,
-    startSearching: PropTypes.func.isRequired,
     statusValue: PropTypes.array,
-    stopSearching: PropTypes.func.isRequired,
     toggleNavigationVisibility: PropTypes.func,
     tree: PropTypes.array
   };
@@ -323,9 +321,7 @@ export default class InfinityMenu extends Component {
       isSearching: this.props.isSearching,
       placeholder: 'Etsi...',
       searchInput: this.props.searchInput,
-      setSearchInput: this.props.setSearchInput,
-      startSearching: this.props.startSearching,
-      stopSearching: this.props.stopSearching
+      setSearchInput: this.props.setSearchInput
     };
 
     const bodyContent = this.renderBody(displayTree);
