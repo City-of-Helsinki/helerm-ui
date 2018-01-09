@@ -118,6 +118,20 @@ export class Navigation extends React.Component {
     return items;
   }
 
+  /**
+   * Sets isOpen to nodes according to selected filters.
+   * Note! Method mutates the objects inside `filterTree`
+   * @param  {Object[]}  [filterTree=[]]
+   * @param  {Array}  [filterStatuses=[]]
+   * @return {Object[]}
+   */
+  openNodesIfFilterStatusIsSelected (filterTree = [], filterStatuses = []) {
+    forEach(filterTree, item => {
+      item.isOpen = Boolean(filterStatuses.length);
+    });
+    return filterTree;
+  }
+
   filter (filterTree, filterStatuses) {
     let indexesToRemove = [];
 
@@ -127,8 +141,6 @@ export class Navigation extends React.Component {
       }
       if ((!item.children && !includes(filterStatuses, item.function_state)) ||
         (item.children && !item.children.length)) {
-        if (item.children && !item.children.length) {
-        }
         indexesToRemove.push(index);
       }
     });
@@ -140,6 +152,7 @@ export class Navigation extends React.Component {
         }
       }
     }
+    this.openNodesIfFilterStatusIsSelected(filterTree, filterStatuses);
   }
 
   handleStatusFilterChange (valArray) {
