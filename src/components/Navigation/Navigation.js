@@ -30,22 +30,34 @@ export class Navigation extends React.Component {
     this.handleStatusFilterChange = this.handleStatusFilterChange.bind(this);
     this.state = {
       filterStatuses: [],
-      tree: []
+      tree: props.items,
+      search: {
+        isSearching: false,
+        searchInput: ''
+      }
     };
   }
 
-  componentWillMount () {
-    const { tree } = this.state;
-    if (!tree.length) {
-      this.props.fetchNavigation();
-    }
+  componentDidMount () {
+    this.props.fetchNavigation();
   }
 
   componentWillReceiveProps (nextProps) {
-    const { items } = nextProps;
+    const { itemsTimestamp: nextTimestamp, items } = nextProps;
+    const { itemsTimestamp: currentTimestamp } = this.props;
+    const isReceivingNewlyFetchedItems = nextTimestamp !== currentTimestamp;
+    if (isReceivingNewlyFetchedItems) {
+      this.receiveItemsAndResetNavigation(items);
+    }
+  }
+
+  receiveItemsAndResetNavigation (items) {
     this.setState(() => ({
-      tree: items
+      tree: items,
+      filterStatuses: []
     }));
+
+    this.stopSearching();
   }
 
   toggleNavigationVisibility () {
@@ -66,6 +78,33 @@ export class Navigation extends React.Component {
       this.props.push(`/view-classification/${leaf.id}`);
     }
     this.toggleNavigationVisibility();
+  }
+
+  startSearching = () => {
+    this.setState({
+      search: {
+        isSearching: true,
+        searchInput: ''
+      }
+    });
+  }
+
+  stopSearching = () => {
+    this.setState({
+      search: {
+        isSearching: false,
+        searchInput: ''
+      }
+    });
+  }
+
+  setSearchInput = (event) => {
+    this.setState({
+      search: {
+        isSearching: true,
+        searchInput: event.target.value
+      }
+    });
   }
 
   getFilteredTree (filterStatuses) {
@@ -113,6 +152,7 @@ export class Navigation extends React.Component {
 
   render () {
     const { onLeafMouseClick } = this.props;
+    const { searchInput, isSearching } = this.state.search;
     let navigationTitle = 'Navigaatio';
     if (!this.props.is_open && this.props.tosPath.length) {
       navigationTitle = this.props.tosPath.map((section, index) => {
@@ -133,6 +173,11 @@ export class Navigation extends React.Component {
           path={this.props.tosPath}
           toggleNavigationVisibility={this.toggleNavigationVisibility}
           tree={this.state.tree}
+          setSearchInput={this.setSearchInput}
+          startSearching={this.startSearching}
+          stopSearching={this.stopSearching}
+          searchInput={searchInput}
+          isSearching={isSearching}
         />
       </div>
     );
@@ -145,6 +190,7 @@ Navigation.propTypes = {
   // One does not simply mutate props unless one is Navigation and the prop is `items`.
   // Sorry, didn't find out where the devil is doing the mutations :'(
   items: PropTypes.array.isRequired,
+  itemsTimestamp: PropTypes.string,
   onLeafMouseClick: PropTypes.func,
   push: PropTypes.func.isRequired,
   setNavigationVisibility: PropTypes.func.isRequired,

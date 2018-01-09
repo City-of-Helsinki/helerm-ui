@@ -11,26 +11,22 @@ import NotFound from './components/NotFound/NotFound';
 
 export default () => (
   <div>
-    <Route path='/'>
+    <Route path='/' component={CoreLayout}>
       <IndexRoute
-        component={() => (
-          <CoreLayout>
-            <IndexPage />
-          </CoreLayout>
-        )}
+        component={IndexPage}
       />
-      <Route path='view-tos/' component={CoreLayout}>
+      <Route path='view-tos/'>
         <Route path=':id(/version/:version)'>
           <IndexRoute component={ViewTOSContainer} />
           <Route path='print' component={PrintTOS} />
         </Route>
       </Route>
-      <Route path='view-classification/' component={CoreLayout}>
+      <Route path='view-classification/'>
         <Route path=':id' component={ViewClassificationContainer} />
       </Route>
-      <Route path='info' component={InfoLayout}>
-        <IndexRoute component={ViewInfo} />
-      </Route>
+    </Route>
+    <Route path='/info' component={InfoLayout}>
+      <IndexRoute component={ViewInfo} />
     </Route>
     <Route path='*' component={NotFound} />
   </div>

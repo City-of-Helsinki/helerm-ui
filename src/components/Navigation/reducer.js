@@ -7,7 +7,8 @@ import { default as api } from '../../utils/api.js';
 const initialState = {
   isFetching: false,
   items: [],
-  is_open: true
+  is_open: true,
+  timestamp: ''
 };
 
 export const REQUEST_NAVIGATION = 'requestNavigationAction';
@@ -49,7 +50,8 @@ const requestNavigationAction = (state) => {
 const receiveNavigationAction = (state, { payload }) => {
   return update(state, {
     items: { $set: payload },
-    isFetching: { $set: false }
+    isFetching: { $set: false },
+    timestamp: { $set: Date.now().toString() }
   });
 };
 
