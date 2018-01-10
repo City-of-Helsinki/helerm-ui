@@ -15,7 +15,7 @@ export class Dropdown extends React.Component {
 
   handleClick (index) {
     this.setState({ open: false });
-    this.props.children[index].action();
+    this.props.items[index].action();
   }
 
   generateRows (dropdownItems) {
@@ -40,8 +40,8 @@ export class Dropdown extends React.Component {
   }
 
   render () {
-    const { children, small, extraSmall } = this.props;
-    const dropdownRows = this.generateRows(children);
+    const { items, small, extraSmall } = this.props;
+    const dropdownRows = this.generateRows(items);
     return (
       <span className='dropdown-wrapper'>
         <button
@@ -65,9 +65,14 @@ export class Dropdown extends React.Component {
 }
 
 Dropdown.propTypes = {
-  children: React.PropTypes.array.isRequired,
-  extraSmall: React.PropTypes.bool,
-  small: React.PropTypes.bool
+  extraSmall: PropTypes.bool,
+  items: PropTypes.arrayOf(PropTypes.shape({
+    style: PropTypes.string,
+    icon: PropTypes.string,
+    text: PropTypes.string,
+    action: PropTypes.func.isRequired
+  })).isRequired,
+  small: PropTypes.bool
 };
 
 export default Dropdown;

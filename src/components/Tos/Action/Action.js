@@ -336,7 +336,7 @@ export class Action extends React.Component {
       <div className='action-buttons'>
         {this.props.documentState === 'edit' && (
           <span className='action-dropdown-button'>
-            <Dropdown children={actionDropdownItems} extraSmall={true} />
+            <Dropdown items={actionDropdownItems} extraSmall={true} />
           </span>
         )}
         {this.showAttributeButton(this.props.action.attributes) && (

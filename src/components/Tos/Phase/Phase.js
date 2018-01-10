@@ -364,7 +364,7 @@ export class Phase extends React.Component {
         )}
         {this.props.documentState === 'edit' && (
           <span className='pull-right'>
-            <Dropdown children={phaseDropdownItems} small={true} />
+            <Dropdown items={phaseDropdownItems} small={true} />
           </span>
         )}
         {this.showAttributeButton(this.props.phase.attributes) && (
