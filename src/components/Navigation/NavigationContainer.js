@@ -1,6 +1,7 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import { isEmpty } from 'lodash';
 
 import { fetchNavigation, setNavigationVisibility } from './reducer';
 
@@ -26,6 +27,7 @@ const mapStateToProps = (state, ownProps) => {
     tosPath,
     is_open: state.navigation.is_open,
     isFetching: state.navigation.isFetching,
+    isUser: !isEmpty(state.user),
     items: JSON.parse(JSON.stringify(items)), // TODO: Unhack this when Navigation doesn't mutate state
     itemsTimestamp: timestamp,
     selectedTOS
