@@ -1,6 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import './Dropdown.scss';
+
+import DropdownMenuWrapper from './DropdownMenuWrapper';
 
 export class Dropdown extends React.Component {
   constructor (props) {
@@ -29,21 +32,32 @@ export class Dropdown extends React.Component {
     });
   }
 
+  handleClickOutsideMenu = (event) => {
+    const shouldCloseMenu = this.button && !this.button.contains(event.target);
+    if (shouldCloseMenu) {
+      this.setState({ open: false });
+    }
+  }
+
   render () {
     const { children, small, extraSmall } = this.props;
     const dropdownRows = this.generateRows(children);
     return (
-      <span className='dropdown-wrapper' >
+      <span className='dropdown-wrapper'>
         <button
+          ref={button => { this.button = button; }}
           className={classnames('btn btn-primary', { 'btn-sm': small }, { 'btn-xs': extraSmall })}
-          onClick={() => this.setState({ open: !this.state.open })}
+          onClick={() => this.setState((state) => ({ open: !state.open }))}
         >
           <span className='fa fa-bars'/>
         </button>
         { this.state.open &&
-        <div className={classnames('dropdown-items', { 'items-xs': extraSmall })}>
+        <DropdownMenuWrapper
+          onClickOutside={this.handleClickOutsideMenu}
+          className={classnames('dropdown-items', { 'items-xs': extraSmall })}
+        >
           {dropdownRows}
-        </div>
+        </DropdownMenuWrapper>
         }
       </span>
     );
