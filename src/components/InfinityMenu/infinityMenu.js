@@ -318,7 +318,6 @@ export default class InfinityMenu extends Component {
     // header component
     const searchInputProps = {
       ...this.props.headerProps,
-      isSearching: this.props.isSearching,
       placeholder: 'Etsi...',
       searchInput: this.props.searchInput,
       setSearchInput: this.props.setSearchInput
