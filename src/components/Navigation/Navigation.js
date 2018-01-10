@@ -43,11 +43,14 @@ export class Navigation extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    const { itemsTimestamp: nextTimestamp, items } = nextProps;
-    const { itemsTimestamp: currentTimestamp } = this.props;
+    const { itemsTimestamp: nextTimestamp, items, isUser } = nextProps;
+    const { itemsTimestamp: currentTimestamp, isUser: currentIsUser } = this.props;
     const isReceivingNewlyFetchedItems = nextTimestamp !== currentTimestamp;
     if (isReceivingNewlyFetchedItems) {
       this.receiveItemsAndResetNavigation(items);
+    }
+    if (isUser && !currentIsUser) {
+      this.updateNavigation();
     }
   }
 
@@ -58,6 +61,11 @@ export class Navigation extends React.Component {
     }));
 
     this.stopSearching();
+  }
+
+  updateNavigation () {
+    this.stopSearching();
+    this.props.fetchNavigation();
   }
 
   toggleNavigationVisibility () {
