@@ -94,7 +94,7 @@ export class Record extends React.Component {
         <div className='record-button-group'>
           { this.props.documentState === 'edit' &&
           <Dropdown
-            children={[
+            items={[
               {
                 text: 'Muokkaa asiakirjaa',
                 icon: 'fa-pencil',

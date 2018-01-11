@@ -458,7 +458,7 @@ export class ViewTOS extends React.Component {
           {this.props.selectedTOS.documentState === 'edit' && (
             <span className='action-dropdown-button'>
               <Dropdown
-                children={[
+                items={[
                   {
                     text: 'Muokkaa metatietoja',
                     icon: 'fa-pencil',
@@ -628,7 +628,7 @@ export class ViewTOS extends React.Component {
                     !this.state.createPhaseMode && (
                       <span className='pull-right'>
                         <Dropdown
-                          children={[
+                          items={[
                             {
                               text: 'Uusi käsittelyvaihe',
                               icon: 'fa-file-text',
