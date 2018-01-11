@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import map from 'lodash/map';
+import filter from 'lodash/filter';
 import forEach from 'lodash/forEach';
 import includes from 'lodash/includes';
 import InfinityMenu from '../InfinityMenu/infinityMenu';
@@ -43,14 +44,11 @@ export class Navigation extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    const { itemsTimestamp: nextTimestamp, items, isUser } = nextProps;
-    const { itemsTimestamp: currentTimestamp, isUser: currentIsUser } = this.props;
+    const { itemsTimestamp: nextTimestamp, items } = nextProps;
+    const { itemsTimestamp: currentTimestamp } = this.props;
     const isReceivingNewlyFetchedItems = nextTimestamp !== currentTimestamp;
     if (isReceivingNewlyFetchedItems) {
       this.receiveItemsAndResetNavigation(items);
-    }
-    if (isUser && !currentIsUser) {
-      this.updateNavigation();
     }
   }
 
@@ -165,7 +163,7 @@ export class Navigation extends React.Component {
   render () {
     const { onLeafMouseClick } = this.props;
     const { searchInput, isSearching } = this.state.search;
-    const filterStatusOptions = this.props.isUser ? filterStatuses : _.filter(filterStatuses, {default:true});
+    const filterStatusOptions = this.props.isUser ? filterStatuses : filter(filterStatuses, { default:true });
     let navigationTitle = 'Navigaatio';
     if (!this.props.is_open && this.props.tosPath.length) {
       navigationTitle = this.props.tosPath.map((section, index) => {
@@ -197,6 +195,7 @@ export class Navigation extends React.Component {
 
 Navigation.propTypes = {
   fetchNavigation: PropTypes.func.isRequired,
+  isUser: PropTypes.bool.isRequired,
   is_open: PropTypes.bool.isRequired,
   // One does not simply mutate props unless one is Navigation and the prop is `items`.
   // Sorry, didn't find out where the devil is doing the mutations :'(

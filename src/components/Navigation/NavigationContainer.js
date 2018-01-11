@@ -27,7 +27,7 @@ const mapStateToProps = (state, ownProps) => {
     tosPath,
     is_open: state.navigation.is_open,
     isFetching: state.navigation.isFetching,
-    isUser: !isEmpty(state.user),
+    isUser: !isEmpty(state.user.data),
     items: JSON.parse(JSON.stringify(items)), // TODO: Unhack this when Navigation doesn't mutate state
     itemsTimestamp: timestamp,
     selectedTOS
