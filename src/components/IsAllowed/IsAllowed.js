@@ -22,7 +22,7 @@ IsAllowed.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user
+    user: state.user.data
   };
 };
 

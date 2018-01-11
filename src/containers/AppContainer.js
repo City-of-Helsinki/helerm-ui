@@ -3,37 +3,35 @@ import { Provider, connect } from 'react-redux';
 import { Router } from 'react-router';
 import ReduxToastr from 'react-redux-toastr';
 
-import {
-  fetchAttributeTypes,
-  fetchTemplates
-} from '../store/uiReducer';
+import Loader from '../components/Loader';
+import { retrieveUserFromSession } from '../components/Login/reducer';
+import { fetchAttributeTypes, fetchTemplates } from '../store/uiReducer';
 
 class AppContainer extends Component {
   static propTypes = {
-    fetchAttributeTypes: PropTypes.func,
-    fetchTemplates: PropTypes.func,
+    fetchAttributeTypes: PropTypes.func.isRequired,
+    fetchTemplates: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
+    retrieveUserFromSession: PropTypes.func.isRequired,
     routes: PropTypes.object.isRequired,
-    store: PropTypes.object.isRequired
+    store: PropTypes.object.isRequired,
+    user: PropTypes.object
   };
 
   componentWillMount () {
     this.props.fetchAttributeTypes();
     this.props.fetchTemplates();
-  }
-
-  shouldComponentUpdate () {
-    return false;
+    this.props.retrieveUserFromSession();
   }
 
   render () {
-    const { routes, store, history } = this.props;
+    const { user, routes, store, history } = this.props;
     return (
       <Provider store={store}>
         <div style={{ height: '100%' }}>
-          <Router history={history}>
-            {routes}
-          </Router>
+          {user
+            ? <Router history={history}>{routes}</Router>
+          : <Loader show={true} />}
           <ReduxToastr
             timeOut={4000}
             newestOnTop={true}
@@ -49,6 +47,10 @@ class AppContainer extends Component {
   }
 }
 
-const mapDispatchToProps = { fetchAttributeTypes, fetchTemplates };
+const mapStateToProps = ({ user }) => ({
+  user: user.data
+});
 
-export default connect(null, mapDispatchToProps)(AppContainer);
+const mapDispatchToProps = { fetchAttributeTypes, fetchTemplates, retrieveUserFromSession };
+
+export default connect(mapStateToProps, mapDispatchToProps)(AppContainer);

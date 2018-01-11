@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 
 import {
   login,
-  logout,
-  retrieveUserFromSession
+  logout
 } from './reducer';
 
 import Login from './Login';
@@ -12,14 +11,13 @@ import Login from './Login';
 const mapDispatchToProps = (dispatch) => {
   return {
     login: bindActionCreators(login, dispatch),
-    logout: bindActionCreators(logout, dispatch),
-    retrieveUserFromSession: bindActionCreators(retrieveUserFromSession, dispatch)
+    logout: bindActionCreators(logout, dispatch)
   };
 };
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user
+    user: state.user.data
   };
 };
 

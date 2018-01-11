@@ -7,10 +7,14 @@ import { isEmpty, get, isString } from 'lodash';
 import { default as api } from '../../utils/api';
 import { setStorageItem, removeStorageItem } from '../../utils/storage';
 
-const initialState = {};
+const initialState = {
+  data: null,
+  isFetching: false
+};
 
 export const RECEIVE_USERDATA = 'receiveUserDataAction';
 export const CLEAR_USERDATA = 'clearUserDataAction';
+export const RETRIEVE_USERDATA = 'retrieveUserFromSessionAction';
 export const LOGIN = 'login';
 export const LOGOUT = 'logout';
 
@@ -24,6 +28,7 @@ export function clearUserData () {
 
 export function retrieveUserFromSession () {
   return function (dispatch) {
+    dispatch(createAction(RETRIEVE_USERDATA)());
     return fetch(`/auth/me?${+new Date()}`, {
       method: 'GET',
       credentials: 'same-origin'
@@ -70,9 +75,14 @@ export function logout () {
   };
 }
 
+const retrieveUserFromSessionAction = (state) => update(state, {
+  isFetching: { $set: true }
+});
+
 const receiveUserDataAction = (state, { payload }) => {
   return update(state, {
-    $merge: payload
+    data: { $set: payload },
+    isFetching: { $set: false }
   });
 };
 
@@ -85,7 +95,8 @@ const clearUserDataAction = state => {
 export default handleActions(
   {
     receiveUserDataAction,
-    clearUserDataAction
+    clearUserDataAction,
+    retrieveUserFromSessionAction
   },
   initialState
 );
