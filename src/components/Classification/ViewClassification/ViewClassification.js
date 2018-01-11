@@ -106,7 +106,7 @@ export class ViewClassification extends React.Component {
               code={classification.code}
               title={classification.title}
               createTos={this.createTos}
-              hasFunction={!!classification.function}
+              functionAllowed={!classification.function && classification.function_allowed}
             />
 
             <div className='single-classification-content'>
