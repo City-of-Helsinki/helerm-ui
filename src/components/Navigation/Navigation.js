@@ -17,7 +17,7 @@ const filterStatuses = [
   { value: DRAFT, label: 'Luonnos' },
   { value: SENT_FOR_REVIEW, label: 'Lähetetty tarkastettavaksi' },
   { value: WAITING_FOR_APPROVAL, label: 'Odottaa hyväksymistä' },
-  { value: APPROVED, label: 'Hyväksytty' }
+  { value: APPROVED, label: 'Hyväksytty', default: true }
 ];
 
 export class Navigation extends React.Component {
@@ -165,6 +165,7 @@ export class Navigation extends React.Component {
   render () {
     const { onLeafMouseClick } = this.props;
     const { searchInput, isSearching } = this.state.search;
+    const filterStatusOptions = this.props.isUser ? filterStatuses : _.filter(filterStatuses, {default:true});
     let navigationTitle = 'Navigaatio';
     if (!this.props.is_open && this.props.tosPath.length) {
       navigationTitle = this.props.tosPath.map((section, index) => {
@@ -175,7 +176,7 @@ export class Navigation extends React.Component {
     return (
       <div className='container-fluid helerm-navigation'>
         <InfinityMenu
-          filterStatuses={filterStatuses}
+          filterStatuses={filterStatusOptions}
           handleStatusFilterChange={this.handleStatusFilterChange}
           isOpen={this.props.is_open}
           onLeafMouseClick={onLeafMouseClick ? (event, leaf) => onLeafMouseClick(event, leaf) : this.onLeafMouseClick}
