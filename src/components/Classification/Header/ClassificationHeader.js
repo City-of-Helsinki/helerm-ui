@@ -24,7 +24,16 @@ const ClassificationHeader = ({ code, title, createTos, functionAllowed }) => {
     <div className='single-classification-header'>
       <div className='row'>
         <h4 className='col-md-6 col-xs-12'>{classificationName}</h4>
-        <div className='document-buttons col-xs-12 col-md-6'>{creatable}</div>
+        <div className='document-buttons col-xs-12 col-md-6 no-print'>
+          <button
+            type='button'
+            className='btn btn-primary btn-sm'
+            onClick={window.print}
+          >
+            Tulosta <i className='fa fa-print' />
+          </button>
+          {creatable}
+        </div>
       </div>
     </div>
   );
