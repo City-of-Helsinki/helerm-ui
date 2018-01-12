@@ -1,7 +1,5 @@
 import { includes, difference, uniq } from 'lodash';
 
-import { VALIDATION_SPECIAL_CASES } from '../../config/constants';
-
 /**
  * Validate conditional rules
  * @param key
@@ -45,8 +43,8 @@ const createValidateErrors = type => (obj, rules) => {
       includes(rule.values.map(obj => obj.value), obj.attributes[key]) ||
       rule.values.length === 0;
     const allowValuesOutsideChoices = includes(
-      VALIDATION_SPECIAL_CASES[type].allow_values_outside_choices || [],
-      key
+      rule.allowValuesOutsideChoicesIn,
+      type
     );
 
     if (
@@ -86,8 +84,8 @@ const createValidateWarnings = type => (obj, rules) => {
     const rule = rules[key];
     const attributeValue = obj.attributes[key];
     const allowOutsideValues = includes(
-      VALIDATION_SPECIAL_CASES[type].allow_values_outside_choices,
-      key
+      rule.allowValuesOutsideChoicesIn,
+      type
     );
 
     if (
@@ -114,47 +112,18 @@ export const validateTOSWarnings = createValidateWarnings('function');
 
 /**
  * Validate Phase against required rules
- * @param phase
- * @param rules
- * @returns {Array}
  */
-export const validatePhase = (phase, rules) => {
-  const errors = [];
-  // TODO: implementation
-  return errors;
-};
+export const validatePhase = createValidateErrors('phase');
 
 /**
  * Validate Phase against warning rules
- * @param phase
- * @param rules
- * @returns {Array}
  */
-export const validatePhaseWarnings = (phase, rules) => {
-  const errors = [];
-  for (const key in rules) {
-    if (
-      phase.attributes[key] &&
-      rules[key].values.length &&
-      !isValueValidOption(phase.attributes[key], rules[key].values)
-    ) {
-      errors.push(key);
-    }
-  }
-  return errors;
-};
+export const validatePhaseWarnings = createValidateWarnings('phase');
 
 /**
  * Validate Action against required rules
- * @param action
- * @param rules
- * @returns {Array}
  */
-export const validateAction = (action, rules) => {
-  const errors = [];
-  // TODO: implementation
-  return errors;
-};
+export const validateAction = createValidateErrors('action');
 
 /**
  * Validate Action against warning rules
@@ -162,19 +131,7 @@ export const validateAction = (action, rules) => {
  * @param rules
  * @returns {Array}
  */
-export const validateActionWarnings = (action, rules) => {
-  const errors = [];
-  for (const key in rules) {
-    if (
-      action.attributes[key] &&
-      rules[key].values.length &&
-      !isValueValidOption(action.attributes[key], rules[key].values)
-    ) {
-      errors.push(key);
-    }
-  }
-  return errors;
-};
+export const validateActionWarnings = createValidateWarnings('action');
 
 /**
  * Validate Record against required rules
