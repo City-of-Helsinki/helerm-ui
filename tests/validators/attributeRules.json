@@ -71,6 +71,7 @@
     "multiIn": [],
     "requiredIf": [],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": [],
     "required": false
   },
   "ActionType": {
@@ -81,6 +82,7 @@
     "multiIn": [],
     "requiredIf": [],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": [],
     "required": false
   },
   "RecordType": {
@@ -701,6 +703,7 @@
     "multiIn": [],
     "requiredIf": [],
     "requiredIn": ["record"],
+    "allowValuesOutsideChoicesIn": [],
     "required": true
   },
   "TypeSpecifier": {
@@ -711,6 +714,7 @@
     "multiIn": [],
     "requiredIf": [],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": [],
     "required": false
   },
   "InformationSystem": {
@@ -743,6 +747,7 @@
     "multiIn": ["action", "phase", "record", "function"],
     "requiredIf": [],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": ["action", "phase", "record", "function"],
     "required": false
   },
   "PublicityClass": {
@@ -782,6 +787,7 @@
     "multiIn": [],
     "requiredIf": [],
     "requiredIn": ["record", "function"],
+    "allowValuesOutsideChoicesIn": [],
     "required": true
   },
   "RetentionPeriod": {
@@ -898,6 +904,7 @@
     "multiIn": [],
     "requiredIf": [],
     "requiredIn": ["record", "function"],
+    "allowValuesOutsideChoicesIn": [],
     "required": true
   },
   "SecurityPeriod": {
@@ -935,6 +942,7 @@
       }
     ],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": [],
     "required": false
   },
   "RetentionReason": {
@@ -1359,6 +1367,7 @@
     "multiIn": [],
     "requiredIf": [],
     "requiredIn": ["record", "function"],
+    "allowValuesOutsideChoicesIn": [],
     "required": true
   },
   "SecurityReason": {
@@ -1634,6 +1643,7 @@
       }
     ],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": [],
     "required": false
   },
   "RetentionPeriodStart": {
@@ -1805,6 +1815,7 @@
       }
     ],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": [],
     "required": false
   },
   "Restriction.SecurityPeriodStart": {
@@ -1856,6 +1867,7 @@
       }
     ],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": [],
     "required": false
   },
   "PublicityClassChange": {
@@ -1866,6 +1878,7 @@
     "multiIn": [],
     "requiredIf": [],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": [],
     "required": false
   },
   "PersonalData": {
@@ -1898,6 +1911,7 @@
     "multiIn": [],
     "requiredIf": [],
     "requiredIn": ["record", "function"],
+    "allowValuesOutsideChoicesIn": [],
     "required": true
   },
   "SocialSecurityNumber": {
@@ -1923,6 +1937,7 @@
     "multiIn": [],
     "requiredIf": [],
     "requiredIn": ["record", "function"],
+    "allowValuesOutsideChoicesIn": [],
     "required": true
   },
   "RetentionPeriodOffice": {
@@ -1976,6 +1991,7 @@
     "multiIn": [],
     "requiredIf": [],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": [],
     "required": false
   },
   "StorageLocation": {
@@ -1986,6 +2002,7 @@
     "multiIn": [],
     "requiredIf": [],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": [],
     "required": false
   },
   "StorageOrder": {
@@ -2039,6 +2056,7 @@
     "multiIn": [],
     "requiredIf": [],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": [],
     "required": false
   },
   "StorageAccountable": {
@@ -2049,6 +2067,7 @@
     "multiIn": [],
     "requiredIf": [],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": [],
     "required": false
   },
   "ProtectionClass": {
@@ -2089,6 +2108,7 @@
     "multiIn": [],
     "requiredIf": [],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": [],
     "required": false
   },
   "AdditionalInformation": {
@@ -2099,6 +2119,7 @@
     "multiIn": [],
     "requiredIf": [],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": [],
     "required": false
   },
   "RetentionPeriodTotal": {
@@ -2209,6 +2230,7 @@
     "multiIn": [],
     "requiredIf": [],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": [],
     "required": false
   },
   "DisposePreviousVersions": {
@@ -2219,6 +2241,7 @@
     "multiIn": [],
     "requiredIf": [],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": [],
     "required": false
   },
   "Restriction.ProtectionLevel": {
@@ -2265,6 +2288,7 @@
     "multiIn": [],
     "requiredIf": [],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": [],
     "required": false
   },
   "Restriction.SecurityClass": {
@@ -2311,6 +2335,7 @@
     "multiIn": [],
     "requiredIf": [],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": [],
     "required": false
   },
   "Subject": {
@@ -2321,6 +2346,7 @@
     "multiIn": ["record", "function"],
     "requiredIf": [],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": ["record", "function"],
     "required": false
   },
   "Subject.Scheme": {
@@ -2331,6 +2357,7 @@
     "multiIn": ["record", "function"],
     "requiredIf": [],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": ["record", "function"],
     "required": false
   },
   "DataGroup": {
@@ -2341,6 +2368,7 @@
     "multiIn": ["record", "function"],
     "requiredIf": [],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": ["record", "function"],
     "required": false
   },
   "ProcessOwner": {
@@ -2351,6 +2379,7 @@
     "multiIn": ["function"],
     "requiredIf": [],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": ["function"],
     "required": false
   },
   "CollectiveProcessIDSource": {
@@ -2361,6 +2390,7 @@
     "multiIn": ["function"],
     "requiredIf": [],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": ["function"],
     "required": false
   },
   "ProcessStatus": {
@@ -2371,6 +2401,7 @@
     "multiIn": [],
     "requiredIf": [],
     "requiredIn": [],
+    "allowValuesOutsideChoicesIn": [],
     "required": false
   }
 }

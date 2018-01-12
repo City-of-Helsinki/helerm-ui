@@ -25,6 +25,7 @@ export function receiveAttributeTypes (attributes, validationRules) {
       let requiredIn = [];
       let requiredIf = [];
       let multiIn = [];
+      let allowValuesOutsideChoicesIn = [];
 
       // Add rules where attribute is allowed to be
       for (const rule in validationRules) {
@@ -94,6 +95,17 @@ export function receiveAttributeTypes (attributes, validationRules) {
         });
       });
 
+      // Add allow values outside choices rule
+      Object.keys(validationRules).map(key => {
+        validationRules[key].extra_validations &&
+        validationRules[key].extra_validations.allow_values_outside_choices &&
+        validationRules[key].extra_validations.allow_values_outside_choices.map(field => {
+          if (field === result.identifier) {
+            allowValuesOutsideChoicesIn.push(key);
+          }
+        });
+      });
+
       attributeTypeList[result.identifier] = {
         index: result.index,
         name: result.name,
@@ -102,7 +114,8 @@ export function receiveAttributeTypes (attributes, validationRules) {
         multiIn,
         requiredIf,
         requiredIn,
-        required
+        required,
+        allowValuesOutsideChoicesIn
       };
     }
   });
