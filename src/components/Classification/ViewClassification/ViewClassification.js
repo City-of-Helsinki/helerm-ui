@@ -7,6 +7,9 @@ import ClassificationHeader from '../Header/ClassificationHeader';
 import './ViewClassification.scss';
 
 export class ViewClassification extends React.Component {
+
+  static BODY_CLASS = 'helerm-classification-view';
+
   constructor (props) {
     super(props);
     this.createTos = this.createTos.bind(this);
@@ -17,6 +20,7 @@ export class ViewClassification extends React.Component {
     const { params: { id } } = this.props;
 
     this.fetchClassification(id);
+    this.addBodyClass();
   }
 
   componentWillReceiveProps (nextProps) {
@@ -33,7 +37,23 @@ export class ViewClassification extends React.Component {
   }
 
   componentWillUnmount () {
+    this.removeBodyClass();
     this.props.clearClassification();
+  }
+
+  addBodyClass () {
+    if (document.body) {
+      document.body.className = document.body.className + ViewClassification.BODY_CLASS;
+    }
+  }
+
+  removeBodyClass () {
+    if (document.body) {
+      document.body.className = document.body.className.replace(
+        ViewClassification.BODY_CLASS,
+        ''
+      );
+    }
   }
 
   fetchClassification (id, params = {}) {
@@ -122,7 +142,7 @@ export class ViewClassification extends React.Component {
                 </div>
                 {classification.function
                   ? (
-                    <div className='classification-details col-xs-12'>
+                    <div className='classification-details col-xs-12 no-print'>
                       <Link to={`/view-tos/${classification.function}`}>
                           Käsittelyprosessi &raquo;
                         </Link>

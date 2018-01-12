@@ -30,3 +30,16 @@
   padding:10px 15px;
   border: 1px solid #ddd;
 }
+
+body.helerm-classification-view {
+
+  @media print {
+    .no-print,
+    .helerm-banner,
+    .navigation-filters,
+    .nav-button,
+    .infinity-menu-container {
+      display: none;
+    }
+  }
+}
