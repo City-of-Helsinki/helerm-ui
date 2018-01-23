@@ -22,6 +22,7 @@ export default class InfinityMenu extends Component {
     headerProps: PropTypes.object,
     isOpen: PropTypes.bool,
     isSearching: PropTypes.bool,
+    isUser: PropTypes.bool,
     loadMoreComponent: PropTypes.func,
     maxLeaves: PropTypes.number,
     onLeafMouseClick: PropTypes.func,
@@ -325,6 +326,8 @@ export default class InfinityMenu extends Component {
     };
 
     const bodyContent = this.renderBody(displayTree);
+
+    const stateFilterText = this.props.isUser ? 'Suodata viimeisen tilan mukaan...' : 'Suodata tilan mukaan...';
 
     return (
       <div className={classnames('navigation-menu', { 'navigation-open': this.props.isOpen })}>
