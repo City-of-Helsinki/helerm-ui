@@ -5,6 +5,7 @@ import SearchInput from './searchInput';
 import ClassificationLink from './classificationLink';
 import NestedObjects from 'nested-objects';
 import _get from 'lodash/get';
+import { Link } from 'react-router';
 
 /**
  * Extracted from https://github.com/socialtables/react-infinity-menu
@@ -345,25 +346,37 @@ export default class InfinityMenu extends Component {
         }
 
         {this.props.isOpen &&
-        <div className='row navigation-filters'>
+        <div className='navigation-filters clearfix'>
+          <div className='navigation-filters-container'>
+            <div className='row'>
 
-          <div className='col-sm-6'>
-            <SearchInput {...searchInputProps}/>
+              <div className='col-sm-6'>
+                <SearchInput {...searchInputProps}/>
+              </div>
+
+              <div className='col-sm-6'>
+                <Select
+                  autoBlur={true}
+                  placeholder='Suodata tilan mukaan...'
+                  value={this.props.statusValue}
+                  multi={true}
+                  joinValues={true}
+                  clearable={false}
+                  resetValue={this.props.filterStatuses}
+                  options={this.props.filterStatuses}
+                  onChange={this.props.handleStatusFilterChange}
+                />
+              </div>
+            </div>
           </div>
 
-          <div className='col-sm-6'>
-            <Select
-              autoBlur={true}
-              placeholder='Suodata tilan mukaan...'
-              value={this.props.statusValue}
-              multi={true}
-              joinValues={true}
-              clearable={false}
-              resetValue={this.props.filterStatuses}
-              options={this.props.filterStatuses}
-              onChange={this.props.handleStatusFilterChange}
-            />
-          </div>
+          <Link
+            className='btn btn-default btn-sm nav-button pull-right'
+            to='/classification-tree'
+          >
+            <span className='fa fa-print' aria-hidden='true' />
+          </Link>
+
         </div>
         }
         <div className='infinity-menu-container'>
