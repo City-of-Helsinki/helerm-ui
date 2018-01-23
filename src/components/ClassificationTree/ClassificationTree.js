@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
 
 import { getStatusLabel } from 'utils/helpers';
 
@@ -9,11 +8,6 @@ import './ClassificationTree.scss';
 export class ClassificationTree extends React.Component {
 
   static BODY_CLASS = 'helerm-classification-tree';
-
-  constructor (props) {
-    super(props);
-
-  }
 
   componentDidMount () {
     this.addBodyClass();
@@ -74,19 +68,20 @@ export class ClassificationTree extends React.Component {
           </table>
         }
       </div>
-    )
+    );
   }
 
   getTreeItems (items, current) {
     const classificationData = this.renderClassification(current);
-    const childrenList = current.children ? current.children.reduce((p, c) => {
-      if (c === undefined) {
-        return p;
+    let currentItems = [...items];
+    const childrenList = current.children ? current.children.reduce((prev, current) => {
+      if (current === undefined) {
+        return prev;
       }
-      return this.getTreeItems(p, c);
+      return this.getTreeItems(prev, current);
     }, []) : null;
 
-    items.push(
+    currentItems.push(
       <div key={current.id}>
         {classificationData}
         {childrenList &&
@@ -97,7 +92,7 @@ export class ClassificationTree extends React.Component {
       </div>
     );
 
-    return items;
+    return currentItems;
   }
 
   render () {
@@ -111,7 +106,7 @@ export class ClassificationTree extends React.Component {
       }, []);
 
       return (
-        <div className="classification-tree">
+        <div className='classification-tree'>
           <div className='no-print'>
             <button
               type='button'
@@ -137,8 +132,8 @@ export class ClassificationTree extends React.Component {
 }
 
 ClassificationTree.propTypes = {
-  navigation: PropTypes.object,
-  goBack: PropTypes.func.isRequired
+  goBack: PropTypes.func.isRequired,
+  tree: PropTypes.array
 };
 
 export default ClassificationTree;
