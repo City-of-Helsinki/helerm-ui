@@ -1,0 +1,27 @@
+body.helerm-classification-tree {
+
+  .navigation-menu {
+    display: none;
+  }
+
+  h4 {
+    padding-top: 0.5em;
+  }
+
+  table td,
+  table th {
+    padding: 0.5em;
+    border: 1px solid #ddd;
+  }
+
+  .classification-children {
+    padding-left: 1em;
+  }
+
+  @media print {
+    .no-print,
+    .helerm-banner {
+      display: none;
+    }
+  }
+}
