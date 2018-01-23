@@ -161,9 +161,9 @@ export class Navigation extends React.Component {
   }
 
   render () {
-    const { onLeafMouseClick } = this.props;
+    const { onLeafMouseClick, isUser } = this.props;
     const { searchInput, isSearching } = this.state.search;
-    const filterStatusOptions = this.props.isUser ? filterStatuses : filter(filterStatuses, { default:true });
+    const filterStatusOptions = isUser ? filterStatuses : filter(filterStatuses, { default:true });
     let navigationTitle = 'Navigaatio';
     if (!this.props.is_open && this.props.tosPath.length) {
       navigationTitle = this.props.tosPath.map((section, index) => {
@@ -187,6 +187,7 @@ export class Navigation extends React.Component {
           setSearchInput={this.setSearchInput}
           searchInput={searchInput}
           isSearching={isSearching}
+          isUser={isUser}
         />
       </div>
     );
