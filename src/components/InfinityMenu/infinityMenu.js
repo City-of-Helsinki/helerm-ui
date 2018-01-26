@@ -360,7 +360,7 @@ export default class InfinityMenu extends Component {
               <div className='col-sm-6'>
                 <Select
                   autoBlur={true}
-                  placeholder='Suodata tilan mukaan...'
+                  placeholder={stateFilterText}
                   value={this.props.statusValue}
                   multi={true}
                   joinValues={true}
