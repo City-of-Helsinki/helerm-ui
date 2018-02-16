@@ -4,8 +4,12 @@ body.helerm-tos-print-view {
   }
 
   table td,
-  table th {
+  table:not(.no-border) th {
     padding: 0.5em;
+  }
+
+  table:not(.no-border) td,
+  table:not(.no-border) th {
     border: 1px solid #ddd;
   }
 
