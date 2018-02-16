@@ -39,6 +39,7 @@ const createValidateErrors = type => (obj, rules) => {
     const isRequired = rules[key].required;
     const isRequiredInType = includes(rule.requiredIn, type);
     const objHasRuleAttribute = !!obj.attributes[key];
+    const isAttributeAllowedInType = includes(rules[key].allowedIn, type);
     const isValid =
       includes(rule.values.map(obj => obj.value), obj.attributes[key]) ||
       rule.values.length === 0;
@@ -46,10 +47,10 @@ const createValidateErrors = type => (obj, rules) => {
       rule.allowValuesOutsideChoicesIn,
       type
     );
-
     if (
       (isRequired && isRequiredInType && !objHasRuleAttribute) ||
-      (objHasRuleAttribute && !isValid && !allowValuesOutsideChoices)
+      (objHasRuleAttribute && !isValid && !allowValuesOutsideChoices) ||
+      (!isAttributeAllowedInType && objHasRuleAttribute)
     ) {
       errors.push(key);
     }
