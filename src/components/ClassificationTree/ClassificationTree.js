@@ -51,22 +51,22 @@ export class ClassificationTree extends React.Component {
     const information = this.renderClassificationData('Lisätietoa', item.additional_information);
     const functionAllowed = this.renderClassificationData('Käsittelyprosessi sallittu', item.function_allowed ? 'Kyllä' : 'Ei');
     const state = item.function_allowed && item.function_state ? this.renderClassificationData('Käsittelyprosessin tila', getStatusLabel(item.function_state)) : null;
-
     return (
       <div key={item.id}>
-        <h4>{item.name}</h4>
-        {(descriptionInternal || descriptionInternal || related || information || functionAllowed || state) &&
-          <table>
-            <tbody>
-              {description}
-              {descriptionInternal}
-              {related}
-              {information}
-              {functionAllowed}
-              {state}
-            </tbody>
-          </table>
-        }
+        <table>
+          <tbody>
+            <tr className='classification-title'>
+              <th scope='row'><h4>{item.code}</h4></th>
+              <td><h4>{item.title}</h4></td>
+            </tr>
+            {description}
+            {descriptionInternal}
+            {related}
+            {information}
+            {functionAllowed}
+            {state}
+          </tbody>
+        </table>
       </div>
     );
   }

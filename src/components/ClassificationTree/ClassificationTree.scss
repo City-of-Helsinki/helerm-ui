@@ -14,6 +14,12 @@ body.helerm-classification-tree {
     border: 1px solid #ddd;
   }
 
+  .classification-title {
+    td, th {
+      border: none;
+    }
+  }
+
   .classification-children {
     padding-left: 1em;
   }
