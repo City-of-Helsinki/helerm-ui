@@ -22,8 +22,7 @@
     "deploy:prod": "better-npm-run deploy:prod",
     "codecov": "cat coverage/*/lcov.info | codecov",
     "precommit": "npm run lint",
-    "prepush":
-      "concurrently --kill-others-on-fail -n \"LINT,TEST\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run lint\" \"npm run test\""
+    "prepush": "concurrently --kill-others-on-fail -n \"LINT,TEST\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run lint\" \"npm run test\""
   },
   "betterScripts": {
     "compile": {
@@ -33,16 +32,14 @@
       }
     },
     "dev": {
-      "command":
-        "nodemon bin/server --ignore dist --ignore coverage --ignore tests --ignore src",
+      "command": "nodemon bin/server --ignore dist --ignore coverage --ignore tests --ignore src",
       "env": {
         "NODE_ENV": "development",
         "DEBUG": "app:*"
       }
     },
     "deploy": {
-      "command":
-        "npm run lint && npm run test && npm run clean && npm run compile",
+      "command": "npm run lint && npm run test && npm run clean && npm run compile",
       "env": {
         "DEBUG": "app:*"
       }
@@ -112,8 +109,8 @@
     "imports-loader": "^0.6.5",
     "ip": "^1.1.2",
     "json-loader": "^0.5.4",
-    "jsonwebtoken": "^7.3.0",
-    "list-to-tree": "0.0.6",
+    "jsonwebtoken": "^8.0.0",
+    "list-to-tree": "1.0.0",
     "moment": "^2.18.1",
     "nconf": "^0.8.4",
     "node-sass": "^4.7.2",
@@ -193,7 +190,13 @@
     "webpack-dashboard": "^0.3.0"
   },
   "babel": {
-    "presets": ["react", "es2015", "stage-2"],
-    "plugins": ["add-module-exports"]
+    "presets": [
+      "react",
+      "es2015",
+      "stage-2"
+    ],
+    "plugins": [
+      "add-module-exports"
+    ]
   }
 }
