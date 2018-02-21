@@ -41,7 +41,8 @@ const styles = {
     height: '100%',
     minHeight: '400px',
     position: 'relative',
-    overflow: 'auto'
+    overflowY: 'scroll',
+    transition: 'left .3s ease-out, margin-right .3s ease-out'
   }
 };
 
@@ -199,6 +200,13 @@ export class ValidationBar extends Component {
     const invalidContent = this.renderInvalidContent();
     return (
       <div className='sidebar-content'>
+        <div className='sidebar-content-close'>
+          <button
+            className='btn btn-sm btn-default'
+            onClick={() => this.props.setValidationVisibility(false)}>
+            <i className='fa fa-times' />
+          </button>
+        </div>
         <Select
           autoBlur={true}
           placeholder='Suodata tyypin mukaan...'
@@ -215,16 +223,18 @@ export class ValidationBar extends Component {
   }
 
   render () {
-    const { children, selectedTOS } = this.props;
+    const { children, is_open: isOpen, selectedTOS } = this.props;
     const sidebarContent = selectedTOS.id ? this.renderContent() : <div />;
 
     return (
       <div className='helerm-validation-bar'>
         <SideBar
           sidebar={sidebarContent}
-          open={this.props.is_open}
-          onSetOpen={() => this.props.setValidationVisibility(false)}
+          open={isOpen}
+          docked={isOpen}
           pullRight={true}
+          rootClassName={`helerm-validation-sidebar${isOpen ? '--opened' : ''}`}
+          contentClassName='helerm-validation-sidebar--content'
           styles={styles}
         >
           {children}
