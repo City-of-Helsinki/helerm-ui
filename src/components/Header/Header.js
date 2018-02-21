@@ -33,8 +33,8 @@ export class Header extends React.Component {
 }
 
 Header.propTypes = {
-  isFetching: PropTypes.bool,
-  fetchNavigation: PropTypes.func
+  fetchNavigation: PropTypes.func,
+  isFetching: PropTypes.bool
 };
 
 Header.defaultProps = {

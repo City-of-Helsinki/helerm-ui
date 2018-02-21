@@ -10,6 +10,12 @@
   color: #ffc61e;
 }
 
+.helerm-validation-sidebar--opened {
+  .helerm-validation-sidebar--content {
+    margin-right: 300px;
+  }
+}
+
 .sidebar-content {
   h4 {
     margin-bottom: 20px;
@@ -17,6 +23,11 @@
 
   h5 {
     margin: 20px 0 10px;
+  }
+
+  .sidebar-content-close {
+    padding: 10px 0;
+    display: block;
   }
 
   .element-name {
