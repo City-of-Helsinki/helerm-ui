@@ -41,7 +41,7 @@ const styles = {
     height: '100%',
     minHeight: '400px',
     position: 'relative',
-    overflowY: 'scroll',
+    overflowY: 'hidden',
     transition: 'left .3s ease-out, margin-right .3s ease-out'
   }
 };
