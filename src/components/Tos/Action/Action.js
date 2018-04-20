@@ -255,7 +255,7 @@ export class Action extends React.Component {
   generateRecords (records) {
     const elements = [];
     for (const key in records) {
-      if (records.hasOwnProperty(key)) {
+      if (this.props.records.hasOwnProperty(records[key])) {
         elements.push(
           <Record
             key={key}
