@@ -101,7 +101,7 @@ export class Record extends React.Component {
                 style: 'btn-primary',
                 action: () => this.props.editRecordForm(
                   this.props.record.id,
-                  this.state.attributes
+                  this.props.record.attributes
                 )
               },
               {
@@ -110,7 +110,7 @@ export class Record extends React.Component {
                 style: 'btn-primary',
                 action: () => this.props.complementRecordForm(
                   this.props.record.id,
-                  this.state.attributes
+                  this.props.record.attributes
                 )
               },
               {

@@ -132,8 +132,7 @@ export const editRecordAttributeAction = (state, { payload }) => {
 };
 
 export const removeRecordAction = (state, { payload }) => {
-  // TODO: Removes a faulty one (index+1)
-  const stateCopy = Object.assign({}, state);
+  const stateCopy = JSON.parse(JSON.stringify(state));
 
   const recordIndex = indexOf(
     stateCopy.actions[payload.actionId].records,
@@ -141,6 +140,7 @@ export const removeRecordAction = (state, { payload }) => {
   );
 
   delete stateCopy.records[payload.recordToRemove];
+
   return update(state, {
     records: {
       $set: stateCopy.records
