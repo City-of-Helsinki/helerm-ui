@@ -11,10 +11,10 @@ const PrintClassification = ({ classification }) => {
       </header>
       <MetaDataTable
         rows={[
-          ['Kuvaus', classification.description_internal],
-          ['Sisäinen kuvaus', classification.description],
-          ['Liittyviä luokituksia', classification.related_classification],
-          ['Lisätietoa', classification.additional_information]
+          ['Kuvaus', classification.description],
+          ['Sisäinen kuvaus', classification.description_internal],
+          ['Liittyvä tehtäväluokka', classification.related_classification],
+          ['Lisätiedot', classification.additional_information]
         ]}
       />
     </section>

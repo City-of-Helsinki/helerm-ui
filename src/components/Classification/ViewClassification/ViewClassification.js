@@ -112,11 +112,11 @@ export class ViewClassification extends React.Component {
         classification.description
       );
       const relatedClassification = this.renderClassificationData(
-        'Liittyviä luokituksia',
+        'Liittyvä tehtäväluokka',
         classification.related_classification
       );
       const additionalInformation = this.renderClassificationData(
-        'Lisätietoa',
+        'Lisätiedot',
         classification.additional_information
       );
       return (
