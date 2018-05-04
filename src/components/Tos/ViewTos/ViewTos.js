@@ -134,7 +134,11 @@ export class ViewTOS extends React.Component {
       .catch(err => {
         if (err instanceof URIError) {
           // We have a 404 from API
-          this.props.push(`/404?tos-id=${id}`);
+          if (this.props.isUser) {
+            this.props.push(`/404?tos-id=${id}`);
+          } else {
+            this.props.login();
+          }
         }
       });
   }
@@ -774,6 +778,8 @@ ViewTOS.propTypes = {
   fetchTOS: PropTypes.func.isRequired,
   importItems: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
+  isUser: PropTypes.bool.isRequired,
+  login: PropTypes.func.isRequired,
   params: PropTypes.object.isRequired,
   phaseTypes: PropTypes.object.isRequired,
   push: PropTypes.func.isRequired,

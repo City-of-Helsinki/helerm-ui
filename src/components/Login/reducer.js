@@ -62,7 +62,7 @@ export function retrieveUserFromSession () {
 }
 
 export function login () {
-  window.location.assign('/auth/login/helsinki');
+  window.location.assign(`/auth/login/helsinki?next=${window.location.href}`);
   return createAction(LOGIN);
 }
 
