@@ -71,7 +71,7 @@ export function logout () {
     dispatch(createAction(LOGOUT));
     removeStorageItem('token');
     dispatch(clearUserData());
-    window.location.assign(`/auth/logout?next=${window.location.href}`);
+    window.location.assign(`/auth/logout?next=${window.location.origin}`);
   };
 }
 
