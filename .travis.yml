@@ -8,6 +8,12 @@ node_js:
   - "lts/*"
   - "node"
 
+# Newest version can fail from time to time fe. if dependencies
+# do not yet support it.
+matrix:
+  allow_failures:
+  - node_js: "node"
+
 cache:
   directories:
     - node_modules
