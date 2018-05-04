@@ -47,8 +47,8 @@ export class ClassificationTree extends React.Component {
   renderClassification (item) {
     const description = this.renderClassificationData('Kuvaus', item.description);
     const descriptionInternal = this.renderClassificationData('Sisäinen kuvaus', item.description_internal);
-    const related = this.renderClassificationData('Liittyviä luokituksia', item.related_classification);
-    const information = this.renderClassificationData('Lisätietoa', item.additional_information);
+    const related = this.renderClassificationData('Liittyvä tehtäväluokka', item.related_classification);
+    const information = this.renderClassificationData('Lisätiedot', item.additional_information);
     const functionAllowed = this.renderClassificationData('Käsittelyprosessi sallittu', item.function_allowed ? 'Kyllä' : 'Ei');
     const state = item.function_allowed && item.function_state ? this.renderClassificationData('Käsittelyprosessin tila', getStatusLabel(item.function_state)) : null;
     return (

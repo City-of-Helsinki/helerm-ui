@@ -102,11 +102,7 @@ class PrintView extends React.Component {
             ['Versionumero', TOS.version.toString()],
             ['Tila', getStatusLabel(TOS.state)],
             ['Muokkausajankohta', formatDateTime(TOS.modified_at)],
-            ['Muokkaaja', TOS.modified_by],
-            ...sortAttributeKeys(Object.keys(TOS.attributes)).map(key => [
-              getAttributeName(key),
-              TOS.attributes[key]
-            ])
+            ['Muokkaaja', TOS.modified_by]
           ]}
         />
         {classification &&
@@ -114,6 +110,19 @@ class PrintView extends React.Component {
             classification={classification}
           />
         }
+        <section>
+          <header>
+            <h2>Käsittelyprosessin tiedot</h2>
+          </header>
+          <MetaDataTable
+            rows={[
+              ...sortAttributeKeys(Object.keys(TOS.attributes)).map(key => [
+                getAttributeName(key),
+                TOS.attributes[key]
+              ])
+            ]}
+          />
+        </section>
         {Object.keys(TOS.phases).map(key => (
           <PrintPhase
             key={TOS.phases[key].id}
