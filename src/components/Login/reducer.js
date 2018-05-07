@@ -62,7 +62,7 @@ export function retrieveUserFromSession () {
 }
 
 export function login () {
-  window.location.assign('/auth/login/helsinki');
+  window.location.assign(`/auth/login/helsinki?next=${window.location.href}`);
   return createAction(LOGIN);
 }
 
@@ -71,7 +71,7 @@ export function logout () {
     dispatch(createAction(LOGOUT));
     removeStorageItem('token');
     dispatch(clearUserData());
-    window.location.assign(`/auth/logout?next=${window.location.href}`);
+    window.location.assign(`/auth/logout?next=${window.location.origin}`);
   };
 }
 

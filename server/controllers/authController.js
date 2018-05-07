@@ -50,7 +50,7 @@ function authCallback (req, res) {
   // `;
   // const html = `<html><body>Login successful.<script>${js}</script>`;
   // res.send(html);
-  const redirectUrl = req.query.next || `${config.globals.APP_URL}`;
+  const redirectUrl = req.session.next || `${config.globals.APP_URL}`;
   res.redirect(redirectUrl);
 }
 
@@ -64,6 +64,12 @@ function getCurrentUser (req, res) {
   res.json(req.user || {});
 }
 
+function beforeLogin (req, res, next) {
+  debug('beforeLogin');
+  req.session.next = req.query.next; // eslint-disable-line no-param-reassign
+  next();
+}
+
 /**
  * Logout
  * @param req
@@ -75,4 +81,4 @@ function logOut (req, res) {
   res.redirect(`https://api.hel.fi/sso/logout/?next=${redirectUrl}`);
 }
 
-export default { passport, authCallback, getCurrentUser, logOut };
+export default { passport, authCallback, getCurrentUser, beforeLogin, logOut };

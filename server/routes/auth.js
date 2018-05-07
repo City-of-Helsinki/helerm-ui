@@ -6,7 +6,8 @@ const router = express.Router();
 /**
  * GET /auth/login/helsinki
  */
-router.route('/login/helsinki').get(authCtrl.passport.authenticate('helsinki'));
+router.route('/login/helsinki')
+  .get(authCtrl.beforeLogin, authCtrl.passport.authenticate('helsinki'));
 
 /**
  * GET /auth/login/helsinki/return
