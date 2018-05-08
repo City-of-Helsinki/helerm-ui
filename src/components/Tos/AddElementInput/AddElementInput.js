@@ -1,5 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
+import { includes, isEmpty, map } from 'lodash';
+
 import KeyStrokeSupport from '../../../decorators/key-stroke-support';
 import './AddElementInput.scss';
 
@@ -39,12 +41,35 @@ function resolveSelectPlaceHolder (type) {
   }
 }
 
+function resolveSelectOptions (values) {
+  const options = [];
+  for (const key in values) {
+    if (values.hasOwnProperty(key)) {
+      options.push({
+        label: values[key].value,
+        value: values[key].value
+      });
+    }
+  }
+  return options;
+}
+
+function resolveSelectedOption (option) {
+  if (option instanceof Array) {
+    return option.length ? map(option, 'value') : null;
+  }
+  return option && option.value ? option.value : option;
+}
+
 export const AddElementInput = ({
   type,
   submit,
+  defaultAttributes,
   typeOptions,
+  newDefaultAttributes,
   newTypeSpecifier,
   newType,
+  onDefaultAttributeChange,
   onTypeSpecifierChange,
   onTypeInputChange,
   onTypeChange,
@@ -54,7 +79,7 @@ export const AddElementInput = ({
     <h5 className='col-xs-12'>{resolveHeader(type)}</h5>
     {/* ActionType disabled for now. */}
     { type !== 'action' &&
-      <div className='col-xs-12 col-md-4'>
+      <div className='col-xs-12 col-md-6 add-element-col'>
         { typeOptions.length !== 0
           ? <Select
             autoBlur={true}
@@ -79,16 +104,47 @@ export const AddElementInput = ({
         }
       </div>
     }
-    <div className='col-xs-12 col-md-4'>
+    <div className='col-xs-12 col-md-6 add-element-col'>
       <input
-      type='text'
-      className='form-control'
-      value={newTypeSpecifier}
-      onChange={onTypeSpecifierChange}
-      onSubmit={submit}
-      placeholder={resolveSpecifierPlaceHolder(type)}/>
+        type='text'
+        className='form-control'
+        value={newTypeSpecifier}
+        onChange={onTypeSpecifierChange}
+        onSubmit={submit}
+        placeholder={resolveSpecifierPlaceHolder(type)}/>
     </div>
-    <div className='col-xs-12 col-md-4 add-element-buttons'>
+    {!isEmpty(defaultAttributes) &&
+      Object.keys(defaultAttributes).map(key => (
+        <div className='col-xs-12 col-md-6' key={`${type}_${key}`}>
+          { defaultAttributes[key].values.length !== 0
+            ? <Select
+              autoBlur={true}
+              key={key}
+              openOnFocus={true}
+              className={`form-control edit-${type}-type__input`}
+              clearable={false}
+              value={newDefaultAttributes[key] || ''}
+              onChange={(option) => onDefaultAttributeChange(key, resolveSelectedOption(option))}
+              onBlur={() => null}
+              autoFocus={false}
+              multi={includes(defaultAttributes[key].multiIn, type)}
+              options={resolveSelectOptions(defaultAttributes[key].values)}
+              placeholder={defaultAttributes[key].name}
+            />
+            : <input
+              type='text'
+              className='form-control'
+              key={key}
+              value={newDefaultAttributes[key] || ''}
+              onChange={(value) => onDefaultAttributeChange(key, value)}
+              onSubmit={submit}
+              placeholder={defaultAttributes[key].name}
+            />
+          }
+        </div>
+      ))
+    }
+    <div className='col-xs-12 col-md-6 add-element-buttons'>
       <button
         className='btn btn-danger col-xs-6'
         onClick={cancel}>
@@ -101,8 +157,11 @@ export const AddElementInput = ({
 
 AddElementInput.propTypes = {
   cancel: React.PropTypes.func.isRequired,
+  defaultAttributes: React.PropTypes.object.isRequired,
+  newDefaultAttributes: React.PropTypes.object.isRequired,
   newType: React.PropTypes.string.isRequired,
   newTypeSpecifier: React.PropTypes.string.isRequired,
+  onDefaultAttributeChange: React.PropTypes.func.isRequired,
   onTypeChange: React.PropTypes.func.isRequired,
   onTypeInputChange: React.PropTypes.func.isRequired,
   onTypeSpecifierChange: React.PropTypes.func.isRequired,

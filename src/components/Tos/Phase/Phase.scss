@@ -82,14 +82,17 @@
     padding: 0;
     height: 34px;
   }
+  &.Select.form-control {
+    height: 43px;
+    margin-bottom: 0;
+  }
   margin-bottom: -10px;
   height: 31px;
   padding: 0;
   border: 0;
-  z-index: 999;
 
   .Select-control {
-    height: 31px;
+    height: 41px;
     border-radius: 2px;
   }
 }

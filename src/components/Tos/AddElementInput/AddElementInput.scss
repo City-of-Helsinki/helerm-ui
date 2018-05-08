@@ -1,5 +1,4 @@
 .add-element-buttons {
-  padding: 0px;
 
   button {
     max-width: 90px;
@@ -8,4 +7,7 @@
 }
 .add-element {
   padding: 10px 20px;
+  .col-md-6 {
+    padding-top: 15px;
+  }
 }

@@ -21,6 +21,7 @@ export function receiveAttributeTypes (attributes, validationRules) {
   attributes.results.map(result => {
     if (result.values) {
       let allowedIn = [];
+      let defaultIn = [];
       let required = false;
       let requiredIn = [];
       let requiredIf = [];
@@ -60,6 +61,14 @@ export function receiveAttributeTypes (attributes, validationRules) {
             requiredIn.push(key);
           }
         });
+      });
+
+      // Add defaultIn attributes
+      // hard coded now, todo: replace with backend definition
+      Object.keys(validationRules).map(key => {
+        if (result.identifier === 'InformationSystem') {
+          defaultIn.push(key);
+        }
       });
 
       // Add conditional rules if any
@@ -111,6 +120,7 @@ export function receiveAttributeTypes (attributes, validationRules) {
         name: result.name,
         values: result.values,
         allowedIn,
+        defaultIn,
         multiIn,
         requiredIf,
         requiredIn,

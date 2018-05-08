@@ -17,6 +17,16 @@ export const Attributes = ({
   updateTypeSpecifier,
   updateType
 }) => {
+  const unwantedAttributes = ['TypeSpecifier', 'RecordType', 'ActionType', 'PhaseType'];
+  const defaultAttributes = [];
+  for (const key in attributeTypes) {
+    if (attributeTypes.hasOwnProperty(key) &&
+        attributeTypes[key].defaultIn.indexOf(type) >= 0 &&
+        !includes(unwantedAttributes, key)) {
+      defaultAttributes.push(key);
+    }
+  }
+
   function generateDescriptions (element) {
     const descriptions = [];
     let elementType;
@@ -70,12 +80,33 @@ export const Attributes = ({
     });
   }
 
+  function generateDefaultAttributes (attributes) {
+    return defaultAttributes.map(key => (
+      <Attribute
+        key={key}
+        elementId={element.id}
+        attributeIndex={key}
+        attributeKey={attributeTypes[key].name}
+        attribute={attributes[key]}
+        attributeTypes={attributeTypes}
+        documentState={documentState}
+        type={'attribute'}
+        parentType={type}
+        editable={true}
+        updateAttribute={updateAttribute}
+        showAttributes={true}
+      />)
+    );
+  }
+
   function generateAttributes (attributes) {
     const attributeElements = [];
-    const unwantedAttributes = ['TypeSpecifier', 'RecordType', 'ActionType', 'PhaseType'];
 
     for (const key in attributeTypes) {
-      if (attributes.hasOwnProperty(key) && attributes[key] && attributeTypes[key] && !includes(unwantedAttributes, key)) {
+      if (attributes.hasOwnProperty(key) && attributes[key] &&
+          attributeTypes[key] &&
+          !includes(unwantedAttributes, key) &&
+          !includes(defaultAttributes, key)) {
         attributeElements.push(
           <Attribute
             key={key}
@@ -101,12 +132,14 @@ export const Attributes = ({
   const basicAttributes = renderBasicAttributes
     ? renderBasicAttributes()
     : generateBasicAttributes(generateDescriptions(element));
+  const defaultViewAttributes = generateDefaultAttributes(element.attributes);
   const attributes = generateAttributes(element.attributes);
 
   return (
     <div className={classnames('list-group', `${type}-attributes`)}>
       { basicAttributes }
       { buttons }
+      { defaultViewAttributes }
       { attributes }
     </div>
   );

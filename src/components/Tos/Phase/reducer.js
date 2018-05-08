@@ -8,13 +8,18 @@ export const REMOVE_PHASE = 'removePhaseAction';
 export const SET_PHASE_VISIBILITY = 'setPhaseVisibilityAction';
 export const SET_PHASES_VISIBILITY = 'setPhasesVisibilityAction';
 
-export function addPhase (typeSpecifier, phaseType, parent) {
+export function addPhase (typeSpecifier, phaseType, phaseAttributes, parent) {
   const phaseId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+  const attributes = Object.assign(
+    {},
+    { TypeSpecifier: typeSpecifier, PhaseType: phaseType },
+    phaseAttributes
+  );
   const newPhase = {
     id: phaseId,
     function: parent,
     actions: [],
-    attributes: { TypeSpecifier: typeSpecifier, PhaseType: phaseType },
+    attributes,
     is_open: false
   };
 

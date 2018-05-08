@@ -41,16 +41,15 @@
 .edit-action-type__input {
   &.form-control {
     padding: 0;
-    height: 34px;
+    height: 41px;
   }
-  margin-bottom: -10px;
   height: 31px;
   padding: 0;
   border: 0;
   z-index: 999;
 
   .Select-control {
-    height: 31px;
+    height: 41px;
     border-radius: 2px;
   }
 }
@@ -77,7 +76,7 @@
 
 .action-open {
   .basic-attributes {
-    height: 40px;
+    height: 20px;
   }
   .list-group-item {
     padding: 10px 15px;

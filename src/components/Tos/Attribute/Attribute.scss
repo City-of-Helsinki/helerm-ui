@@ -65,6 +65,9 @@ $attribute-input-height: 31px;
   max-height: 12em;
   overflow: scroll;
 }
+.Select-menu-outer {
+  z-index: 1000;
+}
 
 // .no-attributes {
 //   display: none;

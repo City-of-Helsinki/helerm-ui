@@ -7,16 +7,18 @@ export const EDIT_ACTION = 'editActionAction';
 export const EDIT_ACTION_ATTRIBUTE = 'editActionAttributeAction';
 export const REMOVE_ACTION = 'removeActionAction';
 
-export function addAction (typeSpecifier, actionType, phaseIndex) {
+export function addAction (typeSpecifier, actionType, actionAttibutes, phaseIndex) {
   const actionId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+  const attributes = Object.assign(
+    {},
+    { TypeSpecifier: typeSpecifier, ActionType: actionType },
+    actionAttibutes
+  );
   const newAction = {
     id: actionId,
     phase: phaseIndex,
     records: [],
-    attributes: {
-      TypeSpecifier: typeSpecifier,
-      ActionType: actionType
-    }
+    attributes
   };
   return createAction(ADD_ACTION)(newAction);
 }

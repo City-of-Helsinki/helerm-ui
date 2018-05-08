@@ -230,7 +230,7 @@ export class Attribute extends React.Component {
       return (
         <a className='list-group-item col-xs-6'>
           <strong>{attributeIndex}:</strong>
-          <div>{attribute}</div>
+          <div>{attribute || '\u00A0'}</div>
         </a>
       );
     }
