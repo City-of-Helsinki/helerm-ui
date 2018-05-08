@@ -142,6 +142,10 @@ export class EditorForm extends React.Component {
           attributesToShow.push(attributeType);
           continue;
         }
+        if (includes(attributeTypes[attributeType].defaultIn, this.props.editorConfig.type)) {
+          attributesToShow.push(attributeType);
+          continue;
+        }
       }
     }
 
@@ -623,7 +627,7 @@ EditorForm.propTypes = {
     action: PropTypes.string.isRequired
   }),
   elementConfig: PropTypes.shape({
-    editWithForm: PropTypes.func.isRequired,
+    editWithForm: PropTypes.func,
     elementTypes: PropTypes.object.isRequired,
     createRecord: PropTypes.func // only records created with editorform
   }),

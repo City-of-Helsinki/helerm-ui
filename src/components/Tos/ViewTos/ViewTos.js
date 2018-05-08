@@ -39,6 +39,7 @@ export class ViewTOS extends React.Component {
     this.createNewPhase = this.createNewPhase.bind(this);
     this.editMetaDataWithForm = this.editMetaDataWithForm.bind(this);
     this.fetchTOS = this.fetchTOS.bind(this);
+    this.onPhaseDefaultAttributeChange = this.onPhaseDefaultAttributeChange.bind(this);
     this.onPhaseTypeChange = this.onPhaseTypeChange.bind(this);
     this.onPhaseTypeInputChange = this.onPhaseTypeInputChange.bind(this);
     this.onPhaseTypeSpecifierChange = this.onPhaseTypeSpecifierChange.bind(
@@ -53,6 +54,7 @@ export class ViewTOS extends React.Component {
 
     this.state = {
       createPhaseMode: false,
+      phaseDefaultAttributes: {},
       phaseTypeSpecifier: '',
       phaseType: '',
       originalTos: {},
@@ -272,10 +274,12 @@ export class ViewTOS extends React.Component {
     this.props.addPhase(
       this.state.phaseTypeSpecifier || '',
       this.state.phaseType || '',
+      this.state.phaseDefaultAttributes || {},
       this.props.selectedTOS.id
     );
     this.setState({
       createPhaseMode: false,
+      phaseDefaultAttributes: {},
       phaseTypeSpecifier: '',
       phaseType: ''
     });
@@ -287,7 +291,11 @@ export class ViewTOS extends React.Component {
 
   cancelPhaseCreation (event) {
     event.preventDefault();
-    this.setState({ phaseTypeSpecifier: '', createPhaseMode: false });
+    this.setState({
+      phaseDefaultAttributes: {},
+      phaseTypeSpecifier: '',
+      createPhaseMode: false
+    });
   }
 
   cloneFromTemplate (selectedMethod, id) {
@@ -308,6 +316,12 @@ export class ViewTOS extends React.Component {
           { type: 'warning' }
         );
       });
+  }
+
+  onPhaseDefaultAttributeChange (key, value) {
+    const { phaseDefaultAttributes } = this.state;
+    phaseDefaultAttributes[key] = value;
+    this.setState({ phaseDefaultAttributes });
   }
 
   onPhaseTypeSpecifierChange (event) {
@@ -367,6 +381,16 @@ export class ViewTOS extends React.Component {
     this.setState({ showCloneView: !current });
   }
 
+  generateDefaultAttributes (attributeTypes, type) {
+    const attributes = {};
+    for (const key in attributeTypes) {
+      if (attributeTypes.hasOwnProperty(key) && attributeTypes[key].defaultIn.indexOf(type) >= 0) {
+        attributes[key] = attributeTypes[key];
+      }
+    }
+    return attributes;
+  }
+
   generateTypeOptions (typeOptions) {
     const options = [];
 
@@ -418,7 +442,7 @@ export class ViewTOS extends React.Component {
       );
     });
     for (const key in attributeTypes) {
-      if (attributes.hasOwnProperty(key) && attributes[key]) {
+      if (attributes.hasOwnProperty(key) && attributes[key] || key === 'InformationSystem') {
         attributeElements.push(
           <Attribute
             key={key}
@@ -681,8 +705,14 @@ export class ViewTOS extends React.Component {
                       typeOptions={this.generateTypeOptions(
                         this.props.phaseTypes
                       )}
+                      defaultAttributes={this.generateDefaultAttributes(
+                        attributeTypes,
+                        'phase'
+                      )}
+                      newDefaultAttributes={this.state.phaseDefaultAttributes}
                       newTypeSpecifier={this.state.phaseTypeSpecifier}
                       newType={this.state.phaseType}
+                      onDefaultAttributeChange={this.onPhaseDefaultAttributeChange}
                       onTypeSpecifierChange={this.onPhaseTypeSpecifierChange}
                       onTypeChange={this.onPhaseTypeChange}
                       onTypeInputChange={this.onPhaseTypeInputChange}

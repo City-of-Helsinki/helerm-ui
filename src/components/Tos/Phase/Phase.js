@@ -19,6 +19,7 @@ import EditorForm from '../EditorForm/EditorForm';
 export class Phase extends React.Component {
   constructor (props) {
     super(props);
+    this.onActionDefaultAttributeChange = this.onActionDefaultAttributeChange.bind(this);
     this.onActionTypeChange = this.onActionTypeChange.bind(this);
     this.onActionTypeInputChange = this.onActionTypeInputChange.bind(this);
     this.onActionTypeSpecifierChange = this.onActionTypeSpecifierChange.bind(
@@ -45,6 +46,7 @@ export class Phase extends React.Component {
       typeSpecifier: this.props.phase.attributes.TypeSpecifier || null,
       type: this.props.phase.attributes.PhaseType || null,
       attributes: this.props.phase.attributes,
+      actionDefaultAttributes: {},
       actionTypeSpecifier: '',
       actionType: '',
       mode: 'view',
@@ -133,9 +135,14 @@ export class Phase extends React.Component {
     this.props.addAction(
       this.state.actionTypeSpecifier || '',
       this.state.actionType || '',
+      this.state.actionDefaultAttributes || {},
       this.props.phaseIndex
     );
-    this.setState({ actionTypeSpecifier: '', actionType: '' });
+    this.setState({
+      actionDefaultAttributes: {},
+      actionTypeSpecifier: '',
+      actionType: ''
+    });
     this.disableEditMode();
     this.props.displayMessage({
       title: 'Toimenpide',
@@ -145,7 +152,7 @@ export class Phase extends React.Component {
 
   cancelActionCreation (event) {
     event.preventDefault();
-    this.setState({ actionTypeSpecifier: '' });
+    this.setState({ actionDefaultAttributes: {}, actionTypeSpecifier: '' });
     this.disableEditMode();
   }
 
@@ -159,6 +166,12 @@ export class Phase extends React.Component {
       this.props.removeAction(action, this.props.phase.id);
     });
     this.props.removePhase(this.props.phase.id);
+  }
+
+  onActionDefaultAttributeChange (key, value) {
+    const { actionDefaultAttributes } = this.state;
+    actionDefaultAttributes[key] = value;
+    this.setState({ actionDefaultAttributes });
   }
 
   onActionTypeSpecifierChange (event) {
@@ -246,6 +259,16 @@ export class Phase extends React.Component {
     }
 
     return options;
+  }
+
+  generateDefaultAttributes (attributeTypes, type) {
+    const attributes = {};
+    for (const key in attributeTypes) {
+      if (attributeTypes.hasOwnProperty(key) && attributeTypes[key].defaultIn.indexOf(type) >= 0) {
+        attributes[key] = attributeTypes[key];
+      }
+    }
+    return attributes;
   }
 
   generateActions (actions) {
@@ -525,8 +548,14 @@ export class Phase extends React.Component {
                     typeOptions={this.generateTypeOptions(
                       this.props.actionTypes
                     )}
+                    defaultAttributes={this.generateDefaultAttributes(
+                      this.props.attributeTypes,
+                      'action'
+                    )}
+                    newDefaultAttributes={this.state.actionDefaultAttributes}
                     newTypeSpecifier={this.state.actionTypeSpecifier}
                     newType={this.state.actionType}
+                    onDefaultAttributeChange={this.onActionDefaultAttributeChange}
                     onTypeSpecifierChange={this.onActionTypeSpecifierChange}
                     onTypeChange={this.onActionTypeChange}
                     onTypeInputChange={this.onActionTypeInputChange}
