@@ -94,7 +94,7 @@ export const Attributes = ({
         parentType={type}
         editable={true}
         updateAttribute={updateAttribute}
-        showAttributes={true}
+        showAttributes={showAttributes}
       />)
     );
   }
