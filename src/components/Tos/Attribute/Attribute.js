@@ -85,6 +85,10 @@ export class Attribute extends React.Component {
     }
   }
 
+  resolvePlaceHolder (fieldName) {
+    return `Valitse ${fieldName.toLowerCase()}...`;
+  }
+
   onPromptCreate (label) {
     return `Lisää "${label}"`;
   }
@@ -97,11 +101,11 @@ export class Attribute extends React.Component {
           label: option.value
         };
       });
-      if (this.state.attribute) {
+      if (currentAttribute) {
         const valueArray =
-          this.state.attribute instanceof Array
-            ? this.state.attribute
-            : [this.state.attribute];
+          currentAttribute instanceof Array
+            ? currentAttribute
+            : [currentAttribute];
         forEach(valueArray, function (value) {
           if (
             !find(options, function (option) {
@@ -127,6 +131,7 @@ export class Attribute extends React.Component {
           autoFocus={true}
           options={options}
           multi={includes(attribute.multiIn, this.props.parentType)}
+          placeholder={this.resolvePlaceHolder(attribute.name)}
           promptTextCreator={this.onPromptCreate}
           delimiter=';'
         />
@@ -247,7 +252,7 @@ export class Attribute extends React.Component {
       if (type === 'attribute') {
         attributeValue = this.generateAttributeInput(
           attributeTypes[attributeIndex],
-          attribute
+          this.state.attribute
         );
       }
       if (type === 'basic') {

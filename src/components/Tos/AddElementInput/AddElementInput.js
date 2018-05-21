@@ -1,9 +1,13 @@
 import React from 'react';
 import Select from 'react-select';
-import { includes, isEmpty, map } from 'lodash';
+import { find, forEach, includes, isEmpty, map } from 'lodash';
 
 import KeyStrokeSupport from '../../../decorators/key-stroke-support';
 import './AddElementInput.scss';
+
+function onPromptCreate (label) {
+  return `Lisää "${label}"`;
+}
 
 function resolveHeader (type) {
   if (type === 'phase') {
@@ -41,7 +45,11 @@ function resolveSelectPlaceHolder (type) {
   }
 }
 
-function resolveSelectOptions (values) {
+function resolvePlaceHolder (fieldName) {
+  return `Valitse ${fieldName.toLowerCase()}...`;
+}
+
+function resolveSelectOptions (values, fieldValue) {
   const options = [];
   for (const key in values) {
     if (values.hasOwnProperty(key)) {
@@ -50,6 +58,24 @@ function resolveSelectOptions (values) {
         value: values[key].value
       });
     }
+  }
+  if (fieldValue) {
+    const valueArray =
+      fieldValue instanceof Array
+        ? fieldValue
+        : [fieldValue];
+    forEach(valueArray, function (value) {
+      if (
+        !find(options, function (option) {
+          return option.value === value;
+        })
+      ) {
+        options.push({
+          label: value,
+          value: value
+        });
+      }
+    });
   }
   return options;
 }
@@ -81,17 +107,18 @@ export const AddElementInput = ({
     { type !== 'action' &&
       <div className='col-xs-12 col-md-6 add-element-col'>
         { typeOptions.length !== 0
-          ? <Select
+          ? <Select.Creatable
             autoBlur={true}
             openOnFocus={true}
             className={`form-control edit-${type}-type__input`}
-            clearable={false}
+            clearable={true}
             value={newType}
             onChange={(option) => onTypeChange(option ? option.value : null)}
             onBlur={() => null}
             autoFocus={false}
             options={typeOptions}
             placeholder={resolveSelectPlaceHolder(type)}
+            promptTextCreator={onPromptCreate}
           />
           : <input
             type='text'
@@ -117,19 +144,21 @@ export const AddElementInput = ({
       Object.keys(defaultAttributes).map(key => (
         <div className='col-xs-12 col-md-6' key={`${type}_${key}`}>
           { defaultAttributes[key].values.length !== 0
-            ? <Select
+            ? <Select.Creatable
               autoBlur={true}
               key={key}
               openOnFocus={true}
               className={`form-control edit-${type}-type__input`}
-              clearable={false}
+              clearable={true}
               value={newDefaultAttributes[key] || ''}
               onChange={(option) => onDefaultAttributeChange(key, resolveSelectedOption(option))}
               onBlur={() => null}
               autoFocus={false}
               multi={includes(defaultAttributes[key].multiIn, type)}
-              options={resolveSelectOptions(defaultAttributes[key].values)}
-              placeholder={defaultAttributes[key].name}
+              options={resolveSelectOptions(defaultAttributes[key].values, newDefaultAttributes[key])}
+              placeholder={resolvePlaceHolder(defaultAttributes[key].name)}
+              promptTextCreator={onPromptCreate}
+              delimiter=';'
             />
             : <input
               type='text'

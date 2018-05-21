@@ -33,6 +33,9 @@
 .records {
   padding: 1px 10px 26px;
 }
+.attribute-labels-container {
+  clear: both;
+}
 .attribute-label {
   text-transform: uppercase;
   font-size: 0.8em;
@@ -46,7 +49,6 @@
   height: 31px;
   padding: 0;
   border: 0;
-  z-index: 999;
 
   .Select-control {
     height: 41px;
@@ -67,8 +69,6 @@
 }
 .action-attributes {
   margin-bottom: 10px;
-  overflow-y: auto;
-  overflow-x: hidden;
   .table-key {
     font-weight: 400;
   }

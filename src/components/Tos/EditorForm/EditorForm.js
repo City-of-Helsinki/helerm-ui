@@ -480,6 +480,7 @@ export class EditorForm extends React.Component {
    * @return {void}
    */
   resolveOnSubmit (e, targetId, stopEditing = true) {
+    e.preventDefault();
     const { action, type } = this.props.editorConfig;
 
     const displayMessage = stopEditing ? this.props.displayMessage : () => {};
