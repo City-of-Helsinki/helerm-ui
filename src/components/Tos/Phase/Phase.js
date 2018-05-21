@@ -348,9 +348,15 @@ export class Phase extends React.Component {
   }
 
   showAttributeButton (attributes) {
+    const { attributeTypes } = this.props;
     const actualAttributes = [];
     for (const key in attributes) {
       if (key !== 'TypeSpecifier' && key !== 'PhaseType') {
+        actualAttributes.push(key);
+      }
+    }
+    for (const key in attributeTypes) {
+      if (attributeTypes.hasOwnProperty(key) && attributeTypes[key].defaultIn.indexOf('phase') >= 0) {
         actualAttributes.push(key);
       }
     }
@@ -442,7 +448,7 @@ export class Phase extends React.Component {
       }
       if (this.state.editingType) {
         phaseType = (
-          <div className='col-md-6'>
+          <div className='col-md-6 phase-title-dropdown'>
             <form onSubmit={this.updatePhaseType}>
               <DropdownInput
                 type={'phase'}

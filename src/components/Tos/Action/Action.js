@@ -317,9 +317,15 @@ export class Action extends React.Component {
   }
 
   showAttributeButton (attributes) {
+    const { attributeTypes } = this.props;
     const actualAttributes = [];
     for (const key in attributes) {
       if (key !== 'TypeSpecifier' && key !== 'ActionType') {
+        actualAttributes.push(key);
+      }
+    }
+    for (const key in attributeTypes) {
+      if (attributeTypes.hasOwnProperty(key) && attributeTypes[key].defaultIn.indexOf('action') >= 0) {
         actualAttributes.push(key);
       }
     }
@@ -544,7 +550,7 @@ export class Action extends React.Component {
                 {!this.state.editingRecord &&
                   !this.state.complementingRecord &&
                   !!recordElements.length && (
-                    <div>
+                    <div className='attribute-labels-container'>
                       <div className='attribute-labels'>
                         <span className='col-xs-6 attribute-label'>
                           {'Asiakirjatyyppi'}

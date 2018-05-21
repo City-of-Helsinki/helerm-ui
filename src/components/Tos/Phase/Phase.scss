@@ -85,6 +85,7 @@
   &.Select.form-control {
     height: 43px;
     margin-bottom: 0;
+    background-color: transparent;
   }
   margin-bottom: -10px;
   height: 31px;
@@ -103,6 +104,7 @@
 
   .basic-attributes {
     height: 40px;
+    position: relative;
   }
 
   .attribute {
@@ -113,5 +115,10 @@
 
   .edit-attribute__input {
     border: 1px solid #aaa;
+  }
+
+  .phase-title-dropdown {
+    position: relative;
+    z-index: 5;
   }
 }

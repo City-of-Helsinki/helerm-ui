@@ -19,6 +19,7 @@ $attribute-input-height: 31px;
 
   .basic-attribute {
     min-height: 23px;
+    padding: 0;
 
 
     // &.editable:hover {
@@ -30,6 +31,7 @@ $attribute-input-height: 31px;
 .list-group-item {
   &.attribute {
     min-height: 62px;
+    position: relative;
   }
 }
 
