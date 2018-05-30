@@ -575,7 +575,7 @@ export class Action extends React.Component {
               content={
                 <DeleteView
                   type='action'
-                  target={this.state.typeSpecifier}
+                  target={this.state.typeSpecifier || this.state.type || '---'}
                   action={() => this.delete()}
                   cancel={() => this.cancelDeletion()}
                 />

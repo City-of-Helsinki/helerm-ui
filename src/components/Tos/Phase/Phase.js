@@ -578,7 +578,7 @@ export class Phase extends React.Component {
               content={
                 <DeleteView
                   type='phase'
-                  target={this.state.typeSpecifier}
+                  target={this.state.typeSpecifier || this.state.type || '---'}
                   action={() => this.delete()}
                   cancel={() => this.cancelDeletion()}
                 />

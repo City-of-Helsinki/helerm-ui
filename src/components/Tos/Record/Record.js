@@ -160,7 +160,7 @@ export class Record extends React.Component {
           content={
             <DeleteView
               type='record'
-              target={record.attributes.TypeSpecifier}
+              target={record.attributes.TypeSpecifier || record.attributes.RecordType || '---'}
               action={() => this.delete()}
               cancel={() => this.cancelDeletion()}
             />
