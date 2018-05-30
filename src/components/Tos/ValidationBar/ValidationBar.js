@@ -182,7 +182,7 @@ export class ValidationBar extends Component {
       return (
         <div>
           <h4>Esitarkastus</h4>
-          {invalidTOSAttributes && <h5>Asian metatiedot</h5>}
+          {invalidTOSAttributes && <h5>Käsittelyprosessi</h5>}
           {invalidTOSAttributes}
           {invalidPhaseAttributes.length > 0 && <h5>Käsittelyvaiheet</h5>}
           {invalidPhaseAttributes}
