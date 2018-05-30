@@ -74,15 +74,8 @@ class PrintView extends React.Component {
               className='btn btn-primary'
               to={getNewPath(location.pathname, '..')}
             >
-              Takaisin <i className='fa fa-close' />
+              Takaisin
             </Link>
-            <button
-              type='button'
-              className='btn btn-success'
-              onClick={window.print}
-            >
-              Tulosta <i className='fa fa-print' />
-            </button>
           </div>
           <table className='no-border'>
             <tbody>

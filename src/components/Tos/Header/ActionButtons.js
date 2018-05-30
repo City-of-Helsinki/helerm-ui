@@ -134,7 +134,7 @@ const ActionButtons = ({
           className='btn btn-sm btn-primary'
           to={getNewPath(window.location.pathname, 'print')}
         >
-          Tulosta
+          Näytä kaikki
         </Link>
       </span>
     </div>
