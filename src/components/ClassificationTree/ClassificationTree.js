@@ -113,14 +113,7 @@ export class ClassificationTree extends React.Component {
               className='btn btn-primary'
               onClick={goBack}
             >
-              Takaisin <i className='fa fa-close' />
-            </button>
-            <button
-              type='button'
-              className='btn btn-success'
-              onClick={window.print}
-            >
-              Tulosta <i className='fa fa-print' />
+              Takaisin
             </button>
           </div>
           {treeItems}

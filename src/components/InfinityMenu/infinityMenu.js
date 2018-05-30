@@ -377,7 +377,7 @@ export default class InfinityMenu extends Component {
             className='btn btn-default btn-sm nav-button pull-right'
             to='/classification-tree'
           >
-            <span className='fa fa-print' aria-hidden='true' />
+            <span className='fa fa-info' aria-hidden='true' />
           </Link>
 
         </div>
