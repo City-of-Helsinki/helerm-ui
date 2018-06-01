@@ -22,7 +22,7 @@ export class Header extends React.Component {
             className='brand-title navbar-brand'
             onClick={this.props.fetchNavigation}
             >
-            Tiedonohjausjärjestelmä v{VERSION}
+            Tiedonohjausjärjestelmä
           </Link>
           <LoginContainer />
         </nav>

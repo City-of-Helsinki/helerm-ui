@@ -24,6 +24,7 @@
     "SENTRY_REPORT_DIALOG"  : false,
     "SENTRY_DSN"            : false,
     "FEEDBACK_EMAIL"          : false,
+    "SITE_TITLE"            : false,
     "__DEV__"               : false,
     "__TEST__"              : false,
     "__PROD__"              : false,
