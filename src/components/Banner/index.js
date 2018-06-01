@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 export default () => (
   <Banner>
-    <Banner.Element background='green'>BETA</Banner.Element>
+    <Banner.Element background='green'>BETA {SITE_TITLE} v{VERSION}</Banner.Element>
     <Banner.Element background='blue'>
       <a
         style={{ color: '#fff' }}
