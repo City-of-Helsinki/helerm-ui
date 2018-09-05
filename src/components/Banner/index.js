@@ -8,7 +8,9 @@ export default () => (
     <Banner.Element background='blue'>
       <a
         style={{ color: '#fff' }}
-        href={`mailto:${FEEDBACK_EMAIL}?subject=Tiedonohjaus-palaute`}
+        href={`${FEEDBACK_URL}`}
+        target='_blank'
+        rel='noopener norefer'
       >
         Anna palautetta
       </a>

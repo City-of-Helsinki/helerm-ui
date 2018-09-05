@@ -73,7 +73,7 @@ config.globals = {
   SENTRY_REPORT_DIALOG: process.env.SENTRY_REPORT_DIALOG,
   RESULTS_PER_PAGE: JSON.stringify(process.env.RESULTS_PER_PAGE),
   STORAGE_PREFIX: JSON.stringify(process.env.STORAGE_PREFIX || 'HELERM'),
-  FEEDBACK_EMAIL: JSON.stringify(process.env.FEEDBACK_EMAIL),
+  FEEDBACK_URL: JSON.stringify(process.env.FEEDBACK_URL),
   SITE_TITLE: JSON.stringify(process.env.SITE_TITLE || '')
 };
 
