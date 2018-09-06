@@ -2,9 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
+import PiwikReactRouter from 'piwik-react-router';
+import Raven from 'raven-js';
+
 import createStore from './store/createStore';
 import AppContainer from './containers/AppContainer';
-var Raven = require('raven-js');
+
+// Piwik Configuration
+const piwik = PiwikReactRouter({
+  url: process.env.PIWIK_URL,
+  siteId: process.env.PIWIK_ID
+});
 
 // Sentry config
 if (SENTRY_DSN) {
@@ -16,8 +24,7 @@ if (SENTRY_DSN) {
 // ========================================================
 const initialState = window.___INITIAL_STATE__;
 export const store = createStore(initialState);
-const history = syncHistoryWithStore(browserHistory, store);
-
+const history = syncHistoryWithStore(piwik.connectToHistory(browserHistory), store);
 // ========================================================
 // Render Setup
 // ========================================================

@@ -22,8 +22,7 @@
     "deploy:prod": "better-npm-run deploy:prod",
     "codecov": "cat coverage/*/lcov.info | codecov",
     "precommit": "npm run lint",
-    "prepush":
-      "concurrently --kill-others-on-fail -n \"LINT,TEST\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run lint\" \"npm run test\""
+    "prepush": "concurrently --kill-others-on-fail -n \"LINT,TEST\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run lint\" \"npm run test\""
   },
   "betterScripts": {
     "compile": {
@@ -33,16 +32,14 @@
       }
     },
     "dev": {
-      "command":
-        "nodemon bin/server --ignore dist --ignore coverage --ignore tests --ignore src",
+      "command": "nodemon bin/server --ignore dist --ignore coverage --ignore tests --ignore src",
       "env": {
         "NODE_ENV": "development",
         "DEBUG": "app:*"
       }
     },
     "deploy": {
-      "command":
-        "npm run lint && npm run test && npm run clean && npm run compile",
+      "command": "npm run lint && npm run test && npm run clean && npm run compile",
       "env": {
         "DEBUG": "app:*"
       }
@@ -120,6 +117,7 @@
     "normalizr": "^3.2.2",
     "passport": "^0.3.2",
     "passport-helsinki": "City-of-Helsinki/passport-helsinki",
+    "piwik-react-router": "^0.12.1",
     "promise-polyfill": "^6.0.2",
     "prop-types": "^15.6.0",
     "raven-js": "^3.17.0",
@@ -193,7 +191,13 @@
     "webpack-dashboard": "^0.3.0"
   },
   "babel": {
-    "presets": ["react", "es2015", "stage-2"],
-    "plugins": ["add-module-exports"]
+    "presets": [
+      "react",
+      "es2015",
+      "stage-2"
+    ],
+    "plugins": [
+      "add-module-exports"
+    ]
   }
 }
