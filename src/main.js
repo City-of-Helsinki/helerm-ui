@@ -2,16 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
+import PiwikReactRouter from 'piwik-react-router';
+import Raven from 'raven-js';
+
 import createStore from './store/createStore';
 import AppContainer from './containers/AppContainer';
-import PiwikReactRouter from 'piwik-react-router';
-import config from '../config';
-var Raven = require('raven-js');
 
 // Piwik Configuration
 const piwik = PiwikReactRouter({
-  url: config.globals.PIWIK_URL,
-  siteId: config.globals.PIWIK_ID
+  url: process.env.PIWIK_URL,
+  siteId: process.env.PIWIK_ID
 });
 
 // Sentry config
