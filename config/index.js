@@ -66,6 +66,8 @@ config.globals = {
   GIT_VERSION: JSON.stringify(gitRevisionPlugin.version()),
   GIT_COMMIT_HASH: JSON.stringify(gitRevisionPlugin.commithash()),
   JWT_TOKEN: process.env.JWT_TOKEN,
+  PIWIK_URL: process.env.PIWIK_URL,
+  PIWIK_ID: process.env.PIWIK_ID,
   APP_URL: process.env.APP_URL,
   API_URL: JSON.stringify(process.env.API_URL),
   API_VERSION: JSON.stringify(process.env.API_VERSION),

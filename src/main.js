@@ -5,12 +5,13 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import createStore from './store/createStore';
 import AppContainer from './containers/AppContainer';
 import PiwikReactRouter from 'piwik-react-router';
+import config from '../config';
 var Raven = require('raven-js');
 
 // Piwik Configuration
 const piwik = PiwikReactRouter({
-  url: 'https://analytics.hel.ninja/piwik',
-  siteId: 17
+  url: config.globals.PIWIK_URL,
+  siteId: config.globals.PIWIK_ID
 });
 
 // Sentry config
