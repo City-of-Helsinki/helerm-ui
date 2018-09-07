@@ -165,7 +165,7 @@ export const AddElementInput = ({
               className='form-control'
               key={key}
               value={newDefaultAttributes[key] || ''}
-              onChange={(value) => onDefaultAttributeChange(key, value)}
+              onChange={(e) => onDefaultAttributeChange(key, e.target.value)}
               onSubmit={submit}
               placeholder={defaultAttributes[key].name}
             />
