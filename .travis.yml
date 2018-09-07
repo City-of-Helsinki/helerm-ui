@@ -27,13 +27,13 @@ cache:
     - node_modules
   yarn: true
 
-# Our only the ATM is to build the product
+# Our only test ATM is to build the product
 script:
-  - npm run deploy:prod
+  - yarn run deploy:prod
 
 # We gather codecov after successful builds
 after_success:
-  - npm run codecov
+  - yarn run codecov
 
 notifications:
   slack:
