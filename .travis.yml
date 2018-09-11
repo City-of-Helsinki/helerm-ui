@@ -1,9 +1,14 @@
-# Travis has pretty old gcc on precise and
-# newer node causes dependencies to need C++11 compilers
+# sudo == false means that we run in container as opposed spinning up a whole VM
+# this also means that we cannot use docker-executable
 sudo: false
+# trusty (Ubuntu 14.04) is the newest image as of 20180906
 dist: trusty
 
+# installs node in the image on startup
+# also automatically runs appropriate node package manager (yarn/npm)
+# depending on presence of yarn.lock file
 language: node_js
+# lts/* == "latest LTS", node == "latest release"
 node_js:
   - "lts/*"
   - "node"
@@ -13,19 +18,22 @@ node_js:
 matrix:
   allow_failures:
   - node_js: "node"
+  # Flag the build as successful after required versions have completed
+  fast_finish: true
 
+# Cache both node_modules and yarn download cache
 cache:
   directories:
     - node_modules
+  yarn: true
 
-install:
-  - npm install
-
+# Our only test ATM is to build the product
 script:
-  - npm run deploy:prod
+  - yarn run deploy:prod
 
+# We gather codecov after successful builds
 after_success:
-  - npm run codecov
+  - yarn run codecov
 
 notifications:
   slack:
