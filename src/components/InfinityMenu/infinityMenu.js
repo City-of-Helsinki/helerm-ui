@@ -1,11 +1,13 @@
-import React, { Component, PropTypes } from 'react';
+import _get from 'lodash/get';
 import Select from 'react-select';
 import classnames from 'classnames';
+import { Link } from 'react-router';
+import NestedObjects from 'nested-objects';
+import React, { Component, PropTypes } from 'react';
+
 import SearchInput from './searchInput';
 import ClassificationLink from './classificationLink';
-import NestedObjects from 'nested-objects';
-import _get from 'lodash/get';
-import { Link } from 'react-router';
+import Exporter from '../Exporter';
 
 /**
  * Extracted from https://github.com/socialtables/react-infinity-menu
@@ -369,6 +371,10 @@ export default class InfinityMenu extends Component {
                   options={this.props.filterStatuses}
                   onChange={this.props.handleStatusFilterChange}
                 />
+              </div>
+
+              <div className='col-xs-12'>
+                <Exporter data={filteredTree} />
               </div>
             </div>
           </div>
