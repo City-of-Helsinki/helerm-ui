@@ -1,3 +1,6 @@
+// Misc
+export const DEFAULT_PAGE_SIZE = 2000;
+
 // Permissions
 export const EDIT = 'can_edit';
 export const APPROVE = 'can_approve';
