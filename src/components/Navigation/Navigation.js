@@ -1,41 +1,33 @@
 import React, { PropTypes } from 'react';
-import map from 'lodash/map';
 import filter from 'lodash/filter';
-import forEach from 'lodash/forEach';
+import get from 'lodash/get';
 import includes from 'lodash/includes';
 import InfinityMenu from '../InfinityMenu/infinityMenu';
+import Exporter from '../Exporter';
 
-import {
-  DRAFT,
-  SENT_FOR_REVIEW,
-  WAITING_FOR_APPROVAL,
-  APPROVED
-} from '../../../config/constants';
+import { statusFilters, retentionPeriodFilters } from '../../../config/constants';
 
 import './Navigation.scss';
+import SearchFilter from './SearchFilter';
 
-const filterStatuses = [
-  { value: DRAFT, label: 'Luonnos' },
-  { value: SENT_FOR_REVIEW, label: 'Lähetetty tarkastettavaksi' },
-  { value: WAITING_FOR_APPROVAL, label: 'Odottaa hyväksymistä' },
-  { value: APPROVED, label: 'Hyväksytty', default: true }
-];
+const stateFilters = {
+  statusFilters: {
+    path: 'function_state',
+    values: []
+  },
+  retentionPeriodFilters: {
+    path: 'function_attributes.RetentionPeriod',
+    values: []
+  }
+};
 
 export class Navigation extends React.Component {
   constructor (props) {
     super(props);
-    this.onNodeMouseClick = this.onNodeMouseClick.bind(this);
-    this.onLeafMouseClick = this.onLeafMouseClick.bind(this);
-    this.toggleNavigationVisibility = this.toggleNavigationVisibility.bind(this);
-    this.filter = this.filter.bind(this);
-    this.handleStatusFilterChange = this.handleStatusFilterChange.bind(this);
     this.state = {
-      filterStatuses: [],
+      filters: stateFilters,
       tree: props.items,
-      search: {
-        isSearching: false,
-        searchInput: ''
-      }
+      searchInput: ''
     };
   }
 
@@ -47,16 +39,17 @@ export class Navigation extends React.Component {
     const { itemsTimestamp: nextTimestamp, items } = nextProps;
     const { itemsTimestamp: currentTimestamp } = this.props;
     const isReceivingNewlyFetchedItems = nextTimestamp !== currentTimestamp;
+
     if (isReceivingNewlyFetchedItems) {
       this.receiveItemsAndResetNavigation(items);
     }
   }
 
   receiveItemsAndResetNavigation (items) {
-    this.setState(() => ({
+    this.setState({
       tree: items,
-      filterStatuses: []
-    }));
+      filters: stateFilters
+    });
 
     this.stopSearching();
   }
@@ -66,128 +59,147 @@ export class Navigation extends React.Component {
     this.props.fetchNavigation();
   }
 
-  toggleNavigationVisibility () {
+  stopSearching = () => {
+    this.setState({
+      searchInput: ''
+    });
+  }
+
+  toggleNavigationVisibility = () => {
     const currentVisibility = this.props.is_open;
     this.props.setNavigationVisibility(!currentVisibility);
   }
 
-  onNodeMouseClick (event, tree, node, level, keyPath) {
+  onNodeMouseClick = (event, tree, node, level, keyPath) => {
     this.setState({
-      tree: tree
+      tree
     });
   }
 
-  onLeafMouseClick (event, leaf) {
+  onLeafMouseClick = (event, leaf) => {
     if (leaf.function) {
-      this.props.push(`/view-tos/${leaf.function}`);
+      return this.props.push(`/view-tos/${leaf.function}`);
     } else if (leaf.parent) {
-      this.props.push(`/view-classification/${leaf.id}`);
+      return this.props.push(`/view-classification/${leaf.id}`);
     }
-    this.toggleNavigationVisibility();
+
+    return this.toggleNavigationVisibility();
   }
 
   setSearchInput = (event) => {
     this.setState({
-      search: {
-        isSearching: true,
-        searchInput: event.target.value
-      }
+      searchInput: event.target.value
     });
   }
 
-  stopSearching = () => {
-    this.setState({
-      search: {
-        isSearching: false,
-        searchInput: ''
-      }
-    });
-  }
-
-  getFilteredTree (filterStatuses) {
+  getFilteredTree = () => {
     const { items } = this.props;
-    let treeCopy = JSON.parse(JSON.stringify(items));
+    const { filters } = this.state;
 
-    if (filterStatuses.length) {
-      this.filter(treeCopy, filterStatuses);
-      return treeCopy;
+    if (!this.hasFilters()) {
+      return items;
     }
-    return items;
-  }
 
-  /**
-   * Sets isOpen to nodes according to selected filters.
-   * Note! Method mutates the objects inside `filterTree`
-   * @param  {Object[]}  [filterTree=[]]
-   * @param  {Array}  [filterStatuses=[]]
-   * @return {Object[]}
-   */
-  openNodesIfFilterStatusIsSelected (filterTree = [], filterStatuses = []) {
-    forEach(filterTree, item => {
-      item.isOpen = Boolean(filterStatuses.length);
-    });
-    return filterTree;
-  }
+    // Deepcopy original item to disable mutation
+    const deepCopy = (item) => JSON.parse(JSON.stringify(item));
 
-  filter (filterTree, filterStatuses) {
-    let indexesToRemove = [];
+    // The actual filtering
+    const filterFunction = (item) => {
+      // const matchesFilters = includes(filters, get(item, path));
+      const matchesFilters = Object.keys(filters).map((key) => {
+        const currentFilter = filters[key].values;
+        return currentFilter.length ? includes(currentFilter, get(item, filters[key].path)) : true;
+      }).every((item) => !!item);
 
-    forEach(filterTree, (item, index) => {
+      return matchesFilters || item.children && (item.children = item.children.filter(filterFunction)).length;
+    };
+
+    // Modify filtered items to be open
+    const setAllOpen = (item) => {
       if (item.children) {
-        this.filter(item.children, filterStatuses);
+        item.children.map(setAllOpen);
       }
-      if ((!item.children && !includes(filterStatuses, item.function_state)) ||
-        (item.children && !item.children.length)) {
-        indexesToRemove.push(index);
-      }
-    });
 
-    if (indexesToRemove.length) {
-      for (let i = filterTree.length - 1; i >= 0; i--) {
-        if (includes(indexesToRemove, i)) {
-          filterTree.splice(i, 1);
+      item.isOpen = true;
+      return item;
+    };
+
+    return items.map(deepCopy).filter(filterFunction).map(setAllOpen);
+  };
+
+  hasFilters = () => {
+    const { filters } = this.state;
+    return !!Object.keys(filters).map((key) => filters[key].values.length).reduce((a, b) => a + b, 0);
+  }
+
+  handleFilterChange = (filterValues, filterName) => {
+    const mappedValues = filterValues.map(({ value }) => value);
+
+    return this.setState({
+      filters: { ...this.state.filters, [filterName]: { ...this.state.filters[filterName], values: mappedValues } }
+    }, () => {
+      return this.setState({ tree: this.getFilteredTree() });
+    });
+  }
+
+  getFilters = () => {
+    const { isUser } = this.props;
+    const statusFilterOptions = isUser ? statusFilters : filter(statusFilters, { default:true });
+    const statusFilterPlaceholder = this.props.isUser ? 'Suodata viimeisen tilan mukaan...' : 'Suodata tilan mukaan...';
+    const displayExporter = this.hasFilters() && !!this.state.tree.length;
+
+    return (
+      <div className='filters row'>
+        <SearchFilter
+          placeholder={statusFilterPlaceholder}
+          value={this.state.filters.statusFilters.values}
+          options={statusFilterOptions}
+          handleChange={(values) => this.handleFilterChange(values, 'statusFilters')}
+        />
+        <SearchFilter
+          placeholder={'Suodata säilytysajan mukaan'}
+          value={this.state.filters.retentionPeriodFilters.values}
+          options={retentionPeriodFilters}
+          handleChange={(values) => this.handleFilterChange(values, 'retentionPeriodFilters')}
+        />
+        {displayExporter &&
+          <div className='col-xs-12 exporter'>
+            <Exporter data={this.state.tree} />
+          </div>
         }
-      }
-    }
-    this.openNodesIfFilterStatusIsSelected(filterTree, filterStatuses);
+      </div>
+    );
   }
 
-  handleStatusFilterChange (valArray) {
-    const mappedValues = map(valArray, (val) => val.value);
-    this.setState({
-      filterStatuses: mappedValues,
-      tree: this.getFilteredTree(mappedValues)
-    });
-  }
-
-  render () {
-    const { onLeafMouseClick, isUser } = this.props;
-    const { searchInput, isSearching } = this.state.search;
-    const filterStatusOptions = isUser ? filterStatuses : filter(filterStatuses, { default:true });
-    let navigationTitle = 'Navigaatio';
+  createNavigationTitle = () => {
     if (!this.props.is_open && this.props.tosPath.length) {
-      navigationTitle = this.props.tosPath.map((section, index) => {
+      return this.props.tosPath.map((section, index) => {
         return <div key={index}>{section}</div>;
       });
     }
 
+    return 'Navigaatio';
+  }
+
+  render () {
+    const { onLeafMouseClick } = this.props;
+    const { searchInput } = this.state;
+
     return (
       <div className='container-fluid helerm-navigation'>
         <InfinityMenu
-          filterStatuses={filterStatusOptions}
-          handleStatusFilterChange={this.handleStatusFilterChange}
           isOpen={this.props.is_open}
+          isSearching={searchInput !== ''}
           onLeafMouseClick={onLeafMouseClick ? (event, leaf) => onLeafMouseClick(event, leaf) : this.onLeafMouseClick}
           onNodeMouseClick={this.onNodeMouseClick}
-          statusValue={this.state.filterStatuses}
-          title={navigationTitle}
           path={this.props.tosPath}
+          searchInput={searchInput}
+          setSearchInput={this.setSearchInput}
+          statusValue={this.state.filters.statusFilters}
+          title={this.createNavigationTitle()}
           toggleNavigationVisibility={this.toggleNavigationVisibility}
           tree={this.state.tree}
-          setSearchInput={this.setSearchInput}
-          searchInput={searchInput}
-          isSearching={isSearching}
-          isUser={isUser}
+          filters={this.getFilters()}
         />
       </div>
     );
