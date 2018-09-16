@@ -8,13 +8,14 @@ const createExport = (data) => {
 };
 
 const Exporter = ({ data }) => {
+  const countStr = data.length > 1 ? 'tulosta' : 'tulos';
   return (
-    <button className='btn btn-primary' onClick={() => createExport(data)}>Export</button>
+    <button className='btn btn-primary' onClick={() => createExport(data)}>Vie {data.length} {countStr} <i className='fa fa-file-excel-o' /></button>
   );
 };
 
 Exporter.propTypes = {
-  data: PropTypes.object
+  data: PropTypes.array
 };
 
 export default Exporter;
