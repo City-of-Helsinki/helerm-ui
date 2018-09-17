@@ -13,9 +13,8 @@ import NotFound from './components/NotFound/NotFound';
 export default () => (
   <div>
     <Route path='/' component={CoreLayout}>
-      <IndexRoute
-        component={IndexPage}
-      />
+      <IndexRoute component={IndexPage} />
+      <Route path='search' component={IndexPage} />
       <Route path='view-tos/'>
         <Route path=':id(/version/:version)'>
           <IndexRoute component={ViewTOSContainer} />
