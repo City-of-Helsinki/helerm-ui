@@ -3,12 +3,12 @@ import filter from 'lodash/filter';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
 import InfinityMenu from '../InfinityMenu/infinityMenu';
+import SearchFilter from './SearchFilter';
 import Exporter from '../Exporter';
 
 import { statusFilters, retentionPeriodFilters } from '../../../config/constants';
 
 import './Navigation.scss';
-import SearchFilter from './SearchFilter';
 
 const stateFilters = {
   statusFilters: {

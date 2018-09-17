@@ -6,6 +6,7 @@ import React, { Component, PropTypes } from 'react';
 
 import SearchInput from './searchInput';
 import ClassificationLink from './classificationLink';
+import EmptyTree from './EmptyTree';
 
 /**
  * Extracted from https://github.com/socialtables/react-infinity-menu
@@ -36,7 +37,7 @@ export default class InfinityMenu extends Component {
 
   static defaultProps = {
     disableDefaultHeaderContent: false,
-    emptyTreeComponent: null,
+    emptyTreeComponent: EmptyTree,
     emptyTreeComponentProps: {},
     filter: (node, searchInput) => node.name.toLowerCase().indexOf(searchInput.toLowerCase()) >= 0,
     headerContent: null,
