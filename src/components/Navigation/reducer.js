@@ -1,6 +1,8 @@
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
 
+import { DEFAULT_PAGE_SIZE } from '../../../config/constants';
+
 import { convertToTree } from '../../utils/helpers';
 import { default as api } from '../../utils/api.js';
 
@@ -31,7 +33,7 @@ export function setNavigationVisibility (value) {
 export function fetchNavigation () {
   return function (dispatch) {
     dispatch(requestNavigation());
-    return api.get('classification', { page_size: RESULTS_PER_PAGE })
+    return api.get('classification', { page_size: RESULTS_PER_PAGE || DEFAULT_PAGE_SIZE })
       .then(response => response.json())
       .then(json =>
         dispatch(receiveNavigation(json))

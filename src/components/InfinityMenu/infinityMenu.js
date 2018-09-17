@@ -1,11 +1,12 @@
-import React, { Component, PropTypes } from 'react';
-import Select from 'react-select';
+import _get from 'lodash/get';
 import classnames from 'classnames';
+import { Link } from 'react-router';
+import NestedObjects from 'nested-objects';
+import React, { Component, PropTypes } from 'react';
+
 import SearchInput from './searchInput';
 import ClassificationLink from './classificationLink';
-import NestedObjects from 'nested-objects';
-import _get from 'lodash/get';
-import { Link } from 'react-router';
+import EmptyTree from './EmptyTree';
 
 /**
  * Extracted from https://github.com/socialtables/react-infinity-menu
@@ -17,12 +18,10 @@ export default class InfinityMenu extends Component {
     emptyTreeComponent: PropTypes.any,
     emptyTreeComponentProps: PropTypes.object,
     filter: PropTypes.func,
-    filterStatuses: PropTypes.array,
-    handleStatusFilterChange: PropTypes.func,
+    filters: PropTypes.object,
     headerProps: PropTypes.object,
     isOpen: PropTypes.bool,
     isSearching: PropTypes.bool,
-    isUser: PropTypes.bool,
     loadMoreComponent: PropTypes.func,
     maxLeaves: PropTypes.number,
     onLeafMouseClick: PropTypes.func,
@@ -32,14 +31,13 @@ export default class InfinityMenu extends Component {
     path: PropTypes.array,
     searchInput: PropTypes.string.isRequired,
     setSearchInput: PropTypes.func.isRequired,
-    statusValue: PropTypes.array,
     toggleNavigationVisibility: PropTypes.func,
     tree: PropTypes.array
   };
 
   static defaultProps = {
     disableDefaultHeaderContent: false,
-    emptyTreeComponent: null,
+    emptyTreeComponent: EmptyTree,
     emptyTreeComponentProps: {},
     filter: (node, searchInput) => node.name.toLowerCase().indexOf(searchInput.toLowerCase()) >= 0,
     headerContent: null,
@@ -327,8 +325,6 @@ export default class InfinityMenu extends Component {
 
     const bodyContent = this.renderBody(displayTree);
 
-    const stateFilterText = this.props.isUser ? 'Suodata viimeisen tilan mukaan...' : 'Suodata tilan mukaan...';
-
     return (
       <div className={classnames('navigation-menu', { 'navigation-open': this.props.isOpen })}>
         {!!this.props.path.length &&
@@ -352,31 +348,19 @@ export default class InfinityMenu extends Component {
         <div className='navigation-filters clearfix'>
           <div className='navigation-filters-container'>
             <div className='row'>
-
-              <div className='col-sm-6'>
+              <div className='col-xs-12'>
                 <SearchInput {...searchInputProps}/>
               </div>
 
-              <div className='col-sm-6'>
-                <Select
-                  autoBlur={true}
-                  placeholder={stateFilterText}
-                  value={this.props.statusValue}
-                  multi={true}
-                  joinValues={true}
-                  clearable={false}
-                  resetValue={this.props.filterStatuses}
-                  options={this.props.filterStatuses}
-                  onChange={this.props.handleStatusFilterChange}
-                />
+              <div className='col-xs-12'>
+                {this.props.filters}
               </div>
             </div>
           </div>
 
           <Link
             className='btn btn-default btn-sm nav-button pull-right'
-            to='/classification-tree'
-          >
+            to='/classification-tree'>
             <span className='fa fa-info' aria-hidden='true' />
           </Link>
 
