@@ -1,3 +1,4 @@
+'use strict';
 /* eslint key-spacing:0 spaced-comment:0 */
 const GitRevisionPlugin = require('git-revision-webpack-plugin');
 const debug = require('debug')('app:config');
@@ -7,6 +8,16 @@ const dotenv = require('dotenv');
 const pkgVersion = require('../package.json').version;
 
 const gitRevisionPlugin = new GitRevisionPlugin();
+let gitVersion, gitCommit;
+
+// Handle situtations where we're outside Git
+try {
+  gitVersion = gitRevisionPlugin.version();
+  gitCommit = gitRevisionPlugin.commithash();
+} catch (e) {
+  gitVersion = '';
+  gitCommit = '';
+}
 
 dotenv.load();
 
@@ -63,8 +74,8 @@ config.globals = {
   CLIENT_SECRET: process.env.CLIENT_SECRET,
   CLIENT_AUDIENCE: process.env.CLIENT_AUDIENCE || null,
   VERSION: JSON.stringify(pkgVersion),
-  GIT_VERSION: JSON.stringify(gitRevisionPlugin.version()),
-  GIT_COMMIT_HASH: JSON.stringify(gitRevisionPlugin.commithash()),
+  GIT_VERSION: JSON.stringify(gitVersion),
+  GIT_COMMIT_HASH: JSON.stringify(gitCommit),
   JWT_TOKEN: process.env.JWT_TOKEN,
   PIWIK_URL: JSON.stringify(process.env.PIWIK_URL),
   PIWIK_ID: process.env.PIWIK_ID,
