@@ -1,5 +1,6 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 import { isEmpty } from 'lodash';
 
@@ -28,10 +29,10 @@ const mapStateToProps = (state, ownProps) => {
     is_open: state.navigation.is_open,
     isFetching: state.navigation.isFetching,
     isUser: !isEmpty(state.user.data),
-    items: JSON.parse(JSON.stringify(items)), // TODO: Unhack this when Navigation doesn't mutate state
+    items, // TODO: Unhack this when Navigation doesn't mutate state
     itemsTimestamp: timestamp,
     selectedTOS
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Navigation);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Navigation));

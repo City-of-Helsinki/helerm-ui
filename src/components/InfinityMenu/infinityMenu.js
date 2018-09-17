@@ -7,6 +7,7 @@ import React, { Component, PropTypes } from 'react';
 import SearchInput from './searchInput';
 import ClassificationLink from './classificationLink';
 import EmptyTree from './EmptyTree';
+import Exporter from '../Exporter';
 
 /**
  * Extracted from https://github.com/socialtables/react-infinity-menu
@@ -15,11 +16,14 @@ export default class InfinityMenu extends Component {
 
   static propTypes = {
     customComponentMappings: PropTypes.object,
+    displayExporter: PropTypes.bool,
     emptyTreeComponent: PropTypes.any,
     emptyTreeComponentProps: PropTypes.object,
     filter: PropTypes.func,
     filters: PropTypes.object,
     headerProps: PropTypes.object,
+    isDetailSearch: PropTypes.bool,
+    isFetching: PropTypes.bool,
     isOpen: PropTypes.bool,
     isSearching: PropTypes.bool,
     loadMoreComponent: PropTypes.func,
@@ -37,6 +41,7 @@ export default class InfinityMenu extends Component {
 
   static defaultProps = {
     disableDefaultHeaderContent: false,
+    displayExporter: false,
     emptyTreeComponent: EmptyTree,
     emptyTreeComponentProps: {},
     filter: (node, searchInput) => node.name.toLowerCase().indexOf(searchInput.toLowerCase()) >= 0,
@@ -285,12 +290,13 @@ export default class InfinityMenu extends Component {
   renderBody (displayTree) {
     const {
       emptyTreeComponent,
-      emptyTreeComponentProps
+      emptyTreeComponentProps,
+      isFetching
     } = this.props;
 
     if (displayTree.length) {
       return displayTree;
-    } else if (emptyTreeComponent) {
+    } else if (emptyTreeComponent && !isFetching) {
       return React.createElement(emptyTreeComponent, emptyTreeComponentProps);
     } else {
       return null;
@@ -298,7 +304,7 @@ export default class InfinityMenu extends Component {
   }
 
   render () {
-    const tree = this.props.tree;
+    const { tree, isDetailSearch, displayExporter } = this.props;
     // find filtered folders base on search, if there no search, return all
     const filteredTree = this.props.isSearching && this.props.searchInput ? tree.reduce((prev, curr, key) => {
       if (key === undefined) {
@@ -348,21 +354,28 @@ export default class InfinityMenu extends Component {
         <div className='navigation-filters clearfix'>
           <div className='navigation-filters-container'>
             <div className='row'>
-              <div className='col-xs-12'>
+              {isDetailSearch &&
+                <div className='col-xs-12'>
+                  <h2>Sisältöhaku <Exporter data={tree} className='btn-sm pull-right' isVisible={displayExporter} /></h2>
+                </div>
+              }
+              <div className={classnames({ 'col-xs-12': isDetailSearch, 'col-sm-6': !isDetailSearch })}>
                 <SearchInput {...searchInputProps}/>
               </div>
 
-              <div className='col-xs-12'>
+              <div className={classnames({ 'col-xs-12': isDetailSearch, 'col-sm-6': !isDetailSearch })}>
                 {this.props.filters}
               </div>
             </div>
           </div>
 
-          <Link
-            className='btn btn-default btn-sm nav-button pull-right'
-            to='/classification-tree'>
-            <span className='fa fa-info' aria-hidden='true' />
-          </Link>
+          {!isDetailSearch &&
+            <Link
+              className='btn btn-default btn-sm nav-button pull-right'
+              to='/classification-tree'>
+              <span className='fa fa-info' aria-hidden='true' />
+            </Link>
+          }
 
         </div>
         }
