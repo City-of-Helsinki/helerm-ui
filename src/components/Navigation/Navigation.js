@@ -105,7 +105,6 @@ export class Navigation extends React.Component {
 
     // The actual filtering
     const filterFunction = (item) => {
-      // const matchesFilters = includes(filters, get(item, path));
       const matchesFilters = Object.keys(filters).map((key) => {
         const currentFilter = filters[key].values;
         return currentFilter.length ? includes(currentFilter, get(item, filters[key].path)) : true;
