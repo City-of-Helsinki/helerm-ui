@@ -31,3 +31,15 @@ export const retentionPeriodFilters = [
   { value: '50', label: 50 },
   { value: '120', label: 120 }
 ];
+
+// export for easier administration
+export const navigationStateFilters = {
+  statusFilters: {
+    path: 'function_state',
+    values: []
+  },
+  retentionPeriodFilters: {
+    path: 'function_attributes.RetentionPeriod',
+    values: []
+  }
+};
