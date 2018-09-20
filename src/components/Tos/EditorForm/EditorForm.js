@@ -585,6 +585,14 @@ export class EditorForm extends React.Component {
   render () {
     const { attributeTypes, targetId, onShowMore } = this.props;
     const attributeElements = this.generateAttributeElements(attributeTypes);
+    let onFormChange;
+    if (this.props.editorConfig.action === 'edit') {
+      onFormChange = 'Näytä Lisää';
+    } else if (this.props.editorConfig.action === 'complement') {
+      onFormChange = 'Näytä Vähemmän';
+    } else {
+      onFormChange = false;
+    }
 
     return (
       <div className='add-box col-xs-12'>
@@ -611,10 +619,11 @@ export class EditorForm extends React.Component {
               Peruuta
             </button>
             <button
-              className='btn btn-success pull-right editor-form__cancel'
+              className={onFormChange ? 'btn btn-success pull-right editor-form__cancel' : 'non-display'}
               onClick={onShowMore}
+
             >
-              {this.props.editorConfig.action === 'edit' ? 'Näytä lisää' : 'Näytä vähemmmän'}
+              {onFormChange}
             </button>
           </div>
         </form>
