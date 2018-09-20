@@ -42,15 +42,14 @@ export class ViewTOS extends React.Component {
     this.onPhaseDefaultAttributeChange = this.onPhaseDefaultAttributeChange.bind(this);
     this.onPhaseTypeChange = this.onPhaseTypeChange.bind(this);
     this.onPhaseTypeInputChange = this.onPhaseTypeInputChange.bind(this);
-    this.onPhaseTypeSpecifierChange = this.onPhaseTypeSpecifierChange.bind(
-      this
-    );
+    this.onPhaseTypeSpecifierChange = this.onPhaseTypeSpecifierChange.bind(this);
     this.routerWillLeave = this.routerWillLeave.bind(this);
     this.saveDraft = this.saveDraft.bind(this);
     this.setPhaseVisibility = this.setPhaseVisibility.bind(this);
     this.updateFunctionAttribute = this.updateFunctionAttribute.bind(this);
     this.setValidationVisibility = this.setValidationVisibility.bind(this);
     this.review = this.review.bind(this);
+    this.onEditFormShowMoreMetaData = this.onEditFormShowMoreMetaData.bind(this);
 
     this.state = {
       createPhaseMode: false,
@@ -117,6 +116,15 @@ export class ViewTOS extends React.Component {
 
   componentWillUnmount () {
     this.props.clearTOS();
+  }
+
+  onEditFormShowMoreMetaData (e) {
+    e.preventDefault();
+    this.setState(prevState => ({
+      complementingMetaData: !prevState.complementingMetaData,
+      editingMetaData: !prevState.editingMetaData
+    })
+    );
   }
 
   routerWillLeave (e) {
@@ -493,12 +501,12 @@ export class ViewTOS extends React.Component {
                     style: 'btn-primary',
                     action: () => this.setState({ editingMetaData: true })
                   },
-                  {
-                    text: 'Täydennä metatietoja',
-                    icon: 'fa-plus-square',
-                    style: 'btn-primary',
-                    action: () => this.setState({ complementingMetaData: true })
-                  },
+                  // {
+                  //   text: 'Täydennä metatietoja',
+                  //   icon: 'fa-plus-square',
+                  //   style: 'btn-primary',
+                  //   action: () => this.setState({ complementingMetaData: true })
+                  // },
                   {
                     text: 'Tuo kuvaus',
                     icon: 'fa-clone',
@@ -618,6 +626,7 @@ export class ViewTOS extends React.Component {
                 <div className='general-info space-between'>
                   {this.state.editingMetaData && (
                     <EditorForm
+                      onShowMore={this.onEditFormShowMoreMetaData}
                       targetId={this.props.selectedTOS.id}
                       attributes={this.props.selectedTOS.attributes}
                       attributeTypes={this.props.attributeTypes}
@@ -632,6 +641,7 @@ export class ViewTOS extends React.Component {
                   )}
                   {this.state.complementingMetaData && (
                     <EditorForm
+                      onShowMore={this.onEditFormShowMoreMetaData}
                       targetId={this.props.selectedTOS.id}
                       attributes={this.props.selectedTOS.attributes}
                       attributeTypes={this.props.attributeTypes}

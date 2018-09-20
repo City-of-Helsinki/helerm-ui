@@ -402,34 +402,34 @@ export class EditorForm extends React.Component {
         if (action === 'add') {
           return 'Uusi käsittelyvaihe';
         }
-        if (action === 'edit') {
+        if (action === 'edit' || 'complement') {
           return 'Muokkaa käsittelyvaihetta';
         }
-        if (action === 'complement') {
-          return 'Täydennä käsittelyvaihetta';
-        }
+        // if (action === 'complement') {
+        //   return 'Täydennä käsittelyvaihetta';
+        // }
         break;
       case 'action':
         if (action === 'add') {
           return 'Uusi toimenpide';
         }
-        if (action === 'edit') {
+        if (action === 'edit' || 'complement') {
           return 'Muokkaa toimenpidettä';
         }
-        if (action === 'complement') {
-          return 'Täydennä toimenpidettä';
-        }
+        // if (action === 'complement') {
+        //   return 'Täydennä toimenpidettä';
+        // }
         break;
       case 'record':
         if (action === 'add') {
           return 'Uusi asiakirja';
         }
-        if (action === 'edit') {
+        if (action === 'edit' || 'complement') {
           return 'Muokkaa asiakirjaa';
         }
-        if (action === 'complement') {
-          return 'Täydennä asiakirjaa';
-        }
+        // if (action === 'complement') {
+        //   return 'Täydennä asiakirjaa';
+        // }
         break;
     }
   }
@@ -583,7 +583,7 @@ export class EditorForm extends React.Component {
   }
 
   render () {
-    const { attributeTypes, targetId } = this.props;
+    const { attributeTypes, targetId, onShowMore } = this.props;
     const attributeElements = this.generateAttributeElements(attributeTypes);
 
     return (
@@ -610,6 +610,12 @@ export class EditorForm extends React.Component {
             >
               Peruuta
             </button>
+            <button
+              className='btn btn-success pull-right editor-form__cancel'
+              onClick={onShowMore}
+            >
+              {this.props.editorConfig.action === 'edit' ? 'Näytä lisää' : 'Näytä vähemmmän'}
+            </button>
           </div>
         </form>
       </div>
@@ -632,6 +638,7 @@ EditorForm.propTypes = {
     elementTypes: PropTypes.object.isRequired,
     createRecord: PropTypes.func // only records created with editorform
   }),
+  onShowMore: PropTypes.func.isRequired,
   targetId: PropTypes.string
 };
 

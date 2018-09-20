@@ -36,6 +36,8 @@ export class Action extends React.Component {
     this.renderBasicAttributes = this.renderBasicAttributes.bind(this);
     this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
     this.disableEditMode = this.disableEditMode.bind(this);
+    this.onEditFormShowMoreAction = this.onEditFormShowMoreAction.bind(this);
+    this.onEditFormShowMoreRecord = this.onEditFormShowMoreRecord.bind(this);
     this.state = {
       typeSpecifier: this.props.action.attributes.TypeSpecifier || null,
       type: this.props.action.attributes.ActionType || null,
@@ -67,6 +69,24 @@ export class Action extends React.Component {
     if (nextProps.documentState === 'view') {
       this.disableEditMode();
     }
+  }
+
+  onEditFormShowMoreAction (e) {
+    e.preventDefault();
+    this.setState(prevState => ({
+      complementingAction: !prevState.complementingAction,
+      editingAction: !prevState.editingAction
+    })
+    );
+  }
+
+  onEditFormShowMoreRecord (e) {
+    e.preventDefault();
+    this.setState(prevState => ({
+      complementingRecord: !prevState.complementingRecord,
+      editingRecord: !prevState.editingRecord
+    })
+    );
   }
 
   toggleReorderView () {
@@ -103,11 +123,11 @@ export class Action extends React.Component {
     }
   }
 
-  complementActionForm () {
-    if (this.props.documentState === 'edit') {
-      this.setState({ complementingAction: true, mode: 'edit' });
-    }
-  }
+  // complementActionForm () {
+  //   if (this.props.documentState === 'edit') {
+  //     this.setState({ complementingAction: true, mode: 'edit' });
+  //   }
+  // }
 
   disableEditMode () {
     this.setState({
@@ -289,12 +309,12 @@ export class Action extends React.Component {
         style: 'btn-primary',
         action: () => this.editActionForm()
       },
-      {
-        text: 'Täydennä metatietoja',
-        icon: 'fa-plus-square',
-        style: 'btn-primary',
-        action: () => this.complementActionForm()
-      },
+      // {
+      //   text: 'Täydennä metatietoja',
+      //   icon: 'fa-plus-square',
+      //   style: 'btn-primary',
+      //   action: () => this.complementActionForm()
+      // },
       {
         text: 'Järjestä asiakirjoja',
         icon: 'fa-th-list',
@@ -447,6 +467,7 @@ export class Action extends React.Component {
           {this.state.mode === 'edit' &&
             this.state.editingAction && (
               <EditorForm
+                onShowMore={this.onEditFormShowMoreAction}
                 targetId={this.props.action.id}
                 attributes={this.props.action.attributes}
                 attributeTypes={this.props.attributeTypes}
@@ -465,6 +486,7 @@ export class Action extends React.Component {
           {this.state.mode === 'edit' &&
             this.state.complementingAction && (
               <EditorForm
+                onShowMore={this.onEditFormShowMoreAction}
                 targetId={this.props.action.id}
                 attributes={this.props.action.attributes}
                 attributeTypes={this.props.attributeTypes}
@@ -515,6 +537,7 @@ export class Action extends React.Component {
                 )}
                 {this.state.editingRecord && (
                   <EditorForm
+                    onShowMore={this.onEditFormShowMoreRecord}
                     targetId={this.state.record.id}
                     attributes={this.state.record.attributes}
                     attributeTypes={this.props.attributeTypes}
@@ -532,6 +555,7 @@ export class Action extends React.Component {
                 )}
                 {this.state.complementingRecord && (
                   <EditorForm
+                    onShowMore={this.onEditFormShowMoreRecord}
                     targetId={this.state.record.id}
                     attributes={this.state.record.attributes}
                     attributeTypes={this.props.attributeTypes}

@@ -42,6 +42,7 @@ export class Phase extends React.Component {
     this.toggleImportView = this.toggleImportView.bind(this);
     this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
     this.cancelActionCreation = this.cancelActionCreation.bind(this);
+    this.onEditFormShowMorePhase = this.onEditFormShowMorePhase.bind(this);
     this.state = {
       typeSpecifier: this.props.phase.attributes.TypeSpecifier || null,
       type: this.props.phase.attributes.PhaseType || null,
@@ -73,6 +74,15 @@ export class Phase extends React.Component {
     if (nextProps.documentState === 'view') {
       this.disableEditMode();
     }
+  }
+
+  onEditFormShowMorePhase (e) {
+    e.preventDefault();
+    this.setState(prevState => ({
+      complementingPhase: !prevState.complementingPhase,
+      editingPhase: !prevState.editingPhase
+    })
+    );
   }
 
   toggleAttributeVisibility () {
@@ -109,11 +119,11 @@ export class Phase extends React.Component {
     }
   }
 
-  complementPhaseForm () {
-    if (this.props.documentState === 'edit') {
-      this.setState({ complementingPhase: true, mode: 'edit' });
-    }
-  }
+  // complementPhaseForm () {
+  //   if (this.props.documentState === 'edit') {
+  //     this.setState({ complementingPhase: true, mode: 'edit' });
+  //   }
+  // }
 
   disableEditMode () {
     this.setState({
@@ -320,12 +330,12 @@ export class Phase extends React.Component {
         style: 'btn-primary',
         action: () => this.editPhaseForm()
       },
-      {
-        text: 'Täydennä metatietoja',
-        icon: 'fa-plus-square',
-        style: 'btn-primary',
-        action: () => this.complementPhaseForm()
-      },
+      // {
+      //   text: 'Täydennä metatietoja',
+      //   icon: 'fa-plus-square',
+      //   style: 'btn-primary',
+      //   action: () => this.complementPhaseForm()
+      // },
       {
         text: 'Järjestä toimenpiteitä',
         icon: 'fa-th-list',
@@ -498,6 +508,7 @@ export class Phase extends React.Component {
           {this.state.mode === 'edit' &&
             this.state.editingPhase && (
               <EditorForm
+                onShowMore={this.onEditFormShowMorePhase}
                 targetId={this.props.phase.id}
                 attributes={this.props.phase.attributes}
                 attributeTypes={this.props.attributeTypes}
@@ -516,6 +527,7 @@ export class Phase extends React.Component {
           {this.state.mode === 'edit' &&
             this.state.complementingPhase && (
               <EditorForm
+                onShowMore={this.onEditFormShowMorePhase}
                 targetId={this.props.phase.id}
                 attributes={this.props.phase.attributes}
                 attributeTypes={this.props.attributeTypes}
