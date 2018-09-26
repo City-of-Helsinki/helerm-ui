@@ -21,7 +21,8 @@ import {
   validateTOS,
   validatePhase,
   validateAction,
-  validateRecord
+  validateRecord,
+  validateConditionalRules
 } from '../../../utils/validators';
 
 import './ViewTos.scss';
@@ -50,6 +51,7 @@ export class ViewTOS extends React.Component {
     this.setValidationVisibility = this.setValidationVisibility.bind(this);
     this.review = this.review.bind(this);
     this.onEditFormShowMoreMetaData = this.onEditFormShowMoreMetaData.bind(this);
+    this.onAddFormShowMorePhase = this.onAddFormShowMorePhase.bind(this);
 
     this.state = {
       createPhaseMode: false,
@@ -63,6 +65,7 @@ export class ViewTOS extends React.Component {
       showReorderView: false,
       showMetadata: false,
       showValidationBar: false,
+      showMore: false,
       update: ''
     };
   }
@@ -120,6 +123,7 @@ export class ViewTOS extends React.Component {
 
   onEditFormShowMoreMetaData (e) {
     e.preventDefault();
+    console.log('this.state.editingMetaData', this.state.editingMetaData);
     this.setState(prevState => ({
       complementingMetaData: !prevState.complementingMetaData,
       editingMetaData: !prevState.editingMetaData
@@ -392,11 +396,29 @@ export class ViewTOS extends React.Component {
   generateDefaultAttributes (attributeTypes, type) {
     const attributes = {};
     for (const key in attributeTypes) {
-      if (attributeTypes.hasOwnProperty(key) && attributeTypes[key].defaultIn.indexOf(type) >= 0) {
+      if (attributeTypes.hasOwnProperty(key) && ((this.state.showMore && attributeTypes[key].allowedIn.indexOf(type) >= 0) || (!this.state.showMore && attributeTypes[key].defaultIn.indexOf(type) >= 0)) && key !== 'TypeSpecifier') {
         attributes[key] = attributeTypes[key];
+
+        if (attributeTypes[key].requiredIf.length) {
+          if (
+            validateConditionalRules(key, attributeTypes)
+          ) {
+            attributes[key] = attributeTypes[key];
+          }
+        } else {
+          attributes[key] = attributeTypes[key];
+        }
       }
     }
     return attributes;
+  }
+
+  onAddFormShowMorePhase (e) {
+    e.preventDefault();
+    this.setState(prevState => ({
+      showMore: !prevState.showMore
+    })
+    );
   }
 
   generateTypeOptions (typeOptions) {
@@ -727,6 +749,7 @@ export class ViewTOS extends React.Component {
                       onTypeChange={this.onPhaseTypeChange}
                       onTypeInputChange={this.onPhaseTypeInputChange}
                       cancel={this.cancelPhaseCreation}
+                      onAddFormShowMore={this.onAddFormShowMorePhase}
                     />
                   )}
                   {phaseElements}

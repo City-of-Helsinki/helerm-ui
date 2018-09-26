@@ -43,6 +43,7 @@ export class Phase extends React.Component {
     this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
     this.cancelActionCreation = this.cancelActionCreation.bind(this);
     this.onEditFormShowMorePhase = this.onEditFormShowMorePhase.bind(this);
+    this.onAddFormShowMoreAction = this.onAddFormShowMoreAction.bind(this);
     this.state = {
       typeSpecifier: this.props.phase.attributes.TypeSpecifier || null,
       type: this.props.phase.attributes.PhaseType || null,
@@ -58,7 +59,8 @@ export class Phase extends React.Component {
       deleting: false,
       showReorderView: false,
       showImportView: false,
-      showAttributes: false
+      showAttributes: false,
+      showMore: false
     };
   }
 
@@ -271,14 +273,22 @@ export class Phase extends React.Component {
     return options;
   }
 
-  generateDefaultAttributes (attributeTypes, type) {
+  generateDefaultAttributes (attributeTypes, type, showMore) {
     const attributes = {};
     for (const key in attributeTypes) {
-      if (attributeTypes.hasOwnProperty(key) && attributeTypes[key].defaultIn.indexOf(type) >= 0) {
+      if (attributeTypes.hasOwnProperty(key) && ((this.state.showMore && attributeTypes[key].allowedIn.indexOf(type) >= 0) || (!this.state.showMore && attributeTypes[key].defaultIn.indexOf(type) >= 0)) && key !== 'TypeSpecifier') {
         attributes[key] = attributeTypes[key];
       }
     }
     return attributes;
+  }
+
+  onAddFormShowMoreAction (e) {
+    e.preventDefault();
+    this.setState(prevState => ({
+      showMore: !prevState.showMore
+    })
+    );
   }
 
   generateActions (actions) {
@@ -578,6 +588,8 @@ export class Phase extends React.Component {
                     onTypeChange={this.onActionTypeChange}
                     onTypeInputChange={this.onActionTypeInputChange}
                     cancel={this.cancelActionCreation}
+                    onAddFormShowMore={this.onAddFormShowMoreAction}
+
                   />
                 )}
                 <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>

@@ -520,6 +520,7 @@ export class Action extends React.Component {
                 />
                 {this.state.creatingRecord && (
                   <EditorForm
+                    onShowMore={this.complementRecordForm}
                     targetId={this.props.action.id}
                     attributes={{}}
                     attributeTypes={this.props.attributeTypes}

@@ -1,7 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
 import { find, forEach, includes, isEmpty, map } from 'lodash';
-
 import KeyStrokeSupport from '../../../decorators/key-stroke-support';
 import './AddElementInput.scss';
 
@@ -99,12 +98,31 @@ export const AddElementInput = ({
   onTypeSpecifierChange,
   onTypeInputChange,
   onTypeChange,
-  cancel
-}) => (
-  <form onSubmit={submit} className='row add-element'>
-    <h5 className='col-xs-12'>{resolveHeader(type)}</h5>
-    {/* ActionType disabled for now. */}
-    { type !== 'action' &&
+  cancel,
+  onAddFormShowMore
+}) => {
+  console.log('onAddFormShowMore', onAddFormShowMore);
+  // const defaultAttributes = { PersonalData: { allowValuesOutsideChoicesIn: [],
+  //   allowedIn: ['record', 'function'],
+  //   defaultIn: [],
+  //   index: 16,
+  //   multiIn: [],
+  //   name: 'Henkilötietoluonne',
+  //   required: true,
+  //   requiredIf: [],
+  //   requiredIn: ['record', 'function'],
+  //   values: [{ created_at: '2017-03-01T14:32:37.971521+02:00',
+  //     id: '6ade9d17bdaa46da8a3b2cb8bd62e411',
+  //     index: 1,
+  //     modified_at: '2017-03-01T14:32:37.971530+02:00',
+  //     value: 'Ei sisällä henkilötietoja' }]
+  // } };
+
+  return (
+    <form onSubmit={submit} className='row add-element'>
+      <h5 className='col-xs-12'>{resolveHeader(type)}</h5>
+      {/* ActionType disabled for now. */}
+      { type !== 'action' &&
       <div className='col-xs-12 col-md-6 add-element-col'>
         { typeOptions.length !== 0
           ? <Select.Creatable
@@ -131,17 +149,17 @@ export const AddElementInput = ({
         }
       </div>
     }
-    <div className='col-xs-12 col-md-6 add-element-col'>
-      <input
+      <div className='col-xs-12 col-md-6 add-element-col'>
+        <input
         type='text'
         className='form-control'
         value={newTypeSpecifier}
         onChange={onTypeSpecifierChange}
         onSubmit={submit}
         placeholder={resolveSpecifierPlaceHolder(type)}/>
-    </div>
-    {!isEmpty(defaultAttributes) &&
-      Object.keys(defaultAttributes).map(key => (
+      </div>
+      {!isEmpty(defaultAttributes) &&
+      Object.keys(defaultAttributes).map(key => console.log('defaultAttributes', defaultAttributes) || (
         <div className='col-xs-12 col-md-6' key={`${type}_${key}`}>
           { defaultAttributes[key].values.length !== 0
             ? <Select.Creatable
@@ -173,16 +191,19 @@ export const AddElementInput = ({
         </div>
       ))
     }
-    <div className='col-xs-12 col-md-6 add-element-buttons'>
-      <button
+      <div className='col-xs-12 col-md-6 add-element-buttons'>
+        <button
         className='btn btn-danger col-xs-6'
         onClick={cancel}>
         Peruuta
       </button>
-      <button className='btn btn-primary col-xs-6' type='submit'>Lisää</button>
-    </div>
-  </form>
-);
+        <button className='btn btn-primary col-xs-6' type='submit'>Lisää</button>
+        <button className='btn btn-success col-xs-6' onClick={onAddFormShowMore}>Näytää Lisää</button>
+      </div>
+    </form>
+  )
+;
+};
 
 AddElementInput.propTypes = {
   cancel: React.PropTypes.func.isRequired,
@@ -190,6 +211,7 @@ AddElementInput.propTypes = {
   newDefaultAttributes: React.PropTypes.object.isRequired,
   newType: React.PropTypes.string.isRequired,
   newTypeSpecifier: React.PropTypes.string.isRequired,
+  onAddFormShowMore: React.PropTypes.func.isRequired,
   onDefaultAttributeChange: React.PropTypes.func.isRequired,
   onTypeChange: React.PropTypes.func.isRequired,
   onTypeInputChange: React.PropTypes.func.isRequired,

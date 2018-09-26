@@ -19,9 +19,7 @@ export class EditorForm extends React.Component {
     this.closeEditorForm = this.closeEditorForm.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onFormInputChange = this.onFormInputChange.bind(this);
-    const initialAttributes = this.initializeAttributes(
-      this.props.attributeTypes
-    );
+    const initialAttributes = this.initializeAttributes(props.attributeTypes);
     this.state = {
       newAttributes: initialAttributes,
       initialAttributes
@@ -35,7 +33,7 @@ export class EditorForm extends React.Component {
       if (attributeTypes.hasOwnProperty(key)) {
         initialState = Object.assign({}, initialState, {
           [key]: {
-            value: attributes[key] ? attributes[key] : null,
+            value: attributes[key] || null,
             checked: true
           }
         });
@@ -155,7 +153,6 @@ export class EditorForm extends React.Component {
   getComplementAttributes (attributeTypes, attributesToShow) {
     const { newAttributes } = this.state;
     const complementAttributes = [];
-
     for (const key in attributeTypes) {
       if (
         includes(attributeTypes[key].allowedIn, this.props.editorConfig.type)
@@ -215,10 +212,7 @@ export class EditorForm extends React.Component {
       this.props.attributes
     );
     if (this.props.editorConfig.action === 'complement') {
-      attributesToShow = this.getComplementAttributes(
-        attributeTypes,
-        attributesToShow
-      );
+      attributesToShow = this.getComplementAttributes(attributeTypes);
     }
     const attributeElements = [];
 
@@ -421,10 +415,10 @@ export class EditorForm extends React.Component {
         // }
         break;
       case 'record':
-        if (action === 'add') {
+        if (action === 'add' && 'complement') {
           return 'Uusi asiakirja';
         }
-        if (action === 'edit' || 'complement') {
+        if (action === 'edit' && 'complement') {
           return 'Muokkaa asiakirjaa';
         }
         // if (action === 'complement') {
@@ -573,9 +567,7 @@ export class EditorForm extends React.Component {
             className='col-xs-6 form-control edit-record__input'
             placeholder={this.resolveSpecifierPlaceholder()}
             value={this.state.newAttributes.TypeSpecifier.value || ''}
-            onChange={e =>
-              this.onChange(e.target.value, 'TypeSpecifier', 'value')
-            }
+            onChange={e => this.onChange(e.target.value, 'TypeSpecifier', 'value')}
           />
         </div>
       </div>
@@ -584,14 +576,13 @@ export class EditorForm extends React.Component {
 
   render () {
     const { attributeTypes, targetId, onShowMore } = this.props;
+    console.log('attributeTypes', attributeTypes);
     const attributeElements = this.generateAttributeElements(attributeTypes);
     let onFormChange;
-    if (this.props.editorConfig.action === 'edit') {
+    if (this.props.editorConfig.action === 'edit' || this.props.editorConfig.action === 'add') {
       onFormChange = 'Näytä Lisää';
     } else if (this.props.editorConfig.action === 'complement') {
       onFormChange = 'Näytä Vähemmän';
-    } else {
-      onFormChange = false;
     }
 
     return (
@@ -621,7 +612,6 @@ export class EditorForm extends React.Component {
             <button
               className={onFormChange ? 'btn btn-success pull-right editor-form__cancel' : 'non-display'}
               onClick={onShowMore}
-
             >
               {onFormChange}
             </button>
@@ -647,7 +637,7 @@ EditorForm.propTypes = {
     elementTypes: PropTypes.object.isRequired,
     createRecord: PropTypes.func // only records created with editorform
   }),
-  onShowMore: PropTypes.func.isRequired,
+  onShowMore: PropTypes.func,
   targetId: PropTypes.string
 };
 
