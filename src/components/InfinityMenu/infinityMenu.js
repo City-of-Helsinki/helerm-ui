@@ -15,6 +15,7 @@ import Exporter from '../Exporter';
 export default class InfinityMenu extends Component {
 
   static propTypes = {
+    attributeTypes: PropTypes.object,
     customComponentMappings: PropTypes.object,
     displayExporter: PropTypes.bool,
     emptyTreeComponent: PropTypes.any,
@@ -356,7 +357,15 @@ export default class InfinityMenu extends Component {
             <div className='row'>
               {isDetailSearch &&
                 <div className='col-xs-12'>
-                  <h2>Sisältöhaku <Exporter data={tree} className='btn-sm pull-right' isVisible={displayExporter} /></h2>
+                  <h2>
+                    Sisältöhaku
+                    <Exporter
+                      attributeTypes={this.props.attributeTypes}
+                      data={tree}
+                      className='btn-sm pull-right'
+                      isVisible={displayExporter}
+                    />
+                  </h2>
                 </div>
               }
               <div className={classnames({ 'col-xs-12': isDetailSearch, 'col-sm-6': !isDetailSearch })}>
