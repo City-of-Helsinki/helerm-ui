@@ -38,6 +38,7 @@ export class Action extends React.Component {
     this.disableEditMode = this.disableEditMode.bind(this);
     this.onEditFormShowMoreAction = this.onEditFormShowMoreAction.bind(this);
     this.onEditFormShowMoreRecord = this.onEditFormShowMoreRecord.bind(this);
+    this.onEditFormShowMoreRecordAdd = this.onEditFormShowMoreRecordAdd.bind(this);
     this.state = {
       typeSpecifier: this.props.action.attributes.TypeSpecifier || null,
       type: this.props.action.attributes.ActionType || null,
@@ -48,6 +49,7 @@ export class Action extends React.Component {
       creatingRecord: false,
       editingRecord: false,
       complementingRecord: false,
+      complementingRecordAdd: false,
       editingAction: false,
       complementingAction: false,
       deleting: false,
@@ -86,6 +88,23 @@ export class Action extends React.Component {
       complementingRecord: !prevState.complementingRecord,
       editingRecord: !prevState.editingRecord
     })
+    );
+  }
+
+  onEditFormShowMoreRecordAdd (recordId, recordAttributes) {
+    this.setState(
+      {
+        record: {
+          id: recordId,
+          attributes: recordAttributes
+        }
+      },
+      () => {
+        this.setState({
+          complementingRecordAdd: !this.state.complementingRecordAdd,
+          creatingRecord: !this.state.creatingRecord
+        });
+      }
     );
   }
 
@@ -239,7 +258,10 @@ export class Action extends React.Component {
         }
       },
       () => {
-        this.setState({ complementingRecord: true });
+        this.setState({
+          complementingRecordAdd: !this.state.complementingRecordAdd,
+          creatingRecord: !this.state.creatingRecord
+        });
       }
     );
   }
@@ -518,9 +540,10 @@ export class Action extends React.Component {
                   updateAttribute={this.updateActionAttribute}
                   showAttributes={this.state.showAttributes}
                 />
-                {this.state.creatingRecord && (
-                  <EditorForm
-                    onShowMore={this.complementRecordForm}
+                {
+                 this.state.creatingRecord && (
+                 <EditorForm
+                    onShowMoreForm={this.complementRecordForm}
                     targetId={this.props.action.id}
                     attributes={{}}
                     attributeTypes={this.props.attributeTypes}
@@ -557,6 +580,25 @@ export class Action extends React.Component {
                 {this.state.complementingRecord && (
                   <EditorForm
                     onShowMore={this.onEditFormShowMoreRecord}
+                    targetId={this.state.record.id}
+                    attributes={this.state.record.attributes}
+                    attributeTypes={this.props.attributeTypes}
+                    elementConfig={{
+                      elementTypes: this.props.recordTypes,
+                      editWithForm: this.editRecordWithForm
+                    }}
+                    editorConfig={{
+                      type: 'record',
+                      action: 'complement'
+                    }}
+                    closeEditorForm={this.cancelRecordComplement}
+                    displayMessage={this.props.displayMessage}
+                  />
+                )}
+
+                {this.state.complementingRecordAdd && (
+                  <EditorForm
+                    onShowMore={this.onEditFormShowMoreRecordAdd}
                     targetId={this.state.record.id}
                     attributes={this.state.record.attributes}
                     attributeTypes={this.props.attributeTypes}

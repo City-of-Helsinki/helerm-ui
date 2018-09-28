@@ -478,46 +478,47 @@ export class EditorForm extends React.Component {
     const { action, type } = this.props.editorConfig;
 
     const displayMessage = stopEditing ? this.props.displayMessage : () => {};
-
-    switch (type) {
-      case 'function':
-        if (action === 'edit' || action === 'complement') {
-          this.editMetaData(e, stopEditing);
-          displayMessage({
-            title: 'Metatiedot',
-            body: 'Tietojen muokkaus onnistui!'
-          });
-        }
-        break;
-      case 'phase':
-        if (action === 'edit' || action === 'complement') {
-          this.editElement(e, targetId, stopEditing);
-          displayMessage({
-            title: 'Käsittelyvaihe',
-            body: 'Käsittelyvaiheen muokkaus onnistui!'
-          });
-        }
-        break;
-      case 'action':
-        if (action === 'edit' || action === 'complement') {
-          this.editElement(e, targetId, stopEditing);
-          displayMessage({
-            title: 'Toimenpide',
-            body: 'Toimenpiteen muokkaus onnistui!'
-          });
-        }
-        break;
-      case 'record':
-        if (action === 'add') {
-          this.addRecord(e, targetId);
-        }
-        if (action === 'edit' || action === 'complement') {
-          this.editElement(e, targetId, stopEditing);
-          displayMessage({
-            title: 'Asiakirja',
-            body: 'Asiakirjan muokkaus onnistui!'
-          });
-        }
+    if (targetId) {
+      switch (type) {
+        case 'function':
+          if (action === 'edit' || action === 'complement') {
+            this.editMetaData(e, stopEditing);
+            displayMessage({
+              title: 'Metatiedot',
+              body: 'Tietojen muokkaus onnistui!'
+            });
+          }
+          break;
+        case 'phase':
+          if (action === 'edit' || action === 'complement') {
+            this.editElement(e, targetId, stopEditing);
+            displayMessage({
+              title: 'Käsittelyvaihe',
+              body: 'Käsittelyvaiheen muokkaus onnistui!'
+            });
+          }
+          break;
+        case 'action':
+          if (action === 'edit' || action === 'complement') {
+            this.editElement(e, targetId, stopEditing);
+            displayMessage({
+              title: 'Toimenpide',
+              body: 'Toimenpiteen muokkaus onnistui!'
+            });
+          }
+          break;
+        case 'record':
+          if (action === 'add') {
+            this.addRecord(e, targetId);
+          }
+          if (action === 'edit' || action === 'complement') {
+            this.editElement(e, targetId, stopEditing);
+            displayMessage({
+              title: 'Asiakirja',
+              body: 'Asiakirjan muokkaus onnistui!'
+            });
+          }
+      }
     }
   }
 
@@ -529,10 +530,12 @@ export class EditorForm extends React.Component {
   closeEditorForm (e) {
     e.preventDefault();
     // Reset local state
+    console.log('keke', this.props);
     this.setState(
       ({ initialAttributes }) => ({ newAttributes: initialAttributes }),
       () => {
         const { targetId, closeEditorForm } = this.props;
+        console.log('targetId', targetId);
         this.resolveOnSubmit(e, targetId, false);
         closeEditorForm();
       }
@@ -575,14 +578,17 @@ export class EditorForm extends React.Component {
   }
 
   render () {
-    const { attributeTypes, targetId, onShowMore } = this.props;
+    const { attributeTypes, targetId, onShowMore, onShowMoreForm } = this.props;
+    console.log('this.props.attributes', this.props.attributes);
     console.log('attributeTypes', attributeTypes);
     const attributeElements = this.generateAttributeElements(attributeTypes);
     let onFormChange;
-    if (this.props.editorConfig.action === 'edit' || this.props.editorConfig.action === 'add') {
+    if (this.props.editorConfig.action === 'edit') {
       onFormChange = 'Näytä Lisää';
     } else if (this.props.editorConfig.action === 'complement') {
       onFormChange = 'Näytä Vähemmän';
+    } else if (this.props.editorConfig.action === 'add') {
+      onFormChange = 'Näytä Lisäää';
     }
 
     return (
@@ -610,8 +616,9 @@ export class EditorForm extends React.Component {
               Peruuta
             </button>
             <button
+
               className={onFormChange ? 'btn btn-success pull-right editor-form__cancel' : 'non-display'}
-              onClick={onShowMore}
+              onClick={(this.props.editorConfig.action === 'add') ? onShowMoreForm : onShowMore}
             >
               {onFormChange}
             </button>
@@ -638,6 +645,7 @@ EditorForm.propTypes = {
     createRecord: PropTypes.func // only records created with editorform
   }),
   onShowMore: PropTypes.func,
+  onShowMoreForm: PropTypes.func,
   targetId: PropTypes.string
 };
 

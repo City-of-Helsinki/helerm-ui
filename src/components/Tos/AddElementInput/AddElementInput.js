@@ -99,7 +99,8 @@ export const AddElementInput = ({
   onTypeInputChange,
   onTypeChange,
   cancel,
-  onAddFormShowMore
+  onAddFormShowMore,
+  showMoreOrLess
 }) => {
   console.log('onAddFormShowMore', onAddFormShowMore);
   // const defaultAttributes = { PersonalData: { allowValuesOutsideChoicesIn: [],
@@ -198,7 +199,7 @@ export const AddElementInput = ({
         Peruuta
       </button>
         <button className='btn btn-primary col-xs-6' type='submit'>Lisää</button>
-        <button className='btn btn-success col-xs-6' onClick={onAddFormShowMore}>Näytää Lisää</button>
+        <button className='btn btn-success col-xs-6' onClick={onAddFormShowMore}>{showMoreOrLess ? 'Näytää Vänhemään' : 'Näytää Lisää'}</button>
       </div>
     </form>
   )
@@ -216,6 +217,7 @@ AddElementInput.propTypes = {
   onTypeChange: React.PropTypes.func.isRequired,
   onTypeInputChange: React.PropTypes.func.isRequired,
   onTypeSpecifierChange: React.PropTypes.func.isRequired,
+  showMoreOrLess: React.PropTypes.boolean,
   submit: React.PropTypes.func.isRequired,
   type: React.PropTypes.string.isRequired,
   typeOptions: React.PropTypes.array.isRequired

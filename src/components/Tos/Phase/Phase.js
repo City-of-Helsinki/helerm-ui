@@ -276,7 +276,7 @@ export class Phase extends React.Component {
   generateDefaultAttributes (attributeTypes, type, showMore) {
     const attributes = {};
     for (const key in attributeTypes) {
-      if (attributeTypes.hasOwnProperty(key) && ((this.state.showMore && attributeTypes[key].allowedIn.indexOf(type) >= 0) || (!this.state.showMore && attributeTypes[key].defaultIn.indexOf(type) >= 0)) && key !== 'TypeSpecifier') {
+      if (attributeTypes.hasOwnProperty(key) && ((this.state.showMore && attributeTypes[key].allowedIn.indexOf(type) >= 0 && key !== 'ActionType') || (!this.state.showMore && attributeTypes[key].defaultIn.indexOf(type) >= 0)) && key !== 'TypeSpecifier') {
         attributes[key] = attributeTypes[key];
       }
     }
@@ -589,6 +589,7 @@ export class Phase extends React.Component {
                     onTypeInputChange={this.onActionTypeInputChange}
                     cancel={this.cancelActionCreation}
                     onAddFormShowMore={this.onAddFormShowMoreAction}
+                    showMoreOrLess={this.state.showMore}
 
                   />
                 )}

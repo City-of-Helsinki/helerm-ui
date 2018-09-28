@@ -123,7 +123,6 @@ export class ViewTOS extends React.Component {
 
   onEditFormShowMoreMetaData (e) {
     e.preventDefault();
-    console.log('this.state.editingMetaData', this.state.editingMetaData);
     this.setState(prevState => ({
       complementingMetaData: !prevState.complementingMetaData,
       editingMetaData: !prevState.editingMetaData
@@ -396,7 +395,7 @@ export class ViewTOS extends React.Component {
   generateDefaultAttributes (attributeTypes, type) {
     const attributes = {};
     for (const key in attributeTypes) {
-      if (attributeTypes.hasOwnProperty(key) && ((this.state.showMore && attributeTypes[key].allowedIn.indexOf(type) >= 0) || (!this.state.showMore && attributeTypes[key].defaultIn.indexOf(type) >= 0)) && key !== 'TypeSpecifier') {
+      if (attributeTypes.hasOwnProperty(key) && ((this.state.showMore && attributeTypes[key].allowedIn.indexOf(type) >= 0 && key !== 'PhaseType') || (!this.state.showMore && attributeTypes[key].defaultIn.indexOf(type) >= 0)) && key !== 'TypeSpecifier') {
         attributes[key] = attributeTypes[key];
 
         if (attributeTypes[key].requiredIf.length) {
@@ -445,6 +444,7 @@ export class ViewTOS extends React.Component {
       state,
       modified_by
     } = this.props.selectedTOS;
+
     const formattedDateTime = formatDateTime(modified_at);
 
     const attributeElements = [];
@@ -750,6 +750,7 @@ export class ViewTOS extends React.Component {
                       onTypeInputChange={this.onPhaseTypeInputChange}
                       cancel={this.cancelPhaseCreation}
                       onAddFormShowMore={this.onAddFormShowMorePhase}
+                      showMoreOrLess={this.state.showMore}
                     />
                   )}
                   {phaseElements}
