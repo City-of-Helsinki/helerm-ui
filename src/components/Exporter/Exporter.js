@@ -9,49 +9,76 @@ const getChildren = (array, item) => {
     return item.children.reduce(getChildren, array);
   }
 
-  // XX XX XX Käsittelyprosessi (function)
-  //    => function_attributes
-
-  // käsittelyvaihe
-  //    => function_attributes
-  // toimenpide
-  //    => function_attributes
-  // Asiakirja
-  //    => function_attributes
-  // Asiakirja
-  //    => function_attributes
-  // Asiakirja
-  //    => function_attributes
-  // ...
   const exportItem = {
     code: item.code,
     name: item.title,
-    attributes: item.function_attributes
+    attributes: item.function_attributes,
+    phases: item.phases
   };
 
   array.push(exportItem);
   return array;
 };
 
+/**
+ * Get all attributes (phases, actions, records) for specific function
+ * @param {object} item
+ */
+const getAllAttributes = (item) => {
+  const allAttributes = Object.keys(item.attributes);
+
+  item.phases.forEach((phase) => {
+    allAttributes.push(...Object.keys(phase.attributes));
+    phase.actions.forEach((action) => {
+      allAttributes.push(...Object.keys(action.attributes));
+      action.records.forEach((record) => {
+        allAttributes.push(...Object.keys(record.attributes));
+      });
+    });
+  });
+
+  // // Add two blank, merge attributes of each items & sort alphabetically
+  return [ null, null, ...allAttributes.reduce((a, b) => [...new Set([...a, b])], []).sort() ];
+};
+
+/**
+ * Set data for row
+ * @param {object} item
+ * @param {array} headers
+ * @param {name} name
+ */
+const setRowData = (item, headers, name = 'käsittelyprosessi') => {
+  const rowData = [name, `${item.code || ''} ${item.name}`];
+  Object.keys(item.attributes).forEach((attrName) => {
+    const indexInHeaders = headers.indexOf(attrName);
+    rowData[indexInHeaders] = item.attributes[attrName];
+  });
+
+  return rowData;
+};
+
 const createWorkBook = (filename, items) => {
   const workBook = XLSX.utils.book_new();
 
-  // Add two blank, merge attributes of each items & sort alphabetically
-  const headers = [null, null, ...items.map(({ attributes }) => Object.keys(attributes)).reduce((a, b) => [...new Set([...a, ...b])], []).sort()];
+  items.forEach((item) => {
+    const headers = getAllAttributes(item);
+    const rows = [];
 
-  items.forEach(({ name, attributes, code }) => {
-    const data = [];
-    // TODO: Just käsittelyprosessi for now, add the phases & actions from loop
-    data[0] = 'käsittelyprosessi';
-    data[1] = `${code} ${name}`;
+    // Function-level data
+    rows.push(setRowData(item, headers));
 
-    Object.keys(attributes).forEach((attrName) => {
-      const indexInHeaders = headers.indexOf(attrName);
-      data[indexInHeaders] = attributes[attrName];
+    item.phases.forEach((phase) => {
+      rows.push(setRowData(phase, headers, 'käsittelyvaihe'));
+      phase.actions.forEach((action) => {
+        rows.push(setRowData(action, headers, 'toimenpide'));
+        action.records.forEach((record) => {
+          rows.push(setRowData(record, headers, 'asiakirja'));
+        });
+      });
     });
 
-    const workSheet = XLSX.utils.aoa_to_sheet([headers, data]);
-    XLSX.utils.book_append_sheet(workBook, workSheet, code);
+    const workSheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    XLSX.utils.book_append_sheet(workBook, workSheet, item.code);
   });
 
   XLSX.writeFile(workBook, filename);
