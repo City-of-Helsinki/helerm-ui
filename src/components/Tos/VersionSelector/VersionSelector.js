@@ -12,10 +12,12 @@ const getVersionLabel = ({
   state,
   modified_at: modifiedAt,
   modified_by: modifiedBy
-}) =>
-  `${version}: ${getStatusLabel(state)}, ${formatDateTime(modifiedAt)}${
+}) => {
+  const versionOrEmpty = version ? `${version}: ` : '';
+  return `${versionOrEmpty} ${getStatusLabel(state)}, ${formatDateTime(modifiedAt)}${
     typeof modifiedBy === 'string' ? `, ${modifiedBy}` : ''
   }`;
+};
 
 const VersionSelector = ({ tosId, currentVersion, versions, router }) => {
   const className = 'helerm-version-selector';

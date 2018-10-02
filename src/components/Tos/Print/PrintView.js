@@ -92,7 +92,7 @@ class PrintView extends React.Component {
         </header>
         <MetaDataTable
           rows={[
-            ['Versionumero', TOS.version.toString()],
+            ['Versionumero', TOS.version && TOS.version.toString()],
             ['Tila', getStatusLabel(TOS.state)],
             ['Muokkausajankohta', formatDateTime(TOS.modified_at)],
             ['Muokkaaja', TOS.modified_by]
