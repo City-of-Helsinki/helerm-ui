@@ -13,6 +13,7 @@ import './Navigation.scss';
 export class Navigation extends React.Component {
 
   static propTypes = {
+    attributeTypes: PropTypes.object,
     fetchNavigation: PropTypes.func.isRequired,
     isFetching: PropTypes.bool,
     isUser: PropTypes.bool.isRequired,
@@ -188,13 +189,14 @@ export class Navigation extends React.Component {
   }
 
   render () {
-    const { onLeafMouseClick, isFetching } = this.props;
+    const { onLeafMouseClick, isFetching, attributeTypes } = this.props;
     const { searchInput } = this.state;
     const displayExporter = this.hasFilters() && !!this.state.tree.length && this.isDetailSearch();
 
     return (
       <div className='container-fluid helerm-navigation'>
         <InfinityMenu
+          attributeTypes={attributeTypes}
           isOpen={this.props.is_open}
           isSearching={searchInput !== ''}
           isFetching={isFetching}
