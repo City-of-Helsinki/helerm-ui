@@ -618,7 +618,7 @@ export class EditorForm extends React.Component {
             <button
 
               className={onFormChange ? 'btn btn-success pull-right editor-form__cancel' : 'non-display'}
-              onClick={(this.props.editorConfig.action === 'add') ? onShowMoreForm : onShowMore}
+              onClick={(e) => (this.props.editorConfig.action === 'add') ? onShowMoreForm(e) : onShowMore(e, this.state)}
             >
               {onFormChange}
             </button>

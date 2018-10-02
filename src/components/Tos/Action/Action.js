@@ -40,22 +40,22 @@ export class Action extends React.Component {
     this.onEditFormShowMoreRecord = this.onEditFormShowMoreRecord.bind(this);
     this.onEditFormShowMoreRecordAdd = this.onEditFormShowMoreRecordAdd.bind(this);
     this.state = {
-      typeSpecifier: this.props.action.attributes.TypeSpecifier || null,
-      type: this.props.action.attributes.ActionType || null,
       attributes: this.props.action.attributes,
-      mode: 'view',
-      editingTypeSpecifier: false,
-      editingType: false,
-      creatingRecord: false,
-      editingRecord: false,
+      complementingAction: false,
       complementingRecord: false,
       complementingRecordAdd: false,
-      editingAction: false,
-      complementingAction: false,
+      creatingRecord: false,
       deleting: false,
-      showReorderView: false,
+      editingAction: false,
+      editingRecord: false,
+      editingType: false,
+      editingTypeSpecifier: false,
+      mode: 'view',
+      showAttributes: false,
       showImportView: false,
-      showAttributes: false
+      showReorderView: false,
+      type: this.props.action.attributes.ActionType || null,
+      typeSpecifier: this.props.action.attributes.TypeSpecifier || null
     };
   }
 
@@ -82,13 +82,24 @@ export class Action extends React.Component {
     );
   }
 
-  onEditFormShowMoreRecord (e) {
+  onEditFormShowMoreRecord (e, { newAttributes }) {
     e.preventDefault();
-    this.setState(prevState => ({
-      complementingRecord: !prevState.complementingRecord,
-      editingRecord: !prevState.editingRecord
-    })
-    );
+    this.setState(prevState => {
+      const newAttrs = {};
+      // Gather attributes from child & assign them to current state record
+      Object.keys(prevState.record.attributes).map((key) => Object.assign(newAttrs, { [key]: newAttributes[key] && newAttributes[key]['value'] }));
+
+      return {
+        complementingRecord: !prevState.complementingRecord,
+        editingRecord: !prevState.editingRecord,
+        record: {
+          attributes: {
+            ...prevState.record.attributes,
+            ...newAttrs
+          }
+        }
+      };
+    });
   }
 
   onEditFormShowMoreRecordAdd (recordId, recordAttributes) {
