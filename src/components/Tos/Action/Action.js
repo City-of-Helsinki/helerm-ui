@@ -82,12 +82,17 @@ export class Action extends React.Component {
     );
   }
 
+  mergeChildAttributesToStateAttributes = (stateAttrs, childattrs) => {
+    const newAttrs = {};
+    // Gather attributes from child & assign them to current state record
+    Object.keys(stateAttrs).map((key) => Object.assign(newAttrs, { [key]: childattrs[key] && childattrs[key]['value'] }));
+    return newAttrs
+  }
+
   onEditFormShowMoreRecord (e, { newAttributes }) {
     e.preventDefault();
     this.setState(prevState => {
-      const newAttrs = {};
-      // Gather attributes from child & assign them to current state record
-      Object.keys(prevState.record.attributes).map((key) => Object.assign(newAttrs, { [key]: newAttributes[key] && newAttributes[key]['value'] }));
+      const newAttrs = this.mergeChildAttributesToStateAttributes(this.sate.record.attributes, newAttributes);
 
       return {
         complementingRecord: !prevState.complementingRecord,
@@ -101,23 +106,6 @@ export class Action extends React.Component {
         }
       };
     });
-  }
-
-  onEditFormShowMoreRecordAdd (recordId, recordAttributes) {
-    this.setState(
-      {
-        record: {
-          id: recordId,
-          attributes: recordAttributes
-        }
-      },
-      () => {
-        this.setState({
-          complementingRecordAdd: !this.state.complementingRecordAdd,
-          creatingRecord: !this.state.creatingRecord
-        });
-      }
-    );
   }
 
   toggleReorderView () {
@@ -261,12 +249,37 @@ export class Action extends React.Component {
     });
   }
 
-  complementRecordForm (recordId, recordAttributes) {
+  complementRecordForm (e, recordAttributes) {
+    const newAttrs = {};
+    Object.keys(recordAttributes).map((key) => Object.assign(newAttrs, { [key]: recordAttributes[key] && recordAttributes[key]['value'] }));
+
     this.setState(
       {
         record: {
-          id: recordId,
-          attributes: recordAttributes
+          ...this.state.record,
+          attributes: newAttrs
+        }
+      },
+      () => {
+        this.setState({
+          complementingRecordAdd: !this.state.complementingRecordAdd,
+          creatingRecord: !this.state.creatingRecord
+        });
+      }
+    );
+  }
+
+  onEditFormShowMoreRecordAdd (e, { newAttributes }) {
+    const newAttrs = this.mergeChildAttributesToStateAttributes(this.state.record.attributes, newAttributes);
+
+    this.setState(
+      {
+        record: {
+          ...this.state.record,
+          attributes: {
+            ...this.state.record.attributes,
+            ...newAttrs
+          }
         }
       },
       () => {
