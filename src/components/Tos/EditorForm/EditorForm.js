@@ -508,10 +508,10 @@ export class EditorForm extends React.Component {
           }
           break;
         case 'record':
-          if (action === 'add') {
+          if (action === 'add' || action === 'complement') {
             this.addRecord(e, targetId);
           }
-          if (action === 'edit' || action === 'complement') {
+          if (action === 'edit' || action === 'complement-record') {
             this.editElement(e, targetId, stopEditing);
             displayMessage({
               title: 'Asiakirja',
@@ -579,8 +579,6 @@ export class EditorForm extends React.Component {
 
   render () {
     const { attributeTypes, targetId, onShowMore, onShowMoreForm } = this.props;
-    console.log('this.props.attributes', this.props.attributes);
-    console.log('attributeTypes', attributeTypes);
     const attributeElements = this.generateAttributeElements(attributeTypes);
 
     let shoMoreLabel;
@@ -591,7 +589,6 @@ export class EditorForm extends React.Component {
     } else if (this.props.editorConfig.action === 'add') {
       shoMoreLabel = 'Näytä Lisäää';
     }
-
     return (
       <div className='add-box col-xs-12'>
         <h4>{this.resolveLabel()}</h4>

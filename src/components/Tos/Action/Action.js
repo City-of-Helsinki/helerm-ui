@@ -74,6 +74,8 @@ export class Action extends React.Component {
   }
 
   onEditFormShowMoreAction (e) {
+    console.log('1');
+
     e.preventDefault();
     this.setState(prevState => ({
       complementingAction: !prevState.complementingAction,
@@ -90,9 +92,10 @@ export class Action extends React.Component {
   }
 
   onEditFormShowMoreRecord (e, { newAttributes }) {
+    console.log('2');
     e.preventDefault();
     this.setState(prevState => {
-      const newAttrs = this.mergeChildAttributesToStateAttributes(this.sate.record.attributes, newAttributes);
+      const newAttrs = this.mergeChildAttributesToStateAttributes(this.state.record.attributes, newAttributes);
 
       return {
         complementingRecord: !prevState.complementingRecord,
@@ -221,14 +224,19 @@ export class Action extends React.Component {
   }
 
   createNewRecord () {
+    console.log('this is running');
+    console.log('3');
+
     this.setState({ creatingRecord: true });
   }
 
   cancelRecordCreation () {
+    console.log('4');
     this.setState({ creatingRecord: false });
   }
 
   editRecordForm (recordId, recordAttributes) {
+    console.log('5');
     this.setState(
       {
         record: {
@@ -243,6 +251,7 @@ export class Action extends React.Component {
   }
 
   cancelRecordEdit () {
+    console.log('6');
     this.setState({
       editingRecord: false,
       recordId: undefined
@@ -250,6 +259,7 @@ export class Action extends React.Component {
   }
 
   complementRecordForm (e, recordAttributes) {
+    console.log('7');
     const newAttrs = {};
     Object.keys(recordAttributes).map((key) => Object.assign(newAttrs, { [key]: recordAttributes[key] && recordAttributes[key]['value'] }));
 
@@ -270,6 +280,7 @@ export class Action extends React.Component {
   }
 
   onEditFormShowMoreRecordAdd (e, { newAttributes }) {
+    console.log('8');
     const newAttrs = this.mergeChildAttributesToStateAttributes(this.state.record.attributes, newAttributes);
 
     this.setState(
@@ -289,13 +300,16 @@ export class Action extends React.Component {
   }
 
   cancelRecordComplement () {
+    console.log('9');
     this.setState({
       complementingRecord: false,
+      complementingRecordAdd: false,
       recordId: undefined
     });
   }
 
   editRecordWithForm (attributes, recordId, disableEditMode = true) {
+    console.log('10');
     this.props.editRecord(attributes, recordId);
     if (disableEditMode) {
       this.disableEditMode();
@@ -312,7 +326,11 @@ export class Action extends React.Component {
   }
 
   createRecord (attributes, actionId) {
-    this.setState({ creatingRecord: false });
+    console.log('11');
+    this.setState({
+      creatingRecord: false,
+      complementingRecordAdd: false
+    });
     this.props.addRecord(attributes, actionId);
   }
 
@@ -617,16 +635,15 @@ export class Action extends React.Component {
                     displayMessage={this.props.displayMessage}
                   />
                 )}
-
                 {this.state.complementingRecordAdd && (
                   <EditorForm
                     onShowMore={this.onEditFormShowMoreRecordAdd}
-                    targetId={this.state.record.id}
+                    targetId={this.props.action.id}
                     attributes={this.state.record.attributes}
                     attributeTypes={this.props.attributeTypes}
                     elementConfig={{
                       elementTypes: this.props.recordTypes,
-                      editWithForm: this.editRecordWithForm
+                      createRecord: this.createRecord
                     }}
                     editorConfig={{
                       type: 'record',
