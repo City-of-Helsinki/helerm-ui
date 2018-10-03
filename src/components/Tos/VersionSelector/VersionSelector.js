@@ -8,13 +8,11 @@ import { getStatusLabel, formatDateTime } from 'utils/helpers';
 import './VersionSelector.scss';
 
 const getVersionLabel = ({
-  version,
   state,
   modified_at: modifiedAt,
   modified_by: modifiedBy
 }) => {
-  const versionOrEmpty = version ? `${version}: ` : '';
-  return `${versionOrEmpty} ${getStatusLabel(state)}, ${formatDateTime(modifiedAt)}${
+  return `${getStatusLabel(state)}, ${formatDateTime(modifiedAt)}${
     typeof modifiedBy === 'string' ? `, ${modifiedBy}` : ''
   }`;
 };
