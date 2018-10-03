@@ -270,13 +270,13 @@ export class Action extends React.Component {
   }
 
   onEditFormShowMoreRecordAdd (e, { newAttributes }) {
-    const newAttrs = this.mergeChildAttributesToStateAttributes(this.state.record.attributes, newAttributes);
-
+    // TODO: handle merge the attributes of createNewRecordForm here
     this.setState(
       {
         record: {
-          ...this.state.record,
-          attributes: newAttrs
+          attributes: {
+            ...this.state.record.attributes
+          }
         }
       },
       () => {
