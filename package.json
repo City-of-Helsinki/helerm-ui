@@ -123,7 +123,6 @@
     "raven-js": "^3.17.0",
     "react": "^15.4.1",
     "react-addons-css-transition-group": "^15.4.1",
-    "react-csv": "^1.0.15-RC2",
     "react-dnd": "^2.3.0",
     "react-dnd-html5-backend": "^2.1.2",
     "react-dom": "^15.4.1",
@@ -146,6 +145,7 @@
     "webpack": "^3.6.0",
     "webpack-dev-middleware": "^1.12.0",
     "webpack-hot-middleware": "^2.12.2",
+    "xlsx": "^0.14.0",
     "yargs": "^5.0.0"
   },
   "devDependencies": {

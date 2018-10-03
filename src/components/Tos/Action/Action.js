@@ -92,7 +92,7 @@ export class Action extends React.Component {
   onEditFormShowMoreRecord (e, { newAttributes }) {
     e.preventDefault();
     this.setState(prevState => {
-      const newAttrs = this.mergeChildAttributesToStateAttributes(this.sate.record.attributes, newAttributes);
+      const newAttrs = this.mergeChildAttributesToStateAttributes(prevState.record.attributes, newAttributes);
 
       return {
         complementingRecord: !prevState.complementingRecord,

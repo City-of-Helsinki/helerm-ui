@@ -448,12 +448,14 @@ export class ViewTOS extends React.Component {
     const formattedDateTime = formatDateTime(modified_at);
 
     const attributeElements = [];
+
     const versionData = [
-      { type: 'Versionumero', name: version.toString() },
+      { type: 'Versionumero', name: version && version.toString() },
       { type: 'Tila', name: getStatusLabel(state) },
       { type: 'Muokkausajankohta', name: formattedDateTime },
       { type: 'Muokkaaja', name: modified_by }
     ];
+
     versionData.map((metadata, index) => {
       attributeElements.push(
         <Attribute
@@ -471,6 +473,7 @@ export class ViewTOS extends React.Component {
         />
       );
     });
+
     for (const key in attributeTypes) {
       if (attributes.hasOwnProperty(key) && attributes[key] || key === 'InformationSystem') {
         attributeElements.push(
@@ -492,6 +495,7 @@ export class ViewTOS extends React.Component {
         );
       }
     }
+
     const metadataElement = (
       <div>
         <div className='metadata-data-row__primary'>
@@ -551,6 +555,7 @@ export class ViewTOS extends React.Component {
         </div>
       </div>
     );
+
     return metadataElement;
   }
 
@@ -605,16 +610,19 @@ export class ViewTOS extends React.Component {
       templates,
       params: { id, version }
     } = this.props;
+
     if (!isFetching && selectedTOS.id) {
       const phasesOrder = Object.keys(selectedTOS.phases);
       const phaseElements = this.generatePhases(
         selectedTOS.phases,
         phasesOrder
       );
+
       const TOSMetaData = this.generateMetaData(
         attributeTypes,
         selectedTOS.attributes
       );
+
       return (
         <div key={`${id}.${version}`}>
           <StickyContainer className='col-xs-12 single-tos-container'>

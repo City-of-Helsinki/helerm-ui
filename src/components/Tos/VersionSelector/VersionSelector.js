@@ -8,14 +8,14 @@ import { getStatusLabel, formatDateTime } from 'utils/helpers';
 import './VersionSelector.scss';
 
 const getVersionLabel = ({
-  version,
   state,
   modified_at: modifiedAt,
   modified_by: modifiedBy
-}) =>
-  `${version}: ${getStatusLabel(state)}, ${formatDateTime(modifiedAt)}${
+}) => {
+  return `${getStatusLabel(state)}, ${formatDateTime(modifiedAt)}${
     typeof modifiedBy === 'string' ? `, ${modifiedBy}` : ''
   }`;
+};
 
 const VersionSelector = ({ tosId, currentVersion, versions, router }) => {
   const className = 'helerm-version-selector';
