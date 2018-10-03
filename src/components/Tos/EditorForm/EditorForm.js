@@ -579,17 +579,15 @@ export class EditorForm extends React.Component {
 
   render () {
     const { attributeTypes, targetId, onShowMore, onShowMoreForm } = this.props;
-    console.log('this.props.attributes', this.props.attributes);
-    console.log('attributeTypes', attributeTypes);
     const attributeElements = this.generateAttributeElements(attributeTypes);
 
-    let shoMoreLabel;
+    let showMoreLabel;
     if (this.props.editorConfig.action === 'edit') {
-      shoMoreLabel = 'Näytä Lisää';
+      showMoreLabel = 'Näytä Lisää';
     } else if (this.props.editorConfig.action === 'complement') {
-      shoMoreLabel = 'Näytä Vähemmän';
+      showMoreLabel = 'Näytä Vähemmän';
     } else if (this.props.editorConfig.action === 'add') {
-      shoMoreLabel = 'Näytä Lisäää';
+      showMoreLabel = 'Näytä Lisäää';
     }
 
     return (
@@ -617,10 +615,10 @@ export class EditorForm extends React.Component {
               Peruuta
             </button>
             <button
-              className={shoMoreLabel ? 'btn btn-success pull-right editor-form__cancel' : 'non-display'}
+              className={showMoreLabel ? 'btn btn-success pull-right editor-form__cancel' : 'non-display'}
               onClick={(e) => (this.props.editorConfig.action === 'add') ? onShowMoreForm(e, this.state.newAttributes) : onShowMore(e, this.state)}
             >
-              {shoMoreLabel}
+              {showMoreLabel}
             </button>
           </div>
         </form>
