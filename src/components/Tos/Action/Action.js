@@ -93,6 +93,7 @@ export class Action extends React.Component {
         complementingRecord: !prevState.complementingRecord,
         editingRecord: !prevState.editingRecord,
         record: {
+          ...prevState.record,
           attributes: {
             ...prevState.record.attributes,
             ...newAttrs
