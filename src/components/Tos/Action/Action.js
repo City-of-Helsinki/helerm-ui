@@ -86,7 +86,7 @@ export class Action extends React.Component {
     const newAttrs = {};
     // Gather attributes from child & assign them to current state record
     Object.keys(stateAttrs).map((key) => Object.assign(newAttrs, { [key]: childattrs[key] && childattrs[key]['value'] }));
-    return newAttrs
+    return newAttrs;
   }
 
   onEditFormShowMoreRecord (e, { newAttributes }) {
@@ -276,10 +276,7 @@ export class Action extends React.Component {
       {
         record: {
           ...this.state.record,
-          attributes: {
-            ...this.state.record.attributes,
-            ...newAttrs
-          }
+          attributes: newAttrs
         }
       },
       () => {

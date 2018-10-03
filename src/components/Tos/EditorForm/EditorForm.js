@@ -591,7 +591,7 @@ export class EditorForm extends React.Component {
     } else if (this.props.editorConfig.action === 'add') {
       shoMoreLabel = 'Näytä Lisäää';
     }
-    console.log(this.props.editorConfig.action)
+
     return (
       <div className='add-box col-xs-12'>
         <h4>{this.resolveLabel()}</h4>
