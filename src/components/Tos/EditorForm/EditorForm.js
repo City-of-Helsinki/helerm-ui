@@ -19,9 +19,7 @@ export class EditorForm extends React.Component {
     this.closeEditorForm = this.closeEditorForm.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onFormInputChange = this.onFormInputChange.bind(this);
-    const initialAttributes = this.initializeAttributes(
-      this.props.attributeTypes
-    );
+    const initialAttributes = this.initializeAttributes(props.attributeTypes);
     this.state = {
       newAttributes: initialAttributes,
       initialAttributes
@@ -35,7 +33,7 @@ export class EditorForm extends React.Component {
       if (attributeTypes.hasOwnProperty(key)) {
         initialState = Object.assign({}, initialState, {
           [key]: {
-            value: attributes[key] ? attributes[key] : null,
+            value: attributes[key] || null,
             checked: true
           }
         });
@@ -155,7 +153,6 @@ export class EditorForm extends React.Component {
   getComplementAttributes (attributeTypes, attributesToShow) {
     const { newAttributes } = this.state;
     const complementAttributes = [];
-
     for (const key in attributeTypes) {
       if (
         includes(attributeTypes[key].allowedIn, this.props.editorConfig.type)
@@ -215,10 +212,7 @@ export class EditorForm extends React.Component {
       this.props.attributes
     );
     if (this.props.editorConfig.action === 'complement') {
-      attributesToShow = this.getComplementAttributes(
-        attributeTypes,
-        attributesToShow
-      );
+      attributesToShow = this.getComplementAttributes(attributeTypes);
     }
     const attributeElements = [];
 
@@ -402,34 +396,34 @@ export class EditorForm extends React.Component {
         if (action === 'add') {
           return 'Uusi käsittelyvaihe';
         }
-        if (action === 'edit') {
+        if (action === 'edit' || 'complement') {
           return 'Muokkaa käsittelyvaihetta';
         }
-        if (action === 'complement') {
-          return 'Täydennä käsittelyvaihetta';
-        }
+        // if (action === 'complement') {
+        //   return 'Täydennä käsittelyvaihetta';
+        // }
         break;
       case 'action':
         if (action === 'add') {
           return 'Uusi toimenpide';
         }
-        if (action === 'edit') {
+        if (action === 'edit' || 'complement') {
           return 'Muokkaa toimenpidettä';
         }
-        if (action === 'complement') {
-          return 'Täydennä toimenpidettä';
-        }
+        // if (action === 'complement') {
+        //   return 'Täydennä toimenpidettä';
+        // }
         break;
       case 'record':
-        if (action === 'add') {
+        if (action === 'add' && 'complement') {
           return 'Uusi asiakirja';
         }
-        if (action === 'edit') {
+        if (action === 'edit' && 'complement') {
           return 'Muokkaa asiakirjaa';
         }
-        if (action === 'complement') {
-          return 'Täydennä asiakirjaa';
-        }
+        // if (action === 'complement') {
+        //   return 'Täydennä asiakirjaa';
+        // }
         break;
     }
   }
@@ -481,49 +475,50 @@ export class EditorForm extends React.Component {
    */
   resolveOnSubmit (e, targetId, stopEditing = true) {
     e.preventDefault();
-    const { action, type } = this.props.editorConfig;
+    const { action, type, from } = this.props.editorConfig;
 
     const displayMessage = stopEditing ? this.props.displayMessage : () => {};
-
-    switch (type) {
-      case 'function':
-        if (action === 'edit' || action === 'complement') {
-          this.editMetaData(e, stopEditing);
-          displayMessage({
-            title: 'Metatiedot',
-            body: 'Tietojen muokkaus onnistui!'
-          });
-        }
-        break;
-      case 'phase':
-        if (action === 'edit' || action === 'complement') {
-          this.editElement(e, targetId, stopEditing);
-          displayMessage({
-            title: 'Käsittelyvaihe',
-            body: 'Käsittelyvaiheen muokkaus onnistui!'
-          });
-        }
-        break;
-      case 'action':
-        if (action === 'edit' || action === 'complement') {
-          this.editElement(e, targetId, stopEditing);
-          displayMessage({
-            title: 'Toimenpide',
-            body: 'Toimenpiteen muokkaus onnistui!'
-          });
-        }
-        break;
-      case 'record':
-        if (action === 'add') {
-          this.addRecord(e, targetId);
-        }
-        if (action === 'edit' || action === 'complement') {
-          this.editElement(e, targetId, stopEditing);
-          displayMessage({
-            title: 'Asiakirja',
-            body: 'Asiakirjan muokkaus onnistui!'
-          });
-        }
+    if (targetId) {
+      switch (type) {
+        case 'function':
+          if (action === 'edit' || action === 'complement') {
+            this.editMetaData(e, stopEditing);
+            displayMessage({
+              title: 'Metatiedot',
+              body: 'Tietojen muokkaus onnistui!'
+            });
+          }
+          break;
+        case 'phase':
+          if (action === 'edit' || action === 'complement') {
+            this.editElement(e, targetId, stopEditing);
+            displayMessage({
+              title: 'Käsittelyvaihe',
+              body: 'Käsittelyvaiheen muokkaus onnistui!'
+            });
+          }
+          break;
+        case 'action':
+          if (action === 'edit' || action === 'complement') {
+            this.editElement(e, targetId, stopEditing);
+            displayMessage({
+              title: 'Toimenpide',
+              body: 'Toimenpiteen muokkaus onnistui!'
+            });
+          }
+          break;
+        case 'record':
+          if (action === 'add' || from === 'newRecord') {
+            this.addRecord(e, targetId);
+          }
+          if (action === 'edit' || from === 'editRecord') {
+            this.editElement(e, targetId, stopEditing);
+            displayMessage({
+              title: 'Asiakirja',
+              body: 'Asiakirjan muokkaus onnistui!'
+            });
+          }
+      }
     }
   }
 
@@ -573,9 +568,7 @@ export class EditorForm extends React.Component {
             className='col-xs-6 form-control edit-record__input'
             placeholder={this.resolveSpecifierPlaceholder()}
             value={this.state.newAttributes.TypeSpecifier.value || ''}
-            onChange={e =>
-              this.onChange(e.target.value, 'TypeSpecifier', 'value')
-            }
+            onChange={e => this.onChange(e.target.value, 'TypeSpecifier', 'value')}
           />
         </div>
       </div>
@@ -583,8 +576,17 @@ export class EditorForm extends React.Component {
   }
 
   render () {
-    const { attributeTypes, targetId } = this.props;
+    const { attributeTypes, targetId, onShowMore, onShowMoreForm } = this.props;
     const attributeElements = this.generateAttributeElements(attributeTypes);
+
+    let showMoreLabel;
+    if (this.props.editorConfig.action === 'edit') {
+      showMoreLabel = 'Näytä Lisää';
+    } else if (this.props.editorConfig.action === 'complement') {
+      showMoreLabel = 'Näytä Vähemmän';
+    } else if (this.props.editorConfig.action === 'add') {
+      showMoreLabel = 'Näytä Lisää';
+    }
 
     return (
       <div className='add-box col-xs-12'>
@@ -610,6 +612,12 @@ export class EditorForm extends React.Component {
             >
               Peruuta
             </button>
+            <button
+              className={showMoreLabel ? 'btn btn-success pull-right editor-form__cancel' : 'non-display'}
+              onClick={(e) => (this.props.editorConfig.action === 'add' || (this.props.editorConfig.action === 'complement' && this.props.complementRecordAdd)) ? onShowMoreForm(e, this.state.newAttributes) : onShowMore(e, this.state)}
+            >
+              {showMoreLabel}
+            </button>
           </div>
         </form>
       </div>
@@ -621,17 +629,21 @@ EditorForm.propTypes = {
   attributeTypes: PropTypes.object.isRequired,
   attributes: PropTypes.object.isRequired,
   closeEditorForm: PropTypes.func.isRequired,
+  complementRecordAdd: PropTypes.func,
   displayMessage: PropTypes.func.isRequired,
   editMetaDataWithForm: PropTypes.func,
   editorConfig: PropTypes.shape({
     type: PropTypes.string.isRequired,
-    action: PropTypes.string.isRequired
+    action: PropTypes.string.isRequired,
+    from: PropTypes.string
   }),
   elementConfig: PropTypes.shape({
     editWithForm: PropTypes.func,
     elementTypes: PropTypes.object.isRequired,
     createRecord: PropTypes.func // only records created with editorform
   }),
+  onShowMore: PropTypes.func,
+  onShowMoreForm: PropTypes.func,
   targetId: PropTypes.string
 };
 

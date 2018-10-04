@@ -42,6 +42,8 @@ export class Phase extends React.Component {
     this.toggleImportView = this.toggleImportView.bind(this);
     this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
     this.cancelActionCreation = this.cancelActionCreation.bind(this);
+    this.onEditFormShowMorePhase = this.onEditFormShowMorePhase.bind(this);
+    this.onAddFormShowMoreAction = this.onAddFormShowMoreAction.bind(this);
     this.state = {
       typeSpecifier: this.props.phase.attributes.TypeSpecifier || null,
       type: this.props.phase.attributes.PhaseType || null,
@@ -57,7 +59,8 @@ export class Phase extends React.Component {
       deleting: false,
       showReorderView: false,
       showImportView: false,
-      showAttributes: false
+      showAttributes: false,
+      showMore: false
     };
   }
 
@@ -73,6 +76,15 @@ export class Phase extends React.Component {
     if (nextProps.documentState === 'view') {
       this.disableEditMode();
     }
+  }
+
+  onEditFormShowMorePhase (e) {
+    e.preventDefault();
+    this.setState(prevState => ({
+      complementingPhase: !prevState.complementingPhase,
+      editingPhase: !prevState.editingPhase
+    })
+    );
   }
 
   toggleAttributeVisibility () {
@@ -109,11 +121,11 @@ export class Phase extends React.Component {
     }
   }
 
-  complementPhaseForm () {
-    if (this.props.documentState === 'edit') {
-      this.setState({ complementingPhase: true, mode: 'edit' });
-    }
-  }
+  // complementPhaseForm () {
+  //   if (this.props.documentState === 'edit') {
+  //     this.setState({ complementingPhase: true, mode: 'edit' });
+  //   }
+  // }
 
   disableEditMode () {
     this.setState({
@@ -261,14 +273,22 @@ export class Phase extends React.Component {
     return options;
   }
 
-  generateDefaultAttributes (attributeTypes, type) {
+  generateDefaultAttributes (attributeTypes, type, showMore) {
     const attributes = {};
     for (const key in attributeTypes) {
-      if (attributeTypes.hasOwnProperty(key) && attributeTypes[key].defaultIn.indexOf(type) >= 0) {
+      if (attributeTypes.hasOwnProperty(key) && ((this.state.showMore && attributeTypes[key].allowedIn.indexOf(type) >= 0 && key !== 'ActionType') || (!this.state.showMore && attributeTypes[key].defaultIn.indexOf(type) >= 0)) && key !== 'TypeSpecifier') {
         attributes[key] = attributeTypes[key];
       }
     }
     return attributes;
+  }
+
+  onAddFormShowMoreAction (e) {
+    e.preventDefault();
+    this.setState(prevState => ({
+      showMore: !prevState.showMore
+    })
+    );
   }
 
   generateActions (actions) {
@@ -320,12 +340,12 @@ export class Phase extends React.Component {
         style: 'btn-primary',
         action: () => this.editPhaseForm()
       },
-      {
-        text: 'Täydennä metatietoja',
-        icon: 'fa-plus-square',
-        style: 'btn-primary',
-        action: () => this.complementPhaseForm()
-      },
+      // {
+      //   text: 'Täydennä metatietoja',
+      //   icon: 'fa-plus-square',
+      //   style: 'btn-primary',
+      //   action: () => this.complementPhaseForm()
+      // },
       {
         text: 'Järjestä toimenpiteitä',
         icon: 'fa-th-list',
@@ -498,6 +518,7 @@ export class Phase extends React.Component {
           {this.state.mode === 'edit' &&
             this.state.editingPhase && (
               <EditorForm
+                onShowMore={this.onEditFormShowMorePhase}
                 targetId={this.props.phase.id}
                 attributes={this.props.phase.attributes}
                 attributeTypes={this.props.attributeTypes}
@@ -516,6 +537,7 @@ export class Phase extends React.Component {
           {this.state.mode === 'edit' &&
             this.state.complementingPhase && (
               <EditorForm
+                onShowMore={this.onEditFormShowMorePhase}
                 targetId={this.props.phase.id}
                 attributes={this.props.phase.attributes}
                 attributeTypes={this.props.attributeTypes}
@@ -566,6 +588,9 @@ export class Phase extends React.Component {
                     onTypeChange={this.onActionTypeChange}
                     onTypeInputChange={this.onActionTypeInputChange}
                     cancel={this.cancelActionCreation}
+                    onAddFormShowMore={this.onAddFormShowMoreAction}
+                    showMoreOrLess={this.state.showMore}
+
                   />
                 )}
                 <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>

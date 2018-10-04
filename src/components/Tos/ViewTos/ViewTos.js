@@ -21,7 +21,8 @@ import {
   validateTOS,
   validatePhase,
   validateAction,
-  validateRecord
+  validateRecord,
+  validateConditionalRules
 } from '../../../utils/validators';
 
 import './ViewTos.scss';
@@ -42,15 +43,15 @@ export class ViewTOS extends React.Component {
     this.onPhaseDefaultAttributeChange = this.onPhaseDefaultAttributeChange.bind(this);
     this.onPhaseTypeChange = this.onPhaseTypeChange.bind(this);
     this.onPhaseTypeInputChange = this.onPhaseTypeInputChange.bind(this);
-    this.onPhaseTypeSpecifierChange = this.onPhaseTypeSpecifierChange.bind(
-      this
-    );
+    this.onPhaseTypeSpecifierChange = this.onPhaseTypeSpecifierChange.bind(this);
     this.routerWillLeave = this.routerWillLeave.bind(this);
     this.saveDraft = this.saveDraft.bind(this);
     this.setPhaseVisibility = this.setPhaseVisibility.bind(this);
     this.updateFunctionAttribute = this.updateFunctionAttribute.bind(this);
     this.setValidationVisibility = this.setValidationVisibility.bind(this);
     this.review = this.review.bind(this);
+    this.onEditFormShowMoreMetaData = this.onEditFormShowMoreMetaData.bind(this);
+    this.onAddFormShowMorePhase = this.onAddFormShowMorePhase.bind(this);
 
     this.state = {
       createPhaseMode: false,
@@ -64,6 +65,7 @@ export class ViewTOS extends React.Component {
       showReorderView: false,
       showMetadata: false,
       showValidationBar: false,
+      showMore: false,
       update: ''
     };
   }
@@ -117,6 +119,15 @@ export class ViewTOS extends React.Component {
 
   componentWillUnmount () {
     this.props.clearTOS();
+  }
+
+  onEditFormShowMoreMetaData (e) {
+    e.preventDefault();
+    this.setState(prevState => ({
+      complementingMetaData: !prevState.complementingMetaData,
+      editingMetaData: !prevState.editingMetaData
+    })
+    );
   }
 
   routerWillLeave (e) {
@@ -384,11 +395,29 @@ export class ViewTOS extends React.Component {
   generateDefaultAttributes (attributeTypes, type) {
     const attributes = {};
     for (const key in attributeTypes) {
-      if (attributeTypes.hasOwnProperty(key) && attributeTypes[key].defaultIn.indexOf(type) >= 0) {
+      if (attributeTypes.hasOwnProperty(key) && ((this.state.showMore && attributeTypes[key].allowedIn.indexOf(type) >= 0 && key !== 'PhaseType') || (!this.state.showMore && attributeTypes[key].defaultIn.indexOf(type) >= 0)) && key !== 'TypeSpecifier') {
         attributes[key] = attributeTypes[key];
+
+        if (attributeTypes[key].requiredIf.length) {
+          if (
+            validateConditionalRules(key, attributeTypes)
+          ) {
+            attributes[key] = attributeTypes[key];
+          }
+        } else {
+          attributes[key] = attributeTypes[key];
+        }
       }
     }
     return attributes;
+  }
+
+  onAddFormShowMorePhase (e) {
+    e.preventDefault();
+    this.setState(prevState => ({
+      showMore: !prevState.showMore
+    })
+    );
   }
 
   generateTypeOptions (typeOptions) {
@@ -415,6 +444,7 @@ export class ViewTOS extends React.Component {
       state,
       modified_by
     } = this.props.selectedTOS;
+
     const formattedDateTime = formatDateTime(modified_at);
 
     const attributeElements = [];
@@ -497,12 +527,12 @@ export class ViewTOS extends React.Component {
                     style: 'btn-primary',
                     action: () => this.setState({ editingMetaData: true })
                   },
-                  {
-                    text: 'Täydennä metatietoja',
-                    icon: 'fa-plus-square',
-                    style: 'btn-primary',
-                    action: () => this.setState({ complementingMetaData: true })
-                  },
+                  // {
+                  //   text: 'Täydennä metatietoja',
+                  //   icon: 'fa-plus-square',
+                  //   style: 'btn-primary',
+                  //   action: () => this.setState({ complementingMetaData: true })
+                  // },
                   {
                     text: 'Tuo kuvaus',
                     icon: 'fa-clone',
@@ -626,6 +656,7 @@ export class ViewTOS extends React.Component {
                 <div className='general-info space-between'>
                   {this.state.editingMetaData && (
                     <EditorForm
+                      onShowMore={this.onEditFormShowMoreMetaData}
                       targetId={this.props.selectedTOS.id}
                       attributes={this.props.selectedTOS.attributes}
                       attributeTypes={this.props.attributeTypes}
@@ -640,6 +671,7 @@ export class ViewTOS extends React.Component {
                   )}
                   {this.state.complementingMetaData && (
                     <EditorForm
+                      onShowMore={this.onEditFormShowMoreMetaData}
                       targetId={this.props.selectedTOS.id}
                       attributes={this.props.selectedTOS.attributes}
                       attributeTypes={this.props.attributeTypes}
@@ -725,6 +757,8 @@ export class ViewTOS extends React.Component {
                       onTypeChange={this.onPhaseTypeChange}
                       onTypeInputChange={this.onPhaseTypeInputChange}
                       cancel={this.cancelPhaseCreation}
+                      onAddFormShowMore={this.onAddFormShowMorePhase}
+                      showMoreOrLess={this.state.showMore}
                     />
                   )}
                   {phaseElements}

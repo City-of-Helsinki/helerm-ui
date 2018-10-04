@@ -104,15 +104,15 @@ export class Record extends React.Component {
                   this.props.record.attributes
                 )
               },
-              {
-                text: 'Täydennä metatietoja',
-                icon: 'fa-plus-square',
-                style: 'btn-primary',
-                action: () => this.props.complementRecordForm(
-                  this.props.record.id,
-                  this.props.record.attributes
-                )
-              },
+              // {
+              //   text: 'Täydennä metatietoja',
+              //   icon: 'fa-plus-square',
+              //   style: 'btn-primary',
+              //   action: () => this.props.complementRecordForm(
+              //     this.props.record.id,
+              //     this.props.record.attributes
+              //   )
+              // },
               {
                 text: 'Poista asiakirja',
                 icon: 'fa-trash',
@@ -175,7 +175,7 @@ export class Record extends React.Component {
 
 Record.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
-  complementRecordForm: React.PropTypes.func.isRequired,
+  // complementRecordForm: React.PropTypes.func.isRequired,
   documentState: React.PropTypes.string.isRequired,
   editRecordAttribute: React.PropTypes.func.isRequired,
   editRecordForm: React.PropTypes.func.isRequired,
