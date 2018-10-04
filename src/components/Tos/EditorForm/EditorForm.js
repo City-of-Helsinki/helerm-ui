@@ -585,7 +585,7 @@ export class EditorForm extends React.Component {
     } else if (this.props.editorConfig.action === 'complement') {
       showMoreLabel = 'Näytä Vähemmän';
     } else if (this.props.editorConfig.action === 'add') {
-      showMoreLabel = 'Näytä Lisäää';
+      showMoreLabel = 'Näytä Lisää';
     }
 
     return (
