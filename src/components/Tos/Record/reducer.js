@@ -72,7 +72,6 @@ export const addRecordAction = (state, { payload }) => {
 };
 
 export const editRecordAction = (state, { payload }) => {
-  console.log(state.records, payload.recordId);
   return update(state, {
     records: {
       [payload.recordId]: {

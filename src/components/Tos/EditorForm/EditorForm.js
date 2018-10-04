@@ -475,7 +475,7 @@ export class EditorForm extends React.Component {
    */
   resolveOnSubmit (e, targetId, stopEditing = true) {
     e.preventDefault();
-    const { action, type } = this.props.editorConfig;
+    const { action, type, from } = this.props.editorConfig;
 
     const displayMessage = stopEditing ? this.props.displayMessage : () => {};
     if (targetId) {
@@ -508,10 +508,10 @@ export class EditorForm extends React.Component {
           }
           break;
         case 'record':
-          if (action === 'add') {
+          if (action === 'add' || from === 'newRecord') {
             this.addRecord(e, targetId);
           }
-          if (action === 'edit' || action === 'complement') {
+          if (action === 'edit' || from === 'editRecord') {
             this.editElement(e, targetId, stopEditing);
             displayMessage({
               title: 'Asiakirja',
@@ -530,12 +530,10 @@ export class EditorForm extends React.Component {
   closeEditorForm (e) {
     e.preventDefault();
     // Reset local state
-    console.log('keke', this.props);
     this.setState(
       ({ initialAttributes }) => ({ newAttributes: initialAttributes }),
       () => {
         const { targetId, closeEditorForm } = this.props;
-        console.log('targetId', targetId);
         this.resolveOnSubmit(e, targetId, false);
         closeEditorForm();
       }
@@ -616,7 +614,7 @@ export class EditorForm extends React.Component {
             </button>
             <button
               className={showMoreLabel ? 'btn btn-success pull-right editor-form__cancel' : 'non-display'}
-              onClick={(e) => (this.props.editorConfig.action === 'add') ? onShowMoreForm(e, this.state.newAttributes) : onShowMore(e, this.state)}
+              onClick={(e) => (this.props.editorConfig.action === 'add' || (this.props.editorConfig.action === 'complement' && this.props.complementRecordAdd)) ? onShowMoreForm(e, this.state.newAttributes) : onShowMore(e, this.state)}
             >
               {showMoreLabel}
             </button>
@@ -631,11 +629,13 @@ EditorForm.propTypes = {
   attributeTypes: PropTypes.object.isRequired,
   attributes: PropTypes.object.isRequired,
   closeEditorForm: PropTypes.func.isRequired,
+  complementRecordAdd: PropTypes.func,
   displayMessage: PropTypes.func.isRequired,
   editMetaDataWithForm: PropTypes.func,
   editorConfig: PropTypes.shape({
     type: PropTypes.string.isRequired,
-    action: PropTypes.string.isRequired
+    action: PropTypes.string.isRequired,
+    from: PropTypes.string
   }),
   elementConfig: PropTypes.shape({
     editWithForm: PropTypes.func,

@@ -102,23 +102,6 @@ export const AddElementInput = ({
   onAddFormShowMore,
   showMoreOrLess
 }) => {
-  console.log('onAddFormShowMore', onAddFormShowMore);
-  // const defaultAttributes = { PersonalData: { allowValuesOutsideChoicesIn: [],
-  //   allowedIn: ['record', 'function'],
-  //   defaultIn: [],
-  //   index: 16,
-  //   multiIn: [],
-  //   name: 'Henkilötietoluonne',
-  //   required: true,
-  //   requiredIf: [],
-  //   requiredIn: ['record', 'function'],
-  //   values: [{ created_at: '2017-03-01T14:32:37.971521+02:00',
-  //     id: '6ade9d17bdaa46da8a3b2cb8bd62e411',
-  //     index: 1,
-  //     modified_at: '2017-03-01T14:32:37.971530+02:00',
-  //     value: 'Ei sisällä henkilötietoja' }]
-  // } };
-
   return (
     <form onSubmit={submit} className='row add-element'>
       <h5 className='col-xs-12'>{resolveHeader(type)}</h5>
@@ -160,7 +143,7 @@ export const AddElementInput = ({
         placeholder={resolveSpecifierPlaceHolder(type)}/>
       </div>
       {!isEmpty(defaultAttributes) &&
-      Object.keys(defaultAttributes).map(key => console.log('defaultAttributes', defaultAttributes) || (
+      Object.keys(defaultAttributes).map(key => (
         <div className='col-xs-12 col-md-6' key={`${type}_${key}`}>
           { defaultAttributes[key].values.length !== 0
             ? <Select.Creatable
@@ -217,7 +200,7 @@ AddElementInput.propTypes = {
   onTypeChange: React.PropTypes.func.isRequired,
   onTypeInputChange: React.PropTypes.func.isRequired,
   onTypeSpecifierChange: React.PropTypes.func.isRequired,
-  showMoreOrLess: React.PropTypes.boolean,
+  showMoreOrLess: React.PropTypes.bool,
   submit: React.PropTypes.func.isRequired,
   type: React.PropTypes.string.isRequired,
   typeOptions: React.PropTypes.array.isRequired

@@ -39,6 +39,7 @@ export class Action extends React.Component {
     this.onEditFormShowMoreAction = this.onEditFormShowMoreAction.bind(this);
     this.onEditFormShowMoreRecord = this.onEditFormShowMoreRecord.bind(this);
     this.onEditFormShowMoreRecordAdd = this.onEditFormShowMoreRecordAdd.bind(this);
+    this.complementRecordAdd = this.complementRecordAdd.bind(this);
     this.state = {
       attributes: this.props.action.attributes,
       complementingAction: false,
@@ -55,7 +56,8 @@ export class Action extends React.Component {
       showImportView: false,
       showReorderView: false,
       type: this.props.action.attributes.ActionType || null,
-      typeSpecifier: this.props.action.attributes.TypeSpecifier || null
+      typeSpecifier: this.props.action.attributes.TypeSpecifier || null,
+      complementRecordAdd: false
     };
   }
 
@@ -142,11 +144,11 @@ export class Action extends React.Component {
     }
   }
 
-  // complementActionForm () {
-  //   if (this.props.documentState === 'edit') {
-  //     this.setState({ complementingAction: true, mode: 'edit' });
-  //   }
-  // }
+  complementRecordAdd () {
+    if (this.props.documentState !== 'edit') {
+      this.setState({ complementRecordAdd: true });
+    }
+  }
 
   disableEditMode () {
     this.setState({
@@ -269,14 +271,15 @@ export class Action extends React.Component {
     );
   }
 
-  onEditFormShowMoreRecordAdd (e, { newAttributes }) {
+  onEditFormShowMoreRecordAdd (e, recordAttributes) {
     // TODO: handle merge the attributes of createNewRecordForm here
+    const newAttrs = {};
+    Object.keys(recordAttributes).map((key) => Object.assign(newAttrs, { [key]: recordAttributes[key] && recordAttributes[key]['value'] }));
     this.setState(
       {
         record: {
-          attributes: {
-            ...this.state.record.attributes
-          }
+          ...this.state.record,
+          attributes: newAttrs
         }
       },
       () => {
@@ -291,6 +294,7 @@ export class Action extends React.Component {
   cancelRecordComplement () {
     this.setState({
       complementingRecord: false,
+      complementingRecordAdd: false,
       recordId: undefined
     });
   }
@@ -312,7 +316,10 @@ export class Action extends React.Component {
   }
 
   createRecord (attributes, actionId) {
-    this.setState({ creatingRecord: false });
+    this.setState({
+      creatingRecord: false,
+      complementingRecordAdd: false
+    });
     this.props.addRecord(attributes, actionId);
   }
 
@@ -611,7 +618,8 @@ export class Action extends React.Component {
                     }}
                     editorConfig={{
                       type: 'record',
-                      action: 'complement'
+                      action: 'complement',
+                      from: 'editRecord'
                     }}
                     closeEditorForm={this.cancelRecordComplement}
                     displayMessage={this.props.displayMessage}
@@ -620,18 +628,21 @@ export class Action extends React.Component {
 
                 {this.state.complementingRecordAdd && (
                   <EditorForm
-                    onShowMore={this.onEditFormShowMoreRecordAdd}
-                    targetId={this.state.record.id}
+                    onShowMoreForm={this.onEditFormShowMoreRecordAdd}
+                    targetId={this.props.action.id}
                     attributes={this.state.record.attributes}
                     attributeTypes={this.props.attributeTypes}
                     elementConfig={{
                       elementTypes: this.props.recordTypes,
-                      editWithForm: this.editRecordWithForm
+                      createRecord: this.createRecord
                     }}
                     editorConfig={{
                       type: 'record',
-                      action: 'complement'
+                      action: 'complement',
+                      from: 'newRecord'
+
                     }}
+                    complementRecordAdd={this.complementRecordAdd}
                     closeEditorForm={this.cancelRecordComplement}
                     displayMessage={this.props.displayMessage}
                   />
