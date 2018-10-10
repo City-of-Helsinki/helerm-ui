@@ -175,14 +175,10 @@ export const AddElementInput = ({
         </div>
       ))
     }
-      <div className='col-xs-12 col-md-6 add-element-buttons'>
-        <button
-        className='btn btn-danger col-xs-6'
-        onClick={cancel}>
-        Peruuta
-      </button>
-        <button className='btn btn-primary col-xs-6' type='submit'>Lisää</button>
-        <button className='btn btn-success col-xs-6' onClick={onAddFormShowMore}>{showMoreOrLess ? 'Näytää Vänhemään' : 'Näytää Lisää'}</button>
+      <div className='add-element-buttons'>
+        <button className='btn btn-success' onClick={onAddFormShowMore}>{showMoreOrLess ? 'Näytä Vähemmän' : 'Näytä Lisää'}</button>
+        <button className='btn btn-danger' onClick={cancel}>Peruuta</button>
+        <button className='btn btn-primary' type='submit'>Lisää</button>
       </div>
     </form>
   )
