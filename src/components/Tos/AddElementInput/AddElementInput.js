@@ -178,7 +178,7 @@ export const AddElementInput = ({
       <div className='add-element-buttons'>
         <button className='btn btn-success' onClick={onAddFormShowMore}>{showMoreOrLess ? 'Näytä vähemmän' : 'Näytä lisää'}</button>
         <button className='btn btn-danger' onClick={cancel}>Peruuta</button>
-        <button className='btn btn-primary' type='submit'>Lisää</button>
+        <button className='btn btn-primary' type='submit'>OK</button>
       </div>
     </form>
   )
