@@ -450,7 +450,7 @@ export class ViewTOS extends React.Component {
 
     const versionData = [
       { type: 'Tila', name: getStatusLabel(state) },
-      { type: 'Muokkausajankohta ja muokkaaja', name: `${formattedDateTime} ${modifiedBy}` }
+      { type: 'Muokkausajankohta, muokkaaja', name: `${formattedDateTime}, ${modifiedBy}` }
     ];
 
     versionData.map((metadata, index) => {
