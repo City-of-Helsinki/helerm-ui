@@ -7,7 +7,7 @@ const ip = require('ip');
 const dotenv = require('dotenv');
 const pkgVersion = require('../package.json').version;
 
-const gitRevisionPlugin = new GitRevisionPlugin();
+const gitRevisionPlugin = new GitRevisionPlugin({ lightweightTags: true });
 let gitVersion, gitCommit;
 
 // Handle situtations where we're outside Git
