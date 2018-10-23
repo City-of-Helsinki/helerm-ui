@@ -440,20 +440,17 @@ export class ViewTOS extends React.Component {
       modified_at,
       documentState,
       editRecord,
-      version,
-      state,
-      modified_by
+      state
     } = this.props.selectedTOS;
 
     const formattedDateTime = formatDateTime(modified_at);
 
     const attributeElements = [];
+    const modifiedBy = this.props.selectedTOS.modified_by || '';
 
     const versionData = [
-      { type: 'Versionumero', name: version && version.toString() },
       { type: 'Tila', name: getStatusLabel(state) },
-      { type: 'Muokkausajankohta', name: formattedDateTime },
-      { type: 'Muokkaaja', name: modified_by }
+      { type: 'Muokkausajankohta ja muokkaaja', name: `${formattedDateTime} ${modifiedBy}` }
     ];
 
     versionData.map((metadata, index) => {
