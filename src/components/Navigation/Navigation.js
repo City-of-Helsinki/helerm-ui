@@ -3,6 +3,8 @@ import classnames from 'classnames';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
+import isArray from 'lodash/isArray';
+import isEmpty from 'lodash/isEmpty';
 import InfinityMenu from '../InfinityMenu/infinityMenu';
 import SearchFilter from './SearchFilter';
 
@@ -110,11 +112,54 @@ export class Navigation extends React.Component {
     // Deepcopy original item to disable mutation
     const deepCopy = (item) => JSON.parse(JSON.stringify(item));
 
+    const getItemFilters = (item, currentPath, nextPath) => {
+      const itemFilters = [];
+      const itemValue = get(item, currentPath.concat([nextPath]).join('.'));
+      if (isArray(itemValue)) {
+        Object.keys(itemValue).forEach((index) => itemFilters.push(currentPath.concat([nextPath, index])));
+      } else if (!isEmpty(itemValue)) {
+        itemFilters.push(currentPath.concat([nextPath]));
+      }
+      return itemFilters;
+    };
+
+    const getItemFilterPaths = (path, item) => {
+      // returns item filter paths e.g.
+      // [
+      //   ['phases', 0, 'actions', 0, 'records', 0, 'attributes', 'RetentionPeriod'],
+      //   ['phases', 1, 'actions', 0, 'records', 0, 'attributes', 'RetentionPeriod']
+      // ]
+      return path.split('.').reduce((currentFilters, currentPath) => {
+        const next = [];
+        if (currentFilters.length) {
+          currentFilters.forEach((a) => {
+            const itemFilters = getItemFilters(item, a, currentPath);
+            itemFilters.forEach((itemFilter) => next.push(itemFilter));
+          });
+        } else {
+          const itemFilters = getItemFilters(item, [], currentPath);
+          itemFilters.forEach((itemFilter) => next.push(itemFilter));
+        }
+        return next;
+      }, []);
+    };
+
     // The actual filtering
     const filterFunction = (item) => {
       const matchesFilters = Object.keys(filters).map((key) => {
         const currentFilter = filters[key].values;
-        return currentFilter.length ? includes(currentFilter, get(item, filters[key].path)) : true;
+        const paths = filters[key].path;
+        if (currentFilter.length) {
+          return paths.some((path) => {
+            const filterPaths = getItemFilterPaths(path, item);
+            return filterPaths.some((filterPath) => {
+              if (includes(currentFilter, get(item, filterPath.join('.')))) {
+                return true;
+              }
+            });
+          });
+        }
+        return true;
       }).every((item) => !!item);
 
       return matchesFilters || item.children && (item.children = item.children.filter(filterFunction)).length;
@@ -218,3 +263,4 @@ export class Navigation extends React.Component {
 }
 
 export default Navigation;
+
