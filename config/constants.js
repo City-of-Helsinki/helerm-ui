@@ -35,11 +35,14 @@ export const retentionPeriodFilters = [
 // export for easier administration
 export const navigationStateFilters = {
   statusFilters: {
-    path: 'function_state',
+    path: ['function_state'],
     values: []
   },
   retentionPeriodFilters: {
-    path: 'function_attributes.RetentionPeriod',
+    path: [
+      'function_attributes.RetentionPeriod',
+      'phases.actions.records.attributes.RetentionPeriod'
+    ],
     values: []
   }
 };
