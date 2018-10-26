@@ -41,7 +41,7 @@ export class Navigation extends React.Component {
   }
 
   componentDidMount () {
-    this.props.fetchNavigation();
+    this.props.fetchNavigation(this.isDetailSearch());
   }
 
   componentWillReceiveProps (nextProps) {
@@ -65,7 +65,7 @@ export class Navigation extends React.Component {
 
   updateNavigation () {
     this.stopSearching();
-    this.props.fetchNavigation();
+    this.props.fetchNavigation(this.isDetailSearch());
   }
 
   stopSearching = () => {

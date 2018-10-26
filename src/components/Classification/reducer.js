@@ -80,7 +80,8 @@ export function createTos () {
         return res.json();
       })
       .then(json => {
-        dispatch(fetchNavigation());
+        const includeRelated = getState().navigation.includeRelated;
+        dispatch(fetchNavigation(includeRelated));
         return dispatch(receiveNewTOS(json));
       });
   };

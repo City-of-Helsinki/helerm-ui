@@ -20,7 +20,7 @@ export class Header extends React.Component {
           <Link
             to='/'
             className='brand-title navbar-brand'
-            onClick={this.props.fetchNavigation}
+            onClick={() => this.props.fetchNavigation(false)}
             >
             Tiedonohjausjärjestelmä
           </Link>

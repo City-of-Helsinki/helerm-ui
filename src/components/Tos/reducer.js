@@ -157,6 +157,7 @@ export function changeStatus (status) {
   return function (dispatch, getState) {
     dispatch(createAction(REQUEST_TOS)());
     const tos = Object.assign({}, getState().selectedTOS);
+    const includeRelated = getState().navigation.includeRelated;
 
     return api.patch(`function/${tos.id}`, { state: status })
       .then(res => {
@@ -167,7 +168,7 @@ export function changeStatus (status) {
         return res.json();
       })
       .then(json => dispatch(receiveTOS(json)))
-      .then(dispatch(fetchNavigation()));
+      .then(dispatch(fetchNavigation(includeRelated)));
   };
 }
 
