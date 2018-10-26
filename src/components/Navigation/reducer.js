@@ -7,6 +7,7 @@ import { convertToTree } from '../../utils/helpers';
 import { default as api } from '../../utils/api.js';
 
 const initialState = {
+  includeRelated: false,
   isFetching: false,
   items: [],
   is_open: true,
@@ -17,8 +18,8 @@ export const REQUEST_NAVIGATION = 'requestNavigationAction';
 export const RECEIVE_NAVIGATION = 'receiveNavigationAction';
 export const SET_NAVIGATION_VISIBILITY = 'setNavigationVisibilityAction';
 
-export function requestNavigation () {
-  return createAction(REQUEST_NAVIGATION)();
+export function requestNavigation (includeRelated) {
+  return createAction(REQUEST_NAVIGATION)(includeRelated);
 }
 
 export function receiveNavigation (items) {
@@ -30,10 +31,10 @@ export function setNavigationVisibility (value) {
   return createAction(SET_NAVIGATION_VISIBILITY)(value);
 }
 
-export function fetchNavigation () {
+export function fetchNavigation (includeRelated = false) {
   return function (dispatch) {
-    dispatch(requestNavigation());
-    return api.get('classification', { page_size: RESULTS_PER_PAGE || DEFAULT_PAGE_SIZE })
+    dispatch(requestNavigation(includeRelated));
+    return api.get('classification', { include_related: includeRelated, page_size: RESULTS_PER_PAGE || DEFAULT_PAGE_SIZE })
       .then(response => response.json())
       .then(json =>
         dispatch(receiveNavigation(json))
@@ -41,8 +42,9 @@ export function fetchNavigation () {
   };
 }
 
-const requestNavigationAction = (state) => {
+const requestNavigationAction = (state, { payload }) => {
   return update(state, {
+    includeRelated: { $set: payload },
     isFetching: {
       $set: true
     }
