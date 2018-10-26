@@ -20,18 +20,6 @@ export const statusFilters = [
   { value: APPROVED, label: 'Hyväksytty', default: true }
 ];
 
-// Retention-period filters
-export const retentionPeriodFilters = [
-  { value: '-1', label: -1 },
-  { value: '1', label: 1 },
-  { value: '20', label: 20 },
-  { value: '25', label: 25 },
-  { value: '30', label: 30 },
-  { value: '40', label: 40 },
-  { value: '50', label: 50 },
-  { value: '120', label: 120 }
-];
-
 // export for easier administration
 export const navigationStateFilters = {
   statusFilters: {

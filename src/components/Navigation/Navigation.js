@@ -8,7 +8,7 @@ import isEmpty from 'lodash/isEmpty';
 import InfinityMenu from '../InfinityMenu/infinityMenu';
 import SearchFilter from './SearchFilter';
 
-import { statusFilters, retentionPeriodFilters, navigationStateFilters } from '../../../config/constants';
+import { statusFilters, navigationStateFilters } from '../../../config/constants';
 
 import './Navigation.scss';
 
@@ -198,10 +198,12 @@ export class Navigation extends React.Component {
   }
 
   getFilters = () => {
-    const { isUser } = this.props;
+    const { attributeTypes, isUser } = this.props;
     const isDetailSearch = this.isDetailSearch();
     const statusFilterOptions = isUser ? statusFilters : filter(statusFilters, { default:true });
     const statusFilterPlaceholder = this.props.isUser ? 'Suodata viimeisen tilan mukaan...' : 'Suodata tilan mukaan...';
+    const retentionPeriods = attributeTypes && attributeTypes.RetentionPeriod ? attributeTypes.RetentionPeriod.values : [];
+    const retentionPeriodOptions = retentionPeriods.map((option) => ({ value: option.value, label: option.value }));
 
     return (
       <div className={classnames({ 'filters row': isDetailSearch })}>
@@ -215,7 +217,7 @@ export class Navigation extends React.Component {
         <SearchFilter
           placeholder={'Suodata säilytysajan mukaan'}
           value={this.state.filters.retentionPeriodFilters.values}
-          options={retentionPeriodFilters}
+          options={retentionPeriodOptions}
           handleChange={(values) => this.handleFilterChange(values, 'retentionPeriodFilters')}
           isVisible={isDetailSearch}
         />
