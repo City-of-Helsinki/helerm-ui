@@ -40,7 +40,6 @@ export class Phase extends React.Component {
     this.renderPhaseButtons = this.renderPhaseButtons.bind(this);
     this.renderBasicAttributes = this.renderBasicAttributes.bind(this);
     this.toggleImportView = this.toggleImportView.bind(this);
-    this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
     this.cancelActionCreation = this.cancelActionCreation.bind(this);
     this.onEditFormShowMorePhase = this.onEditFormShowMorePhase.bind(this);
     this.onAddFormShowMoreAction = this.onAddFormShowMoreAction.bind(this);
@@ -59,7 +58,6 @@ export class Phase extends React.Component {
       deleting: false,
       showReorderView: false,
       showImportView: false,
-      showAttributes: false,
       showMore: false
     };
   }
@@ -85,12 +83,6 @@ export class Phase extends React.Component {
       editingPhase: !prevState.editingPhase
     })
     );
-  }
-
-  toggleAttributeVisibility () {
-    const currentVisibility = this.state.showAttributes;
-    const newVisibility = !currentVisibility;
-    this.setState({ showAttributes: newVisibility });
   }
 
   toggleReorderView () {
@@ -319,6 +311,8 @@ export class Phase extends React.Component {
             changeOrder={this.props.changeOrder}
             importItems={this.props.importItems}
             displayMessage={this.props.displayMessage}
+            setActionVisibility={this.props.setActionVisibility}
+            setRecordVisibility={this.props.setRecordVisibility}
           />
         );
       }
@@ -419,11 +413,11 @@ export class Phase extends React.Component {
         {this.showAttributeButton(this.props.phase.attributes) && (
           <button
             className='btn btn-info btn-xs record-button pull-right'
-            onClick={this.toggleAttributeVisibility}
+            onClick={() => this.props.setPhaseAttributesVisibility(this.props.phaseIndex, !this.props.phase.is_attributes_open)}
           >
             <span
               className={
-                'fa ' + (this.state.showAttributes ? 'fa-minus' : 'fa-plus')
+                'fa ' + (this.props.phase.is_attributes_open ? 'fa-minus' : 'fa-plus')
               }
               aria-hidden='true'
             />
@@ -488,7 +482,7 @@ export class Phase extends React.Component {
       <Sticky
         className={
           'phase-title ' +
-          (this.state.showAttributes ? 'phase-open' : 'phase-closed')
+          (this.props.phase.is_attributes_open ? 'phase-open' : 'phase-closed')
         }
       >
         <div className='basic-attributes'>
@@ -567,7 +561,7 @@ export class Phase extends React.Component {
                   updateTypeSpecifier={this.updateTypeSpecifier}
                   updateType={this.updatePhaseType}
                   updateAttribute={this.updatePhaseAttribute}
-                  showAttributes={this.state.showAttributes}
+                  showAttributes={phase.is_attributes_open}
                 />
                 {this.state.mode === 'add' && (
                   <AddElementInput
@@ -690,7 +684,10 @@ Phase.propTypes = {
   removeAction: React.PropTypes.func.isRequired,
   removePhase: React.PropTypes.func.isRequired,
   removeRecord: React.PropTypes.func.isRequired,
+  setActionVisibility: React.PropTypes.func.isRequired,
+  setPhaseAttributesVisibility: React.PropTypes.func.isRequired,
   setPhaseVisibility: React.PropTypes.func.isRequired,
+  setRecordVisibility: React.PropTypes.func.isRequired,
   update: React.PropTypes.string.isRequired
 };
 

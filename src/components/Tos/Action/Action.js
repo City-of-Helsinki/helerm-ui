@@ -34,7 +34,6 @@ export class Action extends React.Component {
     this.updateActionAttribute = this.updateActionAttribute.bind(this);
     this.renderActionButtons = this.renderActionButtons.bind(this);
     this.renderBasicAttributes = this.renderBasicAttributes.bind(this);
-    this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
     this.disableEditMode = this.disableEditMode.bind(this);
     this.onEditFormShowMoreAction = this.onEditFormShowMoreAction.bind(this);
     this.onEditFormShowMoreRecord = this.onEditFormShowMoreRecord.bind(this);
@@ -52,7 +51,6 @@ export class Action extends React.Component {
       editingType: false,
       editingTypeSpecifier: false,
       mode: 'view',
-      showAttributes: false,
       showImportView: false,
       showReorderView: false,
       type: this.props.action.attributes.ActionType || null,
@@ -118,12 +116,6 @@ export class Action extends React.Component {
   toggleImportView () {
     const current = this.state.showImportView;
     this.setState({ showImportView: !current });
-  }
-
-  toggleAttributeVisibility () {
-    const currentVisibility = this.state.showAttributes;
-    const newVisibility = !currentVisibility;
-    this.setState({ showAttributes: newVisibility });
   }
 
   editTypeSpecifier () {
@@ -339,6 +331,7 @@ export class Action extends React.Component {
             documentState={this.props.documentState}
             attributeTypes={this.props.attributeTypes}
             displayMessage={this.props.displayMessage}
+            setRecordVisibility={this.props.setRecordVisibility}
           />
         );
       }
@@ -419,11 +412,14 @@ export class Action extends React.Component {
         {this.showAttributeButton(this.props.action.attributes) && (
           <button
             className='btn btn-info btn-xs record-button pull-right'
-            onClick={this.toggleAttributeVisibility}
+            onClick={() => this.props.setActionVisibility(
+              this.props.action.id,
+              !this.props.action.is_open
+            )}
           >
             <span
               className={
-                'fa ' + (this.state.showAttributes ? 'fa-minus' : 'fa-plus')
+                'fa ' + (this.props.action.is_open ? 'fa-minus' : 'fa-plus')
               }
               aria-hidden='true'
             />
@@ -488,7 +484,7 @@ export class Action extends React.Component {
       <Sticky
         className={
           'action-title ' +
-          (this.state.showAttributes ? 'action-open' : 'action-closed')
+          (this.props.action.is_open ? 'action-open' : 'action-closed')
         }
       >
         <div className='basic-attributes'>
@@ -567,7 +563,7 @@ export class Action extends React.Component {
                   updateTypeSpecifier={this.updateTypeSpecifier}
                   updateType={this.updateActionType}
                   updateAttribute={this.updateActionAttribute}
-                  showAttributes={this.state.showAttributes}
+                  showAttributes={action.is_open}
                 />
                 {
                  this.state.creatingRecord && (
@@ -750,7 +746,9 @@ Action.propTypes = {
   recordTypes: React.PropTypes.object.isRequired,
   records: React.PropTypes.object.isRequired,
   removeAction: React.PropTypes.func.isRequired,
-  removeRecord: React.PropTypes.func.isRequired
+  removeRecord: React.PropTypes.func.isRequired,
+  setActionVisibility: React.PropTypes.func.isRequired,
+  setRecordVisibility: React.PropTypes.func.isRequired
 };
 
 export default Action;

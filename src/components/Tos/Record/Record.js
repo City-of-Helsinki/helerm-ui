@@ -10,12 +10,10 @@ export class Record extends React.Component {
     super(props);
 
     this.renderRecordButtons = this.renderRecordButtons.bind(this);
-    this.toggleAttributeVisibility = this.toggleAttributeVisibility.bind(this);
     this.updateTypeSpecifier = this.updateTypeSpecifier.bind(this);
     this.updateRecordType = this.updateRecordType.bind(this);
     this.updateRecordAttribute = this.updateRecordAttribute.bind(this);
     this.state = {
-      showAttributes: false,
       mode: 'view',
       deleting: false,
       typeSpecifier: this.props.record.attributes.TypeSpecifier,
@@ -26,12 +24,6 @@ export class Record extends React.Component {
 
   setMode (value) {
     this.setState({ mode: value });
-  }
-
-  toggleAttributeVisibility () {
-    const currentVisibility = this.state.showAttributes;
-    const newVisibility = !currentVisibility;
-    this.setState({ showAttributes: newVisibility });
   }
 
   updateTypeSpecifier (typeSpecifier, recordId) {
@@ -126,9 +118,12 @@ export class Record extends React.Component {
           { this.showAttributeButton(this.props.record.attributes) &&
             <button
               className='btn btn-info btn-xs record-button pull-right'
-              onClick={this.toggleAttributeVisibility}>
+              onClick={() => this.props.setRecordVisibility(
+                this.props.record.id,
+                !this.props.record.is_open
+              )}>
               <span
-                className={'fa ' + (this.state.showAttributes ? 'fa-minus' : 'fa-plus')}
+                className={'fa ' + (this.props.record.is_open ? 'fa-minus' : 'fa-plus')}
                 aria-hidden='true'
               />
             </button>
@@ -142,7 +137,7 @@ export class Record extends React.Component {
     const { attributeTypes, recordTypes, record, documentState } = this.props;
 
     return (
-      <div className={'record col-xs-12 ' + (this.state.showAttributes ? 'record-open' : 'record-closed')}>
+      <div className={'record col-xs-12 ' + (record.is_open ? 'record-open' : 'record-closed')}>
         <Attributes
           element={record}
           documentState={documentState}
@@ -153,7 +148,7 @@ export class Record extends React.Component {
           updateTypeSpecifier={this.updateTypeSpecifier}
           updateType={this.updateRecordType}
           updateAttribute={this.updateRecordAttribute}
-          showAttributes={this.state.showAttributes}
+          showAttributes={record.is_open}
         />
         { this.state.deleting &&
         <Popup
@@ -181,7 +176,8 @@ Record.propTypes = {
   editRecordForm: React.PropTypes.func.isRequired,
   record: React.PropTypes.object.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
-  removeRecord: React.PropTypes.func.isRequired
+  removeRecord: React.PropTypes.func.isRequired,
+  setRecordVisibility: React.PropTypes.func.isRequired
 };
 
 export default Record;

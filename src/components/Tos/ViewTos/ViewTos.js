@@ -63,7 +63,6 @@ export class ViewTOS extends React.Component {
       showCloneView: false,
       showImportView: false,
       showReorderView: false,
-      showMetadata: false,
       showValidationBar: false,
       showMore: false,
       update: ''
@@ -272,10 +271,6 @@ export class ViewTOS extends React.Component {
       });
   }
 
-  toggleMetadataVisibility (current) {
-    this.setState({ showMetadata: !current });
-  }
-
   addPhase () {
     this.setState({ createPhaseMode: true });
   }
@@ -441,7 +436,8 @@ export class ViewTOS extends React.Component {
       documentState,
       editRecord,
       state,
-      modified_by: modifiedBy
+      modified_by: modifiedBy,
+      is_open: isOpen
     } = this.props.selectedTOS;
 
     const formattedDateTime = formatDateTime(modified_at);
@@ -487,7 +483,7 @@ export class ViewTOS extends React.Component {
             documentState={documentState}
             editable={true}
             editRecord={this.props.editRecord}
-            showAttributes={this.state.showMetadata}
+            showAttributes={isOpen}
             tosAttribute={true}
             updateFunctionAttribute={this.updateFunctionAttribute}
             parentType='function'
@@ -505,14 +501,12 @@ export class ViewTOS extends React.Component {
           <button
             type='button'
             className='btn btn-info btn-sm'
-            title={this.state.showMetadata ? 'Pienennä' : 'Laajenna'}
-            onClick={() =>
-              this.toggleMetadataVisibility(this.state.showMetadata)
-            }
+            title={isOpen ? 'Pienennä' : 'Laajenna'}
+            onClick={() => this.props.setMetadataVisibility(!isOpen)}
           >
             <span
               className={
-                'fa ' + (this.state.showMetadata ? 'fa-minus' : 'fa-plus')
+                'fa ' + (isOpen ? 'fa-minus' : 'fa-plus')
               }
               aria-hidden='true'
             />
@@ -548,7 +542,7 @@ export class ViewTOS extends React.Component {
         <div
           className={
             'metadata-data-row__secondary ' +
-            (this.state.showMetadata ? '' : 'hidden')
+            (this.props.selectedTOS.is_open ? '' : 'hidden')
           }
         >
           {attributeElements.slice(2)}
@@ -570,7 +564,10 @@ export class ViewTOS extends React.Component {
               phaseIndex={phases[key].id}
               phase={this.props.selectedTOS.phases[key]}
               phasesOrder={phasesOrder}
+              setActionVisibility={this.props.setActionVisibility}
+              setPhaseAttributesVisibility={this.props.setPhaseAttributesVisibility}
               setPhaseVisibility={this.setPhaseVisibility}
+              setRecordVisibility={this.props.setRecordVisibility}
               actions={this.props.selectedTOS.actions}
               actionTypes={this.props.actionTypes}
               phases={this.props.selectedTOS.phases}
@@ -651,6 +648,32 @@ export class ViewTOS extends React.Component {
                     versions={selectedTOS.version_history}
                   />
                 </div>
+                <div className='col-md-6 button-row visibility-buttons'>
+                  <button
+                    className='btn btn-default btn-sm pull-right'
+                    onClick={() =>
+                      this.props.setTosVisibility(selectedTOS, true)
+                    }
+                  >
+                    Avaa kaikki tiedot
+                  </button>
+                  <button
+                    className='btn btn-default btn-sm pull-right'
+                    onClick={() =>
+                      this.props.setPhasesVisibility(selectedTOS.phases, true)
+                    }
+                  >
+                    Avaa perustiedot
+                  </button>
+                  <button
+                    className='btn btn-default btn-sm pull-right'
+                    onClick={() =>
+                      this.props.setTosVisibility(selectedTOS, false)
+                    }
+                  >
+                    Pienennä kaikki
+                  </button>
+                </div>
               </div>
               <div className='row'>
                 <div className='general-info space-between'>
@@ -720,22 +743,6 @@ export class ViewTOS extends React.Component {
                         />
                       </span>
                     )}
-                  <button
-                    className='btn btn-default btn-sm pull-right'
-                    onClick={() =>
-                      this.props.setPhasesVisibility(selectedTOS.phases, true)
-                    }
-                  >
-                    Avaa kaikki
-                  </button>
-                  <button
-                    className='btn btn-default btn-sm pull-right'
-                    onClick={() =>
-                      this.props.setPhasesVisibility(selectedTOS.phases, false)
-                    }
-                  >
-                    Pienennä kaikki
-                  </button>
                 </div>
                 <div className='col-xs-12'>
                   {this.state.createPhaseMode && (
@@ -864,10 +871,15 @@ ViewTOS.propTypes = {
   router: routerShape.isRequired,
   saveDraft: PropTypes.func.isRequired,
   selectedTOS: PropTypes.object.isRequired,
+  setActionVisibility: PropTypes.func.isRequired,
   setDocumentState: PropTypes.func.isRequired,
+  setMetadataVisibility: PropTypes.func.isRequired,
   setNavigationVisibility: PropTypes.func.isRequired,
+  setPhaseAttributesVisibility: PropTypes.func.isRequired,
   setPhaseVisibility: PropTypes.func.isRequired,
   setPhasesVisibility: PropTypes.func.isRequired,
+  setRecordVisibility: PropTypes.func.isRequired,
+  setTosVisibility: PropTypes.func.isRequired,
   setValidationVisibility: PropTypes.func.isRequired,
   templates: PropTypes.array.isRequired
 };

@@ -6,6 +6,7 @@ export const ADD_ACTION = 'addActionAction';
 export const EDIT_ACTION = 'editActionAction';
 export const EDIT_ACTION_ATTRIBUTE = 'editActionAttributeAction';
 export const REMOVE_ACTION = 'removeActionAction';
+export const SET_ACTION_VISIBILITY = 'setActionVisibilityAction';
 
 export function addAction (typeSpecifier, actionType, actionAttibutes, phaseIndex) {
   const actionId = Math.random().toString(36).replace(/[^a-z]+/g, '');
@@ -18,7 +19,8 @@ export function addAction (typeSpecifier, actionType, actionAttibutes, phaseInde
     id: actionId,
     phase: phaseIndex,
     records: [],
-    attributes
+    attributes,
+    is_open: false
   };
   return createAction(ADD_ACTION)(newAction);
 }
@@ -48,6 +50,14 @@ export function editActionAttribute (editedActionAttribute) {
 export function removeAction (actionToRemove, phaseId) {
   return createAction(REMOVE_ACTION)({ actionToRemove, phaseId });
 }
+
+export function setActionVisibility (action, visibility) {
+  return createAction(SET_ACTION_VISIBILITY)({ action, visibility });
+}
+
+// ------------------------------------
+// Action Handlers
+// ------------------------------------
 
 export const addActionAction = (state, { payload }) => {
   return update(state, {
@@ -146,6 +156,18 @@ export const removeActionAction = (state, { payload }) => {
     },
     records: {
       $set: stateCopy.records
+    }
+  });
+};
+
+export const setActionVisibilityAction = (state, { payload }) => {
+  return update(state, {
+    actions: {
+      [payload.action]: {
+        is_open: {
+          $set: payload.visibility
+        }
+      }
     }
   });
 };
