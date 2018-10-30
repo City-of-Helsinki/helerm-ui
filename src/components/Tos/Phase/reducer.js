@@ -5,6 +5,7 @@ export const ADD_PHASE = 'addPhaseAction';
 export const EDIT_PHASE = 'editPhaseAction';
 export const EDIT_PHASE_ATTRIBUTE = 'editPhaseAttributeAction';
 export const REMOVE_PHASE = 'removePhaseAction';
+export const SET_PHASE_ATTRIBUTES_VISIBILITY = 'setPhaseAttributesVisibilityAction';
 export const SET_PHASE_VISIBILITY = 'setPhaseVisibilityAction';
 export const SET_PHASES_VISIBILITY = 'setPhasesVisibilityAction';
 
@@ -20,6 +21,7 @@ export function addPhase (typeSpecifier, phaseType, phaseAttributes, parent) {
     function: parent,
     actions: [],
     attributes,
+    is_attributes_open: false,
     is_open: false
   };
 
@@ -50,6 +52,10 @@ export function editPhaseAttribute (editedPhaseAttribute) {
 
 export function removePhase (phaseToRemove) {
   return createAction(REMOVE_PHASE)(phaseToRemove);
+}
+
+export function setPhaseAttributesVisibility (phase, visibility) {
+  return createAction(SET_PHASE_ATTRIBUTES_VISIBILITY)({ phase, visibility });
 }
 
 export function setPhaseVisibility (phase, visibility) {
@@ -139,6 +145,18 @@ export const removePhaseAction = (state, { payload }) => {
   return update(state, {
     phases: {
       $set: phasesCopy
+    }
+  });
+};
+
+export const setPhaseAttributesVisibilityAction = (state, { payload }) => {
+  return update(state, {
+    phases: {
+      [payload.phase]: {
+        is_attributes_open: {
+          $set: payload.visibility
+        }
+      }
     }
   });
 };

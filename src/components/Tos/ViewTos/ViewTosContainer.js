@@ -15,14 +15,17 @@ import {
   fetchTOS,
   resetTOS,
   saveDraft,
-  setDocumentState
+  setDocumentState,
+  setMetadataVisibility,
+  setTosVisibility
 } from '../reducer';
 
 import {
   addAction,
   editAction,
   editActionAttribute,
-  removeAction
+  removeAction,
+  setActionVisibility
 } from '../Action/reducer';
 
 import {
@@ -30,6 +33,7 @@ import {
   editPhase,
   editPhaseAttribute,
   removePhase,
+  setPhaseAttributesVisibility,
   setPhasesVisibility,
   setPhaseVisibility
 } from '../Phase/reducer';
@@ -38,7 +42,8 @@ import {
   addRecord,
   editRecord,
   editRecordAttribute,
-  removeRecord
+  removeRecord,
+  setRecordVisibility
 } from '../Record/reducer';
 
 import { importItems } from '../ImportView/reducer';
@@ -74,12 +79,17 @@ const mapDispatchToProps = dispatch => ({
   resetTOS: bindActionCreators(resetTOS, dispatch),
   saveDraft: bindActionCreators(saveDraft, dispatch),
   setDocumentState: bindActionCreators(setDocumentState, dispatch),
+  setActionVisibility: bindActionCreators(setActionVisibility, dispatch),
   setNavigationVisibility: bindActionCreators(
     setNavigationVisibility,
     dispatch
   ),
+  setMetadataVisibility: bindActionCreators(setMetadataVisibility, dispatch),
+  setPhaseAttributesVisibility: bindActionCreators(setPhaseAttributesVisibility, dispatch),
   setPhasesVisibility: bindActionCreators(setPhasesVisibility, dispatch),
   setPhaseVisibility: bindActionCreators(setPhaseVisibility, dispatch),
+  setRecordVisibility: bindActionCreators(setRecordVisibility, dispatch),
+  setTosVisibility: bindActionCreators(setTosVisibility, dispatch),
   setValidationVisibility: bindActionCreators(setValidationVisibility, dispatch)
 });
 

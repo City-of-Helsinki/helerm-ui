@@ -7,7 +7,8 @@ import {
   addActionAction,
   editActionAction,
   editActionAttributeAction,
-  removeActionAction
+  removeActionAction,
+  setActionVisibilityAction
 } from './Action/reducer';
 
 import {
@@ -15,6 +16,7 @@ import {
   editPhaseAction,
   editPhaseAttributeAction,
   removePhaseAction,
+  setPhaseAttributesVisibilityAction,
   setPhaseVisibilityAction,
   setPhasesVisibilityAction
 } from './Phase/reducer';
@@ -23,7 +25,8 @@ import {
   addRecordAction,
   editRecordAction,
   editRecordAttributeAction,
-  removeRecordAction
+  removeRecordAction,
+  setRecordVisibilityAction
 } from './Record/reducer';
 
 import {
@@ -56,7 +59,8 @@ const initialState = {
   attributes: {},
   documentState: 'view',
   lastUpdated: 0,
-  isFetching: false
+  isFetching: false,
+  is_open: false
 };
 
 // ------------------------------------
@@ -69,6 +73,8 @@ export const RESET_TOS = 'resetTosAction';
 export const CLEAR_TOS = 'clearTosAction';
 export const EDIT_META_DATA = 'editMetaDataAction';
 export const SET_DOCUMENT_STATE = 'setDocumentStateAction';
+export const SET_METADATA_VISIBILITY = 'setMetadataVisibilityAction';
+export const SET_TOS_VISIBILITY = 'setTosVisibilityAction';
 
 // ------------------------------------
 // Actions
@@ -172,6 +178,48 @@ export function changeStatus (status) {
   };
 }
 
+export function setMetadataVisibility (visibility) {
+  return createAction(SET_METADATA_VISIBILITY)(visibility);
+}
+
+export function setTosVisibility (tos, visibility) {
+  const allPhasesOpen = {};
+  const allActionsOpen = {};
+  const allRecordsOpen = {};
+  const { actions, phases, records } = tos;
+  for (const key in phases) {
+    if (phases.hasOwnProperty(key)) {
+      allPhasesOpen[key] = update(phases[key], {
+        is_attributes_open: {
+          $set: visibility
+        },
+        is_open: {
+          $set: visibility
+        }
+      });
+      for (const actionKey in actions) {
+        if (actions.hasOwnProperty(actionKey)) {
+          allActionsOpen[actionKey] = update(actions[actionKey], {
+            is_open: {
+              $set: visibility
+            }
+          });
+        }
+        for (const recordKey in records) {
+          if (records.hasOwnProperty(recordKey)) {
+            allRecordsOpen[recordKey] = update(records[recordKey], {
+              is_open: {
+                $set: visibility
+              }
+            });
+          }
+        }
+      }
+    }
+  }
+  return createAction(SET_TOS_VISIBILITY)({ actions: allActionsOpen, phases: allPhasesOpen, records: allRecordsOpen, visibility });
+}
+
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
@@ -206,6 +254,9 @@ const receiveTosAction = (state, { payload }) => {
       $set: 'view'
     },
     isFetching: {
+      $set: false
+    },
+    is_open: {
       $set: false
     }
   });
@@ -274,6 +325,22 @@ const setDocumentStateAction = (state, { payload }) => {
   });
 };
 
+const setMetadataVisibilityAction = (state, { payload }) => {
+  return update(state, {
+    is_open: { $set: payload }
+  });
+};
+
+const setTosVisibilityAction = (state, { payload }) => {
+  const { actions, phases, records, visibility } = payload;
+  return update(state, {
+    actions: { $set: actions },
+    is_open: { $set: visibility },
+    phases: { $set: phases },
+    records: { $set: records }
+  });
+};
+
 export default handleActions({
   requestTosAction,
   receiveTosAction,
@@ -281,8 +348,13 @@ export default handleActions({
   clearTosAction,
   receiveTemplateAction,
   tosErrorAction,
+  setActionVisibilityAction,
+  setMetadataVisibilityAction,
+  setPhaseAttributesVisibilityAction,
   setPhaseVisibilityAction,
   setPhasesVisibilityAction,
+  setRecordVisibilityAction,
+  setTosVisibilityAction,
   addActionAction,
   addPhaseAction,
   addRecordAction,

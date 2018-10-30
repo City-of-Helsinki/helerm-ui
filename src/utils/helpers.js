@@ -62,9 +62,11 @@ export function convertToTree (itemList) {
 export function normalizeTosFromApi (tos) {
   tos.phases.map((phase, phaseIndex) => {
     phase.index = phase.index || phaseIndex;
+    phase.is_attributes_open = false;
     phase.is_open = false;
     phase.actions.map((action, actionIndex) => {
       action.index = action.index || actionIndex;
+      action.is_open = false;
       action.records.map((record, recordIndex) => {
         record.index = record.index || recordIndex;
         record.is_open = false;

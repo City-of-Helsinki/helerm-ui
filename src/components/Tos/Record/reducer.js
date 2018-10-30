@@ -6,6 +6,7 @@ export const ADD_RECORD = 'addRecordAction';
 export const EDIT_RECORD = 'editRecordAction';
 export const EDIT_RECORD_ATTRIBUTE = 'editRecordAttributeAction';
 export const REMOVE_RECORD = 'removeRecordAction';
+export const SET_RECORD_VISIBILITY = 'setRecordVisibilityAction';
 
 export function addRecord (attributes, actionId) {
   const recordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
@@ -53,6 +54,14 @@ export function editRecordAttribute (editedRecord) {
 export function removeRecord (recordToRemove, actionId) {
   return createAction(REMOVE_RECORD)({ recordToRemove, actionId });
 }
+
+export function setRecordVisibility (record, visibility) {
+  return createAction(SET_RECORD_VISIBILITY)({ record, visibility });
+}
+
+// ------------------------------------
+// Action Handlers
+// ------------------------------------
 
 export const addRecordAction = (state, { payload }) => {
   return update(state, {
@@ -149,6 +158,18 @@ export const removeRecordAction = (state, { payload }) => {
       [payload.actionId]: {
         records: {
           $splice: [[recordIndex, 1]]
+        }
+      }
+    }
+  });
+};
+
+export const setRecordVisibilityAction = (state, { payload }) => {
+  return update(state, {
+    records: {
+      [payload.record]: {
+        is_open: {
+          $set: payload.visibility
         }
       }
     }
