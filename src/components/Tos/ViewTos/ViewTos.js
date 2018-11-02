@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter, routerShape } from 'react-router';
 import { StickyContainer } from 'react-sticky';
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
 
 import Phase from 'components/Tos/Phase/Phase';
 import AddElementInput from 'components/Tos/AddElementInput/AddElementInput';
@@ -40,10 +42,13 @@ export class ViewTOS extends React.Component {
     this.createNewPhase = this.createNewPhase.bind(this);
     this.editMetaDataWithForm = this.editMetaDataWithForm.bind(this);
     this.fetchTOS = this.fetchTOS.bind(this);
+    this.generateEditorFormValidDateFields = this.generateEditorFormValidDateFields.bind(this);
+    this.generateEditorFormValidDateField = this.generateEditorFormValidDateField.bind(this);
     this.onPhaseDefaultAttributeChange = this.onPhaseDefaultAttributeChange.bind(this);
     this.onPhaseTypeChange = this.onPhaseTypeChange.bind(this);
     this.onPhaseTypeInputChange = this.onPhaseTypeInputChange.bind(this);
     this.onPhaseTypeSpecifierChange = this.onPhaseTypeSpecifierChange.bind(this);
+    this.onValidDateChange = this.onValidDateChange.bind(this);
     this.routerWillLeave = this.routerWillLeave.bind(this);
     this.saveDraft = this.saveDraft.bind(this);
     this.setPhaseVisibility = this.setPhaseVisibility.bind(this);
@@ -65,7 +70,11 @@ export class ViewTOS extends React.Component {
       showReorderView: false,
       showValidationBar: false,
       showMore: false,
-      update: ''
+      update: '',
+      validFrom: null,
+      validFromEditing: false,
+      validTo: null,
+      validToEditing: false
     };
   }
 
@@ -111,6 +120,8 @@ export class ViewTOS extends React.Component {
     if (nextProps.selectedTOS.documentState === 'view') {
       this.setState({
         editingMetaData: false,
+        validFromEditing: false,
+        validToEditing: false,
         complementingMetaData: false
       });
     }
@@ -222,11 +233,15 @@ export class ViewTOS extends React.Component {
   }
 
   cancelMetaDataEdit () {
+    const { validFrom, validTo } = this.state;
     this.setState({ editingMetaData: false });
+    this.props.editValidDates({ validFrom, validTo });
   }
 
   cancelMetaDataComplement () {
+    const { validFrom, validTo } = this.state;
     this.setState({ complementingMetaData: false });
+    this.props.editValidDates({ validFrom, validTo });
   }
 
   saveDraft () {
@@ -437,13 +452,15 @@ export class ViewTOS extends React.Component {
       editRecord,
       state,
       modified_by: modifiedBy,
-      is_open: isOpen
+      is_open: isOpen,
+      valid_from: validFrom,
+      valid_to: validTo
     } = this.props.selectedTOS;
-
+    const { validFromEditing, validToEditing } = this.state;
     const formattedDateTime = formatDateTime(modified_at);
-
     const attributeElements = [];
-
+    const validFromData = this.generateValidDateField('Voimassaolo alkaa', 'validFrom', validFrom, validFromEditing);
+    const validToData = this.generateValidDateField('Voimassaolo päättyy', 'validTo', validTo, validToEditing);
     const versionData = [
       { type: 'Tila', name: getStatusLabel(state) },
       {
@@ -519,7 +536,7 @@ export class ViewTOS extends React.Component {
                     text: 'Muokkaa metatietoja',
                     icon: 'fa-pencil',
                     style: 'btn-primary',
-                    action: () => this.setState({ editingMetaData: true })
+                    action: () => this.setState({ editingMetaData: true, validFrom, validTo })
                   },
                   // {
                   //   text: 'Täydennä metatietoja',
@@ -539,6 +556,10 @@ export class ViewTOS extends React.Component {
             </span>
           )}
         </div>
+        <div className='metadata-data-row__primary'>
+          {validFromData}
+          {validToData}
+        </div>
         <div
           className={
             'metadata-data-row__secondary ' +
@@ -551,6 +572,73 @@ export class ViewTOS extends React.Component {
     );
 
     return metadataElement;
+  }
+
+  generateValidDateField (label, field, value, editing) {
+    if (editing) {
+      return (
+        <div className='list-group-item col-xs-6 datepicker-field'>
+          <strong>{label}:</strong>
+          <DatePicker
+            autoFocus={true}
+            dateFormat='DD.MM.YYYY'
+            isClearable={true}
+            locale='fi-fi'
+            selected={value ? moment(value) : null}
+            onChange={(date) => this.onValidDateChange(field, date)}
+          />
+        </div>
+      );
+    }
+    return (
+      <a
+        onClick={() => this.activateValidDateEditMode(field)}
+        className='list-group-item col-xs-6'
+      >
+        <strong>{label}:</strong>
+        <div>{value ? formatDateTime(value, 'DD.MM.YYYY') : '\u00A0'}</div>
+      </a>
+    );
+  }
+
+  generateEditorFormValidDateFields () {
+    const { selectedTOS } = this.props;
+    const validFromData = this.generateEditorFormValidDateField('Voimassaolo alkaa', 'validFrom', selectedTOS.valid_from);
+    const validToData = this.generateEditorFormValidDateField('Voimassaolo päättyy', 'validTo', selectedTOS.valid_to);
+
+    return [validFromData, validToData];
+  }
+
+  generateEditorFormValidDateField (label, field, value) {
+    return (
+      <div key={field} className='col-xs-12 col-lg-6 form-group'>
+        <label className='editor-form__label'>
+          {label}
+        </label>
+        <DatePicker
+          className='form-control edit-record__input'
+          dateFormat='DD.MM.YYYY'
+          isClearable={true}
+          locale='fi-fi'
+          selected={value ? moment(value) : null}
+          onChange={(date) => this.onValidDateChange(field, date)}
+        />
+      </div>
+    );
+  }
+
+  onValidDateChange (key, date) {
+    const value = date ? date.format('YYYY-MM-DD') : null;
+    if (value) {
+      this.setState({ [`${key}Editing`]: false });
+    }
+    this.props.editValidDates({ [key]: value });
+  }
+
+  activateValidDateEditMode (key) {
+    if (this.props.selectedTOS.documentState === 'edit') {
+      this.setState({ [`${key}Editing`]: true });
+    }
   }
 
   generatePhases (phases, phasesOrder) {
@@ -681,6 +769,7 @@ export class ViewTOS extends React.Component {
                     <EditorForm
                       onShowMore={this.onEditFormShowMoreMetaData}
                       targetId={this.props.selectedTOS.id}
+                      additionalFields={this.generateEditorFormValidDateFields()}
                       attributes={this.props.selectedTOS.attributes}
                       attributeTypes={this.props.attributeTypes}
                       editMetaDataWithForm={this.editMetaDataWithForm}
@@ -696,6 +785,7 @@ export class ViewTOS extends React.Component {
                     <EditorForm
                       onShowMore={this.onEditFormShowMoreMetaData}
                       targetId={this.props.selectedTOS.id}
+                      additionalFields={this.generateEditorFormValidDateFields()}
                       attributes={this.props.selectedTOS.attributes}
                       attributeTypes={this.props.attributeTypes}
                       editMetaDataWithForm={this.editMetaDataWithForm}
@@ -854,6 +944,7 @@ ViewTOS.propTypes = {
   editPhaseAttribute: PropTypes.func.isRequired,
   editRecord: PropTypes.func.isRequired,
   editRecordAttribute: PropTypes.func.isRequired,
+  editValidDates: PropTypes.func.isRequired,
   fetchTOS: PropTypes.func.isRequired,
   importItems: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,

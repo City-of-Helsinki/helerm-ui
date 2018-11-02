@@ -89,6 +89,9 @@
     top: 0;
   }
 }
+.metadata-data-row__secondary {
+  clear: both;
+}
 .action-dropdown-button {
   position: absolute;
   right: 25px;
@@ -107,4 +110,11 @@
 
 .basic-attributes {
   padding-bottom: 20px;
+}
+.datepicker-field {
+  color: #555555;
+
+  strong {
+    display: block;
+  }
 }

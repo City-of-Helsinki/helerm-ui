@@ -53,6 +53,8 @@ const initialState = {
   created_at: null,
   modified_at: null,
   modified_by: null,
+  valid_from: null,
+  valid_to: null,
   actions: {},
   phases: {},
   records: {},
@@ -72,6 +74,7 @@ export const TOS_ERROR = 'tosErrorAction';
 export const RESET_TOS = 'resetTosAction';
 export const CLEAR_TOS = 'clearTosAction';
 export const EDIT_META_DATA = 'editMetaDataAction';
+export const EDIT_VALID_DATE = 'editValidDateAction';
 export const SET_DOCUMENT_STATE = 'setDocumentStateAction';
 export const SET_METADATA_VISIBILITY = 'setMetadataVisibilityAction';
 export const SET_TOS_VISIBILITY = 'setTosVisibilityAction';
@@ -106,6 +109,10 @@ export function editMetaData (attributes) {
   }
 
   return createAction(EDIT_META_DATA)(editedMetaData);
+}
+
+export function editValidDates (validDate) {
+  return createAction(EDIT_VALID_DATE)(validDate);
 }
 
 export function setDocumentState (newState) {
@@ -317,6 +324,13 @@ const editMetaDataAction = (state, { payload }) => {
   });
 };
 
+const editValidDateAction = (state, { payload }) => {
+  return update(state, {
+    valid_from: { $set: payload.validFrom !== undefined ? payload.validFrom : state.valid_from },
+    valid_to: { $set: payload.validTo !== undefined ? payload.validTo : state.valid_to }
+  });
+};
+
 const setDocumentStateAction = (state, { payload }) => {
   return update(state, {
     documentState: {
@@ -365,6 +379,7 @@ export default handleActions({
   editRecordAction,
   editRecordAttributeAction,
   editMetaDataAction,
+  editValidDateAction,
   removeActionAction,
   removePhaseAction,
   removeRecordAction,
