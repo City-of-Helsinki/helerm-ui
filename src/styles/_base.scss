@@ -15,6 +15,7 @@ $bootstrap-sass-asset-helper: true;
 @import './vendor/hel-components/variables';
 @import '~bootstrap-sass/assets/stylesheets/bootstrap';
 @import '~font-awesome/scss/font-awesome';
+@import '~react-datepicker/dist/react-datepicker.css';
 @import '~react-select/dist/react-select.css';
 @import './vendor/hel-components/bootswatch-flatly';
 @import '~react-redux-toastr/src/styles/index';

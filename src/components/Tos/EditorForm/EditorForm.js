@@ -598,6 +598,7 @@ export class EditorForm extends React.Component {
           {this.props.editorConfig.type !== 'function'
             ? this.renderDescriptions()
             : null}
+          {this.props.additionalFields || null}
           {attributeElements}
           <div className='col-xs-12'>
             <button
@@ -626,6 +627,7 @@ export class EditorForm extends React.Component {
 }
 
 EditorForm.propTypes = {
+  additionalFields: PropTypes.array,
   attributeTypes: PropTypes.object.isRequired,
   attributes: PropTypes.object.isRequired,
   closeEditorForm: PropTypes.func.isRequired,

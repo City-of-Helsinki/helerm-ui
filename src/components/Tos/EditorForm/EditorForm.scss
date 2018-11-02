@@ -47,6 +47,19 @@
       margin: 0;
     }
   }
+
+  .react-datepicker__input-container {
+    display: block;
+
+    a {
+      position: absolute;
+      right: 5px;
+      top: 50%;
+    }
+    .edit-record__input:not(.additional-information) {
+      margin-bottom: 0;
+    }
+  }
 }
 
 .general-info {

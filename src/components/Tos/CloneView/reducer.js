@@ -46,6 +46,15 @@ export const receiveTemplateAction = (state, { payload }) => {
     },
     isFetching: {
       $set: false
+    },
+    is_open: {
+      $set: false
+    },
+    valid_from: {
+      $set: null
+    },
+    valid_to: {
+      $set: null
     }
   });
 };
