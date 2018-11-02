@@ -10,8 +10,8 @@ import AppContainer from './containers/AppContainer';
 
 // Piwik Configuration
 const piwik = PiwikReactRouter({
-  url: process.env.PIWIK_URL,
-  siteId: process.env.PIWIK_ID
+  url: PIWIK_URL,
+  siteId: PIWIK_ID
 });
 
 // Sentry config
