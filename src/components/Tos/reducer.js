@@ -1,6 +1,6 @@
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
-import { map } from 'lodash';
+import { isEmpty, map, values } from 'lodash';
 
 import { fetchNavigation } from '../Navigation/reducer';
 import {
@@ -146,8 +146,12 @@ export function saveDraft () {
     return api.put(`function/${tos.id}`, denormalizedTos)
       .then(res => {
         if (!res.ok) {
-          dispatch(createAction(TOS_ERROR)());
-          throw Error(res.statusText);
+          return res.json()
+            .then(json => {
+              const message = !isEmpty(json) ? values(json).join(',') : res.statusText;
+              dispatch(createAction(TOS_ERROR)());
+              throw Error(message);
+            });
         }
         return res.json();
       })
