@@ -129,6 +129,7 @@ export class ViewTOS extends React.Component {
 
   componentWillUnmount () {
     this.props.clearTOS();
+    this.props.setValidationVisibility(false);
   }
 
   onEditFormShowMoreMetaData (e) {
