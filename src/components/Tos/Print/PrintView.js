@@ -6,7 +6,6 @@ import { withRouter, Link } from 'react-router';
 import get from 'lodash/get';
 
 import { fetchTOS } from 'components/Tos/reducer';
-import { setValidationVisibility } from 'components/Tos/ValidationBar/reducer';
 import { getStatusLabel, formatDateTime, getNewPath, itemById } from 'utils/helpers';
 
 import MetaDataTable from './MetaDataTable';
@@ -22,11 +21,9 @@ class PrintView extends React.Component {
     const {
       fetchTOS,
       TOS,
-      hideNavigation,
       params: { id, version }
     } = this.props;
     this.addBodyClass();
-    hideNavigation();
 
     const tosAvailable = TOS.id === id && (!version || TOS.version === version);
     if (!tosAvailable) {
@@ -135,7 +132,6 @@ PrintView.propTypes = {
   classification: PropTypes.object,
   fetchTOS: PropTypes.func.isRequired,
   getAttributeName: PropTypes.func.isRequired,
-  hideNavigation: PropTypes.func.isRequired,
   location: PropTypes.object.isRequired,
   params: PropTypes.object,
   sortAttributeKeys: PropTypes.func.isRequired
@@ -179,8 +175,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      fetchTOS,
-      hideNavigation: () => setValidationVisibility(false)
+      fetchTOS
     },
     dispatch
   );
