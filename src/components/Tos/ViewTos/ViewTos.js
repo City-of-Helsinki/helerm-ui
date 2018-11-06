@@ -581,9 +581,10 @@ export class ViewTOS extends React.Component {
           <strong>{label}:</strong>
           <DatePicker
             autoFocus={true}
-            dateFormat='DD.MM.YYYY'
+            dateFormat='D.M.YYYY'
             isClearable={true}
             locale='fi-fi'
+            placeholderText='PP.KK.VVVV'
             selected={value ? moment(value) : null}
             onChange={(date) => this.onValidDateChange(field, date)}
           />
@@ -596,7 +597,7 @@ export class ViewTOS extends React.Component {
         className='list-group-item col-xs-6'
       >
         <strong>{label}:</strong>
-        <div>{value ? formatDateTime(value, 'DD.MM.YYYY') : '\u00A0'}</div>
+        <div>{value ? formatDateTime(value, 'D.M.YYYY') : '\u00A0'}</div>
       </a>
     );
   }
@@ -617,9 +618,10 @@ export class ViewTOS extends React.Component {
         </label>
         <DatePicker
           className='form-control edit-record__input'
-          dateFormat='DD.MM.YYYY'
+          dateFormat='D.M.YYYY'
           isClearable={true}
           locale='fi-fi'
+          placeholderText='PP.KK.VVVV'
           selected={value ? moment(value) : null}
           onChange={(date) => this.onValidDateChange(field, date)}
         />
