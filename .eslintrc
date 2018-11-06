@@ -21,6 +21,8 @@
     "VERSION"               : false,
     "GIT_VERSION"           : false,
     "GIT_COMMIT_HASH"       : false,
+    "PIWIK_URL"             : false,
+    "PIWIK_ID"              : false,
     "SENTRY_REPORT_DIALOG"  : false,
     "SENTRY_DSN"            : false,
     "FEEDBACK_URL"          : false,
