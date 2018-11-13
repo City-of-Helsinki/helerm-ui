@@ -5,12 +5,16 @@ import get from 'lodash/get';
 import includes from 'lodash/includes';
 import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
+import update from 'immutability-helper';
+
 import InfinityMenu from '../InfinityMenu/infinityMenu';
 import SearchFilter from './SearchFilter';
 
 import { statusFilters, navigationStateFilters } from '../../../config/constants';
 
 import './Navigation.scss';
+
+const SEARCH_TIMEOUT = 500;
 
 export class Navigation extends React.Component {
 
@@ -36,7 +40,9 @@ export class Navigation extends React.Component {
     this.state = {
       filters: navigationStateFilters,
       tree: props.items,
-      searchInput: ''
+      searchInputs: [''],
+      searchTimestamp: 0,
+      isSearchChanged: false
     };
   }
 
@@ -70,7 +76,9 @@ export class Navigation extends React.Component {
 
   stopSearching = () => {
     this.setState({
-      searchInput: ''
+      isSearchChanged: false,
+      searchInputs: [''],
+      searchTimestamp: 0
     });
   }
 
@@ -95,10 +103,58 @@ export class Navigation extends React.Component {
     return this.toggleNavigationVisibility();
   }
 
-  setSearchInput = (event) => {
-    this.setState({
-      searchInput: event.target.value
-    });
+  setSearchInput = (index, value) => {
+    const isDetailSearch = this.isDetailSearch();
+    this.setState(update(this.state, {
+      isSearchChanged: {
+        $set: !isDetailSearch
+      },
+      searchInputs: {
+        [index]: {
+          $set: value
+        }
+      },
+      searchTimestamp: {
+        $set: Date.now()
+      }
+    }));
+    if (isDetailSearch) {
+      setTimeout(this.onSearchTimeout, SEARCH_TIMEOUT);
+    }
+  }
+
+  addSearchInput = () => {
+    this.setState(update(this.state, {
+      searchInputs: {
+        $push: ['']
+      }
+    }));
+  }
+
+  removeSearchInput = (index) => {
+    const searchInputs = this.state.searchInputs.length === 1
+      ? { $set: [''] }
+      : { $splice: [[index, 1]] };
+    this.setState(update(this.state, {
+      searchInputs,
+      searchTimestamp: {
+        $set: Date.now()
+      },
+      isSearchChanged: {
+        $set: false
+      }
+    }));
+    if (this.state.searchInputs[index].length > 0) {
+      setTimeout(this.onSearchTimeout, SEARCH_TIMEOUT);
+    }
+  }
+
+  onSearchTimeout = () => {
+    if (!this.state.isSearchChanged) {
+      if (Date.now() - this.state.searchTimestamp >= SEARCH_TIMEOUT) {
+        this.setState({ isSearchChanged: true });
+      }
+    }
   }
 
   getFilteredTree = () => {
@@ -237,20 +293,23 @@ export class Navigation extends React.Component {
 
   render () {
     const { onLeafMouseClick, isFetching, attributeTypes } = this.props;
-    const { searchInput } = this.state;
+    const { isSearchChanged, searchInputs } = this.state;
     const displayExporter = this.hasFilters() && !!this.state.tree.length && this.isDetailSearch();
 
     return (
       <div className='container-fluid helerm-navigation'>
         <InfinityMenu
+          addSearchInput={this.addSearchInput}
           attributeTypes={attributeTypes}
           isOpen={this.props.is_open}
-          isSearching={searchInput !== ''}
+          isSearchChanged={isSearchChanged}
+          isSearching={searchInputs.filter(input => input.length > 0).length > 0}
           isFetching={isFetching}
           onLeafMouseClick={onLeafMouseClick ? (event, leaf) => onLeafMouseClick(event, leaf) : this.onLeafMouseClick}
           onNodeMouseClick={this.onNodeMouseClick}
           path={this.props.tosPath}
-          searchInput={searchInput}
+          removeSearchInput={this.removeSearchInput}
+          searchInputs={searchInputs}
           setSearchInput={this.setSearchInput}
           title={this.createNavigationTitle()}
           toggleNavigationVisibility={this.toggleNavigationVisibility}

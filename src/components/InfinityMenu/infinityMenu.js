@@ -3,11 +3,16 @@ import classnames from 'classnames';
 import { Link } from 'react-router';
 import NestedObjects from 'nested-objects';
 import React, { Component, PropTypes } from 'react';
+import Select from 'react-select';
+import Defiant from 'defiant';
 
 import SearchInput from './searchInput';
 import ClassificationLink from './classificationLink';
 import EmptyTree from './EmptyTree';
 import Exporter from '../Exporter';
+
+const DEFAULT_FILTER_CONDITION = 'and';
+const FILTER_CONDITION_OPTIONS = [{ value: 'and', label: 'JA' }, { value: 'or', label: 'TAI' }];
 
 /**
  * Extracted from https://github.com/socialtables/react-infinity-menu
@@ -15,6 +20,7 @@ import Exporter from '../Exporter';
 export default class InfinityMenu extends Component {
 
   static propTypes = {
+    addSearchInput: PropTypes.func.isRequired,
     attributeTypes: PropTypes.object,
     customComponentMappings: PropTypes.object,
     displayExporter: PropTypes.bool,
@@ -26,6 +32,7 @@ export default class InfinityMenu extends Component {
     isDetailSearch: PropTypes.bool,
     isFetching: PropTypes.bool,
     isOpen: PropTypes.bool,
+    isSearchChanged: PropTypes.bool,
     isSearching: PropTypes.bool,
     loadMoreComponent: PropTypes.func,
     maxLeaves: PropTypes.number,
@@ -34,7 +41,8 @@ export default class InfinityMenu extends Component {
     onLeafMouseUp: PropTypes.func,
     onNodeMouseClick: PropTypes.func,
     path: PropTypes.array,
-    searchInput: PropTypes.string.isRequired,
+    removeSearchInput: PropTypes.func.isRequired,
+    searchInputs: PropTypes.array.isRequired,
     setSearchInput: PropTypes.func.isRequired,
     toggleNavigationVisibility: PropTypes.func,
     tree: PropTypes.array
@@ -58,9 +66,28 @@ export default class InfinityMenu extends Component {
 
   constructor (props) {
     super(props);
+    this.state = {
+      filteredTree: [],
+      snapshots: {},
+      filterCondition: DEFAULT_FILTER_CONDITION
+    };
 
     this.onNodeClick = this.onNodeClick.bind(this);
     this.onLoadMoreClick = this.onLoadMoreClick.bind(this);
+    this.onFilterConditionChange = this.onFilterConditionChange.bind(this);
+  }
+
+  componentWillReceiveProps (nextProps) {
+    const { isDetailSearch, isSearchChanged, searchInputs, tree } = nextProps;
+    const { isSearchChanged: wasSearchChanged, searchInputs: prevInputs } = this.props;
+    if (tree !== this.props.tree) {
+      this.setState({ filteredTree: tree });
+      if (isDetailSearch) {
+        this.createSnapshots(tree);
+      }
+    } else if ((isDetailSearch && isSearchChanged && !wasSearchChanged) || (!isDetailSearch && searchInputs !== prevInputs)) {
+      this.filterTree(searchInputs, tree, isDetailSearch);
+    }
   }
 
   shouldComponentUpdate (nextProps, nextState) {
@@ -73,7 +100,7 @@ export default class InfinityMenu extends Component {
 
   onNodeClick (tree, node, keyPath, event) {
     event.preventDefault();
-    if (!this.props.isSearching || !this.props.searchInput.length) {
+    if (!this.props.isSearching) {
       node.isOpen = !node.isOpen;
       node.maxLeaves = this.props.maxLeaves;
       NestedObjects.set(tree, keyPath, node);
@@ -98,9 +125,93 @@ export default class InfinityMenu extends Component {
     }
   }
 
-  findFiltered (trees, node, key) {
+  createSnapshots (tree) {
+    const snapshots = tree.reduce((prev, curr, key) => {
+      if (key === undefined) {
+        return prev;
+      }
+      return this.findSnapshot(prev, curr);
+    }, {});
+    this.setState({ snapshots });
+  }
+
+  findSnapshot (snapshots, node) {
     if (!node.children) {
-      const nodeMatchesSearchFilter = this.props.filter(node, this.props.searchInput);
+      snapshots[node.id] = Defiant.getSnapshot(node);
+      return snapshots;
+    } else {
+      return node.children.length ? node.children.reduce((prev, curr) => {
+        return this.findSnapshot(prev, curr);
+      }, snapshots) : snapshots;
+    }
+  }
+
+  onFilterConditionChange (option) {
+    this.setState(
+      { filterCondition: option.value },
+      () => this.filterTree(this.props.searchInputs, this.props.tree, this.props.isDetailSearch)
+      );
+  }
+
+  filterTree (searchInputs, tree, isDetailSearch) {
+    const filters = isDetailSearch ? this.getDetailFilters(searchInputs) : searchInputs[0];
+    const filteredTree = filters ? tree.reduce((prev, curr, key) => {
+      if (key === undefined) {
+        return prev;
+      }
+      return this.findFiltered(prev, curr, key, filters);
+    }, []) : tree;
+    this.setState({ filteredTree });
+  }
+
+  getDetailFilters (searchInputs) {
+    const filters = [];
+    const { filterCondition } = this.state;
+    searchInputs.forEach(input => {
+      const splitted = input.split('=').map(m => m.trim());
+      let filter;
+      if (splitted.length === 2 && splitted[0] && splitted[1]) {
+        filter = this.formatDetailFilter(splitted[0], splitted[1]);
+      } else if (splitted[0]) {
+        filter = this.formatDetailFilter('.', splitted[0]);
+      }
+      if (filter) {
+        filters.push(filter);
+      }
+    });
+    return filters.length ? `//*[${filters.join(` ${filterCondition} `)}]` : '';
+  }
+
+  formatDetailFilter (field, value) {
+    // returns xpath query e.g.
+    // InformationSystem=*ahjo returns: contains(InformationSystem, "ahjo")
+    // InformationSystem=ahjo* returns: starts-with(InformationSystem, "ahjo")
+    // InformationSystem=ahjo returns: InformationSystem="ahjo"
+    const wildcardIndex = value.indexOf('*');
+    const fieldValue = value.replace(/\*/g, '');
+    if (!fieldValue) {
+      return null;
+    }
+    if (wildcardIndex === 0) {
+      return `contains(${field}, "${fieldValue}")`;
+    } else if (wildcardIndex > 0) {
+      return `starts-with(${field}, "${fieldValue}")`;
+    }
+    return `${field}="${fieldValue}"`;
+  }
+
+  findFiltered (trees, node, key, filters) {
+    if (!node.children) {
+      let nodeMatchesSearchFilter = true;
+      if (filters.length) {
+        if (this.props.isDetailSearch) {
+          const snapshot = this.state.snapshots[node.id] ? this.state.snapshots[node.id] : null;
+          const result = snapshot ? JSON.search(snapshot, filters) : [];
+          nodeMatchesSearchFilter = result.length > 0;
+        } else {
+          nodeMatchesSearchFilter = this.props.filter(node, filters);
+        }
+      }
       if (nodeMatchesSearchFilter) {
         node.isSearchDisplay = true;
         trees[key] = node;
@@ -112,7 +223,7 @@ export default class InfinityMenu extends Component {
       }
     } else {
       const filteredSubFolder = node.children.length ? node.children.reduce((p, c, k) => {
-        return this.findFiltered(p, c, k);
+        return this.findFiltered(p, c, k, filters);
       }, []) : [];
       const shouldDisplay = filteredSubFolder.some(child => child.isSearchDisplay);
 
@@ -136,7 +247,7 @@ export default class InfinityMenu extends Component {
     const currLevel = Math.floor(keyPath.length / 2);
     const currCustomComponent = typeof curr.customComponent === 'string' ? this.props.customComponentMappings[curr.customComponent] : curr.customComponent;
     const currCustomloadMoreComponent = (this.props.loadMoreComponent) ? this.props.loadMoreComponent : null;
-    const isSearching = this.props.isSearching && this.props.searchInput;
+    const isSearching = this.props.isSearching;
     const shouldDisplay = (isSearching && curr.isSearchDisplay) || !isSearching;
     curr.keyPath = keyPath;
 
@@ -288,6 +399,47 @@ export default class InfinityMenu extends Component {
     }
   }
 
+  renderSearchInputs () {
+    const { isDetailSearch, searchInputs } = this.props;
+    const searchInputProps = {
+      ...this.props.headerProps,
+      placeholder: 'Etsi...'
+    };
+    return searchInputs.map((input, index) => (
+      <div key={index} className={classnames({ 'col-xs-12 filters filters-detail-search-input': isDetailSearch, 'col-sm-6': !isDetailSearch })}>
+        <SearchInput
+          {...searchInputProps}
+          searchInput={input}
+          setSearchInput={(event) => this.props.setSearchInput(index, event.target.value)}
+        />
+        {isDetailSearch && (
+          <div className='filters-detail-search-input-buttons'>
+            {index + 1 < searchInputs.length && (
+              <Select
+                autoBlur={true}
+                disabled={index > 0}
+                placeholder='Ehto'
+                value={this.state.filterCondition}
+                joinValues={true}
+                clearable={false}
+                options={FILTER_CONDITION_OPTIONS}
+                onChange={this.onFilterConditionChange}
+              />
+            )}
+            <button className='btn btn-info btn-sm' onClick={() => this.props.removeSearchInput(index)} title='Poista hakuehto'>
+              <span className='fa fa-minus' aria-hidden='true' />
+            </button>
+            {index + 1 === searchInputs.length && (
+              <button className='btn btn-info btn-sm' onClick={this.props.addSearchInput} title='Lisää hakuehto'>
+                <span className='fa fa-plus' aria-hidden='true' />
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+    ));
+  }
+
   renderBody (displayTree) {
     const {
       emptyTreeComponent,
@@ -306,13 +458,7 @@ export default class InfinityMenu extends Component {
 
   render () {
     const { tree, isDetailSearch, displayExporter } = this.props;
-    // find filtered folders base on search, if there no search, return all
-    const filteredTree = this.props.isSearching && this.props.searchInput ? tree.reduce((prev, curr, key) => {
-      if (key === undefined) {
-        return prev;
-      }
-      return this.findFiltered(prev, curr, key);
-    }, []) : tree;
+    const { filteredTree } = this.state;
 
     // recursive go through the tree
     const displayTree = filteredTree.reduce((prev, curr, key) => {
@@ -323,13 +469,7 @@ export default class InfinityMenu extends Component {
     }, []);
 
     // header component
-    const searchInputProps = {
-      ...this.props.headerProps,
-      placeholder: 'Etsi...',
-      searchInput: this.props.searchInput,
-      setSearchInput: this.props.setSearchInput
-    };
-
+    const searchInputContent = this.renderSearchInputs();
     const bodyContent = this.renderBody(displayTree);
 
     return (
@@ -368,16 +508,12 @@ export default class InfinityMenu extends Component {
                   </h2>
                 </div>
               }
-              <div className={classnames({ 'col-xs-12': isDetailSearch, 'col-sm-6': !isDetailSearch })}>
-                <SearchInput {...searchInputProps}/>
-              </div>
-
+              {searchInputContent}
               <div className={classnames({ 'col-xs-12': isDetailSearch, 'col-sm-6': !isDetailSearch })}>
                 {this.props.filters}
               </div>
             </div>
           </div>
-
           {!isDetailSearch &&
             <Link
               className='btn btn-default btn-sm nav-button pull-right'
@@ -385,7 +521,6 @@ export default class InfinityMenu extends Component {
               <span className='fa fa-info' aria-hidden='true' />
             </Link>
           }
-
         </div>
         }
         <div className='infinity-menu-container'>

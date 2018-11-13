@@ -53,6 +53,24 @@
         margin-top: 2px;
       }
 
+      .filters-detail-search-input {
+        padding-right: 200px;
+        .filters-detail-search-input-buttons {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 185px;
+          .Select {
+            max-width: 100px;
+            display: inline-block;
+          }
+          .btn {
+            margin-left: 15px;
+            vertical-align: top;
+          }
+        }
+      }
+
       .Select {
         width: 100%;
 
