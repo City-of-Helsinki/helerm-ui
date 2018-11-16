@@ -3,27 +3,78 @@ import './Record.scss';
 import Attributes from '../Attribute/Attributes';
 import DeleteView from '../DeleteView/DeleteView';
 import Dropdown from 'components/Dropdown';
+import EditorForm from '../EditorForm/EditorForm';
 import Popup from 'components/Popup';
 
 export class Record extends React.Component {
   constructor (props) {
     super(props);
 
+    this.disableEditMode = this.disableEditMode.bind(this);
+    this.editRecordForm = this.editRecordForm.bind(this);
+    this.editRecordWithForm = this.editRecordWithForm.bind(this);
+    this.onEditFormShowMoreRecord = this.onEditFormShowMoreRecord.bind(this);
     this.renderRecordButtons = this.renderRecordButtons.bind(this);
     this.updateTypeSpecifier = this.updateTypeSpecifier.bind(this);
     this.updateRecordType = this.updateRecordType.bind(this);
     this.updateRecordAttribute = this.updateRecordAttribute.bind(this);
     this.state = {
-      mode: 'view',
+      attributes: this.props.record.attributes,
+      complementingRecord: false,
       deleting: false,
+      editingRecord: false,
+      mode: 'view',
       typeSpecifier: this.props.record.attributes.TypeSpecifier,
-      type: this.props.record.attributes.RecordType,
-      attributes: this.props.record.attributes
+      type: this.props.record.attributes.RecordType
     };
   }
 
   setMode (value) {
     this.setState({ mode: value });
+  }
+
+  disableEditMode () {
+    this.setState({
+      editingRecord: false,
+      complementingRecord: false,
+      mode: 'view'
+    });
+  }
+
+  editRecordForm () {
+    if (this.props.documentState === 'edit') {
+      this.setState({ editingRecord: true, mode: 'edit' });
+    }
+  }
+
+  editRecordWithForm (attributes, recordId, disableEditMode = true) {
+    this.props.editRecord(attributes, recordId);
+    if (disableEditMode) {
+      this.disableEditMode();
+    }
+  }
+
+  mergeChildAttributesToStateAttributes = (stateAttrs, childattrs) => {
+    const newAttrs = {};
+    // Gather attributes from child & assign them to current state record
+    Object.keys(stateAttrs).map((key) => Object.assign(newAttrs, { [key]: childattrs[key] && childattrs[key]['value'] }));
+    return newAttrs;
+  }
+
+  onEditFormShowMoreRecord (e, { newAttributes }) {
+    e.preventDefault();
+    this.setState(prevState => {
+      const newAttrs = this.mergeChildAttributesToStateAttributes(prevState.attributes, newAttributes);
+
+      return {
+        complementingRecord: !prevState.complementingRecord,
+        editingRecord: !prevState.editingRecord,
+        attributes: {
+          ...prevState.attributes,
+          ...newAttrs
+        }
+      };
+    });
   }
 
   updateTypeSpecifier (typeSpecifier, recordId) {
@@ -91,10 +142,7 @@ export class Record extends React.Component {
                 text: 'Muokkaa asiakirjaa',
                 icon: 'fa-pencil',
                 style: 'btn-primary',
-                action: () => this.props.editRecordForm(
-                  this.props.record.id,
-                  this.props.record.attributes
-                )
+                action: () => this.editRecordForm()
               },
               // {
               //   text: 'Täydennä metatietoja',
@@ -135,21 +183,64 @@ export class Record extends React.Component {
 
   render () {
     const { attributeTypes, recordTypes, record, documentState } = this.props;
+    const { mode } = this.state;
 
     return (
       <div className={'record col-xs-12 ' + (record.is_open ? 'record-open' : 'record-closed')}>
-        <Attributes
-          element={record}
-          documentState={documentState}
-          type={'record'}
-          attributeTypes={attributeTypes}
-          typeOptions={recordTypes}
-          renderButtons={this.renderRecordButtons}
-          updateTypeSpecifier={this.updateTypeSpecifier}
-          updateType={this.updateRecordType}
-          updateAttribute={this.updateRecordAttribute}
-          showAttributes={record.is_open}
-        />
+        {mode === 'edit' &&
+          this.state.editingRecord && (
+            <EditorForm
+              onShowMore={this.onEditFormShowMoreRecord}
+              targetId={record.id}
+              attributes={record.attributes}
+              attributeTypes={this.props.attributeTypes}
+              elementConfig={{
+                elementTypes: recordTypes,
+                editWithForm: this.editRecordWithForm
+              }}
+              editorConfig={{
+                type: 'record',
+                action: 'edit'
+              }}
+              closeEditorForm={this.disableEditMode}
+              displayMessage={this.props.displayMessage}
+            />
+          )}
+        {mode === 'edit' &&
+          this.state.complementingRecord && (
+            <EditorForm
+              onShowMore={this.onEditFormShowMoreRecord}
+              targetId={record.id}
+              attributes={record.attributes}
+              attributeTypes={this.props.attributeTypes}
+              elementConfig={{
+                elementTypes: recordTypes,
+                editWithForm: this.editRecordWithForm
+              }}
+              editorConfig={{
+                type: 'record',
+                action: 'complement',
+                from: 'editRecord'
+              }}
+              closeEditorForm={this.disableEditMode}
+              displayMessage={this.props.displayMessage}
+            />
+          )}
+        {!this.state.editingRecord &&
+          !this.state.complementingRecord && (
+            <Attributes
+              element={record}
+              documentState={documentState}
+              type={'record'}
+              attributeTypes={attributeTypes}
+              typeOptions={recordTypes}
+              renderButtons={this.renderRecordButtons}
+              updateTypeSpecifier={this.updateTypeSpecifier}
+              updateType={this.updateRecordType}
+              updateAttribute={this.updateRecordAttribute}
+              showAttributes={record.is_open}
+            />
+          )}
         { this.state.deleting &&
         <Popup
           content={
@@ -171,9 +262,10 @@ export class Record extends React.Component {
 Record.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
   // complementRecordForm: React.PropTypes.func.isRequired,
+  displayMessage: React.PropTypes.func.isRequired,
   documentState: React.PropTypes.string.isRequired,
+  editRecord: React.PropTypes.func.isRequired,
   editRecordAttribute: React.PropTypes.func.isRequired,
-  editRecordForm: React.PropTypes.func.isRequired,
   record: React.PropTypes.object.isRequired,
   recordTypes: React.PropTypes.object.isRequired,
   removeRecord: React.PropTypes.func.isRequired,

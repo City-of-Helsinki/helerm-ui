@@ -22,9 +22,17 @@
 .single-tos-content {
   padding: 15px;
 }
-.single-tos-header h4 {
-  margin: 0 0 10px;
-  transition: 0.3s ease-out all;
+.single-tos-header {
+  h4 {
+    margin: 0 0 10px;
+    transition: 0.3s ease-out all;
+  }
+  .visibility-buttons {
+    padding-top: 8px;
+  }
+  .btn {
+    margin-left: 15px;
+  }
 }
 .box {
   padding: 8px 10px 26px;
@@ -56,9 +64,6 @@
 }
 .button-row .btn {
   margin: 0 1px;
-}
-.visibility-buttons {
-  padding: 20px 15px 0px 0px ;
 }
 .version-details {
   flex-direction: column;

@@ -24,10 +24,7 @@ export class Action extends React.Component {
     this.cancelRecordCreation = this.cancelRecordCreation.bind(this);
     this.editActionForm = this.editActionForm.bind(this);
     this.editActionWithForm = this.editActionWithForm.bind(this);
-    this.editRecordForm = this.editRecordForm.bind(this);
     this.complementRecordForm = this.complementRecordForm.bind(this);
-    this.editRecordWithForm = this.editRecordWithForm.bind(this);
-    this.cancelRecordEdit = this.cancelRecordEdit.bind(this);
     this.cancelRecordComplement = this.cancelRecordComplement.bind(this);
     this.updateTypeSpecifier = this.updateTypeSpecifier.bind(this);
     this.updateActionType = this.updateActionType.bind(this);
@@ -36,21 +33,19 @@ export class Action extends React.Component {
     this.renderBasicAttributes = this.renderBasicAttributes.bind(this);
     this.disableEditMode = this.disableEditMode.bind(this);
     this.onEditFormShowMoreAction = this.onEditFormShowMoreAction.bind(this);
-    this.onEditFormShowMoreRecord = this.onEditFormShowMoreRecord.bind(this);
     this.onEditFormShowMoreRecordAdd = this.onEditFormShowMoreRecordAdd.bind(this);
     this.complementRecordAdd = this.complementRecordAdd.bind(this);
     this.state = {
       attributes: this.props.action.attributes,
       complementingAction: false,
-      complementingRecord: false,
       complementingRecordAdd: false,
       creatingRecord: false,
       deleting: false,
       editingAction: false,
-      editingRecord: false,
       editingType: false,
       editingTypeSpecifier: false,
       mode: 'view',
+      record: null,
       showImportView: false,
       showReorderView: false,
       type: this.props.action.attributes.ActionType || null,
@@ -80,32 +75,6 @@ export class Action extends React.Component {
       editingAction: !prevState.editingAction
     })
     );
-  }
-
-  mergeChildAttributesToStateAttributes = (stateAttrs, childattrs) => {
-    const newAttrs = {};
-    // Gather attributes from child & assign them to current state record
-    Object.keys(stateAttrs).map((key) => Object.assign(newAttrs, { [key]: childattrs[key] && childattrs[key]['value'] }));
-    return newAttrs;
-  }
-
-  onEditFormShowMoreRecord (e, { newAttributes }) {
-    e.preventDefault();
-    this.setState(prevState => {
-      const newAttrs = this.mergeChildAttributesToStateAttributes(prevState.record.attributes, newAttributes);
-
-      return {
-        complementingRecord: !prevState.complementingRecord,
-        editingRecord: !prevState.editingRecord,
-        record: {
-          ...prevState.record,
-          attributes: {
-            ...prevState.record.attributes,
-            ...newAttrs
-          }
-        }
-      };
-    });
   }
 
   toggleReorderView () {
@@ -148,8 +117,6 @@ export class Action extends React.Component {
       editingType: false,
       editingAction: false,
       complementingAction: false,
-      editingRecord: false,
-      complementingRecord: false,
       mode: 'view'
     });
   }
@@ -215,38 +182,20 @@ export class Action extends React.Component {
   }
 
   createNewRecord () {
-    this.setState({ creatingRecord: true });
+    this.setState({ creatingRecord: true, record: { attributes: {} } });
   }
 
   cancelRecordCreation () {
     this.setState({ creatingRecord: false });
   }
 
-  editRecordForm (recordId, recordAttributes) {
-    this.setState(
-      {
-        record: {
-          id: recordId,
-          attributes: recordAttributes
-        }
-      },
-      () => {
-        this.setState({ editingRecord: true });
-      }
-    );
-  }
-
-  cancelRecordEdit () {
-    this.setState({
-      editingRecord: false,
-      recordId: undefined
-    });
-  }
-
   complementRecordForm (e, recordAttributes) {
     const newAttrs = {};
-    Object.keys(recordAttributes).map((key) => Object.assign(newAttrs, { [key]: recordAttributes[key] && recordAttributes[key]['value'] }));
-
+    Object.keys(recordAttributes).map((key) => {
+      if (recordAttributes[key] && recordAttributes[key]['value']) {
+        Object.assign(newAttrs, { [key]: recordAttributes[key]['value'] });
+      }
+    });
     this.setState(
       {
         record: {
@@ -266,7 +215,11 @@ export class Action extends React.Component {
   onEditFormShowMoreRecordAdd (e, recordAttributes) {
     // TODO: handle merge the attributes of createNewRecordForm here
     const newAttrs = {};
-    Object.keys(recordAttributes).map((key) => Object.assign(newAttrs, { [key]: recordAttributes[key] && recordAttributes[key]['value'] }));
+    Object.keys(recordAttributes).map((key) => {
+      if (recordAttributes[key] && recordAttributes[key]['value']) {
+        Object.assign(newAttrs, { [key]: recordAttributes[key]['value'] });
+      }
+    });
     this.setState(
       {
         record: {
@@ -285,17 +238,9 @@ export class Action extends React.Component {
 
   cancelRecordComplement () {
     this.setState({
-      complementingRecord: false,
       complementingRecordAdd: false,
       recordId: undefined
     });
-  }
-
-  editRecordWithForm (attributes, recordId, disableEditMode = true) {
-    this.props.editRecord(attributes, recordId);
-    if (disableEditMode) {
-      this.disableEditMode();
-    }
   }
 
   delete () {
@@ -323,8 +268,7 @@ export class Action extends React.Component {
           <Record
             key={key}
             record={this.props.records[records[key]]}
-            editRecordForm={this.editRecordForm}
-            complementRecordForm={this.complementRecordForm}
+            editRecord={this.props.editRecord}
             editRecordAttribute={this.props.editRecordAttribute}
             removeRecord={this.props.removeRecord}
             recordTypes={this.props.recordTypes}
@@ -570,7 +514,7 @@ export class Action extends React.Component {
                  <EditorForm
                     onShowMoreForm={this.complementRecordForm}
                     targetId={this.props.action.id}
-                    attributes={{}}
+                    attributes={this.state.record.attributes}
                     attributeTypes={this.props.attributeTypes}
                     elementConfig={{
                       elementTypes: this.props.recordTypes,
@@ -584,44 +528,6 @@ export class Action extends React.Component {
                     displayMessage={this.props.displayMessage}
                   />
                 )}
-                {this.state.editingRecord && (
-                  <EditorForm
-                    onShowMore={this.onEditFormShowMoreRecord}
-                    targetId={this.state.record.id}
-                    attributes={this.state.record.attributes}
-                    attributeTypes={this.props.attributeTypes}
-                    elementConfig={{
-                      elementTypes: this.props.recordTypes,
-                      editWithForm: this.editRecordWithForm
-                    }}
-                    editorConfig={{
-                      type: 'record',
-                      action: 'edit'
-                    }}
-                    closeEditorForm={this.cancelRecordEdit}
-                    displayMessage={this.props.displayMessage}
-                  />
-                )}
-                {this.state.complementingRecord && (
-                  <EditorForm
-                    onShowMore={this.onEditFormShowMoreRecord}
-                    targetId={this.state.record.id}
-                    attributes={this.state.record.attributes}
-                    attributeTypes={this.props.attributeTypes}
-                    elementConfig={{
-                      elementTypes: this.props.recordTypes,
-                      editWithForm: this.editRecordWithForm
-                    }}
-                    editorConfig={{
-                      type: 'record',
-                      action: 'complement',
-                      from: 'editRecord'
-                    }}
-                    closeEditorForm={this.cancelRecordComplement}
-                    displayMessage={this.props.displayMessage}
-                  />
-                )}
-
                 {this.state.complementingRecordAdd && (
                   <EditorForm
                     onShowMoreForm={this.onEditFormShowMoreRecordAdd}
@@ -643,27 +549,25 @@ export class Action extends React.Component {
                     displayMessage={this.props.displayMessage}
                   />
                 )}
-                {!this.state.editingRecord &&
-                  !this.state.complementingRecord &&
-                  !!recordElements.length && (
-                    <div className='attribute-labels-container'>
-                      <div className='attribute-labels'>
-                        <span className='col-xs-6 attribute-label'>
-                          {'Asiakirjatyyppi'}
-                        </span>
-                        <span className='col-xs-6 attribute-label'>
-                          {'Asiakirjatyypin tarkenne'}
-                        </span>
-                      </div>
-                      <div
-                        className={classnames('col-xs-12 records', {
-                          'records-editing': this.props.documentState === 'edit'
-                        })}
-                      >
-                        {recordElements}
-                      </div>
+                {!!recordElements.length && (
+                  <div className='attribute-labels-container'>
+                    <div className='attribute-labels'>
+                      <span className='col-xs-6 attribute-label'>
+                        {'Asiakirjatyyppi'}
+                      </span>
+                      <span className='col-xs-6 attribute-label'>
+                        {'Asiakirjatyypin tarkenne'}
+                      </span>
                     </div>
-                  )}
+                    <div
+                      className={classnames('col-xs-12 records', {
+                        'records-editing': this.props.documentState === 'edit'
+                      })}
+                    >
+                      {recordElements}
+                    </div>
+                  </div>
+                )}
               </StickyContainer>
             )}
           {this.state.deleting && (
