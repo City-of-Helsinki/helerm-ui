@@ -23,6 +23,8 @@ const ActionButtons = ({
   saveDraft,
   changeStatus,
   setDocumentState,
+  setPhasesVisibility,
+  setTosVisibility,
   setValidationVisibility,
   review,
   status,
@@ -112,31 +114,48 @@ const ActionButtons = ({
   );
 
   return (
-    <div>
-      {status === DRAFT && editable}
-      {status === SENT_FOR_REVIEW && reviewable}
-      {status === WAITING_FOR_APPROVAL && approvable}
-      {status === APPROVED && draftable}
-      {status !== APPROVED && (
-        <div className='validation-button'>
+    <div className='row'>
+      <div className='col-xs-12'>
+        {status === DRAFT && editable}
+        {status === SENT_FOR_REVIEW && reviewable}
+        {status === WAITING_FOR_APPROVAL && approvable}
+        {status === APPROVED && draftable}
+        {status !== APPROVED && (
           <ActionButton
             className='btn-sm pull-right'
-            style={{ marginRight: '15px' }}
             type='success'
             action={() => setValidationVisibility(true)}
             label={'Esitarkasta'}
             icon={'fa-check-circle-o'}
           />
-        </div>
-      )}
-      <span>
+        )}
         <Link
-          className='btn btn-sm btn-primary'
+          className='btn btn-sm btn-primary pull-right'
           to={getNewPath(window.location.pathname, 'print')}
         >
-          Näytä kaikki
+          Raportti
         </Link>
-      </span>
+      </div>
+      <div className='col-xs-12 visibility-buttons'>
+        <ActionButton
+          className='btn-sm pull-right'
+          type='default'
+          action={() => setTosVisibility(true)}
+          label={'Avaa kaikki tiedot'}
+        />
+        <ActionButton
+          className='btn-sm pull-right'
+          type='default'
+          action={setPhasesVisibility}
+          label={'Avaa perustiedot'}
+        />
+        <ActionButton
+          className='btn-sm pull-right'
+          type='default'
+          action={() => setTosVisibility(false)}
+          label={'Pienennä kaikki'}
+        />
+      </div>
     </div>
   );
 };
@@ -149,6 +168,8 @@ ActionButtons.propTypes = {
   review: PropTypes.func.isRequired,
   saveDraft: PropTypes.func,
   setDocumentState: PropTypes.func,
+  setPhasesVisibility: PropTypes.func.isRequired,
+  setTosVisibility: PropTypes.func.isRequired,
   setValidationVisibility: PropTypes.func.isRequired,
   status: PropTypes.string.isRequired,
   tosId: PropTypes.string.isRequired

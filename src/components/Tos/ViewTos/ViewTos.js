@@ -53,6 +53,7 @@ export class ViewTOS extends React.Component {
     this.saveDraft = this.saveDraft.bind(this);
     this.setPhaseVisibility = this.setPhaseVisibility.bind(this);
     this.updateFunctionAttribute = this.updateFunctionAttribute.bind(this);
+    this.setTosVisibility = this.setTosVisibility.bind(this);
     this.setValidationVisibility = this.setValidationVisibility.bind(this);
     this.review = this.review.bind(this);
     this.onEditFormShowMoreMetaData = this.onEditFormShowMoreMetaData.bind(this);
@@ -225,6 +226,10 @@ export class ViewTOS extends React.Component {
   setValidationVisibility (value) {
     this.props.setValidationVisibility(value);
     this.setState({ showValidationBar: value });
+  }
+
+  setTosVisibility (value) {
+    this.props.setTosVisibility(this.props.selectedTOS, value);
   }
 
   cancelEdit () {
@@ -724,6 +729,8 @@ export class ViewTOS extends React.Component {
               name={selectedTOS.name}
               state={selectedTOS.state}
               setDocumentState={state => this.setDocumentState(state)}
+              setPhasesVisibility={() => this.props.setPhasesVisibility(selectedTOS.phases, true)}
+              setTosVisibility={this.setTosVisibility}
               setValidationVisibility={this.setValidationVisibility}
               review={this.review}
               saveDraft={this.saveDraft}
@@ -732,38 +739,12 @@ export class ViewTOS extends React.Component {
 
             <div className='single-tos-content'>
               <div className='row'>
-                <div className='col-md-6'>
+                <div className='col-xs-12'>
                   <VersionSelector
                     tosId={selectedTOS.id}
                     currentVersion={selectedTOS.version}
                     versions={selectedTOS.version_history}
                   />
-                </div>
-                <div className='col-md-6 button-row visibility-buttons'>
-                  <button
-                    className='btn btn-default btn-sm pull-right'
-                    onClick={() =>
-                      this.props.setTosVisibility(selectedTOS, true)
-                    }
-                  >
-                    Avaa kaikki tiedot
-                  </button>
-                  <button
-                    className='btn btn-default btn-sm pull-right'
-                    onClick={() =>
-                      this.props.setPhasesVisibility(selectedTOS.phases, true)
-                    }
-                  >
-                    Avaa perustiedot
-                  </button>
-                  <button
-                    className='btn btn-default btn-sm pull-right'
-                    onClick={() =>
-                      this.props.setTosVisibility(selectedTOS, false)
-                    }
-                  >
-                    Pienennä kaikki
-                  </button>
                 </div>
               </div>
               <div className='row'>
