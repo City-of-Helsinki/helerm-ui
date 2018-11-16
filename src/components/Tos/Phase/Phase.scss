@@ -15,7 +15,6 @@
   font-size: 1.1em;
   padding: 8px 5px 0px;
   position: relative;
-  z-index: 2;
   pointer-events: none;
   * {
     pointer-events:all;
@@ -72,7 +71,6 @@
   position: absolute;
   right: 17px;
   top: 17px;
-  z-index: 2;
 }
 .phase-buttons button {
   margin: 0px 1px;
