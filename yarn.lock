@@ -2139,11 +2139,11 @@ deep-is@~0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/deep-is/-/deep-is-0.1.3.tgz#b369d6fb5dbc13eecf524f91b070feedc357cf34"
 
-defiant@1.4.2:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/defiant/-/defiant-1.4.2.tgz#677166c8c5cdf74004b54a77c21b2aba495383da"
+defiant.js@^1.4.5:
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/defiant.js/-/defiant.js-1.4.5.tgz#654988835d8aa1873ee9976fbd130d056dcd1f18"
   dependencies:
-    x10 "git://github.com/hbi99/x10.js.git"
+    x10.js "^0.1.3"
 
 define-properties@^1.1.2:
   version "1.1.2"
@@ -7989,9 +7989,9 @@ x-is-string@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/x-is-string/-/x-is-string-0.1.0.tgz#474b50865af3a49a9c4657f05acd145458f77d82"
 
-"x10@git://github.com/hbi99/x10.js.git":
+x10.js@^0.1.3:
   version "0.1.3"
-  resolved "git://github.com/hbi99/x10.js.git#5389ae6dd914527e53c83c1b1f7f77c8b5f82ca6"
+  resolved "https://registry.yarnpkg.com/x10.js/-/x10.js-0.1.3.tgz#d1d782122d6d322be915cb51fdaab1498ddcd1a5"
 
 xdg-basedir@^2.0.0:
   version "2.0.0"

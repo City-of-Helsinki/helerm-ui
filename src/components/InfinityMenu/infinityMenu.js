@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import NestedObjects from 'nested-objects';
 import React, { Component, PropTypes } from 'react';
 import Select from 'react-select';
-import Defiant from 'defiant';
+import Defiant from 'defiant.js';
 
 import SearchInput from './searchInput';
 import ClassificationLink from './classificationLink';
