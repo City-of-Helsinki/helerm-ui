@@ -130,7 +130,7 @@ const ActionButtons = ({
           />
         )}
         <Link
-          className='btn btn-sm btn-primary pull-right'
+          className={`btn btn-sm btn-primary pull-right${editMode ? ' disabled' : ''}`}
           to={getNewPath(window.location.pathname, 'print')}
         >
           Raportti
