@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import SideBar from 'react-sidebar';
 import Select from 'react-select';
-import { map, filter, find } from 'lodash';
+import { map, find, forEach } from 'lodash';
 import './ValidationBar.scss';
 
 import {
@@ -64,7 +64,7 @@ export class ValidationBar extends Component {
     };
   }
 
-  generateInvalidAttributes (validate, validateWarn, values) {
+  generateInvalidTosAttributes (validate, validateWarn, values) {
     const showInvalidAttributes = this.getFilterByStatus(FILTER_VALUE_ERROR);
     const showWarnAttributes = this.getFilterByStatus(FILTER_VALUE_WARN);
     const invalidAttributes = showInvalidAttributes
@@ -96,21 +96,66 @@ export class ValidationBar extends Component {
     }
   }
 
-  generateAttributeSection (validateRequired, validateWarn, elements) {
-    const { attributeTypes } = this.props;
+  generateInvalidAttributes () {
+    const { selectedTOS } = this.props;
     const showInvalidAttributes = this.getFilterByStatus(FILTER_VALUE_ERROR);
     const showWarnAttributes = this.getFilterByStatus(FILTER_VALUE_WARN);
-    const mappedAttributeSections = map(elements, (element, index) => {
-      const invalidAttributes = showInvalidAttributes
-        ? validateRequired(element, attributeTypes)
-        : [];
-      const warnAttributes = showWarnAttributes
-        ? validateWarn(element, attributeTypes)
-        : [];
-      if (invalidAttributes.length || warnAttributes.length) {
-        return (
+    const invalidPhases = [];
+    forEach(selectedTOS.phases, (phase, index) => {
+      const invalidActions = [];
+      forEach(phase.actions, (actionId) => {
+        const action = selectedTOS.actions[actionId];
+        const invalidRecords = [];
+        forEach(action.records, recordId => {
+          const invalidRecord = this.getInvalidSection(
+            'record',
+            selectedTOS.records[recordId],
+            showInvalidAttributes ? validateRecord : null,
+            showWarnAttributes ? validateRecordWarnings : null
+          );
+          if (invalidRecord) {
+            invalidRecords.push(invalidRecord);
+          }
+        });
+        const invalidAction = this.getInvalidSection(
+          'action',
+          action,
+          showInvalidAttributes ? validateAction : null,
+          showWarnAttributes ? validateActionWarnings : null,
+          invalidRecords
+        );
+        if (invalidAction) {
+          invalidActions.push(invalidAction);
+        }
+      });
+      const invalidPhase = this.getInvalidSection(
+        'phase',
+        phase,
+        showInvalidAttributes ? validatePhase : null,
+        showWarnAttributes ? validatePhaseWarnings : null,
+        invalidActions
+      );
+      if (invalidPhase) {
+        invalidPhases.push(
           <div key={index}>
-            <div className='parent-name'>{element.name}</div>
+            {invalidPhase}
+          </div>
+        );
+      }
+    });
+
+    return invalidPhases;
+  }
+
+  getInvalidSection (type, section, validateRequired, validateWarn, children) {
+    if (section) {
+      const { attributeTypes } = this.props;
+      const invalidAttributes = validateRequired ? validateRequired(section, attributeTypes) : [];
+      const warnAttributes = validateWarn ? validateWarn(section, attributeTypes) : [];
+      if (invalidAttributes.length || warnAttributes.length || (children && children.length)) {
+        return (
+          <div className={`sidebar-content-${type}`} key={section.id}>
+            <div className='parent-name'>{section.attributes ? section.attributes.TypeSpecifier : ''}</div>
             <div className='missing-attributes'>
               {map(invalidAttributes, (item, key) => {
                 return (
@@ -129,12 +174,12 @@ export class ValidationBar extends Component {
                 );
               })}
             </div>
+            {children}
           </div>
         );
       }
-    });
-
-    return filter(mappedAttributeSections, section => section !== undefined);
+    }
+    return null;
   }
 
   onFilterStatusChange (options) {
@@ -152,44 +197,21 @@ export class ValidationBar extends Component {
 
   renderInvalidContent () {
     const { selectedTOS } = this.props;
-    const invalidTOSAttributes = this.generateInvalidAttributes(
+    const invalidTOSAttributes = this.generateInvalidTosAttributes(
       validateTOS,
       validateTOSWarnings,
       selectedTOS
     );
-    const invalidPhaseAttributes = this.generateAttributeSection(
-      validatePhase,
-      validatePhaseWarnings,
-      selectedTOS.phases
-    );
-    const invalidActionAttributes = this.generateAttributeSection(
-      validateAction,
-      validateActionWarnings,
-      selectedTOS.actions
-    );
-    const invalidRecordAttributes = this.generateAttributeSection(
-      validateRecord,
-      validateRecordWarnings,
-      selectedTOS.records
-    );
+    const invalidAttributes = this.generateInvalidAttributes();
 
-    if (
-      invalidTOSAttributes ||
-      invalidPhaseAttributes.length > 0 ||
-      invalidActionAttributes.length > 0 ||
-      invalidRecordAttributes.length > 0
-    ) {
+    if (invalidTOSAttributes || invalidAttributes.length > 0) {
       return (
         <div>
           <h4>Esitarkastus</h4>
           {invalidTOSAttributes && <h5>Käsittelyprosessi</h5>}
           {invalidTOSAttributes}
-          {invalidPhaseAttributes.length > 0 && <h5>Käsittelyvaiheet</h5>}
-          {invalidPhaseAttributes}
-          {invalidActionAttributes.length > 0 && <h5>Toimenpiteet</h5>}
-          {invalidActionAttributes}
-          {invalidRecordAttributes.length > 0 && <h5>Asiakirjat</h5>}
-          {invalidRecordAttributes}
+          {invalidAttributes.length > 0 && <h5>Käsittelyvaiheet</h5>}
+          {invalidAttributes}
         </div>
       );
     }
