@@ -118,7 +118,7 @@ export const AddElementInput = ({
             onChange={(option) => onTypeChange(option ? option.value : null)}
             onBlur={() => null}
             autoFocus={false}
-            options={typeOptions}
+            options={resolveSelectOptions(typeOptions, newType)}
             placeholder={resolveSelectPlaceHolder(type)}
             promptTextCreator={onPromptCreate}
           />
