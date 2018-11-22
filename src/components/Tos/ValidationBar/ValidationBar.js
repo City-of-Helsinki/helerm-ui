@@ -54,6 +54,8 @@ const filterStatuses = [
   { value: FILTER_VALUE_WARN, label: 'Huomautukset' }
 ];
 
+const ATTRIBUTE_NAME_FIELDS = ['PhaseType', 'ActionType', 'TypeSpecifier'];
+
 export class ValidationBar extends Component {
   constructor (props) {
     super(props);
@@ -152,10 +154,13 @@ export class ValidationBar extends Component {
       const { attributeTypes } = this.props;
       const invalidAttributes = validateRequired ? validateRequired(section, attributeTypes) : [];
       const warnAttributes = validateWarn ? validateWarn(section, attributeTypes) : [];
+      const nameAttribute = section.attributes
+        ? find(ATTRIBUTE_NAME_FIELDS, field => !!section.attributes[field])
+        : '';
       if (invalidAttributes.length || warnAttributes.length || (children && children.length)) {
         return (
           <div className={`sidebar-content-${type}`} key={section.id}>
-            <div className='parent-name'>{section.attributes ? section.attributes.TypeSpecifier : ''}</div>
+            <div className='parent-name'>{nameAttribute ? section.attributes[nameAttribute] : ''}</div>
             <div className='missing-attributes'>
               {map(invalidAttributes, (item, key) => {
                 return (
@@ -210,7 +215,6 @@ export class ValidationBar extends Component {
           <h4>Esitarkastus</h4>
           {invalidTOSAttributes && <h5>Käsittelyprosessi</h5>}
           {invalidTOSAttributes}
-          {invalidAttributes.length > 0 && <h5>Käsittelyvaiheet</h5>}
           {invalidAttributes}
         </div>
       );
