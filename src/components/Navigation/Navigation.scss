@@ -383,6 +383,11 @@
     color: $link-hover-color;
   }
 
+  .infinity-menu-load-more-container {
+    color: $link-color;
+    cursor: pointer;
+  }
+
   .navigation-menu-items {
     display: flex;
     flex-direction: column;
