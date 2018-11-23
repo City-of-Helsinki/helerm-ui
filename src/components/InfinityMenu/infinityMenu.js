@@ -34,7 +34,7 @@ export default class InfinityMenu extends Component {
     isOpen: PropTypes.bool,
     isSearchChanged: PropTypes.bool,
     isSearching: PropTypes.bool,
-    loadMoreComponent: PropTypes.func,
+    items: PropTypes.array,
     maxLeaves: PropTypes.number,
     onLeafMouseClick: PropTypes.func,
     onLeafMouseDown: PropTypes.func,
@@ -78,14 +78,22 @@ export default class InfinityMenu extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    const { isDetailSearch, isSearchChanged, searchInputs, tree } = nextProps;
-    const { isSearchChanged: wasSearchChanged, searchInputs: prevInputs } = this.props;
-    if (tree !== this.props.tree) {
+    const { isDetailSearch, isSearchChanged, items, searchInputs, tree } = nextProps;
+    const {
+      isSearchChanged: wasSearchChanged,
+      items: prevItems,
+      searchInputs: prevInputs,
+      tree: prevTree
+    } = this.props;
+    if (isDetailSearch && items !== prevItems) {
+      this.createSnapshots(items);
+    }
+    if (tree !== prevTree) {
       this.setState({ filteredTree: tree });
-      if (isDetailSearch) {
-        this.createSnapshots(tree);
-      }
-    } else if ((isDetailSearch && isSearchChanged && !wasSearchChanged) || (!isDetailSearch && searchInputs !== prevInputs)) {
+    }
+    if ((tree !== prevTree && isSearchChanged && searchInputs) ||
+      (isDetailSearch && isSearchChanged && !wasSearchChanged) ||
+      (!isDetailSearch && searchInputs !== prevInputs)) {
       this.filterTree(searchInputs, tree, isDetailSearch);
     }
   }
@@ -246,7 +254,6 @@ export default class InfinityMenu extends Component {
   setDisplayTree (tree, prevs, curr, keyPath) {
     const currLevel = Math.floor(keyPath.length / 2);
     const currCustomComponent = typeof curr.customComponent === 'string' ? this.props.customComponentMappings[curr.customComponent] : curr.customComponent;
-    const currCustomloadMoreComponent = (this.props.loadMoreComponent) ? this.props.loadMoreComponent : null;
     const isSearching = this.props.isSearching;
     const shouldDisplay = (isSearching && curr.isSearchDisplay) || !isSearching;
     curr.keyPath = keyPath;
@@ -301,25 +308,15 @@ export default class InfinityMenu extends Component {
             </li>
           );
         }
-      } else {
-        if (relativeIndex === filteredChildren.length - 1) {
-          if (currCustomloadMoreComponent) {
-            const loadMoreProps = {
-              key: itemKey,
-              onClick: (e) => this.onLoadMoreClick(tree, curr, keyPath, e)
-            };
-            prevs.push(React.createElement(currCustomloadMoreComponent, loadMoreProps));
-          } else {
-            prevs.push(
-              <li key={itemKey}
-                  className='infinity-menu-load-more-container'
-                  onClick={(e) => this.onLoadMoreClick(tree, curr, keyPath, e)}
-              >
-                <span>Load more</span>
-              </li>
-            );
-          }
-        }
+      } else if (shouldDisplay && relativeIndex === filteredChildren.length - 1) {
+        prevs.push(
+          <li key={itemKey}
+              className='infinity-menu-load-more-container'
+              onClick={(e) => this.onLoadMoreClick(tree, curr, keyPath, e)}
+          >
+            <span>Näytä lisää</span>
+          </li>
+        );
       }
       return prevs;
     } else {

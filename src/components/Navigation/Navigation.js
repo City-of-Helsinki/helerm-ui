@@ -292,7 +292,7 @@ export class Navigation extends React.Component {
   }
 
   render () {
-    const { onLeafMouseClick, isFetching, attributeTypes } = this.props;
+    const { onLeafMouseClick, isFetching, attributeTypes, items } = this.props;
     const { isSearchChanged, searchInputs } = this.state;
     const displayExporter = this.hasFilters() && !!this.state.tree.length && this.isDetailSearch();
 
@@ -305,6 +305,7 @@ export class Navigation extends React.Component {
           isSearchChanged={isSearchChanged}
           isSearching={searchInputs.filter(input => input.length > 0).length > 0}
           isFetching={isFetching}
+          items={items}
           onLeafMouseClick={onLeafMouseClick ? (event, leaf) => onLeafMouseClick(event, leaf) : this.onLeafMouseClick}
           onNodeMouseClick={this.onNodeMouseClick}
           path={this.props.tosPath}
