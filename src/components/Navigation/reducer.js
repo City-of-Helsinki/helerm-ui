@@ -17,6 +17,7 @@ const initialState = {
 export const REQUEST_NAVIGATION = 'requestNavigationAction';
 export const RECEIVE_NAVIGATION = 'receiveNavigationAction';
 export const SET_NAVIGATION_VISIBILITY = 'setNavigationVisibilityAction';
+export const NAVIGATION_ERROR = 'navigationErrorAction';
 
 export function requestNavigation (includeRelated) {
   return createAction(REQUEST_NAVIGATION)(includeRelated);
@@ -35,12 +36,26 @@ export function fetchNavigation (includeRelated = false) {
   return function (dispatch) {
     dispatch(requestNavigation(includeRelated));
     return api.get('classification', { include_related: includeRelated, page_size: RESULTS_PER_PAGE || DEFAULT_PAGE_SIZE })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          dispatch(createAction(NAVIGATION_ERROR)());
+          throw Error(`Virhe luokittelupuun haussa: ${response.statusText}`);
+        }
+        return response.json();
+      })
       .then(json =>
         dispatch(receiveNavigation(json))
       );
   };
 }
+
+const navigationErrorAction = (state) => {
+  return update(state, {
+    isFetching: { $set: false },
+    items: { $set : [] },
+    timestamp: { $set : '' }
+  });
+};
 
 const requestNavigationAction = (state, { payload }) => {
   return update(state, {
@@ -66,6 +81,7 @@ const setNavigationVisibilityAction = (state, { payload }) => {
 };
 
 export default handleActions({
+  navigationErrorAction,
   requestNavigationAction,
   receiveNavigationAction,
   setNavigationVisibilityAction

@@ -20,6 +20,7 @@ export class Navigation extends React.Component {
 
   static propTypes = {
     attributeTypes: PropTypes.object,
+    displayMessage: PropTypes.func.isRequired,
     fetchNavigation: PropTypes.func.isRequired,
     isFetching: PropTypes.bool,
     isUser: PropTypes.bool.isRequired,
@@ -47,7 +48,16 @@ export class Navigation extends React.Component {
   }
 
   componentDidMount () {
-    this.props.fetchNavigation(this.isDetailSearch());
+    this.props.fetchNavigation(this.isDetailSearch())
+      .catch(err => {
+        return this.props.displayMessage(
+          {
+            title: 'Virhe',
+            body: `"${err.message}"`
+          },
+          { type: 'error' }
+        );
+      });
   }
 
   componentWillReceiveProps (nextProps) {
@@ -71,7 +81,15 @@ export class Navigation extends React.Component {
 
   updateNavigation () {
     this.stopSearching();
-    this.props.fetchNavigation(this.isDetailSearch());
+    this.props.fetchNavigation(this.isDetailSearch())
+      .catch(err => this.props.displayMessage(
+        {
+          title: 'Virhe',
+          body: `"${err.message}"`
+        },
+        { type: 'error' }
+      )
+    );
   }
 
   stopSearching = () => {
