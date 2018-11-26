@@ -1,6 +1,6 @@
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
-import { isEmpty, map, values } from 'lodash';
+import { cloneDeep, isEmpty, map, values } from 'lodash';
 
 import { fetchNavigation } from '../Navigation/reducer';
 import {
@@ -137,8 +137,8 @@ export function fetchTOS (tosId, params = {}) {
 export function saveDraft () {
   return function (dispatch, getState) {
     dispatch(createAction(REQUEST_TOS)());
-    const tos = Object.assign({}, getState().selectedTOS);
-    const newTos = Object.assign({}, tos);
+    const tos = cloneDeep(getState().selectedTOS);
+    const newTos = cloneDeep(tos);
     const finalPhases = normalizeTosForApi(newTos);
     const denormalizedTos = update(tos, { phases: { $set: finalPhases } });
     const currentVersion = tos.version;
