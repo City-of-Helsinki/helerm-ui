@@ -19,8 +19,7 @@ export class Header extends React.Component {
     this.fetchNavigation = this.fetchNavigation.bind(this);
   }
 
-  fetchNavigation (event) {
-    event.preventDefault();
+  fetchNavigation = () => {
     this.props.fetchNavigation(false)
       .catch(err => {
         this.props.displayMessage(

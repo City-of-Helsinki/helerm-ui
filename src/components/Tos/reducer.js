@@ -185,7 +185,7 @@ export function changeStatus (status) {
         return res.json();
       })
       .then(json => dispatch(receiveTOS(json)))
-      .then(dispatch(fetchNavigation(includeRelated).catch(() => {})));
+      .then(dispatch(fetchNavigation(includeRelated)).catch(() => {}));
   };
 }
 
