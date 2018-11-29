@@ -130,7 +130,8 @@ export function fetchTOS (tosId, params = {}) {
         }
         return res.json();
       })
-      .then(json => dispatch(receiveTOS(json)));
+      .then(json => dispatch(receiveTOS(json)))
+      .catch(() => dispatch(createAction(TOS_ERROR)()));
   };
 }
 

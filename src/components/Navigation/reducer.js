@@ -17,6 +17,7 @@ const initialState = {
 export const REQUEST_NAVIGATION = 'requestNavigationAction';
 export const RECEIVE_NAVIGATION = 'receiveNavigationAction';
 export const SET_NAVIGATION_VISIBILITY = 'setNavigationVisibilityAction';
+export const NAVIGATION_ERROR = 'navigationErrorAction';
 
 export function requestNavigation (includeRelated) {
   return createAction(REQUEST_NAVIGATION)(includeRelated);
@@ -38,9 +39,18 @@ export function fetchNavigation (includeRelated = false) {
       .then(response => response.json())
       .then(json =>
         dispatch(receiveNavigation(json))
-      );
+      )
+      .catch(() => dispatch(createAction(NAVIGATION_ERROR)()));
   };
 }
+
+const navigationErrorAction = (state) => {
+  return update(state, {
+    isFetching: { $set: false },
+    items: { $set : [] },
+    timestamp: { $set: Date.now().toString() }
+  });
+};
 
 const requestNavigationAction = (state, { payload }) => {
   return update(state, {
@@ -66,6 +76,7 @@ const setNavigationVisibilityAction = (state, { payload }) => {
 };
 
 export default handleActions({
+  navigationErrorAction,
   requestNavigationAction,
   receiveNavigationAction,
   setNavigationVisibilityAction

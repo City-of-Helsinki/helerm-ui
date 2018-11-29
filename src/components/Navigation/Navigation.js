@@ -292,10 +292,19 @@ export class Navigation extends React.Component {
   }
 
   render () {
-    const { onLeafMouseClick, isFetching, attributeTypes, items } = this.props;
+    const { onLeafMouseClick, isFetching, attributeTypes, items, itemsTimestamp } = this.props;
     const { isSearchChanged, searchInputs } = this.state;
     const displayExporter = this.hasFilters() && !!this.state.tree.length && this.isDetailSearch();
 
+    if (!isFetching && isEmpty(items) && !isEmpty(itemsTimestamp)) {
+      return (
+        <div className='container-fluid helerm-navigation'>
+          <div className='navigation-error'>
+            <div className='alert alert-danger'>Navigaatiota ei löytynyt</div>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className='container-fluid helerm-navigation'>
         <InfinityMenu

@@ -15,6 +15,7 @@ const initialState = {
 export const RECEIVE_USERDATA = 'receiveUserDataAction';
 export const CLEAR_USERDATA = 'clearUserDataAction';
 export const RETRIEVE_USERDATA = 'retrieveUserFromSessionAction';
+export const ERROR_USERDATA = 'errorUserDataAction';
 export const LOGIN = 'login';
 export const LOGOUT = 'logout';
 
@@ -54,9 +55,15 @@ export function retrieveUserFromSession () {
                 permissions: permissions
               });
               return dispatch(receiveUserData(userWithPermissions));
+            })
+            .catch(() => {
+              dispatch(createAction(ERROR_USERDATA)());
             });
         }
         return dispatch(receiveUserData(user));
+      })
+      .catch(() => {
+        dispatch(createAction(ERROR_USERDATA)());
       });
   };
 }
@@ -92,11 +99,19 @@ const clearUserDataAction = state => {
   });
 };
 
+const errorUserDataAction = state => {
+  return update(state, {
+    data: { $set: {} },
+    isFetching: { $set: false }
+  });
+};
+
 export default handleActions(
   {
     receiveUserDataAction,
     clearUserDataAction,
-    retrieveUserFromSessionAction
+    retrieveUserFromSessionAction,
+    errorUserDataAction
   },
   initialState
 );
