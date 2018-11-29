@@ -13,6 +13,7 @@ import './Header.scss';
 export class Header extends React.Component {
   render () {
     const { isFetching } = this.props;
+
     return (
       <div>
         <nav className='navbar navbar-inverse container-fluid'>

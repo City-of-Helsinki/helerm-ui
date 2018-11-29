@@ -36,12 +36,7 @@ export function fetchNavigation (includeRelated = false) {
   return function (dispatch) {
     dispatch(requestNavigation(includeRelated));
     return api.get('classification', { include_related: includeRelated, page_size: RESULTS_PER_PAGE || DEFAULT_PAGE_SIZE })
-      .then(response => {
-        if (!response.ok) {
-          throw Error();
-        }
-        return response.json();
-      })
+      .then(response => response.json())
       .then(json =>
         dispatch(receiveNavigation(json))
       )
