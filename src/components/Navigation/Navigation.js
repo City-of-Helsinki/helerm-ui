@@ -294,7 +294,6 @@ export class Navigation extends React.Component {
   render () {
     const { onLeafMouseClick, isFetching, attributeTypes, items, itemsTimestamp } = this.props;
     const { isSearchChanged, searchInputs } = this.state;
-    const displayExporter = this.hasFilters() && !!this.state.tree.length && this.isDetailSearch();
 
     if (!isFetching && isEmpty(items) && !isEmpty(itemsTimestamp)) {
       return (
@@ -326,7 +325,6 @@ export class Navigation extends React.Component {
           tree={this.state.tree}
           filters={this.getFilters()}
           isDetailSearch={this.isDetailSearch()}
-          displayExporter={displayExporter}
         />
       </div>
     );

@@ -25,14 +25,14 @@ const getChildren = (array, item) => {
  * @param {object} item
  */
 const getAllAttributes = (item) => {
-  const allAttributes = Object.keys(item.attributes);
+  const allAttributes = Object.keys(item.attributes || {});
 
   item.phases.forEach((phase) => {
-    allAttributes.push(...Object.keys(phase.attributes));
+    allAttributes.push(...Object.keys(phase.attributes || {}));
     phase.actions.forEach((action) => {
-      allAttributes.push(...Object.keys(action.attributes));
+      allAttributes.push(...Object.keys(action.attributes || {}));
       action.records.forEach((record) => {
-        allAttributes.push(...Object.keys(record.attributes));
+        allAttributes.push(...Object.keys(record.attributes || {}));
       });
     });
   });
@@ -49,7 +49,7 @@ const getAllAttributes = (item) => {
  */
 const setRowData = (item, headers, name = 'käsittelyprosessi') => {
   const rowData = [name, `${item.code || ''} ${item.name}`];
-  Object.keys(item.attributes).forEach((attrName) => {
+  Object.keys(item.attributes || {}).forEach((attrName) => {
     const indexInHeaders = headers.indexOf(attrName);
     rowData[indexInHeaders] = item.attributes[attrName];
   });
