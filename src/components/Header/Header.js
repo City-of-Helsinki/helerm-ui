@@ -7,7 +7,6 @@ import { Link } from 'react-router';
 import { fetchNavigation } from '../Navigation/reducer';
 import Loader from '../Loader';
 import LoginContainer from '../Login/LoginContainer';
-import { displayMessage } from '../../utils/helpers';
 
 import './Header.scss';
 
@@ -21,7 +20,7 @@ export class Header extends React.Component {
             to='/'
             className='brand-title navbar-brand'
             onClick={() => this.props.fetchNavigation(false)}
-          >
+            >
             Tiedonohjausjärjestelmä
           </Link>
           <LoginContainer />
@@ -47,9 +46,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({
-  displayMessage: (msg, opts) => displayMessage(msg, opts),
-  fetchNavigation: bindActionCreators(fetchNavigation, dispatch)
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  fetchNavigation
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
