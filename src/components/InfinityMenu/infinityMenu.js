@@ -1,4 +1,5 @@
 import _get from 'lodash/get';
+import cloneDeep from 'lodash/cloneDeep';
 import classnames from 'classnames';
 import { Link } from 'react-router';
 import NestedObjects from 'nested-objects';
@@ -23,7 +24,6 @@ export default class InfinityMenu extends Component {
     addSearchInput: PropTypes.func.isRequired,
     attributeTypes: PropTypes.object,
     customComponentMappings: PropTypes.object,
-    displayExporter: PropTypes.bool,
     emptyTreeComponent: PropTypes.any,
     emptyTreeComponentProps: PropTypes.object,
     filter: PropTypes.func,
@@ -50,7 +50,6 @@ export default class InfinityMenu extends Component {
 
   static defaultProps = {
     disableDefaultHeaderContent: false,
-    displayExporter: false,
     emptyTreeComponent: EmptyTree,
     emptyTreeComponentProps: {},
     filter: (node, searchInput) => node.name.toLowerCase().indexOf(searchInput.toLowerCase()) >= 0,
@@ -209,6 +208,7 @@ export default class InfinityMenu extends Component {
   }
 
   findFiltered (trees, node, key, filters) {
+    const newNode = cloneDeep(node);
     if (!node.children) {
       let nodeMatchesSearchFilter = true;
       if (filters.length) {
@@ -221,14 +221,10 @@ export default class InfinityMenu extends Component {
         }
       }
       if (nodeMatchesSearchFilter) {
-        node.isSearchDisplay = true;
-        trees[key] = node;
-        return trees;
-      } else {
-        node.isSearchDisplay = false;
-        trees[key] = node;
-        return trees;
+        newNode.isSearchDisplay = true;
+        trees[key] = newNode;
       }
+      return trees;
     } else {
       const filteredSubFolder = node.children.length ? node.children.reduce((p, c, k) => {
         return this.findFiltered(p, c, k, filters);
@@ -236,18 +232,13 @@ export default class InfinityMenu extends Component {
       const shouldDisplay = filteredSubFolder.some(child => child.isSearchDisplay);
 
       if (shouldDisplay) {
-        node.isSearchOpen = true;
-        node.children = filteredSubFolder;
-        node.isSearchDisplay = true;
-        node.maxLeaves = (node.maxLeaves) ? node.maxLeaves : this.props.maxLeaves;
-        trees[key] = node;
-        return trees;
-      } else {
-        node.isSearchOpen = false;
-        node.isSearchDisplay = false;
-        trees[key] = node;
-        return trees;
+        newNode.isSearchOpen = true;
+        newNode.children = filteredSubFolder;
+        newNode.isSearchDisplay = true;
+        newNode.maxLeaves = (newNode.maxLeaves) ? newNode.maxLeaves : this.props.maxLeaves;
+        trees[key] = newNode;
       }
+      return trees;
     }
   }
 
@@ -262,7 +253,7 @@ export default class InfinityMenu extends Component {
     if (!curr.children) {
       const keyPathArray = keyPath.split('.');
       const parentPath = Object.assign([], keyPathArray).splice(0, keyPathArray.length - 2);
-      const parentNode = _get(this.props.tree, parentPath);
+      const parentNode = _get(tree, parentPath);
       const filteredChildren = (
         parentNode.children.some(child => child.isSearchDisplay === true)
           ? parentNode.children.filter(child => child.isSearchDisplay === true)
@@ -454,7 +445,7 @@ export default class InfinityMenu extends Component {
   }
 
   render () {
-    const { tree, isDetailSearch, displayExporter } = this.props;
+    const { isDetailSearch } = this.props;
     const { filteredTree } = this.state;
 
     // recursive go through the tree
@@ -462,7 +453,7 @@ export default class InfinityMenu extends Component {
       if (key === undefined) {
         return prev;
       }
-      return this.setDisplayTree(tree, prev, curr, key.toString());
+      return this.setDisplayTree(filteredTree, prev, curr, key.toString());
     }, []);
 
     // header component
@@ -498,9 +489,9 @@ export default class InfinityMenu extends Component {
                     Sisältöhaku
                     <Exporter
                       attributeTypes={this.props.attributeTypes}
-                      data={tree}
+                      data={filteredTree}
                       className='btn-sm pull-right'
-                      isVisible={displayExporter}
+                      isVisible={filteredTree.length > 0}
                     />
                   </h2>
                 </div>
