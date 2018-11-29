@@ -222,7 +222,7 @@ export default class InfinityMenu extends Component {
       }
       if (nodeMatchesSearchFilter) {
         newNode.isSearchDisplay = true;
-        trees[key] = newNode;
+        trees.push(newNode);
       }
       return trees;
     } else {
@@ -236,7 +236,7 @@ export default class InfinityMenu extends Component {
         newNode.children = filteredSubFolder;
         newNode.isSearchDisplay = true;
         newNode.maxLeaves = (newNode.maxLeaves) ? newNode.maxLeaves : this.props.maxLeaves;
-        trees[key] = newNode;
+        trees.push(newNode);
       }
       return trees;
     }
