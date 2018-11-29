@@ -38,14 +38,14 @@ export function fetchNavigation (includeRelated = false) {
     return api.get('classification', { include_related: includeRelated, page_size: RESULTS_PER_PAGE || DEFAULT_PAGE_SIZE })
       .then(response => {
         if (!response.ok) {
-          dispatch(createAction(NAVIGATION_ERROR)());
-          throw Error(`Virhe luokittelupuun haussa: ${response.statusText}`);
+          throw Error();
         }
         return response.json();
       })
       .then(json =>
         dispatch(receiveNavigation(json))
-      );
+      )
+      .catch(() => dispatch(createAction(NAVIGATION_ERROR)()));
   };
 }
 
@@ -53,7 +53,7 @@ const navigationErrorAction = (state) => {
   return update(state, {
     isFetching: { $set: false },
     items: { $set : [] },
-    timestamp: { $set : '' }
+    timestamp: { $set: Date.now().toString() }
   });
 };
 

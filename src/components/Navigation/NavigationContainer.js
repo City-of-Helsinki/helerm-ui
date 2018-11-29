@@ -6,13 +6,12 @@ import { isEmpty } from 'lodash';
 
 import { fetchNavigation, setNavigationVisibility } from './reducer';
 
-import { displayMessage, itemById } from '../../utils/helpers';
+import { itemById } from '../../utils/helpers';
 
 import Navigation from './Navigation';
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    displayMessage: (msg, opts) => displayMessage(msg, opts),
     fetchNavigation: bindActionCreators(fetchNavigation, dispatch),
     push: (path) => dispatch(push(path)),
     setNavigationVisibility: bindActionCreators(setNavigationVisibility, dispatch)

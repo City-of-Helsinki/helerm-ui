@@ -12,26 +12,6 @@ import { displayMessage } from '../../utils/helpers';
 import './Header.scss';
 
 export class Header extends React.Component {
-
-  constructor (props) {
-    super(props);
-
-    this.fetchNavigation = this.fetchNavigation.bind(this);
-  }
-
-  fetchNavigation = () => {
-    this.props.fetchNavigation(false)
-      .catch(err => {
-        this.props.displayMessage(
-          {
-            title: 'Virhe',
-            body: `"${err.message}"`
-          },
-          { type: 'error' }
-        );
-      });
-  }
-
   render () {
     const { isFetching } = this.props;
     return (
@@ -40,7 +20,7 @@ export class Header extends React.Component {
           <Link
             to='/'
             className='brand-title navbar-brand'
-            onClick={this.fetchNavigation}
+            onClick={() => this.props.fetchNavigation(false)}
           >
             Tiedonohjausjärjestelmä
           </Link>
@@ -53,7 +33,6 @@ export class Header extends React.Component {
 }
 
 Header.propTypes = {
-  displayMessage: PropTypes.func.isRequired,
   fetchNavigation: PropTypes.func,
   isFetching: PropTypes.bool
 };

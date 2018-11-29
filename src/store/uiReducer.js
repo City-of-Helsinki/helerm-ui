@@ -15,6 +15,7 @@ const initialState = {
 
 export const RECEIVE_ATTRIBUTE_TYPES = 'receiveAttributeTypesAction';
 export const RECEIVE_TEMPLATES = 'receiveTemplatesAction';
+export const ERROR_FROM_API = 'errorFromApiAction';
 
 export function receiveAttributeTypes (attributes, validationRules) {
   const attributeTypeList = {};
@@ -148,7 +149,8 @@ export function fetchAttributeTypes () {
           .then(response => response.json())
           .then(json =>
             dispatch(receiveAttributeTypes(json, validationRules)));
-      });
+      })
+      .catch(() => dispatch(createAction(ERROR_FROM_API)()));
   };
 }
 
@@ -159,7 +161,8 @@ export function fetchTemplates () {
       .then(response => response.json())
       .then(res => {
         dispatch(receiveTemplates(res));
-      });
+      })
+      .catch(() => dispatch(createAction(ERROR_FROM_API)()));
   };
 }
 
@@ -208,8 +211,15 @@ const receiveTemplatesAction = (state, { payload }) => {
   });
 };
 
+const errorFromApiAction = (state) => {
+  return update(state, {
+    isFetching: { $set: false }
+  });
+};
+
 export default handleActions({
   requestFromApiAction,
   receiveAttributeTypesAction,
-  receiveTemplatesAction
+  receiveTemplatesAction,
+  errorFromApiAction
 }, initialState);
