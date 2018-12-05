@@ -299,7 +299,7 @@ export class Navigation extends React.Component {
       return (
         <div className='container-fluid helerm-navigation'>
           <div className='navigation-error'>
-            <div className='alert alert-danger'>Navigaatiota ei löytynyt</div>
+            <div className='alert alert-danger'>Järjestelmä ei ole käytettävissä. Yritä hetken päästä uudestaan.</div>
           </div>
         </div>
       );
