@@ -18,7 +18,7 @@ const extractStyles = new ExtractTextPlugin({
 
 debug('Creating configuration.');
 const webpackConfig = {
-  devtool: __DEV__ ? 'source-map' : false,
+  devtool: 'source-map',
   resolve: {
     modules: [path.resolve('src'), 'node_modules'],
     extensions: ['*', '.js', '.jsx', '.json']
@@ -184,7 +184,8 @@ if (__DEV__) {
         unused: true,
         dead_code: true,
         warnings: false
-      }
+      },
+      sourceMap: true
     })
   );
 }
