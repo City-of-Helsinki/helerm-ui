@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { map, find, forEach, indexOf } from 'lodash';
 import classnames from 'classnames';
-import StickySidebar from 'sticky-sidebar';
+import StickySidebar from 'sticky-sidebar/dist/sticky-sidebar';
 
 import './ValidationBar.scss';
 
