@@ -104,6 +104,7 @@ const mapStateToProps = state => ({
   phaseTypes: state.ui.phaseTypes,
   recordTypes: state.ui.recordTypes,
   selectedTOS: state.selectedTOS,
+  showValidationBar: state.validation.is_open,
   templates: state.ui.templates
 });
 

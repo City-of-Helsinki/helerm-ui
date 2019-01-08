@@ -1,19 +1,12 @@
+@import '../../styles/vendor/hel-components/variables';
+
 .phase {
   border-top: 0px;
-  background-color: #f2f2f2;
+  background-color: $gray-lighter;
   padding: 0px 0px 10px 0px;
-
-  &.box {
-    padding-bottom: 10px;
-  }
-}
-.phase > div:first-child {
-  border-top: 4px solid salmon;
-  border-radius: 4px;
 }
 .phase-title {
   font-size: 1.1em;
-  padding: 8px 5px 0px;
   position: relative;
   pointer-events: none;
   * {
@@ -24,26 +17,24 @@
   }
 }
 .phase-title.sticky {
-  background-color: #f2f2f2;
-  z-index: 3;
+  background-color: $gray-lighter;
+  z-index: 8;
   margin-left: 0;
   width: 100% !important;
   left: 0px !important;
+  border-bottom: 1px solid #cfcfcf;
+}
+.validation-bar-open {
+  .phase-title.sticky {
+    width: 75% !important;
+  }
 }
 .phase-title.phase-closed.sticky {
-  padding: 7px 21px 2px;
+  padding: 7px 46px 2px;
   margin-left: 0px;
 }
 .phase-title.phase-open.sticky {
-  padding: 7px 37px 2px;
-  left: 0px !important;
-  width: 100% !important;
-  .phase-buttons {
-    right: 52px;
-    button {
-      padding: 2px 6px;
-    }
-  }
+  padding: 7px 46px 2px;
 }
 .helerm-validation-sidebar--opened .phase-title.sticky {
   padding-right: 341px;
@@ -103,12 +94,18 @@
   .basic-attributes {
     height: 40px;
     position: relative;
+
+    .phase-basic-attribute {
+      font-size: $font-size-h3;
+      color: $brand-info;
+    }
   }
 
   .attribute {
     font-size: 15px;
     min-height: 80px;
-    border: 3px solid #f2f2f2;
+    border: none;
+    padding: 15px 0;
   }
 
   .edit-attribute__input {
@@ -118,5 +115,11 @@
   .phase-title-dropdown {
     position: relative;
     z-index: 5;
+  }
+}
+
+.phase {
+  .add-element {
+    margin: 15px 5px;
   }
 }

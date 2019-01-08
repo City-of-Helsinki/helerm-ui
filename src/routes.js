@@ -2,7 +2,7 @@ import React from 'react';
 import { IndexRoute, Route } from 'react-router';
 import CoreLayout from './layouts/CoreLayout/CoreLayout';
 import InfoLayout from './layouts/InfoLayout/InfoLayout';
-import IndexPage from './components/Index';
+// import IndexPage from './components/Index';
 import ViewTOSContainer from './components/Tos/ViewTos/ViewTosContainer';
 import ViewClassificationContainer from './components/Classification/ViewClassification/ViewClassificationContainer';
 import ClassificationTreeContainer from './components/ClassificationTree/ClassificationTreeContainer';
@@ -13,8 +13,8 @@ import NotFound from './components/NotFound/NotFound';
 export default () => (
   <div>
     <Route path='/' component={CoreLayout}>
-      <IndexRoute component={IndexPage} />
-      <Route path='search' component={IndexPage} />
+      <IndexRoute component={ViewInfo} />
+      <Route path='search' component={ViewInfo} />
       <Route path='view-tos/'>
         <Route path=':id(/version/:version)'>
           <IndexRoute component={ViewTOSContainer} />

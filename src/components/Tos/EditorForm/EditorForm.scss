@@ -1,6 +1,9 @@
+@import '../../styles/vendor/hel-components/variables';
+
 .add-box {
   padding: 16px 12px 20px;
-  border: 3px dashed grey;
+  border: 2px dotted $brand-primary;
+  background-color: $gray-lighter;
   border-radius: 4px;
   margin: 25px 0px;
 }

@@ -11,10 +11,9 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const mapStateToProps = (state) => {
-  const { validation, ui, selectedTOS } = state;
+  const { ui, selectedTOS } = state;
 
   return {
-    is_open: validation.is_open,
     attributeTypes: ui.attributeTypes,
     selectedTOS
   };

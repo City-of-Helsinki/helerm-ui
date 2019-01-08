@@ -38,6 +38,13 @@
 
 .btn:active {
   @include box-shadow(none);
+  outline: none;
+  border: none;
+}
+
+.btn:focus {
+  outline: none;
+  border: none;
 }
 
 .btn-group.open .dropdown-toggle {

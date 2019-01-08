@@ -1,31 +1,38 @@
+@import '../../styles/vendor/hel-components/variables';
+
 .record {
   position: relative;
   padding: 0px;
+  margin-bottom: 15px;
 
+  &-attributes {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    
+    .list-group-item.attribute.attribute-basic {
+      background-color: $blue05;
+      min-height: 40px;
+      padding: 4px 15px;
+    }
+  }
   .attribute:nth-child(3) {
       width: 41.66667%;
   }
-}
-.record:nth-child(odd), .record:nth-child(odd) .list-group-item {
-  background-color: #f2f2f2;
-}
-.records .record:nth-child(odd) .list-group-item:hover {
-  background-color: #f2f2f2;
 }
 .record-button {
   margin: 0px 1px;
 }
 .table-key {
-  font-weight: bold;
+  font-weight: 700;
 }
 .record-button-group {
   position: absolute;
-  right: 4px;
-  top: 4px;
+  right: 8px;
+  top: 10px;
   font-size: 14px;
 }
 .record-open {
-  border: solid gray;
   margin-top: -1px;
   padding: 0px 0px 1px 0px;
   border-width: 1px 0px;

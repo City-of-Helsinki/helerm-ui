@@ -1,7 +1,9 @@
 import React from 'react';
 import Select from 'react-select';
-import './Attribute.scss';
+import classnames from 'classnames';
 import { includes, forEach, find, map } from 'lodash';
+
+import './Attribute.scss';
 
 export class Attribute extends React.Component {
   constructor (props) {
@@ -233,7 +235,7 @@ export class Attribute extends React.Component {
     let attributeValue;
     if (editable === false && attribute !== null) {
       return (
-        <a className='list-group-item col-xs-6'>
+        <a className='list-group-item col-xs-6 attribute-basic'>
           <strong>{attributeIndex}:</strong>
           <div>{attribute || '\u00A0'}</div>
         </a>
@@ -268,8 +270,11 @@ export class Attribute extends React.Component {
         <a
           onClick={() => this.activateEditMode()}
           className={
-            'list-group-item col-xs-6 attribute ' +
-            (showAttributes ? 'visible' : 'hidden')
+            classnames([
+              'list-group-item col-xs-6 attribute',
+              showAttributes ? 'visible' : 'hidden',
+              type === 'basic' ? 'attribute-basic' : ''
+            ])
           }
         >
           <span className='table-key'>

@@ -1,31 +1,23 @@
+@import '../../styles/vendor/hel-components/variables';
+
 .single-tos-container {
-  border: 1px solid grey;
-  border-radius: 4px;
   background-color: white;
-  padding: 15px 0;
-  margin-bottom: 150px;
+  padding: 0;
+
+  .single-tos-header-wrapper {
+    z-index: 9;
+  }
 }
 .single-tos-header {
-  padding: 10px 15px;
+  padding: 15px 20px;
   background: white;
-  z-index: 4;
-}
-.single-tos-header.sticky {
-  padding: 10px 31px;
-  border-bottom: 1px solid #eee;
-  left: 0px !important;
-  width: 100% !important;
-}
-.helerm-validation-sidebar--opened .single-tos-header.sticky {
-  padding-right: 331px;
-}
-.single-tos-content {
-  padding: 15px;
-}
-.single-tos-header {
-  h4 {
+  border-bottom: solid 1px #dddddd;
+  z-index: 11;
+  h2 {
     margin: 0 0 10px;
-    transition: 0.3s ease-out all;
+    a {
+      font-size: smaller;
+    }
   }
   .visibility-buttons {
     padding-top: 8px;
@@ -34,11 +26,26 @@
     margin-left: 15px;
   }
 }
+.single-tos-wrapper {
+  display: flex;
+  > div {
+    flex-grow: 1;
+  }
+}
+.single-tos-content {
+  padding: 15px;
+  margin-bottom: 150px;
+}
+.validation-bar-container {
+  background-color: $gray-lighter;
+  border-left: 1px solid $gray-dark;
+  z-index: 8;
+}
 .box {
-  padding: 8px 10px 26px;
-  border: 1px solid grey;
+  padding: 15px;
+  border: 1px solid $gray-dark;
   border-radius: 4px;
-  margin: 10px 0px;
+  margin-bottom: 40px;
 }
 .general-info {
   margin-bottom: 40px;
@@ -50,6 +57,9 @@
 .space-between {
   display: flex;
   justify-content: space-between;
+}
+.phases-title {
+  margin: 0;
 }
 .black-icon, .black-icon:hover {
   color: black;
@@ -64,12 +74,6 @@
 }
 .button-row .btn {
   margin: 0 1px;
-}
-.version-details {
-  flex-direction: column;
-  margin: 10px 15px;
-  padding:10px 15px;
-  border: 1px solid #ddd;
 }
 .unlocated-title {
   color: black;
@@ -92,6 +96,16 @@
   .action-dropdown-button {
     right: 32px;
     top: 0;
+  }
+}
+
+.metadata-data-row__secondary,
+.metadata-data-row__primary {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  .attribute-basic {
+    margin: -1px 0 0 -1px;
   }
 }
 .metadata-data-row__secondary {

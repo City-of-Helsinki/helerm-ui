@@ -1,12 +1,13 @@
 import React, { PropTypes } from 'react';
-import Sticky from 'react-sticky';
 import { Link } from 'react-router';
 
 import ActionButtons from './ActionButtons';
+import VersionSelector from '../VersionSelector/VersionSelector';
 
 const TosHeader = ({
   cancelEdit,
   classificationId,
+  currentVersion,
   documentState,
   functionId,
   fetchTos,
@@ -19,19 +20,27 @@ const TosHeader = ({
   setValidationVisibility,
   review,
   state,
-  tosId
+  tosId,
+  versions
 }) => {
   const tosName = `${functionId} ${name}`;
 
   return (
-    <Sticky className='single-tos-header'>
+    <div className='single-tos-header'>
       <div className='row'>
-        <h4 className='col-md-6 col-xs-12'>
-          {tosName}{' '}
-          <Link to={`/view-classification/${classificationId}`} title='Avaa luokituksen tiedot'>
-            <i className='fa fa-info-circle'/>
-          </Link>
-        </h4>
+        <div className='col-md-6 col-xs-12'>
+          <h2>
+            {tosName}{' '}
+            <Link to={`/view-classification/${classificationId}`} title='Avaa luokituksen tiedot'>
+              <i className='fa fa-info-circle'/>
+            </Link>
+          </h2>
+          <VersionSelector
+            tosId={tosId}
+            currentVersion={currentVersion}
+            versions={versions}
+          />
+        </div>
         <div className='document-buttons col-xs-12 col-md-6'>
           <ActionButtons
             cancelEdit={cancelEdit}
@@ -49,7 +58,7 @@ const TosHeader = ({
           />
         </div>
       </div>
-    </Sticky>
+    </div>
   );
 };
 
@@ -57,6 +66,7 @@ TosHeader.propTypes = {
   cancelEdit: PropTypes.func,
   changeStatus: PropTypes.func,
   classificationId: PropTypes.string.isRequired,
+  currentVersion: PropTypes.number.isRequired,
   documentState: PropTypes.string.isRequired,
   fetchTos: PropTypes.func.isRequired,
   functionId: PropTypes.string.isRequired,
@@ -68,7 +78,8 @@ TosHeader.propTypes = {
   setTosVisibility: PropTypes.func.isRequired,
   setValidationVisibility: PropTypes.func,
   state: PropTypes.string,
-  tosId: PropTypes.string
+  tosId: PropTypes.string,
+  versions: PropTypes.array
 };
 
 export default TosHeader;
