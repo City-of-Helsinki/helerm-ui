@@ -1,13 +1,16 @@
+@import '../../styles/vendor/hel-components/variables';
+
 $attribute-input-height: 31px;
 
 .attribute {
-  border: 0;
-  border-top: 1px solid #f2f2f2;
   padding: 15px;
+  margin: -1px 0 0 -1px;
+  background-color: transparent;
 
   .table-value {
     line-height: 31px;
     word-wrap: break-word;
+    min-height: 31px;
   }
 }
 
@@ -20,7 +23,8 @@ $attribute-input-height: 31px;
   .basic-attribute {
     min-height: 23px;
     padding: 0;
-
+    font-size: 21px;
+    font-weight: $bold;
 
     // &.editable:hover {
     //   border: 1px solid #aaa;

@@ -602,10 +602,10 @@ export class EditorForm extends React.Component {
           {attributeElements}
           <div className='col-xs-12'>
             <button
-              className='btn btn-primary pull-right editor-form__submit'
+              className='btn btn-success pull-right editor-form__submit'
               type='submit'
             >
-              OK
+              Valmis
             </button>
             <button
               className='btn btn-danger pull-right editor-form__cancel'
@@ -614,7 +614,7 @@ export class EditorForm extends React.Component {
               Peruuta
             </button>
             <button
-              className={showMoreLabel ? 'btn btn-success pull-right editor-form__cancel' : 'non-display'}
+              className={showMoreLabel ? 'btn btn-primary pull-right editor-form__cancel' : 'non-display'}
               onClick={(e) => (this.props.editorConfig.action === 'add' || (this.props.editorConfig.action === 'complement' && this.props.complementRecordAdd)) ? onShowMoreForm(e, this.state.newAttributes) : onShowMore(e, this.state)}
             >
               {showMoreLabel}

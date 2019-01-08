@@ -1,7 +1,6 @@
 @import '../../styles/vendor/hel-components/variables';
 .helerm-navigation {
-
-  padding-right: 50px !important;
+  background-color: $gray-lighter;
 
   .navigation-error {
     max-width: 400px;
@@ -12,16 +11,15 @@
   .navigation-menu {
     position: relative;
     background-color: white;
-    padding: 15px 15px 0 15px;
-    border: 1px solid $black50;
-    border-radius: $border-radius-base;
+    padding: 0;
 
-    &.navigation-open {
-      padding-bottom: 15px;
+    .navigation-sticky.sticky {
+      z-index: 12;
     }
 
     .navigation-header  {
-      padding-bottom: 15px;
+      background-color: $gray-lighter;
+      padding: 12px 15px;
     }
 
     .breadcrumb {
@@ -34,12 +32,27 @@
     .nav-button {
       border-radius: $border-radius-base;
       padding: 8px 12px;
+      background-color: transparent;
+      border: none;
+    }
+
+    .navigation-container {
+      min-width: 870px;
+      background-color: $white;
+      padding: 12px 15px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      box-shadow: 10px 0 5px -2px rgba(0, 0, 0, .3);
+      z-index: 12;
+      display: flex;
+      flex-direction: column;
     }
 
     .navigation-filters {
-      padding-bottom: 15px;
+      padding: 15px 0;
       margin-bottom: 10px;
-      border-bottom: 1px solid;
 
       .navigation-filters-container {
         width: 95%;
@@ -224,6 +237,11 @@
     // [converter] extracted textarea& to textarea.form-control
   }
 
+  .infinity-menu-container {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
   .infinity-menu-node-container {
     font-size: 1.5rem;
     letter-spacing: 0.03rem;
@@ -272,20 +290,20 @@
     -webkit-padding-before: 0;
     position: relative;
     &:before {
-      content: '-';
-      height: 26px;
+      content: "−";
+      height: 20px;
       width: 15px;
-      margin-top: 10px;
-      color: #191919;
+      color: #003380;
       background-color: #fff;
-      font-size: 27px;
+      font-size: 25px;
       font-weight: 500;
-      border-bottom: 0px;
+      border-bottom: 0;
       position: absolute;
-      left: 17px;
-      top: -30px;
+      left: 12px;
+      top: -10px;
       z-index: 2;
       pointer-events: none;
+      line-height: 20px;
     }
   }
 
@@ -294,7 +312,6 @@
   }
 
   .infinity-menu-display-tree-container ul:nth-last-child(n + 2) {
-    border-left: 1px solid $black90;
     margin-top: -20px;
     padding-top: 20px;
   }
@@ -313,46 +330,33 @@
     width: 9px;
     height: 9px;
     position: absolute;
-    left: 20px;
+    left: 15px;
     border-radius: 50%;
-    background: $black90;
+    background: $blue00;
     top: 50%;
     margin-top: -5px;
     pointer-events: none;
   }
 
   .infinity-menu-node-container:after {
-    content: '+';
-    height: 23px;
-    width: 10px;
-    color: #191919;
-    border-bottom: 0px;
-    background-color: white;
+    content: "+";
+    height: fit-content;
+    width: 15px;
+    color: #003380;
+    border-bottom: 0;
+    background-color: #fff;
     font-size: 25px;
     font-weight: 500;
     position: absolute;
-    left: 15px;
-    top: -3px;
+    left: 12px;
+    top: 5px;
     z-index: 2;
     pointer-events: none;
+    line-height: 20px;
   }
 
   .react-infinity-menu-default-search-input:focus {
     z-index: 2;
-  }
-
-  .infinity-menu-node-container:before,
-  .infinity-menu-leaf-container:before {
-    left: -1px;
-    position: absolute;
-    content: '';
-    border-left: 1px solid $black90;
-    border-bottom: 1px solid $black90;
-    top: -50%;
-    width: 20px;
-    height: 100%;
-    z-index: 1;
-    pointer-events: none;
   }
 
   .infinity-menu-display-tree-container

@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter, routerShape } from 'react-router';
-import { StickyContainer } from 'react-sticky';
 import DatePicker from 'react-datepicker';
+import { StickyContainer, Sticky } from 'react-sticky';
 import moment from 'moment';
+import classnames from 'classnames';
 
 import Phase from 'components/Tos/Phase/Phase';
 import AddElementInput from 'components/Tos/AddElementInput/AddElementInput';
@@ -13,10 +14,9 @@ import ImportView from 'components/Tos/ImportView/ImportView';
 import CloneView from 'components/Tos/CloneView/CloneView';
 import EditorForm from 'components/Tos/EditorForm/EditorForm';
 import TosHeader from 'components/Tos/Header/TosHeader';
+import ValidationBarContainer from 'components/Tos/ValidationBar/ValidationBarContainer';
 
 import Popup from 'components/Popup';
-import Dropdown from 'components/Dropdown';
-import VersionSelector from '../VersionSelector/VersionSelector';
 
 import { formatDateTime, getStatusLabel } from '../../../utils/helpers';
 import {
@@ -69,7 +69,6 @@ export class ViewTOS extends React.Component {
       showCloneView: false,
       showImportView: false,
       showReorderView: false,
-      showValidationBar: false,
       showMore: false,
       update: '',
       validFrom: null,
@@ -225,7 +224,6 @@ export class ViewTOS extends React.Component {
 
   setValidationVisibility (value) {
     this.props.setValidationVisibility(value);
-    this.setState({ showValidationBar: value });
   }
 
   setTosVisibility (value) {
@@ -451,6 +449,42 @@ export class ViewTOS extends React.Component {
     return options;
   }
 
+  generateMetaDataButtons () {
+    const {
+      documentState,
+      is_open: isOpen,
+      valid_from: validFrom,
+      valid_to: validTo
+    } = this.props.selectedTOS;
+    const isEdit = documentState === 'edit';
+    return (
+      <div className='pull-right'>
+        {isEdit && <button className='btn btn-link' onClick={() => this.toggleCloneView()}>Tuo kuvaus</button>}
+        {isEdit && (
+          <button
+            className='btn btn-link'
+            onClick={() => this.setState({ editingMetaData: true, validFrom, validTo })}
+          >
+            Muokkaa metatietoja
+          </button>
+        )}
+        <button
+          type='button'
+          className='btn btn-info btn-sm'
+          title={isOpen ? 'Pienennä' : 'Laajenna'}
+          onClick={() => this.props.setMetadataVisibility(!isOpen)}
+        >
+          <span
+            className={
+              'fa ' + (isOpen ? 'fa-minus' : 'fa-plus')
+            }
+            aria-hidden='true'
+          />
+        </button>
+      </div>
+    );
+  }
+
   generateMetaData (attributeTypes, attributes) {
     const {
       modified_at,
@@ -520,48 +554,6 @@ export class ViewTOS extends React.Component {
         <div className='metadata-data-row__primary'>
           {attributeElements.slice(0, 2)}
         </div>
-        <div className='metadata-buttons'>
-          <button
-            type='button'
-            className='btn btn-info btn-sm'
-            title={isOpen ? 'Pienennä' : 'Laajenna'}
-            onClick={() => this.props.setMetadataVisibility(!isOpen)}
-          >
-            <span
-              className={
-                'fa ' + (isOpen ? 'fa-minus' : 'fa-plus')
-              }
-              aria-hidden='true'
-            />
-          </button>
-          {this.props.selectedTOS.documentState === 'edit' && (
-            <span className='action-dropdown-button'>
-              <Dropdown
-                items={[
-                  {
-                    text: 'Muokkaa metatietoja',
-                    icon: 'fa-pencil',
-                    style: 'btn-primary',
-                    action: () => this.setState({ editingMetaData: true, validFrom, validTo })
-                  },
-                  // {
-                  //   text: 'Täydennä metatietoja',
-                  //   icon: 'fa-plus-square',
-                  //   style: 'btn-primary',
-                  //   action: () => this.setState({ complementingMetaData: true })
-                  // },
-                  {
-                    text: 'Tuo kuvaus',
-                    icon: 'fa-clone',
-                    style: 'btn-primary',
-                    action: () => this.toggleCloneView()
-                  }
-                ]}
-                small={true}
-              />
-            </span>
-          )}
-        </div>
         <div className='metadata-data-row__primary'>
           {validFromData}
           {validToData}
@@ -600,7 +592,7 @@ export class ViewTOS extends React.Component {
     return (
       <a
         onClick={() => this.activateValidDateEditMode(field)}
-        className='list-group-item col-xs-6'
+        className='list-group-item col-xs-6 attribute-basic'
       >
         <strong>{label}:</strong>
         <div>{value ? formatDateTime(value, 'D.M.YYYY') : '\u00A0'}</div>
@@ -701,7 +693,8 @@ export class ViewTOS extends React.Component {
       selectedTOS,
       isFetching,
       templates,
-      params: { id, version }
+      params: { id, version },
+      showValidationBar
     } = this.props;
 
     if (!isFetching && selectedTOS.id) {
@@ -710,7 +703,7 @@ export class ViewTOS extends React.Component {
         selectedTOS.phases,
         phasesOrder
       );
-
+      const metataDataButtons = this.generateMetaDataButtons();
       const TOSMetaData = this.generateMetaData(
         attributeTypes,
         selectedTOS.attributes
@@ -718,190 +711,196 @@ export class ViewTOS extends React.Component {
 
       return (
         <div key={`${id}.${version}`}>
-          <StickyContainer className='col-xs-12 single-tos-container'>
-            <TosHeader
-              cancelEdit={this.cancelEdit}
-              classificationId={selectedTOS.classification}
-              changeStatus={this.changeStatus}
-              documentState={selectedTOS.documentState}
-              fetchTos={this.fetchTOS}
-              functionId={selectedTOS.function_id}
-              name={selectedTOS.name}
-              state={selectedTOS.state}
-              setDocumentState={state => this.setDocumentState(state)}
-              setPhasesVisibility={() => this.props.setPhasesVisibility(selectedTOS.phases, true)}
-              setTosVisibility={this.setTosVisibility}
-              setValidationVisibility={this.setValidationVisibility}
-              review={this.review}
-              saveDraft={this.saveDraft}
-              tosId={selectedTOS.id}
-            />
-
-            <div className='single-tos-content'>
-              <div className='row'>
-                <div className='col-xs-12'>
-                  <VersionSelector
-                    tosId={selectedTOS.id}
-                    currentVersion={selectedTOS.version}
-                    versions={selectedTOS.version_history}
-                  />
-                </div>
-              </div>
-              <div className='row'>
-                <div className='general-info space-between'>
-                  {this.state.editingMetaData && (
-                    <EditorForm
-                      onShowMore={this.onEditFormShowMoreMetaData}
-                      targetId={this.props.selectedTOS.id}
-                      additionalFields={this.generateEditorFormValidDateFields()}
-                      attributes={this.props.selectedTOS.attributes}
-                      attributeTypes={this.props.attributeTypes}
-                      editMetaDataWithForm={this.editMetaDataWithForm}
-                      editorConfig={{
-                        type: 'function',
-                        action: 'edit'
-                      }}
-                      closeEditorForm={this.cancelMetaDataEdit}
-                      displayMessage={this.props.displayMessage}
-                    />
-                  )}
-                  {this.state.complementingMetaData && (
-                    <EditorForm
-                      onShowMore={this.onEditFormShowMoreMetaData}
-                      targetId={this.props.selectedTOS.id}
-                      additionalFields={this.generateEditorFormValidDateFields()}
-                      attributes={this.props.selectedTOS.attributes}
-                      attributeTypes={this.props.attributeTypes}
-                      editMetaDataWithForm={this.editMetaDataWithForm}
-                      editorConfig={{
-                        type: 'function',
-                        action: 'complement'
-                      }}
-                      closeEditorForm={this.cancelMetaDataComplement}
-                      displayMessage={this.props.displayMessage}
-                    />
-                  )}
-                  {!this.state.editingMetaData &&
-                    !this.state.complementingMetaData && (
-                      <div className='version-details col-xs-12'>
-                        {TOSMetaData}
+          <div className='col-xs-12 single-tos-container'>
+            <StickyContainer>
+              <Sticky className='single-tos-header-wrapper'>
+                <TosHeader
+                  cancelEdit={this.cancelEdit}
+                  classificationId={selectedTOS.classification}
+                  changeStatus={this.changeStatus}
+                  currentVersion={selectedTOS.version}
+                  documentState={selectedTOS.documentState}
+                  fetchTos={this.fetchTOS}
+                  functionId={selectedTOS.function_id}
+                  name={selectedTOS.name}
+                  state={selectedTOS.state}
+                  setDocumentState={state => this.setDocumentState(state)}
+                  setPhasesVisibility={() => this.props.setPhasesVisibility(selectedTOS.phases, true)}
+                  setTosVisibility={this.setTosVisibility}
+                  setValidationVisibility={this.setValidationVisibility}
+                  review={this.review}
+                  saveDraft={this.saveDraft}
+                  tosId={selectedTOS.id}
+                  versions={selectedTOS.version_history}
+                />
+              </Sticky>
+              <div className='single-tos-wrapper'>
+                <div className={
+                  classnames([
+                    showValidationBar ? 'col-xs-9 validation-bar-open' : 'col-xs-12'
+                  ])}
+                >
+                  <div className='single-tos-content'>
+                    <div className='row'>
+                      <div className='col-xs-6'>
+                        <h3>Metatiedot</h3>
                       </div>
-                    )}
-                </div>
-                <div className='col-xs-12 button-row'>
-                  {selectedTOS.documentState === 'edit' &&
-                    !this.state.createPhaseMode && (
-                      <span className='pull-right'>
-                        <Dropdown
-                          items={[
-                            {
-                              text: 'Uusi käsittelyvaihe',
-                              icon: 'fa-file-text',
-                              style: 'btn-primary',
-                              action: () => this.addPhase()
-                            },
-                            {
-                              text: 'Tuo käsittelyvaihe',
-                              icon: 'fa-download',
-                              style: 'btn-primary',
-                              action: () => this.toggleImportView()
-                            },
-                            {
-                              text: 'Järjestä käsittelyvaiheita',
-                              icon: 'fa-th-list',
-                              style: 'btn-primary',
-                              action: () => this.toggleReorderView()
+                      <div className='col-xs-6'>
+                        {metataDataButtons}
+                      </div>
+                    </div>
+                    <div className='row'>
+                      <div className='general-info space-between'>
+                        {this.state.editingMetaData && (
+                          <EditorForm
+                            onShowMore={this.onEditFormShowMoreMetaData}
+                            targetId={this.props.selectedTOS.id}
+                            additionalFields={this.generateEditorFormValidDateFields()}
+                            attributes={this.props.selectedTOS.attributes}
+                            attributeTypes={this.props.attributeTypes}
+                            editMetaDataWithForm={this.editMetaDataWithForm}
+                            editorConfig={{
+                              type: 'function',
+                              action: 'edit'
+                            }}
+                            closeEditorForm={this.cancelMetaDataEdit}
+                            displayMessage={this.props.displayMessage}
+                          />
+                        )}
+                        {this.state.complementingMetaData && (
+                          <EditorForm
+                            onShowMore={this.onEditFormShowMoreMetaData}
+                            targetId={this.props.selectedTOS.id}
+                            additionalFields={this.generateEditorFormValidDateFields()}
+                            attributes={this.props.selectedTOS.attributes}
+                            attributeTypes={this.props.attributeTypes}
+                            editMetaDataWithForm={this.editMetaDataWithForm}
+                            editorConfig={{
+                              type: 'function',
+                              action: 'complement'
+                            }}
+                            closeEditorForm={this.cancelMetaDataComplement}
+                            displayMessage={this.props.displayMessage}
+                          />
+                        )}
+                        {!this.state.editingMetaData &&
+                          !this.state.complementingMetaData && (
+                            <div className='col-xs-12'>
+                              {TOSMetaData}
+                            </div>
+                          )}
+                      </div>
+                      <div className='col-xs-12'>
+                        <div className='col-xs-3'>
+                          <h3 className='phases-title'>Vaiheet</h3>
+                        </div>
+                        {selectedTOS.documentState === 'edit' &&
+                          !this.state.createPhaseMode && (
+                            <div className='col-xs-9'>
+                              <button className='btn btn-link pull-right' onClick={() => this.toggleReorderView()}>
+                                Järjestä käsittelyvaiheita
+                              </button>
+                              <button className='btn btn-link pull-right' onClick={() => this.toggleImportView()}>
+                                Tuo käsittelyvaihe
+                              </button>
+                              <button className='btn btn-link pull-right' onClick={() => this.addPhase()}>
+                                Uusi käsittelyvaihe
+                              </button>
+                            </div>
+                          )}
+                      </div>
+                      <div className='col-xs-12'>
+                        {this.state.createPhaseMode && (
+                          <AddElementInput
+                            type='phase'
+                            submit={this.createNewPhase}
+                            typeOptions={this.generateTypeOptions(
+                              this.props.phaseTypes
+                            )}
+                            defaultAttributes={this.generateDefaultAttributes(
+                              attributeTypes,
+                              'phase'
+                            )}
+                            newDefaultAttributes={this.state.phaseDefaultAttributes}
+                            newTypeSpecifier={this.state.phaseTypeSpecifier}
+                            newType={this.state.phaseType}
+                            onDefaultAttributeChange={this.onPhaseDefaultAttributeChange}
+                            onTypeSpecifierChange={this.onPhaseTypeSpecifierChange}
+                            onTypeChange={this.onPhaseTypeChange}
+                            onTypeInputChange={this.onPhaseTypeInputChange}
+                            cancel={this.cancelPhaseCreation}
+                            onAddFormShowMore={this.onAddFormShowMorePhase}
+                            showMoreOrLess={this.state.showMore}
+                          />
+                        )}
+                        {phaseElements}
+                        {this.state.showReorderView && (
+                          <Popup
+                            content={
+                              <ReorderView
+                                target='phase'
+                                toggleReorderView={() => this.toggleReorderView()}
+                                keys={Object.keys(selectedTOS.phases)}
+                                values={selectedTOS.phases}
+                                changeOrder={this.props.changeOrder}
+                                parent={null}
+                                attributeTypes={this.props.attributeTypes}
+                                parentName={
+                                  selectedTOS.function_id + ' ' + selectedTOS.name
+                                }
+                              />
                             }
-                          ]}
-                          small={true}
-                        />
-                      </span>
-                    )}
+                            closePopup={() => this.toggleReorderView()}
+                          />
+                        )}
+                        {this.state.showImportView && (
+                          <Popup
+                            content={
+                              <ImportView
+                                level='phase'
+                                toggleImportView={() => this.toggleImportView()}
+                                phases={selectedTOS.phases}
+                                phasesOrder={phasesOrder}
+                                actions={selectedTOS.actions}
+                                records={selectedTOS.records}
+                                importItems={this.props.importItems}
+                                title='käsittelyvaiheita'
+                                targetText={'Tos-kuvaukseen ' + selectedTOS.name}
+                                itemsToImportText='käsittelyvaiheet'
+                              />
+                            }
+                            closePopup={() => this.toggleImportView()}
+                          />
+                        )}
+                        {this.state.showCloneView && (
+                          <Popup
+                            content={
+                              <CloneView
+                                cloneFromTemplate={(selectedMethod, id) =>
+                                  this.cloneFromTemplate(selectedMethod, id)
+                                }
+                                setNavigationVisibility={
+                                  this.props.setNavigationVisibility
+                                }
+                                templates={templates}
+                                toggleCloneView={() => this.toggleCloneView()}
+                              />
+                            }
+                            closePopup={() => this.toggleCloneView()}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className='col-xs-12'>
-                  {this.state.createPhaseMode && (
-                    <AddElementInput
-                      type='phase'
-                      submit={this.createNewPhase}
-                      typeOptions={this.generateTypeOptions(
-                        this.props.phaseTypes
-                      )}
-                      defaultAttributes={this.generateDefaultAttributes(
-                        attributeTypes,
-                        'phase'
-                      )}
-                      newDefaultAttributes={this.state.phaseDefaultAttributes}
-                      newTypeSpecifier={this.state.phaseTypeSpecifier}
-                      newType={this.state.phaseType}
-                      onDefaultAttributeChange={this.onPhaseDefaultAttributeChange}
-                      onTypeSpecifierChange={this.onPhaseTypeSpecifierChange}
-                      onTypeChange={this.onPhaseTypeChange}
-                      onTypeInputChange={this.onPhaseTypeInputChange}
-                      cancel={this.cancelPhaseCreation}
-                      onAddFormShowMore={this.onAddFormShowMorePhase}
-                      showMoreOrLess={this.state.showMore}
-                    />
-                  )}
-                  {phaseElements}
-                  {this.state.showReorderView && (
-                    <Popup
-                      content={
-                        <ReorderView
-                          target='phase'
-                          toggleReorderView={() => this.toggleReorderView()}
-                          keys={Object.keys(selectedTOS.phases)}
-                          values={selectedTOS.phases}
-                          changeOrder={this.props.changeOrder}
-                          parent={null}
-                          attributeTypes={this.props.attributeTypes}
-                          parentName={
-                            selectedTOS.function_id + ' ' + selectedTOS.name
-                          }
-                        />
-                      }
-                      closePopup={() => this.toggleReorderView()}
-                    />
-                  )}
-                  {this.state.showImportView && (
-                    <Popup
-                      content={
-                        <ImportView
-                          level='phase'
-                          toggleImportView={() => this.toggleImportView()}
-                          phases={selectedTOS.phases}
-                          phasesOrder={phasesOrder}
-                          actions={selectedTOS.actions}
-                          records={selectedTOS.records}
-                          importItems={this.props.importItems}
-                          title='käsittelyvaiheita'
-                          targetText={'Tos-kuvaukseen ' + selectedTOS.name}
-                          itemsToImportText='käsittelyvaiheet'
-                        />
-                      }
-                      closePopup={() => this.toggleImportView()}
-                    />
-                  )}
-                  {this.state.showCloneView && (
-                    <Popup
-                      content={
-                        <CloneView
-                          cloneFromTemplate={(selectedMethod, id) =>
-                            this.cloneFromTemplate(selectedMethod, id)
-                          }
-                          setNavigationVisibility={
-                            this.props.setNavigationVisibility
-                          }
-                          templates={templates}
-                          toggleCloneView={() => this.toggleCloneView()}
-                        />
-                      }
-                      closePopup={() => this.toggleCloneView()}
-                    />
-                  )}
-                </div>
+                {showValidationBar && (
+                  <div className='col-xs-3 validation-bar-container'>
+                    <ValidationBarContainer />
+                  </div>
+                )}
               </div>
-            </div>
-          </StickyContainer>
+            </StickyContainer>
+          </div>
         </div>
       );
     } else {
@@ -956,6 +955,7 @@ ViewTOS.propTypes = {
   setRecordVisibility: PropTypes.func.isRequired,
   setTosVisibility: PropTypes.func.isRequired,
   setValidationVisibility: PropTypes.func.isRequired,
+  showValidationBar: PropTypes.bool.isRequired,
   templates: PropTypes.array.isRequired
 };
 

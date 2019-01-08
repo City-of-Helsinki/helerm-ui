@@ -1,3 +1,16 @@
+@import '../../styles/vendor/hel-components/variables';
+
+.helerm-version-label {
+  vertical-align: text-bottom;
+  margin-right: 12px;
+}
+
 .helerm-version-selector {
-  display: block;
+  display: inline-block;
+  min-width: 400px;
+  vertical-align: bottom;
+  
+  .Select-value-label {
+    color: $link-color;
+  }
 }

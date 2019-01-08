@@ -1,3 +1,5 @@
+@import '../../styles/vendor/hel-components/variables';
+
 .add-element-buttons {
   clear: both;
   padding: 1rem 1rem 0 1rem;
@@ -10,6 +12,9 @@
 }
 .add-element {
   padding: 10px 20px;
+  border: 2px dotted $brand-primary;
+  border-radius: 4px;
+  margin: 15px 0;
   .col-md-6 {
     padding-top: 15px;
   }

@@ -1,13 +1,19 @@
+@import '../../styles/vendor/hel-components/variables';
+
 .missing-attributes {
   margin-bottom: 25px;
 }
 
 .missing-attribute {
-  color: #ff0000;
+  .fa {
+    color: $brand-danger;
+  }
 }
 
 .warn-attribute {
-  color: #ffc61e;
+  .fa {
+    color: $brand-warning;
+  }
 }
 
 .helerm-validation-sidebar--opened {
@@ -17,6 +23,7 @@
 }
 
 .sidebar-content {
+  will-change: min-height;
   h4 {
     margin-bottom: 20px;
   }
@@ -28,7 +35,45 @@
   .sidebar-content-close {
     padding: 10px 0;
     display: block;
+    .sidebar-close-button {
+      background: transparent;
+      border: none;
+      font-size: $font-size-large;
+    }
   }
+
+  .sidebar-content-filter {
+    .btn {
+      margin-right: 15px;
+      border-radius: 15px;
+      &-filter {
+        background-color: transparent;
+        border: none;
+        color: $black00;
+      }
+    }
+    .sidebar-content-filter-warn {
+      .fa {
+        color: $brand-warning;
+      }
+    }
+    .sidebar-content-filter-error {
+      .fa {
+        color: $brand-danger;
+      }
+    }
+    .sidebar__inner{
+      transform: translate(0, 0); /* For browsers don't support translate3d. */
+      transform: translate3d(0, 0, 0);
+      will-change: position, transform;
+    }
+  }
+
+.sidebar-content-phase {
+  > .parent-name {
+    font-weight: 700;
+  }
+}
 
   .element-name {
     margin-bottom: 5px;

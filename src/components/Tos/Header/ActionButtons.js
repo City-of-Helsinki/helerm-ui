@@ -36,16 +36,16 @@ const ActionButtons = ({
     <IsAllowed to={EDIT}>
       <span>
         <ActionButton
-          className='btn-sm pull-right'
-          type={editMode ? 'primary' : 'default'}
+          className='btn pull-right'
+          type={editMode ? 'success' : 'success'}
           action={editMode ? saveDraft : () => review(SENT_FOR_REVIEW)}
           label={editMode ? 'Tallenna luonnos' : 'Lähetä tarkastettavaksi'}
         />
         <ActionButton
-          className='btn-sm pull-right'
+          className='btn pull-right'
           type={editMode ? 'danger' : 'primary'}
           action={editMode ? cancelEdit : () => setDocumentState('edit')}
-          label={editMode ? 'Peruuta muokkaus' : 'Muokkaustila'}
+          label={editMode ? 'Peruuta muokkaus' : 'Muokkaa'}
         />
         {/* {editMode &&
         <span className='fa fa-asterisk required-asterisk required-legend'> = Pakollinen tieto</span>
@@ -58,13 +58,13 @@ const ActionButtons = ({
     <IsAllowed to={REVIEW}>
       <span>
         <ActionButton
-          className='btn-sm pull-right'
+          className='btn pull-right'
           type='primary'
           action={() => changeStatus(WAITING_FOR_APPROVAL)}
           label={'Lähetä hyväksyttäväksi'}
         />
         <ActionButton
-          className='btn-sm pull-right'
+          className='btn pull-right'
           type='danger'
           action={() => changeStatus(DRAFT)}
           label={'Palauta luonnokseksi'}
@@ -77,13 +77,13 @@ const ActionButtons = ({
     <IsAllowed to={APPROVE}>
       <span>
         <ActionButton
-          className='btn-sm pull-right'
+          className='btn pull-right'
           type='primary'
           action={() => changeStatus(APPROVED)}
           label={'Hyväksy'}
         />
         <ActionButton
-          className='btn-sm pull-right'
+          className='btn pull-right'
           type='danger'
           action={() => changeStatus(DRAFT)}
           label={'Palauta luonnokseksi'}
@@ -96,14 +96,14 @@ const ActionButtons = ({
     <IsAllowed to={EDIT}>
       <span>
         <ActionButton
-          className='btn-sm pull-right'
+          className='btn pull-right'
           type='primary'
           icon='fa-file-o'
           action={saveDraft}
           label={'Luo luonnos'}
         />
         <ActionButton
-          className='btn-sm pull-right'
+          className='btn pull-right'
           type='secondary'
           icon='fa-refresh'
           action={() => fetchTos(tosId, { state: 'approved' })}
@@ -122,15 +122,14 @@ const ActionButtons = ({
         {status === APPROVED && draftable}
         {status !== APPROVED && (
           <ActionButton
-            className='btn-sm pull-right'
-            type='success'
+            className='btn pull-right'
+            type='primary'
             action={() => setValidationVisibility(true)}
             label={'Esitarkasta'}
-            icon={'fa-check-circle-o'}
           />
         )}
         <Link
-          className={`btn btn-sm btn-primary pull-right${editMode ? ' disabled' : ''}`}
+          className={`btn btn-primary pull-right${editMode ? ' disabled' : ''}`}
           to={getNewPath(window.location.pathname, 'print')}
         >
           Raportti
@@ -138,20 +137,20 @@ const ActionButtons = ({
       </div>
       <div className='col-xs-12 visibility-buttons'>
         <ActionButton
-          className='btn-sm pull-right'
-          type='default'
+          className='pull-right'
+          type='link'
           action={() => setTosVisibility(true)}
           label={'Avaa kaikki tiedot'}
         />
         <ActionButton
-          className='btn-sm pull-right'
-          type='default'
+          className='pull-right'
+          type='link'
           action={setPhasesVisibility}
           label={'Avaa perustiedot'}
         />
         <ActionButton
-          className='btn-sm pull-right'
-          type='default'
+          className='pull-right'
+          type='link'
           action={() => setTosVisibility(false)}
           label={'Pienennä kaikki'}
         />

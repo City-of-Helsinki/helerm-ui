@@ -305,7 +305,7 @@ export class Navigation extends React.Component {
       );
     }
     return (
-      <div className='container-fluid helerm-navigation'>
+      <div className='helerm-navigation'>
         <InfinityMenu
           addSearchInput={this.addSearchInput}
           attributeTypes={attributeTypes}

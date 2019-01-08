@@ -18,16 +18,15 @@ const getVersionLabel = ({
 };
 
 const VersionSelector = ({ tosId, currentVersion, versions, router }) => {
-  const className = 'helerm-version-selector';
-  const name = `${className}-${tosId}`;
+  const name = `helerm-version-${tosId}`;
 
   return (
-    <label className={className} htmlFor={name}>
-      Versio
+    <div>
+      <label className='helerm-version-label' htmlFor={name}>Versio:</label>
       <Select
         id={name}
         name={name}
-        className={className}
+        className='helerm-version-selector'
         placeholder='Valitse versio...'
         noResultsText='Hakua vastaavia versioita ei löytynyt'
         onChange={({ value }) => {
@@ -42,7 +41,7 @@ const VersionSelector = ({ tosId, currentVersion, versions, router }) => {
         backspaceRemoves={false}
         deleteRemoves={false}
       />
-    </label>
+    </div>
   );
 };
 

@@ -1,40 +1,45 @@
+@import '../../styles/vendor/hel-components/variables';
+
 .action {
   &.box {
     margin: 0;
+    background-color: $white;
   }
-  margin: 10px 0;
-  border-top-color: #658fcd;
-  border-top-width: 4px;
-  background-color: white;
+  margin: 15px 0;
   position: relative;
 }
 .action-title {
-  margin-left: 10px;
   position: relative;
   font-weight: 600;
   width: 100%;
-  padding: 1px 0 7px;
+  min-height: 31px;
   &-input {
     margin-right: 15px;
   }
 }
 .action-title.sticky {
-  z-index: 1;
-  background-color: #f2f2f2;
-  padding-left: 48px;
+  z-index: 7;
+  background-color: $gray-lighter;
+  padding: 25px 67px 15px;
   left: 0px !important;
   margin-left: 0;
   width: 100% !important;
   border-bottom: 1px solid #cfcfcf;
-  // .action-dropdown-button {
-  //   right: 53px;
-  // }
 }
 .records {
   padding: 1px 10px 26px;
+  background-color: $white;
+  margin-top: -1px;
+  h4 {
+    font-size: 18px;
+  }
+  .attribute {
+    padding: 15px;
+  }
 }
 .attribute-labels-container {
   clear: both;
+  margin-left: 15px;
 }
 .attribute-label {
   text-transform: uppercase;
@@ -58,8 +63,8 @@
 
 .action-buttons {
   position: absolute;
-  right: 25px;
-  top: 4px;
+  right: 15px;
+  top: 15px;
   font-size: 14px;
   .action-dropdown-button {
     right: 0;
@@ -69,14 +74,17 @@
 }
 .action-attributes {
   margin-bottom: 10px;
+  .attribute {
+    border: none;
+  }
   .table-key {
-    font-weight: 400;
+    font-weight: 700;
   }
 }
 
 .action-open {
   .basic-attributes {
-    height: 20px;
+    height: 31px;
   }
   .list-group-item {
     padding: 10px 15px;

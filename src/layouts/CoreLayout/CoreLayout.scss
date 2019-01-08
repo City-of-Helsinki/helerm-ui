@@ -1,7 +1,10 @@
 .core-layout__viewport {
-  
+
+    .core-layout__navigation {
+        z-index: 10;
+    }
 }
 
 .helerm-content {
-    padding-right: 50px;
+    padding: 0;
 }

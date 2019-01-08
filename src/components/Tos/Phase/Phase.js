@@ -431,6 +431,7 @@ export class Phase extends React.Component {
     const classNames = classnames([
       'col-md-6',
       'basic-attribute',
+      'phase-basic-attribute',
       this.props.documentState === 'edit' ? 'editable' : null
     ]);
     let typeSpecifier = (
