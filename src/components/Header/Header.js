@@ -32,7 +32,7 @@ export class Header extends React.Component {
             <small>{SITE_TITLE} {gitVersion}</small>
           </p>
           <LoginContainer />
-          <p className='navbar-text login-container'>
+          <p className='navbar-text pull-right'>
             <Link
               to={FEEDBACK_URL}
               target='_blank'

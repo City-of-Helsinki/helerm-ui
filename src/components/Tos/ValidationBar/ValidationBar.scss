@@ -16,12 +16,6 @@
   }
 }
 
-.helerm-validation-sidebar--opened {
-  .helerm-validation-sidebar--content {
-    margin-right: 300px;
-  }
-}
-
 .sidebar-content {
   will-change: min-height;
   h4 {
@@ -46,11 +40,11 @@
     .btn {
       margin-right: 15px;
       border-radius: 15px;
-      &-filter {
-        background-color: transparent;
-        border: none;
-        color: $black00;
-      }
+    }
+    .btn:not(.btn-default) {
+      background-color: transparent;
+      border: none;
+      color: $black00;
     }
     .sidebar-content-filter-warn {
       .fa {
@@ -69,22 +63,26 @@
     }
   }
 
-.sidebar-content-phase {
-  > .parent-name {
-    font-weight: 700;
+  .sidebar-invalid-content {
+    padding-bottom: 150px;
   }
-}
+
+  .sidebar-content-phase {
+    > .parent-name {
+      font-weight: 700;
+    }
+  }
 
   .element-name {
     margin-bottom: 5px;
   }
 
   .no-missing-attributes {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
     color: #009c3d;
     font-size: 120px;
-    left: 100px;
-    position: absolute;
-    top: 40%;
   }
 
   .sidebar-content-action,

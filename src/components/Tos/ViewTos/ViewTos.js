@@ -70,7 +70,6 @@ export class ViewTOS extends React.Component {
       showImportView: false,
       showReorderView: false,
       showMore: false,
-      update: '',
       validFrom: null,
       validFromEditing: false,
       validTo: null,
@@ -379,15 +378,7 @@ export class ViewTOS extends React.Component {
     this.props.editMetaData(attributes);
   }
 
-  /*
-   setPhaseVisibility is a hack to fix firefox specific issue of re-rendering phases
-   remove once firefox issue is fixed
-   */
   setPhaseVisibility (x, y) {
-    const newString = Math.random()
-      .toString(36)
-      .replace(/[^a-z]+/g, '');
-    this.setState({ update: newString });
     this.props.setPhaseVisibility(x, y);
   }
 
@@ -678,7 +669,6 @@ export class ViewTOS extends React.Component {
               displayMessage={this.props.displayMessage}
               changeOrder={this.props.changeOrder}
               importItems={this.props.importItems}
-              update={this.state.update}
             />
           );
         }

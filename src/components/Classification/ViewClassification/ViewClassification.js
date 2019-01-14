@@ -120,36 +120,34 @@ export class ViewClassification extends React.Component {
         classification.additional_information
       );
       return (
-        <div>
-          <div className='col-xs-12 single-classification-container'>
-            <ClassificationHeader
-              code={classification.code}
-              title={classification.title}
-              createTos={this.createTos}
-              functionAllowed={!classification.function && classification.function_allowed}
-            />
+        <div className='col-xs-12 single-classification-container'>
+          <ClassificationHeader
+            code={classification.code}
+            title={classification.title}
+            createTos={this.createTos}
+            functionAllowed={!classification.function && classification.function_allowed}
+          />
 
-            <div className='single-classification-content'>
-              <div className='row'>
-                <div className='general-info space-between'>
-                  <div className='classification-details col-xs-12'>
-                    <h5 style={{ marginTop: '0' }}>Tehtäväluokan tiedot</h5>
-                    {description}
-                    {descriptionInternal}
-                    {relatedClassification}
-                    {additionalInformation}
-                  </div>
+          <div className='single-classification-content'>
+            <div className='row'>
+              <div className='general-info space-between'>
+                <div className='classification-details col-xs-12'>
+                  <h5 style={{ marginTop: '0' }}>Tehtäväluokan tiedot</h5>
+                  {description}
+                  {descriptionInternal}
+                  {relatedClassification}
+                  {additionalInformation}
                 </div>
-                {classification.function
-                  ? (
-                    <div className='classification-details col-xs-12 no-print'>
-                      <Link to={`/view-tos/${classification.function}`}>
-                          Käsittelyprosessi &raquo;
-                        </Link>
-                    </div>
-                  )
-                  : null}
               </div>
+              {classification.function
+                ? (
+                  <div className='classification-details col-xs-12 no-print'>
+                    <Link to={`/view-tos/${classification.function}`}>
+                        Käsittelyprosessi &raquo;
+                      </Link>
+                  </div>
+                )
+                : null}
             </div>
           </div>
         </div>
