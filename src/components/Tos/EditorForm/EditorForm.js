@@ -605,7 +605,7 @@ export class EditorForm extends React.Component {
               className='btn btn-success pull-right editor-form__submit'
               type='submit'
             >
-              Valmis
+              OK
             </button>
             <button
               className='btn btn-danger pull-right editor-form__cancel'
