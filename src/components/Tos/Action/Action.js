@@ -424,17 +424,22 @@ export class Action extends React.Component {
       // }
     }
 
+    if (this.props.action.is_open && this.props.action.records.length) {
+      return (
+        <Sticky className='action-title action-open'>
+          <div className='basic-attributes'>
+            {typeSpecifier}
+          </div>
+        </Sticky>
+      );
+    }
+
     return (
-      <Sticky
-        className={
-          'action-title ' +
-          (this.props.action.is_open ? 'action-open' : 'action-closed')
-        }
-      >
+      <div className='action-title action-closed'>
         <div className='basic-attributes'>
           {typeSpecifier}
         </div>
-      </Sticky>
+      </div>
     );
   }
 

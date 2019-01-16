@@ -27,6 +27,9 @@
   left: 0px !important;
   padding: 0 46px 0;
   border-bottom: 1px solid #cfcfcf;
+  .basic-attributes {
+    padding-bottom: 0;
+  }
 }
 .validation-bar-open {
   .phase-title.sticky {

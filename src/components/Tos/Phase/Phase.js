@@ -428,6 +428,7 @@ export class Phase extends React.Component {
   }
 
   renderBasicAttributes () {
+    const { phase } = this.props;
     const classNames = classnames([
       'col-md-6',
       'basic-attribute',
@@ -479,18 +480,33 @@ export class Phase extends React.Component {
       }
     }
 
+    if (phase.is_open && phase.actions.length) {
+      return (
+        <Sticky
+          className={
+            'phase-title ' +
+            (phase.is_attributes_open ? 'phase-open' : 'phase-closed')
+          }
+        >
+          <div className='basic-attributes'>
+            {phaseType}
+            {typeSpecifier}
+          </div>
+        </Sticky>
+      );
+    }
     return (
-      <Sticky
+      <div
         className={
           'phase-title ' +
-          (this.props.phase.is_attributes_open ? 'phase-open' : 'phase-closed')
+          (phase.is_attributes_open ? 'phase-open' : 'phase-closed')
         }
       >
         <div className='basic-attributes'>
           {phaseType}
           {typeSpecifier}
         </div>
-      </Sticky>
+      </div>
     );
   }
 
