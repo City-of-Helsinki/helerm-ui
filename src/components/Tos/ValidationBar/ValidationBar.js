@@ -35,7 +35,7 @@ export class ValidationBar extends Component {
   componentDidMount () {
     const sidebar = new StickySidebar('.sidebar-content', {
       bottomSpacing: 10,
-      topSpacing: 185,
+      topSpacing: 135,
       containerSelector: '.validation-bar-container',
       innerWrapperSelector: '.sidebar__inner'
     });

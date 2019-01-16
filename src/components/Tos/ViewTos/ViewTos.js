@@ -733,7 +733,7 @@ export class ViewTOS extends React.Component {
                   <div className='single-tos-content'>
                     <div className='row'>
                       <div className='col-xs-6'>
-                        <h3>Metatiedot</h3>
+                        <h4>Metatiedot</h4>
                       </div>
                       <div className='col-xs-6'>
                         {metataDataButtons}

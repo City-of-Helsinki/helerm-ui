@@ -22,10 +22,16 @@ export class Header extends React.Component {
         <nav className='navbar navbar-inverse container-fluid'>
           <Link
             to='/'
-            className='brand-title navbar-brand'
+            className='brand-title navbar-brand logo'
             onClick={() => this.props.fetchNavigation(false)}
             >
             <Logo />
+          </Link>
+          <Link
+            to='/'
+            className='brand-title navbar-brand'
+            onClick={() => this.props.fetchNavigation(false)}
+            >
             Tiedonohjausjärjestelmä
           </Link>
           <p className='navbar-text'>
