@@ -135,7 +135,7 @@ const ActionButtons = ({
           Raportti
         </Link>
       </div>
-      <div className='col-xs-12'>
+      <div className='col-xs-12 tos-visibility-buttons'>
         <ActionButton
           className='pull-right'
           type='link'
