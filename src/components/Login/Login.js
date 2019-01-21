@@ -1,7 +1,5 @@
 import React, { PropTypes } from 'react';
 
-import './Login.scss';
-
 class Login extends React.Component {
   constructor () {
     super();
@@ -28,7 +26,7 @@ class Login extends React.Component {
 
   render () {
     return (
-      <p className='navbar-text login-container'>
+      <p className='navbar-text pull-right'>
         {this.getUserLink()}
       </p>
     );

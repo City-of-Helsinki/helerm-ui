@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { map, find, forEach, indexOf } from 'lodash';
+import { map, find, forEach } from 'lodash';
 import classnames from 'classnames';
 import StickySidebar from 'sticky-sidebar/dist/sticky-sidebar';
 
@@ -27,15 +27,15 @@ export class ValidationBar extends Component {
     this.renderContent = this.renderContent.bind(this);
     this.onFilterStatusChange = this.onFilterStatusChange.bind(this);
     this.state = {
-      filterStatus: [],
+      filterStatus: '',
       sidebar: null
     };
   }
 
   componentDidMount () {
     const sidebar = new StickySidebar('.sidebar-content', {
-      bottomSpacing: 125,
-      topSpacing: 185,
+      bottomSpacing: 10,
+      topSpacing: 155,
       containerSelector: '.validation-bar-container',
       innerWrapperSelector: '.sidebar__inner'
     });
@@ -177,17 +177,15 @@ export class ValidationBar extends Component {
     return null;
   }
 
-  onFilterStatusChange (value) {
+  onFilterStatusChange (filterStatus) {
     this.setState({
-      filterStatus: !value ? [] : [value]
+      filterStatus
     });
   }
 
   getFilterByStatus (filterValue) {
-    if (!this.state.filterStatus.length) {
-      return true;
-    }
-    return !!find(this.state.filterStatus, item => item === filterValue);
+    const { filterStatus } = this.state;
+    return !filterStatus ? true : filterValue === filterStatus;
   }
 
   renderInvalidContent () {
@@ -201,19 +199,19 @@ export class ValidationBar extends Component {
 
     if (invalidTOSAttributes || invalidAttributes.length > 0) {
       return (
-        <div>
+        <div className='sidebar-invalid-content'>
           {invalidTOSAttributes && <h5>Käsittelyprosessi</h5>}
           {invalidTOSAttributes}
           {invalidAttributes}
         </div>
       );
     }
-    return <div className='no-missing-attributes fa fa-check-circle' />;
+    return <div className='no-missing-attributes'><div className='fa fa-check-circle' /></div>;
   }
 
   renderContent () {
-    const invalidContent = this.renderInvalidContent();
     const { filterStatus } = this.state;
+    const invalidContent = this.renderInvalidContent();
     return (
       <div className='sidebar-content'>
         <div className='sidebar-content-close'>
@@ -228,17 +226,26 @@ export class ValidationBar extends Component {
         </div>
         <div className='sidebar-content-filter'>
           <button
-            className={classnames(['sidebar-content-filter-all btn btn-sm btn-default', !filterStatus.length ? '' : 'btn-filter'])}
-            onClick={() => this.onFilterStatusChange()}>
+            className={classnames(
+              'sidebar-content-filter-all btn btn-sm',
+              { 'btn-default': filterStatus === '' }
+            )}
+            onClick={() => this.onFilterStatusChange('')}>
             Kaikki
           </button>
           <button
-            className={classnames(['sidebar-content-filter-warn btn btn-sm btn-default', indexOf(filterStatus, FILTER_VALUE_WARN) >= 0 ? '' : 'btn-filter'])}
+            className={classnames(
+              'sidebar-content-filter-warn btn btn-sm',
+              { 'btn-default': filterStatus === FILTER_VALUE_WARN }
+            )}
             onClick={() => this.onFilterStatusChange(FILTER_VALUE_WARN)}>
             <i className='fa fa-exclamation-circle' /> Huomautukset
           </button>
           <button
-            className={classnames(['sidebar-content-filter-error btn btn-sm btn-default', indexOf(filterStatus, FILTER_VALUE_ERROR) >= 0 ? '' : 'btn-filter'])}
+            className={classnames(
+              'sidebar-content-filter-error btn btn-sm',
+              { 'btn-default': filterStatus === FILTER_VALUE_ERROR }
+            )}
             onClick={() => this.onFilterStatusChange(FILTER_VALUE_ERROR)}>
             <i className='fa fa-exclamation-triangle' /> Virheet
           </button>

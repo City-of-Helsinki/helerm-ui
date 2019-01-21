@@ -1,9 +1,12 @@
 @import '../../styles/vendor/hel-components/variables';
 
 .phase {
-  border-top: 0px;
-  background-color: $gray-lighter;
-  padding: 0px 0px 10px 0px;
+  padding-bottom: 40px;
+  >.box {
+    display: inline-block;
+    width: 100%;
+    background-color: $gray-lighter;
+  }
 }
 .phase-title {
   font-size: 1.1em;
@@ -22,22 +25,16 @@
   margin-left: 0;
   width: 100% !important;
   left: 0px !important;
+  padding: 0 46px 0;
   border-bottom: 1px solid #cfcfcf;
+  .basic-attributes {
+    padding-bottom: 0;
+  }
 }
 .validation-bar-open {
   .phase-title.sticky {
     width: 75% !important;
   }
-}
-.phase-title.phase-closed.sticky {
-  padding: 7px 46px 2px;
-  margin-left: 0px;
-}
-.phase-title.phase-open.sticky {
-  padding: 7px 46px 2px;
-}
-.helerm-validation-sidebar--opened .phase-title.sticky {
-  padding-right: 341px;
 }
 .title-edit-button {
   margin-left: 8px;
@@ -48,20 +45,13 @@
 .input-type {
   font-size: 1em;
 }
-// this is a hack to fix firefox specific issue of re-rendering phases
-// remove once firefox issue is fixed
-.update {
-  position: absolute;
-  z-index: -999999;
-  color: transparent;
-}
 .actions {
   padding: 0px 5px;
 }
 .phase-buttons {
   position: absolute;
-  right: 17px;
-  top: 17px;
+  right: 0;
+  top: 0;
 }
 .phase-buttons button {
   margin: 0px 1px;
@@ -90,10 +80,12 @@
 .phase-attributes {
   display: inline-block;
   width: 100%;
+  margin-bottom: 0;
+  position: relative;
 
   .basic-attributes {
-    height: 40px;
-    position: relative;
+    display: inline-block;
+    width: 100%;
 
     .phase-basic-attribute {
       font-size: $font-size-h3;

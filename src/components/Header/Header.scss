@@ -4,12 +4,15 @@
 
 .navbar-brand {
   color: #fff !important;
-  padding: 15px 5px !important;
+  padding: 10px 5px !important;
   line-height: 40px !important;
-  svg {
-    height: 40px;
-    fill: #fff;
+  font-size: 18px !important;
+  &.logo {
     margin-right: 15px;
+  }
+  svg {
+    width: 75px;
+    fill: #fff;
     vertical-align: middle;
   }
 }

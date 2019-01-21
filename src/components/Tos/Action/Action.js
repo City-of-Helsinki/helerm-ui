@@ -424,17 +424,22 @@ export class Action extends React.Component {
       // }
     }
 
+    if (this.props.action.is_open && this.props.action.records.length) {
+      return (
+        <Sticky className='action-title action-open'>
+          <div className='basic-attributes'>
+            {typeSpecifier}
+          </div>
+        </Sticky>
+      );
+    }
+
     return (
-      <Sticky
-        className={
-          'action-title ' +
-          (this.props.action.is_open ? 'action-open' : 'action-closed')
-        }
-      >
+      <div className='action-title action-closed'>
         <div className='basic-attributes'>
           {typeSpecifier}
         </div>
-      </Sticky>
+      </div>
     );
   }
 
@@ -452,7 +457,7 @@ export class Action extends React.Component {
       action && action.records ? this.generateRecords(action.records) : [];
 
     return (
-      <div>
+      <StickyContainer>
         <div className='action row'>
           {this.state.mode === 'edit' &&
             this.state.editingAction && (
@@ -494,77 +499,75 @@ export class Action extends React.Component {
             )}
           {!this.state.editingAction &&
             !this.state.complementingAction && (
-              <StickyContainer>
-                <div className='action row'>
-                  <div className='action row box'>
-                    <Attributes
-                      element={action}
-                      documentState={this.props.documentState}
-                      type={'action'}
+              <div>
+                <div className='box'>
+                  <Attributes
+                    element={action}
+                    documentState={this.props.documentState}
+                    type={'action'}
+                    attributeTypes={this.props.attributeTypes}
+                    typeOptions={this.props.actionTypes}
+                    renderBasicAttributes={this.renderBasicAttributes}
+                    renderButtons={this.renderActionButtons}
+                    updateTypeSpecifier={this.updateTypeSpecifier}
+                    updateType={this.updateActionType}
+                    updateAttribute={this.updateActionAttribute}
+                    showAttributes={action.is_open}
+                  />
+                  {
+                  this.state.creatingRecord && (
+                  <EditorForm
+                      onShowMoreForm={this.complementRecordForm}
+                      targetId={this.props.action.id}
+                      attributes={this.state.record.attributes}
                       attributeTypes={this.props.attributeTypes}
-                      typeOptions={this.props.actionTypes}
-                      renderBasicAttributes={this.renderBasicAttributes}
-                      renderButtons={this.renderActionButtons}
-                      updateTypeSpecifier={this.updateTypeSpecifier}
-                      updateType={this.updateActionType}
-                      updateAttribute={this.updateActionAttribute}
-                      showAttributes={action.is_open}
+                      elementConfig={{
+                        elementTypes: this.props.recordTypes,
+                        createRecord: this.createRecord
+                      }}
+                      editorConfig={{
+                        type: 'record',
+                        action: 'add'
+                      }}
+                      closeEditorForm={this.cancelRecordCreation}
+                      displayMessage={this.props.displayMessage}
                     />
-                    {
-                    this.state.creatingRecord && (
+                  )}
+                  {this.state.complementingRecordAdd && (
                     <EditorForm
-                        onShowMoreForm={this.complementRecordForm}
-                        targetId={this.props.action.id}
-                        attributes={this.state.record.attributes}
-                        attributeTypes={this.props.attributeTypes}
-                        elementConfig={{
-                          elementTypes: this.props.recordTypes,
-                          createRecord: this.createRecord
-                        }}
-                        editorConfig={{
-                          type: 'record',
-                          action: 'add'
-                        }}
-                        closeEditorForm={this.cancelRecordCreation}
-                        displayMessage={this.props.displayMessage}
-                      />
-                    )}
-                    {this.state.complementingRecordAdd && (
-                      <EditorForm
-                        onShowMoreForm={this.onEditFormShowMoreRecordAdd}
-                        targetId={this.props.action.id}
-                        attributes={this.state.record.attributes}
-                        attributeTypes={this.props.attributeTypes}
-                        elementConfig={{
-                          elementTypes: this.props.recordTypes,
-                          createRecord: this.createRecord
-                        }}
-                        editorConfig={{
-                          type: 'record',
-                          action: 'complement',
-                          from: 'newRecord'
+                      onShowMoreForm={this.onEditFormShowMoreRecordAdd}
+                      targetId={this.props.action.id}
+                      attributes={this.state.record.attributes}
+                      attributeTypes={this.props.attributeTypes}
+                      elementConfig={{
+                        elementTypes: this.props.recordTypes,
+                        createRecord: this.createRecord
+                      }}
+                      editorConfig={{
+                        type: 'record',
+                        action: 'complement',
+                        from: 'newRecord'
 
-                        }}
-                        complementRecordAdd={this.complementRecordAdd}
-                        closeEditorForm={this.cancelRecordComplement}
-                        displayMessage={this.props.displayMessage}
-                      />
-                    )}
-                  </div>
-                  {!!recordElements.length && (
-                    <div className='attribute-labels-container'>
-                      <div
-                        className={classnames('col-xs-12 records box', {
-                          'records-editing': this.props.documentState === 'edit'
-                        })}
-                      >
-                        <h4>Asiakirjat</h4>
-                        {recordElements}
-                      </div>
-                    </div>
+                      }}
+                      complementRecordAdd={this.complementRecordAdd}
+                      closeEditorForm={this.cancelRecordComplement}
+                      displayMessage={this.props.displayMessage}
+                    />
                   )}
                 </div>
-              </StickyContainer>
+                {!!recordElements.length && (
+                  <div className='attribute-labels-container'>
+                    <div
+                      className={classnames('col-xs-12 records box', {
+                        'records-editing': this.props.documentState === 'edit'
+                      })}
+                    >
+                      <h4>Asiakirjat</h4>
+                      {recordElements}
+                    </div>
+                  </div>
+                )}
+              </div>
             )}
           {this.state.deleting && (
             <Popup
@@ -622,7 +625,7 @@ export class Action extends React.Component {
             />
           )}
         </div>
-      </div>
+      </StickyContainer>
     );
   }
 }

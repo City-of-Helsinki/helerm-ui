@@ -428,6 +428,7 @@ export class Phase extends React.Component {
   }
 
   renderBasicAttributes () {
+    const { phase } = this.props;
     const classNames = classnames([
       'col-md-6',
       'basic-attribute',
@@ -479,18 +480,33 @@ export class Phase extends React.Component {
       }
     }
 
+    if (phase.is_open && phase.actions.length) {
+      return (
+        <Sticky
+          className={
+            'phase-title ' +
+            (phase.is_attributes_open ? 'phase-open' : 'phase-closed')
+          }
+        >
+          <div className='basic-attributes'>
+            {phaseType}
+            {typeSpecifier}
+          </div>
+        </Sticky>
+      );
+    }
     return (
-      <Sticky
+      <div
         className={
           'phase-title ' +
-          (this.props.phase.is_attributes_open ? 'phase-open' : 'phase-closed')
+          (phase.is_attributes_open ? 'phase-open' : 'phase-closed')
         }
       >
         <div className='basic-attributes'>
           {phaseType}
           {typeSpecifier}
         </div>
-      </Sticky>
+      </div>
     );
   }
 
@@ -504,157 +520,154 @@ export class Phase extends React.Component {
   }
 
   render () {
-    const { phase, phaseIndex, update } = this.props;
+    const { phase, phaseIndex } = this.props;
     const actionElements = this.generateActions(phase.actions);
 
     return (
-      <div>
-        <div className='phase box col-xs-12'>
-          {this.state.mode === 'edit' &&
-            this.state.editingPhase && (
-              <EditorForm
-                onShowMore={this.onEditFormShowMorePhase}
-                targetId={this.props.phase.id}
-                attributes={this.props.phase.attributes}
-                attributeTypes={this.props.attributeTypes}
-                elementConfig={{
-                  elementTypes: this.props.phaseTypes,
-                  editWithForm: this.editPhaseWithForm
-                }}
-                editorConfig={{
-                  type: 'phase',
-                  action: 'edit'
-                }}
-                closeEditorForm={this.disableEditMode}
-                displayMessage={this.props.displayMessage}
-              />
-            )}
-          {this.state.mode === 'edit' &&
-            this.state.complementingPhase && (
-              <EditorForm
-                onShowMore={this.onEditFormShowMorePhase}
-                targetId={this.props.phase.id}
-                attributes={this.props.phase.attributes}
-                attributeTypes={this.props.attributeTypes}
-                elementConfig={{
-                  elementTypes: this.props.phaseTypes,
-                  editWithForm: this.editPhaseWithForm
-                }}
-                editorConfig={{
-                  type: 'phase',
-                  action: 'complement'
-                }}
-                closeEditorForm={this.disableEditMode}
-                displayMessage={this.props.displayMessage}
-              />
-            )}
-          {!this.state.editingPhase &&
-            !this.state.complementingPhase && (
-              <StickyContainer>
-                <Attributes
-                  element={phase}
-                  documentState={this.props.documentState}
-                  type={'phase'}
+      <StickyContainer>
+        <div className='phase'>
+          <div className='box'>
+            {this.state.mode === 'edit' &&
+              this.state.editingPhase && (
+                <EditorForm
+                  onShowMore={this.onEditFormShowMorePhase}
+                  targetId={this.props.phase.id}
+                  attributes={this.props.phase.attributes}
                   attributeTypes={this.props.attributeTypes}
-                  typeOptions={this.props.phaseTypes}
-                  renderBasicAttributes={this.renderBasicAttributes}
-                  renderButtons={this.renderPhaseButtons}
-                  updateTypeSpecifier={this.updateTypeSpecifier}
-                  updateType={this.updatePhaseType}
-                  updateAttribute={this.updatePhaseAttribute}
-                  showAttributes={phase.is_attributes_open}
+                  elementConfig={{
+                    elementTypes: this.props.phaseTypes,
+                    editWithForm: this.editPhaseWithForm
+                  }}
+                  editorConfig={{
+                    type: 'phase',
+                    action: 'edit'
+                  }}
+                  closeEditorForm={this.disableEditMode}
+                  displayMessage={this.props.displayMessage}
                 />
-                {this.state.mode === 'add' && (
-                  <AddElementInput
-                    type='action'
-                    submit={this.addAction}
-                    typeOptions={this.generateTypeOptions(
-                      this.props.actionTypes
-                    )}
-                    defaultAttributes={this.generateDefaultAttributes(
-                      this.props.attributeTypes,
-                      'action'
-                    )}
-                    newDefaultAttributes={this.state.actionDefaultAttributes}
-                    newTypeSpecifier={this.state.actionTypeSpecifier}
-                    newType={this.state.actionType}
-                    onDefaultAttributeChange={this.onActionDefaultAttributeChange}
-                    onTypeSpecifierChange={this.onActionTypeSpecifierChange}
-                    onTypeChange={this.onActionTypeChange}
-                    onTypeInputChange={this.onActionTypeInputChange}
-                    cancel={this.cancelActionCreation}
-                    onAddFormShowMore={this.onAddFormShowMoreAction}
-                    showMoreOrLess={this.state.showMore}
-
+              )}
+            {this.state.mode === 'edit' &&
+              this.state.complementingPhase && (
+                <EditorForm
+                  onShowMore={this.onEditFormShowMorePhase}
+                  targetId={this.props.phase.id}
+                  attributes={this.props.phase.attributes}
+                  attributeTypes={this.props.attributeTypes}
+                  elementConfig={{
+                    elementTypes: this.props.phaseTypes,
+                    editWithForm: this.editPhaseWithForm
+                  }}
+                  editorConfig={{
+                    type: 'phase',
+                    action: 'complement'
+                  }}
+                  closeEditorForm={this.disableEditMode}
+                  displayMessage={this.props.displayMessage}
+                />
+              )}
+            {!this.state.editingPhase &&
+              !this.state.complementingPhase && (
+                <div>
+                  <Attributes
+                    element={phase}
+                    documentState={this.props.documentState}
+                    type={'phase'}
+                    attributeTypes={this.props.attributeTypes}
+                    typeOptions={this.props.phaseTypes}
+                    renderBasicAttributes={this.renderBasicAttributes}
+                    renderButtons={this.renderPhaseButtons}
+                    updateTypeSpecifier={this.updateTypeSpecifier}
+                    updateType={this.updatePhaseType}
+                    updateAttribute={this.updatePhaseAttribute}
+                    showAttributes={phase.is_attributes_open}
                   />
-                )}
-                <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>
-                  {actionElements}
+                  {this.state.mode === 'add' && (
+                    <AddElementInput
+                      type='action'
+                      submit={this.addAction}
+                      typeOptions={this.generateTypeOptions(
+                        this.props.actionTypes
+                      )}
+                      defaultAttributes={this.generateDefaultAttributes(
+                        this.props.attributeTypes,
+                        'action'
+                      )}
+                      newDefaultAttributes={this.state.actionDefaultAttributes}
+                      newTypeSpecifier={this.state.actionTypeSpecifier}
+                      newType={this.state.actionType}
+                      onDefaultAttributeChange={this.onActionDefaultAttributeChange}
+                      onTypeSpecifierChange={this.onActionTypeSpecifierChange}
+                      onTypeChange={this.onActionTypeChange}
+                      onTypeInputChange={this.onActionTypeInputChange}
+                      cancel={this.cancelActionCreation}
+                      onAddFormShowMore={this.onAddFormShowMoreAction}
+                      showMoreOrLess={this.state.showMore}
+
+                    />
+                  )}
+                  <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>
+                    {actionElements}
+                  </div>
                 </div>
-              </StickyContainer>
+              )}
+            {this.state.deleting && (
+              <Popup
+                content={
+                  <DeleteView
+                    type='phase'
+                    target={this.state.typeSpecifier || this.state.type || '---'}
+                    action={() => this.delete()}
+                    cancel={() => this.cancelDeletion()}
+                  />
+                }
+                closePopup={() => this.cancelDeletion()}
+              />
             )}
-          {this.state.deleting && (
-            <Popup
-              content={
-                <DeleteView
-                  type='phase'
-                  target={this.state.typeSpecifier || this.state.type || '---'}
-                  action={() => this.delete()}
-                  cancel={() => this.cancelDeletion()}
-                />
-              }
-              closePopup={() => this.cancelDeletion()}
-            />
-          )}
-          {this.state.showReorderView && (
-            <Popup
-              content={
-                <ReorderView
-                  target='action'
-                  toggleReorderView={() => this.toggleReorderView()}
-                  keys={this.props.phase.actions}
-                  values={this.props.actions}
-                  changeOrder={this.props.changeOrder}
-                  parent={phaseIndex}
-                  attributeTypes={this.props.attributeTypes}
-                  parentName={this.getTargetName()}
-                />
-              }
-              closePopup={() => this.toggleReorderView()}
-            />
-          )}
-          {this.state.showImportView && (
-            <Popup
-              content={
-                <ImportView
-                  level='action'
-                  toggleImportView={this.toggleImportView}
-                  title='toimenpiteitä'
-                  targetText={
-                    'käsittelyvaiheeseen "' + this.getTargetName() + '"'
-                  }
-                  itemsToImportText='toimenpiteet'
-                  phasesOrder={this.props.phasesOrder}
-                  phases={this.props.phases}
-                  actions={this.props.actions}
-                  records={this.props.records}
-                  importItems={this.props.importItems}
-                  parent={phaseIndex}
-                  showItems={() =>
-                    this.props.setPhaseVisibility(phaseIndex, true)
-                  }
-                />
-              }
-              closePopup={() => this.toggleImportView()}
-            />
-          )}
-          {/*
-           { update } is a hack to fix firefox specific issue of re-rendering phases
-           remove once firefox issue is fixed
-           */}
-          <div className='update'>{update}</div>
+            {this.state.showReorderView && (
+              <Popup
+                content={
+                  <ReorderView
+                    target='action'
+                    toggleReorderView={() => this.toggleReorderView()}
+                    keys={this.props.phase.actions}
+                    values={this.props.actions}
+                    changeOrder={this.props.changeOrder}
+                    parent={phaseIndex}
+                    attributeTypes={this.props.attributeTypes}
+                    parentName={this.getTargetName()}
+                  />
+                }
+                closePopup={() => this.toggleReorderView()}
+              />
+            )}
+            {this.state.showImportView && (
+              <Popup
+                content={
+                  <ImportView
+                    level='action'
+                    toggleImportView={this.toggleImportView}
+                    title='toimenpiteitä'
+                    targetText={
+                      'käsittelyvaiheeseen "' + this.getTargetName() + '"'
+                    }
+                    itemsToImportText='toimenpiteet'
+                    phasesOrder={this.props.phasesOrder}
+                    phases={this.props.phases}
+                    actions={this.props.actions}
+                    records={this.props.records}
+                    importItems={this.props.importItems}
+                    parent={phaseIndex}
+                    showItems={() =>
+                      this.props.setPhaseVisibility(phaseIndex, true)
+                    }
+                  />
+                }
+                closePopup={() => this.toggleImportView()}
+              />
+            )}
+          </div>
         </div>
-      </div>
+      </StickyContainer>
     );
   }
 }
@@ -688,8 +701,7 @@ Phase.propTypes = {
   setActionVisibility: React.PropTypes.func.isRequired,
   setPhaseAttributesVisibility: React.PropTypes.func.isRequired,
   setPhaseVisibility: React.PropTypes.func.isRequired,
-  setRecordVisibility: React.PropTypes.func.isRequired,
-  update: React.PropTypes.string.isRequired
+  setRecordVisibility: React.PropTypes.func.isRequired
 };
 
 Phase.defaultProps = {

@@ -33,6 +33,10 @@
 
 body.helerm-classification-view {
 
+  .helerm-content {
+    padding: 15px;
+  }
+
   @media print {
     .no-print,
     .helerm-banner,

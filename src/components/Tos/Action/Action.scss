@@ -1,11 +1,13 @@
 @import '../../styles/vendor/hel-components/variables';
 
 .action {
-  &.box {
+  .box {
     margin: 0;
     background-color: $white;
   }
-  margin: 15px 0;
+  margin-left: 0;
+  margin-right: 0;
+  padding-bottom: 15px;
   position: relative;
 }
 .action-title {
@@ -20,16 +22,17 @@
 .action-title.sticky {
   z-index: 7;
   background-color: $gray-lighter;
-  padding: 25px 67px 15px;
+  padding: 5px 67px;
   left: 0px !important;
   margin-left: 0;
   width: 100% !important;
   border-bottom: 1px solid #cfcfcf;
 }
-.records {
-  padding: 1px 10px 26px;
+.records.box {
+  padding: 0 10px;
   background-color: $white;
   margin-top: -1px;
+
   h4 {
     font-size: 18px;
   }
@@ -73,7 +76,9 @@
   }
 }
 .action-attributes {
-  margin-bottom: 10px;
+  display: inline-block;
+  margin-bottom: 0;
+  width: 100%;
   .attribute {
     border: none;
   }
@@ -84,7 +89,8 @@
 
 .action-open {
   .basic-attributes {
-    height: 31px;
+    display: inline-block;
+    width: 100%;
   }
   .list-group-item {
     padding: 10px 15px;
