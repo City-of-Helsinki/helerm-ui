@@ -27,7 +27,6 @@
   }
 
   .sidebar-content-close {
-    padding: 10px 0;
     display: block;
     .sidebar-close-button {
       background: transparent;
@@ -37,6 +36,7 @@
   }
 
   .sidebar-content-filter {
+    margin-top: 15px;
     margin-bottom: 15px;
     .btn {
       margin-right: 15px;
