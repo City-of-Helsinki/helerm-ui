@@ -1,3 +1,25 @@
+.helerm-info-view {
+    .helerm-navigation .navigation-menu .navigation-container {
+        position: relative;
+        float: left;
+        display: block;
+        min-height: 100vh;
+        height: auto;
+    }
+    .navigation-header {
+        display: none;
+    }
+    .navigation-toggle {
+        display: none;
+    }
+    .navigation-sticky {
+        transform: none !important;
+        position: relative !important;
+    }
+}
+
 .info-view {
     padding: 30px;
+    width: 40vw;
+    float: right;
 }

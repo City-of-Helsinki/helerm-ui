@@ -330,7 +330,7 @@ export default class InfinityMenu extends Component {
             prevs.push(
               <div key={key}
                    onClick={(e) => this.onNodeClick(tree, curr, keyPath, e)}
-                   className='infinity-menu-node-container'
+                   className={classnames('infinity-menu-node-container', { opened: !!curr.isOpen })}
               >
                 <label>
                   {nodeName}{' '}
@@ -358,7 +358,7 @@ export default class InfinityMenu extends Component {
             openedNode.push(
               <div key={key}
                    onClick={(e) => this.onNodeClick(tree, curr, keyPath, e)}
-                   className='infinity-menu-node-container'
+                   className={classnames('infinity-menu-node-container', { opened: !!curr.isOpen })}
               >
                 <label>{nodeName}{' '}
                   <ClassificationLink id={curr.id} />
@@ -478,53 +478,53 @@ export default class InfinityMenu extends Component {
               </ol>
             }
           </div>
-        </Sticky>
-        {this.props.isOpen &&
-          <div className='navigation-container'>
-            <div className='navigation-toggle'>
-              <button className='nav-button' onClick={this.props.toggleNavigationVisibility}>
-                <span className={'fa fa-times'} aria-hidden='true' />
-              </button>
-            </div>
-            <div className='navigation-filters clearfix'>
-              <div className='navigation-filters-container'>
-                <div className='row'>
-                  {isDetailSearch &&
-                    <div className='col-xs-12'>
-                      <h2>
-                        Sisältöhaku
-                        <Exporter
-                          attributeTypes={this.props.attributeTypes}
-                          data={filteredTree}
-                          className='btn-sm pull-right'
-                          isVisible={filteredTree.length > 0}
-                        />
-                      </h2>
+          {this.props.isOpen &&
+            <div className='navigation-container'>
+              <div className='navigation-toggle'>
+                <button className='nav-button' onClick={this.props.toggleNavigationVisibility}>
+                  <span className={'fa fa-times'} aria-hidden='true' />
+                </button>
+              </div>
+              <div className='navigation-filters clearfix'>
+                <div className='navigation-filters-container'>
+                  <div className='row'>
+                    {isDetailSearch &&
+                      <div className='col-xs-12'>
+                        <h2>
+                          Sisältöhaku
+                          <Exporter
+                            attributeTypes={this.props.attributeTypes}
+                            data={filteredTree}
+                            className='btn-sm pull-right'
+                            isVisible={filteredTree.length > 0}
+                          />
+                        </h2>
+                      </div>
+                    }
+                    {searchInputContent}
+                    <div className={classnames({ 'col-xs-12': isDetailSearch, 'col-sm-6': !isDetailSearch })}>
+                      {this.props.filters}
                     </div>
-                  }
-                  {searchInputContent}
-                  <div className={classnames({ 'col-xs-12': isDetailSearch, 'col-sm-6': !isDetailSearch })}>
-                    {this.props.filters}
                   </div>
                 </div>
+                {!isDetailSearch &&
+                  <Link
+                    className='btn btn-default btn-sm nav-button pull-right'
+                    to='/classification-tree'>
+                    <span className='fa fa-info' aria-hidden='true' />
+                  </Link>
+                }
               </div>
-              {!isDetailSearch &&
-                <Link
-                  className='btn btn-default btn-sm nav-button pull-right'
-                  to='/classification-tree'>
-                  <span className='fa fa-info' aria-hidden='true' />
-                </Link>
-              }
-            </div>
-            <div className='infinity-menu-container'>
-              {this.props.isOpen &&
-              <div className='infinity-menu-display-tree-container'>
-                {bodyContent}
+              <div className='infinity-menu-container'>
+                {this.props.isOpen &&
+                <div className='infinity-menu-display-tree-container'>
+                  {bodyContent}
+                </div>
+                }
               </div>
-              }
             </div>
-          </div>
-        }
+          }
+        </Sticky>
       </div>
     );
   }

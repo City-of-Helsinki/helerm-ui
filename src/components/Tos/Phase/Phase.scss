@@ -9,7 +9,6 @@
   }
 }
 .phase-title {
-  font-size: 1.1em;
   position: relative;
   pointer-events: none;
   * {
@@ -25,7 +24,7 @@
   margin-left: 0;
   width: 100% !important;
   left: 0px !important;
-  padding: 0 46px 0;
+  padding: 0 46px;
   border-bottom: 1px solid #cfcfcf;
   .basic-attributes {
     padding-bottom: 0;
@@ -88,7 +87,6 @@
     width: 100%;
 
     .phase-basic-attribute {
-      font-size: $font-size-h3;
       color: $brand-info;
     }
   }

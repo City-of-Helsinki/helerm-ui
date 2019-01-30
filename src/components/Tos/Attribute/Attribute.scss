@@ -15,7 +15,7 @@ $attribute-input-height: 31px;
 }
 
 .basic-attributes {
-  // width: 90%;
+  vertical-align: middle;
   .form-control {
     height: 34px;
   }
@@ -23,12 +23,10 @@ $attribute-input-height: 31px;
   .basic-attribute {
     min-height: 23px;
     padding: 0;
-    font-size: 21px;
+    font-size: 18px;
     font-weight: $bold;
-
-    // &.editable:hover {
-    //   border: 1px solid #aaa;
-    // }
+    line-height: 34px;
+    vertical-align: middle;
   }
 }
 
