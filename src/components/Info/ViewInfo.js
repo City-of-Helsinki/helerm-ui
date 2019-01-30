@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import ReactMarkdown from 'react-markdown';
@@ -8,7 +8,29 @@ import { setNavigationVisibility } from '../Navigation/reducer';
 
 import './ViewInfo.scss';
 
-class InfoView extends React.Component {
+class InfoView extends Component {
+  static propTypes = {
+    setNavigationVisibility: PropTypes.func
+  };
+
+  static BODY_CLASS = 'helerm-info-view';
+
+  componentDidMount () {
+    if (document.body) {
+      document.body.className = document.body.className + InfoView.BODY_CLASS;
+    }
+    this.props.setNavigationVisibility(true);
+  }
+
+  componentWillUnmount () {
+    if (document.body) {
+      document.body.className = document.body.className.replace(
+        InfoView.BODY_CLASS,
+        ''
+      );
+    }
+  }
+
   render () {
     return (
       <div className='info-view'>

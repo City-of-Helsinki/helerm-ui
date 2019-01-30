@@ -12,8 +12,9 @@
     position: relative;
     background-color: white;
     padding: 0;
+    z-index: 12;
 
-    .navigation-sticky.sticky {
+    .navigation-sticky {
       z-index: 12;
     }
 
@@ -37,14 +38,15 @@
     }
 
     .navigation-container {
-      min-width: 870px;
+      width: 60vw;
+      height: 100vh;
       background-color: $white;
       padding: 12px 15px;
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
       bottom: 0;
-      box-shadow: 10px 0 5px -2px rgba(0, 0, 0, .3);
+      box-shadow: 3px 0 3px 0 rgba(0,0,0,.2);
       z-index: 12;
       display: flex;
       flex-direction: column;
@@ -289,22 +291,6 @@
     padding: 0 0 0 24px;
     -webkit-padding-before: 0;
     position: relative;
-    &:before {
-      content: "−";
-      height: 20px;
-      width: 15px;
-      color: #003380;
-      background-color: #fff;
-      font-size: 25px;
-      font-weight: 500;
-      border-bottom: 0;
-      position: absolute;
-      left: 12px;
-      top: -10px;
-      z-index: 2;
-      pointer-events: none;
-      line-height: 20px;
-    }
   }
 
   .infinity-menu-node-container:hover + ul:before {
@@ -353,6 +339,10 @@
     z-index: 2;
     pointer-events: none;
     line-height: 20px;
+  }
+
+  .infinity-menu-node-container.opened:after {
+    content: "-";
   }
 
   .react-infinity-menu-default-search-input:focus {
