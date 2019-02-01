@@ -32,7 +32,7 @@ export class Header extends React.Component {
             className='brand-title navbar-brand'
             onClick={() => this.props.fetchNavigation(false)}
             >
-            Tiedonohjausjärjestelmä
+            Tiedonohjaus
           </Link>
           <p className='navbar-text'>
             <small>{SITE_TITLE} {gitVersion}</small>
