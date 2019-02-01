@@ -16,3 +16,11 @@
     vertical-align: middle;
   }
 }
+
+@media (max-width: 800px) {
+  .login-link {
+    small {
+      display: none;
+    }
+  }
+}

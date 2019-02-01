@@ -16,8 +16,7 @@ class Login extends React.Component {
 
   getUserLink () {
     const { user } = this.props;
-    const displayName = (user && user.id) ? user.displayName ? user.displayName : `${user.firstName}${user.lastName ? ' ' + user.lastName + ', ' : ', '}` : null;
-    const linkText = (user && user.id) ? `${displayName} Kirjaudu ulos` : 'Kirjaudu sisään';
+    const linkText = (user && user.id) ? 'Kirjaudu ulos' : 'Kirjaudu sisään';
 
     return (
       <a href='' className='navbar-link' onClick={this.handleUserLinkClick}>{linkText}</a>
@@ -25,8 +24,12 @@ class Login extends React.Component {
   }
 
   render () {
+    const { user } = this.props;
+    const displayName = (user && user.id) ? user.displayName ? user.displayName : `${user.firstName}${user.lastName ? ' ' + user.lastName + ', ' : ', '}` : null;
+
     return (
-      <p className='navbar-text pull-right'>
+      <p className='navbar-text pull-right login-link'>
+        <small>{displayName}</small>
         {this.getUserLink()}
       </p>
     );
