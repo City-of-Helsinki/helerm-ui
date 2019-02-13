@@ -17,6 +17,12 @@
   }
 }
 
+.login-link {
+  small {
+    padding-right: 8px;
+  }
+}
+
 @media (max-width: 800px) {
   .login-link {
     small {

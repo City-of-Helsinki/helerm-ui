@@ -508,11 +508,13 @@ export default class InfinityMenu extends Component {
                   </div>
                 </div>
                 {!isDetailSearch &&
-                  <Link
-                    className='btn btn-default btn-sm nav-button pull-right'
-                    to='/classification-tree'>
-                    <span className='fa fa-info' aria-hidden='true' />
-                  </Link>
+                  <div className='classification-link'>
+                    <Link
+                      className='btn btn-primary btn-sm'
+                      to='/classification-tree'>
+                      <span className='fa fa-info' aria-hidden='true' />
+                    </Link>
+                  </div>
                 }
               </div>
               <div className='infinity-menu-container'>
