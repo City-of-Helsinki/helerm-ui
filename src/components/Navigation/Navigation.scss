@@ -53,12 +53,19 @@
     }
 
     .navigation-filters {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       padding: 15px 0;
       margin-bottom: 10px;
 
       .navigation-filters-container {
-        width: 95%;
-        float: left;
+        flex: 1 1 auto;
+      }
+
+      .classification-link {
+        flex: 0 0 auto;
+        padding-left: 15px;
       }
 
       .filters {
