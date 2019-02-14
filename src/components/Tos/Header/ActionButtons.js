@@ -20,6 +20,7 @@ const ActionButtons = ({
   cancelEdit,
   documentState,
   fetchTos,
+  isValidationBarVisible,
   saveDraft,
   changeStatus,
   setDocumentState,
@@ -124,8 +125,8 @@ const ActionButtons = ({
           <ActionButton
             className='btn pull-right'
             type='primary'
-            action={() => setValidationVisibility(true)}
-            label={'Esitarkasta'}
+            action={() => setValidationVisibility(!isValidationBarVisible)}
+            label={isValidationBarVisible ? 'Sulje esitarkastus' : 'Esitarkasta'}
           />
         )}
         <Link
@@ -164,6 +165,7 @@ ActionButtons.propTypes = {
   changeStatus: PropTypes.func,
   documentState: PropTypes.string,
   fetchTos: PropTypes.func,
+  isValidationBarVisible: PropTypes.bool,
   review: PropTypes.func.isRequired,
   saveDraft: PropTypes.func,
   setDocumentState: PropTypes.func,

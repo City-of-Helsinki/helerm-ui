@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { map, find, forEach } from 'lodash';
-import classnames from 'classnames';
 import StickySidebar from 'sticky-sidebar/dist/sticky-sidebar';
 
 import './ValidationBar.scss';
@@ -16,8 +15,10 @@ import {
   validateRecordWarnings
 } from '../../../utils/validators';
 
-const FILTER_VALUE_ERROR = 'error';
-const FILTER_VALUE_WARN = 'warning';
+import {
+  VALIDATION_FILTER_ERROR,
+  VALIDATION_FILTER_WARN
+} from '../../../../config/constants';
 
 const ATTRIBUTE_NAME_FIELDS = ['PhaseType', 'ActionType', 'TypeSpecifier'];
 
@@ -25,9 +26,7 @@ export class ValidationBar extends Component {
   constructor (props) {
     super(props);
     this.renderContent = this.renderContent.bind(this);
-    this.onFilterStatusChange = this.onFilterStatusChange.bind(this);
     this.state = {
-      filterStatus: '',
       sidebar: null
     };
   }
@@ -37,7 +36,7 @@ export class ValidationBar extends Component {
       bottomSpacing: 10,
       topSpacing: 155,
       containerSelector: '.validation-bar-container',
-      innerWrapperSelector: '.sidebar__inner'
+      innerWrapperSelector: '.sidebar-invalid-content'
     });
     this.setState({ sidebar }); // eslint-disable-line react/no-did-mount-set-state
   }
@@ -57,8 +56,8 @@ export class ValidationBar extends Component {
   }
 
   generateInvalidTosAttributes (validate, validateWarn, values) {
-    const showInvalidAttributes = this.getFilterByStatus(FILTER_VALUE_ERROR);
-    const showWarnAttributes = this.getFilterByStatus(FILTER_VALUE_WARN);
+    const showInvalidAttributes = this.getFilterByStatus(VALIDATION_FILTER_ERROR);
+    const showWarnAttributes = this.getFilterByStatus(VALIDATION_FILTER_WARN);
     const invalidAttributes = showInvalidAttributes
       ? validate(values, this.props.attributeTypes)
       : [];
@@ -90,8 +89,8 @@ export class ValidationBar extends Component {
 
   generateInvalidAttributes () {
     const { selectedTOS } = this.props;
-    const showInvalidAttributes = this.getFilterByStatus(FILTER_VALUE_ERROR);
-    const showWarnAttributes = this.getFilterByStatus(FILTER_VALUE_WARN);
+    const showInvalidAttributes = this.getFilterByStatus(VALIDATION_FILTER_ERROR);
+    const showWarnAttributes = this.getFilterByStatus(VALIDATION_FILTER_WARN);
     const invalidPhases = [];
     forEach(selectedTOS.phases, (phase, index) => {
       const invalidActions = [];
@@ -177,15 +176,9 @@ export class ValidationBar extends Component {
     return null;
   }
 
-  onFilterStatusChange (filterStatus) {
-    this.setState({
-      filterStatus
-    });
-  }
-
-  getFilterByStatus (filterValue) {
-    const { filterStatus } = this.state;
-    return !filterStatus ? true : filterValue === filterStatus;
+  getFilterByStatus (value) {
+    const { validationFilter } = this.props;
+    return !validationFilter ? true : value === validationFilter;
   }
 
   renderInvalidContent () {
@@ -210,46 +203,9 @@ export class ValidationBar extends Component {
   }
 
   renderContent () {
-    const { filterStatus } = this.state;
     const invalidContent = this.renderInvalidContent();
     return (
       <div className='sidebar-content'>
-        <div className='sidebar-content-close'>
-          <h3>
-            Esitarkastus
-            <button
-              className='sidebar-close-button pull-right'
-              onClick={() => this.props.setValidationVisibility(false)}>
-              <i className='fa fa-times' />
-            </button>
-          </h3>
-        </div>
-        <div className='sidebar-content-filter'>
-          <button
-            className={classnames(
-              'sidebar-content-filter-all btn btn-sm',
-              { 'btn-default': filterStatus === '' }
-            )}
-            onClick={() => this.onFilterStatusChange('')}>
-            Kaikki
-          </button>
-          <button
-            className={classnames(
-              'sidebar-content-filter-warn btn btn-sm',
-              { 'btn-default': filterStatus === FILTER_VALUE_WARN }
-            )}
-            onClick={() => this.onFilterStatusChange(FILTER_VALUE_WARN)}>
-            <i className='fa fa-exclamation-circle' /> Huomautukset
-          </button>
-          <button
-            className={classnames(
-              'sidebar-content-filter-error btn btn-sm',
-              { 'btn-default': filterStatus === FILTER_VALUE_ERROR }
-            )}
-            onClick={() => this.onFilterStatusChange(FILTER_VALUE_ERROR)}>
-            <i className='fa fa-exclamation-triangle' /> Virheet
-          </button>
-        </div>
         {invalidContent}
       </div>
     );
@@ -270,7 +226,7 @@ export class ValidationBar extends Component {
 ValidationBar.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
   selectedTOS: React.PropTypes.object.isRequired,
-  setValidationVisibility: React.PropTypes.func.isRequired
+  validationFilter: React.PropTypes.string.isRequired
 };
 
 export default ValidationBar;

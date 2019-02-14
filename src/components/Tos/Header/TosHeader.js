@@ -11,6 +11,7 @@ const TosHeader = ({
   documentState,
   functionId,
   fetchTos,
+  isValidationBarVisible,
   name,
   saveDraft,
   changeStatus,
@@ -47,6 +48,7 @@ const TosHeader = ({
             changeStatus={changeStatus}
             documentState={documentState}
             fetchTos={fetchTos}
+            isValidationBarVisible={isValidationBarVisible}
             saveDraft={saveDraft}
             setDocumentState={setDocumentState}
             setPhasesVisibility={setPhasesVisibility}
@@ -70,6 +72,7 @@ TosHeader.propTypes = {
   documentState: PropTypes.string.isRequired,
   fetchTos: PropTypes.func.isRequired,
   functionId: PropTypes.string.isRequired,
+  isValidationBarVisible: PropTypes.bool,
   name: PropTypes.string.isRequired,
   review: PropTypes.func.isRequired,
   saveDraft: PropTypes.func,

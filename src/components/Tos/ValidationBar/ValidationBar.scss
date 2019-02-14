@@ -23,7 +23,7 @@
   }
 
   h5 {
-    margin: 20px 0 10px;
+    margin: 0 0 10px;
   }
 
   .sidebar-content-close {
@@ -35,36 +35,14 @@
     }
   }
 
-  .sidebar-content-filter {
-    margin-top: 15px;
-    margin-bottom: 15px;
-    .btn {
-      margin-right: 15px;
-      border-radius: 15px;
-    }
-    .btn:not(.btn-default) {
-      background-color: transparent;
-      border: none;
-      color: $black00;
-    }
-    .sidebar-content-filter-warn {
-      .fa {
-        color: $brand-warning;
-      }
-    }
-    .sidebar-content-filter-error {
-      .fa {
-        color: $brand-danger;
-      }
-    }
-    .sidebar__inner{
-      transform: translate(0, 0); /* For browsers don't support translate3d. */
-      transform: translate3d(0, 0, 0);
-      will-change: position, transform;
-    }
+  .sidebar-invalid-content {
+    transform: translate(0, 0); /* For browsers don't support translate3d. */
+    transform: translate3d(0, 0, 0);
+    will-change: position, transform;
   }
 
   .sidebar-invalid-content {
+    padding-top: 120px;
     padding-bottom: 150px;
   }
 
