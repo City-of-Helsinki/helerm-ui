@@ -15,6 +15,7 @@ import CloneView from 'components/Tos/CloneView/CloneView';
 import EditorForm from 'components/Tos/EditorForm/EditorForm';
 import TosHeader from 'components/Tos/Header/TosHeader';
 import ValidationBarContainer from 'components/Tos/ValidationBar/ValidationBarContainer';
+import ValidationBarHeader from 'components/Tos/ValidationBarHeader/ValidationBarHeader';
 
 import Popup from 'components/Popup';
 
@@ -44,6 +45,7 @@ export class ViewTOS extends React.Component {
     this.fetchTOS = this.fetchTOS.bind(this);
     this.generateEditorFormValidDateFields = this.generateEditorFormValidDateFields.bind(this);
     this.generateEditorFormValidDateField = this.generateEditorFormValidDateField.bind(this);
+    this.onValidationFilterChange = this.onValidationFilterChange.bind(this);
     this.onPhaseDefaultAttributeChange = this.onPhaseDefaultAttributeChange.bind(this);
     this.onPhaseTypeChange = this.onPhaseTypeChange.bind(this);
     this.onPhaseTypeInputChange = this.onPhaseTypeInputChange.bind(this);
@@ -61,6 +63,7 @@ export class ViewTOS extends React.Component {
 
     this.state = {
       createPhaseMode: false,
+      validationFilter: '',
       phaseDefaultAttributes: {},
       phaseTypeSpecifier: '',
       phaseType: '',
@@ -632,6 +635,12 @@ export class ViewTOS extends React.Component {
     }
   }
 
+  onValidationFilterChange (validationFilter) {
+    this.setState({
+      validationFilter
+    });
+  }
+
   generatePhases (phases, phasesOrder) {
     const phaseElements = [];
     if (phases) {
@@ -712,6 +721,7 @@ export class ViewTOS extends React.Component {
                   documentState={selectedTOS.documentState}
                   fetchTos={this.fetchTOS}
                   functionId={selectedTOS.function_id}
+                  isValidationBarVisible={showValidationBar}
                   name={selectedTOS.name}
                   state={selectedTOS.state}
                   setDocumentState={state => this.setDocumentState(state)}
@@ -723,6 +733,13 @@ export class ViewTOS extends React.Component {
                   tosId={selectedTOS.id}
                   versions={selectedTOS.version_history}
                 />
+                {showValidationBar && (
+                  <ValidationBarHeader
+                    onFilterChange={this.onValidationFilterChange}
+                    setValidationVisibility={this.setValidationVisibility}
+                    validationFilter={this.state.validationFilter}
+                  />
+                )}
               </Sticky>
               <div className='single-tos-wrapper'>
                 <div className={
@@ -885,7 +902,7 @@ export class ViewTOS extends React.Component {
                 </div>
                 {showValidationBar && (
                   <div className='col-xs-3 validation-bar-container'>
-                    <ValidationBarContainer />
+                    <ValidationBarContainer validationFilter={this.state.validationFilter} />
                   </div>
                 )}
               </div>

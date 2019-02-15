@@ -34,3 +34,6 @@ export const navigationStateFilters = {
     values: []
   }
 };
+
+export const VALIDATION_FILTER_ERROR = 'error';
+export const VALIDATION_FILTER_WARN = 'warning';
