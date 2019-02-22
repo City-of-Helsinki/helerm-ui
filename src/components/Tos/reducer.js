@@ -62,6 +62,7 @@ const initialState = {
   documentState: 'view',
   lastUpdated: 0,
   isFetching: false,
+  is_classification_open: false,
   is_open: false
 };
 
@@ -76,6 +77,7 @@ export const CLEAR_TOS = 'clearTosAction';
 export const EDIT_META_DATA = 'editMetaDataAction';
 export const EDIT_VALID_DATE = 'editValidDateAction';
 export const SET_DOCUMENT_STATE = 'setDocumentStateAction';
+export const SET_CLASSIFICATION_VISIBILITY = 'setClassificationVisibilityAction';
 export const SET_METADATA_VISIBILITY = 'setMetadataVisibilityAction';
 export const SET_TOS_VISIBILITY = 'setTosVisibilityAction';
 
@@ -190,11 +192,15 @@ export function changeStatus (status) {
   };
 }
 
+export function setClassificationVisibility (visibility) {
+  return createAction(SET_CLASSIFICATION_VISIBILITY)(visibility);
+}
+
 export function setMetadataVisibility (visibility) {
   return createAction(SET_METADATA_VISIBILITY)(visibility);
 }
 
-export function setTosVisibility (tos, visibility) {
+export function setTosVisibility (tos, basicVisibility, metaDataVisibility) {
   const allPhasesOpen = {};
   const allActionsOpen = {};
   const allRecordsOpen = {};
@@ -203,17 +209,17 @@ export function setTosVisibility (tos, visibility) {
     if (phases.hasOwnProperty(key)) {
       allPhasesOpen[key] = update(phases[key], {
         is_attributes_open: {
-          $set: visibility
+          $set: metaDataVisibility
         },
         is_open: {
-          $set: visibility
+          $set: basicVisibility
         }
       });
       for (const actionKey in actions) {
         if (actions.hasOwnProperty(actionKey)) {
           allActionsOpen[actionKey] = update(actions[actionKey], {
             is_open: {
-              $set: visibility
+              $set: metaDataVisibility
             }
           });
         }
@@ -221,7 +227,7 @@ export function setTosVisibility (tos, visibility) {
           if (records.hasOwnProperty(recordKey)) {
             allRecordsOpen[recordKey] = update(records[recordKey], {
               is_open: {
-                $set: visibility
+                $set: metaDataVisibility
               }
             });
           }
@@ -229,7 +235,7 @@ export function setTosVisibility (tos, visibility) {
       }
     }
   }
-  return createAction(SET_TOS_VISIBILITY)({ actions: allActionsOpen, phases: allPhasesOpen, records: allRecordsOpen, visibility });
+  return createAction(SET_TOS_VISIBILITY)({ actions: allActionsOpen, phases: allPhasesOpen, records: allRecordsOpen, metaDataVisibility });
 }
 
 // ------------------------------------
@@ -344,6 +350,12 @@ const setDocumentStateAction = (state, { payload }) => {
   });
 };
 
+const setClassificationVisibilityAction = (state, { payload }) => {
+  return update(state, {
+    is_classification_open: { $set: payload }
+  });
+};
+
 const setMetadataVisibilityAction = (state, { payload }) => {
   return update(state, {
     is_open: { $set: payload }
@@ -351,10 +363,11 @@ const setMetadataVisibilityAction = (state, { payload }) => {
 };
 
 const setTosVisibilityAction = (state, { payload }) => {
-  const { actions, phases, records, visibility } = payload;
+  const { actions, phases, records, metaDataVisibility } = payload;
   return update(state, {
     actions: { $set: actions },
-    is_open: { $set: visibility },
+    is_classification_open: { $set: metaDataVisibility },
+    is_open: { $set: metaDataVisibility },
     phases: { $set: phases },
     records: { $set: records }
   });
@@ -368,6 +381,7 @@ export default handleActions({
   receiveTemplateAction,
   tosErrorAction,
   setActionVisibilityAction,
+  setClassificationVisibilityAction,
   setMetadataVisibilityAction,
   setPhaseAttributesVisibilityAction,
   setPhaseVisibilityAction,

@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker';
 import { StickyContainer, Sticky } from 'react-sticky';
 import moment from 'moment';
 import classnames from 'classnames';
+import { includes } from 'lodash';
 
 import Phase from 'components/Tos/Phase/Phase';
 import AddElementInput from 'components/Tos/AddElementInput/AddElementInput';
@@ -14,6 +15,7 @@ import ImportView from 'components/Tos/ImportView/ImportView';
 import CloneView from 'components/Tos/CloneView/CloneView';
 import EditorForm from 'components/Tos/EditorForm/EditorForm';
 import TosHeader from 'components/Tos/Header/TosHeader';
+import ClassificationHeader from 'components/Tos/Header/ClassificationHeader';
 import ValidationBarContainer from 'components/Tos/ValidationBar/ValidationBarContainer';
 import ValidationBarHeader from 'components/Tos/ValidationBarHeader/ValidationBarHeader';
 
@@ -156,7 +158,12 @@ export class ViewTOS extends React.Component {
   fetchTOS (id, params = {}) {
     this.props
       .fetchTOS(id, params)
-      .then(() => this.props.setNavigationVisibility(false))
+      .then(() => {
+        this.props.setNavigationVisibility(false);
+        if (includes(window.location.pathname, '/all')) {
+          this.props.setTosVisibility(this.props.selectedTOS, true, true);
+        }
+      })
       .catch(err => {
         if (err instanceof URIError) {
           // We have a 404 from API
@@ -228,8 +235,9 @@ export class ViewTOS extends React.Component {
     this.props.setValidationVisibility(value);
   }
 
-  setTosVisibility (value) {
-    this.props.setTosVisibility(this.props.selectedTOS, value);
+  setTosVisibility (basicDataVisibility, metaDataVisibility) {
+    this.props.setTosVisibility(this.props.selectedTOS, basicDataVisibility, metaDataVisibility);
+    this.props.replace(`/view-tos/${this.props.selectedTOS.id}${basicDataVisibility && metaDataVisibility ? '/all' : ''}`);
   }
 
   cancelEdit () {
@@ -255,6 +263,9 @@ export class ViewTOS extends React.Component {
     return this.props
       .saveDraft()
       .then(() => {
+        if (includes(window.location.pathname, '/all')) {
+          this.props.replace(`/view-tos/${this.props.selectedTOS.id}`);
+        }
         return this.props.displayMessage({
           title: 'Luonnos',
           body: 'Luonnos tallennettu!'
@@ -481,45 +492,10 @@ export class ViewTOS extends React.Component {
 
   generateMetaData (attributeTypes, attributes) {
     const {
-      modified_at,
       documentState,
-      editRecord,
-      state,
-      modified_by: modifiedBy,
-      is_open: isOpen,
-      valid_from: validFrom,
-      valid_to: validTo
+      is_open: isOpen
     } = this.props.selectedTOS;
-    const { validFromEditing, validToEditing } = this.state;
-    const formattedDateTime = formatDateTime(modified_at);
     const attributeElements = [];
-    const validFromData = this.generateValidDateField('Voimassaolo alkaa', 'validFrom', validFrom, validFromEditing);
-    const validToData = this.generateValidDateField('Voimassaolo päättyy', 'validTo', validTo, validToEditing);
-    const versionData = [
-      { type: 'Tila', name: getStatusLabel(state) },
-      {
-        type: 'Muokkausajankohta, muokkaaja',
-        name: `${formattedDateTime}${typeof modifiedBy === 'string' ? `, ${modifiedBy}` : ''}`
-      }
-    ];
-
-    versionData.map((metadata, index) => {
-      attributeElements.push(
-        <Attribute
-          key={index}
-          attributeIndex={metadata.type}
-          attributeKey={metadata.type}
-          attribute={metadata.name}
-          documentState={documentState}
-          attributeTypes={attributeTypes}
-          type='attribute'
-          editable={false}
-          editRecord={editRecord}
-          showAttributes={true}
-          parentType='function'
-        />
-      );
-    });
 
     for (const key in attributeTypes) {
       if (attributes.hasOwnProperty(key) && attributes[key] || key === 'InformationSystem') {
@@ -545,21 +521,73 @@ export class ViewTOS extends React.Component {
 
     const metadataElement = (
       <div>
-        <div className='metadata-data-row__primary'>
-          {attributeElements.slice(0, 2)}
-        </div>
-        <div className='metadata-data-row__primary'>
-          {validFromData}
-          {validToData}
-        </div>
         <div
           className={
             'metadata-data-row__secondary ' +
             (this.props.selectedTOS.is_open ? '' : 'hidden')
           }
         >
-          {attributeElements.slice(2)}
+          {attributeElements}
         </div>
+      </div>
+    );
+
+    return metadataElement;
+  }
+
+  generateVersionData (attributeTypes, attributes) {
+    const {
+      modified_at,
+      documentState,
+      editRecord,
+      state,
+      modified_by: modifiedBy,
+      valid_from: validFrom,
+      valid_to: validTo
+    } = this.props.selectedTOS;
+    const { validFromEditing, validToEditing } = this.state;
+    const formattedDateTime = formatDateTime(modified_at);
+    const versionDataElements = [];
+    const validFromData = this.generateValidDateField('Voimassaolo alkaa', 'validFrom', validFrom, validFromEditing);
+    const validToData = this.generateValidDateField('Voimassaolo päättyy', 'validTo', validTo, validToEditing);
+    const versionData = [
+      { type: 'Tila', name: getStatusLabel(state) },
+      {
+        type: 'Muokkausajankohta, muokkaaja',
+        name: `${formattedDateTime}${typeof modifiedBy === 'string' ? `, ${modifiedBy}` : ''}`
+      }
+    ];
+
+    versionData.map((metadata, index) => {
+      versionDataElements.push(
+        <Attribute
+          key={index}
+          attributeIndex={metadata.type}
+          attributeKey={metadata.type}
+          attribute={metadata.name}
+          documentState={documentState}
+          attributeTypes={attributeTypes}
+          type='attribute'
+          editable={false}
+          editRecord={editRecord}
+          showAttributes={true}
+          parentType='function'
+        />
+      );
+    });
+
+    const metadataElement = (
+      <div>
+        <div className='metadata-data-row__primary'>
+          {versionDataElements}
+        </div>
+        {!this.state.editingMetaData &&
+          !this.state.complementingMetaData && (
+          <div className='metadata-data-row__primary'>
+            {validFromData}
+            {validToData}
+          </div>
+        )}
       </div>
     );
 
@@ -689,11 +717,13 @@ export class ViewTOS extends React.Component {
   render () {
     const {
       attributeTypes,
+      classification,
       selectedTOS,
       isFetching,
       templates,
       params: { id, version },
-      showValidationBar
+      showValidationBar,
+      setClassificationVisibility
     } = this.props;
 
     if (!isFetching && selectedTOS.id) {
@@ -703,10 +733,15 @@ export class ViewTOS extends React.Component {
         phasesOrder
       );
       const metataDataButtons = this.generateMetaDataButtons();
+      const TOSVersionData = this.generateVersionData(
+        attributeTypes,
+        selectedTOS.attributes
+      );
       const TOSMetaData = this.generateMetaData(
         attributeTypes,
         selectedTOS.attributes
       );
+      const showAll = includes(window.location.pathname, '/all');
 
       return (
         <div key={`${id}.${version}`}>
@@ -715,6 +750,7 @@ export class ViewTOS extends React.Component {
               <Sticky className='single-tos-header-wrapper'>
                 <TosHeader
                   cancelEdit={this.cancelEdit}
+                  classification={classification}
                   classificationId={selectedTOS.classification}
                   changeStatus={this.changeStatus}
                   currentVersion={selectedTOS.version}
@@ -725,7 +761,7 @@ export class ViewTOS extends React.Component {
                   name={selectedTOS.name}
                   state={selectedTOS.state}
                   setDocumentState={state => this.setDocumentState(state)}
-                  setPhasesVisibility={() => this.props.setPhasesVisibility(selectedTOS.phases, true)}
+                  setPhasesVisibility={() => this.setTosVisibility(true, false)}
                   setTosVisibility={this.setTosVisibility}
                   setValidationVisibility={this.setValidationVisibility}
                   review={this.review}
@@ -748,74 +784,97 @@ export class ViewTOS extends React.Component {
                   ])}
                 >
                   <div className='single-tos-content'>
+                    {showAll && !!classification && (
+                      <ClassificationHeader
+                        classification={classification}
+                        isOpen={selectedTOS.is_classification_open}
+                        setVisibility={setClassificationVisibility}
+                      />
+                    )}
                     <div className='row'>
                       <div className='col-xs-6'>
-                        <h4>Metatiedot</h4>
+                        <h4>Version tiedot</h4>
                       </div>
                       <div className='col-xs-6'>
                         {metataDataButtons}
                       </div>
                     </div>
-                    <div className='row'>
-                      <div className='general-info space-between'>
-                        {this.state.editingMetaData && (
-                          <EditorForm
-                            onShowMore={this.onEditFormShowMoreMetaData}
-                            targetId={this.props.selectedTOS.id}
-                            additionalFields={this.generateEditorFormValidDateFields()}
-                            attributes={this.props.selectedTOS.attributes}
-                            attributeTypes={this.props.attributeTypes}
-                            editMetaDataWithForm={this.editMetaDataWithForm}
-                            editorConfig={{
-                              type: 'function',
-                              action: 'edit'
-                            }}
-                            closeEditorForm={this.cancelMetaDataEdit}
-                            displayMessage={this.props.displayMessage}
-                          />
-                        )}
-                        {this.state.complementingMetaData && (
-                          <EditorForm
-                            onShowMore={this.onEditFormShowMoreMetaData}
-                            targetId={this.props.selectedTOS.id}
-                            additionalFields={this.generateEditorFormValidDateFields()}
-                            attributes={this.props.selectedTOS.attributes}
-                            attributeTypes={this.props.attributeTypes}
-                            editMetaDataWithForm={this.editMetaDataWithForm}
-                            editorConfig={{
-                              type: 'function',
-                              action: 'complement'
-                            }}
-                            closeEditorForm={this.cancelMetaDataComplement}
-                            displayMessage={this.props.displayMessage}
-                          />
-                        )}
-                        {!this.state.editingMetaData &&
-                          !this.state.complementingMetaData && (
-                            <div className='col-xs-12'>
-                              {TOSMetaData}
-                            </div>
-                          )}
-                      </div>
-                      <div className='col-xs-12'>
-                        <div className='col-xs-3'>
-                          <h3 className='phases-title'>Vaiheet</h3>
+                    {selectedTOS.is_open && (
+                      <div className='row'>
+                        <div className='col-xs-12'>
+                          {TOSVersionData}
                         </div>
-                        {selectedTOS.documentState === 'edit' &&
-                          !this.state.createPhaseMode && (
-                            <div className='col-xs-9'>
-                              <button className='btn btn-link pull-right' onClick={() => this.toggleReorderView()}>
-                                Järjestä käsittelyvaiheita
-                              </button>
-                              <button className='btn btn-link pull-right' onClick={() => this.toggleImportView()}>
-                                Tuo käsittelyvaihe
-                              </button>
-                              <button className='btn btn-link pull-right' onClick={() => this.addPhase()}>
-                                Uusi käsittelyvaihe
-                              </button>
-                            </div>
-                          )}
                       </div>
+                    )}
+                    {selectedTOS.is_open &&
+                      !this.state.editingMetaData &&
+                      !this.state.complementingMetaData && (
+                      <div className='row tos-metadata-header'>
+                        <div className='col-xs-6'>
+                          <h4>Käsittelyprosessin tiedot</h4>
+                        </div>
+                      </div>
+                    )}
+                    <div className='row tos-metadata'>
+                      {this.state.editingMetaData && (
+                        <EditorForm
+                          onShowMore={this.onEditFormShowMoreMetaData}
+                          targetId={this.props.selectedTOS.id}
+                          additionalFields={this.generateEditorFormValidDateFields()}
+                          attributes={this.props.selectedTOS.attributes}
+                          attributeTypes={this.props.attributeTypes}
+                          editMetaDataWithForm={this.editMetaDataWithForm}
+                          editorConfig={{
+                            type: 'function',
+                            action: 'edit'
+                          }}
+                          closeEditorForm={this.cancelMetaDataEdit}
+                          displayMessage={this.props.displayMessage}
+                        />
+                      )}
+                      {this.state.complementingMetaData && (
+                        <EditorForm
+                          onShowMore={this.onEditFormShowMoreMetaData}
+                          targetId={this.props.selectedTOS.id}
+                          additionalFields={this.generateEditorFormValidDateFields()}
+                          attributes={this.props.selectedTOS.attributes}
+                          attributeTypes={this.props.attributeTypes}
+                          editMetaDataWithForm={this.editMetaDataWithForm}
+                          editorConfig={{
+                            type: 'function',
+                            action: 'complement'
+                          }}
+                          closeEditorForm={this.cancelMetaDataComplement}
+                          displayMessage={this.props.displayMessage}
+                        />
+                      )}
+                      {!this.state.editingMetaData &&
+                        !this.state.complementingMetaData && (
+                          <div className='col-xs-12'>
+                            {TOSMetaData}
+                          </div>
+                        )}
+                    </div>
+                    <div className='row'>
+                      <div className='col-xs-3'>
+                        <h4 className='phases-title'>Vaiheet</h4>
+                      </div>
+                      {selectedTOS.documentState === 'edit' &&
+                        !this.state.createPhaseMode && (
+                        <div className='col-xs-9'>
+                          <button className='btn btn-link pull-right' onClick={() => this.toggleReorderView()}>
+                            Järjestä käsittelyvaiheita
+                          </button>
+                          <button className='btn btn-link pull-right' onClick={() => this.toggleImportView()}>
+                            Tuo käsittelyvaihe
+                          </button>
+                          <button className='btn btn-link pull-right' onClick={() => this.addPhase()}>
+                            Uusi käsittelyvaihe
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    <div className='row'>
                       <div className='col-xs-12'>
                         {this.state.createPhaseMode && (
                           <AddElementInput
@@ -924,6 +983,7 @@ ViewTOS.propTypes = {
   attributeTypes: PropTypes.object.isRequired,
   changeOrder: PropTypes.func.isRequired,
   changeStatus: PropTypes.func.isRequired,
+  classification: PropTypes.object,
   clearTOS: PropTypes.func.isRequired,
   cloneFromTemplate: PropTypes.func.isRequired,
   displayMessage: PropTypes.func.isRequired,
@@ -947,18 +1007,19 @@ ViewTOS.propTypes = {
   removeAction: PropTypes.func.isRequired,
   removePhase: PropTypes.func.isRequired,
   removeRecord: PropTypes.func.isRequired,
+  replace: PropTypes.func.isRequired,
   resetTOS: PropTypes.func.isRequired,
   route: PropTypes.object.isRequired,
   router: routerShape.isRequired,
   saveDraft: PropTypes.func.isRequired,
   selectedTOS: PropTypes.object.isRequired,
   setActionVisibility: PropTypes.func.isRequired,
+  setClassificationVisibility: PropTypes.func.isRequired,
   setDocumentState: PropTypes.func.isRequired,
   setMetadataVisibility: PropTypes.func.isRequired,
   setNavigationVisibility: PropTypes.func.isRequired,
   setPhaseAttributesVisibility: PropTypes.func.isRequired,
   setPhaseVisibility: PropTypes.func.isRequired,
-  setPhasesVisibility: PropTypes.func.isRequired,
   setRecordVisibility: PropTypes.func.isRequired,
   setTosVisibility: PropTypes.func.isRequired,
   setValidationVisibility: PropTypes.func.isRequired,

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
-import { getNewPath } from 'utils/helpers';
 
 import IsAllowed from 'components/IsAllowed/IsAllowed';
 import ActionButton from './ActionButton';
@@ -131,7 +130,7 @@ const ActionButtons = ({
         )}
         <Link
           className={`btn btn-primary pull-right${editMode ? ' disabled' : ''}`}
-          to={getNewPath(window.location.pathname, 'print')}
+          to={`/view-tos/${tosId}/print`}
         >
           Raportti
         </Link>
@@ -140,7 +139,7 @@ const ActionButtons = ({
         <ActionButton
           className='pull-right'
           type='link'
-          action={() => setTosVisibility(true)}
+          action={() => setTosVisibility(true, true)}
           label={'Avaa kaikki tiedot'}
         />
         <ActionButton
@@ -152,7 +151,7 @@ const ActionButtons = ({
         <ActionButton
           className='pull-right'
           type='link'
-          action={() => setTosVisibility(false)}
+          action={() => setTosVisibility(false, false)}
           label={'Pienennä kaikki'}
         />
       </div>

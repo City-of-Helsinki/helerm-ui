@@ -12,6 +12,14 @@
     border-bottom: solid 1px $gray-dark;
   }
 }
+.classification-header {
+  padding-bottom: 20px;
+  width: 100%;
+
+  .list-group-item {
+    margin: -1px 0 0 -1px;
+  }
+}
 .single-tos-header {
   z-index: 11;
   h3 {
@@ -33,6 +41,12 @@
 .single-tos-content {
   padding: 15px 15px 150px;
 }
+.tos-metadata-header {
+  padding-top: 20px;
+}
+.tos-metadata {
+  padding-bottom: 40px;
+}
 .validation-bar-container {
   background-color: $gray-lighter;
   border-left: 1px solid $gray-dark;
@@ -43,16 +57,9 @@
   border: 1px solid $gray-dark;
   border-radius: 4px;
 }
-.general-info {
-  margin-bottom: 40px;
-}
 .tos-nav {
   margin: 0 -15px 40px -15px;
   padding: 0 15px;
-}
-.space-between {
-  display: flex;
-  justify-content: space-between;
 }
 .phases-title {
   margin: 0 0 5px 0;

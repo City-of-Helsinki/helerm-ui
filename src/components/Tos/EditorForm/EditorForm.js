@@ -391,7 +391,7 @@ export class EditorForm extends React.Component {
 
     switch (type) {
       case 'function':
-        return 'Metatiedot';
+        return 'Käsittelyprosessin tiedot';
       case 'phase':
         if (action === 'add') {
           return 'Uusi käsittelyvaihe';
@@ -484,7 +484,7 @@ export class EditorForm extends React.Component {
           if (action === 'edit' || action === 'complement') {
             this.editMetaData(e, stopEditing);
             displayMessage({
-              title: 'Metatiedot',
+              title: 'Käsittelyprosessin tiedot',
               body: 'Tietojen muokkaus onnistui!'
             });
           }

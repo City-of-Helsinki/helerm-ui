@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { push } from 'react-router-redux';
-import { displayMessage } from '../../../utils/helpers';
+import { push, replace } from 'react-router-redux';
+import { displayMessage, itemById } from '../../../utils/helpers';
 import { isEmpty } from 'lodash';
 
 import { login } from '../../Login/reducer';
@@ -16,6 +16,7 @@ import {
   fetchTOS,
   resetTOS,
   saveDraft,
+  setClassificationVisibility,
   setDocumentState,
   setMetadataVisibility,
   setTosVisibility
@@ -35,7 +36,6 @@ import {
   editPhaseAttribute,
   removePhase,
   setPhaseAttributesVisibility,
-  setPhasesVisibility,
   setPhaseVisibility
 } from '../Phase/reducer';
 
@@ -78,8 +78,10 @@ const mapDispatchToProps = dispatch => ({
   removeAction: bindActionCreators(removeAction, dispatch),
   removePhase: bindActionCreators(removePhase, dispatch),
   removeRecord: bindActionCreators(removeRecord, dispatch),
+  replace: path => dispatch(replace(path)),
   resetTOS: bindActionCreators(resetTOS, dispatch),
   saveDraft: bindActionCreators(saveDraft, dispatch),
+  setClassificationVisibility: bindActionCreators(setClassificationVisibility, dispatch),
   setDocumentState: bindActionCreators(setDocumentState, dispatch),
   setActionVisibility: bindActionCreators(setActionVisibility, dispatch),
   setNavigationVisibility: bindActionCreators(
@@ -88,16 +90,23 @@ const mapDispatchToProps = dispatch => ({
   ),
   setMetadataVisibility: bindActionCreators(setMetadataVisibility, dispatch),
   setPhaseAttributesVisibility: bindActionCreators(setPhaseAttributesVisibility, dispatch),
-  setPhasesVisibility: bindActionCreators(setPhasesVisibility, dispatch),
   setPhaseVisibility: bindActionCreators(setPhaseVisibility, dispatch),
   setRecordVisibility: bindActionCreators(setRecordVisibility, dispatch),
   setTosVisibility: bindActionCreators(setTosVisibility, dispatch),
   setValidationVisibility: bindActionCreators(setValidationVisibility, dispatch)
 });
 
+const getClassification = (tos, items) => {
+  if (tos && tos.classification && items) {
+    return itemById(items, tos.classification);
+  }
+  return null;
+};
+
 const mapStateToProps = state => ({
   actionTypes: state.ui.actionTypes,
   attributeTypes: state.ui.attributeTypes,
+  classification: getClassification(state.selectedTOS, state.navigation.items),
   isFetching: state.ui.isFetching || state.selectedTOS.isFetching,
   isUser: !isEmpty(state.user.data),
   items: state.navigation.items,
