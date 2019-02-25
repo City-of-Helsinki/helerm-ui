@@ -16,7 +16,6 @@ const TosHeader = ({
   saveDraft,
   changeStatus,
   setDocumentState,
-  setPhasesVisibility,
   setTosVisibility,
   setValidationVisibility,
   review,
@@ -51,7 +50,6 @@ const TosHeader = ({
             isValidationBarVisible={isValidationBarVisible}
             saveDraft={saveDraft}
             setDocumentState={setDocumentState}
-            setPhasesVisibility={setPhasesVisibility}
             setTosVisibility={setTosVisibility}
             setValidationVisibility={setValidationVisibility}
             review={review}
@@ -77,7 +75,6 @@ TosHeader.propTypes = {
   review: PropTypes.func.isRequired,
   saveDraft: PropTypes.func,
   setDocumentState: PropTypes.func,
-  setPhasesVisibility: PropTypes.func.isRequired,
   setTosVisibility: PropTypes.func.isRequired,
   setValidationVisibility: PropTypes.func,
   state: PropTypes.string,

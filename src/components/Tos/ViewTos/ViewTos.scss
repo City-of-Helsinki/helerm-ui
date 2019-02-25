@@ -41,6 +41,12 @@
 .single-tos-content {
   padding: 15px 15px 150px;
 }
+.tos-version-data {
+  .list-group-item {
+    margin: -1px 0 0 -1px;
+    color: $list-group-link-color;
+  }
+}
 .tos-metadata-header {
   padding-top: 20px;
 }

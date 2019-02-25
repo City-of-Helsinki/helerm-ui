@@ -27,7 +27,8 @@ const ClassificationHeader = ({
           </button>
         </div>
       </div>
-      {isOpen && (
+      {isOpen &&
+        !!classification && (
         <div className='row'>
           <div className='col-xs-12'>
             <div className='list-group-item col-xs-6'>
@@ -41,7 +42,8 @@ const ClassificationHeader = ({
           </div>
         </div>
       )}
-      {isOpen && (
+      {isOpen &&
+        !!classification && (
         <div className='row'>
           <div className='col-xs-12'>
             <div className='list-group-item col-xs-6'>
@@ -60,7 +62,7 @@ const ClassificationHeader = ({
 };
 
 ClassificationHeader.propTypes = {
-  classification: PropTypes.object.isRequired,
+  classification: PropTypes.object,
   isOpen: PropTypes.bool.isRequired,
   setVisibility: PropTypes.func.isRequired
 };

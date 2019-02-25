@@ -19,7 +19,6 @@ export default () => (
         <Route path=':id(/version/:version)'>
           <IndexRoute component={ViewTOSContainer} />
           <Route path='print' component={PrintTOS} />
-          <Route path='all' component={ViewTOSContainer} />
         </Route>
       </Route>
       <Route path='view-classification/'>

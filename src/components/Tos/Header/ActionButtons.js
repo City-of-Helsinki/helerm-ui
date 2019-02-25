@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
 
 import IsAllowed from 'components/IsAllowed/IsAllowed';
 import ActionButton from './ActionButton';
@@ -23,7 +22,6 @@ const ActionButtons = ({
   saveDraft,
   changeStatus,
   setDocumentState,
-  setPhasesVisibility,
   setTosVisibility,
   setValidationVisibility,
   review,
@@ -128,12 +126,6 @@ const ActionButtons = ({
             label={isValidationBarVisible ? 'Sulje esitarkastus' : 'Esitarkasta'}
           />
         )}
-        <Link
-          className={`btn btn-primary pull-right${editMode ? ' disabled' : ''}`}
-          to={`/view-tos/${tosId}/print`}
-        >
-          Raportti
-        </Link>
       </div>
       <div className='col-xs-12 tos-visibility-buttons'>
         <ActionButton
@@ -145,7 +137,7 @@ const ActionButtons = ({
         <ActionButton
           className='pull-right'
           type='link'
-          action={setPhasesVisibility}
+          action={() => setTosVisibility(true, false)}
           label={'Avaa perustiedot'}
         />
         <ActionButton
@@ -168,7 +160,6 @@ ActionButtons.propTypes = {
   review: PropTypes.func.isRequired,
   saveDraft: PropTypes.func,
   setDocumentState: PropTypes.func,
-  setPhasesVisibility: PropTypes.func.isRequired,
   setTosVisibility: PropTypes.func.isRequired,
   setValidationVisibility: PropTypes.func.isRequired,
   status: PropTypes.string.isRequired,

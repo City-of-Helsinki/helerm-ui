@@ -63,7 +63,8 @@ const initialState = {
   lastUpdated: 0,
   isFetching: false,
   is_classification_open: false,
-  is_open: false
+  is_open: false,
+  is_version_open: false
 };
 
 // ------------------------------------
@@ -80,6 +81,7 @@ export const SET_DOCUMENT_STATE = 'setDocumentStateAction';
 export const SET_CLASSIFICATION_VISIBILITY = 'setClassificationVisibilityAction';
 export const SET_METADATA_VISIBILITY = 'setMetadataVisibilityAction';
 export const SET_TOS_VISIBILITY = 'setTosVisibilityAction';
+export const SET_VERSION_VISIBILITY = 'setVersionVisibilityAction';
 
 // ------------------------------------
 // Actions
@@ -238,6 +240,10 @@ export function setTosVisibility (tos, basicVisibility, metaDataVisibility) {
   return createAction(SET_TOS_VISIBILITY)({ actions: allActionsOpen, phases: allPhasesOpen, records: allRecordsOpen, metaDataVisibility });
 }
 
+export function setVersionVisibility (visibility) {
+  return createAction(SET_VERSION_VISIBILITY)(visibility);
+}
+
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
@@ -274,7 +280,13 @@ const receiveTosAction = (state, { payload }) => {
     isFetching: {
       $set: false
     },
+    is_classification_open: {
+      $set: false
+    },
     is_open: {
+      $set: false
+    },
+    is_version_open: {
       $set: false
     }
   });
@@ -368,8 +380,15 @@ const setTosVisibilityAction = (state, { payload }) => {
     actions: { $set: actions },
     is_classification_open: { $set: metaDataVisibility },
     is_open: { $set: metaDataVisibility },
+    is_version_open: { $set: metaDataVisibility },
     phases: { $set: phases },
     records: { $set: records }
+  });
+};
+
+const setVersionVisibilityAction = (state, { payload }) => {
+  return update(state, {
+    is_version_open: { $set: payload }
   });
 };
 
@@ -388,6 +407,7 @@ export default handleActions({
   setPhasesVisibilityAction,
   setRecordVisibilityAction,
   setTosVisibilityAction,
+  setVersionVisibilityAction,
   addActionAction,
   addPhaseAction,
   addRecordAction,

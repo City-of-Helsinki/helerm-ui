@@ -64,7 +64,7 @@ export class EditorForm extends React.Component {
       state => update(state, this.createUpdate(value, key, field)),
       () =>
         this.resolveOnSubmit(
-          { preventDefault: () => {} },
+          null,
           this.props.targetId,
           false
         )
@@ -346,12 +346,10 @@ export class EditorForm extends React.Component {
   }
 
   /**
-   * @param  {Event} e
    * @param  {boolean} stopEditing
    * @return {void}
    */
-  editMetaData (e, stopEditing) {
-    e.preventDefault();
+  editMetaData (stopEditing) {
     const { newAttributes } = this.state;
     this.props.editMetaDataWithForm(
       this.filterAttributes(newAttributes),
@@ -390,6 +388,8 @@ export class EditorForm extends React.Component {
     const { type, action } = this.props.editorConfig;
 
     switch (type) {
+      case 'version':
+        return 'Version tiedot';
       case 'function':
         return 'Käsittelyprosessin tiedot';
       case 'phase':
@@ -474,15 +474,26 @@ export class EditorForm extends React.Component {
    * @return {void}
    */
   resolveOnSubmit (e, targetId, stopEditing = true) {
-    e.preventDefault();
+    if (e) {
+      e.preventDefault();
+    }
     const { action, type, from } = this.props.editorConfig;
 
     const displayMessage = stopEditing ? this.props.displayMessage : () => {};
     if (targetId) {
       switch (type) {
+        case 'version':
+          if (action === 'edit') {
+            this.editMetaData(stopEditing);
+            displayMessage({
+              title: 'Version tiedot',
+              body: 'Tietojen muokkaus onnistui!'
+            });
+          }
+          break;
         case 'function':
           if (action === 'edit' || action === 'complement') {
-            this.editMetaData(e, stopEditing);
+            this.editMetaData(stopEditing);
             displayMessage({
               title: 'Käsittelyprosessin tiedot',
               body: 'Tietojen muokkaus onnistui!'
@@ -534,7 +545,7 @@ export class EditorForm extends React.Component {
       ({ initialAttributes }) => ({ newAttributes: initialAttributes }),
       () => {
         const { targetId, closeEditorForm } = this.props;
-        this.resolveOnSubmit(e, targetId, false);
+        this.resolveOnSubmit(null, targetId, false);
         closeEditorForm();
       }
     );
@@ -576,7 +587,7 @@ export class EditorForm extends React.Component {
   }
 
   render () {
-    const { attributeTypes, targetId, onShowMore, onShowMoreForm } = this.props;
+    const { attributeTypes, editorConfig, targetId, onShowMore, onShowMoreForm } = this.props;
     const attributeElements = this.generateAttributeElements(attributeTypes);
 
     let showMoreLabel;
@@ -595,7 +606,7 @@ export class EditorForm extends React.Component {
           onSubmit={e => this.resolveOnSubmit(e, targetId)}
           className='editor-form'
         >
-          {this.props.editorConfig.type !== 'function'
+          {!includes(['function', 'version'], this.props.editorConfig.type)
             ? this.renderDescriptions()
             : null}
           {this.props.additionalFields || null}
@@ -613,12 +624,14 @@ export class EditorForm extends React.Component {
             >
               Peruuta
             </button>
-            <button
-              className={showMoreLabel ? 'btn btn-primary pull-right editor-form__cancel' : 'non-display'}
-              onClick={(e) => (this.props.editorConfig.action === 'add' || (this.props.editorConfig.action === 'complement' && this.props.complementRecordAdd)) ? onShowMoreForm(e, this.state.newAttributes) : onShowMore(e, this.state)}
-            >
-              {showMoreLabel}
-            </button>
+            {editorConfig.type !== 'version' && (
+              <button
+                className={showMoreLabel ? 'btn btn-primary pull-right editor-form__cancel' : 'non-display'}
+                onClick={(e) => (this.props.editorConfig.action === 'add' || (this.props.editorConfig.action === 'complement' && this.props.complementRecordAdd)) ? onShowMoreForm(e, this.state.newAttributes) : onShowMore(e, this.state)}
+              >
+                {showMoreLabel}
+              </button>
+            )}
           </div>
         </form>
       </div>
