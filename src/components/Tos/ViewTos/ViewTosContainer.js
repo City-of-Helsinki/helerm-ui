@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { push, replace } from 'react-router-redux';
+import { push } from 'react-router-redux';
 import { displayMessage, itemById } from '../../../utils/helpers';
 import { isEmpty } from 'lodash';
 
@@ -19,7 +19,8 @@ import {
   setClassificationVisibility,
   setDocumentState,
   setMetadataVisibility,
-  setTosVisibility
+  setTosVisibility,
+  setVersionVisibility
 } from '../reducer';
 
 import {
@@ -78,7 +79,6 @@ const mapDispatchToProps = dispatch => ({
   removeAction: bindActionCreators(removeAction, dispatch),
   removePhase: bindActionCreators(removePhase, dispatch),
   removeRecord: bindActionCreators(removeRecord, dispatch),
-  replace: path => dispatch(replace(path)),
   resetTOS: bindActionCreators(resetTOS, dispatch),
   saveDraft: bindActionCreators(saveDraft, dispatch),
   setClassificationVisibility: bindActionCreators(setClassificationVisibility, dispatch),
@@ -93,7 +93,8 @@ const mapDispatchToProps = dispatch => ({
   setPhaseVisibility: bindActionCreators(setPhaseVisibility, dispatch),
   setRecordVisibility: bindActionCreators(setRecordVisibility, dispatch),
   setTosVisibility: bindActionCreators(setTosVisibility, dispatch),
-  setValidationVisibility: bindActionCreators(setValidationVisibility, dispatch)
+  setValidationVisibility: bindActionCreators(setValidationVisibility, dispatch),
+  setVersionVisibility: bindActionCreators(setVersionVisibility, dispatch)
 });
 
 const getClassification = (tos, items) => {
