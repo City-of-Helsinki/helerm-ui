@@ -458,7 +458,7 @@ export class Action extends React.Component {
 
     return (
       <StickyContainer>
-        <div className='action row'>
+        <div className='action row' id={action.id}>
           {this.state.mode === 'edit' &&
             this.state.editingAction && (
               <EditorForm

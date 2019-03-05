@@ -7,6 +7,19 @@
     width: 100%;
     background-color: $gray-lighter;
   }
+
+  &:target::before {
+    content: "";
+    display: block;
+    height: 200px;
+    margin-top: -200px;
+  }
+
+  /*
+  &:target > .box {
+    background-color: $brand-warning;
+  }
+  */
 }
 .phase-title {
   position: relative;

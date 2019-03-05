@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import classnames from 'classnames';
 import { map, find, forEach } from 'lodash';
-import StickySidebar from 'sticky-sidebar/dist/sticky-sidebar';
 
 import './ValidationBar.scss';
 
@@ -25,34 +25,18 @@ const ATTRIBUTE_NAME_FIELDS = ['PhaseType', 'ActionType', 'TypeSpecifier'];
 export class ValidationBar extends Component {
   constructor (props) {
     super(props);
+    this.onFilterChange = this.onFilterChange.bind(this);
     this.renderContent = this.renderContent.bind(this);
+
     this.state = {
-      sidebar: null
+      filter: ''
     };
   }
 
-  componentDidMount () {
-    const sidebar = new StickySidebar('.sidebar-content', {
-      bottomSpacing: 10,
-      topSpacing: 155,
-      containerSelector: '.validation-bar-container',
-      innerWrapperSelector: '.sidebar-invalid-content'
+  onFilterChange (filter) {
+    this.setState({
+      filter
     });
-    this.setState({ sidebar }); // eslint-disable-line react/no-did-mount-set-state
-  }
-
-  componentDidUpdate () {
-    const { sidebar } = this.state;
-    if (sidebar) {
-      sidebar.updateSticky();
-    }
-  }
-
-  componentWillUnmount () {
-    const { sidebar } = this.state;
-    if (sidebar) {
-      sidebar.destroy();
-    }
   }
 
   generateInvalidTosAttributes (validate, validateWarn, values) {
@@ -149,7 +133,11 @@ export class ValidationBar extends Component {
       if (invalidAttributes.length || warnAttributes.length || (children && children.length)) {
         return (
           <div className={`sidebar-content-${type}`} key={section.id}>
-            <div className='parent-name'>{nameAttribute ? section.attributes[nameAttribute] : ''}</div>
+            <div className='parent-name'>
+              <a href={`#${section.id}`}>
+                {nameAttribute ? section.attributes[nameAttribute] : ''}
+              </a>
+            </div>
             <div className='missing-attributes'>
               {map(invalidAttributes, (item, key) => {
                 return (
@@ -177,8 +165,8 @@ export class ValidationBar extends Component {
   }
 
   getFilterByStatus (value) {
-    const { validationFilter } = this.props;
-    return !validationFilter ? true : value === validationFilter;
+    const { filter } = this.state;
+    return !filter ? true : value === filter;
   }
 
   renderInvalidContent () {
@@ -193,7 +181,7 @@ export class ValidationBar extends Component {
     if (invalidTOSAttributes || invalidAttributes.length > 0) {
       return (
         <div className='sidebar-invalid-content'>
-          {invalidTOSAttributes && <h5>Käsittelyprosessi</h5>}
+          {invalidTOSAttributes && <h5><a href={`#${selectedTOS.id}`}>Käsittelyprosessi</a></h5>}
           {invalidTOSAttributes}
           {invalidAttributes}
         </div>
@@ -212,11 +200,48 @@ export class ValidationBar extends Component {
   }
 
   render () {
-    const { selectedTOS } = this.props;
+    const { selectedTOS, setValidationVisibility, top } = this.props;
+    const { filter } = this.state;
     const sidebarContent = selectedTOS.id ? this.renderContent() : <div />;
 
     return (
-      <div className='helerm-validation-bar'>
+      <div className='validation-bar' style={{ top: top + 47 }}>
+        <div className='validation-bar-header'>
+          <h3>
+            Esitarkastus
+            <button
+              className='sidebar-close-button pull-right'
+              onClick={() => setValidationVisibility(false)}>
+              <i className='fa fa-times' />
+            </button>
+          </h3>
+          <div className='sidebar-filter'>
+            <button
+                className={classnames(
+                'sidebar-filter-all btn btn-sm',
+                { 'btn-default': filter === '' }
+                )}
+                onClick={() => this.onFilterChange('')}>
+                Kaikki
+            </button>
+            <button
+              className={classnames(
+              'sidebar-filter-warn btn btn-sm',
+              { 'btn-default': filter === VALIDATION_FILTER_WARN }
+              )}
+              onClick={() => this.onFilterChange(VALIDATION_FILTER_WARN)}>
+              <i className='fa fa-exclamation-circle' /> Huomautukset
+            </button>
+            <button
+              className={classnames(
+              'sidebar-filter-error btn btn-sm',
+              { 'btn-default': filter === VALIDATION_FILTER_ERROR }
+              )}
+              onClick={() => this.onFilterChange(VALIDATION_FILTER_ERROR)}>
+              <i className='fa fa-exclamation-triangle' /> Virheet
+            </button>
+          </div>
+        </div>
         {sidebarContent}
       </div>
     );
@@ -226,7 +251,8 @@ export class ValidationBar extends Component {
 ValidationBar.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
   selectedTOS: React.PropTypes.object.isRequired,
-  validationFilter: React.PropTypes.string.isRequired
+  setValidationVisibility: React.PropTypes.func.isRequired,
+  top: React.PropTypes.number.isRequired
 };
 
 export default ValidationBar;

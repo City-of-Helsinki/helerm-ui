@@ -18,7 +18,7 @@ export class Header extends React.Component {
     const gitVersion = head(GIT_VERSION.split('-'));
 
     return (
-      <div>
+      <div className='header'>
         <nav className='navbar navbar-inverse container-fluid'>
           <Link
             to='/'
