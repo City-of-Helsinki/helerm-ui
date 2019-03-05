@@ -452,6 +452,14 @@ export class ViewTOS extends React.Component {
         {isEdit && (
           <button
             className='btn btn-link'
+            onClick={() => this.toggleCloneView()}
+          >
+            Tuo kuvaus
+          </button>
+        )}
+        {isEdit && (
+          <button
+            className='btn btn-link'
             onClick={() => this.setState({ editingMetaData: true })}
           >
             Muokkaa metatietoja
@@ -646,7 +654,6 @@ export class ViewTOS extends React.Component {
                       editValidDates={editValidDates}
                       selectedTOS={selectedTOS}
                       setVersionVisibility={setVersionVisibility}
-                      toggleCloneView={this.toggleCloneView}
                     />
                     <div className='row tos-metadata-header'>
                       <div className='col-xs-6'>
