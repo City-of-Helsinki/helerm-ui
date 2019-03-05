@@ -702,7 +702,7 @@ export class ViewTOS extends React.Component {
                       </div>
                       {selectedTOS.documentState === 'edit' &&
                         !this.state.createPhaseMode && (
-                        <div className='col-xs-9'>
+                        <div className='col-xs-9 phases-actions'>
                           <button className='btn btn-link pull-right' onClick={() => this.toggleReorderView()}>
                             Järjestä käsittelyvaiheita
                           </button>

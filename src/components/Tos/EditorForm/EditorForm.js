@@ -358,11 +358,13 @@ export class EditorForm extends React.Component {
   }
 
   addRecord (e, targetId) {
-    const shouldCreateRecord = e.type === 'submit';
+    const shouldCreateRecord = !!e && e.type === 'submit';
     if (!shouldCreateRecord) {
       return;
     }
-    e.preventDefault();
+    if (e) {
+      e.preventDefault();
+    }
     const { newAttributes } = this.state;
 
     this.props.elementConfig.createRecord(
