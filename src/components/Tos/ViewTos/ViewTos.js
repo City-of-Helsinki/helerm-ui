@@ -137,7 +137,8 @@ export class ViewTOS extends React.Component {
   }
 
   handleScroll (event) {
-    const scrollTop = HEADER_HEIGHT - min([HEADER_HEIGHT, event.srcElement.scrollingElement.scrollTop]);
+    const element = event.srcElement.scrollingElement || event.srcElement.documentElement || {};
+    const scrollTop = HEADER_HEIGHT - min([HEADER_HEIGHT, element.scrollTop || 0]);
     if (scrollTop >= 0 && scrollTop !== this.state.scrollTop) {
       this.setState({ scrollTop });
     }
