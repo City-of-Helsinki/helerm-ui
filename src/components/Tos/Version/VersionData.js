@@ -36,7 +36,7 @@ export class VersionData extends React.Component {
   }
 
   generateVersionDataButtons () {
-    const { selectedTOS, setVersionVisibility, toggleCloneView } = this.props;
+    const { selectedTOS, setVersionVisibility } = this.props;
     const {
       documentState,
       is_version_open: isVersionOpen,
@@ -46,7 +46,6 @@ export class VersionData extends React.Component {
     const isEdit = documentState === 'edit';
     return (
       <div className='pull-right'>
-        {isEdit && <button className='btn btn-link' onClick={() => toggleCloneView()}>Tuo kuvaus</button>}
         {isEdit && (
           <button
             className='btn btn-link'
@@ -245,8 +244,7 @@ VersionData.propTypes = {
   displayMessage: PropTypes.func.isRequired,
   editValidDates: PropTypes.func.isRequired,
   selectedTOS: PropTypes.object.isRequired,
-  setVersionVisibility: PropTypes.func.isRequired,
-  toggleCloneView: PropTypes.func.isRequired
+  setVersionVisibility: PropTypes.func.isRequired
 };
 
 export default VersionData;
