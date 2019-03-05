@@ -141,7 +141,6 @@
     "redux-thunk": "^2.0.0",
     "rimraf": "^2.5.4",
     "sass-loader": "^6.0.6",
-    "sticky-sidebar": "^3.3.1",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.6",
     "webpack": "^3.6.0",

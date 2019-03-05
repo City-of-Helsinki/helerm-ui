@@ -26,7 +26,6 @@ class Login extends React.Component {
   render () {
     const { user } = this.props;
     const displayName = (user && user.id) ? user.displayName ? user.displayName : `${user.firstName}${user.lastName ? ' ' + user.lastName : ''}` : null;
-
     return (
       <p className='navbar-text pull-right login-link'>
         {!!displayName && <small>{displayName}</small>}

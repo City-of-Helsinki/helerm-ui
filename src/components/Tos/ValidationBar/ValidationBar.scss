@@ -1,71 +1,103 @@
 @import '../../styles/vendor/hel-components/variables';
 
-.missing-attributes {
-  margin-bottom: 25px;
-}
-
-.missing-attribute {
-  .fa {
-    color: $brand-danger;
-  }
-}
-
-.warn-attribute {
-  .fa {
-    color: $brand-warning;
-  }
-}
-
-.sidebar-content {
-  will-change: min-height;
-  h4 {
-    margin-bottom: 20px;
+.validation-bar {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  
+  .validation-bar-header {
+    flex: 0 0 auto;
+    padding: 0 15px;
   }
 
-  h5 {
-    margin: 0 0 10px;
+  .missing-attributes {
+    margin-bottom: 25px;
   }
 
-  .sidebar-content-close {
-    display: block;
-    .sidebar-close-button {
-      background: transparent;
-      border: none;
-      font-size: $font-size-large;
+  .missing-attribute {
+    .fa {
+      color: $brand-danger;
     }
   }
 
-  .sidebar-invalid-content {
-    transform: translate(0, 0); /* For browsers don't support translate3d. */
-    transform: translate3d(0, 0, 0);
-    will-change: position, transform;
-  }
-
-  .sidebar-invalid-content {
-    padding-top: 120px;
-    padding-bottom: 150px;
-  }
-
-  .sidebar-content-phase {
-    > .parent-name {
-      font-weight: 700;
+  .warn-attribute {
+    .fa {
+      color: $brand-warning;
     }
   }
 
-  .element-name {
+  .sidebar-close-button {
+    background: transparent;
+    border: none;
+    font-size: $font-size-large;
+  }
+
+  .sidebar-filter {
+    margin-top: 15px;
     margin-bottom: 5px;
+    .btn {
+      margin-right: 15px;
+      border-radius: 15px;
+    }
+    .btn:not(.btn-default) {
+      background-color: transparent;
+      border: none;
+      color: $black00;
+    }
+    .sidebar-filter-warn {
+      .fa {
+        color: $brand-warning;
+      }
+    }
+    .sidebar-filter-error {
+      .fa {
+        color: $brand-danger;
+      }
+    }
   }
 
-  .no-missing-attributes {
-    display: flex;
-    justify-content: center;
-    padding: 20px 0;
-    color: #009c3d;
-    font-size: 120px;
-  }
+  .sidebar-content {
+    overflow-y: scroll;
+    flex: 1 1 auto;
+    padding: 0 15px;
 
-  .sidebar-content-action,
-  .sidebar-content-record {
-    padding-left: 15px;
+    h4 {
+      margin-bottom: 20px;
+    }
+
+    h5 {
+      margin: 0 0 10px;
+    }
+
+    .sidebar-invalid-content {
+      padding-top: 20px;
+      padding-bottom: 20px;
+    }
+
+    .sidebar-content-phase {
+      > .parent-name {
+        font-weight: 700;
+      }
+    }
+
+    .element-name {
+      margin-bottom: 5px;
+    }
+
+    .no-missing-attributes {
+      display: flex;
+      justify-content: center;
+      padding: 20px 0;
+      color: #009c3d;
+      font-size: 120px;
+    }
+
+    .sidebar-content-action,
+    .sidebar-content-record {
+      padding-left: 15px;
+    }
   }
 }

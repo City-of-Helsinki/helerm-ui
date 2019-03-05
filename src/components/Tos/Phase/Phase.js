@@ -525,7 +525,7 @@ export class Phase extends React.Component {
 
     return (
       <StickyContainer>
-        <div className='phase'>
+        <div className='phase' id={phase.id}>
           <div className='box'>
             {this.state.mode === 'edit' &&
               this.state.editingPhase && (

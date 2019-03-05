@@ -35,5 +35,9 @@ export const navigationStateFilters = {
   }
 };
 
+// header height
+export const HEADER_HEIGHT = 60;
+
+// validation bar filters
 export const VALIDATION_FILTER_ERROR = 'error';
 export const VALIDATION_FILTER_WARN = 'warning';

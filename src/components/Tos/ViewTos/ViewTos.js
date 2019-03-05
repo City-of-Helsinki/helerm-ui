@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import { withRouter, routerShape } from 'react-router';
 import { StickyContainer, Sticky } from 'react-sticky';
 import classnames from 'classnames';
+import { min } from 'lodash';
 
+import { HEADER_HEIGHT } from '../../../../config/constants';
 import Phase from 'components/Tos/Phase/Phase';
 import AddElementInput from 'components/Tos/AddElementInput/AddElementInput';
 import Attribute from 'components/Tos/Attribute/Attribute';
@@ -14,7 +16,6 @@ import EditorForm from 'components/Tos/EditorForm/EditorForm';
 import TosHeader from 'components/Tos/Header/TosHeader';
 import ClassificationHeader from 'components/Tos/Header/ClassificationHeader';
 import ValidationBarContainer from 'components/Tos/ValidationBar/ValidationBarContainer';
-import ValidationBarHeader from 'components/Tos/ValidationBarHeader/ValidationBarHeader';
 import VersionData from 'components/Tos/Version/VersionData';
 
 import Popup from 'components/Popup';
@@ -43,7 +44,7 @@ export class ViewTOS extends React.Component {
     this.createNewPhase = this.createNewPhase.bind(this);
     this.editMetaDataWithForm = this.editMetaDataWithForm.bind(this);
     this.fetchTOS = this.fetchTOS.bind(this);
-    this.onValidationFilterChange = this.onValidationFilterChange.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
     this.onPhaseDefaultAttributeChange = this.onPhaseDefaultAttributeChange.bind(this);
     this.onPhaseTypeChange = this.onPhaseTypeChange.bind(this);
     this.onPhaseTypeInputChange = this.onPhaseTypeInputChange.bind(this);
@@ -62,12 +63,12 @@ export class ViewTOS extends React.Component {
       complementingMetaData: false,
       createPhaseMode: false,
       editingMetaData: false,
-      validationFilter: '',
       phaseDefaultAttributes: {},
       phaseTypeSpecifier: '',
       phaseType: '',
       originalTos: {},
       isDirty: false,
+      scrollTop: HEADER_HEIGHT,
       showCloneView: false,
       showImportView: false,
       showReorderView: false,
@@ -88,6 +89,7 @@ export class ViewTOS extends React.Component {
     }
 
     this.fetchTOS(id, params);
+    document.addEventListener('scroll', this.handleScroll);
   }
 
   componentWillReceiveProps (nextProps) {
@@ -131,6 +133,14 @@ export class ViewTOS extends React.Component {
   componentWillUnmount () {
     this.props.clearTOS();
     this.props.setValidationVisibility(false);
+    document.removeEventListener('scroll', this.handleScroll);
+  }
+
+  handleScroll (event) {
+    const scrollTop = HEADER_HEIGHT - min([HEADER_HEIGHT, event.srcElement.scrollingElement.scrollTop]);
+    if (scrollTop >= 0 && scrollTop !== this.state.scrollTop) {
+      this.setState({ scrollTop });
+    }
   }
 
   onEditFormShowMoreMetaData (e) {
@@ -517,12 +527,6 @@ export class ViewTOS extends React.Component {
     );
   }
 
-  onValidationFilterChange (validationFilter) {
-    this.setState({
-      validationFilter
-    });
-  }
-
   generatePhases (phases, phasesOrder) {
     const phaseElements = [];
     if (phases) {
@@ -594,40 +598,37 @@ export class ViewTOS extends React.Component {
         attributeTypes,
         selectedTOS.attributes
       );
+      const { scrollTop } = this.state;
+      const headerHeight = this.header ? this.header.clientHeight : 0;
 
       return (
         <div key={`${id}.${version}`}>
           <div className='col-xs-12 single-tos-container'>
             <StickyContainer>
-              <Sticky className='single-tos-header-wrapper'>
-                <TosHeader
-                  cancelEdit={this.cancelEdit}
-                  classification={classification}
-                  classificationId={selectedTOS.classification}
-                  changeStatus={this.changeStatus}
-                  currentVersion={selectedTOS.version}
-                  documentState={selectedTOS.documentState}
-                  fetchTos={this.fetchTOS}
-                  functionId={selectedTOS.function_id}
-                  isValidationBarVisible={showValidationBar}
-                  name={selectedTOS.name}
-                  state={selectedTOS.state}
-                  setDocumentState={state => this.setDocumentState(state)}
-                  setTosVisibility={this.setTosVisibility}
-                  setValidationVisibility={this.setValidationVisibility}
-                  review={this.review}
-                  saveDraft={this.saveDraft}
-                  tosId={selectedTOS.id}
-                  versions={selectedTOS.version_history}
-                />
-                {showValidationBar && (
-                  <ValidationBarHeader
-                    onFilterChange={this.onValidationFilterChange}
+              <div ref={element => { this.header = element; }}>
+                <Sticky className='single-tos-header-wrapper'>
+                  <TosHeader
+                    cancelEdit={this.cancelEdit}
+                    classification={classification}
+                    classificationId={selectedTOS.classification}
+                    changeStatus={this.changeStatus}
+                    currentVersion={selectedTOS.version}
+                    documentState={selectedTOS.documentState}
+                    fetchTos={this.fetchTOS}
+                    functionId={selectedTOS.function_id}
+                    isValidationBarVisible={showValidationBar}
+                    name={selectedTOS.name}
+                    state={selectedTOS.state}
+                    setDocumentState={state => this.setDocumentState(state)}
+                    setTosVisibility={this.setTosVisibility}
                     setValidationVisibility={this.setValidationVisibility}
-                    validationFilter={this.state.validationFilter}
+                    review={this.review}
+                    saveDraft={this.saveDraft}
+                    tosId={selectedTOS.id}
+                    versions={selectedTOS.version_history}
                   />
-                )}
-              </Sticky>
+                </Sticky>
+              </div>
               <div className='single-tos-wrapper'>
                 <div className={
                   classnames([
@@ -656,7 +657,7 @@ export class ViewTOS extends React.Component {
                         {metaDataButtons}
                       </div>
                     </div>
-                    <div className='row tos-metadata'>
+                    <div className='row tos-metadata' id={selectedTOS.id}>
                       {this.state.editingMetaData && (
                         <EditorForm
                           onShowMore={this.onEditFormShowMoreMetaData}
@@ -800,7 +801,7 @@ export class ViewTOS extends React.Component {
                 </div>
                 {showValidationBar && (
                   <div className='col-xs-3 validation-bar-container'>
-                    <ValidationBarContainer validationFilter={this.state.validationFilter} />
+                    <ValidationBarContainer top={headerHeight + scrollTop} />
                   </div>
                 )}
               </div>

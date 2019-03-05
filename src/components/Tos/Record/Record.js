@@ -1,4 +1,6 @@
 import React from 'react';
+import classnames from 'classnames';
+
 import './Record.scss';
 import Attributes from '../Attribute/Attributes';
 import DeleteView from '../DeleteView/DeleteView';
@@ -186,9 +188,16 @@ export class Record extends React.Component {
     const { mode } = this.state;
 
     return (
-      <div className={'record col-xs-12 ' + (record.is_open ? 'record-open' : 'record-closed')}>
-        {mode === 'edit' &&
-          this.state.editingRecord && (
+      <div
+        className={classnames(
+          'record col-xs-12',
+          { 'record-open' : record.is_open },
+          { 'record-closed': !record.is_open }
+        )}
+      >
+        <div id={record.id}>
+          {mode === 'edit' &&
+            this.state.editingRecord && (
             <EditorForm
               onShowMore={this.onEditFormShowMoreRecord}
               targetId={record.id}
@@ -206,8 +215,8 @@ export class Record extends React.Component {
               displayMessage={this.props.displayMessage}
             />
           )}
-        {mode === 'edit' &&
-          this.state.complementingRecord && (
+          {mode === 'edit' &&
+            this.state.complementingRecord && (
             <EditorForm
               onShowMore={this.onEditFormShowMoreRecord}
               targetId={record.id}
@@ -226,8 +235,8 @@ export class Record extends React.Component {
               displayMessage={this.props.displayMessage}
             />
           )}
-        {!this.state.editingRecord &&
-          !this.state.complementingRecord && (
+          {!this.state.editingRecord &&
+            !this.state.complementingRecord && (
             <Attributes
               element={record}
               documentState={documentState}
@@ -241,19 +250,20 @@ export class Record extends React.Component {
               showAttributes={record.is_open}
             />
           )}
-        { this.state.deleting &&
-        <Popup
-          content={
-            <DeleteView
-              type='record'
-              target={record.attributes.TypeSpecifier || record.attributes.RecordType || '---'}
-              action={() => this.delete()}
-              cancel={() => this.cancelDeletion()}
-            />
+          {this.state.deleting &&
+          <Popup
+            content={
+              <DeleteView
+                type='record'
+                target={record.attributes.TypeSpecifier || record.attributes.RecordType || '---'}
+                action={() => this.delete()}
+                cancel={() => this.cancelDeletion()}
+              />
+            }
+            closePopup={() => this.cancelDeletion()}
+          />
           }
-          closePopup={() => this.cancelDeletion()}
-        />
-        }
+        </div>
       </div>
     );
   }

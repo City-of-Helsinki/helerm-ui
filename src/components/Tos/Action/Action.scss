@@ -9,6 +9,19 @@
   margin-right: 0;
   padding-bottom: 15px;
   position: relative;
+
+  &:target::before {
+    content: "";
+    display: block;
+    height: 230px;
+    margin-top: -230px;
+  }
+
+  /*
+  &:target .box:not(.records) {
+    background-color: $brand-warning;
+  }
+  */
 }
 .action-title {
   position: relative;
