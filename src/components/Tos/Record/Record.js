@@ -187,7 +187,8 @@ export class Record extends React.Component {
 
   scrollToRecord (topOffset) {
     if (this.element) {
-      window.scrollTo(0, topOffset + this.element.offsetParent.offsetTop + this.element.offsetTop);
+      const parentOffset = this.element.offsetParent ? this.element.offsetParent.offsetTop : 0;
+      window.scrollTo(0, topOffset + parentOffset + this.element.offsetTop);
     }
   }
 

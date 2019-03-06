@@ -458,14 +458,16 @@ export class Action extends React.Component {
 
   scrollToAction () {
     if (this.element) {
-      window.scrollTo(0, this.element.offsetParent.offsetTop + this.element.offsetTop);
+      const parentOffset = this.element.offsetParent ? this.element.offsetParent.offsetTop : 0;
+      window.scrollTo(0, parentOffset + this.element.offsetTop);
     }
   }
 
   scrollToRecord (recordId) {
     const record = this.records[recordId] || null;
     if (this.element && record) {
-      record.scrollToRecord(this.element.offsetParent.offsetTop + this.element.offsetTop);
+      const parentOffset = this.element.offsetParent ? this.element.offsetParent.offsetTop : 0;
+      record.scrollToRecord(parentOffset + this.element.offsetTop);
     }
   }
 
