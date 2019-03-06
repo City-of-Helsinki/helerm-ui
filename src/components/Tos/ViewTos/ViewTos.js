@@ -58,6 +58,8 @@ export class ViewTOS extends React.Component {
     this.review = this.review.bind(this);
     this.onEditFormShowMoreMetaData = this.onEditFormShowMoreMetaData.bind(this);
     this.onAddFormShowMorePhase = this.onAddFormShowMorePhase.bind(this);
+    this.scrollToMetadata = this.scrollToMetadata.bind(this);
+    this.scrollToType = this.scrollToType.bind(this);
 
     this.state = {
       complementingMetaData: false,
@@ -78,6 +80,8 @@ export class ViewTOS extends React.Component {
       validTo: null,
       validToEditing: false
     };
+
+    this.phases = {};
   }
 
   componentDidMount () {
@@ -141,6 +145,40 @@ export class ViewTOS extends React.Component {
     const scrollTop = HEADER_HEIGHT - min([HEADER_HEIGHT, element.scrollTop || 0]);
     if (scrollTop >= 0 && scrollTop !== this.state.scrollTop) {
       this.setState({ scrollTop });
+    }
+  }
+
+  scrollToMetadata () {
+    if (this.metadata) {
+      window.scrollTo(0, this.metadata.offsetTop + HEADER_HEIGHT);
+    }
+  }
+
+  scrollToType (type, id) {
+    if (type === 'phase') {
+      const element = this.phases[id] || null;
+      if (element) {
+        element.scrollToPhase();
+      }
+    } else if (type === 'action') {
+      const action = this.props.selectedTOS.actions[id];
+      if (action && action.phase) {
+        const phase = this.phases[action.phase] || null;
+        if (phase) {
+          phase.scrollToAction(id);
+        }
+      }
+    } else if (type === 'record') {
+      const record = this.props.selectedTOS.records[id];
+      if (record && record.action) {
+        const action = this.props.selectedTOS.actions[record.action];
+        if (action && action.phase) {
+          const phase = this.phases[action.phase] || null;
+          if (phase) {
+            phase.scrollToActionRecord(record.action, id);
+          }
+        }
+      }
     }
   }
 
@@ -573,6 +611,7 @@ export class ViewTOS extends React.Component {
               displayMessage={this.props.displayMessage}
               changeOrder={this.props.changeOrder}
               importItems={this.props.importItems}
+              ref={element => { this.phases[key] = element; }}
             />
           );
         }
@@ -657,7 +696,7 @@ export class ViewTOS extends React.Component {
                       selectedTOS={selectedTOS}
                       setVersionVisibility={setVersionVisibility}
                     />
-                    <div className='row tos-metadata-header'>
+                    <div className='row tos-metadata-header' ref={element => { this.metadata = element; }}>
                       <div className='col-xs-6'>
                         <h4>Käsittelyprosessin tiedot</h4>
                       </div>
@@ -665,7 +704,7 @@ export class ViewTOS extends React.Component {
                         {metaDataButtons}
                       </div>
                     </div>
-                    <div className='row tos-metadata' id={selectedTOS.id}>
+                    <div className='row tos-metadata'>
                       {this.state.editingMetaData && (
                         <EditorForm
                           onShowMore={this.onEditFormShowMoreMetaData}
@@ -809,7 +848,11 @@ export class ViewTOS extends React.Component {
                 </div>
                 {showValidationBar && (
                   <div className='col-xs-3 validation-bar-container'>
-                    <ValidationBarContainer top={headerHeight + scrollTop} />
+                    <ValidationBarContainer
+                      scrollToMetadata={this.scrollToMetadata}
+                      scrollToType={this.scrollToType}
+                      top={headerHeight + scrollTop}
+                    />
                   </div>
                 )}
               </div>

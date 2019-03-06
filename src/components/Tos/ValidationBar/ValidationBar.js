@@ -133,10 +133,8 @@ export class ValidationBar extends Component {
       if (invalidAttributes.length || warnAttributes.length || (children && children.length)) {
         return (
           <div className={`sidebar-content-${type}`} key={section.id}>
-            <div className='parent-name'>
-              <a href={`#${section.id}`}>
-                {nameAttribute ? section.attributes[nameAttribute] : ''}
-              </a>
+            <div className='parent-name' onClick={() => this.props.scrollToType(type, section.id)}>
+              {nameAttribute ? section.attributes[nameAttribute] : ''}
             </div>
             <div className='missing-attributes'>
               {map(invalidAttributes, (item, key) => {
@@ -181,7 +179,7 @@ export class ValidationBar extends Component {
     if (invalidTOSAttributes || invalidAttributes.length > 0) {
       return (
         <div className='sidebar-invalid-content'>
-          {invalidTOSAttributes && <h5><a href={`#${selectedTOS.id}`}>Käsittelyprosessi</a></h5>}
+          {invalidTOSAttributes && <h5 onClick={this.props.scrollToMetadata}>Käsittelyprosessi</h5>}
           {invalidTOSAttributes}
           {invalidAttributes}
         </div>
@@ -250,6 +248,8 @@ export class ValidationBar extends Component {
 
 ValidationBar.propTypes = {
   attributeTypes: React.PropTypes.object.isRequired,
+  scrollToMetadata: React.PropTypes.func.isRequired,
+  scrollToType: React.PropTypes.func.isRequired,
   selectedTOS: React.PropTypes.object.isRequired,
   setValidationVisibility: React.PropTypes.func.isRequired,
   top: React.PropTypes.number.isRequired

@@ -52,18 +52,6 @@
 }
 .tos-metadata {
   padding-bottom: 40px;
-  &:target::before {
-    content: "";
-    display: block;
-    height: 200px;
-    width: 200px;
-    margin-top: -200px;
-  }
-  /*
-  &:target .attribute {
-    background-color: $brand-warning;
-  }
-  */
 }
 .validation-bar-container {
   background-color: $gray-lighter;

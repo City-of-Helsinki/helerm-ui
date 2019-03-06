@@ -76,6 +76,11 @@
 
     h5 {
       margin: 0 0 10px;
+      color: $link-color;
+      
+      &:hover {
+        cursor: pointer;
+      }
     }
 
     .sidebar-invalid-content {
@@ -86,6 +91,14 @@
     .sidebar-content-phase {
       > .parent-name {
         font-weight: 700;
+      }
+    }
+
+    .parent-name {
+      color: $link-color;
+      
+      &:hover {
+        cursor: pointer;
       }
     }
 
