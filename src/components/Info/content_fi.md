@@ -8,6 +8,9 @@ Tiedonohjausjärjestelmä on toteutettu avoimella kehityksellä ja avoimen koodi
 
 Tuotantoympäristö Beta-vaiheessa tarjoaa työkalun sisällöntuottamiseen ja kuvausten hyväksymiseen sekä julkaisee hyväksytyt kuvaukset. Rajapinnasta tietoa on tarjolla, mutta vielä kehitämme sisältöä ja integraatiovalmiuksia. Ympäristön osoite on Betan aikana https://tiedonohjaus.hel.ninja/ ja kun ingtegraatiot siirtyvät tuotantokäyttöön osoite virallistetaan.
 
+### Palvelun selainyhteensopivuus
+Ohjeistamme, että käytätte ensisijaisesti Chrome selainta ja tuemme Microsoft Edge selainta. Internet Explorer selaimen käytössä varsinkin muokkausnäkymissä voi esiintyä virheitä.
+
 ### Tietoa ohjelmistokehittäjille (en)
-sis tiedot rajapinnasta
+sis rajapintalinkki sekä linkit rajapintadokumentaatioon ja ohjelmistokoodiin (frontend, backend)
 https://dev.hel.fi/projects/tiedonohjausjarjestelma/
