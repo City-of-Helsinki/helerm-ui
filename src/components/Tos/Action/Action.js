@@ -381,7 +381,7 @@ export class Action extends React.Component {
 
   renderBasicAttributes () {
     const classNames = classnames([
-      'col-md-6',
+      'col-xs-12',
       'basic-attribute',
       this.props.documentState === 'edit' ? 'editable' : null
     ]);
@@ -399,7 +399,7 @@ export class Action extends React.Component {
     if (this.state.mode === 'edit') {
       if (this.state.editingTypeSpecifier) {
         typeSpecifier = (
-          <div className='col-md-6 action-title-input row'>
+          <div className='col-xs-11 action-title-input row'>
             <form onSubmit={this.updateTypeSpecifier}>
               <input
                 className='input-title form-control col-xs-11'
