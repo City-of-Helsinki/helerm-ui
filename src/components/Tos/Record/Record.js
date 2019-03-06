@@ -17,9 +17,11 @@ export class Record extends React.Component {
     this.editRecordWithForm = this.editRecordWithForm.bind(this);
     this.onEditFormShowMoreRecord = this.onEditFormShowMoreRecord.bind(this);
     this.renderRecordButtons = this.renderRecordButtons.bind(this);
+    this.scrollToRecord = this.scrollToRecord.bind(this);
     this.updateTypeSpecifier = this.updateTypeSpecifier.bind(this);
     this.updateRecordType = this.updateRecordType.bind(this);
     this.updateRecordAttribute = this.updateRecordAttribute.bind(this);
+
     this.state = {
       attributes: this.props.record.attributes,
       complementingRecord: false,
@@ -183,6 +185,12 @@ export class Record extends React.Component {
     }
   }
 
+  scrollToRecord (topOffset) {
+    if (this.element) {
+      window.scrollTo(0, topOffset + this.element.offsetParent.offsetTop + this.element.offsetTop);
+    }
+  }
+
   render () {
     const { attributeTypes, recordTypes, record, documentState } = this.props;
     const { mode } = this.state;
@@ -194,8 +202,9 @@ export class Record extends React.Component {
           { 'record-open' : record.is_open },
           { 'record-closed': !record.is_open }
         )}
+        ref={element => { this.element = element; }}
       >
-        <div id={record.id}>
+        <div>
           {mode === 'edit' &&
             this.state.editingRecord && (
             <EditorForm

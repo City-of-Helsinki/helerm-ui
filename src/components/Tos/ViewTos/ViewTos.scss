@@ -52,18 +52,6 @@
 }
 .tos-metadata {
   padding-bottom: 40px;
-  &:target::before {
-    content: "";
-    display: block;
-    height: 200px;
-    width: 200px;
-    margin-top: -200px;
-  }
-  /*
-  &:target .attribute {
-    background-color: $brand-warning;
-  }
-  */
 }
 .validation-bar-container {
   background-color: $gray-lighter;
@@ -81,9 +69,6 @@
 }
 .phases-title {
   margin: 0 0 5px 0;
-}
-.phases-actions {
-  z-index: 1;
 }
 .black-icon, .black-icon:hover {
   color: black;

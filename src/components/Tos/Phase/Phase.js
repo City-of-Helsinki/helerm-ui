@@ -43,6 +43,9 @@ export class Phase extends React.Component {
     this.cancelActionCreation = this.cancelActionCreation.bind(this);
     this.onEditFormShowMorePhase = this.onEditFormShowMorePhase.bind(this);
     this.onAddFormShowMoreAction = this.onAddFormShowMoreAction.bind(this);
+    this.scrollToAction = this.scrollToAction.bind(this);
+    this.scrollToActionRecord = this.scrollToActionRecord.bind(this);
+
     this.state = {
       typeSpecifier: this.props.phase.attributes.TypeSpecifier || null,
       type: this.props.phase.attributes.PhaseType || null,
@@ -60,6 +63,8 @@ export class Phase extends React.Component {
       showImportView: false,
       showMore: false
     };
+
+    this.actions = {};
   }
 
   componentWillReceiveProps (nextProps) {
@@ -313,6 +318,7 @@ export class Phase extends React.Component {
             displayMessage={this.props.displayMessage}
             setActionVisibility={this.props.setActionVisibility}
             setRecordVisibility={this.props.setRecordVisibility}
+            ref={element => { this.actions[actions[key]] = element; }}
           />
         );
       }
@@ -519,13 +525,33 @@ export class Phase extends React.Component {
     return (this.state.type || '') + slash + (this.state.typeSpecifier || '');
   }
 
+  scrollToPhase () {
+    if (this.element) {
+      window.scrollTo(0, this.element.offsetParent.offsetTop + this.element.offsetTop);
+    }
+  }
+
+  scrollToAction (actionId) {
+    const element = this.actions[actionId] || null;
+    if (element) {
+      element.scrollToAction();
+    }
+  }
+
+  scrollToActionRecord (actionId, recordId) {
+    const action = this.actions[actionId] || null;
+    if (action) {
+      action.scrollToRecord(recordId);
+    }
+  }
+
   render () {
     const { phase, phaseIndex } = this.props;
     const actionElements = this.generateActions(phase.actions);
 
     return (
       <StickyContainer>
-        <div className='phase' id={phase.id}>
+        <div className='phase' ref={element => { this.element = element; }}>
           <div className='box'>
             {this.state.mode === 'edit' &&
               this.state.editingPhase && (

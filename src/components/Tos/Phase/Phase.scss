@@ -7,21 +7,6 @@
     width: 100%;
     background-color: $gray-lighter;
   }
-
-  &:target::before {
-    content: "";
-    display: block;
-    height: 200px;
-    width: 200px;
-    margin-top: -200px;
-    z-index: -1;
-  }
-
-  /*
-  &:target > .box {
-    background-color: $brand-warning;
-  }
-  */
 }
 .phase-title {
   position: relative;
@@ -66,7 +51,6 @@
   position: absolute;
   right: 0;
   top: 0;
-  z-index: 1;
 }
 .phase-buttons button {
   margin: 0px 1px;

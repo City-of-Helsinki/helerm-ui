@@ -35,6 +35,9 @@ export class Action extends React.Component {
     this.onEditFormShowMoreAction = this.onEditFormShowMoreAction.bind(this);
     this.onEditFormShowMoreRecordAdd = this.onEditFormShowMoreRecordAdd.bind(this);
     this.complementRecordAdd = this.complementRecordAdd.bind(this);
+    this.scrollToAction = this.scrollToAction.bind(this);
+    this.scrollToRecord = this.scrollToRecord.bind(this);
+
     this.state = {
       attributes: this.props.action.attributes,
       complementingAction: false,
@@ -52,6 +55,8 @@ export class Action extends React.Component {
       typeSpecifier: this.props.action.attributes.TypeSpecifier || null,
       complementRecordAdd: false
     };
+
+    this.records = {};
   }
 
   componentWillReceiveProps (nextProps) {
@@ -276,6 +281,7 @@ export class Action extends React.Component {
             attributeTypes={this.props.attributeTypes}
             displayMessage={this.props.displayMessage}
             setRecordVisibility={this.props.setRecordVisibility}
+            ref={element => { this.records[records[key]] = element; }}
           />
         );
       }
@@ -375,7 +381,7 @@ export class Action extends React.Component {
 
   renderBasicAttributes () {
     const classNames = classnames([
-      'col-md-6',
+      'col-xs-12',
       'basic-attribute',
       this.props.documentState === 'edit' ? 'editable' : null
     ]);
@@ -393,7 +399,7 @@ export class Action extends React.Component {
     if (this.state.mode === 'edit') {
       if (this.state.editingTypeSpecifier) {
         typeSpecifier = (
-          <div className='col-md-6 action-title-input row'>
+          <div className='col-xs-11 action-title-input row'>
             <form onSubmit={this.updateTypeSpecifier}>
               <input
                 className='input-title form-control col-xs-11'
@@ -450,6 +456,19 @@ export class Action extends React.Component {
     return value;
   }
 
+  scrollToAction () {
+    if (this.element) {
+      window.scrollTo(0, this.element.offsetParent.offsetTop + this.element.offsetTop);
+    }
+  }
+
+  scrollToRecord (recordId) {
+    const record = this.records[recordId] || null;
+    if (this.element && record) {
+      record.scrollToRecord(this.element.offsetParent.offsetTop + this.element.offsetTop);
+    }
+  }
+
   render () {
     // TODO: Handle errors where we don't have an valid action (i.e 400 error from API)
     const { action } = this.props;
@@ -458,7 +477,7 @@ export class Action extends React.Component {
 
     return (
       <StickyContainer>
-        <div className='action row' id={action.id}>
+        <div className='action row' ref={element => { this.element = element; }}>
           {this.state.mode === 'edit' &&
             this.state.editingAction && (
               <EditorForm

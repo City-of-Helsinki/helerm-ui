@@ -4,22 +4,6 @@
   position: relative;
   padding: 0px;
 
-  div:target::before {
-    content: "";
-    display: block;
-    height: 260px;
-    width: 260px;
-    margin-top: -260px;
-    z-index: -1;
-  }
-
-  /*
-  div:target .attribute,
-  div:target .attribute.attribute-basic {
-    background-color: $brand-warning;
-  }
-  */
-
   &-attributes {
     display: flex;
     flex-direction: row;

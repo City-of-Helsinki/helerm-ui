@@ -9,21 +9,6 @@
   margin-right: 0;
   padding-bottom: 15px;
   position: relative;
-
-  &:target::before {
-    content: "";
-    display: block;
-    height: 230px;
-    width: 230px;
-    margin-top: -230px;
-    z-index: -1;
-  }
-
-  /*
-  &:target .box:not(.records) {
-    background-color: $brand-warning;
-  }
-  */
 }
 .action-title {
   position: relative;
@@ -82,9 +67,8 @@
 .action-buttons {
   position: absolute;
   right: 15px;
-  top: 0;
+  top: 15px;
   font-size: 14px;
-  z-index: 6;
   .action-dropdown-button {
     right: 0;
     top: 0;
@@ -95,7 +79,7 @@
   display: inline-block;
   margin-bottom: 0;
   width: 100%;
-  position: relative;
+
   .attribute {
     border: none;
   }
