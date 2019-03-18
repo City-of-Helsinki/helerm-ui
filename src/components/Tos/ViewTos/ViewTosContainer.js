@@ -1,11 +1,8 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
+
 import { displayMessage, itemById } from '../../../utils/helpers';
-import { isEmpty } from 'lodash';
-
-import { login } from '../../Login/reducer';
-
 import { setNavigationVisibility } from '../../Navigation/reducer';
 
 import {
@@ -74,7 +71,6 @@ const mapDispatchToProps = dispatch => ({
   editValidDates: bindActionCreators(editValidDates, dispatch),
   fetchTOS: bindActionCreators(fetchTOS, dispatch),
   importItems: bindActionCreators(importItems, dispatch),
-  login: bindActionCreators(login, dispatch),
   push: path => dispatch(push(path)),
   removeAction: bindActionCreators(removeAction, dispatch),
   removePhase: bindActionCreators(removePhase, dispatch),
@@ -109,7 +105,6 @@ const mapStateToProps = state => ({
   attributeTypes: state.ui.attributeTypes,
   classification: getClassification(state.selectedTOS, state.navigation.items),
   isFetching: state.ui.isFetching || state.selectedTOS.isFetching,
-  isUser: !isEmpty(state.user.data),
   items: state.navigation.items,
   phaseTypes: state.ui.phaseTypes,
   recordTypes: state.ui.recordTypes,
