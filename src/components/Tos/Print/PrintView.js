@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import { withRouter, Link } from 'react-router';
+import { push } from 'react-router-redux';
 import get from 'lodash/get';
 
 import { fetchTOS } from 'components/Tos/reducer';
@@ -31,7 +32,13 @@ class PrintView extends React.Component {
       if (typeof version !== 'undefined') {
         params.version = version;
       }
-      fetchTOS(id, params);
+      fetchTOS(id, params)
+        .catch(err => {
+          if (err instanceof URIError) {
+            // We have a 404 from API
+            this.props.push(`/404?tos-id=${id}`);
+          }
+        });
     }
   }
 
@@ -134,6 +141,7 @@ PrintView.propTypes = {
   getAttributeName: PropTypes.func.isRequired,
   location: PropTypes.object.isRequired,
   params: PropTypes.object,
+  push: PropTypes.func.isRequired,
   sortAttributeKeys: PropTypes.func.isRequired
 };
 
@@ -172,13 +180,10 @@ const mapStateToProps = state => ({
     )
 });
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      fetchTOS
-    },
-    dispatch
-  );
+const mapDispatchToProps = dispatch => ({
+  fetchTOS: bindActionCreators(fetchTOS, dispatch),
+  push: path => dispatch(push(path))
+});
 
 export default compose(
   withRouter,

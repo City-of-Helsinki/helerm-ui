@@ -2,7 +2,7 @@ import fetch from 'isomorphic-fetch';
 import Promise from 'promise-polyfill';
 import { forEach, merge } from 'lodash';
 import { store } from '../main.js';
-import { logout } from '../components/Login/reducer';
+import { logoutUnauthorized } from '../components/Login/reducer';
 
 import { getStorageItem } from './storage';
 
@@ -134,9 +134,9 @@ export function callApi (endpoint, params, options = {}) {
 
   finalOptions.headers = defaultHeaders;
   return fetch(url, finalOptions).then(res => {
-    // TODO: Remove me & use refresh token
     if (res.status === 401) {
-      logout()(store.dispatch);
+      // logout and forward to login
+      logoutUnauthorized()(store.dispatch);
       throw new Unauthorized(url);
     }
     return res;

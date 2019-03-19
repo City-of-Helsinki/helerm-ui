@@ -82,6 +82,15 @@ export function logout () {
   };
 }
 
+export function logoutUnauthorized () {
+  return function (dispatch) {
+    dispatch(createAction(LOGOUT));
+    removeStorageItem('token');
+    dispatch(clearUserData());
+    window.location.assign(`/auth/login/helsinki?next=${window.location.href}`);
+  };
+}
+
 const retrieveUserFromSessionAction = (state) => update(state, {
   isFetching: { $set: true }
 });
