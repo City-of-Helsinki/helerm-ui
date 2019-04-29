@@ -5,7 +5,9 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import head from 'lodash/head';
 
+import { EDIT } from '../../../config/constants';
 import { fetchNavigation } from '../Navigation/reducer';
+import IsAllowed from '../IsAllowed/IsAllowed';
 import Loader from '../Loader';
 import LoginContainer from '../Login/LoginContainer';
 import Logo from './Logo';
@@ -38,6 +40,16 @@ export class Header extends React.Component {
             <small>{SITE_TITLE} {gitVersion}</small>
           </p>
           <LoginContainer />
+          <IsAllowed to={EDIT}>
+            <p className='navbar-text pull-right'>
+              <Link
+                to='bulk'
+                className='navbar-link'
+                >
+                Massamuutos
+              </Link>
+            </p>
+          </IsAllowed>
           <p className='navbar-text pull-right'>
             <Link
               to={FEEDBACK_URL}

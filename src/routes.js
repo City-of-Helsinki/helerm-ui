@@ -3,6 +3,9 @@ import { IndexRoute, Route } from 'react-router';
 import CoreLayout from './layouts/CoreLayout/CoreLayout';
 import InfoLayout from './layouts/InfoLayout/InfoLayout';
 // import IndexPage from './components/Index';
+import BulkListViewContainer from './components/Bulk/BulkListViewContainer';
+import BulkCreateViewContainer from './components/Bulk/BulkCreateView/BulkCreateViewContainer';
+import BulkViewContainer from './components/Bulk/BulkView/BulkViewContainer';
 import ViewTOSContainer from './components/Tos/ViewTos/ViewTosContainer';
 import ViewClassificationContainer from './components/Classification/ViewClassification/ViewClassificationContainer';
 import ClassificationTreeContainer from './components/ClassificationTree/ClassificationTreeContainer';
@@ -28,6 +31,13 @@ export default () => (
     </Route>
     <Route path='/info' component={InfoLayout}>
       <IndexRoute component={ViewInfo} />
+    </Route>
+    <Route path='/bulk' component={InfoLayout}>
+      <IndexRoute component={BulkListViewContainer} />
+      <Route path='view/:id'>
+        <IndexRoute component={BulkViewContainer} />
+      </Route>
+      <Route path='create' component={BulkCreateViewContainer} />
     </Route>
     <Route path='*' component={NotFound} />
   </div>

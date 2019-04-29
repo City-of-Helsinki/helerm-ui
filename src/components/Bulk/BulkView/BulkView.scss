@@ -1,0 +1,53 @@
+@import '../../styles/vendor/hel-components/variables';
+
+.bulk-view {
+  padding: 15px 30px;
+  width: 100%;
+
+  .bulk-view-changes-header {
+    display: flex;
+    padding-bottom: 15px;
+    padding-top: 30px;
+
+    .bulk-view-changes {
+      flex: 1 1 auto;
+    }
+    
+    button {
+      margin-left: 15px;
+    }
+  }
+
+  .bulk-view-items {
+    border-top: 1px solid $hr-border;
+  }
+
+  .bulk-view-item {
+    display: flex;
+    padding: 15px 0;
+    border-bottom: 1px solid $hr-border;
+
+    .bulk-view-item-info {
+      flex: 1 1 auto;
+    }
+
+    .bulk-view-item-state {
+      padding: 0 15px;
+    }
+  }
+
+  .bulk-view-path {
+    display: block;
+    color: #999;
+  }
+
+  .bulk-view-name {
+    font-weight: normal;
+  }
+
+  .popup-inner-background {
+    button {
+      margin-right: 15px;
+    }
+  }
+}
