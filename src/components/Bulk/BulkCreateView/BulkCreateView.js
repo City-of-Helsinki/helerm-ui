@@ -577,7 +577,7 @@ export class BulkCreateView extends React.Component {
                     recordCounter++;
                   }
                 });
-                if (!isEmpty(recordHit) && (combinedSearchTerms.record.all && action.record.length === recordCounter) || (!combinedSearchTerms.record.all && recordCounter)) {
+                if (!isEmpty(recordHit) && (combinedSearchTerms.record.all && action.records.length === recordCounter) || (!combinedSearchTerms.record.all && recordCounter)) {
                   recordPaths.forEach(path => {
                     actionPaths.push(`${phaseName} > ${actionName} > ${path}`);
                   });
