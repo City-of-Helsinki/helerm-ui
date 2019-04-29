@@ -41,3 +41,58 @@ export const HEADER_HEIGHT = 60;
 // validation bar filters
 export const VALIDATION_FILTER_ERROR = 'error';
 export const VALIDATION_FILTER_WARN = 'warning';
+
+// mass update
+export const BULK_UPDATE_CONVERSION_TYPES = [{
+  label: 'Käsittelyprosessi',
+  value: 'function'
+}, {
+  label: 'Vaihe',
+  value: 'phase'
+}, {
+  label: 'Toimenpide',
+  value: 'action'
+}, {
+  label: 'Asiakirja',
+  value: 'record'
+}];
+export const BULK_UPDATE_SEARCH_TARGET = [{
+  label: 'Käsittelyprosessi',
+  value: 'function'
+}, {
+  label: 'Vaihe',
+  value: 'phase'
+}, {
+  label: 'Kaikki vaiheet',
+  value: 'phases'
+}, {
+  label: 'Toimenpide',
+  value: 'action'
+}, {
+  label: 'Kaikki toimenpiteet',
+  value: 'actions'
+}, {
+  label: 'Asiakirja',
+  value: 'record'
+}, {
+  label: 'Kaikki asiakirjat',
+  value: 'records'
+}];
+export const BULK_UPDATE_SEARCH_UNEDITABLE_FUNCTION_ATTRIBUTES = [
+  { label: 'Koodi', value: 'code' },
+  { label: 'Tila', value: 'function_state' }
+];
+export const BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES = [
+  { label: 'Voimassaolo alkaa', value: 'valid_from' },
+  { label: 'Voimassaolo päättyy', value: 'valid_to' }
+];
+export const BULK_UPDATE_SEARCH_COMPARISON = [
+  { label: 'sama kuin', value: true },
+  { label: 'eri kuin', value: false }
+];
+export const BULK_UPDATE_SEARCH_TERM_DEFAULT = {
+  attribute: '',
+  equals: true,
+  target: 'function',
+  value: ''
+};

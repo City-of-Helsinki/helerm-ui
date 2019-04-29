@@ -1,0 +1,39 @@
+@import '../../styles/vendor/hel-components/variables';
+
+.search-terms {
+  padding-bottom: 30px;
+  .search-terms-container {
+    padding: 15px 0;
+  }
+}
+
+.search-term {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-top: 8px;
+  padding-bottom: 8px;
+
+  > div {
+    flex: 1 1 auto;
+    padding-right: 15px;
+  }
+
+  > div.search-term-action {
+    padding-right: 0;
+    flex: 0 0 60px;
+    text-align: right;
+  }
+
+  .search-term-remove {
+    margin-right: 15px;
+  }
+}
+
+.bulk-update-search-actions {
+  display: flex;
+  justify-content: flex-end;
+  button {
+    margin-left: 15px;
+  }
+}
