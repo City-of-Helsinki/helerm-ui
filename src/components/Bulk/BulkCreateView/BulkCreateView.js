@@ -520,7 +520,7 @@ export class BulkCreateView extends React.Component {
       let functionsSuccess = isEmpty(combinedSearchTerms.function.attributes);
       let phasesSuccess = isEmpty(combinedSearchTerms.phase.attributes);
       let recordsSuccess = isEmpty(combinedSearchTerms.record.attributes);
-      const isSubSearch = actionsSuccess || phasesSuccess || recordsSuccess;
+      const isSubSearch = !actionsSuccess || !phasesSuccess || !recordsSuccess;
 
       if (!functionsSuccess) {
         functionsSuccess = every(keys(combinedSearchTerms.function.attributes), attribute => {
@@ -539,7 +539,7 @@ export class BulkCreateView extends React.Component {
         });
       }
 
-      if (functionsSuccess && !phasesSuccess || !actionsSuccess || !recordsSuccess) {
+      if (functionsSuccess && isSubSearch) {
         const phasePaths = [];
         let phaseHit = {};
         let phaseCounter = 0;
