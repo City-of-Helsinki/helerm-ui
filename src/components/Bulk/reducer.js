@@ -1,6 +1,8 @@
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
+import { isArray, orderBy } from 'lodash';
 
+import { DEFAULT_PAGE_SIZE } from '../../../config/constants';
 import { default as api } from '../../utils/api.js';
 
 const initialState = {
@@ -35,7 +37,7 @@ export function receiveFetchBulkUpdates (resp) {
 export function fetchBulkUpdates (includeApproved = false) {
   return function (dispatch) {
     dispatch(createAction(FETCH_BULK_UPDATES_REQUEST));
-    return api.get('bulk-update', includeApproved ? { include_approved: true } : {})
+    return api.get('bulk-update', includeApproved ? { include_approved: true, page_size: DEFAULT_PAGE_SIZE } : {})
       .then(response => response.json())
       .then(json =>
         dispatch(receiveFetchBulkUpdates(json))
@@ -156,8 +158,9 @@ const fetchBulkUpdatesRequestAction = (state) => {
 };
 
 const fetchBulkUpdatesReceiveAction = (state, { payload }) => {
+  const sortedBulkUpdates = isArray(payload) ? orderBy(payload, ['created_at'], ['desc']) : [];
   return update(state, {
-    bulkUpdates: { $set: payload },
+    bulkUpdates: { $set: sortedBulkUpdates },
     isFetching: { $set: false }
   });
 };
