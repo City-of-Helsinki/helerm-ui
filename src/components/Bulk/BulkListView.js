@@ -15,6 +15,7 @@ export class BulkListView extends React.Component {
   constructor (props) {
     super(props);
     this.onChangeFilter = this.onChangeFilter.bind(this);
+    this.onClickBulkUpdate = this.onClickBulkUpdate.bind(this);
 
     this.state = {
       filters: [false]
@@ -28,6 +29,10 @@ export class BulkListView extends React.Component {
   onChangeFilter (options) {
     const filters = options.map(option => option.value);
     this.setState({ filters });
+  }
+
+  onClickBulkUpdate (bulkId) {
+    this.props.push(`/bulk/view/${bulkId}`);
   }
 
   render () {
@@ -62,11 +67,10 @@ export class BulkListView extends React.Component {
                   placeholder='Valitse massamuutoksen tila'
                 />
               </div>
-              <div className='bulk-update-action' />
             </div>
             <div className='bulk-updates'>
               {filteredBulkUpdates.map((bulk) => (
-                <div className='bulk-update' key={bulk.id}>
+                <div className='bulk-update' key={bulk.id} onClick={() => this.onClickBulkUpdate(bulk.id)}>
                   <div className='bulk-update-info'>
                     <div>Paketti ID: {bulk.id}</div>
                     <div>Luotu: {formatDateTime(bulk.created_at)}</div>
@@ -77,11 +81,6 @@ export class BulkListView extends React.Component {
                     <div>Käsittelyprosessin tila muutoksen jälkeen: {getStatusLabel(bulk.state)}</div>
                   </div>
                   <div className='bulk-update-approved'><h5>{bulk.is_approved ? 'Hyväksytty' : 'Odottaa'}</h5></div>
-                  <div className='bulk-update-action'>
-                    <Link className='btn btn-primary' to={`/bulk/view/${bulk.id}`}>
-                      Tarkasta
-                    </Link>
-                  </div>
                 </div>
               ))}
             </div>
@@ -94,7 +93,8 @@ export class BulkListView extends React.Component {
 
 BulkListView.propTypes = {
   bulkUpdates: PropTypes.array.isRequired,
-  fetchBulkUpdates: PropTypes.func.isRequired
+  fetchBulkUpdates: PropTypes.func.isRequired,
+  push: PropTypes.func.isRequired
 };
 
 export default withRouter(BulkListView);
