@@ -3,8 +3,13 @@ import { Link } from 'react-router';
 import PropTypes from 'prop-types';
 import { cloneDeep, find, isEmpty, keys, split } from 'lodash';
 
-import { BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES } from '../../../../config/constants';
+import {
+  APPROVE_BULKUPDATE,
+  DELETE_BULKUPDATE,
+  BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES
+} from '../../../../config/constants';
 import { formatDateTime, getStatusLabel } from 'utils/helpers';
+import IsAllowed from 'components/IsAllowed/IsAllowed';
 import Popup from 'components/Popup';
 import './BulkView.scss';
 
@@ -48,6 +53,10 @@ export class BulkView extends React.Component {
     if (isEmpty(itemList) && !isEmpty(items) && !isEmpty(selectedBulk) && ((wasFetchingNavigation && !isFetchingNavigation) || !prevSelectedBulk)) {
       this.parseItemList(items, selectedBulk);
     }
+  }
+
+  componentWillUnmount () {
+    this.props.clearSelectedBulkUpdate();
   }
 
   onApprove () {
@@ -189,9 +198,9 @@ export class BulkView extends React.Component {
     if (!isEmpty(changes.phases)) {
       keys(changes.phases).forEach(phase => {
         const currentPhase = find(item.phases, { id: phase });
-        if (!isEmpty(changes.phases[phase].attributes)) {
+        if (currentPhase && !isEmpty(changes.phases[phase].attributes)) {
           keys(changes.phases[phase].attributes).forEach(attribute => {
-            const currentValue = (currentPhase && currentPhase.attributes && currentPhase.attributes[attribute]) || ' ';
+            const currentValue = (currentPhase.attributes && currentPhase.attributes[attribute]) || ' ';
             changesEl.push(
               <h4 key={`phase_${phase}_attr_${attribute}`}>
                 {currentPhase.name || ''} &gt;
@@ -200,12 +209,12 @@ export class BulkView extends React.Component {
             );
           });
         }
-        if (!isEmpty(changes.phases[phase].actions)) {
+        if (currentPhase && !isEmpty(changes.phases[phase].actions)) {
           keys(changes.phases[phase].actions).forEach(action => {
             const currentAction = find(currentPhase.actions, { id: action });
-            if (!isEmpty(changes.phases[phase].actions[action].attributes)) {
+            if (currentAction && !isEmpty(changes.phases[phase].actions[action].attributes)) {
               keys(changes.phases[phase].actions[action].attributes).forEach(attribute => {
-                const currentValue = (currentAction && currentAction.attributes && currentAction.attributes[attribute]) || ' ';
+                const currentValue = (currentAction.attributes && currentAction.attributes[attribute]) || ' ';
                 changesEl.push(
                   <h4 key={`action_${action}_attr_${attribute}`}>
                     {currentPhase.name || ''} &gt;
@@ -215,7 +224,7 @@ export class BulkView extends React.Component {
                 );
               });
             }
-            if (!isEmpty(changes.phases[phase].actions[action].records)) {
+            if (currentAction && !isEmpty(changes.phases[phase].actions[action].records)) {
               keys(changes.phases[phase].actions[action].records).forEach(record => {
                 const currentRecord = find(currentAction.records, { id: record });
                 if (!isEmpty(changes.phases[phase].actions[action].records[record].attributes)) {
@@ -261,8 +270,8 @@ export class BulkView extends React.Component {
           <p>Paketti ID: {selectedBulk && selectedBulk.id}</p>
           <p>Luotu: {selectedBulk && formatDateTime(selectedBulk.created_at)}</p>
           <p>Muutettu: {selectedBulk && formatDateTime(selectedBulk.modified_at)}</p>
-          <p>Tekijä: [TODO]</p>
-          <p>Tila: {selectedBulk && getStatusLabel(selectedBulk.state)}</p>
+          <p>Muokkaaja: {selectedBulk && selectedBulk.modified_by}</p>
+          <p>Käsittelyprosessin tila muutoksen jälkeen: {selectedBulk && getStatusLabel(selectedBulk.state)}</p>
           <p>Muutokset: {selectedBulk && selectedBulk.description}</p>
           <p>Hyväksytty: {selectedBulk && (selectedBulk.is_approved ? 'Kyllä' : 'Ei')}</p>
         </div>
@@ -271,15 +280,21 @@ export class BulkView extends React.Component {
             <h4>Tehdyt muutokset ({selectedBulk ? keys(selectedBulk.changes).length : ''})</h4>
           </div>
           <div className='bulk-view-actions'>
-            <button className='btn btn-danger' disabled={!selectedBulk} onClick={this.onDelete}>
-              Poista
-            </button>
-            <button className='btn btn-default' disabled={isApproved} onClick={this.onReject}>
-              Hylkää
-            </button>
-            <button className='btn btn-primary' disabled={isApproved} onClick={this.onApprove}>
-              Hyväksy
-            </button>
+            <IsAllowed to={DELETE_BULKUPDATE}>
+              <button className='btn btn-danger' disabled={!selectedBulk} onClick={this.onDelete}>
+                Poista
+              </button>
+            </IsAllowed>
+            <IsAllowed to={APPROVE_BULKUPDATE}>
+              <button className='btn btn-default' disabled={isApproved} onClick={this.onReject}>
+                Hylkää
+              </button>
+            </IsAllowed>
+            <IsAllowed to={APPROVE_BULKUPDATE}>
+              <button className='btn btn-primary' disabled={isApproved} onClick={this.onApprove}>
+                Hyväksy
+              </button>
+            </IsAllowed>
           </div>
         </div>
         <div className='bulk-view-items'>
@@ -358,6 +373,7 @@ export class BulkView extends React.Component {
 
 BulkView.propTypes = {
   approveBulkUpdate: PropTypes.func.isRequired,
+  clearSelectedBulkUpdate: PropTypes.func.isRequired,
   deleteBulkUpdate: PropTypes.func.isRequired,
   displayMessage: PropTypes.func.isRequired,
   fetchBulkUpdate: PropTypes.func.isRequired,

@@ -28,6 +28,7 @@ export const FETCH_BULK_UPDATE_ERROR = 'fetchBulkUpdateErrorAction';
 export const SAVE_BULK_UPDATE_REQUEST = 'saveBulkUpdateRequestAction';
 export const SAVE_BULK_UPDATE_RECEIVE = 'saveBulkUpdateReceiveAction';
 export const SAVE_BULK_UPDATE_ERROR = 'saveBulkUpdateErrorAction';
+export const CLEAR_SELECTED_BULK_UPDATE = 'clearSelectedBulkUpdateAction';
 
 export function receiveFetchBulkUpdates (resp) {
   const results = resp.results || [];
@@ -106,6 +107,10 @@ export function saveBulkUpdate (bulkUpdate) {
       })
       .catch(() => dispatch(createAction(SAVE_BULK_UPDATE_ERROR)()));
   };
+}
+
+export function clearSelectedBulkUpdate () {
+  return createAction(CLEAR_SELECTED_BULK_UPDATE)();
 }
 
 const approveBulkUpdateErrorAction = (state) => {
@@ -202,10 +207,17 @@ const saveBulkUpdateReceiveAction = (state, { payload }) => {
   });
 };
 
+const clearSelectedBulkUpdateAction = (state) => {
+  return update(state, {
+    selectedBulk: { $set: null }
+  });
+};
+
 export default handleActions({
   approveBulkUpdateErrorAction,
   approveBulkUpdateReceiveAction,
   approveBulkUpdateRequestAction,
+  clearSelectedBulkUpdateAction,
   deleteBulkUpdateErrorAction,
   deleteBulkUpdateRequestAction,
   deleteBulkUpdateReceiveAction,

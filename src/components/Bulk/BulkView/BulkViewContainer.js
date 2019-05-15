@@ -5,11 +5,12 @@ import { get } from 'lodash';
 
 import { fetchNavigation } from '../../Navigation/reducer';
 import { displayMessage } from '../../../utils/helpers';
-import { approveBulkUpdate, deleteBulkUpdate, fetchBulkUpdate } from '../reducer';
+import { approveBulkUpdate, clearSelectedBulkUpdate, deleteBulkUpdate, fetchBulkUpdate } from '../reducer';
 import BulkView from './BulkView';
 
 const mapDispatchToProps = dispatch => ({
   approveBulkUpdate: bindActionCreators(approveBulkUpdate, dispatch),
+  clearSelectedBulkUpdate: bindActionCreators(clearSelectedBulkUpdate, dispatch),
   deleteBulkUpdate: bindActionCreators(deleteBulkUpdate, dispatch),
   fetchBulkUpdate: bindActionCreators(fetchBulkUpdate, dispatch),
   fetchNavigation: bindActionCreators(fetchNavigation, dispatch),
