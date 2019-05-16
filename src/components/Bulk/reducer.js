@@ -1,6 +1,8 @@
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
+import { isArray, orderBy } from 'lodash';
 
+import { DEFAULT_PAGE_SIZE } from '../../../config/constants';
 import { default as api } from '../../utils/api.js';
 
 const initialState = {
@@ -8,7 +10,8 @@ const initialState = {
   bulkUpdates: [],
   isFetching: false,
   isFetchingSelected: false,
-  isSaving: false
+  isSaving: false,
+  isUpdating: false
 };
 
 export const APPROVE_BULK_UPDATE_REQUEST = 'approveBulkUpdateRequestAction';
@@ -26,6 +29,10 @@ export const FETCH_BULK_UPDATE_ERROR = 'fetchBulkUpdateErrorAction';
 export const SAVE_BULK_UPDATE_REQUEST = 'saveBulkUpdateRequestAction';
 export const SAVE_BULK_UPDATE_RECEIVE = 'saveBulkUpdateReceiveAction';
 export const SAVE_BULK_UPDATE_ERROR = 'saveBulkUpdateErrorAction';
+export const UPDATE_BULK_UPDATE_REQUEST = 'updateBulkUpdateRequestAction';
+export const UPDATE_BULK_UPDATE_RECEIVE = 'updateBulkUpdateReceiveAction';
+export const UPDATE_BULK_UPDATE_ERROR = 'updateBulkUpdateErrorAction';
+export const CLEAR_SELECTED_BULK_UPDATE = 'clearSelectedBulkUpdateAction';
 
 export function receiveFetchBulkUpdates (resp) {
   const results = resp.results || [];
@@ -35,7 +42,7 @@ export function receiveFetchBulkUpdates (resp) {
 export function fetchBulkUpdates (includeApproved = false) {
   return function (dispatch) {
     dispatch(createAction(FETCH_BULK_UPDATES_REQUEST));
-    return api.get('bulk-update', includeApproved ? { include_approved: true } : {})
+    return api.get('bulk-update', includeApproved ? { include_approved: true, page_size: DEFAULT_PAGE_SIZE } : {})
       .then(response => response.json())
       .then(json =>
         dispatch(receiveFetchBulkUpdates(json))
@@ -90,20 +97,32 @@ export function deleteBulkUpdate (id) {
   };
 }
 
-export function receiveCreateBulkUpdate (resp) {
-  return createAction(SAVE_BULK_UPDATE_RECEIVE)(resp);
-}
-
 export function saveBulkUpdate (bulkUpdate) {
   return function (dispatch) {
     dispatch(createAction(SAVE_BULK_UPDATE_REQUEST)());
     return api.post('bulk-update', bulkUpdate)
       .then(response => response.json())
       .then(json => {
-        dispatch(receiveCreateBulkUpdate(json));
+        dispatch(createAction(SAVE_BULK_UPDATE_RECEIVE)(json));
       })
       .catch(() => dispatch(createAction(SAVE_BULK_UPDATE_ERROR)()));
   };
+}
+
+export function updateBulkUpdate (id, bulkUpdate) {
+  return function (dispatch) {
+    dispatch(createAction(UPDATE_BULK_UPDATE_REQUEST)());
+    return api.patch(`bulk-update/${id}`, bulkUpdate)
+      .then(response => response.json())
+      .then(json => {
+        dispatch(createAction(UPDATE_BULK_UPDATE_RECEIVE)(json));
+      })
+      .catch(() => dispatch(createAction(UPDATE_BULK_UPDATE_ERROR)()));
+  };
+}
+
+export function clearSelectedBulkUpdate () {
+  return createAction(CLEAR_SELECTED_BULK_UPDATE)();
 }
 
 const approveBulkUpdateErrorAction = (state) => {
@@ -156,8 +175,9 @@ const fetchBulkUpdatesRequestAction = (state) => {
 };
 
 const fetchBulkUpdatesReceiveAction = (state, { payload }) => {
+  const sortedBulkUpdates = isArray(payload) ? orderBy(payload, ['created_at'], ['desc']) : [];
   return update(state, {
-    bulkUpdates: { $set: payload },
+    bulkUpdates: { $set: sortedBulkUpdates },
     isFetching: { $set: false }
   });
 };
@@ -199,10 +219,36 @@ const saveBulkUpdateReceiveAction = (state, { payload }) => {
   });
 };
 
+const updateBulkUpdateErrorAction = (state) => {
+  return update(state, {
+    isUpdating: { $set: false }
+  });
+};
+
+const updateBulkUpdateRequestAction = (state) => {
+  return update(state, {
+    isUpdating: { $set: true }
+  });
+};
+
+const updateBulkUpdateReceiveAction = (state, { payload }) => {
+  return update(state, {
+    selectedBulk: { $set: payload },
+    isUpdating: { $set: false }
+  });
+};
+
+const clearSelectedBulkUpdateAction = (state) => {
+  return update(state, {
+    selectedBulk: { $set: null }
+  });
+};
+
 export default handleActions({
   approveBulkUpdateErrorAction,
   approveBulkUpdateReceiveAction,
   approveBulkUpdateRequestAction,
+  clearSelectedBulkUpdateAction,
   deleteBulkUpdateErrorAction,
   deleteBulkUpdateRequestAction,
   deleteBulkUpdateReceiveAction,
@@ -214,5 +260,8 @@ export default handleActions({
   fetchBulkUpdatesRequestAction,
   saveBulkUpdateErrorAction,
   saveBulkUpdateRequestAction,
-  saveBulkUpdateReceiveAction
+  saveBulkUpdateReceiveAction,
+  updateBulkUpdateErrorAction,
+  updateBulkUpdateReceiveAction,
+  updateBulkUpdateRequestAction
 }, initialState);

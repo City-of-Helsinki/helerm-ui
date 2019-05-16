@@ -9,6 +9,7 @@
 
   .bulk-packages-header {
     display: flex;
+    padding: 15px 0;
   }
 
   .bulk-updates {
@@ -20,6 +21,11 @@
     padding-bottom: 15px;
     border-bottom: 1px solid $hr-border;
     display: flex;
+    
+    &:hover {
+      cursor: pointer;
+      background-color: $gray-lighter;
+    }
   }
 
   .bulk-packages-header,
@@ -28,10 +34,9 @@
       flex: 1 1 auto;
     }
 
-    .bulk-update-status,
     .bulk-update-approved {
-      flex: 0 0 150px;
-      padding: 8px;
+      flex: 0 0 300px;
+      padding-left: 15px;
     }
 
     .bulk-update-action {

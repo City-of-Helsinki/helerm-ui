@@ -1,13 +1,13 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { push } from 'react-router-redux';
 
-import { fetchNavigation } from '../Navigation/reducer';
 import { fetchBulkUpdates } from './reducer';
 import BulkListView from './BulkListView';
 
 const mapDispatchToProps = dispatch => ({
   fetchBulkUpdates: bindActionCreators(fetchBulkUpdates, dispatch),
-  fetchNavigation: bindActionCreators(fetchNavigation, dispatch)
+  push: path => dispatch(push(path))
 });
 
 const mapStateToProps = state => ({

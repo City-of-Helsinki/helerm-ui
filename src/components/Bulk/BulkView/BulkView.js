@@ -1,10 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router';
 import PropTypes from 'prop-types';
-import { cloneDeep, find, isEmpty, keys, split } from 'lodash';
+import classnames from 'classnames';
+import { cloneDeep, every, find, isEmpty, keys, omit, split } from 'lodash';
 
-import { BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES } from '../../../../config/constants';
+import {
+  APPROVE_BULKUPDATE,
+  DELETE_BULKUPDATE,
+  BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES
+} from '../../../../config/constants';
 import { formatDateTime, getStatusLabel } from 'utils/helpers';
+import IsAllowed from 'components/IsAllowed/IsAllowed';
 import Popup from 'components/Popup';
 import './BulkView.scss';
 
@@ -20,12 +26,16 @@ export class BulkView extends React.Component {
     this.onConfirmReject = this.onConfirmReject.bind(this);
     this.onDelete = this.onDelete.bind(this);
     this.onReject = this.onReject.bind(this);
+    this.onRemoveBulkItem = this.onRemoveBulkItem.bind(this);
+    this.onConfirmRemoveBulkItem = this.onConfirmRemoveBulkItem.bind(this);
 
     this.state = {
       isApproving: false,
       isDeleting: false,
       isRejecting: false,
-      itemList: []
+      isValid: true,
+      itemList: [],
+      itemToRemove: null
     };
   }
 
@@ -42,12 +52,17 @@ export class BulkView extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    const { isFetchingNavigation: wasFetchingNavigation, selectedBulk: prevSelectedBulk } = this.props;
-    const { isFetchingNavigation, items, selectedBulk } = nextProps;
-    const { itemList } = this.state;
-    if (isEmpty(itemList) && !isEmpty(items) && !isEmpty(selectedBulk) && ((wasFetchingNavigation && !isFetchingNavigation) || !prevSelectedBulk)) {
+    const { isFetchingNavigation: wasFetchingNavigation, isUpdating: wasUpdating, selectedBulk: prevSelectedBulk } = this.props;
+    const { isFetchingNavigation, isUpdating, items, selectedBulk } = nextProps;
+    if (!isEmpty(items) &&
+      !isEmpty(selectedBulk) &&
+      ((wasFetchingNavigation && !isFetchingNavigation) || (wasUpdating && !isUpdating) || !prevSelectedBulk)) {
       this.parseItemList(items, selectedBulk);
     }
+  }
+
+  componentWillUnmount () {
+    this.props.clearSelectedBulkUpdate();
   }
 
   onApprove () {
@@ -83,7 +98,8 @@ export class BulkView extends React.Component {
     this.setState({
       isApproving: false,
       isDeleting: false,
-      isRejecting: false
+      isRejecting: false,
+      itemToRemove: null
     });
   }
 
@@ -131,6 +147,39 @@ export class BulkView extends React.Component {
     // what happens on reject is still open
   }
 
+  onRemoveBulkItem (id) {
+    const { itemList } = this.state;
+    const itemToRemove = find(itemList, { id });
+    if (itemToRemove) {
+      this.setState({ itemToRemove });
+    }
+  }
+
+  onConfirmRemoveBulkItem () {
+    const { selectedBulk } = this.props;
+    const { itemToRemove } = this.state;
+    this.setState({ itemToRemove: null });
+    if (itemToRemove && selectedBulk.changes && selectedBulk.changes[`${itemToRemove.id}__${itemToRemove.changes.version}`]) {
+      const changes = omit(selectedBulk.changes, [`${itemToRemove.id}__${itemToRemove.changes.version}`]);
+      this.props.updateBulkUpdate(selectedBulk.id, { changes })
+        .then(() => {
+          return this.props.displayMessage({
+            title: 'Massamuutos',
+            body: 'Massamuutos päivitetty!'
+          });
+        })
+        .catch(err => {
+          return this.props.displayMessage(
+            {
+              title: 'Virhe',
+              body: `"${err.message}"`
+            },
+            { type: 'error' }
+          );
+        });
+    }
+  }
+
   parseItemList (items, selectedBulk) {
     const changedFunctions = keys(selectedBulk.changes).reduce((acc, functionVersion) => {
       const versionSplitted = split(functionVersion, '__');
@@ -150,6 +199,7 @@ export class BulkView extends React.Component {
           clonedItem.valid_from = clonedItem.function_valid_from;
           clonedItem.valid_to = clonedItem.function_valid_to;
           acc.push({
+            id: item.function,
             item: clonedItem,
             changes: changedFunctions[item.function]
           });
@@ -158,13 +208,50 @@ export class BulkView extends React.Component {
       }, []);
     };
     const itemList = flattenItems(items);
-    this.setState({ itemList });
+    const isValid = this.validateBulkUpdate(itemList);
+    this.setState({ isValid, itemList });
+  }
+
+  validateBulkUpdate (itemList) {
+    const isValid = !isEmpty(itemList) ? every(itemList, listItem => {
+      const { changes, item } = listItem;
+      if (!isEmpty(changes.phases)) {
+        return every(keys(changes.phases), phaseId => {
+          const phaseChange = changes.phases[phaseId];
+          const phase = find(item.phases, { id: phaseId });
+          if (!phase) {
+            return false;
+          } else if (phase && !isEmpty(phaseChange.actions)) {
+            return every(keys(phaseChange.actions), actionId => {
+              const actionChange = phaseChange.actions[actionId];
+              const action = phase.actions ? find(phase.actions, { id: actionId }) : null;
+              if (!action) {
+                return false;
+              } else if (action && !isEmpty(actionChange.records)) {
+                return every(keys(actionChange.records), recordId => {
+                  const record = action.records ? find(action.records, { id: recordId }) : null;
+                  if (!record) {
+                    return false;
+                  }
+                  return true;
+                });
+              }
+              return true;
+            });
+          }
+          return true;
+        });
+      }
+      return true;
+    }) : false;
+    return isValid;
   }
 
   renderItemChanges (changedItem) {
     const { getAttributeName } = this.props;
     const { changes, item } = changedItem;
     const changesEl = [];
+    let isError = false;
 
     BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES.forEach(attribute => {
       if (changes[attribute.value]) {
@@ -189,9 +276,18 @@ export class BulkView extends React.Component {
     if (!isEmpty(changes.phases)) {
       keys(changes.phases).forEach(phase => {
         const currentPhase = find(item.phases, { id: phase });
-        if (!isEmpty(changes.phases[phase].attributes)) {
+        if (!currentPhase) {
+          isError = true;
+          changesEl.push(
+            <h5 className='bulk-view-item-phase-error' key={`phase_${phase}_error`}>
+              <i className='fa fa-exclamation-triangle' />
+              Käsittelyvaihetta {phase} ei löytynyt, massamuutosta ei voida tehdä tälle käsittelyprosessille
+            </h5>
+          );
+        }
+        if (currentPhase && !isEmpty(changes.phases[phase].attributes)) {
           keys(changes.phases[phase].attributes).forEach(attribute => {
-            const currentValue = (currentPhase && currentPhase.attributes && currentPhase.attributes[attribute]) || ' ';
+            const currentValue = (currentPhase.attributes && currentPhase.attributes[attribute]) || ' ';
             changesEl.push(
               <h4 key={`phase_${phase}_attr_${attribute}`}>
                 {currentPhase.name || ''} &gt;
@@ -200,12 +296,21 @@ export class BulkView extends React.Component {
             );
           });
         }
-        if (!isEmpty(changes.phases[phase].actions)) {
+        if (currentPhase && !isEmpty(changes.phases[phase].actions)) {
           keys(changes.phases[phase].actions).forEach(action => {
             const currentAction = find(currentPhase.actions, { id: action });
-            if (!isEmpty(changes.phases[phase].actions[action].attributes)) {
+            if (!currentAction) {
+              isError = true;
+              changesEl.push(
+                <h5 className='bulk-view-item-action-error' key={`action_${action}_error`}>
+                  <i className='fa fa-exclamation-triangle' />
+                  Toimenpidettä {action} ei löytynyt, massamuutosta ei voida tehdä tälle käsittelyprosessille
+                </h5>
+              );
+            }
+            if (currentAction && !isEmpty(changes.phases[phase].actions[action].attributes)) {
               keys(changes.phases[phase].actions[action].attributes).forEach(attribute => {
-                const currentValue = (currentAction && currentAction.attributes && currentAction.attributes[attribute]) || ' ';
+                const currentValue = (currentAction.attributes && currentAction.attributes[attribute]) || ' ';
                 changesEl.push(
                   <h4 key={`action_${action}_attr_${attribute}`}>
                     {currentPhase.name || ''} &gt;
@@ -215,12 +320,21 @@ export class BulkView extends React.Component {
                 );
               });
             }
-            if (!isEmpty(changes.phases[phase].actions[action].records)) {
+            if (currentAction && !isEmpty(changes.phases[phase].actions[action].records)) {
               keys(changes.phases[phase].actions[action].records).forEach(record => {
                 const currentRecord = find(currentAction.records, { id: record });
-                if (!isEmpty(changes.phases[phase].actions[action].records[record].attributes)) {
+                if (!currentRecord) {
+                  isError = true;
+                  changesEl.push(
+                    <h5 className='bulk-view-item-record-error' key={`record_${record}_error`}>
+                      <i className='fa fa-exclamation-triangle' />
+                      Asiakirjaa {record} ei löytynyt, massamuutosta ei voida tehdä tälle käsittelyprosessille
+                    </h5>
+                  );
+                }
+                if (currentRecord && !isEmpty(changes.phases[phase].actions[action].records[record].attributes)) {
                   keys(changes.phases[phase].actions[action].records[record].attributes).forEach(attribute => {
-                    const currentValue = (currentRecord && currentRecord.attributes && currentRecord.attributes[attribute]) || ' ';
+                    const currentValue = (currentRecord.attributes && currentRecord.attributes[attribute]) || ' ';
                     changesEl.push(
                       <h4 key={`record_${record}_attr_${attribute}`}>
                         {currentPhase.name || ''} &gt;
@@ -238,15 +352,27 @@ export class BulkView extends React.Component {
       });
     }
     return (
-      <div className='preview-changes'>
-        {changesEl}
+      <div className='bulk-view-item' key={item.id}>
+        <div className='bulk-view-item-info'>
+          <span className='bulk-view-item-path'>{item.path.join(' > ')}</span>
+          <h4 className='bulk-view-item-name'>{item.name}</h4>
+          <div className={classnames('bulk-view-item-changes', { 'bulk-view-item-errors': isError })}>
+            {changesEl}
+          </div>
+        </div>
+        <div className='bulk-view-item-state'>
+          <h4>{getStatusLabel(item.function_state)}</h4>
+        </div>
+        <div className='bulk-view-item-action'>
+          <button className='btn btn-danger' onClick={() => this.onRemoveBulkItem(item.function)}>Poista</button>
+        </div>
       </div>
     );
   }
 
   render () {
     const { selectedBulk } = this.props;
-    const { isApproving, isDeleting, isRejecting, itemList } = this.state;
+    const { isApproving, isDeleting, isRejecting, isValid, itemList, itemToRemove } = this.state;
     const isApproved = selectedBulk ? selectedBulk.is_approved : false;
 
     return (
@@ -256,45 +382,52 @@ export class BulkView extends React.Component {
             <i className='fa fa-angle-left' /> Takaisin
           </Link>
         </div>
-        <div className='bulk-view-info'>
+        <div>
           <h3>Massamuutos esikatselu</h3>
-          <p>Paketti ID: {selectedBulk && selectedBulk.id}</p>
-          <p>Luotu: {selectedBulk && formatDateTime(selectedBulk.created_at)}</p>
-          <p>Muutettu: {selectedBulk && formatDateTime(selectedBulk.modified_at)}</p>
-          <p>Tekijä: [TODO]</p>
-          <p>Tila: {selectedBulk && getStatusLabel(selectedBulk.state)}</p>
-          <p>Muutokset: {selectedBulk && selectedBulk.description}</p>
-          <p>Hyväksytty: {selectedBulk && (selectedBulk.is_approved ? 'Kyllä' : 'Ei')}</p>
         </div>
-        <div className='bulk-view-changes-header'>
-          <div className='bulk-view-changes'>
-            <h4>Tehdyt muutokset ({selectedBulk ? keys(selectedBulk.changes).length : ''})</h4>
+        {!isValid && !isEmpty(itemList) && (
+          <div className='alert alert-danger'>
+            <i className='fa fa-exclamation-triangle' />
+            Massamuutospaketissa on käsittelyprosesseja, joita ei voida varmistaa. Massamuutospakettia ei voida hyväksyä.
           </div>
-          <div className='bulk-view-actions'>
-            <button className='btn btn-danger' disabled={!selectedBulk} onClick={this.onDelete}>
-              Poista
-            </button>
-            <button className='btn btn-default' disabled={isApproved} onClick={this.onReject}>
-              Hylkää
-            </button>
-            <button className='btn btn-primary' disabled={isApproved} onClick={this.onApprove}>
-              Hyväksy
-            </button>
+        )}
+        {selectedBulk && (
+          <div>
+            <p>Paketti ID: {selectedBulk.id}</p>
+            <p>Luotu: {formatDateTime(selectedBulk.created_at)}</p>
+            <p>Muutettu: {formatDateTime(selectedBulk.modified_at)}</p>
+            <p>Muokkaaja: {selectedBulk.modified_by}</p>
+            <p>Käsittelyprosessin tila muutoksen jälkeen: {getStatusLabel(selectedBulk.state)}</p>
+            <p>Muutokset: {selectedBulk.description}</p>
+            <p>Hyväksytty: {(selectedBulk.is_approved ? 'Kyllä' : 'Ei')}</p>
           </div>
-        </div>
-        <div className='bulk-view-items'>
-          {itemList.map(changedItem => (
-            <div className='bulk-view-item' key={changedItem.item.function}>
-              <div className='bulk-view-item-info'>
-                <span className='bulk-view-item-path'>{changedItem.item.path.join(' > ')}</span>
-                <h4 className='bulk-view-item-name'>{changedItem.item.name}</h4>
-                {this.renderItemChanges(changedItem)}
-              </div>
-              <div className='bulk-view-item-state'>
-                <h4>{getStatusLabel(changedItem.item.function_state)}</h4>
-              </div>
+        )}
+        {selectedBulk && (
+          <div className='bulk-view-changes-header'>
+            <div className='bulk-view-changes'>
+              <h4>Tehdyt muutokset ({keys(selectedBulk.changes).length})</h4>
             </div>
-          ))}
+            <div className='bulk-view-actions'>
+              <IsAllowed to={DELETE_BULKUPDATE}>
+                <button className='btn btn-danger' disabled={!selectedBulk} onClick={this.onDelete}>
+                  Poista
+                </button>
+              </IsAllowed>
+              <IsAllowed to={APPROVE_BULKUPDATE}>
+                <button className='btn btn-default' disabled={isApproved} onClick={this.onReject}>
+                  Hylkää
+                </button>
+              </IsAllowed>
+              <IsAllowed to={APPROVE_BULKUPDATE}>
+                <button className='btn btn-primary' disabled={isApproved || !isValid} onClick={this.onApprove}>
+                  Hyväksy
+                </button>
+              </IsAllowed>
+            </div>
+          </div>
+        )}
+        <div className='bulk-view-items'>
+          {itemList.map(changedItem => this.renderItemChanges(changedItem))}
         </div>
         {isApproving && (
           <Popup
@@ -351,6 +484,24 @@ export class BulkView extends React.Component {
             closePopup={this.onCancel}
           />
         )}
+        {itemToRemove && (
+          <Popup
+            content={
+              <div>
+                <h4>Poistetaanko käsittelyprosessi {itemToRemove.item.code} {itemToRemove.item.name} massamuutoksesta?</h4>
+                <div>
+                  <button className='btn btn-danger' onClick={this.onConfirmRemoveBulkItem}>
+                    Poista
+                  </button>
+                  <button className='btn btn-default' onClick={this.onCancel}>
+                    Peruuta
+                  </button>
+                </div>
+              </div>
+            }
+            closePopup={this.onCancel}
+          />
+        )}
       </div>
     );
   }
@@ -358,17 +509,20 @@ export class BulkView extends React.Component {
 
 BulkView.propTypes = {
   approveBulkUpdate: PropTypes.func.isRequired,
+  clearSelectedBulkUpdate: PropTypes.func.isRequired,
   deleteBulkUpdate: PropTypes.func.isRequired,
   displayMessage: PropTypes.func.isRequired,
   fetchBulkUpdate: PropTypes.func.isRequired,
   fetchNavigation: PropTypes.func.isRequired,
   getAttributeName: PropTypes.func.isRequired,
   isFetchingNavigation: PropTypes.bool,
+  isUpdating: PropTypes.bool,
   items: PropTypes.array.isRequired,
   itemsIncludeRelated: PropTypes.bool,
   params: PropTypes.object.isRequired,
   push: PropTypes.func.isRequired,
-  selectedBulk: PropTypes.object
+  selectedBulk: PropTypes.object,
+  updateBulkUpdate: PropTypes.func.isRequired
 };
 
 export default BulkView;

@@ -7,6 +7,13 @@
 .search-result-header {
   padding: 15px;
   border-bottom: 1px solid $hr-border;
+
+  &-amounts {
+    display: flex;
+    h4 {
+      margin-right: 15px;
+    }
+  }
 }
 
 .search-result-item {

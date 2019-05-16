@@ -5,6 +5,9 @@ export const DEFAULT_PAGE_SIZE = 2000;
 export const EDIT = 'can_edit';
 export const APPROVE = 'can_approve';
 export const REVIEW = 'can_review';
+export const APPROVE_BULKUPDATE = 'approve_bulkupdate';
+export const CHANGE_BULKUPDATE = 'change_bulkupdate';
+export const DELETE_BULKUPDATE = 'delete_bulkupdate';
 
 // Statuses
 export const DRAFT = 'draft';
@@ -96,3 +99,8 @@ export const BULK_UPDATE_SEARCH_TERM_DEFAULT = {
   target: 'function',
   value: ''
 };
+
+export const BULK_UPDATE_PACKAGE_APPROVE_OPTIONS = [
+  { label: 'Odottaa', value: false },
+  { label: 'Hyväksytty', value: true }
+];
