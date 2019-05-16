@@ -14,7 +14,7 @@ export class SearchResults extends React.Component {
   }
 
   render () {
-    const { searchResults } = this.props;
+    const { hits, searchResults } = this.props;
     const allSelected = every(searchResults, { selected: true });
     const drafts = this.getStateCount(searchResults, 'draft');
     const sentForReview = this.getStateCount(searchResults, 'sent_for_review');
@@ -32,8 +32,16 @@ export class SearchResults extends React.Component {
               <i className='fa fa-check' />
             </div>
           </div>
-          <div className='col-xs-8'>
-            <h3>{`Hakutulos: ${searchResults.length} osumaa`}</h3>
+          <div className='col-xs-8 search-result-header-amounts'>
+            <div>
+              <h4>Hakutulos:</h4>
+            </div>
+            <div>
+              <h5>Käsittelyprosessin kuvaus: {searchResults.length}</h5>
+              {hits.phases > 0 && <h5>Käsittelyvaihe: {hits.phases}</h5>}
+              {hits.actions > 0 && <h5>Toimenpide: {hits.actions}</h5>}
+              {hits.records > 0 && <h5>Asiakirja: {hits.records}</h5>}
+            </div>
           </div>
           <div className='col-xs-3'>
             {drafts > 0 && (<h5>Luonnoksia: {drafts}</h5>)}
@@ -72,6 +80,11 @@ export class SearchResults extends React.Component {
 };
 
 SearchResults.propTypes = {
+  hits: PropTypes.shape({
+    actions: PropTypes.number.isRequired,
+    phases: PropTypes.number.isRequired,
+    records: PropTypes.number.isRequired
+  }),
   onSelect: PropTypes.func.isRequired,
   onSelectAll: PropTypes.func.isRequired,
   searchResults: PropTypes.array.isRequired

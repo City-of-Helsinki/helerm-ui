@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { find, isEmpty, keys } from 'lodash';
+import { filter, find, isEmpty, keys } from 'lodash';
 
 import { getStatusLabel } from 'utils/helpers';
 
@@ -143,7 +143,7 @@ export class Preview extends React.Component {
     }
     return (
       <div className='preview-errors'>
-        <h4>Esitarkastus:</h4>
+        <h4><i className='fa fa-exclamation-triangle' /> Esitarkastus:</h4>
         {elem}
       </div>
     );
@@ -151,37 +151,47 @@ export class Preview extends React.Component {
 
   render () {
     const { conversions, getAttributeName, getTypeName, isFinalPreview, items } = this.props;
+    const selectedCount = filter(items, { selected: true }).length;
 
     return (
       <div className='preview'>
-        <div className='col-xs-12'>
-          <button className='btn btn-link' onClick={this.props.onClose}>
-            <i className='fa fa-angle-left' /> Takaisin
-          </button>
-        </div>
-        <div className='col-xs-12'>
-          <h3>Massamuutos esikatselu</h3>
-          <p><strong>{`Muutetaan: ${keys(items).length} käsittelyprosessia`}</strong></p>
-          {conversions.map((conversion, index) => (
-            <p key={`conv-${index}`}>
-              {`${getTypeName(conversion.type)}: ${getAttributeName(conversion.attribute)} = ${conversion.value}`}
-            </p>
-          ))}
-        </div>
-        <div className='col-xs-12 preview-actions'>
-          {!isFinalPreview && (
-            <button className='btn btn-primary' onClick={this.props.onConfirm}>
-              Tee muutokset
+        <div className='row'>
+          <div className='col-xs-12'>
+            <button className='btn btn-link' onClick={this.props.onClose}>
+              <i className='fa fa-angle-left' /> Takaisin
             </button>
-          )}
-          <button className='btn btn-default' onClick={this.props.onClose}>
-            Peruuta
-          </button>
+          </div>
+          <div className='col-xs-12'>
+            <h3>Massamuutos esikatselu</h3>
+            <p><strong>{`Muutetaan: ${selectedCount} käsittelyprosessia`}</strong></p>
+            {conversions.map((conversion, index) => (
+              <p key={`conv-${index}`}>
+                {`${getTypeName(conversion.type)}: ${getAttributeName(conversion.attribute)} = ${conversion.value}`}
+              </p>
+            ))}
+          </div>
+          <div className='col-xs-12 preview-actions'>
+            {!isFinalPreview && (
+              <button className='btn btn-primary' disabled={selectedCount === 0} onClick={this.props.onConfirm}>
+                Lisää muutokset
+              </button>
+            )}
+            <button className='btn btn-default' onClick={this.props.onClose}>
+              {isFinalPreview ? 'Takaisin' : 'Peruuta'}
+            </button>
+          </div>
         </div>
         {keys(items).map(id => (
-          <div className={classnames('col-xs-12 preview-item', { 'preview-item-error': !isEmpty(items[id].errors) })} key={id}>
+          <div className='row preview-item' key={id}>
             <div className='col-xs-1'>
-              <i className={classnames('fa', { 'fa-check-circle': isEmpty(items[id].errors), 'fa-exclamation-triangle': !isEmpty(items[id].errors) })} />
+              <div
+                  className={classnames('preview-item-check', { 'preview-item-checked': items[id].selected })}
+                  onClick={() => {
+                    this.props.onSelect(id);
+                  }}
+                >
+                <i className='fa fa-check' />
+              </div>
             </div>
             <div className='col-xs-9'>
               <span className='preview-item-path'>{items[id].item.path.join(' > ')}</span>
@@ -206,7 +216,8 @@ Preview.propTypes = {
   isFinalPreview: PropTypes.bool.isRequired,
   items: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
-  onConfirm: PropTypes.func.isRequired
+  onConfirm: PropTypes.func.isRequired,
+  onSelect: PropTypes.func.isRequired
 };
 
 export default Preview;

@@ -15,6 +15,7 @@ import {
   keys,
   mapKeys,
   merge,
+  pickBy,
   slice,
   some,
   startsWith,
@@ -60,6 +61,7 @@ export class BulkCreateView extends React.Component {
     this.onSave = this.onSave.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.onSelectAllSearchResults = this.onSelectAllSearchResults.bind(this);
+    this.onSelectPreviewItem = this.onSelectPreviewItem.bind(this);
     this.onSelectSearchResult = this.onSelectSearchResult.bind(this);
     this.routerWillLeave = this.routerWillLeave.bind(this);
 
@@ -67,6 +69,7 @@ export class BulkCreateView extends React.Component {
       attributeValues: {},
       conversion: null,
       conversions: null,
+      conversionItems: null,
       confirmed: null,
       isDirty: false,
       isFinalPreview: false,
@@ -74,7 +77,13 @@ export class BulkCreateView extends React.Component {
       isValid: false,
       itemList: [],
       preview: null,
+      previewItems: null,
       searchResults: [],
+      searchResultHits: {
+        actions: 0,
+        phases: 0,
+        records: 0
+      },
       searchTerms: [{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }],
       state: 'draft'
     };
@@ -261,6 +270,7 @@ export class BulkCreateView extends React.Component {
           item: result.item,
           hit: result.hit,
           paths: result.paths,
+          selected: true,
           changed,
           errors
         };
@@ -273,13 +283,15 @@ export class BulkCreateView extends React.Component {
         conversion: [conversion],
         items,
         searchTerms
-      }
+      },
+      previewItems: items
     });
   }
 
   validateChangedItem (item, changed) {
     const { attributeTypes } = this.props;
-    const changedItem = merge(item, changed);
+    const clonedItem = cloneDeep(item);
+    const changedItem = merge(clonedItem, changed);
     const errors = {};
     const functionErrors = validateTOS(changedItem, attributeTypes);
 
@@ -327,17 +339,41 @@ export class BulkCreateView extends React.Component {
     return errors;
   }
 
+  onSelectPreviewItem (id) {
+    const { conversionItems, isFinalPreview, previewItems } = this.state;
+    if (previewItems && previewItems[id]) {
+      this.setState({
+        previewItems: {
+          ...previewItems,
+          [id]: { ...previewItems[id], selected: !previewItems[id].selected }
+        }
+      });
+    }
+    if (isFinalPreview && conversionItems && conversionItems[id]) {
+      this.setState({
+        conversionItems: {
+          ...conversionItems,
+          [id]: { ...conversionItems[id], selected: !conversionItems[id].selected }
+        }
+      });
+    }
+  }
+
   onConfirmConvert () {
-    const { conversions, preview } = this.state;
+    const { conversions, conversionItems, preview, previewItems } = this.state;
+    const selectedItems = pickBy(previewItems, item => item.selected);
+    const mergedItems = conversionItems ? merge(conversionItems, selectedItems) : selectedItems;
+
     this.setState({
       conversion: null,
       conversions: {
         conversion: !isEmpty(conversions) ? [...conversions.conversion, ...preview.conversion] : preview.conversion,
-        items: !isEmpty(conversions) ? merge(conversions.items, preview.items) : preview.items,
         searchTerms: !isEmpty(conversions) ? [...conversions.searchTerms, ...preview.searchTerms] : preview.searchTerms
       },
+      conversionItems: mergedItems,
       isDirty: true,
       preview: null,
+      previewItems: null,
       searchResults: [],
       searchTerms: [{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }]
     });
@@ -345,7 +381,8 @@ export class BulkCreateView extends React.Component {
 
   onCancel () {
     this.setState({
-      conversions: [],
+      conversions: null,
+      conversionItems: null,
       isDirty: false
     });
   }
@@ -362,11 +399,13 @@ export class BulkCreateView extends React.Component {
 
   onConfirmSave () {
     if (this.state.conversions) {
-      const { conversions: { conversion, items }, state } = this.state;
+      const { conversionItems, conversions: { conversion }, state } = this.state;
       const description = conversion.map(conv => `${this.getTypeName(conv.type)}: ${this.getAttributeName(conv.attribute)} = ${conv.value}`).join(', ');
-      const changes = keys(items).reduce((acc, id) => {
-        const item = items[id].item;
-        acc[`${id}__${item.function_version}`] = items[id].changed;
+      const changes = keys(conversionItems).reduce((acc, id) => {
+        if (conversionItems[id].selected) {
+          const item = conversionItems[id].item;
+          acc[`${id}__${item.function_version}`] = conversionItems[id].changed;
+        }
         return acc;
       }, {});
       const bulkUpdate = {
@@ -375,13 +414,15 @@ export class BulkCreateView extends React.Component {
         state
       };
       this.props.saveBulkUpdate(bulkUpdate)
-        .then((resp) => {
+        .then(() => {
           this.setState({
             conversion: null,
             conversions: null,
+            conversionItems: null,
             confirmed: null,
             isDirty: false,
             preview: null,
+            previewItems: null,
             searchResults: [],
             searchTerms: [{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }]
           });
@@ -411,9 +452,10 @@ export class BulkCreateView extends React.Component {
   }
 
   onPreview () {
-    const { conversions } = this.state;
+    const { conversions, conversionItems } = this.state;
     this.setState({
       preview: conversions,
+      previewItems: conversionItems,
       isFinalPreview: true
     });
   }
@@ -421,6 +463,7 @@ export class BulkCreateView extends React.Component {
   onClosePreview () {
     this.setState({
       preview: null,
+      previewItems: null,
       isFinalPreview: false
     });
   }
@@ -631,7 +674,28 @@ export class BulkCreateView extends React.Component {
       }
       return acc;
     }, []);
-    this.setState({ searchResults, searchTerms });
+
+    const searchResultHits = searchResults.reduce((acc, result) => {
+      const { hit } = result;
+      if (hit.phases) {
+        keys(hit.phases).forEach(phaseId => {
+          acc.phases++;
+          const phase = hit.phases[phaseId];
+          if (phase && phase.actions) {
+            keys(phase.actions).forEach(actionId => {
+              acc.actions++;
+              const action = phase.actions[actionId];
+              if (action && action.records) {
+                acc.records += keys(action.records).length;
+              }
+            });
+          }
+        });
+      }
+      return acc;
+    }, { phases: 0, actions: 0, records: 0 });
+
+    this.setState({ searchResults, searchResultHits, searchTerms });
   }
 
   resetSearch () {
@@ -675,25 +739,30 @@ export class BulkCreateView extends React.Component {
       attributeValues,
       conversion,
       conversions,
+      conversionItems,
       isFinalPreview,
       isValid,
       preview,
+      previewItems,
       searchResults,
+      searchResultHits,
       searchTerms,
       state
     } = this.state;
     const isSelectedResults = searchResults.filter(result => result.selected).length > 0;
+    const selectedCount = filter(conversionItems, { selected: true }).length;
 
-    if (!isEmpty(preview)) {
+    if (!isEmpty(preview) && previewItems) {
       return (
         <Preview
           conversions={preview.conversion}
           getAttributeName={this.getAttributeName}
           getTypeName={this.getTypeName}
           isFinalPreview={isFinalPreview}
-          items={preview.items}
+          items={previewItems}
           onClose={this.onClosePreview}
           onConfirm={this.onConfirmConvert}
+          onSelect={this.onSelectPreviewItem}
           searchTerms={preview.searchTerms}
         />
       );
@@ -729,6 +798,7 @@ export class BulkCreateView extends React.Component {
           </IsAllowed>
           {!isEmpty(searchResults) && (
             <SearchResults
+              hits={searchResultHits}
               onSelect={this.onSelectSearchResult}
               onSelectAll={this.onSelectAllSearchResults}
               searchResults={searchResults}
@@ -763,7 +833,7 @@ export class BulkCreateView extends React.Component {
           </IsAllowed>
           <h4>Muutoshistoria</h4>
           {isEmpty(conversions) && <p>Ei tapahtumia</p>}
-          {!isEmpty(conversions) && <p><strong>{`Muutetaan: ${keys(conversions.items).length} käsittelyprosessia`}</strong></p>}
+          {!isEmpty(conversions) && <p><strong>Muutetaan: {selectedCount} käsittelyprosessia</strong></p>}
           {!isEmpty(conversions) && conversions.conversion.map((conversion, index) => (
             <p key={`conversion-${index}`}>
               {`${this.getTypeName(conversion.type)}: ${this.getAttributeName(conversion.attribute)} = ${conversion.value}`}
@@ -774,7 +844,7 @@ export class BulkCreateView extends React.Component {
               content={
                 <div>
                   <h3>Tallennetaanko massatilaus?</h3>
-                  <p>{`Muutetaan: ${keys(conversions.items).length} käsittelyprosessia`}</p>
+                  <p>Muutetaan: {selectedCount} käsittelyprosessia</p>
                   {!isValid && <p className='alert-danger'>HUOM! Esitarkastuksessa on virheitä. Katso esikatselu.</p>}
                   <div>
                     <label>Valitse massamuutospaketin tila:</label>

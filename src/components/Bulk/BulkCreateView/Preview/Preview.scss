@@ -1,7 +1,7 @@
 @import '../../styles/vendor/hel-components/variables';
 
 .preview {
-  padding: 15px;
+  padding: 15px 30px;
 }
 
 .preview-actions {
@@ -19,25 +19,22 @@
   padding: 15px;
   border-bottom: 1px solid $hr-border;
 
-  &.preview-item-error {
-    &:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      width: 15px;
-      background-color: $brand-danger;
-    } 
-
-    .fa {
-      color: $brand-danger;
-    }
+  &-check {
+    display: inline-block;
+    color: $hr-border;
+    padding: 8px 10px;
+    border: 1px solid $hr-border;
   }
 
-  .fa {
-    color: $brand-success;
-    font-size: $font-size-h3;
+  &-checked {
+    background-color: $brand-primary;
+    border: 1px solid $brand-primary;
+    color: $white;
+  }
+
+  .fa-exclamation-triangle {
+    color: $brand-danger;
+    margin-right: 15px;
   }
 }
 
