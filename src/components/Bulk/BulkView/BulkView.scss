@@ -4,6 +4,10 @@
   padding: 15px 30px;
   width: 100%;
 
+  .alert .fa {
+    margin-right: 10px;
+  }
+
   .bulk-view-changes-header {
     display: flex;
     padding-bottom: 15px;
@@ -27,18 +31,34 @@
     padding: 15px 0;
     border-bottom: 1px solid $hr-border;
 
-    .bulk-view-item-info {
+    &-changes {
+      h4 span {
+        color: #999;
+        text-decoration: line-through;
+      }
+    }
+
+    &-info {
       flex: 1 1 auto;
     }
 
-    .bulk-view-item-state {
+    &-path {
+      display: block;
+      color: #999;
+    }
+
+    &-state,
+    &-action {
       padding: 0 15px;
     }
-  }
 
-  .bulk-view-path {
-    display: block;
-    color: #999;
+    &-phase-error {
+      color: $brand-danger;
+    }
+
+    .fa {
+      margin-right: 10px;
+    }
   }
 
   .bulk-view-name {

@@ -10,7 +10,8 @@ const initialState = {
   bulkUpdates: [],
   isFetching: false,
   isFetchingSelected: false,
-  isSaving: false
+  isSaving: false,
+  isUpdating: false
 };
 
 export const APPROVE_BULK_UPDATE_REQUEST = 'approveBulkUpdateRequestAction';
@@ -28,6 +29,9 @@ export const FETCH_BULK_UPDATE_ERROR = 'fetchBulkUpdateErrorAction';
 export const SAVE_BULK_UPDATE_REQUEST = 'saveBulkUpdateRequestAction';
 export const SAVE_BULK_UPDATE_RECEIVE = 'saveBulkUpdateReceiveAction';
 export const SAVE_BULK_UPDATE_ERROR = 'saveBulkUpdateErrorAction';
+export const UPDATE_BULK_UPDATE_REQUEST = 'updateBulkUpdateRequestAction';
+export const UPDATE_BULK_UPDATE_RECEIVE = 'updateBulkUpdateReceiveAction';
+export const UPDATE_BULK_UPDATE_ERROR = 'updateBulkUpdateErrorAction';
 export const CLEAR_SELECTED_BULK_UPDATE = 'clearSelectedBulkUpdateAction';
 
 export function receiveFetchBulkUpdates (resp) {
@@ -93,19 +97,27 @@ export function deleteBulkUpdate (id) {
   };
 }
 
-export function receiveCreateBulkUpdate (resp) {
-  return createAction(SAVE_BULK_UPDATE_RECEIVE)(resp);
-}
-
 export function saveBulkUpdate (bulkUpdate) {
   return function (dispatch) {
     dispatch(createAction(SAVE_BULK_UPDATE_REQUEST)());
     return api.post('bulk-update', bulkUpdate)
       .then(response => response.json())
       .then(json => {
-        dispatch(receiveCreateBulkUpdate(json));
+        dispatch(createAction(SAVE_BULK_UPDATE_RECEIVE)(json));
       })
       .catch(() => dispatch(createAction(SAVE_BULK_UPDATE_ERROR)()));
+  };
+}
+
+export function updateBulkUpdate (id, bulkUpdate) {
+  return function (dispatch) {
+    dispatch(createAction(UPDATE_BULK_UPDATE_REQUEST)());
+    return api.patch(`bulk-update/${id}`, bulkUpdate)
+      .then(response => response.json())
+      .then(json => {
+        dispatch(createAction(UPDATE_BULK_UPDATE_RECEIVE)(json));
+      })
+      .catch(() => dispatch(createAction(UPDATE_BULK_UPDATE_ERROR)()));
   };
 }
 
@@ -207,6 +219,25 @@ const saveBulkUpdateReceiveAction = (state, { payload }) => {
   });
 };
 
+const updateBulkUpdateErrorAction = (state) => {
+  return update(state, {
+    isUpdating: { $set: false }
+  });
+};
+
+const updateBulkUpdateRequestAction = (state) => {
+  return update(state, {
+    isUpdating: { $set: true }
+  });
+};
+
+const updateBulkUpdateReceiveAction = (state, { payload }) => {
+  return update(state, {
+    selectedBulk: { $set: payload },
+    isUpdating: { $set: false }
+  });
+};
+
 const clearSelectedBulkUpdateAction = (state) => {
   return update(state, {
     selectedBulk: { $set: null }
@@ -229,5 +260,8 @@ export default handleActions({
   fetchBulkUpdatesRequestAction,
   saveBulkUpdateErrorAction,
   saveBulkUpdateRequestAction,
-  saveBulkUpdateReceiveAction
+  saveBulkUpdateReceiveAction,
+  updateBulkUpdateErrorAction,
+  updateBulkUpdateReceiveAction,
+  updateBulkUpdateRequestAction
 }, initialState);
