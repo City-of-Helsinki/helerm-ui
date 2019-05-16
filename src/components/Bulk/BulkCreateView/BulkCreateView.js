@@ -25,7 +25,7 @@ import {
 import Select from 'react-select';
 
 import {
-  EDIT,
+  CHANGE_BULKUPDATE,
   BULK_UPDATE_CONVERSION_TYPES,
   BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES,
   BULK_UPDATE_SEARCH_TERM_DEFAULT,
@@ -783,7 +783,7 @@ export class BulkCreateView extends React.Component {
             resetSearchResults={this.resetSearch}
             searchTerms={searchTerms}
           />
-          <IsAllowed to={EDIT}>
+          <IsAllowed to={CHANGE_BULKUPDATE}>
             <div>
               {!isEmpty(searchResults) && (
                 <Conversion
@@ -806,7 +806,7 @@ export class BulkCreateView extends React.Component {
           )}
         </div>
         <div className='col-xs-3 bulk-update-create-side-content'>
-          <IsAllowed to={EDIT}>
+          <IsAllowed to={CHANGE_BULKUPDATE}>
             <div className='bulk-update-create-actions'>
               <button
                 className='btn btn-primary'
