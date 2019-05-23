@@ -63,11 +63,13 @@ export class SearchTerm extends React.Component {
 
   onChangeValue (option) {
     const { searchTerm } = this.props;
-    const value = startsWith(option.value, '[') && endsWith(option.value, ']') ? JSON.parse(option.value) : option.value;
-    this.props.onChangeSearchTerm({
-      ...searchTerm,
-      value: value
-    });
+    if (option && option.value) {
+      const value = startsWith(option.value, '[') && endsWith(option.value, ']') ? JSON.parse(option.value) : option.value;
+      this.props.onChangeSearchTerm({
+        ...searchTerm,
+        value: value
+      });
+    }
   }
 
   getAttributeOptions (attributeTypes, target) {
