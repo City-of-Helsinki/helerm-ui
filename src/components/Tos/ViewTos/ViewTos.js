@@ -71,6 +71,7 @@ export class ViewTOS extends React.Component {
       originalTos: {},
       isDirty: false,
       scrollTop: HEADER_HEIGHT,
+      showCancelEditView: false,
       showCloneView: false,
       showImportView: false,
       showReorderView: false,
@@ -280,9 +281,7 @@ export class ViewTOS extends React.Component {
   }
 
   cancelEdit () {
-    return this.setState({ isDirty: false }, () => {
-      return this.props.resetTOS(this.state.originalTos);
-    });
+    this.setState({ showCancelEditView: true });
   }
 
   cancelMetaDataEdit () {
@@ -441,6 +440,14 @@ export class ViewTOS extends React.Component {
   toggleCloneView () {
     const current = this.state.showCloneView;
     this.setState({ showCloneView: !current });
+  }
+
+  toggleCancelEditView (confirmed) {
+    this.setState({ isDirty: false, showCancelEditView: false }, () => {
+      if (confirmed) {
+        this.props.resetTOS(this.state.originalTos);
+      }
+    });
   }
 
   generateDefaultAttributes (attributeTypes, type) {
@@ -836,6 +843,18 @@ export class ViewTOS extends React.Component {
                               />
                             }
                             closePopup={() => this.toggleCloneView()}
+                          />
+                        )}
+                        {this.state.showCancelEditView && (
+                          <Popup
+                            content={
+                              <div className='cancelEditView'>
+                                <h3>Peruutetaanko muutokset?</h3>
+                                <button className='btn btn-default' onClick={() => this.toggleCancelEditView(false)}>Ei</button>
+                                <button className='btn btn-danger' onClick={() => this.toggleCancelEditView(true)}>Kyllä</button>
+                              </div>
+                            }
+                            closePopup={() => this.toggleCancelEditView(false)}
                           />
                         )}
                       </div>
