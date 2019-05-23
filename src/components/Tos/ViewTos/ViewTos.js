@@ -849,7 +849,7 @@ export class ViewTOS extends React.Component {
                           <Popup
                             content={
                               <div className='cancelEditView'>
-                                <h3>Haluatko peruuttaa muutokset?</h3>
+                                <h3>Peruutetaanko muutokset?</h3>
                                 <button className='btn btn-default' onClick={() => this.toggleCancelEditView(false)}>Ei</button>
                                 <button className='btn btn-danger' onClick={() => this.toggleCancelEditView(true)}>Kyllä</button>
                               </div>
