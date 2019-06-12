@@ -195,6 +195,7 @@ export class Action extends React.Component {
   }
 
   complementRecordForm (e, recordAttributes) {
+    e.preventDefault();
     const newAttrs = {};
     Object.keys(recordAttributes).map((key) => {
       if (recordAttributes[key] && recordAttributes[key]['value']) {
@@ -219,6 +220,7 @@ export class Action extends React.Component {
 
   onEditFormShowMoreRecordAdd (e, recordAttributes) {
     // TODO: handle merge the attributes of createNewRecordForm here
+    e.preventDefault();
     const newAttrs = {};
     Object.keys(recordAttributes).map((key) => {
       if (recordAttributes[key] && recordAttributes[key]['value']) {
