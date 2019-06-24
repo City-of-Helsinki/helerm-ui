@@ -44,7 +44,6 @@ import './BulkCreateView.scss';
 const PATH_EMPTY_NAME_REPLACEMENT = '---';
 
 export class BulkCreateView extends React.Component {
-
   constructor (props) {
     super(props);
 

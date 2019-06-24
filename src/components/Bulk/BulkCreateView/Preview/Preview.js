@@ -9,7 +9,6 @@ import './Preview.scss';
 import { BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES } from '../../../../../config/constants';
 
 export class Preview extends React.Component {
-
   renderItemChanges (previewItem) {
     const { getAttributeName } = this.props;
     const { changed, item } = previewItem;
@@ -185,11 +184,11 @@ export class Preview extends React.Component {
           <div className='row preview-item' key={id}>
             <div className='col-xs-1'>
               <div
-                  className={classnames('preview-item-check', { 'preview-item-checked': items[id].selected })}
-                  onClick={() => {
-                    this.props.onSelect(id);
-                  }}
-                >
+                className={classnames('preview-item-check', { 'preview-item-checked': items[id].selected })}
+                onClick={() => {
+                  this.props.onSelect(id);
+                }}
+              >
                 <i className='fa fa-check' />
               </div>
             </div>

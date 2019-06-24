@@ -24,13 +24,13 @@ const PrintAction = ({
     {action.records
       ? action.records.map(record => (
         <PrintRecord
-            key={record.id}
-            record={record}
-            breadscrumbs={[phaseName, action.name].join(' » ')}
-            getAttributeName={getAttributeName}
-            sortAttributeKeys={sortAttributeKeys}
-          />
-        ))
+          key={record.id}
+          record={record}
+          breadscrumbs={[phaseName, action.name].join(' » ')}
+          getAttributeName={getAttributeName}
+          sortAttributeKeys={sortAttributeKeys}
+        />
+      ))
       : null}
   </section>
 );

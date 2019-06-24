@@ -8,7 +8,6 @@ const METHOD_TEMPLATE = 'template';
 const METHOD_FUNCTION = 'function';
 
 export class CloneView extends React.Component {
-
   static propTypes = {
     cloneFromTemplate: PropTypes.func,
     setNavigationVisibility: PropTypes.func,
@@ -84,11 +83,11 @@ export class CloneView extends React.Component {
       <div className='row clone__view'>
         <ul className='nav nav-tabs disabled'>
           <li role='presentation'
-              className={classnames({ 'disabled': hasSelectedItem, 'active': selectedMethod === METHOD_TEMPLATE })}>
+            className={classnames({ 'disabled': hasSelectedItem, 'active': selectedMethod === METHOD_TEMPLATE })}>
             <a onClick={() => this.selectMethod(METHOD_TEMPLATE)}>Tuo kuvaus moduulista</a>
           </li>
           <li role='presentation'
-              className={classnames({ 'disabled': hasSelectedItem, 'active': selectedMethod === METHOD_FUNCTION })}>
+            className={classnames({ 'disabled': hasSelectedItem, 'active': selectedMethod === METHOD_FUNCTION })}>
             <a onClick={() => this.selectMethod(METHOD_FUNCTION)}>Tuo kuvaus toisesta kuvauksesta</a>
           </li>
         </ul>
@@ -98,9 +97,9 @@ export class CloneView extends React.Component {
           <div className='list-group'>
             {templates.map(({ name, id }) => (
               <button key={id}
-                      type='button'
-                      className={classnames('list-group-item', { 'active': selectedItem.id === id })}
-                      onClick={() => this.selectItem({ id, name })}>
+                type='button'
+                className={classnames('list-group-item', { 'active': selectedItem.id === id })}
+                onClick={() => this.selectItem({ id, name })}>
                 {name}
               </button>
             ))}

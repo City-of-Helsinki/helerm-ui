@@ -6,7 +6,6 @@ import { getStatusLabel } from 'utils/helpers';
 import './ClassificationTree.scss';
 
 export class ClassificationTree extends React.Component {
-
   static BODY_CLASS = 'helerm-classification-tree';
 
   componentDidMount () {

@@ -13,7 +13,6 @@ import {
 import './Conversion.scss';
 
 export class Conversion extends React.Component {
-
   constructor (props) {
     super(props);
 

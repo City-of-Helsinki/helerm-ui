@@ -20,7 +20,6 @@ const FILTER_CONDITION_OPTIONS = [{ value: 'and', label: 'JA' }, { value: 'or', 
  * Extracted from https://github.com/socialtables/react-infinity-menu
  */
 export default class InfinityMenu extends Component {
-
   static propTypes = {
     addSearchInput: PropTypes.func.isRequired,
     attributeTypes: PropTypes.object,
@@ -158,7 +157,7 @@ export default class InfinityMenu extends Component {
     this.setState(
       { filterCondition: option.value },
       () => this.filterTree(this.props.searchInputs, this.props.tree, this.props.isDetailSearch)
-      );
+    );
   }
 
   filterTree (searchInputs, tree, isDetailSearch) {
@@ -288,10 +287,10 @@ export default class InfinityMenu extends Component {
         } else {
           prevs.push(
             <li key={itemKey}
-                className={'infinity-menu-leaf-container' + (!curr.function ? ' new-leaf' : '')}
-                onMouseDown={(e) => this.props.onLeafMouseDown ? this.props.onLeafMouseDown(e, curr) : null}
-                onMouseUp={(e) => this.props.onLeafMouseUp ? this.props.onLeafMouseUp(e, curr) : null}
-                onClick={(e) => this.props.onLeafMouseClick ? this.props.onLeafMouseClick(e, curr) : null}
+              className={'infinity-menu-leaf-container' + (!curr.function ? ' new-leaf' : '')}
+              onMouseDown={(e) => this.props.onLeafMouseDown ? this.props.onLeafMouseDown(e, curr) : null}
+              onMouseUp={(e) => this.props.onLeafMouseUp ? this.props.onLeafMouseUp(e, curr) : null}
+              onClick={(e) => this.props.onLeafMouseClick ? this.props.onLeafMouseClick(e, curr) : null}
             >
               <span>
                 {curr.name}{' '}
@@ -303,8 +302,8 @@ export default class InfinityMenu extends Component {
       } else if (shouldDisplay && relativeIndex === filteredChildren.length - 1) {
         prevs.push(
           <li key={itemKey}
-              className='infinity-menu-load-more-container'
-              onClick={(e) => this.onLoadMoreClick(tree, curr, keyPath, e)}
+            className='infinity-menu-load-more-container'
+            onClick={(e) => this.onLoadMoreClick(tree, curr, keyPath, e)}
           >
             <span>Näytä lisää</span>
           </li>
@@ -329,8 +328,8 @@ export default class InfinityMenu extends Component {
           } else {
             prevs.push(
               <div key={key}
-                   onClick={(e) => this.onNodeClick(tree, curr, keyPath, e)}
-                   className={classnames('infinity-menu-node-container', { opened: !!curr.isOpen })}
+                onClick={(e) => this.onNodeClick(tree, curr, keyPath, e)}
+                className={classnames('infinity-menu-node-container', { opened: !!curr.isOpen })}
               >
                 <label>
                   {nodeName}{' '}
@@ -357,8 +356,8 @@ export default class InfinityMenu extends Component {
           } else {
             openedNode.push(
               <div key={key}
-                   onClick={(e) => this.onNodeClick(tree, curr, keyPath, e)}
-                   className={classnames('infinity-menu-node-container', { opened: !!curr.isOpen })}
+                onClick={(e) => this.onNodeClick(tree, curr, keyPath, e)}
+                className={classnames('infinity-menu-node-container', { opened: !!curr.isOpen })}
               >
                 <label>{nodeName}{' '}
                   <ClassificationLink id={curr.id} />
@@ -466,14 +465,14 @@ export default class InfinityMenu extends Component {
         <Sticky className='navigation-sticky'>
           <div className='navigation-header clearfix'>
             <button className='pull-left nav-button'
-                    onClick={this.props.toggleNavigationVisibility}>
+              onClick={this.props.toggleNavigationVisibility}>
               <span className={'fa fa-list'} aria-hidden='true' />
             </button>
             {!!this.props.path.length &&
               <ol className='breadcrumb' onClick={this.props.toggleNavigationVisibility}>
                 {this.props.path.map((item, index) => (
                   <li className={classnames({ 'active': index === this.props.path.length })}
-                      key={index}>{item}</li>
+                    key={index}>{item}</li>
                 ))}
               </ol>
             }

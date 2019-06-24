@@ -17,7 +17,6 @@ import './Navigation.scss';
 const SEARCH_TIMEOUT = 500;
 
 export class Navigation extends React.Component {
-
   static propTypes = {
     attributeTypes: PropTypes.object,
     fetchNavigation: PropTypes.func.isRequired,

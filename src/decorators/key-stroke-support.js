@@ -2,7 +2,6 @@ import React, { PropTypes, Component } from 'react';
 
 export default function (WrappedComponent) {
   class KeyStrokeSupport extends Component {
-
     static propTypes = {
       cancel: PropTypes.func.isRequired,
       submit: PropTypes.func.isRequired
