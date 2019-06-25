@@ -31,7 +31,7 @@ class AppContainer extends Component {
         <div style={{ height: '100%' }}>
           {user
             ? <Router history={history}>{routes}</Router>
-          : <Loader show={true} />}
+            : <Loader show={true} />}
           <ReduxToastr
             timeOut={4000}
             newestOnTop={true}

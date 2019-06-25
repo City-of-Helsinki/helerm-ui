@@ -11,7 +11,6 @@ import IsAllowed from 'components/IsAllowed/IsAllowed';
 import './BulkListView.scss';
 
 export class BulkListView extends React.Component {
-
   constructor (props) {
     super(props);
     this.onChangeFilter = this.onChangeFilter.bind(this);

@@ -555,87 +555,87 @@ export class Phase extends React.Component {
           <div className='box'>
             {this.state.mode === 'edit' &&
               this.state.editingPhase && (
-                <EditorForm
-                  onShowMore={this.onEditFormShowMorePhase}
-                  targetId={this.props.phase.id}
-                  attributes={this.props.phase.attributes}
-                  attributeTypes={this.props.attributeTypes}
-                  elementConfig={{
-                    elementTypes: this.props.phaseTypes,
-                    editWithForm: this.editPhaseWithForm
-                  }}
-                  editorConfig={{
-                    type: 'phase',
-                    action: 'edit'
-                  }}
-                  closeEditorForm={this.disableEditMode}
-                  displayMessage={this.props.displayMessage}
-                />
-              )}
+              <EditorForm
+                onShowMore={this.onEditFormShowMorePhase}
+                targetId={this.props.phase.id}
+                attributes={this.props.phase.attributes}
+                attributeTypes={this.props.attributeTypes}
+                elementConfig={{
+                  elementTypes: this.props.phaseTypes,
+                  editWithForm: this.editPhaseWithForm
+                }}
+                editorConfig={{
+                  type: 'phase',
+                  action: 'edit'
+                }}
+                closeEditorForm={this.disableEditMode}
+                displayMessage={this.props.displayMessage}
+              />
+            )}
             {this.state.mode === 'edit' &&
               this.state.complementingPhase && (
-                <EditorForm
-                  onShowMore={this.onEditFormShowMorePhase}
-                  targetId={this.props.phase.id}
-                  attributes={this.props.phase.attributes}
-                  attributeTypes={this.props.attributeTypes}
-                  elementConfig={{
-                    elementTypes: this.props.phaseTypes,
-                    editWithForm: this.editPhaseWithForm
-                  }}
-                  editorConfig={{
-                    type: 'phase',
-                    action: 'complement'
-                  }}
-                  closeEditorForm={this.disableEditMode}
-                  displayMessage={this.props.displayMessage}
-                />
-              )}
+              <EditorForm
+                onShowMore={this.onEditFormShowMorePhase}
+                targetId={this.props.phase.id}
+                attributes={this.props.phase.attributes}
+                attributeTypes={this.props.attributeTypes}
+                elementConfig={{
+                  elementTypes: this.props.phaseTypes,
+                  editWithForm: this.editPhaseWithForm
+                }}
+                editorConfig={{
+                  type: 'phase',
+                  action: 'complement'
+                }}
+                closeEditorForm={this.disableEditMode}
+                displayMessage={this.props.displayMessage}
+              />
+            )}
             {!this.state.editingPhase &&
               !this.state.complementingPhase && (
-                <div>
-                  <Attributes
-                    element={phase}
-                    documentState={this.props.documentState}
-                    type={'phase'}
-                    attributeTypes={this.props.attributeTypes}
-                    typeOptions={this.props.phaseTypes}
-                    renderBasicAttributes={this.renderBasicAttributes}
-                    renderButtons={this.renderPhaseButtons}
-                    updateTypeSpecifier={this.updateTypeSpecifier}
-                    updateType={this.updatePhaseType}
-                    updateAttribute={this.updatePhaseAttribute}
-                    showAttributes={phase.is_attributes_open}
-                  />
-                  {this.state.mode === 'add' && (
-                    <AddElementInput
-                      type='action'
-                      submit={this.addAction}
-                      typeOptions={this.generateTypeOptions(
-                        this.props.actionTypes
-                      )}
-                      defaultAttributes={this.generateDefaultAttributes(
-                        this.props.attributeTypes,
-                        'action'
-                      )}
-                      newDefaultAttributes={this.state.actionDefaultAttributes}
-                      newTypeSpecifier={this.state.actionTypeSpecifier}
-                      newType={this.state.actionType}
-                      onDefaultAttributeChange={this.onActionDefaultAttributeChange}
-                      onTypeSpecifierChange={this.onActionTypeSpecifierChange}
-                      onTypeChange={this.onActionTypeChange}
-                      onTypeInputChange={this.onActionTypeInputChange}
-                      cancel={this.cancelActionCreation}
-                      onAddFormShowMore={this.onAddFormShowMoreAction}
-                      showMoreOrLess={this.state.showMore}
+              <div>
+                <Attributes
+                  element={phase}
+                  documentState={this.props.documentState}
+                  type={'phase'}
+                  attributeTypes={this.props.attributeTypes}
+                  typeOptions={this.props.phaseTypes}
+                  renderBasicAttributes={this.renderBasicAttributes}
+                  renderButtons={this.renderPhaseButtons}
+                  updateTypeSpecifier={this.updateTypeSpecifier}
+                  updateType={this.updatePhaseType}
+                  updateAttribute={this.updatePhaseAttribute}
+                  showAttributes={phase.is_attributes_open}
+                />
+                {this.state.mode === 'add' && (
+                  <AddElementInput
+                    type='action'
+                    submit={this.addAction}
+                    typeOptions={this.generateTypeOptions(
+                      this.props.actionTypes
+                    )}
+                    defaultAttributes={this.generateDefaultAttributes(
+                      this.props.attributeTypes,
+                      'action'
+                    )}
+                    newDefaultAttributes={this.state.actionDefaultAttributes}
+                    newTypeSpecifier={this.state.actionTypeSpecifier}
+                    newType={this.state.actionType}
+                    onDefaultAttributeChange={this.onActionDefaultAttributeChange}
+                    onTypeSpecifierChange={this.onActionTypeSpecifierChange}
+                    onTypeChange={this.onActionTypeChange}
+                    onTypeInputChange={this.onActionTypeInputChange}
+                    cancel={this.cancelActionCreation}
+                    onAddFormShowMore={this.onAddFormShowMoreAction}
+                    showMoreOrLess={this.state.showMore}
 
-                    />
-                  )}
-                  <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>
-                    {actionElements}
-                  </div>
+                  />
+                )}
+                <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>
+                  {actionElements}
                 </div>
-              )}
+              </div>
+            )}
             {this.state.deleting && (
               <Popup
                 content={

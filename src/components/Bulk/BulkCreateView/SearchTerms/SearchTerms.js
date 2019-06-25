@@ -8,7 +8,6 @@ import SearchTerm from './SearchTerm';
 import './SearchTerms.scss';
 
 export class SearchTerms extends React.Component {
-
   constructor (props) {
     super(props);
 

@@ -398,7 +398,7 @@ export class EditorForm extends React.Component {
         if (action === 'add') {
           return 'Uusi käsittelyvaihe';
         }
-        if (action === 'edit' || 'complement') {
+        if (action === 'edit' || action === 'complement') {
           return 'Muokkaa käsittelyvaihetta';
         }
         // if (action === 'complement') {
@@ -409,7 +409,7 @@ export class EditorForm extends React.Component {
         if (action === 'add') {
           return 'Uusi toimenpide';
         }
-        if (action === 'edit' || 'complement') {
+        if (action === 'edit' || action === 'complement') {
           return 'Muokkaa toimenpidettä';
         }
         // if (action === 'complement') {

@@ -24,7 +24,6 @@ import {
 import './SearchTerms.scss';
 
 export class SearchTerm extends React.Component {
-
   constructor (props) {
     super(props);
 

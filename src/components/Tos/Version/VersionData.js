@@ -7,7 +7,6 @@ import EditorForm from 'components/Tos/EditorForm/EditorForm';
 import { formatDateTime, getStatusLabel } from '../../../utils/helpers';
 
 export class VersionData extends React.Component {
-
   constructor (props) {
     super(props);
     this.cancelVersionEdit = this.cancelVersionEdit.bind(this);
@@ -73,14 +72,14 @@ export class VersionData extends React.Component {
 
   generateVersionData () {
     const {
-      modified_at,
+      modified_at: modifiedAt,
       state,
       modified_by: modifiedBy,
       valid_from: validFrom,
       valid_to: validTo
     } = this.props.selectedTOS;
     const { validFromEditing, validToEditing } = this.state;
-    const formattedDateTime = formatDateTime(modified_at);
+    const formattedDateTime = formatDateTime(modifiedAt);
     const validFromData = this.generateValidDateField('Voimassaolo alkaa', 'validFrom', validFrom, validFromEditing);
     const validToData = this.generateValidDateField('Voimassaolo päättyy', 'validTo', validTo, validToEditing);
 

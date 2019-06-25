@@ -15,7 +15,6 @@ import Popup from 'components/Popup';
 import './BulkView.scss';
 
 export class BulkView extends React.Component {
-
   constructor (props) {
     super(props);
 

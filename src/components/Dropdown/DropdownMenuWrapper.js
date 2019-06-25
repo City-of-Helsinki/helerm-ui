@@ -39,8 +39,8 @@ class DropdownMenuWrapper extends React.Component {
   render () {
     const {
       children,
-      onClickOutside: _ignore_onClickOutside, // eslint-disable-line no-unused-vars
-      listenEvents: _ignore_listenEvents, // eslint-disable-line no-unused-vars
+      onClickOutside: _ignore_onClickOutside, // eslint-disable-line
+      listenEvents: _ignore_listenEvents, // eslint-disable-line
       ...divProps
     } = this.props;
     return (

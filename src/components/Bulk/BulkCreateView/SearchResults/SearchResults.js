@@ -8,7 +8,6 @@ import { getStatusLabel } from 'utils/helpers';
 import './SearchResults.scss';
 
 export class SearchResults extends React.Component {
-
   getStateCount (searchResults, state) {
     return filter(searchResults, result => result.item ? isEqual(result.item.function_state, state) : false).length;
   }

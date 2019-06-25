@@ -28,8 +28,8 @@ const webpackConfig = {
       ? [
         path.resolve('./src/main.js'),
         `webpack-hot-middleware/client?path=${
-            config.compiler_public_path
-          }__webpack_hmr`
+          config.compiler_public_path
+        }__webpack_hmr`
       ]
       : [path.resolve('./src/main.js')],
     vendor: ['babel-polyfill', 'react', 'react-redux', 'react-router', 'redux']

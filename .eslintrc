@@ -85,5 +85,10 @@
       }
     ],
     "react/no-unescaped-entities": 2
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "legacyDecorators": true
+    }
   }
 }

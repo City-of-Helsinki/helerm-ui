@@ -740,10 +740,10 @@ export class ViewTOS extends React.Component {
                       )}
                       {!this.state.editingMetaData &&
                         !this.state.complementingMetaData && (
-                          <div className='col-xs-12'>
-                            {TOSMetaData}
-                          </div>
-                        )}
+                        <div className='col-xs-12'>
+                          {TOSMetaData}
+                        </div>
+                      )}
                     </div>
                     <div className='row'>
                       <div className='col-xs-3'>

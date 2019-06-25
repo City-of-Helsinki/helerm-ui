@@ -7,7 +7,6 @@ import ClassificationHeader from '../Header/ClassificationHeader';
 import './ViewClassification.scss';
 
 export class ViewClassification extends React.Component {
-
   static BODY_CLASS = 'helerm-classification-view';
 
   constructor (props) {
@@ -143,8 +142,8 @@ export class ViewClassification extends React.Component {
                 ? (
                   <div className='classification-details col-xs-12 no-print'>
                     <Link to={`/view-tos/${classification.function}`}>
-                        Käsittelyprosessi &raquo;
-                      </Link>
+                      Käsittelyprosessi &raquo;
+                    </Link>
                   </div>
                 )
                 : null}

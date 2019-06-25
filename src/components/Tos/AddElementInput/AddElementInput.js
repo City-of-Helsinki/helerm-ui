@@ -106,41 +106,42 @@ export const AddElementInput = ({
     <form onSubmit={submit} className='row add-element'>
       <h5 className='col-xs-12'>{resolveHeader(type)}</h5>
       {/* ActionType disabled for now. */}
-      { type !== 'action' &&
-      <div className='col-xs-12 col-md-6 add-element-col'>
-        { typeOptions.length !== 0
-          ? <Select.Creatable
-            autoBlur={true}
-            openOnFocus={true}
-            className={`form-control edit-${type}-type__input`}
-            clearable={true}
-            value={newType}
-            onChange={(option) => onTypeChange(option ? option.value : null)}
-            onBlur={() => null}
-            autoFocus={false}
-            options={resolveSelectOptions(typeOptions, newType)}
-            placeholder={resolveSelectPlaceHolder(type)}
-            promptTextCreator={onPromptCreate}
-          />
-          : <input
-            type='text'
-            className='form-control'
-            value={newType}
-            onChange={onTypeInputChange}
-            onSubmit={submit}
-            placeholder={resolveTypePlaceHolder(type)}
-          />
-        }
-      </div>
-    }
+      {type !== 'action' && (
+        <div className='col-xs-12 col-md-6 add-element-col'>
+          {typeOptions.length !== 0
+            ? <Select.Creatable
+              autoBlur={true}
+              openOnFocus={true}
+              className={`form-control edit-${type}-type__input`}
+              clearable={true}
+              value={newType}
+              onChange={(option) => onTypeChange(option ? option.value : null)}
+              onBlur={() => null}
+              autoFocus={false}
+              options={resolveSelectOptions(typeOptions, newType)}
+              placeholder={resolveSelectPlaceHolder(type)}
+              promptTextCreator={onPromptCreate}
+            />
+            : <input
+              type='text'
+              className='form-control'
+              value={newType}
+              onChange={onTypeInputChange}
+              onSubmit={submit}
+              placeholder={resolveTypePlaceHolder(type)}
+            />
+          }
+        </div>
+      )}
       <div className='col-xs-12 col-md-6 add-element-col'>
         <input
-        type='text'
-        className='form-control'
-        value={newTypeSpecifier}
-        onChange={onTypeSpecifierChange}
-        onSubmit={submit}
-        placeholder={resolveSpecifierPlaceHolder(type)}/>
+          type='text'
+          className='form-control'
+          value={newTypeSpecifier}
+          onChange={onTypeSpecifierChange}
+          onSubmit={submit}
+          placeholder={resolveSpecifierPlaceHolder(type)}
+        />
       </div>
       {!isEmpty(defaultAttributes) &&
       Object.keys(defaultAttributes).map(key => (
@@ -173,16 +174,14 @@ export const AddElementInput = ({
             />
           }
         </div>
-      ))
-    }
+      ))}
       <div className='add-element-buttons'>
         <button className='btn btn-success' onClick={onAddFormShowMore}>{showMoreOrLess ? 'Näytä vähemmän' : 'Näytä lisää'}</button>
         <button className='btn btn-danger' onClick={cancel}>Peruuta</button>
         <button className='btn btn-primary' type='submit'>OK</button>
       </div>
     </form>
-  )
-;
+  );
 };
 
 AddElementInput.propTypes = {

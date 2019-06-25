@@ -26,14 +26,14 @@ export class Header extends React.Component {
             to='/'
             className='brand-title navbar-brand logo'
             onClick={() => this.props.fetchNavigation(false)}
-            >
+          >
             <Logo />
           </Link>
           <Link
             to='/'
             className='brand-title navbar-brand'
             onClick={() => this.props.fetchNavigation(false)}
-            >
+          >
             Tiedonohjaus
           </Link>
           <p className='navbar-text'>
@@ -45,7 +45,7 @@ export class Header extends React.Component {
               <Link
                 to='bulk'
                 className='navbar-link'
-                >
+              >
                 Massamuutos
               </Link>
             </p>
@@ -55,7 +55,7 @@ export class Header extends React.Component {
               to={FEEDBACK_URL}
               target='_blank'
               className='navbar-link'
-              >
+            >
               Anna palautetta
             </Link>
           </p>

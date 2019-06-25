@@ -215,25 +215,25 @@ export class ValidationBar extends Component {
           </h3>
           <div className='sidebar-filter'>
             <button
-                className={classnames(
+              className={classnames(
                 'sidebar-filter-all btn btn-sm',
                 { 'btn-default': filter === '' }
-                )}
-                onClick={() => this.onFilterChange('')}>
+              )}
+              onClick={() => this.onFilterChange('')}>
                 Kaikki
             </button>
             <button
               className={classnames(
-              'sidebar-filter-warn btn btn-sm',
-              { 'btn-default': filter === VALIDATION_FILTER_WARN }
+                'sidebar-filter-warn btn btn-sm',
+                { 'btn-default': filter === VALIDATION_FILTER_WARN }
               )}
               onClick={() => this.onFilterChange(VALIDATION_FILTER_WARN)}>
               <i className='fa fa-exclamation-circle' /> Huomautukset
             </button>
             <button
               className={classnames(
-              'sidebar-filter-error btn btn-sm',
-              { 'btn-default': filter === VALIDATION_FILTER_ERROR }
+                'sidebar-filter-error btn btn-sm',
+                { 'btn-default': filter === VALIDATION_FILTER_ERROR }
               )}
               onClick={() => this.onFilterChange(VALIDATION_FILTER_ERROR)}>
               <i className='fa fa-exclamation-triangle' /> Virheet
