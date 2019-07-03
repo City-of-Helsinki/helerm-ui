@@ -388,7 +388,9 @@ export class BulkCreateView extends React.Component {
 
   onSave () {
     if (this.state.conversions) {
-      this.setState({ isSaving: true, state: 'draft' });
+      const { conversionItems } = this.state;
+      const isErrors = some(keys(conversionItems), id => conversionItems[id].selected && !isEmpty(conversionItems[id].errors));
+      this.setState({ isSaving: true, state: 'draft', isValid: !isErrors });
     }
   }
 
