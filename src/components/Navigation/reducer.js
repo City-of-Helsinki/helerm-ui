@@ -19,13 +19,16 @@ export const RECEIVE_NAVIGATION = 'receiveNavigationAction';
 export const SET_NAVIGATION_VISIBILITY = 'setNavigationVisibilityAction';
 export const NAVIGATION_ERROR = 'navigationErrorAction';
 
-export function requestNavigation (includeRelated) {
-  return createAction(REQUEST_NAVIGATION)(includeRelated);
+export function requestNavigation () {
+  return createAction(REQUEST_NAVIGATION)();
 }
 
-export function receiveNavigation (items) {
+export function receiveNavigation (items, includeRelated) {
   const orderedTree = convertToTree(items);
-  return createAction(RECEIVE_NAVIGATION)(orderedTree);
+  return createAction(RECEIVE_NAVIGATION)({
+    items: orderedTree,
+    includeRelated
+  });
 }
 
 export function setNavigationVisibility (value) {
@@ -34,11 +37,11 @@ export function setNavigationVisibility (value) {
 
 export function fetchNavigation (includeRelated = false) {
   return function (dispatch) {
-    dispatch(requestNavigation(includeRelated));
+    dispatch(requestNavigation());
     return api.get('classification', { include_related: includeRelated, page_size: RESULTS_PER_PAGE || DEFAULT_PAGE_SIZE })
       .then(response => response.json())
       .then(json =>
-        dispatch(receiveNavigation(json))
+        dispatch(receiveNavigation(json, includeRelated))
       )
       .catch(() => dispatch(createAction(NAVIGATION_ERROR)()));
   };
@@ -52,9 +55,8 @@ const navigationErrorAction = (state) => {
   });
 };
 
-const requestNavigationAction = (state, { payload }) => {
+const requestNavigationAction = (state) => {
   return update(state, {
-    includeRelated: { $set: payload },
     isFetching: {
       $set: true
     }
@@ -63,7 +65,8 @@ const requestNavigationAction = (state, { payload }) => {
 
 const receiveNavigationAction = (state, { payload }) => {
   return update(state, {
-    items: { $set: payload },
+    items: { $set: payload.items },
+    includeRelated: { $set: payload.includeRelated },
     isFetching: { $set: false },
     timestamp: { $set: Date.now().toString() }
   });

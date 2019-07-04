@@ -26,7 +26,7 @@ const mapStateToProps = state => ({
   isFetchingNavigation: state.navigation.isFetching,
   isUpdating: state.bulk.isUpdating,
   itemsIncludeRelated: state.navigation.includeRelated,
-  items: state.navigation.items,
+  items: state.navigation.includeRelated ? state.navigation.items : [],
   phaseTypes: state.ui.phaseTypes,
   recordTypes: state.ui.recordTypes,
   selectedBulk: state.bulk.selectedBulk,
