@@ -22,7 +22,7 @@ $yellow30:   #f8d362;
 $yellow05:   #fefb8d;
 
 $green00:   #00634f;
-$green50:   #009c3d;
+$green50:   #009246;
 
 $red00: #E74022;
 
@@ -43,7 +43,7 @@ $gray-dark:              $black50 !default;   // #333
 $gray-light:             darken($black05,10%) !default;   // #999
 $gray-lighter:           $black05 !default; // #eee
 
-$brand-primary:         $blue50 !default;
+$brand-primary:         $themeColor !default;
 $brand-success:         $green50 !default;
 $brand-info:            $blue00 !default;
 $brand-warning:         $yellow00 !default;

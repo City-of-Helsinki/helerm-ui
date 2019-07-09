@@ -9,6 +9,23 @@ const debug = require('debug')('app:webpack:config');
 const __DEV__ = config.globals.__DEV__;
 const __PROD__ = config.globals.__PROD__;
 const __TEST__ = config.globals.__TEST__;
+const THEMES = {
+  black: '#000000',
+  brick: '#bd2719',
+  bus: '#0000bf',
+  copper: '#00d7a7',
+  coat: '#0072c6',
+  engel: '#ffe977',
+  fog: '#9fc9eb',
+  gold: '#c2a251',
+  metro: '#fd4f00',
+  silver: '#dedfe1',
+  summer: '#ffc61e',
+  suomenlinna: '#f5a3c7',
+  tram: '#009246',
+  white: '#ffffff'
+};
+const SITE_THEME = config.globals.SITE_THEME.toLowerCase();
 
 const extractStyles = new ExtractTextPlugin({
   filename: 'styles/[name].[contenthash].css',
@@ -77,7 +94,8 @@ const webpackConfig = {
               loader: 'sass-loader',
               options: {
                 sourceMap: true,
-                includePaths: ['src/styles']
+                includePaths: ['src/styles'],
+                data: `$themeColor: ${THEMES[SITE_THEME] || THEMES.coat};`
               }
             }
           ]
