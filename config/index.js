@@ -87,6 +87,7 @@ config.globals = {
   RESULTS_PER_PAGE: JSON.stringify(process.env.RESULTS_PER_PAGE),
   STORAGE_PREFIX: JSON.stringify(process.env.STORAGE_PREFIX || 'HELERM'),
   FEEDBACK_URL: JSON.stringify(process.env.FEEDBACK_URL),
+  SITE_THEME: process.env.SITE_THEME || 'coat',
   SITE_TITLE: JSON.stringify(process.env.SITE_TITLE || '')
 };
 
