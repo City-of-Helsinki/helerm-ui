@@ -171,7 +171,7 @@
     "eslint-plugin-standard": "^2.0.0",
     "husky": "^0.14.3",
     "isomorphic-fetch": "^2.2.1",
-    "karma": "^1.0.0",
+    "karma": "^4.2.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-coverage": "^1.0.0",
     "karma-mocha": "^1.0.1",
