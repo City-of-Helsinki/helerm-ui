@@ -77,11 +77,11 @@ const itemTarget = {
 export class ReorderItem extends React.Component {
   getLabels (labels) {
     const elements = [];
-    for (const label of labels) {
+    labels.forEach(label => {
       elements.push(
         <span key={label} className='reorder-label'>{label}</span>
       );
-    }
+    });
     return elements;
   }
 

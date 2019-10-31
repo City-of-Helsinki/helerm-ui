@@ -28,13 +28,11 @@ export function addAction (typeSpecifier, actionType, actionAttibutes, phaseInde
 export function editAction (attributes, actionId) {
   let editedAttributes = {};
 
-  for (const key in attributes) {
-    if (attributes.hasOwnProperty(key)) {
-      if (attributes[key].checked === true) {
-        editedAttributes[key] = attributes[key].value;
-      }
+  Object.keys(attributes).forEach(key => {
+    if (attributes.hasOwnProperty(key) && attributes[key].checked) {
+      editedAttributes[key] = attributes[key].value;
     }
-  }
+  });
 
   const editedAction = Object.assign({}, {
     attributes: editedAttributes
@@ -136,11 +134,11 @@ export const removeActionAction = (state, { payload }) => {
   );
 
   const recordsUnderAction = stateCopy.actions[payload.actionToRemove].records;
-  for (const record in stateCopy.records) {
-    if (includes(recordsUnderAction, record)) {
-      delete stateCopy.records[record];
+  Object.keys(stateCopy.records).forEach(key => {
+    if (includes(recordsUnderAction, key)) {
+      delete stateCopy.records[key];
     }
-  }
+  });
 
   delete stateCopy.actions[payload.actionToRemove];
   return update(state, {

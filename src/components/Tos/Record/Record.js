@@ -124,11 +124,11 @@ export class Record extends React.Component {
 
   showAttributeButton (attributes) {
     const actualAttributes = [];
-    for (const key in attributes) {
+    Object.keys(attributes).forEach(key => {
       if (key !== 'TypeSpecifier' && key !== 'RecordType') {
         actualAttributes.push(key);
       }
-    }
+    });
     if (actualAttributes.length) {
       return true;
     }

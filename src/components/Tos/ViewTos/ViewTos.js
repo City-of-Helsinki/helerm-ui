@@ -254,16 +254,17 @@ export class ViewTOS extends React.Component {
   }
 
   evaluateAttributes (items, validate, attributeTypes) {
-    if (Object.keys(items).length > 0) {
-      for (const item in items) {
+    let isValid = true;
+    Object.keys(items).forEach(item => {
+      if (items.hasOwnProperty(item)) {
         const validAttributes =
           validate(items[item], attributeTypes).length === 0;
         if (!validAttributes) {
-          return false;
+          isValid = false;
         }
       }
-    }
-    return true;
+    });
+    return isValid;
   }
 
   setDocumentState (state) {
@@ -452,7 +453,7 @@ export class ViewTOS extends React.Component {
 
   generateDefaultAttributes (attributeTypes, type) {
     const attributes = {};
-    for (const key in attributeTypes) {
+    Object.keys(attributeTypes).forEach(key => {
       if (attributeTypes.hasOwnProperty(key) && ((this.state.showMore && attributeTypes[key].allowedIn.indexOf(type) >= 0 && key !== 'PhaseType') || (!this.state.showMore && attributeTypes[key].defaultIn.indexOf(type) >= 0)) && key !== 'TypeSpecifier') {
         attributes[key] = attributeTypes[key];
 
@@ -466,7 +467,7 @@ export class ViewTOS extends React.Component {
           attributes[key] = attributeTypes[key];
         }
       }
-    }
+    });
     return attributes;
   }
 
@@ -481,14 +482,14 @@ export class ViewTOS extends React.Component {
   generateTypeOptions (typeOptions) {
     const options = [];
 
-    for (const key in typeOptions) {
+    Object.keys(typeOptions).forEach(key => {
       if (typeOptions.hasOwnProperty(key)) {
         options.push({
           label: typeOptions[key].value,
           value: typeOptions[key].value
         });
       }
-    }
+    });
 
     return options;
   }
@@ -541,7 +542,7 @@ export class ViewTOS extends React.Component {
     } = this.props.selectedTOS;
     const attributeElements = [];
 
-    for (const key in attributeTypes) {
+    Object.keys(attributeTypes).forEach(key => {
       if (attributes.hasOwnProperty(key) && attributes[key] || key === 'InformationSystem') {
         attributeElements.push(
           <Attribute
@@ -561,7 +562,7 @@ export class ViewTOS extends React.Component {
           />
         );
       }
-    }
+    });
 
     return (
       <div>
@@ -580,7 +581,7 @@ export class ViewTOS extends React.Component {
   generatePhases (phases, phasesOrder) {
     const phaseElements = [];
     if (phases) {
-      for (const key in phases) {
+      Object.keys(phases).forEach(key => {
         if (phases.hasOwnProperty(key)) {
           phaseElements.push(
             <Phase
@@ -618,7 +619,7 @@ export class ViewTOS extends React.Component {
             />
           );
         }
-      }
+      });
     }
     return phaseElements;
   }

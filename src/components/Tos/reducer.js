@@ -104,13 +104,13 @@ export function resetTOS (originalTos) {
 export function editMetaData (attributes) {
   let editedMetaData = {};
 
-  for (const key in attributes) {
+  Object.keys(attributes).forEach(key => {
     if (attributes.hasOwnProperty(key)) {
       if (attributes[key].checked === true) {
         editedMetaData = Object.assign({}, editedMetaData, { [key]: attributes[key].value });
       }
     }
-  }
+  });
 
   return createAction(EDIT_META_DATA)(editedMetaData);
 }
@@ -206,7 +206,7 @@ export function setTosVisibility (tos, basicVisibility, metaDataVisibility) {
   const allActionsOpen = {};
   const allRecordsOpen = {};
   const { actions, phases, records } = tos;
-  for (const key in phases) {
+  Object.keys(phases).forEach(key => {
     if (phases.hasOwnProperty(key)) {
       allPhasesOpen[key] = update(phases[key], {
         is_attributes_open: {
@@ -216,7 +216,7 @@ export function setTosVisibility (tos, basicVisibility, metaDataVisibility) {
           $set: basicVisibility
         }
       });
-      for (const actionKey in actions) {
+      Object.keys(actions).forEach(actionKey => {
         if (actions.hasOwnProperty(actionKey)) {
           allActionsOpen[actionKey] = update(actions[actionKey], {
             is_open: {
@@ -224,7 +224,7 @@ export function setTosVisibility (tos, basicVisibility, metaDataVisibility) {
             }
           });
         }
-        for (const recordKey in records) {
+        Object.keys(records).forEach(recordKey => {
           if (records.hasOwnProperty(recordKey)) {
             allRecordsOpen[recordKey] = update(records[recordKey], {
               is_open: {
@@ -232,10 +232,10 @@ export function setTosVisibility (tos, basicVisibility, metaDataVisibility) {
               }
             });
           }
-        }
-      }
+        });
+      });
     }
-  }
+  });
   return createAction(SET_TOS_VISIBILITY)({ actions: allActionsOpen, phases: allPhasesOpen, records: allRecordsOpen, metaDataVisibility });
 }
 

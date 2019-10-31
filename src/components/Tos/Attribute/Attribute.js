@@ -175,14 +175,14 @@ export class Attribute extends React.Component {
 
   generateBasicAttributeDropdown (typeOptions, activeElement) {
     const options = [];
-    for (const key in typeOptions) {
+    Object.keys(typeOptions).forEach(key => {
       if (typeOptions.hasOwnProperty(key)) {
         options.push({
           label: typeOptions[key].value,
           value: typeOptions[key].value
         });
       }
-    }
+    });
     if (this.state.attribute) {
       const valueArray =
         this.state.attribute instanceof Array

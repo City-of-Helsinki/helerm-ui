@@ -50,14 +50,12 @@ function resolvePlaceHolder (fieldName) {
 
 function resolveSelectOptions (values, fieldValue) {
   const options = [];
-  for (const key in values) {
-    if (values.hasOwnProperty(key)) {
-      options.push({
-        label: values[key].value,
-        value: values[key].value
-      });
-    }
-  }
+  Object.keys(values).forEach(key => {
+    options.push({
+      label: values[key].value,
+      value: values[key].value
+    });
+  });
   if (fieldValue) {
     const valueArray =
       fieldValue instanceof Array

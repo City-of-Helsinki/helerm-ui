@@ -19,13 +19,13 @@ export const Attributes = ({
 }) => {
   const unwantedAttributes = ['TypeSpecifier', 'RecordType', 'ActionType', 'PhaseType'];
   const defaultAttributes = [];
-  for (const key in attributeTypes) {
+  Object.keys(attributeTypes).forEach(key => {
     if (attributeTypes.hasOwnProperty(key) &&
         attributeTypes[key].defaultIn.indexOf(type) >= 0 &&
         !includes(unwantedAttributes, key)) {
       defaultAttributes.push(key);
     }
-  }
+  });
 
   function generateDescriptions (element) {
     const descriptions = [];
@@ -102,7 +102,7 @@ export const Attributes = ({
   function generateAttributes (attributes) {
     const attributeElements = [];
 
-    for (const key in attributeTypes) {
+    Object.keys(attributeTypes).forEach(key => {
       if (attributes.hasOwnProperty(key) && attributes[key] &&
           attributeTypes[key] &&
           !includes(unwantedAttributes, key) &&
@@ -123,7 +123,7 @@ export const Attributes = ({
             showAttributes={showAttributes}
           />);
       }
-    }
+    });
 
     return attributeElements;
   }

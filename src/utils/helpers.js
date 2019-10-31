@@ -128,36 +128,51 @@ export function normalizeTosForApi (tos) {
  * @returns {*}
  */
 export function trimAttributes (tosCopy) {
-  for (const phase in tosCopy.phases) {
-    for (const attribute in tosCopy.phases[phase].attributes) {
-      if (
-        tosCopy.phases[phase].attributes[attribute] === '' ||
-        tosCopy.phases[phase].attributes[attribute] === null
-      ) {
-        delete tosCopy.phases[phase].attributes[attribute];
-      }
+  Object.keys(tosCopy.phases).forEach(phase => {
+    if (tosCopy.phases.hasOwnProperty(phase)) {
+      Object.keys(tosCopy.phases[phase].attributes).forEach(attribute => {
+        if (
+          tosCopy.phases[phase].attributes.hasOwnProperty(attribute) &&
+          (
+            tosCopy.phases[phase].attributes[attribute] === '' ||
+            tosCopy.phases[phase].attributes[attribute] === null
+          )
+        ) {
+          delete tosCopy.phases[phase].attributes[attribute];
+        }
+      });
     }
-  }
-  for (const action in tosCopy.actions) {
-    for (const attribute in tosCopy.actions[action].attributes) {
-      if (
-        tosCopy.actions[action].attributes[attribute] === '' ||
-        tosCopy.actions[action].attributes[attribute] === null
-      ) {
-        delete tosCopy.actions[action].attributes[attribute];
-      }
+  });
+  Object.keys(tosCopy.actions).forEach(action => {
+    if (tosCopy.actions.hasOwnProperty(action)) {
+      Object.keys(tosCopy.actions[action].attributes).forEach(attribute => {
+        if (
+          tosCopy.actions[action].attributes.hasOwnProperty(attribute) &&
+          (
+            tosCopy.actions[action].attributes[attribute] === '' ||
+            tosCopy.actions[action].attributes[attribute] === null
+          )
+        ) {
+          delete tosCopy.actions[action].attributes[attribute];
+        }
+      });
     }
-  }
-  for (const record in tosCopy.records) {
-    for (const attribute in tosCopy.records[record].attributes) {
-      if (
-        tosCopy.records[record].attributes[attribute] === '' ||
-        tosCopy.records[record].attributes[attribute] === null
-      ) {
-        delete tosCopy.records[record].attributes[attribute];
-      }
+  });
+  Object.keys(tosCopy.records).forEach(record => {
+    if (tosCopy.records.hasOwnProperty(record)) {
+      Object.keys(tosCopy.records[record].attributes).forEach(attribute => {
+        if (
+          tosCopy.records[record].attributes.hasOwnProperty(attribute) &&
+          (
+            tosCopy.records[record].attributes[attribute] === '' ||
+            tosCopy.records[record].attributes[attribute] === null
+          )
+        ) {
+          delete tosCopy.records[record].attributes[attribute];
+        }
+      });
     }
-  }
+  });
 
   return tosCopy;
 }
