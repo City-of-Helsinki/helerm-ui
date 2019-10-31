@@ -207,7 +207,7 @@ export class ViewTOS extends React.Component {
       .fetchTOS(id, params)
       .then(() => {
         this.props.setNavigationVisibility(false);
-        this.setTosVisibility(true, true);
+        this.setTosVisibility(true, false);
       })
       .catch(err => {
         if (err instanceof URIError) {

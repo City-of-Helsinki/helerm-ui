@@ -236,7 +236,13 @@ export function setTosVisibility (tos, basicVisibility, metaDataVisibility) {
       });
     }
   });
-  return createAction(SET_TOS_VISIBILITY)({ actions: allActionsOpen, phases: allPhasesOpen, records: allRecordsOpen, metaDataVisibility });
+  return createAction(SET_TOS_VISIBILITY)({
+    actions: allActionsOpen,
+    phases: allPhasesOpen,
+    records: allRecordsOpen,
+    basicVisibility,
+    metaDataVisibility
+  });
 }
 
 export function setVersionVisibility (visibility) {
@@ -374,10 +380,10 @@ const setMetadataVisibilityAction = (state, { payload }) => {
 };
 
 const setTosVisibilityAction = (state, { payload }) => {
-  const { actions, phases, records, metaDataVisibility } = payload;
+  const { actions, phases, records, basicVisibility, metaDataVisibility } = payload;
   return update(state, {
     actions: { $set: actions },
-    is_classification_open: { $set: metaDataVisibility },
+    is_classification_open: { $set: basicVisibility },
     is_open: { $set: metaDataVisibility },
     is_version_open: { $set: metaDataVisibility },
     phases: { $set: phases },
