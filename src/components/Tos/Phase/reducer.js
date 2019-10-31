@@ -31,13 +31,13 @@ export function addPhase (typeSpecifier, phaseType, phaseAttributes, parent) {
 export function editPhase (attributes, phaseId) {
   let editedAttributes = {};
 
-  for (const key in attributes) {
+  Object.keys(attributes).forEach(key => {
     if (attributes.hasOwnProperty(key)) {
       if (attributes[key].checked === true) {
         editedAttributes[key] = attributes[key].value;
       }
     }
-  }
+  });
 
   const editedPhase = Object.assign({}, {
     attributes: editedAttributes
@@ -64,7 +64,7 @@ export function setPhaseVisibility (phase, visibility) {
 
 export function setPhasesVisibility (phases, value) {
   const allPhasesOpen = {};
-  for (const key in phases) {
+  Object.keys(phases).keys(key => {
     if (phases.hasOwnProperty(key)) {
       allPhasesOpen[key] = update(phases[key], {
         is_open: {
@@ -72,7 +72,7 @@ export function setPhasesVisibility (phases, value) {
         }
       });
     }
-  }
+  });
   return createAction(SET_PHASES_VISIBILITY)(allPhasesOpen);
 }
 

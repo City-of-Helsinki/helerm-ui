@@ -9,19 +9,19 @@ import { includes, difference, uniq } from 'lodash';
  */
 export const validateConditionalRules = (key, attributeTypes, attributes) => {
   const requiredIf = attributeTypes[key].requiredIf;
-  for (const attribute in attributes) {
+  Object.keys(attributes).forEach(attribute => {
     // for each attribute
-    for (const item in requiredIf) {
+    Object.keys(requiredIf).forEach(item => {
       // for each item in requiredIf
-      if (requiredIf[item].key === attribute) {
+      if (requiredIf.hasOwnProperty(item) && requiredIf[item].key === attribute) {
         // if requiredIf has attribute
         if (includes(requiredIf[item].values, attributes[attribute].value)) {
           // if requiredIf has same value as attribute
           return true;
         }
       }
-    }
-  }
+    });
+  });
   return false;
 };
 
@@ -34,44 +34,46 @@ export const validateConditionalRules = (key, attributeTypes, attributes) => {
  */
 const createValidateErrors = type => (obj, rules) => {
   const errors = [];
-  for (const key in rules) {
-    const rule = rules[key];
-    const isRequired = rules[key].required;
-    const isRequiredInType = includes(rule.requiredIn, type);
-    const objHasRuleAttribute = !!obj.attributes[key];
-    const isAttributeAllowedInType = includes(rules[key].allowedIn, type);
-    const isValid =
-      includes(rule.values.map(obj => obj.value), obj.attributes[key]) ||
-      rule.values.length === 0;
-    const allowValuesOutsideChoices = includes(
-      rule.allowValuesOutsideChoicesIn,
-      type
-    );
-    if (
-      (isRequired && isRequiredInType && !objHasRuleAttribute) ||
-      (objHasRuleAttribute && !isValid && !allowValuesOutsideChoices) ||
-      (!isAttributeAllowedInType && objHasRuleAttribute)
-    ) {
-      errors.push(key);
-    }
+  Object.keys(rules).forEach(key => {
+    if (rules.hasOwnProperty(key)) {
+      const rule = rules[key];
+      const isRequired = rules[key].required;
+      const isRequiredInType = includes(rule.requiredIn, type);
+      const objHasRuleAttribute = !!obj.attributes[key];
+      const isAttributeAllowedInType = includes(rules[key].allowedIn, type);
+      const isValid =
+        includes(rule.values.map(obj => obj.value), obj.attributes[key]) ||
+        rule.values.length === 0;
+      const allowValuesOutsideChoices = includes(
+        rule.allowValuesOutsideChoicesIn,
+        type
+      );
+      if (
+        (isRequired && isRequiredInType && !objHasRuleAttribute) ||
+        (objHasRuleAttribute && !isValid && !allowValuesOutsideChoices) ||
+        (!isAttributeAllowedInType && objHasRuleAttribute)
+      ) {
+        errors.push(key);
+      }
 
-    const isConditionallyRequired = rule.requiredIf.length !== 0;
-    if (isConditionallyRequired) {
-      for (const item of rule.requiredIf) {
-        const predicateValue = obj.attributes[item.key];
-        const hasPredicate = typeof predicateValue === 'string';
-        const isRequired =
-          hasPredicate && includes(item.values, predicateValue);
+      const isConditionallyRequired = rule.requiredIf.length !== 0;
+      if (isConditionallyRequired) {
+        rule.requiredIf.forEach(item => {
+          const predicateValue = obj.attributes[item.key];
+          const hasPredicate = typeof predicateValue === 'string';
+          const isRequired =
+            hasPredicate && includes(item.values, predicateValue);
 
-        if (
-          (isRequired && !objHasRuleAttribute) ||
-          (!isRequired && objHasRuleAttribute)
-        ) {
-          errors.push(key);
-        }
+          if (
+            (isRequired && !objHasRuleAttribute) ||
+            (!isRequired && objHasRuleAttribute)
+          ) {
+            errors.push(key);
+          }
+        });
       }
     }
-  }
+  });
   return errors;
 };
 
@@ -81,23 +83,25 @@ const createValidateErrors = type => (obj, rules) => {
  */
 const createValidateWarnings = type => (obj, rules) => {
   const warnings = [];
-  for (const key in rules) {
-    const rule = rules[key];
-    const attributeValue = obj.attributes[key];
-    const allowOutsideValues = includes(
-      rule.allowValuesOutsideChoicesIn,
-      type
-    );
+  Object.keys(rules).forEach(key => {
+    if (rules.hasOwnProperty(key)) {
+      const rule = rules[key];
+      const attributeValue = obj.attributes[key];
+      const allowOutsideValues = includes(
+        rule.allowValuesOutsideChoicesIn,
+        type
+      );
 
-    if (
-      attributeValue &&
-      rule.values.length &&
-      !isValueValidOption(attributeValue, rule.values) &&
-      allowOutsideValues
-    ) {
-      warnings.push(key);
+      if (
+        attributeValue &&
+        rule.values.length &&
+        !isValueValidOption(attributeValue, rule.values) &&
+        allowOutsideValues
+      ) {
+        warnings.push(key);
+      }
     }
-  }
+  });
   return uniq(warnings);
 };
 

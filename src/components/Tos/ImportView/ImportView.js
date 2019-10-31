@@ -96,7 +96,7 @@ export class ImportView extends React.Component {
     if (!items.length) {
       itemsInArray = Object.keys(items); // Because items mutates into object for unknown reason
     }
-    for (const key in itemsInArray) {
+    Object.keys(itemsInArray).forEach(key => {
       if (itemsInArray.hasOwnProperty(key)) {
         links.push(
           <div key={key} className='col-xs-12'>
@@ -109,7 +109,7 @@ export class ImportView extends React.Component {
           </div>
         );
       }
-    }
+    });
     return links;
   }
 

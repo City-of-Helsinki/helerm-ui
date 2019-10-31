@@ -258,25 +258,25 @@ export class Phase extends React.Component {
   generateTypeOptions (typeOptions) {
     const options = [];
 
-    for (const key in typeOptions) {
+    Object.keys(typeOptions).forEach(key => {
       if (typeOptions.hasOwnProperty(key)) {
         options.push({
           label: typeOptions[key].name,
           value: typeOptions[key].name
         });
       }
-    }
+    });
 
     return options;
   }
 
   generateDefaultAttributes (attributeTypes, type, showMore) {
     const attributes = {};
-    for (const key in attributeTypes) {
+    Object.keys(attributeTypes).forEach(key => {
       if (attributeTypes.hasOwnProperty(key) && ((this.state.showMore && attributeTypes[key].allowedIn.indexOf(type) >= 0 && key !== 'ActionType') || (!this.state.showMore && attributeTypes[key].defaultIn.indexOf(type) >= 0)) && key !== 'TypeSpecifier') {
         attributes[key] = attributeTypes[key];
       }
-    }
+    });
     return attributes;
   }
 
@@ -290,7 +290,7 @@ export class Phase extends React.Component {
 
   generateActions (actions) {
     const elements = [];
-    for (const key in actions) {
+    Object.keys(actions).forEach(key => {
       if (actions.hasOwnProperty(key)) {
         elements.push(
           <Action
@@ -322,7 +322,7 @@ export class Phase extends React.Component {
           />
         );
       }
-    }
+    });
     return elements;
   }
 
@@ -370,16 +370,16 @@ export class Phase extends React.Component {
   showAttributeButton (attributes) {
     const { attributeTypes } = this.props;
     const actualAttributes = [];
-    for (const key in attributes) {
+    Object.keys(attributes).forEach(key => {
       if (key !== 'TypeSpecifier' && key !== 'PhaseType') {
         actualAttributes.push(key);
       }
-    }
-    for (const key in attributeTypes) {
+    });
+    Object.keys(attributeTypes).forEach(key => {
       if (attributeTypes.hasOwnProperty(key) && attributeTypes[key].defaultIn.indexOf('phase') >= 0) {
         actualAttributes.push(key);
       }
-    }
+    });
     if (actualAttributes.length) {
       return true;
     }

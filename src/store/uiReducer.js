@@ -30,11 +30,11 @@ export function receiveAttributeTypes (attributes, validationRules) {
       let allowValuesOutsideChoicesIn = [];
 
       // Add rules where attribute is allowed to be
-      for (const rule in validationRules) {
-        if (validationRules[rule].properties[result.identifier]) {
+      Object.keys(validationRules).forEach(rule => {
+        if (validationRules.hasOwnProperty(rule) && validationRules[rule].properties[result.identifier]) {
           allowedIn.push(rule);
         }
-      }
+      });
 
       // Add basic required if so
       validationRules.record.required.map(rule => {

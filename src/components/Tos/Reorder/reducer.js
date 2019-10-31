@@ -39,7 +39,7 @@ export function executeOrderChange (newOrder, itemType, itemParent, currentState
     parentList.push(item.id);
   });
   let itemList = Object.assign({}, currentState.selectedTOS[itemLevel]);
-  for (const key in itemList) {
+  Object.keys(itemList).forEach(key => {
     if (itemList.hasOwnProperty(key)) {
       reorderedList.map(item => {
         if (itemList[key].id === item.id) {
@@ -47,7 +47,7 @@ export function executeOrderChange (newOrder, itemType, itemParent, currentState
         }
       });
     }
-  }
+  });
 
   itemList = parentLevel === 'tos'
     ? reorderedList.reduce((result, item) => {

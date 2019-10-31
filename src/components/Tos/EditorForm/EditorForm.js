@@ -29,7 +29,7 @@ export class EditorForm extends React.Component {
   initializeAttributes (attributeTypes) {
     const { attributes } = this.props;
     let initialState = {};
-    for (const key in attributeTypes) {
+    Object.keys(attributeTypes).forEach(key => {
       if (attributeTypes.hasOwnProperty(key)) {
         initialState = Object.assign({}, initialState, {
           [key]: {
@@ -38,7 +38,7 @@ export class EditorForm extends React.Component {
           }
         });
       }
-    }
+    });
     return initialState;
   }
 
@@ -105,16 +105,12 @@ export class EditorForm extends React.Component {
   getAttributesToShow (attributeTypes, attributes) {
     const { newAttributes } = this.state;
     const attributesToShow = [];
-    const getAttributeKeys = attributes => {
-      const attributeKeys = [];
-      for (const key in attributes) {
-        attributeKeys.push(key);
-      }
-      return attributeKeys;
-    };
-
-    for (const attributeType in attributeTypes) {
+    const getAttributeKeys = attributes => Object.keys(attributes);
+    const attributeTypeKeys = Object.keys(attributeTypes);
+    for (let k = 0; k < attributeTypeKeys.length; k++) {
+      const attributeType = attributeTypeKeys[k];
       if (
+        attributeTypes.hasOwnProperty(attributeType) &&
         includes(
           attributeTypes[attributeType].allowedIn,
           this.props.editorConfig.type
@@ -153,8 +149,9 @@ export class EditorForm extends React.Component {
   getComplementAttributes (attributeTypes, attributesToShow) {
     const { newAttributes } = this.state;
     const complementAttributes = [];
-    for (const key in attributeTypes) {
+    Object.keys(attributeTypes).forEach(key => {
       if (
+        attributeTypes.hasOwnProperty(key) &&
         includes(attributeTypes[key].allowedIn, this.props.editorConfig.type)
       ) {
         if (attributeTypes[key].requiredIf.length) {
@@ -168,7 +165,7 @@ export class EditorForm extends React.Component {
           complementAttributes.push(key);
         }
       }
-    }
+    });
 
     return this.prepareAttributes(complementAttributes);
   }
@@ -217,7 +214,7 @@ export class EditorForm extends React.Component {
     const attributeElements = [];
 
     if (attributesToShow.length) {
-      for (const key of attributesToShow) {
+      attributesToShow.forEach(key => {
         if (attributeTypes.hasOwnProperty(key)) {
           if (attributeTypes[key].values.length) {
             const options = this.mapOptions(attributeTypes[key].values);
@@ -301,7 +298,7 @@ export class EditorForm extends React.Component {
             );
           }
         }
-      }
+      });
     } else {
       attributeElements.push(
         // <div key='no-fields' className='no-fields'>Ei täydennettäviä metatietoja</div>
@@ -337,11 +334,11 @@ export class EditorForm extends React.Component {
 
   filterAttributes (attributes) {
     const filteredAttributes = Object.assign({}, attributes);
-    for (const key in filteredAttributes) {
-      if (!filteredAttributes[key].value) {
+    Object.keys(filteredAttributes).forEach(key => {
+      if (filteredAttributes.hasOwnProperty(key) && !filteredAttributes[key].value) {
         delete filteredAttributes[key];
       }
-    }
+    });
     return filteredAttributes;
   }
 

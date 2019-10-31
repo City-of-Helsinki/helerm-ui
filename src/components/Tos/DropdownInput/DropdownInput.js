@@ -96,21 +96,21 @@ export const DropdownInput = ({
           : onChange(option ? option.value : null);
       }
     };
-    for (const key in options) {
+    Object.keys(options).forEach(key => {
       if (options.hasOwnProperty(key)) {
         optionsArray.push({
           label: options[key].value,
           value: options[key].value
         });
       }
-    }
+    });
     const missingOptions = getMissingValueOptions(valueState, optionsArray);
-    for (const key in missingOptions) {
+    missingOptions.forEach(option => {
       optionsArray.push({
-        label: missingOptions[key],
-        value: missingOptions[key]
+        label: option,
+        value: option
       });
-    }
+    });
     return (
       <Select.Creatable
         className={selectClassName}

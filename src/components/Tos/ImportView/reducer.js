@@ -20,30 +20,29 @@ export function executeImport (newItem, level, itemParent, currentState) {
   switch (level) {
     case 'phase':
       let phaseIndexes = [];
-      for (const key in importPhases) {
+      Object.keys(importPhases).forEach(key => {
         if (importPhases.hasOwnProperty(key)) {
           phaseIndexes.push(importPhases[key].index);
         }
-      }
+      });
       const newPhaseId = Math.random().toString(36).replace(/[^a-z]+/g, '');
 
       if (importPhases[newItem].actions) {
-        for (const childAction of importPhases[newItem].actions) {
+        importPhases[newItem].actions.forEach(childAction => {
           const newActionId = Math.random().toString(36).replace(/[^a-z]+/g, '');
           const newActionRecords = [];
-
           if (importActions[childAction].records) {
-            for (const childRecord of importActions[childAction].records) {
+            importActions[childAction].records.forEach(childRecord => {
               const newRecordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
               const newRecord = Object.assign({}, importRecords[childRecord], { id: newRecordId }, { action: newActionId });
               newActionRecords.push(newRecordId);
               newRecords[newRecordId] = newRecord;
-            }
+            });
           }
 
           const newAction = Object.assign({}, importActions[childAction], { id: newActionId }, { phase: newPhaseId }, { records: newActionRecords });
           newActions[newActionId] = newAction;
-        }
+        });
       }
       const newPhaseIndex = phaseIndexes.length > 0 ? Math.max.apply(null, phaseIndexes) + 1 : 1;
       const newPhaseName = (importPhases[newItem].name || '') + ' (KOPIO)';
@@ -56,21 +55,21 @@ export function executeImport (newItem, level, itemParent, currentState) {
       break;
     case 'action':
       let actionIndexes = [];
-      for (const key in importActions) {
+      Object.keys(importActions).forEach(key => {
         if (importActions.hasOwnProperty(key)) {
           actionIndexes.push(importActions[key].index);
         }
-      }
+      });
       const newActionId = Math.random().toString(36).replace(/[^a-z]+/g, '');
       const newActionRecords = [];
 
       if (importActions[newItem].records) {
-        for (const childRecord of importActions[newItem].records) {
+        importActions[newItem].records.forEach(childRecord => {
           const newRecordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
           const newRecord = Object.assign({}, importRecords[childRecord], { id: newRecordId }, { action: newActionId });
           newActionRecords.push(newRecordId);
           newRecords[newRecordId] = newRecord;
-        }
+        });
       }
       const newActionIndex = actionIndexes.length > 0 ? Math.max.apply(null, actionIndexes) + 1 : 1;
       const newActionName = (importActions[newItem].name || '') + ' (KOPIO)';
@@ -83,11 +82,11 @@ export function executeImport (newItem, level, itemParent, currentState) {
       break;
     case 'record':
       let recordIndexes = [];
-      for (const key in importRecords) {
+      Object.keys(importRecords).forEach(key => {
         if (importRecords.hasOwnProperty(key)) {
           recordIndexes.push(importRecords[key].index);
         }
-      }
+      });
       const newRecordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
 
       const newRecordIndex = recordIndexes.length > 0 ? Math.max.apply(null, recordIndexes) + 1 : 1;

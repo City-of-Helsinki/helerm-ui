@@ -269,7 +269,7 @@ export class Action extends React.Component {
 
   generateRecords (records) {
     const elements = [];
-    for (const key in records) {
+    Object.keys(records).forEach(key => {
       if (this.props.records.hasOwnProperty(records[key])) {
         elements.push(
           <Record
@@ -287,7 +287,7 @@ export class Action extends React.Component {
           />
         );
       }
-    }
+    });
     return elements;
   }
 
@@ -335,16 +335,16 @@ export class Action extends React.Component {
   showAttributeButton (attributes) {
     const { attributeTypes } = this.props;
     const actualAttributes = [];
-    for (const key in attributes) {
+    Object.keys(attributes).forEach(key => {
       if (key !== 'TypeSpecifier' && key !== 'ActionType') {
         actualAttributes.push(key);
       }
-    }
-    for (const key in attributeTypes) {
+    });
+    Object.keys(attributeTypes).forEach(key => {
       if (attributeTypes.hasOwnProperty(key) && attributeTypes[key].defaultIn.indexOf('action') >= 0) {
         actualAttributes.push(key);
       }
-    }
+    });
     if (actualAttributes.length) {
       return true;
     }

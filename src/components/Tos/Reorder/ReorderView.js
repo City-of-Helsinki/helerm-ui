@@ -48,11 +48,11 @@ export class ReorderView extends React.Component {
   getValues (attributes, target) {
     const values = [];
     const baseValues = getBaseValues(this.props.attributeTypes, target);
-    for (const value of baseValues) {
+    baseValues.forEach(value => {
       if ((value === 'TypeSpecifier' || value === `${capitalize(target)}Type`) && attributes[value] !== undefined) {
         values.push(attributes[value]);
       }
-    }
+    });
     return values;
   }
 

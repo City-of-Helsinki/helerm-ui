@@ -11,13 +11,13 @@ export const SET_RECORD_VISIBILITY = 'setRecordVisibilityAction';
 export function addRecord (attributes, actionId) {
   const recordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
   const newAttributes = {};
-  for (const key in attributes) {
+  Object.keys(attributes).forEach(key => {
     if (attributes.hasOwnProperty(key)) {
       if (attributes[key].checked === true) {
         newAttributes[key] = attributes[key].value;
       }
     }
-  }
+  });
 
   const newRecord = Object.assign({}, {
     id: recordId,
@@ -32,13 +32,13 @@ export function addRecord (attributes, actionId) {
 export function editRecord (attributes, recordId) {
   let editedAttributes = {};
 
-  for (const key in attributes) {
+  Object.keys(attributes).forEach(key => {
     if (attributes.hasOwnProperty(key)) {
       if (attributes[key].checked === true) {
         editedAttributes[key] = attributes[key].value;
       }
     }
-  }
+  });
 
   const editedRecord = Object.assign({}, {
     attributes: editedAttributes
