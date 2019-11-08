@@ -1,17 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import isArray from 'lodash/isArray';
+import { includes, isArray, isEmpty } from 'lodash';
 import XLSX from 'xlsx';
+import moment from 'moment';
+
+const CLASSIFICATION_ATTRIBUTES = [
+  { attribute: 'code', name: 'Koodi', type: 'classification' },
+  { attribute: 'name', name: 'Nimi', type: 'classification' },
+  { attribute: 'description', name: 'Kuvaus', type: 'classification' },
+  { attribute: 'descriptionInternal', name: 'Sisäinen kuvaus', type: 'classification' },
+  { attribute: 'relatedClassification', name: 'Liittyvä tehtäväluokka', type: 'classification' },
+  { attribute: 'additionalInformation', name: 'Lisätiedot', type: 'classification' }
+];
 
 const getChildren = (array, item) => {
   if (isArray(item.children)) {
     return item.children.reduce(getChildren, array);
   }
-
   const exportItem = {
+    additionalInformation: item.additional_information,
     code: item.code,
+    description: item.description,
+    descriptionInternal: item.description_internal,
     name: item.title,
+    relatedClassification: item.related_classification,
     attributes: item.function_attributes,
     phases: item.phases
   };
@@ -57,11 +70,16 @@ const setRowData = (item, headers, name = 'käsittelyprosessi') => {
   return rowData;
 };
 
-const createWorkBook = (filename, items) => {
+const createWorkBook = (attributeTypes, filename, items) => {
   const workBook = XLSX.utils.book_new();
 
   items.forEach((item) => {
     const headers = getAllAttributes(item);
+    const names = headers.map(header => {
+      return attributeTypes && attributeTypes.hasOwnProperty(header)
+        ? attributeTypes[header].name || null
+        : null;
+    });
     const rows = [];
 
     // Function-level data
@@ -77,33 +95,122 @@ const createWorkBook = (filename, items) => {
       });
     });
 
-    const workSheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    const workSheet = XLSX.utils.aoa_to_sheet([headers, names, ...rows]);
     XLSX.utils.book_append_sheet(workBook, workSheet, item.code);
   });
 
   XLSX.writeFile(workBook, filename);
 };
 
-const Exporter = ({ data, className, isVisible }) => {
+const getAttributes = (attributeTypes, type) => {
+  return Object.keys(attributeTypes || {}).reduce((acc, attribute) => {
+    if (attributeTypes.hasOwnProperty(attribute) && attributeTypes[attribute].allowedIn && includes(attributeTypes[attribute].allowedIn, type)) {
+      acc.push({
+        attribute,
+        index: attributeTypes[attribute].index || 100,
+        name: attributeTypes[attribute].name,
+        type
+      });
+    }
+    return acc;
+  }, []).sort((a, b) => a.index - b.index);
+};
+
+const getItemAttributes = (attributes, item) => {
+  const values = [];
+  attributes.forEach(attr => {
+    const value = item.attributes && item.attributes.hasOwnProperty(attr.attribute)
+      ? item.attributes[attr.attribute]
+      : null;
+    values.push(isArray(value) ? value.join(', ') : value);
+  });
+  return values;
+};
+
+const createSingleSheetWorkBook = (attributeTypes, filename, items) => {
+  const workBook = XLSX.utils.book_new();
+  const functionAttributes = getAttributes(attributeTypes, 'function');
+  const phaseAttributes = getAttributes(attributeTypes, 'phase');
+  const actionAttributes = getAttributes(attributeTypes, 'action');
+  const recordAttributes = getAttributes(attributeTypes, 'record');
+  const attributes = [];
+  const titles = [];
+
+  [...CLASSIFICATION_ATTRIBUTES, ...functionAttributes, ...phaseAttributes, ...actionAttributes, ...recordAttributes].forEach(attr => {
+    attributes.push(`${attr.type}.${attr.attribute}`);
+    titles.push(attr.name);
+  });
+
+  const workSheet = XLSX.utils.aoa_to_sheet([attributes, titles]);
+
+  items.forEach((item) => {
+    const cols = [];
+
+    CLASSIFICATION_ATTRIBUTES.forEach(attr => {
+      cols.push(item.hasOwnProperty(attr.attribute) ? item[attr.attribute] : null);
+    });
+
+    cols.push(...getItemAttributes(functionAttributes, item));
+
+    item.phases.forEach((phase) => {
+      const phaseCols = getItemAttributes(phaseAttributes, phase);
+
+      phase.actions.forEach((action) => {
+        const actionCols = getItemAttributes(actionAttributes, action);
+
+        action.records.forEach((record) => {
+          const recordCols = getItemAttributes(recordAttributes, record);
+          XLSX.utils.sheet_add_aoa(workSheet, [[...cols, ...phaseCols, ...actionCols, ...recordCols]], { origin: -1 });
+        });
+
+        if (isEmpty(action.records)) {
+          XLSX.utils.sheet_add_aoa(workSheet, [[...cols, ...phaseCols, ...actionCols]], { origin: -1 });
+        }
+      });
+
+      if (isEmpty(phase.actions)) {
+        XLSX.utils.sheet_add_aoa(workSheet, [[...cols, ...phaseCols]], { origin: -1 });
+      }
+    });
+
+    if (isEmpty(item.phases)) {
+      XLSX.utils.sheet_add_aoa(workSheet, [[...cols]], { origin: -1 });
+    }
+  });
+
+  XLSX.utils.book_append_sheet(workBook, workSheet, 'Tiedonohjaus');
+  XLSX.writeFile(workBook, filename);
+};
+
+const Exporter = ({ attributeTypes, data, className, isVisible }) => {
   if (!isVisible) {
     return null;
   }
 
   const exportData = data.reduce(getChildren, []);
   const countStr = exportData.length > 1 ? 'tulosta' : 'tulos';
-  const fileName = `helerm-export_${new Date().getTime()}.xlsx`;
+  const fileName = `helerm-export_${moment().format('DD.MM.YYYY')}.xlsx`;
 
   return (
-    <button
-      className={classnames('btn btn-primary', className)}
-      target='_blank'
-      onClick={() => createWorkBook(fileName, exportData)}>
-      Vie {exportData.length} {countStr} <i className='fa fa-file-excel-o' />
-    </button>
+    <span className={classnames('exporter', className)}>
+      <button
+        className='btn btn-primary btn-sm'
+        target='_blank'
+        onClick={() => createWorkBook(attributeTypes, fileName, exportData)}>
+        Vie {exportData.length} {countStr} välilehdille <i className='fa fa-file-excel-o' />
+      </button>
+      <button
+        className='btn btn-primary btn-sm'
+        target='_blank'
+        onClick={() => createSingleSheetWorkBook(attributeTypes, fileName, exportData)}>
+        Vie {exportData.length} {countStr} <i className='fa fa-file-excel-o' />
+      </button>
+    </span>
   );
 };
 
 Exporter.propTypes = {
+  attributeTypes: PropTypes.object,
   className: PropTypes.string,
   data: PropTypes.array,
   isVisible: PropTypes.bool
