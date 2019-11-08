@@ -70,11 +70,16 @@ const setRowData = (item, headers, name = 'käsittelyprosessi') => {
   return rowData;
 };
 
-const createWorkBook = (filename, items) => {
+const createWorkBook = (attributeTypes, filename, items) => {
   const workBook = XLSX.utils.book_new();
 
   items.forEach((item) => {
     const headers = getAllAttributes(item);
+    const names = headers.map(header => {
+      return attributeTypes && attributeTypes.hasOwnProperty(header)
+        ? attributeTypes[header].name || null
+        : null;
+    });
     const rows = [];
 
     // Function-level data
@@ -90,7 +95,7 @@ const createWorkBook = (filename, items) => {
       });
     });
 
-    const workSheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    const workSheet = XLSX.utils.aoa_to_sheet([headers, names, ...rows]);
     XLSX.utils.book_append_sheet(workBook, workSheet, item.code);
   });
 
@@ -191,7 +196,7 @@ const Exporter = ({ attributeTypes, data, className, isVisible }) => {
       <button
         className='btn btn-primary btn-sm'
         target='_blank'
-        onClick={() => createWorkBook(fileName, exportData)}>
+        onClick={() => createWorkBook(attributeTypes, fileName, exportData)}>
         Vie {exportData.length} {countStr} välilehdille <i className='fa fa-file-excel-o' />
       </button>
       <button
