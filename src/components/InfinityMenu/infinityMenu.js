@@ -494,7 +494,7 @@ export default class InfinityMenu extends Component {
                           <Exporter
                             attributeTypes={this.props.attributeTypes}
                             data={filteredTree}
-                            className='btn-sm pull-right'
+                            className='pull-right'
                             isVisible={filteredTree.length > 0}
                           />
                         </h2>
