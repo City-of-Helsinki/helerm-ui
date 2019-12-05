@@ -52,6 +52,14 @@ export class Header extends React.Component {
           </IsAllowed>
           <p className='navbar-text pull-right'>
             <Link
+              to='search'
+              className='navbar-link'
+            >
+              Haku
+            </Link>
+          </p>
+          <p className='navbar-text pull-right'>
+            <Link
               to={FEEDBACK_URL}
               target='_blank'
               className='navbar-link'

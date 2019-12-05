@@ -239,7 +239,7 @@ export class Navigation extends React.Component {
   }
 
   isDetailSearch = () => {
-    return this.props.router.isActive('search');
+    return this.props.router.isActive('filter');
   }
 
   handleFilterChange = (filterValues, filterName) => {

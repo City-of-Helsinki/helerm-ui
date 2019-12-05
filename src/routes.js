@@ -6,6 +6,7 @@ import InfoLayout from './layouts/InfoLayout/InfoLayout';
 import BulkListViewContainer from './components/Bulk/BulkListViewContainer';
 import BulkCreateViewContainer from './components/Bulk/BulkCreateView/BulkCreateViewContainer';
 import BulkViewContainer from './components/Bulk/BulkView/BulkViewContainer';
+import FacetedSearchContainer from './components/FacetedSearch/FacetedSearchContainer';
 import ViewTOSContainer from './components/Tos/ViewTos/ViewTosContainer';
 import ViewClassificationContainer from './components/Classification/ViewClassification/ViewClassificationContainer';
 import ClassificationTreeContainer from './components/ClassificationTree/ClassificationTreeContainer';
@@ -17,7 +18,8 @@ export default () => (
   <div>
     <Route path='/' component={CoreLayout}>
       <IndexRoute component={ViewInfo} />
-      <Route path='search' component={ViewInfo} />
+      <Route path='search' component={FacetedSearchContainer} />
+      <Route path='filter' component={ViewInfo} />
       <Route path='view-tos/'>
         <Route path=':id(/version/:version)'>
           <IndexRoute component={ViewTOSContainer} />

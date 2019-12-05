@@ -1,5 +1,6 @@
 // Misc
 export const DEFAULT_PAGE_SIZE = 2000;
+export const DEFAULT_SEARCH_PAGE_SIZE = 100;
 
 // Permissions
 export const EDIT = 'can_edit';
@@ -8,6 +9,19 @@ export const REVIEW = 'can_review';
 export const APPROVE_BULKUPDATE = 'approve_bulkupdate';
 export const CHANGE_BULKUPDATE = 'change_bulkupdate';
 export const DELETE_BULKUPDATE = 'delete_bulkupdate';
+
+export const TYPE_CLASSIFICATION = 'classification';
+export const TYPE_FUNCTION = 'function';
+export const TYPE_PHASE = 'phase';
+export const TYPE_ACTION = 'action';
+export const TYPE_RECORD = 'record';
+export const TYPE_LABELS = {
+  action: 'Toimenpide',
+  classification: 'Tehtäväluokka',
+  function: 'Käsittelyprosessi',
+  phase: 'Käsittelyvaihe',
+  record: 'Asiakirja'
+};
 
 // Statuses
 export const DRAFT = 'draft';
@@ -104,3 +118,31 @@ export const BULK_UPDATE_PACKAGE_APPROVE_OPTIONS = [
   { label: 'Odottaa', value: false },
   { label: 'Hyväksytty', value: true }
 ];
+
+export const FACET_ATTRIBUTE_SIZE = 3;
+
+export const FACETED_SEARCH_DEFAULT_ATTRIBUTES = [{
+  key: 'name',
+  name: 'Nimi',
+  type: TYPE_CLASSIFICATION
+}, {
+  key: 'description',
+  name: 'Kuvaus',
+  type: TYPE_CLASSIFICATION
+}, {
+  key: 'description_internal',
+  name: 'Sisäinen kuvaus',
+  type: TYPE_CLASSIFICATION
+}, {
+  key: 'related_classification',
+  name: 'Liittyvä tehtäväluokka',
+  type: TYPE_CLASSIFICATION
+}, {
+  key: 'additional_information',
+  name: 'Lisätiedot',
+  type: TYPE_CLASSIFICATION
+}, {
+  key: 'function_state',
+  name: 'Tila',
+  type: TYPE_FUNCTION
+}];
