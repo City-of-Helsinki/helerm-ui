@@ -145,4 +145,12 @@ export const FACETED_SEARCH_DEFAULT_ATTRIBUTES = [{
   key: 'function_state',
   name: 'Tila',
   type: TYPE_FUNCTION
+}, {
+  key: 'function_valid_from',
+  name: 'Voimassaolo alkaa',
+  type: TYPE_FUNCTION
+}, {
+  key: 'function_valid_to',
+  name: 'Voimassaolo päättyy',
+  type: TYPE_FUNCTION
 }];

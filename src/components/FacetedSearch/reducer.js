@@ -222,8 +222,12 @@ const receiveClassificationsAction = (state, { payload }) => {
     if (item.function) {
       parents.push(item.id);
       acc.functions.push({
-        ...item,
-        attributes: { ...item.function_attributes, function_state: item.function_state },
+        attributes: {
+          ...item.function_attributes,
+          function_state: item.function_state,
+          function_valid_from: item.function_valid_from,
+          function_valid_to: item.function_valid_to
+        },
         id: item.function,
         name,
         parents,
@@ -233,13 +237,34 @@ const receiveClassificationsAction = (state, { payload }) => {
     }
     if (item.phases) {
       item.phases.forEach(phase => {
-        acc.phases.push({ ...phase, parents: [...parents, phase.function], path, type: TYPE_PHASE });
+        acc.phases.push({
+          attributes: phase.attributes,
+          id: phase.id,
+          name: phase.name,
+          parents: [...parents, phase.function],
+          path,
+          type: TYPE_PHASE
+        });
         if (phase.actions) {
           phase.actions.forEach(action => {
-            acc.actions.push({ ...action, parents: [...parents, phase.function, phase.id], path, type: TYPE_ACTION });
+            acc.actions.push({
+              attributes: action.attributes,
+              id: action.id,
+              name: action.name,
+              parents: [...parents, phase.function, phase.id],
+              path,
+              type: TYPE_ACTION
+            });
             if (action.records) {
               action.records.forEach(record => {
-                acc.records.push({ ...record, parents: [...parents, phase.function, phase.id, action.id], path, type: TYPE_RECORD });
+                acc.records.push({
+                  attributes: record.attributes,
+                  id: record.id,
+                  name: record.name,
+                  parents: [...parents, phase.function, phase.id, action.id],
+                  path,
+                  type: TYPE_RECORD
+                });
               });
             }
           });
