@@ -1,0 +1,280 @@
+@import '../../styles/vendor/hel-components/variables';
+
+.faceted-search {
+  display: flex;
+
+  &-content {
+    padding: 20px;
+    width: 75%;
+  }
+
+  &-header {
+    display: flex;
+    align-items: center;
+
+    div:first-child {
+      flex-grow: 2;
+    }
+    div:last-child {
+      flex-grow: 1;
+    }
+    .Select-menu {
+      overflow: auto;
+    }
+  }
+
+  &-field {
+    display: flex;
+    align-items: center;
+
+    button {
+      margin-left: 15px;
+    }
+
+    button.faceted-search-tip {
+      border: solid 1px $black50;
+      border-radius: $border-radius-large;
+    }
+  }
+
+  &-results {
+    display: flex;
+    padding: 40px 0;
+  }
+
+  &-loader {
+    text-align: center;
+    
+    .fa-spinner {
+      font-size: 30px;
+      color: $brand-primary;
+    }
+  }
+
+  &-facets {
+    width: 25%;
+    overflow: hidden;
+
+    &-items {
+      border: solid 1px $black50;
+    }
+
+    &-item {
+
+      &-title {
+        padding: 3px 11px;
+        background-color: $black05;
+        font-size: 16px;
+        font-weight: $bold;
+        display: flex;
+        align-items: center;
+        border-bottom: solid 1px $black50;
+
+        span {
+          flex-grow: 1;
+        }
+      }
+
+      &-attributes {
+        background-color: $white;
+        padding: 5px 11px;
+      }
+
+      &-attribute,
+      &-attribute-value {
+        display: flex;
+        align-items: baseline;
+        padding: 3px;
+        color: $brand-primary;
+        font-size: 14px;
+
+        .fa {
+          margin-right: 5px;
+        }
+
+        span {
+          flex-grow: 1;
+        }
+        span:last-child {
+          color: $gray;
+          flex-grow: 0;
+        }
+      }
+
+      &-attribute:hover,
+      &-attribute-value:hover {
+        cursor: pointer;
+      }
+
+      &-attribute-value {
+        padding: 3px 3px 3px 36px;
+
+        .fa {
+          display: none;
+        }
+
+        &-selected {
+          padding-left: 17px;
+
+          .fa {
+            display: inline-block;
+            color: $gray;
+          }
+        }
+      }
+
+      &-attribute-more {
+        padding: 3px 0 3px 36px;
+        color: $brand-primary;
+        font-weight: $bold;
+      }
+    }
+
+    &-item:not(:last-child) {
+      border-bottom: solid 1px $black50;
+    }
+
+    &-title {
+      background-color: $brand-primary;
+      color: $white;
+      font-size: 22px;
+      padding: 11px;
+      display: flex;
+      align-items: center;
+
+      span {
+        flex-grow: 1;
+      }
+
+      .btn {
+        color: $white;
+        border: solid 1px $white;
+        border-radius: $border-radius-large;
+      }
+    }
+  }
+
+  &-list {
+    padding: 0 20px 11px 21px;
+    width: 75%;
+
+    &-item {
+      padding: 10px;
+      display: flex;
+
+      &-selected {
+        .faceted-search-list-item-link {
+          background-color: $black05;
+        }
+      }
+
+      &-info {
+        padding: 10px 0;
+        flex-grow: 1;
+      }
+
+      &-type {
+        font-size: 16px;
+        font-weight: $bold;
+      }
+
+      &-title {
+        font-size: 26px;
+        font-weight: $bold;
+        color: $brand-primary;
+      }
+
+      &-link {
+        display: flex;
+        align-items: center;
+        flex-grow: 0;
+        padding: 0 20px;
+        font-size: $font-size-h1;
+        border-left: solid 1px $black50;
+        color: $brand-primary;
+      }
+    }
+
+    &-item:hover {
+      background-color: $black05;
+      cursor: pointer;
+    }
+  }
+
+  &-selected-facets {
+    padding: 11px 0;
+
+    .btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      border-radius: 15px;
+      margin: 0 5px 5px 0;
+      font-weight: normal;
+
+      span:first-child {
+        display: block;
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .fa {
+        margin-left: 5px;
+      }
+
+      .tooltiptext {
+        visibility: hidden;
+        background-color: $black05;
+        color: $gray;
+        text-align: left;
+        border-radius: 10px;
+        padding: 5px 10px;
+        position: absolute;
+        z-index: 1;
+        top: 135%;
+        left: 0;
+        max-width: 235px;
+        white-space: normal;
+      }
+
+      &:hover .tooltiptext {
+        visibility: visible;
+      }
+    }
+  }
+
+  &-preview {
+    padding: 20px;
+    background-color: $black05;
+    border-left: solid 1px $black50;
+    width: 25%;
+
+    &-item {
+      &-title {
+        padding: 15px 0;
+        font-size: 24px;
+        font-weight: $bold;
+      }
+      &-path {
+        padding: 5px 0;
+      }
+      &-type {
+        padding-top: 15px;
+        font-weight: $bold;
+      }
+      &-name {
+        padding: 0 0 15px;
+        font-size: 24px;
+        font-weight: $bold;
+        color: $brand-primary;
+      }
+      &-attribute {
+        padding: 15px 0;
+      }
+    }
+    .btn {
+      color: $gray;
+    }
+  }
+}

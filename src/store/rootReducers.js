@@ -9,6 +9,7 @@ import { default as navigation } from '../components/Navigation/reducer';
 import { default as validation } from '../components/Tos/ValidationBar/reducer';
 import { default as classification } from '../components/Classification/reducer';
 import { default as bulk } from '../components/Bulk/reducer';
+import { default as search } from '../components/FacetedSearch/reducer';
 
 export const makeRootReducer = () => {
   return combineReducers({
@@ -20,7 +21,8 @@ export const makeRootReducer = () => {
     toastr,
     user,
     ui,
-    bulk
+    bulk,
+    search
   });
 };
 
