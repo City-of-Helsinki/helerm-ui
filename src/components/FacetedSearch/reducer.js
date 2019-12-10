@@ -1,6 +1,6 @@
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
-import { cloneDeep, every, filter, findIndex, includes, isEmpty, some, toLower, uniq } from 'lodash';
+import { cloneDeep, every, filter, findIndex, includes, isEmpty, some, toLower, uniq, words } from 'lodash';
 
 import {
   DEFAULT_SEARCH_PAGE_SIZE,
@@ -107,18 +107,51 @@ export function fetchClassifications (page = 1) {
 };
 
 export function searchItems (searchTerm) {
-  const term = toLower(searchTerm);
-  const isAnd = includes(term, 'and');
-  const searchTerms = toLower(searchTerm).split(isAnd ? 'and' : 'or').map(term => term.trim());
+  const TERM_AND = 'AND';
+  const TERM_NOT = 'NOT';
+  const TERM_OR = 'OR';
+  const terms = words(searchTerm);
+  const splitted = terms.reduce((acc, term, index) => {
+    const isOperator = includes([TERM_AND, TERM_NOT, TERM_OR], term);
+    const operator = isOperator && !acc.lastOperator ? term : acc.lastOperator;
+    if (!isOperator) {
+      acc.lastTerms.push(toLower(term).trim());
+    }
+    if (operator === TERM_AND || (!acc.lastOperator && operator === TERM_NOT) ||
+      (!operator && index + 1 === terms.length)) {
+      acc.andTerms.push(...acc.lastTerms);
+      acc.lastTerms = [];
+    } else if (operator === TERM_OR) {
+      acc.orTerms.push(...acc.lastTerms);
+      acc.lastTerms = [];
+    } else if (operator === TERM_NOT) {
+      acc.notTerms.push(...acc.lastTerms);
+      acc.lastTerms = [];
+    }
+    if (isOperator) {
+      acc.lastOperator =
+        !acc.lastOperator && (term === TERM_AND && index + 1 < terms.length)
+          ? null
+          : term;
+    }
+    return acc;
+  }, {
+    andTerms: [],
+    notTerms: [],
+    orTerms: [],
+    lastTerms: [],
+    lastOperator: null
+  });
+  const { andTerms, notTerms, orTerms } = splitted;
 
   return function (dispatch, getState) {
     const attributes = getState().search.attributes;
     const filteredAttributes = searchTerm
       ? attributes.reduce((acc, attr) => {
         const options = filter(attr.options, option => {
-          return isAnd
-            ? every(searchTerms, st => includes(option.ref, st))
-            : some(searchTerms, st => includes(option.ref, st));
+          return (isEmpty(andTerms) || every(andTerms, st => includes(option.ref, st))) &&
+            (isEmpty(orTerms) || some(orTerms, st => includes(option.ref, st))) &&
+            (isEmpty(notTerms) || every(notTerms, st => !includes(option.ref, st)));
         });
         if (!isEmpty(options)) {
           acc.push({ ...attr, options, open: false, showAll: false });
