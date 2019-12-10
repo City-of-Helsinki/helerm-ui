@@ -31,7 +31,7 @@ export class FacetedSearch extends React.Component {
     this.onClosePreview = this.onClosePreview.bind(this);
     this.onExport = this.onExport.bind(this);
     this.onClickReset = this.onClickReset.bind(this);
-    this.onSearchClick = this.onSearchClick.bind(this);
+    this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.onSearchInputChange = this.onSearchInputChange.bind(this);
     this.onToggleFacet = this.onToggleFacet.bind(this);
 
@@ -153,9 +153,12 @@ export class FacetedSearch extends React.Component {
     this.setState({ searchTerm: e.target.value });
   }
 
-  onSearchClick () {
+  onSearchSubmit (event) {
+    event.preventDefault();
     const { searchTerm } = this.state;
     this.setState({
+      facetsOpen: [],
+      previewItem: null,
       selectedFacets: {
         action: [],
         classification: [],
@@ -360,13 +363,16 @@ export class FacetedSearch extends React.Component {
             </div>
           </div>
           <div className='faceted-search-field'>
-            <input className='input-title form-control col-xs-11'
-              type='search'
-              placeholder='Vapaasanahaku'
-              onChange={this.onSearchInputChange}
-              value={searchTerm}
-            />
-            <button className='btn btn-primary' onClick={this.onSearchClick}>Hae</button>
+            <form onSubmit={this.onSearchSubmit}>
+              <input className='input-title form-control col-xs-11'
+                type='search'
+                placeholder='Vapaasanahaku'
+                onChange={this.onSearchInputChange}
+                ref={field => { this.searchField = field; }}
+                value={searchTerm}
+              />
+            </form>
+            <button className='btn btn-primary' onClick={this.onSearchSubmit}>Hae</button>
             <button className='btn btn-primary' onClick={this.onClickReset}>Tyhjennä</button>
             <button className='btn btn-link faceted-search-tip'>
               <i className='fa fa-question' />
