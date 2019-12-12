@@ -9,20 +9,21 @@ import { includes, difference, uniq } from 'lodash';
  */
 export const validateConditionalRules = (key, attributeTypes, attributes) => {
   const requiredIf = attributeTypes[key].requiredIf;
+  let valid = false;
   Object.keys(attributes).forEach(attribute => {
     // for each attribute
-    Object.keys(requiredIf).forEach(item => {
+    requiredIf.forEach(item => {
       // for each item in requiredIf
-      if (requiredIf.hasOwnProperty(item) && requiredIf[item].key === attribute) {
+      if (item.key === attribute) {
         // if requiredIf has attribute
-        if (includes(requiredIf[item].values, attributes[attribute].value)) {
+        if (includes(item.values, attributes[attribute].value)) {
           // if requiredIf has same value as attribute
-          return true;
+          valid = true;
         }
       }
     });
   });
-  return false;
+  return valid;
 };
 
 /**
