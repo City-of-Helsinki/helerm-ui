@@ -249,6 +249,7 @@ const receiveClassificationsAction = (state, { payload }) => {
         related_classification: item.related_classification,
         description_internal: item.description_internal
       },
+      function: item.function || null,
       id: item.id,
       name,
       parents,
@@ -264,6 +265,7 @@ const receiveClassificationsAction = (state, { payload }) => {
           function_valid_from: item.function_valid_from,
           function_valid_to: item.function_valid_to
         },
+        function: item.function,
         id: item.function,
         name,
         parents,
@@ -275,6 +277,7 @@ const receiveClassificationsAction = (state, { payload }) => {
       item.phases.forEach(phase => {
         acc.phases.push({
           attributes: phase.attributes,
+          function: item.function,
           id: phase.id,
           name: phase.name,
           parents: [...parents, phase.function],
@@ -285,6 +288,7 @@ const receiveClassificationsAction = (state, { payload }) => {
           phase.actions.forEach(action => {
             acc.actions.push({
               attributes: action.attributes,
+              function: item.function,
               id: action.id,
               name: action.name,
               parents: [...parents, phase.function, phase.id],
@@ -295,6 +299,7 @@ const receiveClassificationsAction = (state, { payload }) => {
               action.records.forEach(record => {
                 acc.records.push({
                   attributes: record.attributes,
+                  function: item.function,
                   id: record.id,
                   name: record.name,
                   parents: [...parents, phase.function, phase.id, action.id],

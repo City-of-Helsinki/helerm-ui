@@ -14,6 +14,7 @@ import {
 } from '../../../config/constants';
 
 import FacetedSearchResults from './FacetedSearchResults/FacetedSearchResults';
+import PreviewItem from './PreviewItem/PreviewItem';
 import './FacetedSearch.scss';
 
 export const EXPORT_OPTIONS = [
@@ -306,43 +307,6 @@ export class FacetedSearch extends React.Component {
     );
   }
 
-  renderPreviewItem (previewItem) {
-    const { metadata } = this.props;
-    const attributes = Object.keys(previewItem.attributes).reduce((acc, key) => {
-      if (previewItem.attributes.hasOwnProperty(key) && previewItem.attributes[key]) {
-        acc.push({
-          key,
-          name: metadata[key] ? metadata[key].name : key,
-          value: previewItem.attributes[key]
-        });
-      }
-      return acc;
-    }, []);
-    return (
-      <div>
-        <div className='faceted-search-preview-item-title'>
-          Esikatselu
-          <button className='btn btn-sm btn-link pull-right' onClick={this.onClosePreview}>
-            <i className='fa fa-times' />
-          </button>
-        </div>
-        <div className='faceted-search-preview-item-path'>
-          {previewItem.path.map(path => (
-            <div key={`preview-${path}`}>{path}</div>
-          ))}
-        </div>
-        <div className='faceted-search-preview-item-type'>{TYPE_LABELS[previewItem.type]}</div>
-        <div className='faceted-search-preview-item-name'>{previewItem.name}</div>
-        {attributes.map(attr => (
-          <div className='faceted-search-preview-item-attribute' key={`preview-${attr.key}`}>
-            <div><strong>{attr.name}</strong></div>
-            <div>{isArray(attr.value) ? attr.value.join(', ') : attr.value}</div>
-          </div>
-        ))}
-      </div>
-    );
-  }
-
   render () {
     const { previewItem, searchTerm } = this.state;
     const { isFetching, items, metadata } = this.props;
@@ -408,7 +372,7 @@ export class FacetedSearch extends React.Component {
           </div>
         </div>
         <div className='faceted-search-preview'>
-          {!!previewItem && this.renderPreviewItem(previewItem)}
+          {!!previewItem && <PreviewItem item={previewItem} metadata={metadata} onClose={this.onClosePreview} />}
         </div>
       </div>
     );

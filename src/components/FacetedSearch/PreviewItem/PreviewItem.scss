@@ -1,0 +1,35 @@
+@import '../../styles/vendor/hel-components/variables';
+
+.faceted-search-preview {
+  padding: 20px;
+  background-color: $black05;
+  border-left: solid 1px $black50;
+  width: 25%;
+
+  &-item {
+    &-title {
+      padding: 15px 0;
+      font-size: 24px;
+      font-weight: $bold;
+    }
+    &-path {
+      padding: 5px 0;
+    }
+    &-type {
+      padding-top: 15px;
+      font-weight: $bold;
+    }
+    &-name {
+      padding: 0 0 15px;
+      font-size: 24px;
+      font-weight: $bold;
+      color: $brand-primary;
+    }
+    &-attribute {
+      padding: 15px 0;
+    }
+  }
+  .btn {
+    color: $gray;
+  }
+}
