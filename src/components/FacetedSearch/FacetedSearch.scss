@@ -3,7 +3,7 @@
 .faceted-search {
   display: flex;
 
-  &-content {
+  &-wrapper {
     padding: 20px;
     width: 75%;
   }
@@ -27,6 +27,10 @@
     display: flex;
     align-items: center;
 
+    form {
+      flex-grow: 1;
+    }
+
     button {
       margin-left: 15px;
     }
@@ -37,7 +41,7 @@
     }
   }
 
-  &-results {
+  &-content {
     display: flex;
     padding: 40px 0;
   }
@@ -184,6 +188,10 @@
         color: $brand-primary;
       }
 
+      &-attribute {
+        color: $gray;
+      }
+
       &-link {
         display: flex;
         align-items: center;
@@ -192,6 +200,10 @@
         font-size: $font-size-h1;
         border-left: solid 1px $black50;
         color: $brand-primary;
+      }
+
+      mark {
+        padding: 0;
       }
     }
 
@@ -241,40 +253,6 @@
       &:hover .tooltiptext {
         visibility: visible;
       }
-    }
-  }
-
-  &-preview {
-    padding: 20px;
-    background-color: $black05;
-    border-left: solid 1px $black50;
-    width: 25%;
-
-    &-item {
-      &-title {
-        padding: 15px 0;
-        font-size: 24px;
-        font-weight: $bold;
-      }
-      &-path {
-        padding: 5px 0;
-      }
-      &-type {
-        padding-top: 15px;
-        font-weight: $bold;
-      }
-      &-name {
-        padding: 0 0 15px;
-        font-size: 24px;
-        font-weight: $bold;
-        color: $brand-primary;
-      }
-      &-attribute {
-        padding: 15px 0;
-      }
-    }
-    .btn {
-      color: $gray;
     }
   }
 }

@@ -1,0 +1,53 @@
+@import '../../styles/vendor/hel-components/variables';
+
+.faceted-search-results {
+  &-item {
+    padding: 10px;
+    display: flex;
+
+    &-selected {
+      .faceted-search-results-item-link {
+        background-color: $black05;
+      }
+    }
+
+    &-info {
+      padding: 10px 0;
+      flex-grow: 1;
+    }
+
+    &-type {
+      font-size: 16px;
+      font-weight: $bold;
+    }
+
+    &-title {
+      font-size: 26px;
+      font-weight: $bold;
+      color: $brand-primary;
+    }
+
+    &-attribute {
+      color: $gray;
+    }
+
+    &-link {
+      display: flex;
+      align-items: center;
+      flex-grow: 0;
+      padding: 0 20px;
+      font-size: $font-size-h1;
+      border-left: solid 1px $black50;
+      color: $brand-primary;
+    }
+
+    mark {
+      padding: 0;
+    }
+  }
+
+  &-item:hover {
+    background-color: $black05;
+    cursor: pointer;
+  }
+}
