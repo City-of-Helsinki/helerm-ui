@@ -5,7 +5,6 @@ import { filter, find, includes, isArray, isEmpty, orderBy, slice, uniq, without
 
 import {
   FACET_ATTRIBUTE_SIZE,
-  FACETED_SEARCH_DEFAULT_ATTRIBUTES,
   TYPE_ACTION,
   TYPE_CLASSIFICATION,
   TYPE_FUNCTION,
@@ -13,6 +12,8 @@ import {
   TYPE_RECORD,
   TYPE_LABELS
 } from '../../../config/constants';
+
+import FacetedSearchResults from './FacetedSearchResults/FacetedSearchResults';
 import './FacetedSearch.scss';
 
 export const EXPORT_OPTIONS = [
@@ -287,9 +288,15 @@ export class FacetedSearch extends React.Component {
   }
 
   renderSelectedFacets () {
+    const { terms } = this.props;
     const { selectedFacets } = this.state;
     return (
       <div className='faceted-search-selected-facets'>
+        {(!isEmpty(terms) || !isEmpty(selectedFacets.classification) ||
+          !isEmpty(selectedFacets.function) || !isEmpty(selectedFacets.phase) ||
+          !isEmpty(selectedFacets.action) || !isEmpty(selectedFacets.record)) && (
+          <button className='btn btn-sm btn-primary' onClick={this.onClickReset}>Poista rajaukset</button>
+        )}
         {selectedFacets.classification.map(facet => this.renderSelectedFacetButton(facet))}
         {selectedFacets.function.map(facet => this.renderSelectedFacetButton(facet))}
         {selectedFacets.phase.map(facet => this.renderSelectedFacetButton(facet))}
@@ -300,15 +307,12 @@ export class FacetedSearch extends React.Component {
   }
 
   renderPreviewItem (previewItem) {
-    const { attributeTypes } = this.props;
+    const { metadata } = this.props;
     const attributes = Object.keys(previewItem.attributes).reduce((acc, key) => {
       if (previewItem.attributes.hasOwnProperty(key) && previewItem.attributes[key]) {
-        const attribute = attributeTypes[key]
-          ? attributeTypes[key]
-          : find(FACETED_SEARCH_DEFAULT_ATTRIBUTES, { key });
         acc.push({
           key,
-          name: attribute && attribute.name ? attribute.name : key,
+          name: metadata[key] ? metadata[key].name : key,
           value: previewItem.attributes[key]
         });
       }
@@ -341,11 +345,11 @@ export class FacetedSearch extends React.Component {
 
   render () {
     const { previewItem, searchTerm } = this.state;
-    const { isFetching, items } = this.props;
+    const { isFetching, items, metadata } = this.props;
 
     return (
       <div className='faceted-search'>
-        <div className='faceted-search-content'>
+        <div className='faceted-search-wrapper'>
           <div className='faceted-search-header'>
             <div>
               <h2>Sisältöhaku</h2>
@@ -373,12 +377,11 @@ export class FacetedSearch extends React.Component {
               />
             </form>
             <button className='btn btn-primary' onClick={this.onSearchSubmit}>Hae</button>
-            <button className='btn btn-primary' onClick={this.onClickReset}>Tyhjennä</button>
             <button className='btn btn-link faceted-search-tip'>
               <i className='fa fa-question' />
             </button>
           </div>
-          <div className='faceted-search-results'>
+          <div className='faceted-search-content'>
             <div className='faceted-search-facets'>
               <div className='faceted-search-facets-item faceted-search-facets-title'>
                 <span>Rajaa hakua</span>
@@ -395,27 +398,12 @@ export class FacetedSearch extends React.Component {
             <div className='faceted-search-list'>
               {isFetching && <div className='faceted-search-loader'><span className='fa fa-2x fa-spinner fa-spin'/></div>}
               {this.renderSelectedFacets()}
-              {items.map(item => (
-                <div
-                  className={classnames('faceted-search-list-item', {
-                    'faceted-search-list-item-selected': previewItem && previewItem.id === item.id
-                  })}
-                  key={item.id}
-                  onClick={() => this.onClickItem(item)}
-                >
-                  <div className='faceted-search-list-item-info'>
-                    <div className='faceted-search-list-item-type'>{TYPE_LABELS[item.type]}</div>
-                    <div className='faceted-search-list-item-title'>{item.name}</div>
-                    <div className='faceted-search-list-item-path'>{item.path ? item.path.join(' > ') : ''}</div>
-                  </div>
-                  <div className='faceted-search-list-item-link'>
-                    <i className={classnames('fa', {
-                      'fa-angle-right': !previewItem || previewItem.id !== item.id,
-                      'fa-angle-left': previewItem && previewItem.id === item.id
-                    })} />
-                  </div>
-                </div>
-              ))}
+              <FacetedSearchResults
+                highlightedId={previewItem ? previewItem.id : null}
+                items={items}
+                metadata={metadata}
+                onSelectItem={this.onClickItem}
+              />
             </div>
           </div>
         </div>
@@ -435,8 +423,10 @@ FacetedSearch.propTypes = {
   filterItems: PropTypes.func.isRequired,
   isFetching: PropTypes.bool,
   items: PropTypes.array.isRequired,
+  metadata: PropTypes.object.isRequired,
   searchItems: PropTypes.func.isRequired,
   setNavigationVisibility: PropTypes.func.isRequired,
+  terms: PropTypes.array.isRequired,
   toggleAttributeOpen: PropTypes.func.isRequired,
   // toggleAttributeOption: PropTypes.func.isRequired,
   toggleShowAllAttributeOptions: PropTypes.func.isRequired

@@ -33,7 +33,9 @@ const mapStateToProps = state => ({
   attributeTypes: state.ui.attributeTypes,
   classifications: state.search.classifications,
   isFetching: state.search.isFetching,
-  items: state.search.items
+  items: state.search.items,
+  metadata: state.search.metadata,
+  terms: state.search.terms
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(FacetedSearch));

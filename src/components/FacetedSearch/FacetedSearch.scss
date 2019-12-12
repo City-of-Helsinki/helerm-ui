@@ -3,7 +3,7 @@
 .faceted-search {
   display: flex;
 
-  &-content {
+  &-wrapper {
     padding: 20px;
     width: 75%;
   }
@@ -41,7 +41,7 @@
     }
   }
 
-  &-results {
+  &-content {
     display: flex;
     padding: 40px 0;
   }
@@ -188,6 +188,10 @@
         color: $brand-primary;
       }
 
+      &-attribute {
+        color: $gray;
+      }
+
       &-link {
         display: flex;
         align-items: center;
@@ -196,6 +200,10 @@
         font-size: $font-size-h1;
         border-left: solid 1px $black50;
         color: $brand-primary;
+      }
+
+      mark {
+        padding: 0;
       }
     }
 

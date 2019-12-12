@@ -1,6 +1,6 @@
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
-import { cloneDeep, every, filter, findIndex, includes, isEmpty, some, toLower, uniq, words } from 'lodash';
+import { cloneDeep, every, filter, findIndex, includes, isArray, isEmpty, some, toLower, uniq, words } from 'lodash';
 
 import {
   DEFAULT_SEARCH_PAGE_SIZE,
@@ -16,8 +16,9 @@ import { default as api } from '../../utils/api.js';
 
 const initialState = {
   actions: [],
-  classifications: [],
   attributes: [],
+  metadata: {},
+  classifications: [],
   filteredAttributes: [],
   functions: [],
   headers: {},
@@ -25,7 +26,8 @@ const initialState = {
   items: [],
   page: 1,
   phases: [],
-  records: []
+  records: [],
+  terms: []
 };
 
 export const CLASSIFICATIONS_ERROR = 'classificationsErrorAction';
@@ -54,11 +56,6 @@ export function receivedNavigation () {
   return createAction(CLASSIFICATIONS_READY)();
 }
 
-export function setAttributeTypes (attributeTypes) {
-  const attributes = [...FACETED_SEARCH_DEFAULT_ATTRIBUTES, ...attributeTypes];
-  return createAction(SET_ATTRIBUTE_TYPES, attributes);
-}
-
 export function updateAttributeTypes (attributeTypes) {
   const attributes = Object.keys(attributeTypes).reduce((acc, key) => {
     if (attributeTypes.hasOwnProperty(key)) {
@@ -73,13 +70,19 @@ export function updateAttributeTypes (attributeTypes) {
     }
     return acc;
   }, []);
+  const metadata = FACETED_SEARCH_DEFAULT_ATTRIBUTES.reduce((acc, attr) => {
+    acc[attr.key] = {
+      name: attr.name
+    };
+    return acc;
+  }, { ...attributeTypes });
   const allAttributes = [...FACETED_SEARCH_DEFAULT_ATTRIBUTES, ...attributes];
   allAttributes.forEach(attr => {
     attr.open = false;
     attr.showAll = false;
     attr.options = [];
   });
-  return createAction(SET_ATTRIBUTE_TYPES)(allAttributes);
+  return createAction(SET_ATTRIBUTE_TYPES)({ attributes: allAttributes, metadata });
 };
 
 export function fetchClassifications (page = 1) {
@@ -166,7 +169,7 @@ export function searchItems (searchTerm) {
     const actions = isEmpty(classifications) && isEmpty(functions) && isEmpty(phases) ? getFilteredHits(filteredAttributes, TYPE_ACTION) : [];
     const records = isEmpty(classifications) && isEmpty(functions) && isEmpty(phases) && isEmpty(actions) ? getFilteredHits(filteredAttributes, TYPE_RECORD) : [];
     return dispatch(createAction(SEARCH_ITEMS)({
-      classifications, filteredAttributes, functions, phases, actions, records
+      classifications, filteredAttributes, functions, phases, actions, records, terms: [...andTerms, ...orTerms]
     }));
   };
 }
@@ -339,6 +342,7 @@ const receiveClassificationsAction = (state, { payload }) => {
 const searchItemsAction = (state, { payload }) => {
   const { classifications, functions, phases, actions, records } = state;
   const { filteredAttributes } = payload;
+  const terms = payload.terms || state.terms;
   if (isEmpty(payload.classifications) && isEmpty(payload.functions) && isEmpty(payload.phases) &&
     isEmpty(payload.actions) && isEmpty(payload.records)) {
     return update(state, {
@@ -346,7 +350,7 @@ const searchItemsAction = (state, { payload }) => {
       items: { $set: !filteredAttributes ? classifications : [] }
     });
   }
-  const items = [{
+  const filteredItems = [{
     facet: payload.classifications,
     items: classifications
   }, {
@@ -373,16 +377,46 @@ const searchItemsAction = (state, { payload }) => {
     return acc;
   }, []);
 
+  const items = filteredItems.map(item => {
+    if (!isEmpty(terms)) {
+      const matchedAttributes = Object.keys(item.attributes || {}).reduce((acc, key) => {
+        if (item.attributes.hasOwnProperty(key) && key !== 'name') {
+          const attrValue = isArray(item.attributes[key]) ? item.attributes[key].join(', ') : item.attributes[key];
+          const isHit = some(terms, term => new RegExp(term, 'gi').test(attrValue));
+          if (isHit) {
+            const value = terms.reduce((valAcc, term) => {
+              return valAcc.replace(new RegExp(term, 'gi'), (match) => `<mark>${match}</mark>`);
+            }, attrValue);
+            acc.push({ key, value });
+          }
+        }
+        return acc;
+      }, []);
+      return {
+        ...item,
+        matchedAttributes,
+        matchedName: isEmpty(terms)
+          ? item.name
+          : terms.reduce((acc, term) => {
+            return acc.replace(new RegExp(term, 'gi'), (match) => `<mark>${match}</mark>`);
+          }, item.name)
+      };
+    }
+    return item;
+  });
+
   return update(state, {
     filteredAttributes: { $set: filteredAttributes || state.filteredAttributes },
-    items: { $set: items }
+    items: { $set: items },
+    terms: { $set: payload.terms || terms }
   });
 };
 
 const setAttributeTypesAction = (state, { payload }) => {
   return update(state, {
-    attributes: { $set: payload },
-    filteredAttributes: { $set: payload }
+    attributes: { $set: payload.attributes },
+    metadata: { $set: payload.metadata },
+    filteredAttributes: { $set: payload.attributes }
   });
 };
 
@@ -406,7 +440,6 @@ const toggleAttributeOptionAction = (state, { payload }) => {
   const { actions, filteredAttributes, classifications, functions, phases, records } = state;
   const { key, type, options } = payload.attribute;
   const { selected, value } = payload.option;
-  console.log('toggleAttributeOptionAction', key, value);
   const attributeIndex = findIndex(filteredAttributes, { key, type });
   const valueIndex = findIndex(options, { value });
   if (attributeIndex >= 0 && valueIndex >= 0) {
