@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import Select from 'react-select';
 import classnames from 'classnames';
 import { filter, find, includes, isArray, isEmpty, orderBy, slice, uniq, without } from 'lodash';
 
@@ -12,15 +11,11 @@ import {
   TYPE_RECORD,
   TYPE_LABELS
 } from '../../../config/constants';
+import Exporter from '../Exporter';
 
 import FacetedSearchResults from './FacetedSearchResults/FacetedSearchResults';
 import PreviewItem from './PreviewItem/PreviewItem';
 import './FacetedSearch.scss';
-
-export const EXPORT_OPTIONS = [
-  { value: 0, label: 'Yhdelle välilehdelle' },
-  { value: 1, label: 'Omille välilehdille' }
-];
 
 export class FacetedSearch extends React.Component {
   constructor (props) {
@@ -31,7 +26,6 @@ export class FacetedSearch extends React.Component {
     this.onClickItem = this.onClickItem.bind(this);
     this.onClickShowAll = this.onClickShowAll.bind(this);
     this.onClosePreview = this.onClosePreview.bind(this);
-    this.onExport = this.onExport.bind(this);
     this.onClickReset = this.onClickReset.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.onSearchInputChange = this.onSearchInputChange.bind(this);
@@ -173,10 +167,6 @@ export class FacetedSearch extends React.Component {
     });
   }
 
-  onExport (option) {
-    console.log('onExport', option.value);
-  }
-
   isOptionSelected (attribute, option) {
     const { key, type } = attribute;
     const { value } = option;
@@ -308,8 +298,8 @@ export class FacetedSearch extends React.Component {
   }
 
   render () {
+    const { attributeTypes, exportItems, isFetching, items, metadata } = this.props;
     const { previewItem, searchTerm } = this.state;
-    const { isFetching, items, metadata } = this.props;
 
     return (
       <div className='faceted-search'>
@@ -318,17 +308,12 @@ export class FacetedSearch extends React.Component {
             <div>
               <h2>Sisältöhaku</h2>
             </div>
-            <div>
-              <Select
-                autoBlur={false}
-                clearable={false}
-                value={null}
-                onChange={this.onExport}
-                autoFocus={true}
-                options={EXPORT_OPTIONS}
-                placeholder='Vie hakutulokset'
-              />
-            </div>
+            <Exporter
+              attributeTypes={attributeTypes}
+              data={exportItems}
+              className='pull-right'
+              isVisible={exportItems.length > 0}
+            />
           </div>
           <div className='faceted-search-field'>
             <form onSubmit={this.onSearchSubmit}>
@@ -383,6 +368,7 @@ FacetedSearch.propTypes = {
   attributeTypes: PropTypes.object.isRequired,
   attributes: PropTypes.array.isRequired,
   classifications: PropTypes.array.isRequired,
+  exportItems: PropTypes.array.isRequired,
   fetchClassifications: PropTypes.func.isRequired,
   filterItems: PropTypes.func.isRequired,
   isFetching: PropTypes.bool,

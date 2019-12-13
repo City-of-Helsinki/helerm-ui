@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import Select from 'react-select';
 import { includes, isArray, isEmpty } from 'lodash';
 import XLSX from 'xlsx';
 import moment from 'moment';
@@ -12,6 +13,11 @@ const CLASSIFICATION_ATTRIBUTES = [
   { attribute: 'descriptionInternal', name: 'Sisäinen kuvaus', type: 'classification' },
   { attribute: 'relatedClassification', name: 'Liittyvä tehtäväluokka', type: 'classification' },
   { attribute: 'additionalInformation', name: 'Lisätiedot', type: 'classification' }
+];
+
+export const EXPORT_OPTIONS = [
+  { value: 0, label: 'Yhdelle välilehdelle' },
+  { value: 1, label: 'Omille välilehdille' }
 ];
 
 const getChildren = (array, item) => {
@@ -188,24 +194,26 @@ const Exporter = ({ attributeTypes, data, className, isVisible }) => {
   }
 
   const exportData = data.reduce(getChildren, []);
-  const countStr = exportData.length > 1 ? 'tulosta' : 'tulos';
   const fileName = `helerm-export_${moment().format('DD.MM.YYYY')}.xlsx`;
 
   return (
-    <span className={classnames('exporter', className)}>
-      <button
-        className='btn btn-primary btn-sm'
-        target='_blank'
-        onClick={() => createWorkBook(attributeTypes, fileName, exportData)}>
-        Vie {exportData.length} {countStr} välilehdille <i className='fa fa-file-excel-o' />
-      </button>
-      <button
-        className='btn btn-primary btn-sm'
-        target='_blank'
-        onClick={() => createSingleSheetWorkBook(attributeTypes, fileName, exportData)}>
-        Vie {exportData.length} {countStr} <i className='fa fa-file-excel-o' />
-      </button>
-    </span>
+    <div className={classnames('exporter', className)}>
+      <Select
+        autoBlur={false}
+        clearable={false}
+        value={null}
+        onChange={(e) => {
+          if (e.value === 0) {
+            createSingleSheetWorkBook(attributeTypes, fileName, exportData);
+          } else {
+            createWorkBook(attributeTypes, fileName, exportData);
+          }
+        }}
+        autoFocus={true}
+        options={EXPORT_OPTIONS}
+        placeholder={`Vie hakutulokset (${exportData.length})`}
+      />
+    </div>
   );
 };
 

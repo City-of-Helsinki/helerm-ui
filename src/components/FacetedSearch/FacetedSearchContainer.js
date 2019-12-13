@@ -32,6 +32,7 @@ const mapStateToProps = state => ({
   attributes: state.search.filteredAttributes,
   attributeTypes: state.ui.attributeTypes,
   classifications: state.search.classifications,
+  exportItems: state.search.exportItems,
   isFetching: state.search.isFetching,
   items: state.search.items,
   metadata: state.search.metadata,

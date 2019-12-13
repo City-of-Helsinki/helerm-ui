@@ -1,6 +1,6 @@
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
-import { cloneDeep, every, filter, findIndex, includes, isArray, isEmpty, some, toLower, uniq, words } from 'lodash';
+import { cloneDeep, every, filter, find, findIndex, includes, isArray, isEmpty, some, toLower, uniq, words } from 'lodash';
 
 import {
   DEFAULT_SEARCH_PAGE_SIZE,
@@ -17,6 +17,7 @@ import { default as api } from '../../utils/api.js';
 const initialState = {
   actions: [],
   attributes: [],
+  exportItems: [],
   metadata: {},
   classifications: [],
   filteredAttributes: [],
@@ -116,33 +117,30 @@ export function searchItems (searchTerm) {
   const terms = words(searchTerm);
   const splitted = terms.reduce((acc, term, index) => {
     const isOperator = includes([TERM_AND, TERM_NOT, TERM_OR], term);
-    const operator = isOperator && !acc.lastOperator ? term : acc.lastOperator;
     if (!isOperator) {
-      acc.lastTerms.push(toLower(term).trim());
+      acc.terms.push(toLower(term).trim());
     }
-    if (operator === TERM_AND || (!acc.lastOperator && operator === TERM_NOT) ||
-      (!operator && index + 1 === terms.length)) {
-      acc.andTerms.push(...acc.lastTerms);
-      acc.lastTerms = [];
-    } else if (operator === TERM_OR) {
-      acc.orTerms.push(...acc.lastTerms);
-      acc.lastTerms = [];
-    } else if (operator === TERM_NOT) {
-      acc.notTerms.push(...acc.lastTerms);
-      acc.lastTerms = [];
+    if (isOperator || index + 1 === terms.length) {
+      if (term === TERM_OR || acc.lastOperator === TERM_OR) {
+        acc.orTerms.push(acc.terms.join(' '));
+        acc.terms = [];
+      } else if (acc.lastOperator === TERM_NOT) {
+        acc.notTerms.push(acc.terms.join(' '));
+        acc.terms = [];
+      } else {
+        acc.andTerms.push(acc.terms.join(' '));
+        acc.terms = [];
+      }
     }
     if (isOperator) {
-      acc.lastOperator =
-        !acc.lastOperator && (term === TERM_AND && index + 1 < terms.length)
-          ? null
-          : term;
+      acc.lastOperator = term;
     }
     return acc;
   }, {
     andTerms: [],
     notTerms: [],
     orTerms: [],
-    lastTerms: [],
+    terms: [],
     lastOperator: null
   });
   const { andTerms, notTerms, orTerms } = splitted;
@@ -259,12 +257,14 @@ const receiveClassificationsAction = (state, { payload }) => {
     if (item.function) {
       parents.push(item.id);
       acc.functions.push({
+        ...item,
         attributes: {
           ...item.function_attributes,
           function_state: item.function_state,
           function_valid_from: item.function_valid_from,
           function_valid_to: item.function_valid_to
         },
+        children: null,
         function: item.function,
         id: item.function,
         name,
@@ -335,6 +335,7 @@ const receiveClassificationsAction = (state, { payload }) => {
     attributes: { $set: filteredAttributes },
     filteredAttributes: { $set: filteredAttributes },
     classifications: isAdd ? { $splice: [[state.classifications.length, 0, ...classifications]] } : { $set: classifications },
+    exportItems: { $set: [...state.exportItems, ...functions] },
     functions: isAdd ? { $splice: [[state.functions.length, 0, ...functions]] } : { $set: functions },
     headers: { $merge: headers },
     items: isAdd ? { $splice: [[state.classifications.length, 0, ...classifications]] } : { $set: classifications },
@@ -351,6 +352,7 @@ const searchItemsAction = (state, { payload }) => {
   if (isEmpty(payload.classifications) && isEmpty(payload.functions) && isEmpty(payload.phases) &&
     isEmpty(payload.actions) && isEmpty(payload.records)) {
     return update(state, {
+      exportItems: { $set: !filteredAttributes ? functions : [] },
       filteredAttributes: { $set: filteredAttributes || state.filteredAttributes },
       items: { $set: !filteredAttributes ? classifications : [] }
     });
@@ -410,8 +412,24 @@ const searchItemsAction = (state, { payload }) => {
     return item;
   });
 
+  const exportItems = items.reduce((acc, item) => {
+    const accFunc = item.function ? find(acc, { id: item.function }) : null;
+    if (!accFunc && item.function) {
+      if (item.type === TYPE_FUNCTION) {
+        acc.push(item);
+      } else {
+        const func = find(functions, { id: item.function });
+        if (func) {
+          acc.push(func);
+        }
+      }
+    }
+    return acc;
+  }, []);
+
   return update(state, {
     filteredAttributes: { $set: filteredAttributes || state.filteredAttributes },
+    exportItems: { $set: exportItems },
     items: { $set: items },
     terms: { $set: payload.terms || terms }
   });
