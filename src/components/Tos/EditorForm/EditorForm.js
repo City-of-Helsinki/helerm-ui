@@ -5,7 +5,6 @@ import update from 'immutability-helper';
 import includes from 'lodash/includes';
 import capitalize from 'lodash/capitalize';
 import sortBy from 'lodash/sortBy';
-import get from 'lodash/get';
 
 import DropdownInput from '../DropdownInput/DropdownInput';
 import { validateConditionalRules } from '../../../utils/validators';
@@ -42,15 +41,28 @@ export class EditorForm extends React.Component {
     return initialState;
   }
 
-  createUpdate = (value, key, field) => ({
-    newAttributes: {
-      [key]: {
-        [field]: {
-          $set: value
+  createUpdate = (value, key, field) => {
+    return {
+      newAttributes: field === 'checked' && !value
+        ? {
+          [key]: {
+            [field]: {
+              $set: value
+            },
+            value: {
+              $set: null
+            }
+          }
         }
-      }
-    }
-  });
+        : {
+          [key]: {
+            [field]: {
+              $set: value
+            }
+          }
+        }
+    };
+  }
 
   /**
    * Updates the value to the local state and redux state.
@@ -94,7 +106,7 @@ export class EditorForm extends React.Component {
   getCheckedState (key) {
     if (
       this.props.editorConfig.action === 'edit' &&
-      !get(this.state, `newAttributes[${key}].value`)
+      !this.state.newAttributes[key].value
     ) {
       return false;
     } else {
@@ -106,9 +118,7 @@ export class EditorForm extends React.Component {
     const { newAttributes } = this.state;
     const attributesToShow = [];
     const getAttributeKeys = attributes => Object.keys(attributes);
-    const attributeTypeKeys = Object.keys(attributeTypes);
-    for (let k = 0; k < attributeTypeKeys.length; k++) {
-      const attributeType = attributeTypeKeys[k];
+    for (const attributeType in attributeTypes) {
       if (
         attributeTypes.hasOwnProperty(attributeType) &&
         includes(
@@ -146,7 +156,7 @@ export class EditorForm extends React.Component {
     return this.prepareAttributes(attributesToShow);
   }
 
-  getComplementAttributes (attributeTypes, attributesToShow) {
+  getComplementAttributes (attributeTypes) {
     const { newAttributes } = this.state;
     const complementAttributes = [];
     Object.keys(attributeTypes).forEach(key => {
@@ -204,13 +214,9 @@ export class EditorForm extends React.Component {
   }
 
   generateAttributeElements (attributeTypes) {
-    let attributesToShow = this.getAttributesToShow(
-      attributeTypes,
-      this.props.attributes
-    );
-    if (this.props.editorConfig.action === 'complement') {
-      attributesToShow = this.getComplementAttributes(attributeTypes);
-    }
+    const attributesToShow = this.props.editorConfig.action === 'complement'
+      ? this.getComplementAttributes(attributeTypes)
+      : this.getAttributesToShow(attributeTypes, this.props.attributes);
     const attributeElements = [];
 
     if (attributesToShow.length) {
