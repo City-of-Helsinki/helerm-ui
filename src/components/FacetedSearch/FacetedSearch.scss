@@ -34,11 +34,6 @@
     button {
       margin-left: 15px;
     }
-
-    button.faceted-search-tip {
-      border: solid 1px $black50;
-      border-radius: $border-radius-large;
-    }
   }
 
   &-content {
@@ -57,7 +52,6 @@
 
   &-facets {
     width: 25%;
-    overflow: hidden;
 
     &-items {
       border: solid 1px $black50;

@@ -486,20 +486,23 @@ export default class InfinityMenu extends Component {
               </div>
               <div className='navigation-filters clearfix'>
                 <div className='navigation-filters-container'>
-                  <div className='row'>
-                    {isDetailSearch &&
-                      <div className='col-xs-12'>
+                  {isDetailSearch &&
+                    <div className='row navigation-filters-header'>
+                      <div className='col-xs-6'>
                         <h2>
                           Sisältöhaku
-                          <Exporter
-                            attributeTypes={this.props.attributeTypes}
-                            data={filteredTree}
-                            className='pull-right'
-                            isVisible={filteredTree.length > 0}
-                          />
                         </h2>
                       </div>
-                    }
+                      <div className='col-xs-6'>
+                        <Exporter
+                          attributeTypes={this.props.attributeTypes}
+                          data={filteredTree}
+                          isVisible={filteredTree.length > 0}
+                        />
+                      </div>
+                    </div>
+                  }
+                  <div className='row'>
                     {searchInputContent}
                     <div className={classnames({ 'col-xs-12': isDetailSearch, 'col-sm-6': !isDetailSearch })}>
                       {this.props.filters}
