@@ -13,6 +13,7 @@ import {
 } from '../../../config/constants';
 import Exporter from '../Exporter';
 
+import { FacetedSearchHelp, FACETED_SEARCH_HELP_TYPE_FACET, FACETED_SEARCH_HELP_TYPE_TERM } from './FacetedSearchHelp/FacetedSearchHelp';
 import FacetedSearchResults from './FacetedSearchResults/FacetedSearchResults';
 import PreviewItem from './PreviewItem/PreviewItem';
 import './FacetedSearch.scss';
@@ -326,15 +327,13 @@ export class FacetedSearch extends React.Component {
               />
             </form>
             <button className='btn btn-primary' onClick={this.onSearchSubmit}>Hae</button>
-            <button className='btn btn-link faceted-search-tip'>
-              <i className='fa fa-question' />
-            </button>
+            <FacetedSearchHelp type={FACETED_SEARCH_HELP_TYPE_TERM} />
           </div>
           <div className='faceted-search-content'>
             <div className='faceted-search-facets'>
               <div className='faceted-search-facets-item faceted-search-facets-title'>
                 <span>Rajaa hakua</span>
-                <button className='btn btn-link'><i className='fa fa-question' /></button>
+                <FacetedSearchHelp type={FACETED_SEARCH_HELP_TYPE_FACET} />
               </div>
               <div className='faceted-search-facets-items'>
                 {this.renderFacetGroup(TYPE_CLASSIFICATION)}
