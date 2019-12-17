@@ -18,7 +18,7 @@
     "API_VERSION"           : false,
     "RESULTS_PER_PAGE"      : false,
     "SEARCH_PAGE_SIZE"      : false,
-    "FACET_SEARCH_LENGTH"   : false,
+    "FACETED_SEARCH_LENGTH" : false,
     "STORAGE_PREFIX"        : false,
     "VERSION"               : false,
     "GIT_VERSION"           : false,

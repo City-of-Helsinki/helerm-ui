@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import { filter, find, includes, isArray, isEmpty, orderBy, slice, uniq, without } from 'lodash';
 
 import {
-  DEFAULT_FACET_SEARCH_LENGTH,
+  DEFAULT_FACETED_SEARCH_LENGTH,
   FACET_ATTRIBUTE_SIZE,
   TYPE_ACTION,
   TYPE_CLASSIFICATION,
@@ -150,7 +150,7 @@ export class FacetedSearch extends React.Component {
   }
 
   onSearchInputChange (e) {
-    const suggestSize = FACET_SEARCH_LENGTH || DEFAULT_FACET_SEARCH_LENGTH;
+    const suggestSize = FACETED_SEARCH_LENGTH || DEFAULT_FACETED_SEARCH_LENGTH;
     this.setState({ searchTerm: e.target.value }, () => {
       if (this.state.searchTerm.length >= suggestSize) {
         this.props.searchItems(this.state.searchTerm, true);
