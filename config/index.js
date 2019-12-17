@@ -86,7 +86,7 @@ config.globals = {
   SENTRY_REPORT_DIALOG: process.env.SENTRY_REPORT_DIALOG,
   RESULTS_PER_PAGE: JSON.stringify(process.env.RESULTS_PER_PAGE),
   SEARCH_PAGE_SIZE: JSON.stringify(process.env.SEARCH_PAGE_SIZE),
-  FACET_SEARCH_LENGTH: JSON.stringify(process.env.FACET_SEARCH_LENGTH),
+  FACETED_SEARCH_LENGTH: JSON.stringify(process.env.FACETED_SEARCH_LENGTH),
   STORAGE_PREFIX: JSON.stringify(process.env.STORAGE_PREFIX || 'HELERM'),
   FEEDBACK_URL: JSON.stringify(process.env.FEEDBACK_URL),
   SITE_THEME: process.env.SITE_THEME || 'coat',
