@@ -1,0 +1,26 @@
+@import '../../styles/vendor/hel-components/variables';
+
+.faceted-search-suggestions {
+  position: absolute;
+  top: 110%;
+  padding: 15px;
+  max-width: 100%;
+  width: 100%;
+
+  &-title {
+    padding: 0 10px;
+    color: #aaa;
+    font-size: 13px;
+    text-transform: uppercase;
+  }
+}
+
+.faceted-search-suggestion {
+  padding: 10px;
+  color: $brand-primary;
+  font-weight: $bold;
+}
+
+.faceted-search-suggestion:hover {
+  background-color: $black05;
+}

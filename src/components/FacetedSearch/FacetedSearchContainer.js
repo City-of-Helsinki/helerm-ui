@@ -7,6 +7,7 @@ import { setNavigationVisibility } from './../Navigation/reducer';
 import {
   fetchClassifications,
   filterItems,
+  resetSuggestions,
   searchItems,
   toggleAttributeOpen,
   toggleAttributeOption,
@@ -20,6 +21,7 @@ const mapDispatchToProps = (dispatch) => {
     fetchClassifications: bindActionCreators(fetchClassifications, dispatch),
     filterItems: bindActionCreators(filterItems, dispatch),
     push: (path) => dispatch(push(path)),
+    resetSuggestions: bindActionCreators(resetSuggestions, dispatch),
     searchItems: bindActionCreators(searchItems, dispatch),
     setNavigationVisibility: bindActionCreators(setNavigationVisibility, dispatch),
     toggleAttributeOpen: bindActionCreators(toggleAttributeOpen, dispatch),
@@ -36,6 +38,7 @@ const mapStateToProps = state => ({
   isFetching: state.search.isFetching,
   items: state.search.items,
   metadata: state.search.metadata,
+  suggestions: state.search.suggestions,
   terms: state.search.terms
 });
 
