@@ -28,6 +28,7 @@ const initialState = {
   page: 1,
   phases: [],
   records: [],
+  suggestions: [],
   terms: []
 };
 
@@ -37,6 +38,7 @@ export const REQUEST_CLASSIFICATIONS = 'requestClassificationsAction';
 export const RECEIVE_CLASSIFICATIONS = 'receiveClassificationsAction';
 export const FILTER_ITEMS = 'filterItemsAction';
 export const SEARCH_ITEMS = 'searchItemsAction';
+export const SEARCH_SUGGESTIONS = 'searchSuggestionsAction';
 export const SET_ATTRIBUTE_TYPES = 'setAttributeTypesAction';
 export const TOGGLE_ATTRIBUTE = 'toggleAttributeAction';
 export const TOGGLE_ATTRIBUTE_OPTION = 'toggleAttributeOptionAction';
@@ -110,11 +112,11 @@ export function fetchClassifications (page = 1) {
   };
 };
 
-export function searchItems (searchTerm) {
+export function searchItems (searchTerm, isSuggestionsOnly = false, type = TYPE_CLASSIFICATION) {
   const TERM_AND = 'AND';
   const TERM_NOT = 'NOT';
   const TERM_OR = 'OR';
-  const terms = words(searchTerm);
+  const terms = words(searchTerm, /[^, ]+/g);
   const splitted = terms.reduce((acc, term, index) => {
     const isOperator = includes([TERM_AND, TERM_NOT, TERM_OR], term);
     if (!isOperator) {
@@ -162,14 +164,44 @@ export function searchItems (searchTerm) {
       : attributes;
 
     const classifications = getFilteredHits(filteredAttributes, TYPE_CLASSIFICATION);
-    const functions = isEmpty(classifications) ? getFilteredHits(filteredAttributes, TYPE_FUNCTION) : [];
-    const phases = isEmpty(classifications) && isEmpty(functions) ? getFilteredHits(filteredAttributes, TYPE_PHASE) : [];
-    const actions = isEmpty(classifications) && isEmpty(functions) && isEmpty(phases) ? getFilteredHits(filteredAttributes, TYPE_ACTION) : [];
-    const records = isEmpty(classifications) && isEmpty(functions) && isEmpty(phases) && isEmpty(actions) ? getFilteredHits(filteredAttributes, TYPE_RECORD) : [];
+    const functions = getFilteredHits(filteredAttributes, TYPE_FUNCTION);
+    const phases = getFilteredHits(filteredAttributes, TYPE_PHASE);
+    const actions = getFilteredHits(filteredAttributes, TYPE_ACTION);
+    const records = getFilteredHits(filteredAttributes, TYPE_RECORD);
+    const suggestions = [{
+      type: TYPE_CLASSIFICATION,
+      hits: classifications
+    }, {
+      type: TYPE_FUNCTION,
+      hits: functions
+    }, {
+      type: TYPE_PHASE,
+      hits: phases
+    }, {
+      type: TYPE_ACTION,
+      hits: actions
+    }, {
+      type: TYPE_RECORD,
+      hits: records
+    }];
+    if (isSuggestionsOnly) {
+      return dispatch(createAction(SEARCH_SUGGESTIONS)(suggestions));
+    }
     return dispatch(createAction(SEARCH_ITEMS)({
-      classifications, filteredAttributes, functions, phases, actions, records, terms: [...andTerms, ...orTerms]
+      classifications: !type || type === TYPE_CLASSIFICATION ? classifications : [],
+      filteredAttributes,
+      functions: type === TYPE_FUNCTION || (!type && isEmpty(classifications)) ? functions : [],
+      phases: type === TYPE_PHASE || (!type && isEmpty(classifications) && isEmpty(functions)) ? phases : [],
+      actions: type === TYPE_ACTION || (!type && isEmpty(classifications) && isEmpty(functions) && isEmpty(phases)) ? actions : [],
+      records: type === TYPE_RECORD || (!type && isEmpty(classifications) && isEmpty(functions) && isEmpty(phases) && isEmpty(actions)) ? records : [],
+      suggestions: [],
+      terms: [...andTerms, ...orTerms]
     }));
   };
+}
+
+export function resetSuggestions () {
+  return createAction(SEARCH_SUGGESTIONS)([]);
 }
 
 export function filterItems (selectedFacets) {
@@ -279,7 +311,7 @@ const receiveClassificationsAction = (state, { payload }) => {
           attributes: phase.attributes,
           function: item.function,
           id: phase.id,
-          name: phase.name,
+          name: phase.name || '',
           parents: [...parents, phase.function],
           path,
           type: TYPE_PHASE
@@ -290,7 +322,7 @@ const receiveClassificationsAction = (state, { payload }) => {
               attributes: action.attributes,
               function: item.function,
               id: action.id,
-              name: action.name,
+              name: action.name || '',
               parents: [...parents, phase.function, phase.id],
               path,
               type: TYPE_ACTION
@@ -301,7 +333,7 @@ const receiveClassificationsAction = (state, { payload }) => {
                   attributes: record.attributes,
                   function: item.function,
                   id: record.id,
-                  name: record.name,
+                  name: record.name || '',
                   parents: [...parents, phase.function, phase.id, action.id],
                   path,
                   type: TYPE_RECORD
@@ -345,6 +377,12 @@ const receiveClassificationsAction = (state, { payload }) => {
   });
 };
 
+const searchSuggestionsAction = (state, { payload }) => {
+  return update(state, {
+    suggestions: { $set: payload }
+  });
+};
+
 const searchItemsAction = (state, { payload }) => {
   const { classifications, functions, phases, actions, records } = state;
   const { filteredAttributes } = payload;
@@ -354,7 +392,8 @@ const searchItemsAction = (state, { payload }) => {
     return update(state, {
       exportItems: { $set: !filteredAttributes ? functions : [] },
       filteredAttributes: { $set: filteredAttributes || state.filteredAttributes },
-      items: { $set: !filteredAttributes ? classifications : [] }
+      items: { $set: !filteredAttributes ? classifications : [] },
+      suggestions: { $set: [] }
     });
   }
   const filteredItems = [{
@@ -406,7 +445,7 @@ const searchItemsAction = (state, { payload }) => {
           ? item.name
           : terms.reduce((acc, term) => {
             return acc.replace(new RegExp(term, 'gi'), (match) => `<mark>${match}</mark>`);
-          }, item.name)
+          }, item.name || '')
       };
     }
     return item;
@@ -431,6 +470,7 @@ const searchItemsAction = (state, { payload }) => {
     filteredAttributes: { $set: filteredAttributes || state.filteredAttributes },
     exportItems: { $set: exportItems },
     items: { $set: items },
+    suggestions: { $set: [] },
     terms: { $set: payload.terms || terms }
   });
 };
@@ -550,6 +590,7 @@ export default handleActions({
   requestClassificationsAction,
   receiveClassificationsAction,
   searchItemsAction,
+  searchSuggestionsAction,
   setAttributeTypesAction,
   toggleAttributeAction,
   toggleAttributeOptionAction,

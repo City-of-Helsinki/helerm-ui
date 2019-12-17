@@ -1,6 +1,11 @@
 @import '../../styles/vendor/hel-components/variables';
 
 .faceted-search-results {
+  &-size {
+    padding: 10px 0;
+    font-weight: $bold;
+  }
+
   &-item {
     padding: 10px;
     display: flex;

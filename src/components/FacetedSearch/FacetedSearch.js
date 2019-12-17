@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import { filter, find, includes, isArray, isEmpty, orderBy, slice, uniq, without } from 'lodash';
 
 import {
+  DEFAULT_FACET_SEARCH_LENGTH,
   FACET_ATTRIBUTE_SIZE,
   TYPE_ACTION,
   TYPE_CLASSIFICATION,
@@ -15,6 +16,7 @@ import Exporter from '../Exporter';
 
 import { FacetedSearchHelp, FACETED_SEARCH_HELP_TYPE_FACET, FACETED_SEARCH_HELP_TYPE_TERM } from './FacetedSearchHelp/FacetedSearchHelp';
 import FacetedSearchResults from './FacetedSearchResults/FacetedSearchResults';
+import FacetedSearchSuggestions from './FacetedSearchSuggestions/FacetedSearchSuggestions';
 import PreviewItem from './PreviewItem/PreviewItem';
 import './FacetedSearch.scss';
 
@@ -30,6 +32,7 @@ export class FacetedSearch extends React.Component {
     this.onClickReset = this.onClickReset.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.onSearchInputChange = this.onSearchInputChange.bind(this);
+    this.onSelectSuggestion = this.onSelectSuggestion.bind(this);
     this.onToggleFacet = this.onToggleFacet.bind(this);
 
     this.state = {
@@ -147,7 +150,14 @@ export class FacetedSearch extends React.Component {
   }
 
   onSearchInputChange (e) {
-    this.setState({ searchTerm: e.target.value });
+    const suggestSize = FACET_SEARCH_LENGTH || DEFAULT_FACET_SEARCH_LENGTH;
+    this.setState({ searchTerm: e.target.value }, () => {
+      if (this.state.searchTerm.length >= suggestSize) {
+        this.props.searchItems(this.state.searchTerm, true);
+      } else {
+        this.props.resetSuggestions();
+      }
+    });
   }
 
   onSearchSubmit (event) {
@@ -165,6 +175,15 @@ export class FacetedSearch extends React.Component {
       }
     }, () => {
       this.props.searchItems(searchTerm);
+    });
+  }
+
+  onSelectSuggestion (type) {
+    const { searchTerm } = this.state;
+    this.setState({
+      facetsOpen: [type]
+    }, () => {
+      this.props.searchItems(searchTerm, false, type);
     });
   }
 
@@ -299,7 +318,7 @@ export class FacetedSearch extends React.Component {
   }
 
   render () {
-    const { attributeTypes, exportItems, isFetching, items, metadata } = this.props;
+    const { attributeTypes, exportItems, isFetching, items, metadata, suggestions } = this.props;
     const { previewItem, searchTerm } = this.state;
 
     return (
@@ -325,6 +344,13 @@ export class FacetedSearch extends React.Component {
                 ref={field => { this.searchField = field; }}
                 value={searchTerm}
               />
+              {!isEmpty(suggestions) && (
+                <FacetedSearchSuggestions
+                  onSelect={this.onSelectSuggestion}
+                  suggestions={suggestions}
+                  term={searchTerm}
+                />
+              )}
             </form>
             <button className='btn btn-primary' onClick={this.onSearchSubmit}>Hae</button>
             <FacetedSearchHelp type={FACETED_SEARCH_HELP_TYPE_TERM} />
@@ -373,8 +399,10 @@ FacetedSearch.propTypes = {
   isFetching: PropTypes.bool,
   items: PropTypes.array.isRequired,
   metadata: PropTypes.object.isRequired,
+  resetSuggestions: PropTypes.func.isRequired,
   searchItems: PropTypes.func.isRequired,
   setNavigationVisibility: PropTypes.func.isRequired,
+  suggestions: PropTypes.array.isRequired,
   terms: PropTypes.array.isRequired,
   toggleAttributeOpen: PropTypes.func.isRequired,
   // toggleAttributeOption: PropTypes.func.isRequired,

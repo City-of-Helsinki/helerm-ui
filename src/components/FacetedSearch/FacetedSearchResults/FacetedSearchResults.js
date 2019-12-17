@@ -13,6 +13,7 @@ export const FacetedSearchResults = ({
 }) => {
   return (
     <div className='faceted-search-results'>
+      <div className='faceted-search-results-size'>Hakutulokset ({items.length})</div>
       {items.map(item => (
         <div
           className={classnames('faceted-search-results-item', {
