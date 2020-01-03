@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import classnames from 'classnames';
 import { filter, find, includes, isArray, isEmpty, orderBy, slice, uniq, without } from 'lodash';
+import { StickyContainer, Sticky } from 'react-sticky';
 
 import {
   DEFAULT_FACETED_SEARCH_LENGTH,
@@ -336,69 +337,75 @@ export class FacetedSearch extends React.Component {
     const { previewItem, searchTerm } = this.state;
 
     return (
-      <div className='faceted-search'>
-        <div className='faceted-search-wrapper'>
-          <div className='faceted-search-header'>
-            <div>
-              <h2>Sisältöhaku</h2>
-            </div>
-            <Exporter
-              attributeTypes={attributeTypes}
-              data={exportItems}
-              className='pull-right'
-              isVisible={exportItems.length > 0}
-            />
-          </div>
-          <div className='faceted-search-field'>
-            <form onSubmit={this.onSearchSubmit}>
-              <input className='input-title form-control col-xs-11'
-                type='search'
-                placeholder='Vapaasanahaku'
-                onChange={this.onSearchInputChange}
-                ref={field => { this.searchField = field; }}
-                value={searchTerm}
+      <StickyContainer>
+        <div className='faceted-search'>
+          <div className='faceted-search-wrapper'>
+            <div className='faceted-search-header'>
+              <div>
+                <h2>Sisältöhaku</h2>
+              </div>
+              <Exporter
+                attributeTypes={attributeTypes}
+                data={exportItems}
+                className='pull-right'
+                isVisible={exportItems.length > 0}
               />
-              {!isEmpty(suggestions) && (
-                <FacetedSearchSuggestions
-                  onSelect={this.onSelectSuggestion}
-                  suggestions={suggestions}
-                  term={searchTerm}
+            </div>
+            <div className='faceted-search-field'>
+              <form onSubmit={this.onSearchSubmit}>
+                <input className='input-title form-control col-xs-11'
+                  type='search'
+                  placeholder='Vapaasanahaku'
+                  onChange={this.onSearchInputChange}
+                  ref={field => { this.searchField = field; }}
+                  value={searchTerm}
                 />
-              )}
-            </form>
-            <button className='btn btn-primary' onClick={this.onSearchSubmit}>Hae</button>
-            <FacetedSearchHelp type={FACETED_SEARCH_HELP_TYPE_TERM} />
-          </div>
-          <div className='faceted-search-content'>
-            <div className='faceted-search-facets'>
-              <div className='faceted-search-facets-item faceted-search-facets-title'>
-                <span>Rajaa hakua</span>
-                <FacetedSearchHelp type={FACETED_SEARCH_HELP_TYPE_FACET} />
+                {!isEmpty(suggestions) && (
+                  <FacetedSearchSuggestions
+                    onSelect={this.onSelectSuggestion}
+                    suggestions={suggestions}
+                    term={searchTerm}
+                  />
+                )}
+              </form>
+              <button className='btn btn-primary' onClick={this.onSearchSubmit}>Hae</button>
+              <FacetedSearchHelp type={FACETED_SEARCH_HELP_TYPE_TERM} />
+            </div>
+            <div className='faceted-search-content'>
+              <div className='faceted-search-facets'>
+                <div className='faceted-search-facets-item faceted-search-facets-title'>
+                  <span>Rajaa hakua</span>
+                  <FacetedSearchHelp type={FACETED_SEARCH_HELP_TYPE_FACET} />
+                </div>
+                <div className='faceted-search-facets-items'>
+                  {this.renderFacetGroup(TYPE_CLASSIFICATION)}
+                  {this.renderFacetGroup(TYPE_FUNCTION)}
+                  {this.renderFacetGroup(TYPE_PHASE)}
+                  {this.renderFacetGroup(TYPE_ACTION)}
+                  {this.renderFacetGroup(TYPE_RECORD)}
+                </div>
               </div>
-              <div className='faceted-search-facets-items'>
-                {this.renderFacetGroup(TYPE_CLASSIFICATION)}
-                {this.renderFacetGroup(TYPE_FUNCTION)}
-                {this.renderFacetGroup(TYPE_PHASE)}
-                {this.renderFacetGroup(TYPE_ACTION)}
-                {this.renderFacetGroup(TYPE_RECORD)}
+              <div className='faceted-search-list'>
+                {isFetching && <div className='faceted-search-loader'><span className='fa fa-2x fa-spinner fa-spin'/></div>}
+                {this.renderSelectedFacets()}
+                <FacetedSearchResults
+                  highlightedId={previewItem ? previewItem.id : null}
+                  items={items}
+                  metadata={metadata}
+                  onSelectItem={this.onClickItem}
+                />
               </div>
             </div>
-            <div className='faceted-search-list'>
-              {isFetching && <div className='faceted-search-loader'><span className='fa fa-2x fa-spinner fa-spin'/></div>}
-              {this.renderSelectedFacets()}
-              <FacetedSearchResults
-                highlightedId={previewItem ? previewItem.id : null}
-                items={items}
-                metadata={metadata}
-                onSelectItem={this.onClickItem}
-              />
-            </div>
+          </div>
+          <div className='faceted-search-preview'>
+            {!!previewItem && (
+              <Sticky>
+                <PreviewItem item={previewItem} metadata={metadata} onClose={this.onClosePreview} />
+              </Sticky>
+            )}
           </div>
         </div>
-        <div className='faceted-search-preview'>
-          {!!previewItem && <PreviewItem item={previewItem} metadata={metadata} onClose={this.onClosePreview} />}
-        </div>
-      </div>
+      </StickyContainer>
     );
   }
 }
