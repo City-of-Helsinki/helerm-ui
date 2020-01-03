@@ -112,7 +112,7 @@ export function fetchClassifications (page = 1) {
   };
 };
 
-export function searchItems (searchTerm, isSuggestionsOnly = false, type = TYPE_CLASSIFICATION) {
+export function searchItems (searchTerm, isSuggestionsOnly = false, type) {
   const TERM_AND = 'AND';
   const TERM_NOT = 'NOT';
   const TERM_OR = 'OR';
@@ -211,7 +211,8 @@ export function filterItems (selectedFacets) {
     let phases = getFacetHits(selectedFacets[TYPE_PHASE]);
     let actions = getFacetHits(selectedFacets[TYPE_ACTION]);
     let records = getFacetHits(selectedFacets[TYPE_RECORD]);
-    if (!isEmpty(classifications) || !isEmpty(functions) || !isEmpty(phases) || !isEmpty(actions) || !isEmpty(records)) {
+    if (!isEmpty(selectedFacets[TYPE_CLASSIFICATION]) || !isEmpty(selectedFacets[TYPE_FUNCTION]) ||
+      !isEmpty(selectedFacets[TYPE_PHASE]) || !isEmpty(selectedFacets[TYPE_ACTION]) || !isEmpty(selectedFacets[TYPE_RECORD])) {
       return dispatch(createAction(SEARCH_ITEMS)({
         classifications, functions, phases, actions, records
       }));
@@ -392,7 +393,7 @@ const searchItemsAction = (state, { payload }) => {
     return update(state, {
       exportItems: { $set: !filteredAttributes ? functions : [] },
       filteredAttributes: { $set: filteredAttributes || state.filteredAttributes },
-      items: { $set: !filteredAttributes ? classifications : [] },
+      items: { $set: [] },
       suggestions: { $set: [] }
     });
   }
@@ -566,10 +567,26 @@ const getSelectedItemsForType = (attributes, type, items) => {
 };
 
 const getFacetHits = (facets) => {
-  return facets.reduce((acc, facet) => {
-    acc.push(...facet.hits);
+  const byKeys = facets.reduce((acc, facet) => {
+    if (acc.hasOwnProperty(facet.key)) {
+      acc[facet.key].push(...facet.hits);
+    } else {
+      acc[facet.key] = facet.hits;
+    }
     return acc;
+  }, {});
+  const ids = Object.keys(byKeys || {}).reduce((acc, key, index) => {
+    const hits = [];
+    if (byKeys.hasOwnProperty(key)) {
+      byKeys[key].forEach(hit => {
+        if ((index === 0 && isEmpty(acc)) || includes(acc, hit)) {
+          hits.push(hit);
+        }
+      });
+    }
+    return hits;
   }, []);
+  return uniq(ids);
 };
 
 const getFilteredHits = (filteredAttributes, type) => {

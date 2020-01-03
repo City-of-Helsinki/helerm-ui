@@ -10,7 +10,6 @@ import {
   resetSuggestions,
   searchItems,
   toggleAttributeOpen,
-  toggleAttributeOption,
   toggleShowAllAttributeOptions
 } from './reducer';
 
@@ -25,7 +24,6 @@ const mapDispatchToProps = (dispatch) => {
     searchItems: bindActionCreators(searchItems, dispatch),
     setNavigationVisibility: bindActionCreators(setNavigationVisibility, dispatch),
     toggleAttributeOpen: bindActionCreators(toggleAttributeOpen, dispatch),
-    toggleAttributeOption: bindActionCreators(toggleAttributeOption, dispatch),
     toggleShowAllAttributeOptions: bindActionCreators(toggleShowAllAttributeOptions, dispatch)
   };
 };

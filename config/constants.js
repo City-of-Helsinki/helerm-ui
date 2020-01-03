@@ -1,7 +1,7 @@
 // Misc
 export const DEFAULT_PAGE_SIZE = 2000;
 export const DEFAULT_SEARCH_PAGE_SIZE = 100;
-export const DEFAULT_FACETED_SEARCH_LENGTH = 5;
+export const DEFAULT_FACETED_SEARCH_LENGTH = 4;
 
 // Permissions
 export const EDIT = 'can_edit';
