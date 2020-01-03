@@ -24,6 +24,7 @@ export class FacetedSearch extends React.Component {
   constructor (props) {
     super(props);
 
+    this.onClickAllByType = this.onClickAllByType.bind(this);
     this.onClickAttribute = this.onClickAttribute.bind(this);
     this.onClickAttributeOption = this.onClickAttributeOption.bind(this);
     this.onClickItem = this.onClickItem.bind(this);
@@ -77,12 +78,16 @@ export class FacetedSearch extends React.Component {
     this.props.toggleShowAllAttributeOptions(attribute);
   }
 
+  onClickAllByType (type) {
+    const { searchTerm } = this.state;
+    this.props.searchItems(searchTerm, false, type);
+  }
+
   onClickAttribute (attribute) {
     this.props.toggleAttributeOpen(attribute);
   }
 
   onClickAttributeOption (attribute, option) {
-    // this.props.toggleAttributeOption(attribute, option);
     const { key, name, type } = attribute;
     const { value, hits } = option;
     const { selectedFacets } = this.state;
@@ -274,6 +279,15 @@ export class FacetedSearch extends React.Component {
         </div>
         {isOpen && !isEmpty(orderedAttributes) && (
           <div className='faceted-search-facets-item-attributes'>
+            <div>
+              <div
+                className='faceted-search-facets-item-attribute'
+                onClick={() => this.onClickAllByType(type)}
+              >
+                <span><strong>Kaikki</strong></span>
+                <span>({totalHits})</span>
+              </div>
+            </div>
             {orderedAttributes.map(attribute => this.renderAttribute(attribute))}
           </div>
         )}
@@ -405,7 +419,6 @@ FacetedSearch.propTypes = {
   suggestions: PropTypes.array.isRequired,
   terms: PropTypes.array.isRequired,
   toggleAttributeOpen: PropTypes.func.isRequired,
-  // toggleAttributeOption: PropTypes.func.isRequired,
   toggleShowAllAttributeOptions: PropTypes.func.isRequired
 };
 
