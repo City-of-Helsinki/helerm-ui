@@ -112,7 +112,7 @@ export function fetchClassifications (page = 1) {
   };
 };
 
-export function searchItems (searchTerm, isSuggestionsOnly = false, type = TYPE_CLASSIFICATION) {
+export function searchItems (searchTerm, isSuggestionsOnly = false, type) {
   const TERM_AND = 'AND';
   const TERM_NOT = 'NOT';
   const TERM_OR = 'OR';
