@@ -211,7 +211,7 @@ const Exporter = ({ attributeTypes, data, className, isVisible }) => {
         }}
         autoFocus={true}
         options={EXPORT_OPTIONS}
-        placeholder={`Vie hakutulokset (${exportData.length})`}
+        placeholder={`Vie hakutulokset Exceliin (${exportData.length})`}
       />
     </div>
   );
