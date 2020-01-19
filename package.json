@@ -114,7 +114,7 @@
     "list-to-tree": "1.0.0",
     "moment": "^2.19.3",
     "nconf": "^0.8.4",
-    "node-sass": "^4.9.4",
+    "node-sass": "^4.13.1",
     "normalizr": "^3.2.2",
     "passport": "^0.3.2",
     "passport-helsinki": "City-of-Helsinki/passport-helsinki",
