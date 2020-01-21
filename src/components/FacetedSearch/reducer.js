@@ -273,6 +273,7 @@ const receiveClassificationsAction = (state, { payload }) => {
     const parents = parent ? [...parent.parents, item.parent] : [];
     acc.headers[item.id] = { name, parents, path };
     acc.classifications.push({
+      ...item,
       attributes: {
         additional_information: item.additional_information,
         name,
@@ -280,8 +281,8 @@ const receiveClassificationsAction = (state, { payload }) => {
         related_classification: item.related_classification,
         description_internal: item.description_internal
       },
+      classification: item.id,
       function: item.function || null,
-      id: item.id,
       name,
       parents,
       path: parent ? parent.path : [],
@@ -290,7 +291,6 @@ const receiveClassificationsAction = (state, { payload }) => {
     if (item.function) {
       parents.push(item.id);
       acc.functions.push({
-        ...item,
         attributes: {
           ...item.function_attributes,
           function_state: item.function_state,
@@ -298,6 +298,7 @@ const receiveClassificationsAction = (state, { payload }) => {
           function_valid_to: item.function_valid_to
         },
         children: null,
+        classification: item.id,
         function: item.function,
         id: item.function,
         name,
@@ -310,6 +311,7 @@ const receiveClassificationsAction = (state, { payload }) => {
       item.phases.forEach(phase => {
         acc.phases.push({
           attributes: phase.attributes,
+          classification: item.id,
           function: item.function,
           id: phase.id,
           name: phase.name || '',
@@ -321,6 +323,7 @@ const receiveClassificationsAction = (state, { payload }) => {
           phase.actions.forEach(action => {
             acc.actions.push({
               attributes: action.attributes,
+              classification: item.id,
               function: item.function,
               id: action.id,
               name: action.name || '',
@@ -332,6 +335,7 @@ const receiveClassificationsAction = (state, { payload }) => {
               action.records.forEach(record => {
                 acc.records.push({
                   attributes: record.attributes,
+                  classification: item.id,
                   function: item.function,
                   id: record.id,
                   name: record.name || '',
@@ -368,7 +372,7 @@ const receiveClassificationsAction = (state, { payload }) => {
     attributes: { $set: filteredAttributes },
     filteredAttributes: { $set: filteredAttributes },
     classifications: isAdd ? { $splice: [[state.classifications.length, 0, ...classifications]] } : { $set: classifications },
-    exportItems: { $set: [...state.exportItems, ...functions] },
+    exportItems: { $set: [...state.exportItems, ...classifications] },
     functions: isAdd ? { $splice: [[state.functions.length, 0, ...functions]] } : { $set: functions },
     headers: { $merge: headers },
     items: isAdd ? { $splice: [[state.classifications.length, 0, ...classifications]] } : { $set: classifications },
@@ -453,14 +457,14 @@ const searchItemsAction = (state, { payload }) => {
   });
 
   const exportItems = items.reduce((acc, item) => {
-    const accFunc = item.function ? find(acc, { id: item.function }) : null;
-    if (!accFunc && item.function) {
-      if (item.type === TYPE_FUNCTION) {
+    const accClass = item.classification ? find(acc, { classification: item.classification }) : null;
+    if (!accClass) {
+      if (item.type === TYPE_CLASSIFICATION) {
         acc.push(item);
       } else {
-        const func = find(functions, { id: item.function });
-        if (func) {
-          acc.push(func);
+        const classification = find(classifications, { id: item.classification });
+        if (classification) {
+          acc.push(classification);
         }
       }
     }
