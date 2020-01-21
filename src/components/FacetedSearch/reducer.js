@@ -575,7 +575,7 @@ const getFacetHits = (facets) => {
     if (acc.hasOwnProperty(facet.key)) {
       acc[facet.key].push(...facet.hits);
     } else {
-      acc[facet.key] = facet.hits;
+      acc[facet.key] = [...facet.hits];
     }
     return acc;
   }, {});
