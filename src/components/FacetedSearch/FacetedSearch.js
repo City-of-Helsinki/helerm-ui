@@ -202,7 +202,7 @@ export class FacetedSearch extends React.Component {
   }
 
   renderAttribute (attribute) {
-    const orderedOptions = orderBy(attribute.options, val => val.hits.length, ['desc']);
+    const orderedOptions = orderBy(attribute.options, option => option.ref, ['asc']);
     const options = attribute.showAll ? orderedOptions : slice(orderedOptions, 0, FACET_ATTRIBUTE_SIZE);
     const hidden = attribute.options.length - options.length;
     const total = uniq(attribute.options.reduce((acc, val) => {
