@@ -179,7 +179,7 @@
     "karma-phantomjs-launcher": "^1.0.2",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^2.0.9",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "mocha": "4.0.1",
     "nested-objects": "^0.0.2",
     "nodemon": "^1.10.2",
