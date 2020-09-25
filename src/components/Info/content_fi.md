@@ -15,4 +15,4 @@ Ohjeistamme, että käytätte ensisijaisesti Chrome selainta ja tuemme Microsoft
 
 ### Tietoa ohjelmistokehittäjille (en)
 sis rajapintalinkki sekä linkit rajapintadokumentaatioon ja ohjelmistokoodiin (frontend, backend)
-https://dev.hel.fi/projects/tiedonohjausjarjestelma/
+https://dev.hel.ninja/projects/tiedonohjausjarjestelma/
