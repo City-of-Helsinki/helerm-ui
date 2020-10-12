@@ -662,7 +662,7 @@ export class ViewTOS extends React.Component {
                   <TosHeader
                     cancelEdit={this.cancelEdit}
                     classification={classification}
-                    classificationId={selectedTOS.classification}
+                    classificationId={selectedTOS.classification.id}
                     changeStatus={this.changeStatus}
                     currentVersion={selectedTOS.version}
                     documentState={selectedTOS.documentState}

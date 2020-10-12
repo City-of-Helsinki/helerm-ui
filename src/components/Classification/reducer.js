@@ -66,7 +66,7 @@ export function createTos () {
     const newTos = Object.assign(
       {},
       {
-        classification: classification.id
+        classification: { id: classification.id, version: classification.version }
       }
     );
 

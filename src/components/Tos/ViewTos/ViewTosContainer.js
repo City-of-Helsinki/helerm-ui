@@ -95,7 +95,7 @@ const mapDispatchToProps = dispatch => ({
 
 const getClassification = (tos, items) => {
   if (tos && tos.classification && items) {
-    return itemById(items, tos.classification);
+    return itemById(items, tos.classification.id);
   }
   return null;
 };

@@ -13,9 +13,11 @@ import {
 
 export function convertToTree (itemList) {
   // ------------------------------------
-  // Combine navigation number and names
-  // and
-  // Give each item in the navigation a level specific id for sorting
+  // Combine navigation number and names and
+  // give each item in the navigation a level specific id for sorting.
+  // Because 'list-to-tree' cannot build a tree if option fields are not at
+  // root level, lift parent id from { id: parentId, version: parentVersion }
+  // to object root.
   // ------------------------------------
   itemList.map(item => {
     item.name = item.code + ' ' + item.title;
@@ -24,10 +26,11 @@ export function convertToTree (itemList) {
       item.code.length
     );
     item.path = [];
+    item.parent_id = item.parent ? item.parent.id : null;
   });
   const ltt = new LTT(itemList, {
     key_id: 'id',
-    key_parent: 'parent',
+    key_parent: 'parent_id',
     key_child: 'children'
   });
   const unOrderedTree = ltt.GetTree();
