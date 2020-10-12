@@ -22,7 +22,7 @@ const mapStateToProps = (state, ownProps) => {
   const { items, timestamp } = state.navigation;
   const { attributeTypes } = state.ui;
   const { selectedTOS, classification } = state;
-  const tos = selectedTOS.classification ? itemById(items, selectedTOS.classification) : classification.id ? itemById(items, classification.id) : null;
+  const tos = selectedTOS.classification ? itemById(items, selectedTOS.classification.id) : classification.id ? itemById(items, classification.id) : null;
   const tosPath = ownProps.tosPath ? ownProps.tosPath : tos ? tos.path : [];
 
   return {

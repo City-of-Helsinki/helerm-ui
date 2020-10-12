@@ -266,11 +266,11 @@ const receiveClassificationsAction = (state, { payload }) => {
 
   const data = items.reduce((acc, item) => {
     const name = `${item.code} ${item.title}`;
-    const parent = item.parent ? acc.headers[item.parent] || state.headers[item.parent] : null;
+    const parent = item.parent ? acc.headers[item.parent.id] || state.headers[item.parent.id] : null;
     const path = parent
       ? [...parent.path, name]
       : [name];
-    const parents = parent ? [...parent.parents, item.parent] : [];
+    const parents = parent ? [...parent.parents, item.parent.id] : [];
     acc.headers[item.id] = { name, parents, path };
     acc.classifications.push({
       ...item,
