@@ -29,30 +29,37 @@ const ClassificationHeader = ({
       </div>
       {isOpen &&
         !!classification && (
-        <div className='row'>
-          <div className='col-xs-12'>
-            <div className='list-group-item col-xs-6'>
-              <strong>Kuvaus</strong>
-              <div>{classification.description || '\u00A0'}</div>
-            </div>
-            <div className='list-group-item col-xs-6'>
-              <strong>Sisäinen kuvaus</strong>
-              <div>{classification.description_internal || '\u00A0'}</div>
+        <div>
+          <div className='row'>
+            <div className='col-xs-12'>
+              <div className='list-group-item col-xs-6'>
+                <strong>Kuvaus</strong>
+                <div>{classification.description || '\u00A0'}</div>
+              </div>
+              <div className='list-group-item col-xs-6'>
+                <strong>Sisäinen kuvaus</strong>
+                <div>{classification.description_internal || '\u00A0'}</div>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-      {isOpen &&
-        !!classification && (
-        <div className='row'>
-          <div className='col-xs-12'>
-            <div className='list-group-item col-xs-6'>
-              <strong>Liittyvä tehtäväluokka</strong>
-              <div>{classification.related_classification || '\u00A0'}</div>
+          <div className='row'>
+            <div className='col-xs-12'>
+              <div className='list-group-item col-xs-6'>
+                <strong>Liittyvä tehtäväluokka</strong>
+                <div>{classification.related_classification || '\u00A0'}</div>
+              </div>
+              <div className='list-group-item col-xs-6'>
+                <strong>Lisätiedot</strong>
+                <div>{classification.additional_information || '\u00A0'}</div>
+              </div>
             </div>
-            <div className='list-group-item col-xs-6'>
-              <strong>Lisätiedot</strong>
-              <div>{classification.additional_information || '\u00A0'}</div>
+          </div>
+          <div className='row'>
+            <div className='col-xs-12'>
+              <div className='list-group-item col-xs-6'>
+                <strong>Versio</strong>
+                <div>{classification.version || '\u00A0'}</div>
+              </div>
             </div>
           </div>
         </div>

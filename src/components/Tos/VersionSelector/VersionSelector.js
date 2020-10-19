@@ -22,7 +22,7 @@ const VersionSelector = ({ tosId, currentVersion, versions, router }) => {
 
   return (
     <div>
-      <label className='helerm-version-label' htmlFor={name}>Versio:</label>
+      <label className='helerm-version-label' htmlFor={name}>Käsittelyprosessin versio:</label>
       <Select
         id={name}
         name={name}
