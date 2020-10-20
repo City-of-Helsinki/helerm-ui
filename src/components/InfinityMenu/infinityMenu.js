@@ -229,7 +229,10 @@ export default class InfinityMenu extends Component {
       const filteredSubFolder = node.children.length ? node.children.reduce((p, c, k) => {
         return this.findFiltered(p, c, k, filters);
       }, []) : [];
-      const shouldDisplay = filteredSubFolder.some(child => child.isSearchDisplay);
+
+      const shouldDisplay =
+        filteredSubFolder.some(child => child.isSearchDisplay) ||
+        this.props.filter(node, filters);
 
       if (shouldDisplay) {
         newNode.isSearchOpen = true;
