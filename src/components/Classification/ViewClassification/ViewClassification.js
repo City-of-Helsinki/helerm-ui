@@ -118,6 +118,10 @@ export class ViewClassification extends React.Component {
         'Lisätiedot',
         classification.additional_information
       );
+      const version = this.renderClassificationData(
+        'Versio',
+        classification.version
+      );
       return (
         <div className='col-xs-12 single-classification-container'>
           <ClassificationHeader
@@ -136,6 +140,7 @@ export class ViewClassification extends React.Component {
                   {descriptionInternal}
                   {relatedClassification}
                   {additionalInformation}
+                  {version}
                 </div>
               </div>
               {classification.function

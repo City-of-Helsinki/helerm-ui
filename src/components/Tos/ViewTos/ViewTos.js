@@ -17,6 +17,7 @@ import TosHeader from 'components/Tos/Header/TosHeader';
 import ClassificationHeader from 'components/Tos/Header/ClassificationHeader';
 import ValidationBarContainer from 'components/Tos/ValidationBar/ValidationBarContainer';
 import VersionData from 'components/Tos/Version/VersionData';
+import VersionSelector from '../VersionSelector/VersionSelector';
 
 import Popup from 'components/Popup';
 
@@ -692,6 +693,11 @@ export class ViewTOS extends React.Component {
                       classification={classification}
                       isOpen={selectedTOS.is_classification_open}
                       setVisibility={setClassificationVisibility}
+                    />
+                    <VersionSelector
+                      tosId={selectedTOS.id}
+                      currentVersion={selectedTOS.version}
+                      versions={selectedTOS.version_history}
                     />
                     <VersionData
                       attributeTypes={attributeTypes}

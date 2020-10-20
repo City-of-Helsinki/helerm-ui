@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
 import ActionButtons from './ActionButtons';
-import VersionSelector from '../VersionSelector/VersionSelector';
 
 const TosHeader = ({
   cancelEdit,
@@ -29,17 +28,14 @@ const TosHeader = ({
     <div className='single-tos-header'>
       <div className='row'>
         <div className='col-md-6 col-xs-12'>
-          <h3>
-            {tosName}{' '}
-            <Link to={`/view-classification/${classificationId}`} title='Avaa luokituksen tiedot'>
-              <i className='fa fa-info-circle'/>
-            </Link>
-          </h3>
-          <VersionSelector
-            tosId={tosId}
-            currentVersion={currentVersion}
-            versions={versions}
-          />
+          <span className='classification-header-text'>
+            <h3>
+              {tosName}{' '}
+              <Link to={`/view-classification/${classificationId}`} title='Avaa luokituksen tiedot'>
+                <i className='fa fa-info-circle'/>
+              </Link>
+            </h3>
+          </span>
         </div>
         <div className='document-buttons col-xs-12 col-md-6'>
           <ActionButtons
