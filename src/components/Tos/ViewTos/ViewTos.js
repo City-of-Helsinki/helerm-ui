@@ -61,6 +61,7 @@ export class ViewTOS extends React.Component {
     this.onAddFormShowMorePhase = this.onAddFormShowMorePhase.bind(this);
     this.scrollToMetadata = this.scrollToMetadata.bind(this);
     this.scrollToType = this.scrollToType.bind(this);
+    this.getClassificationInfo = this.getClassificationInfo.bind(this);
 
     this.state = {
       complementingMetaData: false,
@@ -138,6 +139,7 @@ export class ViewTOS extends React.Component {
 
   componentWillUnmount () {
     this.props.clearTOS();
+    this.props.clearClassification();
     this.props.setValidationVisibility(false);
     document.removeEventListener('scroll', this.handleScroll);
   }
@@ -203,12 +205,35 @@ export class ViewTOS extends React.Component {
     }
   }
 
+  getClassificationInfo (tosResponse, tosId) {
+    const { payload } = tosResponse;
+    if (payload && payload.entities && payload.entities.tos && payload.entities.tos[tosId]) {
+      const tos = payload.entities.tos[tosId];
+      return tos.classification;
+    }
+    return null;
+  }
+
   fetchTOS (id, params = {}) {
     this.props
       .fetchTOS(id, params)
-      .then(() => {
+      .then((res) => {
         this.props.setNavigationVisibility(false);
         this.setTosVisibility(true, false);
+        const classificationInfo = this.getClassificationInfo(res, id);
+        if (classificationInfo) {
+          this.props
+            .fetchClassification(classificationInfo.id, { version: classificationInfo.version })
+            .catch(() => {
+              this.props.displayMessage(
+                {
+                  title: 'Virhe',
+                  body: `Tehtäväluokan versio ${classificationInfo.version} haku epäonnistui`
+                },
+                { type: 'error' }
+              );
+            });
+        }
       })
       .catch(err => {
         if (err instanceof URIError) {
@@ -897,6 +922,7 @@ ViewTOS.propTypes = {
   changeOrder: PropTypes.func.isRequired,
   changeStatus: PropTypes.func.isRequired,
   classification: PropTypes.object,
+  clearClassification: PropTypes.func.isRequired,
   clearTOS: PropTypes.func.isRequired,
   cloneFromTemplate: PropTypes.func.isRequired,
   displayMessage: PropTypes.func.isRequired,
@@ -908,6 +934,7 @@ ViewTOS.propTypes = {
   editRecord: PropTypes.func.isRequired,
   editRecordAttribute: PropTypes.func.isRequired,
   editValidDates: PropTypes.func.isRequired,
+  fetchClassification: PropTypes.func.isRequired,
   fetchTOS: PropTypes.func.isRequired,
   importItems: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
