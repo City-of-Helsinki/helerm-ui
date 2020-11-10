@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
 
-import { displayMessage, itemById } from '../../../utils/helpers';
+import { displayMessage } from '../../../utils/helpers';
 import { setNavigationVisibility } from '../../Navigation/reducer';
 
 import {
@@ -49,6 +49,7 @@ import { importItems } from '../ImportView/reducer';
 import { cloneFromTemplate } from '../CloneView/reducer';
 import { changeOrder } from '../Reorder/reducer';
 import { setValidationVisibility } from '../ValidationBar/reducer';
+import { fetchClassification, clearClassification } from '../../Classification/reducer';
 
 import ViewTOS from './ViewTos';
 
@@ -58,6 +59,7 @@ const mapDispatchToProps = dispatch => ({
   addRecord: bindActionCreators(addRecord, dispatch),
   changeOrder: bindActionCreators(changeOrder, dispatch),
   changeStatus: bindActionCreators(changeStatus, dispatch),
+  clearClassification: bindActionCreators(clearClassification, dispatch),
   clearTOS: bindActionCreators(clearTOS, dispatch),
   cloneFromTemplate: bindActionCreators(cloneFromTemplate, dispatch),
   displayMessage: (msg, opts) => displayMessage(msg, opts),
@@ -70,6 +72,7 @@ const mapDispatchToProps = dispatch => ({
   editRecordAttribute: bindActionCreators(editRecordAttribute, dispatch),
   editValidDates: bindActionCreators(editValidDates, dispatch),
   fetchTOS: bindActionCreators(fetchTOS, dispatch),
+  fetchClassification: bindActionCreators(fetchClassification, dispatch),
   importItems: bindActionCreators(importItems, dispatch),
   push: path => dispatch(push(path)),
   removeAction: bindActionCreators(removeAction, dispatch),
@@ -93,17 +96,10 @@ const mapDispatchToProps = dispatch => ({
   setVersionVisibility: bindActionCreators(setVersionVisibility, dispatch)
 });
 
-const getClassification = (tos, items) => {
-  if (tos && tos.classification && items) {
-    return itemById(items, tos.classification.id);
-  }
-  return null;
-};
-
 const mapStateToProps = state => ({
   actionTypes: state.ui.actionTypes,
   attributeTypes: state.ui.attributeTypes,
-  classification: getClassification(state.selectedTOS, state.navigation.items),
+  classification: state.classification,
   isFetching: state.ui.isFetching || state.selectedTOS.isFetching,
   items: state.navigation.items,
   phaseTypes: state.ui.phaseTypes,
