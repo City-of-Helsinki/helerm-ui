@@ -27,7 +27,7 @@ export default () => (
         </Route>
       </Route>
       <Route path='view-classification/'>
-        <Route path=':id' component={ViewClassificationContainer} />
+        <Route path=':id(/version/:version)' component={ViewClassificationContainer} />
       </Route>
       <Route path='classification-tree' component={ClassificationTreeContainer} />
     </Route>

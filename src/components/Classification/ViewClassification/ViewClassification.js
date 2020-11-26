@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import ClassificationHeader from '../Header/ClassificationHeader';
 
 import './ViewClassification.scss';
+import VersionSelector from '../VersionSelector/VersionSelector';
 
 export class ViewClassification extends React.Component {
   static BODY_CLASS = 'helerm-classification-view';
@@ -16,18 +17,26 @@ export class ViewClassification extends React.Component {
   }
 
   componentDidMount () {
-    const { params: { id } } = this.props;
-
-    this.fetchClassification(id);
+    const { params: { id, version } } = this.props;
+    let params = {};
+    if (version) {
+      params = { version };
+    }
+    this.fetchClassification(id, params);
     this.addBodyClass();
   }
 
   componentWillReceiveProps (nextProps) {
     const { route } = nextProps;
 
-    if (nextProps.params.id !== this.props.params.id) {
-      const { id } = nextProps.params;
-      this.fetchClassification(id);
+    if (nextProps.params.id !== this.props.params.id ||
+        nextProps.params.version !== this.props.params.version) {
+      const { id, version } = nextProps.params;
+      let params = {};
+      if (version) {
+        params = { version };
+      }
+      this.fetchClassification(id, params);
     }
 
     if (route && route.path === 'view-classification/:id') {
@@ -131,6 +140,13 @@ export class ViewClassification extends React.Component {
             functionAllowed={!classification.function && classification.function_allowed}
           />
 
+          <div className='classification-version-selector'>
+            <VersionSelector
+              classificationId={classification.id}
+              currentVersion={classification.version}
+              versions={classification.version_history}
+            />
+          </div>
           <div className='single-classification-content'>
             <div className='row'>
               <div className='general-info space-between'>
@@ -146,7 +162,7 @@ export class ViewClassification extends React.Component {
               {classification.function
                 ? (
                   <div className='classification-details col-xs-12 no-print'>
-                    <Link to={`/view-tos/${classification.function}`}>
+                    <Link to={`/view-tos/${classification.function}/version/${classification.function_version}`}>
                       Käsittelyprosessi &raquo;
                     </Link>
                   </div>
