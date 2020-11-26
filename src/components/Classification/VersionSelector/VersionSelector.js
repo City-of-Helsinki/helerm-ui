@@ -10,28 +10,25 @@ import './VersionSelector.scss';
 const getVersionLabel = ({
   state,
   version,
-  modified_at: modifiedAt,
-  modified_by: modifiedBy
+  modified_at: modifiedAt
 }) => {
-  return `${getStatusLabel(state)}, ${formatDateTime(modifiedAt)}${
-    typeof modifiedBy === 'string' ? `, ${modifiedBy}` : ''
-  } (v${version})`;
+  return `${getStatusLabel(state)}, ${formatDateTime(modifiedAt)} (v${version})`;
 };
 
-const VersionSelector = ({ tosId, currentVersion, versions, router }) => {
-  const name = `helerm-version-${tosId}`;
+const VersionSelector = ({ classificationId, currentVersion, versions, router }) => {
+  const name = `helerm-classification-${classificationId}`;
 
   return (
     <div>
-      <label className='helerm-version-label' htmlFor={name}>Käsittelyprosessin versio:</label>
+      <label className='helerm-classification-label' htmlFor={name}>Versio:</label>
       <Select
         id={name}
         name={name}
-        className='helerm-version-selector'
+        className='helerm-classification-selector'
         placeholder='Valitse versio...'
         noResultsText='Hakua vastaavia versioita ei löytynyt'
         onChange={({ value }) => {
-          router.push(`/view-tos/${tosId}/version/${value}`);
+          router.push(`/view-classification/${classificationId}/version/${value}`);
         }}
         options={versions.map(version => ({
           value: version.version,
@@ -50,13 +47,14 @@ export const versionShape = PropTypes.shape({
   version: PropTypes.number.isRequired,
   state: PropTypes.string.isRequired,
   modified_at: PropTypes.string.isRequired,
-  modified_by: PropTypes.string
+  valid_from: PropTypes.string,
+  valid_to: PropTypes.string
 });
 
 VersionSelector.propTypes = {
+  classificationId: PropTypes.string.isRequired,
   currentVersion: PropTypes.number.isRequired,
   router: routerShape,
-  tosId: PropTypes.string.isRequired,
   versions: PropTypes.arrayOf(versionShape)
 };
 

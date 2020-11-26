@@ -57,7 +57,7 @@ const ClassificationHeader = ({
           <div className='row'>
             <div className='col-xs-12'>
               <div className='list-group-item col-xs-6'>
-                <strong>Versio</strong>
+                <strong>Tehtäväluokan versio</strong>
                 <div>{classification.version || '\u00A0'}</div>
               </div>
             </div>

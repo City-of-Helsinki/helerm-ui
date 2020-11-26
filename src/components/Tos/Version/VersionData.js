@@ -205,7 +205,7 @@ export class VersionData extends React.Component {
       <div className='tos-version-data'>
         <div className='row'>
           <div className='col-xs-6'>
-            <h4>Version tiedot</h4>
+            <h4>Käsittelyprosessin version tiedot</h4>
           </div>
           <div className='col-xs-6'>
             {versionDataButtons}

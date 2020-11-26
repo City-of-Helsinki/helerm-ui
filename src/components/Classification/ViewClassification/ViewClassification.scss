@@ -26,12 +26,11 @@
 .classification-details {
   flex-direction: column;
   margin: 10px 15px;
-  padding:10px 15px;
+  padding: 10px 15px;
   border: 1px solid #ddd;
 }
 
 body.helerm-classification-view {
-
   .helerm-content {
     padding: 15px;
   }
@@ -45,4 +44,10 @@ body.helerm-classification-view {
       display: none;
     }
   }
+}
+
+.classification-version-selector {
+  flex-direction: column;
+  margin: 10px 15px;
+  padding: 10px 15px;
 }
