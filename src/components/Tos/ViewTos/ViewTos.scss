@@ -1,4 +1,4 @@
-@import '../../styles/vendor/hel-components/variables';
+@import '../../../styles/vendor/hel-components/variables';
 
 .single-tos-container {
   background-color: white;
@@ -164,4 +164,9 @@
   display: flex;
   min-height: 96px;
   align-items: center;
+}
+
+.single-tos-header-sticky {
+  margin-top: 48px;
+  z-index: 9;
 }

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { every, filter, isEqual } from 'lodash';
 
-import { getStatusLabel } from 'utils/helpers';
+import { getStatusLabel } from '../../../../utils/helpers';
 
 import './SearchResults.scss';
 

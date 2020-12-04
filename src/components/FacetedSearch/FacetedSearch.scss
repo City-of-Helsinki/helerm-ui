@@ -10,14 +10,10 @@
 
   &-header {
     display: flex;
+    flex-direction: row;
     align-items: center;
+    justify-content: space-between;
 
-    div:first-child {
-      flex-grow: 2;
-    }
-    div:last-child {
-      flex-grow: 1;
-    }
     .Select-menu {
       overflow: auto;
     }
@@ -250,4 +246,8 @@
       }
     }
   }
+}
+
+.faceted-search-preview-sticky {
+  margin-top: 48px;
 }

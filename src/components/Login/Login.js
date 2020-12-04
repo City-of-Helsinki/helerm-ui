@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 class Login extends React.Component {
   constructor () {
@@ -19,7 +20,7 @@ class Login extends React.Component {
     const linkText = (user && user.id) ? 'Kirjaudu ulos' : 'Kirjaudu sisään';
 
     return (
-      <a href='' className='navbar-link' onClick={this.handleUserLinkClick}>{linkText}</a>
+      <a className='navbar-link' href='' onClick={this.handleUserLinkClick}>{linkText}</a>
     );
   }
 

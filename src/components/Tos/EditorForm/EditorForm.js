@@ -10,7 +10,7 @@ import DropdownInput from '../DropdownInput/DropdownInput';
 import { validateConditionalRules } from '../../../utils/validators';
 
 export class EditorForm extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.generateAttributeElements = this.generateAttributeElements.bind(this);
     this.getActiveValue = this.getActiveValue.bind(this);
@@ -25,10 +25,10 @@ export class EditorForm extends React.Component {
     };
   }
 
-  initializeAttributes (attributeTypes) {
+  initializeAttributes(attributeTypes) {
     const { attributes } = this.props;
     let initialState = {};
-    Object.keys(attributeTypes).forEach(key => {
+    Object.keys(attributeTypes).forEach((key) => {
       if (attributeTypes.hasOwnProperty(key)) {
         initialState = Object.assign({}, initialState, {
           [key]: {
@@ -43,26 +43,27 @@ export class EditorForm extends React.Component {
 
   createUpdate = (value, key, field) => {
     return {
-      newAttributes: field === 'checked' && !value
-        ? {
-          [key]: {
-            [field]: {
-              $set: value
-            },
-            value: {
-              $set: null
+      newAttributes:
+        field === 'checked' && !value
+          ? {
+              [key]: {
+                [field]: {
+                  $set: value
+                },
+                value: {
+                  $set: null
+                }
+              }
             }
-          }
-        }
-        : {
-          [key]: {
-            [field]: {
-              $set: value
+          : {
+              [key]: {
+                [field]: {
+                  $set: value
+                }
+              }
             }
-          }
-        }
     };
-  }
+  };
 
   /**
    * Updates the value to the local state and redux state.
@@ -71,15 +72,10 @@ export class EditorForm extends React.Component {
    * @param  {string} field
    * @return {void}
    */
-  onBlur (value, key, field) {
+  onBlur(value, key, field) {
     this.setState(
-      state => update(state, this.createUpdate(value, key, field)),
-      () =>
-        this.resolveOnSubmit(
-          null,
-          this.props.targetId,
-          false
-        )
+      (state) => update(state, this.createUpdate(value, key, field)),
+      () => this.resolveOnSubmit(null, this.props.targetId, false)
     );
   }
 
@@ -93,7 +89,7 @@ export class EditorForm extends React.Component {
 
   onFormInputChange = this.onBlur;
 
-  getActiveValue (key) {
+  getActiveValue(key) {
     if (this.state.newAttributes[key].value) {
       return this.state.newAttributes[key].value;
     }
@@ -103,7 +99,7 @@ export class EditorForm extends React.Component {
    * @param  {string} key
    * @return {boolean}
    */
-  getCheckedState (key) {
+  getCheckedState(key) {
     if (
       this.props.editorConfig.action === 'edit' &&
       !this.state.newAttributes[key].value
@@ -114,10 +110,10 @@ export class EditorForm extends React.Component {
     }
   }
 
-  getAttributesToShow (attributeTypes, attributes) {
+  getAttributesToShow(attributeTypes, attributes) {
     const { newAttributes } = this.state;
     const attributesToShow = [];
-    const getAttributeKeys = attributes => Object.keys(attributes);
+    const getAttributeKeys = (attr) => Object.keys(attr);
     for (const attributeType in attributeTypes) {
       if (
         attributeTypes.hasOwnProperty(attributeType) &&
@@ -146,7 +142,12 @@ export class EditorForm extends React.Component {
           attributesToShow.push(attributeType);
           continue;
         }
-        if (includes(attributeTypes[attributeType].defaultIn, this.props.editorConfig.type)) {
+        if (
+          includes(
+            attributeTypes[attributeType].defaultIn,
+            this.props.editorConfig.type
+          )
+        ) {
           attributesToShow.push(attributeType);
           continue;
         }
@@ -156,10 +157,10 @@ export class EditorForm extends React.Component {
     return this.prepareAttributes(attributesToShow);
   }
 
-  getComplementAttributes (attributeTypes) {
+  getComplementAttributes(attributeTypes) {
     const { newAttributes } = this.state;
     const complementAttributes = [];
-    Object.keys(attributeTypes).forEach(key => {
+    Object.keys(attributeTypes).forEach((key) => {
       if (
         attributeTypes.hasOwnProperty(key) &&
         includes(attributeTypes[key].allowedIn, this.props.editorConfig.type)
@@ -180,7 +181,7 @@ export class EditorForm extends React.Component {
     return this.prepareAttributes(complementAttributes);
   }
 
-  prepareAttributes (attributesToShow) {
+  prepareAttributes(attributesToShow) {
     if (
       includes(
         attributesToShow,
@@ -200,27 +201,28 @@ export class EditorForm extends React.Component {
 
     const sortedAttributes = sortBy(
       attributesToShow,
-      attribute => this.props.attributeTypes[attribute].index
+      (attribute) => this.props.attributeTypes[attribute].index
     );
 
     return sortedAttributes;
   }
 
-  mapOptions (array) {
-    return array.map(item => ({
+  mapOptions(array) {
+    return array.map((item) => ({
       value: item.value,
       label: item.value
     }));
   }
 
-  generateAttributeElements (attributeTypes) {
-    const attributesToShow = this.props.editorConfig.action === 'complement'
-      ? this.getComplementAttributes(attributeTypes)
-      : this.getAttributesToShow(attributeTypes, this.props.attributes);
+  generateAttributeElements(attributeTypes) {
+    const attributesToShow =
+      this.props.editorConfig.action === 'complement'
+        ? this.getComplementAttributes(attributeTypes)
+        : this.getAttributesToShow(attributeTypes, this.props.attributes);
     const attributeElements = [];
 
     if (attributesToShow.length) {
-      attributesToShow.forEach(key => {
+      attributesToShow.forEach((key) => {
         if (attributeTypes.hasOwnProperty(key)) {
           if (attributeTypes[key].values.length) {
             const options = this.mapOptions(attributeTypes[key].values);
@@ -230,7 +232,7 @@ export class EditorForm extends React.Component {
                   type='checkbox'
                   checked={this.getCheckedState(key)}
                   value={this.state.newAttributes[key].checked}
-                  onChange={e =>
+                  onChange={(e) =>
                     this.onChange(
                       !this.state.newAttributes[key].checked,
                       key,
@@ -247,7 +249,7 @@ export class EditorForm extends React.Component {
                 <DropdownInput
                   keyValue={key}
                   type={'form'}
-                  selectClassName={'form-control editor-form__select'}
+                  selectClassName={'Select form-control editor-form__select'}
                   inputClassName={'form-control edit-attribute__input'}
                   disabled={!this.state.newAttributes[key].checked}
                   valueState={this.getActiveValue(key)}
@@ -269,7 +271,7 @@ export class EditorForm extends React.Component {
                   type='checkbox'
                   checked={this.getCheckedState(key)}
                   value={this.state.newAttributes[key].checked}
-                  onChange={e =>
+                  onChange={(e) =>
                     this.onChange(
                       !this.state.newAttributes[key].checked,
                       key,
@@ -288,7 +290,9 @@ export class EditorForm extends React.Component {
                     className='form-control edit-record__input additional-information'
                     value={this.getActiveValue(key)}
                     placeholder={attributeTypes[key].name}
-                    onChange={e => this.onChange(e.target.value, key, 'value')}
+                    onChange={(e) =>
+                      this.onChange(e.target.value, key, 'value')
+                    }
                     disabled={!this.state.newAttributes[key].checked}
                   />
                 ) : (
@@ -296,7 +300,9 @@ export class EditorForm extends React.Component {
                     className='form-control edit-record__input'
                     value={this.getActiveValue(key)}
                     placeholder={attributeTypes[key].name}
-                    onChange={e => this.onChange(e.target.value, key, 'value')}
+                    onChange={(e) =>
+                      this.onChange(e.target.value, key, 'value')
+                    }
                     disabled={!this.state.newAttributes[key].checked}
                   />
                 )}
@@ -315,7 +321,7 @@ export class EditorForm extends React.Component {
     return attributeElements;
   }
 
-  generateDropdown (elementTypes) {
+  generateDropdown(elementTypes) {
     const type = `${capitalize(this.props.editorConfig.type)}Type`;
 
     return (
@@ -323,7 +329,7 @@ export class EditorForm extends React.Component {
         keyValue={type}
         type={'form'}
         formType={this.props.editorConfig.type}
-        selectClassName={'form-control col-xs-6'}
+        selectClassName={'Select form-control editor-form__select'}
         inputClassName={'form-control edit-attribute__input'}
         valueState={
           this.state.newAttributes[type]
@@ -338,10 +344,13 @@ export class EditorForm extends React.Component {
     );
   }
 
-  filterAttributes (attributes) {
+  filterAttributes(attributes) {
     const filteredAttributes = Object.assign({}, attributes);
-    Object.keys(filteredAttributes).forEach(key => {
-      if (filteredAttributes.hasOwnProperty(key) && !filteredAttributes[key].value) {
+    Object.keys(filteredAttributes).forEach((key) => {
+      if (
+        filteredAttributes.hasOwnProperty(key) &&
+        !filteredAttributes[key].value
+      ) {
         delete filteredAttributes[key];
       }
     });
@@ -352,7 +361,7 @@ export class EditorForm extends React.Component {
    * @param  {boolean} stopEditing
    * @return {void}
    */
-  editMetaData (stopEditing) {
+  editMetaData(stopEditing) {
     const { newAttributes } = this.state;
     this.props.editMetaDataWithForm(
       this.filterAttributes(newAttributes),
@@ -360,7 +369,7 @@ export class EditorForm extends React.Component {
     );
   }
 
-  addRecord (e, targetId) {
+  addRecord(e, targetId) {
     const shouldCreateRecord = !!e && e.type === 'submit';
     if (!shouldCreateRecord) {
       return;
@@ -380,7 +389,7 @@ export class EditorForm extends React.Component {
     });
   }
 
-  editElement (e, targetId, stopEditing = true) {
+  editElement(e, targetId, stopEditing = true) {
     const { newAttributes } = this.state;
     this.props.elementConfig.editWithForm(
       this.filterAttributes(newAttributes),
@@ -389,15 +398,17 @@ export class EditorForm extends React.Component {
     );
   }
 
-  resolveLabel () {
+  resolveLabel() {
     const { type, action } = this.props.editorConfig;
 
     switch (type) {
-      case 'version':
+      case 'version': {
         return 'Version tiedot';
-      case 'function':
+      }
+      case 'function': {
         return 'Käsittelyprosessin tiedot';
-      case 'phase':
+      }
+      case 'phase': {
         if (action === 'add') {
           return 'Uusi käsittelyvaihe';
         }
@@ -408,7 +419,8 @@ export class EditorForm extends React.Component {
         //   return 'Täydennä käsittelyvaihetta';
         // }
         break;
-      case 'action':
+      }
+      case 'action': {
         if (action === 'add') {
           return 'Uusi toimenpide';
         }
@@ -419,7 +431,8 @@ export class EditorForm extends React.Component {
         //   return 'Täydennä toimenpidettä';
         // }
         break;
-      case 'record':
+      }
+      case 'record': {
         if (action === 'add' && 'complement') {
           return 'Uusi asiakirja';
         }
@@ -430,23 +443,27 @@ export class EditorForm extends React.Component {
         //   return 'Täydennä asiakirjaa';
         // }
         break;
+      }
+      default: {
+        return '';
+      }
     }
   }
 
-  resolveTypeDescription () {
+  resolveTypeDescription() {
     const { type } = this.props.editorConfig;
 
     switch (type) {
       case 'phase':
         return 'Käsittelyvaihe';
-      // case 'action':
-      //   return '';
       case 'record':
         return 'Asiakirjatyyppi';
+      default:
+        return '';
     }
   }
 
-  resolveSpecifierDescription () {
+  resolveSpecifierDescription() {
     const { type } = this.props.editorConfig;
 
     switch (type) {
@@ -456,10 +473,12 @@ export class EditorForm extends React.Component {
         return 'Toimenpide';
       case 'record':
         return 'Asiakirjatyypin tarkenne';
+      default:
+        return '';
     }
   }
 
-  resolveSpecifierPlaceholder () {
+  resolveSpecifierPlaceholder() {
     const { type } = this.props.editorConfig;
 
     switch (type) {
@@ -469,6 +488,8 @@ export class EditorForm extends React.Component {
         return 'Toimenpide';
       case 'record':
         return 'Asiakirjatyypin tarkenne';
+      default:
+        return '';
     }
   }
 
@@ -478,7 +499,7 @@ export class EditorForm extends React.Component {
    * @param  {boolean} [stopEditing=true]
    * @return {void}
    */
-  resolveOnSubmit (e, targetId, stopEditing = true) {
+  resolveOnSubmit(e, targetId, stopEditing = true) {
     if (e) {
       e.preventDefault();
     }
@@ -487,7 +508,7 @@ export class EditorForm extends React.Component {
     const displayMessage = stopEditing ? this.props.displayMessage : () => {};
     if (targetId) {
       switch (type) {
-        case 'version':
+        case 'version': {
           if (action === 'edit') {
             this.editMetaData(stopEditing);
             displayMessage({
@@ -496,7 +517,8 @@ export class EditorForm extends React.Component {
             });
           }
           break;
-        case 'function':
+        }
+        case 'function': {
           if (action === 'edit' || action === 'complement') {
             this.editMetaData(stopEditing);
             displayMessage({
@@ -505,7 +527,8 @@ export class EditorForm extends React.Component {
             });
           }
           break;
-        case 'phase':
+        }
+        case 'phase': {
           if (action === 'edit' || action === 'complement') {
             this.editElement(e, targetId, stopEditing);
             displayMessage({
@@ -514,7 +537,8 @@ export class EditorForm extends React.Component {
             });
           }
           break;
-        case 'action':
+        }
+        case 'action': {
           if (action === 'edit' || action === 'complement') {
             this.editElement(e, targetId, stopEditing);
             displayMessage({
@@ -523,7 +547,8 @@ export class EditorForm extends React.Component {
             });
           }
           break;
-        case 'record':
+        }
+        case 'record': {
           if (action === 'add' || from === 'newRecord') {
             this.addRecord(e, targetId);
           }
@@ -534,6 +559,10 @@ export class EditorForm extends React.Component {
               body: 'Asiakirjan muokkaus onnistui!'
             });
           }
+          break;
+        }
+        default:
+          break;
       }
     }
   }
@@ -543,7 +572,7 @@ export class EditorForm extends React.Component {
    * @param  {Event} e
    * @return {void}
    */
-  closeEditorForm (e) {
+  closeEditorForm(e) {
     e.preventDefault();
     // Reset local state
     this.setState(
@@ -556,7 +585,7 @@ export class EditorForm extends React.Component {
     );
   }
 
-  renderDescriptions () {
+  renderDescriptions() {
     // const { attributeTypes } = this.props;
     // const typeName = attributeTypes ? attributeTypes[`${capitalize(this.props.editorConfig.type)}Type`].name : '';
     // const specifierName = attributeTypes ? attributeTypes.TypeSpecifier.name : '';
@@ -584,15 +613,23 @@ export class EditorForm extends React.Component {
             className='col-xs-6 form-control edit-record__input'
             placeholder={this.resolveSpecifierPlaceholder()}
             value={this.state.newAttributes.TypeSpecifier.value || ''}
-            onChange={e => this.onChange(e.target.value, 'TypeSpecifier', 'value')}
+            onChange={(e) =>
+              this.onChange(e.target.value, 'TypeSpecifier', 'value')
+            }
           />
         </div>
       </div>
     );
   }
 
-  render () {
-    const { attributeTypes, editorConfig, targetId, onShowMore, onShowMoreForm } = this.props;
+  render() {
+    const {
+      attributeTypes,
+      editorConfig,
+      targetId,
+      onShowMore,
+      onShowMoreForm
+    } = this.props;
     const attributeElements = this.generateAttributeElements(attributeTypes);
 
     let showMoreLabel;
@@ -608,7 +645,7 @@ export class EditorForm extends React.Component {
       <div className='add-box col-xs-12'>
         <h4>{this.resolveLabel()}</h4>
         <form
-          onSubmit={e => this.resolveOnSubmit(e, targetId)}
+          onSubmit={(e) => this.resolveOnSubmit(e, targetId)}
           className='editor-form'
         >
           {!includes(['function', 'version'], this.props.editorConfig.type)
@@ -625,14 +662,24 @@ export class EditorForm extends React.Component {
             </button>
             <button
               className='btn btn-danger pull-right editor-form__cancel'
-              onClick={e => this.closeEditorForm(e)}
+              onClick={(e) => this.closeEditorForm(e)}
             >
               Peruuta
             </button>
             {editorConfig.type !== 'version' && (
               <button
-                className={showMoreLabel ? 'btn btn-primary pull-right editor-form__cancel' : 'non-display'}
-                onClick={(e) => (this.props.editorConfig.action === 'add' || (this.props.editorConfig.action === 'complement' && this.props.complementRecordAdd)) ? onShowMoreForm(e, this.state.newAttributes) : onShowMore(e, this.state)}
+                className={
+                  showMoreLabel
+                    ? 'btn btn-primary pull-right editor-form__cancel'
+                    : 'non-display'
+                }
+                onClick={(e) =>
+                  this.props.editorConfig.action === 'add' ||
+                  (this.props.editorConfig.action === 'complement' &&
+                    this.props.complementRecordAdd)
+                    ? onShowMoreForm(e, this.state.newAttributes)
+                    : onShowMore(e, this.state)
+                }
               >
                 {showMoreLabel}
               </button>

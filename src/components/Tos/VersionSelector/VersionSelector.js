@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
-import { withRouter, routerShape } from 'react-router';
+import { withRouter } from 'react-router-dom';
 
-import { getStatusLabel, formatDateTime } from 'utils/helpers';
+import { getStatusLabel, formatDateTime } from '../../../utils/helpers';
 
 import './VersionSelector.scss';
 
@@ -18,29 +18,37 @@ const getVersionLabel = ({
   } (v${version})`;
 };
 
-const VersionSelector = ({ tosId, currentVersion, versions, router }) => {
+const VersionSelector = ({ tosId, currentVersion, versions, history }) => {
   const name = `helerm-version-${tosId}`;
-
+  const selected = versions.find(({ version }) => version === currentVersion);
   return (
     <div>
-      <label className='helerm-version-label' htmlFor={name}>Käsittelyprosessin versio:</label>
+      <label className='helerm-version-label' htmlFor={name}>
+        Käsittelyprosessin versio:
+      </label>
       <Select
         id={name}
         name={name}
-        className='helerm-version-selector'
+        className='Select helerm-version-selector'
         placeholder='Valitse versio...'
-        noResultsText='Hakua vastaavia versioita ei löytynyt'
-        onChange={({ value }) => {
-          router.push(`/view-tos/${tosId}/version/${value}`);
+        noOptionsMessage={() => 'Hakua vastaavia versioita ei löytynyt'}
+        onChange={(item) => {
+          if (item) {
+            history.push(`/view-tos/${tosId}/version/${item.value}`);
+          }
         }}
-        options={versions.map(version => ({
+        options={versions.map((version) => ({
           value: version.version,
           label: getVersionLabel(version)
         }))}
-        value={currentVersion}
-        clearable={false}
-        backspaceRemoves={false}
-        deleteRemoves={false}
+        value={{
+          value: selected.version,
+          label: getVersionLabel(selected)
+        }}
+        captureMenuScroll={false}
+        backspaceRemovesValue={true}
+        escapeClearsValue={true}
+        isSearchable={true}
       />
     </div>
   );
@@ -55,7 +63,7 @@ export const versionShape = PropTypes.shape({
 
 VersionSelector.propTypes = {
   currentVersion: PropTypes.number.isRequired,
-  router: routerShape,
+  history: PropTypes.object,
   tosId: PropTypes.string.isRequired,
   versions: PropTypes.arrayOf(versionShape)
 };

@@ -1,7 +1,7 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-import { push } from 'react-router-redux';
+import { withRouter } from 'react-router-dom';
+import { push } from 'connected-react-router';
 import { isEmpty } from 'lodash';
 
 import { fetchNavigation, setNavigationVisibility } from './reducer';

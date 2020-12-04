@@ -1,38 +1,17 @@
-import { applyMiddleware, compose, createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
-import { browserHistory } from 'react-router';
-import { routerMiddleware } from 'react-router-redux';
+import { routerMiddleware } from 'connected-react-router';
+import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 import makeRootReducer from './rootReducers';
 
-export default (initialState = {}) => {
-  // ======================================================
-  // Middleware Configuration
-  // ======================================================
-  const middleware = [thunk, routerMiddleware(browserHistory)];
-  // const middleware = process.env.NODE_ENV !== 'production' ?
-  //   [require('redux-immutable-state-invariant')(), thunk] :
-  //   [thunk];
-  // ======================================================
-  // Store Enhancers
-  // ======================================================
-  const enhancers = [];
-  if (__DEV__) {
-    const devToolsExtension = window.devToolsExtension;
-    if (typeof devToolsExtension === 'function') {
-      enhancers.push(devToolsExtension());
-    }
-  }
-
+const storeCreator = (history, initialState = {}) => {
   // ======================================================
   // Store Instantiation and HMR Setup
   // ======================================================
   const store = createStore(
-    makeRootReducer(),
+    makeRootReducer(history),
     initialState,
-    compose(
-      applyMiddleware(...middleware),
-      ...enhancers
-    )
+    composeWithDevTools(applyMiddleware(routerMiddleware(history), thunk))
   );
   store.asyncReducers = {};
 
@@ -45,3 +24,5 @@ export default (initialState = {}) => {
 
   return store;
 };
+
+export default storeCreator;

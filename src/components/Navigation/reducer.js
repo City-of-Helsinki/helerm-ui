@@ -1,12 +1,11 @@
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
 
-import { DEFAULT_PAGE_SIZE, DEFAULT_SEARCH_PAGE_SIZE } from '../../../config/constants';
-
+import { config } from '../../config';
 import { convertToTree } from '../../utils/helpers';
 import { default as api } from '../../utils/api.js';
 
-const initialState = {
+export const initialState = {
   includeRelated: false,
   isFetching: false,
   items: [],
@@ -22,11 +21,11 @@ export const RECEIVE_NAVIGATION = 'receiveNavigationAction';
 export const SET_NAVIGATION_VISIBILITY = 'setNavigationVisibilityAction';
 export const NAVIGATION_ERROR = 'navigationErrorAction';
 
-export function requestNavigation () {
+export function requestNavigation() {
   return createAction(REQUEST_NAVIGATION)();
 }
 
-export function receiveNavigation (items, includeRelated, page) {
+export function receiveNavigation(items, includeRelated, page) {
   return createAction(RECEIVE_NAVIGATION)({
     includeRelated,
     items,
@@ -34,46 +33,51 @@ export function receiveNavigation (items, includeRelated, page) {
   });
 }
 
-export function parseNavigation (items) {
+export function parseNavigation(items) {
   const orderedTree = convertToTree(items);
   return createAction(PARSED_NAVIGATION)({
     items: orderedTree
   });
 }
 
-export function setNavigationVisibility (value) {
+export function setNavigationVisibility(value) {
   return createAction(SET_NAVIGATION_VISIBILITY)(value);
 }
 
-export function fetchNavigation (includeRelated = false, page = 1) {
+export function fetchNavigation(includeRelated = false, page = 1) {
   const pageSize = includeRelated
-    ? SEARCH_PAGE_SIZE || DEFAULT_SEARCH_PAGE_SIZE
-    : RESULTS_PER_PAGE || DEFAULT_PAGE_SIZE;
+    ? config.SEARCH_PAGE_SIZE
+    : config.RESULTS_PER_PAGE;
   return function (dispatch, getState) {
     dispatch(requestNavigation());
-    return api.get('classification', {
-      include_related: includeRelated,
-      page_size: pageSize,
-      page
-    })
-      .then(response => response.json())
-      .then(json => {
+    return api
+      .get('classification', {
+        include_related: includeRelated,
+        page_size: pageSize,
+        page
+      })
+      .then((response) => response.json())
+      .then((json) => {
         dispatch(receiveNavigation(json.results, includeRelated, page));
         return json;
       })
-      .then(json => {
+      .then((json) => {
         const list = getState().navigation.list || [];
-        return dispatch(json.next ? fetchNavigation(includeRelated, page + 1) : parseNavigation(list));
+        return dispatch(
+          json.next
+            ? fetchNavigation(includeRelated, page + 1)
+            : parseNavigation(list)
+        );
       })
       .catch(() => dispatch(createAction(NAVIGATION_ERROR)()));
   };
-};
+}
 
 const navigationErrorAction = (state) => {
   return update(state, {
-    list: { $set : [] },
+    list: { $set: [] },
     isFetching: { $set: false },
-    items: { $set : [] },
+    items: { $set: [] },
     timestamp: { $set: Date.now().toString() }
   });
 };
@@ -108,10 +112,13 @@ const setNavigationVisibilityAction = (state, { payload }) => {
   });
 };
 
-export default handleActions({
-  navigationErrorAction,
-  parsedNavigationAction,
-  requestNavigationAction,
-  receiveNavigationAction,
-  setNavigationVisibilityAction
-}, initialState);
+export default handleActions(
+  {
+    navigationErrorAction,
+    parsedNavigationAction,
+    requestNavigationAction,
+    receiveNavigationAction,
+    setNavigationVisibilityAction
+  },
+  initialState
+);

@@ -1,43 +1,56 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
-import { withRouter, routerShape } from 'react-router';
+import { withRouter } from 'react-router-dom';
 
-import { getStatusLabel, formatDateTime } from 'utils/helpers';
+import { getStatusLabel, formatDateTime } from '../../../utils/helpers';
 
 import './VersionSelector.scss';
 
-const getVersionLabel = ({
-  state,
-  version,
-  modified_at: modifiedAt
-}) => {
-  return `${getStatusLabel(state)}, ${formatDateTime(modifiedAt)} (v${version})`;
+const getVersionLabel = ({ state, version, modified_at: modifiedAt }) => {
+  return `${getStatusLabel(state)}, ${formatDateTime(
+    modifiedAt
+  )} (v${version})`;
 };
 
-const VersionSelector = ({ classificationId, currentVersion, versions, router }) => {
+const VersionSelector = ({
+  classificationId,
+  currentVersion,
+  versions,
+  history
+}) => {
   const name = `helerm-classification-${classificationId}`;
-
+  const selected = versions.find(({ version }) => version === currentVersion);
   return (
     <div>
-      <label className='helerm-classification-label' htmlFor={name}>Versio:</label>
+      <label className='helerm-classification-label' htmlFor={name}>
+        Versio:
+      </label>
       <Select
         id={name}
         name={name}
-        className='helerm-classification-selector'
+        className='Select helerm-classification-selector'
         placeholder='Valitse versio...'
-        noResultsText='Hakua vastaavia versioita ei löytynyt'
-        onChange={({ value }) => {
-          router.push(`/view-classification/${classificationId}/version/${value}`);
+        noOptionsMessage={() => 'Hakua vastaavia versioita ei löytynyt'}
+        onChange={(item) => {
+          if (item) {
+            history.push(
+              `/view-classification/${classificationId}/version/${item.value}`
+            );
+          }
         }}
-        options={versions.map(version => ({
+        options={versions.map((version) => ({
           value: version.version,
           label: getVersionLabel(version)
         }))}
-        value={currentVersion}
-        clearable={false}
-        backspaceRemoves={false}
-        deleteRemoves={false}
+        value={{
+          value: selected.version,
+          label: getVersionLabel(selected)
+        }}
+        captureMenuScroll={false}
+        backspaceRemovesValue={true}
+        escapeClearsValue={true}
+        isSearchable={true}
       />
     </div>
   );
@@ -54,7 +67,7 @@ export const versionShape = PropTypes.shape({
 VersionSelector.propTypes = {
   classificationId: PropTypes.string.isRequired,
   currentVersion: PropTypes.number.isRequired,
-  router: routerShape,
+  history: PropTypes.object.isRequired,
   versions: PropTypes.arrayOf(versionShape)
 };
 

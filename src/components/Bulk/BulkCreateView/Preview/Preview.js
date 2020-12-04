@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { filter, find, isEmpty, keys } from 'lodash';
 
-import { getStatusLabel } from 'utils/helpers';
+import { getStatusLabel } from '../../../../utils/helpers';
 
 import './Preview.scss';
-import { BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES } from '../../../../../config/constants';
+import { BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES } from '../../../../constants';
 
 export class Preview extends React.Component {
   renderItemChanges (previewItem) {

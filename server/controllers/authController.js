@@ -1,34 +1,39 @@
-import { Passport } from 'passport';
-import HelsinkiStrategy from 'passport-helsinki';
-import _debug from 'debug';
-const debug = _debug('app:auth');
+const { Passport } = require("passport");
+const HelsinkiStrategy = require("passport-helsinki");
+const _debug = require("debug");
+const debug = _debug("app:auth");
 
-import config from '../../config';
-
-const helsinkiStrategy = new HelsinkiStrategy({
-  clientID: config.globals.CLIENT_ID,
-  clientSecret: config.globals.CLIENT_SECRET,
-  callbackURL: `${config.globals.APP_URL}/auth/login/helsinki/return`
-}, (accessToken, refreshToken, profile, done) => {
-  debug('access token:', accessToken);
-  debug('refresh token:', refreshToken);
-  debug('acquiring token from api...');
-  helsinkiStrategy.getAPIToken(accessToken, config.globals.CLIENT_AUDIENCE, (token) => {
-    profile.token = token;
-    return done(null, profile);
-  });
-});
+const helsinkiStrategy = new HelsinkiStrategy(
+  {
+    clientID: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    callbackURL: `${process.env.APP_URL}/auth/login/helsinki/return`,
+  },
+  (accessToken, refreshToken, profile, done) => {
+    debug("access token:", accessToken);
+    debug("refresh token:", refreshToken);
+    debug("acquiring token  = require( api...");
+    helsinkiStrategy.getAPIToken(
+      accessToken,
+      process.env.CLIENT_AUDIENCE,
+      (token) => {
+        profile.token = token;
+        return done(null, profile);
+      }
+    );
+  }
+);
 
 const passport = new Passport();
 passport.use(helsinkiStrategy);
 
 passport.serializeUser((user, done) => {
-  debug('serializing user:', user);
+  debug("serializing user:", user);
   done(null, user);
 });
 
 passport.deserializeUser((user, done) => {
-  debug('deserializing user:', user);
+  debug("deserializing user:", user);
   done(null, user);
 });
 
@@ -37,20 +42,9 @@ passport.deserializeUser((user, done) => {
  * @param req
  * @param res
  */
-function authCallback (req, res) {
-  debug('Authcallback');
-  // const js = `
-  //   setTimeout(function(){
-  //     try{
-  //       window.close();
-  //     } catch(e) {
-  //       location.href = "/";
-  //     }
-  //   }, 300);
-  // `;
-  // const html = `<html><body>Login successful.<script>${js}</script>`;
-  // res.send(html);
-  const redirectUrl = req.session.next || `${config.globals.APP_URL}`;
+function authCallback(req, res) {
+  debug("Authcallback");
+  const redirectUrl = req.session.next || `${process.env.APP_URL}`;
   res.redirect(redirectUrl);
 }
 
@@ -59,13 +53,13 @@ function authCallback (req, res) {
  * @param req
  * @param res
  */
-function getCurrentUser (req, res) {
-  debug('CurrentUser');
+function getCurrentUser(req, res) {
+  debug("CurrentUser");
   res.json(req.user || {});
 }
 
-function beforeLogin (req, res, next) {
-  debug('beforeLogin');
+function beforeLogin(req, res, next) {
+  debug("beforeLogin");
   req.session.next = req.query.next; // eslint-disable-line no-param-reassign
   next();
 }
@@ -75,10 +69,16 @@ function beforeLogin (req, res, next) {
  * @param req
  * @param res
  */
-function logOut (req, res) {
+function logOut(req, res) {
   req.logout();
-  const redirectUrl = req.query.next || `${config.globals.APP_URL}`;
+  const redirectUrl = req.query.next || `${process.env.APP_URL}`;
   res.redirect(`https://api.hel.fi/sso/logout/?next=${redirectUrl}`);
 }
-
-export default { passport, authCallback, getCurrentUser, beforeLogin, logOut };
+const authController = {
+  passport,
+  authCallback,
+  getCurrentUser,
+  beforeLogin,
+  logOut,
+};
+module.exports = authController;

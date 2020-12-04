@@ -1,7 +1,8 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
-import { TYPE_LABELS } from '../../../../config/constants';
+import { TYPE_LABELS } from '../../../constants';
 
 import './FacetedSearchSuggestions.scss';
 

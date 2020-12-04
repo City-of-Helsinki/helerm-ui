@@ -1,21 +1,22 @@
-import React from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import update from 'immutability-helper';
-import { StickyContainer, Sticky } from 'react-sticky';
+import Sticky from 'react-sticky-el';
 import './Action.scss';
 
 import Record from '../Record/Record';
 import Attributes from '../Attribute/Attributes';
 import EditorForm from '../EditorForm/EditorForm';
-import Popup from 'components/Popup';
-import Dropdown from 'components/Dropdown';
+import Popup from '../../../components/Popup';
+import Dropdown from '../../../components/Dropdown';
 // import DropdownInput from '../DropdownInput/DropdownInput';
 import DeleteView from '../DeleteView/DeleteView';
 import ReorderView from '../Reorder/ReorderView';
 import ImportView from '../ImportView/ImportView';
 
-export class Action extends React.Component {
-  constructor (props) {
+export class Action extends Component {
+  constructor(props) {
     super(props);
     this.onTypeChange = this.onTypeChange.bind(this);
     this.onTypeInputChange = this.onTypeInputChange.bind(this);
@@ -33,7 +34,9 @@ export class Action extends React.Component {
     this.renderBasicAttributes = this.renderBasicAttributes.bind(this);
     this.disableEditMode = this.disableEditMode.bind(this);
     this.onEditFormShowMoreAction = this.onEditFormShowMoreAction.bind(this);
-    this.onEditFormShowMoreRecordAdd = this.onEditFormShowMoreRecordAdd.bind(this);
+    this.onEditFormShowMoreRecordAdd = this.onEditFormShowMoreRecordAdd.bind(
+      this
+    );
     this.complementRecordAdd = this.complementRecordAdd.bind(this);
     this.scrollToAction = this.scrollToAction.bind(this);
     this.scrollToRecord = this.scrollToRecord.bind(this);
@@ -59,7 +62,7 @@ export class Action extends React.Component {
     this.records = {};
   }
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.action && nextProps.action.attributes.TypeSpecifier) {
       this.setState({
         typeSpecifier: nextProps.action.attributes.TypeSpecifier
@@ -73,50 +76,49 @@ export class Action extends React.Component {
     }
   }
 
-  onEditFormShowMoreAction (e) {
+  onEditFormShowMoreAction(e) {
     e.preventDefault();
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       complementingAction: !prevState.complementingAction,
       editingAction: !prevState.editingAction
-    })
-    );
+    }));
   }
 
-  toggleReorderView () {
+  toggleReorderView() {
     const current = this.state.showReorderView;
     this.setState({ showReorderView: !current });
   }
 
-  toggleImportView () {
+  toggleImportView() {
     const current = this.state.showImportView;
     this.setState({ showImportView: !current });
   }
 
-  editTypeSpecifier () {
+  editTypeSpecifier() {
     if (this.props.documentState === 'edit') {
       this.setState({ editingTypeSpecifier: true, mode: 'edit' });
     }
   }
 
-  editType () {
+  editType() {
     if (this.props.documentState === 'edit') {
       this.setState({ editingType: true, mode: 'edit' });
     }
   }
 
-  editActionForm () {
+  editActionForm() {
     if (this.props.documentState === 'edit') {
       this.setState({ editingAction: true, mode: 'edit' });
     }
   }
 
-  complementRecordAdd () {
+  complementRecordAdd() {
     if (this.props.documentState !== 'edit') {
       this.setState({ complementRecordAdd: true });
     }
   }
 
-  disableEditMode () {
+  disableEditMode() {
     this.setState({
       editingTypeSpecifier: false,
       editingType: false,
@@ -126,11 +128,11 @@ export class Action extends React.Component {
     });
   }
 
-  onTypeSpecifierChange (event) {
+  onTypeSpecifierChange(event) {
     this.setState({ typeSpecifier: event.target.value });
   }
 
-  onTypeChange (value) {
+  onTypeChange(value) {
     this.setState(
       update(this.state, {
         type: {
@@ -140,11 +142,11 @@ export class Action extends React.Component {
     );
   }
 
-  onTypeInputChange (event) {
+  onTypeInputChange(event) {
     this.setState({ type: event.target.value });
   }
 
-  updateTypeSpecifier (event) {
+  updateTypeSpecifier(event) {
     event.preventDefault();
     const updatedTypeSpecifier = {
       typeSpecifier: this.state.typeSpecifier,
@@ -154,7 +156,7 @@ export class Action extends React.Component {
     this.disableEditMode();
   }
 
-  updateActionType (event) {
+  updateActionType(event) {
     event.preventDefault();
     const updatedActionType = {
       type: this.state.type,
@@ -164,7 +166,7 @@ export class Action extends React.Component {
     this.disableEditMode();
   }
 
-  updateActionAttribute (attribute, attributeIndex, actionId) {
+  updateActionAttribute(attribute, attributeIndex, actionId) {
     this.setState({
       attributes: {
         [attributeIndex]: attribute
@@ -174,7 +176,7 @@ export class Action extends React.Component {
     this.props.editActionAttribute(updatedActionAttribute);
   }
 
-  editActionWithForm (attributes, actionId, disableEditMode = true) {
+  editActionWithForm(attributes, actionId, disableEditMode = true) {
     this.setState({
       attributes: attributes,
       typeSpecifier: attributes.TypeSpecifier,
@@ -186,18 +188,18 @@ export class Action extends React.Component {
     }
   }
 
-  createNewRecord () {
+  createNewRecord() {
     this.setState({ creatingRecord: true, record: { attributes: {} } });
   }
 
-  cancelRecordCreation () {
+  cancelRecordCreation() {
     this.setState({ creatingRecord: false });
   }
 
-  complementRecordForm (e, recordAttributes) {
+  complementRecordForm(e, recordAttributes) {
     e.preventDefault();
     const newAttrs = {};
-    Object.keys(recordAttributes).map((key) => {
+    Object.keys(recordAttributes).forEach((key) => {
       if (recordAttributes[key] && recordAttributes[key]['value']) {
         Object.assign(newAttrs, { [key]: recordAttributes[key]['value'] });
       }
@@ -218,11 +220,11 @@ export class Action extends React.Component {
     );
   }
 
-  onEditFormShowMoreRecordAdd (e, recordAttributes) {
+  onEditFormShowMoreRecordAdd(e, recordAttributes) {
     // TODO: handle merge the attributes of createNewRecordForm here
     e.preventDefault();
     const newAttrs = {};
-    Object.keys(recordAttributes).map((key) => {
+    Object.keys(recordAttributes).forEach((key) => {
       if (recordAttributes[key] && recordAttributes[key]['value']) {
         Object.assign(newAttrs, { [key]: recordAttributes[key]['value'] });
       }
@@ -243,23 +245,23 @@ export class Action extends React.Component {
     );
   }
 
-  cancelRecordComplement () {
+  cancelRecordComplement() {
     this.setState({
       complementingRecordAdd: false,
       recordId: undefined
     });
   }
 
-  delete () {
+  delete() {
     this.setState({ deleting: false });
     this.props.removeAction(this.props.action.id, this.props.action.phase);
   }
 
-  cancelDeletion () {
+  cancelDeletion() {
     this.setState({ deleting: false });
   }
 
-  createRecord (attributes, actionId) {
+  createRecord(attributes, actionId) {
     this.setState({
       creatingRecord: false,
       complementingRecordAdd: false
@@ -267,9 +269,9 @@ export class Action extends React.Component {
     this.props.addRecord(attributes, actionId);
   }
 
-  generateRecords (records) {
+  generateRecords(records) {
     const elements = [];
-    Object.keys(records).forEach(key => {
+    Object.keys(records).forEach((key) => {
       if (this.props.records.hasOwnProperty(records[key])) {
         elements.push(
           <Record
@@ -283,7 +285,9 @@ export class Action extends React.Component {
             attributeTypes={this.props.attributeTypes}
             displayMessage={this.props.displayMessage}
             setRecordVisibility={this.props.setRecordVisibility}
-            ref={element => { this.records[records[key]] = element; }}
+            ref={(element) => {
+              this.records[records[key]] = element;
+            }}
           />
         );
       }
@@ -291,7 +295,7 @@ export class Action extends React.Component {
     return elements;
   }
 
-  generateDropdownItems () {
+  generateDropdownItems() {
     return [
       {
         text: 'Uusi asiakirja',
@@ -332,16 +336,19 @@ export class Action extends React.Component {
     ];
   }
 
-  showAttributeButton (attributes) {
+  showAttributeButton(attributes) {
     const { attributeTypes } = this.props;
     const actualAttributes = [];
-    Object.keys(attributes).forEach(key => {
+    Object.keys(attributes).forEach((key) => {
       if (key !== 'TypeSpecifier' && key !== 'ActionType') {
         actualAttributes.push(key);
       }
     });
-    Object.keys(attributeTypes).forEach(key => {
-      if (attributeTypes.hasOwnProperty(key) && attributeTypes[key].defaultIn.indexOf('action') >= 0) {
+    Object.keys(attributeTypes).forEach((key) => {
+      if (
+        attributeTypes.hasOwnProperty(key) &&
+        attributeTypes[key].defaultIn.indexOf('action') >= 0
+      ) {
         actualAttributes.push(key);
       }
     });
@@ -351,7 +358,7 @@ export class Action extends React.Component {
     return false;
   }
 
-  renderActionButtons () {
+  renderActionButtons() {
     const actionDropdownItems = this.generateDropdownItems();
 
     return (
@@ -364,10 +371,12 @@ export class Action extends React.Component {
         {this.showAttributeButton(this.props.action.attributes) && (
           <button
             className='btn btn-info btn-xs record-button pull-right'
-            onClick={() => this.props.setActionVisibility(
-              this.props.action.id,
-              !this.props.action.is_open
-            )}
+            onClick={() =>
+              this.props.setActionVisibility(
+                this.props.action.id,
+                !this.props.action.is_open
+              )
+            }
           >
             <span
               className={
@@ -381,7 +390,7 @@ export class Action extends React.Component {
     );
   }
 
-  renderBasicAttributes () {
+  renderBasicAttributes() {
     const classNames = classnames([
       'col-xs-12',
       'basic-attribute',
@@ -435,244 +444,244 @@ export class Action extends React.Component {
     if (this.props.action.is_open && this.props.action.records.length) {
       return (
         <Sticky className='action-title action-open'>
-          <div className='basic-attributes'>
-            {typeSpecifier}
-          </div>
+          <div className='basic-attributes'>{typeSpecifier}</div>
         </Sticky>
       );
     }
 
     return (
       <div className='action-title action-closed'>
-        <div className='basic-attributes'>
-          {typeSpecifier}
-        </div>
+        <div className='basic-attributes'>{typeSpecifier}</div>
       </div>
     );
   }
 
-  getTargetText (value) {
+  getTargetText(value) {
     if (value === undefined) {
       return '';
     }
     return value;
   }
 
-  scrollToAction () {
+  scrollToAction() {
     if (this.element) {
-      const parentOffset = this.element.offsetParent ? this.element.offsetParent.offsetTop : 0;
+      const parentOffset = this.element.offsetParent
+        ? this.element.offsetParent.offsetTop
+        : 0;
       window.scrollTo(0, parentOffset + this.element.offsetTop);
     }
   }
 
-  scrollToRecord (recordId) {
+  scrollToRecord(recordId) {
     const record = this.records[recordId] || null;
     if (this.element && record) {
-      const parentOffset = this.element.offsetParent ? this.element.offsetParent.offsetTop : 0;
+      const parentOffset = this.element.offsetParent
+        ? this.element.offsetParent.offsetTop
+        : 0;
       record.scrollToRecord(parentOffset + this.element.offsetTop);
     }
   }
 
-  render () {
+  render() {
     // TODO: Handle errors where we don't have an valid action (i.e 400 error from API)
     const { action } = this.props;
     const recordElements =
       action && action.records ? this.generateRecords(action.records) : [];
 
     return (
-      <StickyContainer>
-        <div className='action row' ref={element => { this.element = element; }}>
-          {this.state.mode === 'edit' &&
-            this.state.editingAction && (
-            <EditorForm
-              onShowMore={this.onEditFormShowMoreAction}
-              targetId={this.props.action.id}
-              attributes={this.props.action.attributes}
-              attributeTypes={this.props.attributeTypes}
-              elementConfig={{
-                elementTypes: this.props.actionTypes,
-                editWithForm: this.editActionWithForm
-              }}
-              editorConfig={{
-                type: 'action',
-                action: 'edit'
-              }}
-              closeEditorForm={this.disableEditMode}
-              displayMessage={this.props.displayMessage}
-            />
-          )}
-          {this.state.mode === 'edit' &&
-            this.state.complementingAction && (
-            <EditorForm
-              onShowMore={this.onEditFormShowMoreAction}
-              targetId={this.props.action.id}
-              attributes={this.props.action.attributes}
-              attributeTypes={this.props.attributeTypes}
-              elementConfig={{
-                elementTypes: this.props.actionTypes,
-                editWithForm: this.editActionWithForm
-              }}
-              editorConfig={{
-                type: 'action',
-                action: 'complement'
-              }}
-              closeEditorForm={this.disableEditMode}
-              displayMessage={this.props.displayMessage}
-            />
-          )}
-          {!this.state.editingAction &&
-            !this.state.complementingAction && (
-            <div>
-              <div className='box'>
-                <Attributes
-                  element={action}
-                  documentState={this.props.documentState}
-                  type={'action'}
+      <div
+        className='action row'
+        ref={(element) => {
+          this.element = element;
+        }}
+      >
+        {this.state.mode === 'edit' && this.state.editingAction && (
+          <EditorForm
+            onShowMore={this.onEditFormShowMoreAction}
+            targetId={this.props.action.id}
+            attributes={this.props.action.attributes}
+            attributeTypes={this.props.attributeTypes}
+            elementConfig={{
+              elementTypes: this.props.actionTypes,
+              editWithForm: this.editActionWithForm
+            }}
+            editorConfig={{
+              type: 'action',
+              action: 'edit'
+            }}
+            closeEditorForm={this.disableEditMode}
+            displayMessage={this.props.displayMessage}
+          />
+        )}
+        {this.state.mode === 'edit' && this.state.complementingAction && (
+          <EditorForm
+            onShowMore={this.onEditFormShowMoreAction}
+            targetId={this.props.action.id}
+            attributes={this.props.action.attributes}
+            attributeTypes={this.props.attributeTypes}
+            elementConfig={{
+              elementTypes: this.props.actionTypes,
+              editWithForm: this.editActionWithForm
+            }}
+            editorConfig={{
+              type: 'action',
+              action: 'complement'
+            }}
+            closeEditorForm={this.disableEditMode}
+            displayMessage={this.props.displayMessage}
+          />
+        )}
+        {!this.state.editingAction && !this.state.complementingAction && (
+          <div>
+            <div className='box'>
+              <Attributes
+                element={action}
+                documentState={this.props.documentState}
+                type={'action'}
+                attributeTypes={this.props.attributeTypes}
+                typeOptions={this.props.actionTypes}
+                renderBasicAttributes={this.renderBasicAttributes}
+                renderButtons={this.renderActionButtons}
+                updateTypeSpecifier={this.updateTypeSpecifier}
+                updateType={this.updateActionType}
+                updateAttribute={this.updateActionAttribute}
+                showAttributes={action.is_open}
+              />
+              {this.state.creatingRecord && (
+                <EditorForm
+                  onShowMoreForm={this.complementRecordForm}
+                  targetId={this.props.action.id}
+                  attributes={this.state.record.attributes}
                   attributeTypes={this.props.attributeTypes}
-                  typeOptions={this.props.actionTypes}
-                  renderBasicAttributes={this.renderBasicAttributes}
-                  renderButtons={this.renderActionButtons}
-                  updateTypeSpecifier={this.updateTypeSpecifier}
-                  updateType={this.updateActionType}
-                  updateAttribute={this.updateActionAttribute}
-                  showAttributes={action.is_open}
+                  elementConfig={{
+                    elementTypes: this.props.recordTypes,
+                    createRecord: this.createRecord
+                  }}
+                  editorConfig={{
+                    type: 'record',
+                    action: 'add'
+                  }}
+                  closeEditorForm={this.cancelRecordCreation}
+                  displayMessage={this.props.displayMessage}
                 />
-                {this.state.creatingRecord && (
-                  <EditorForm
-                    onShowMoreForm={this.complementRecordForm}
-                    targetId={this.props.action.id}
-                    attributes={this.state.record.attributes}
-                    attributeTypes={this.props.attributeTypes}
-                    elementConfig={{
-                      elementTypes: this.props.recordTypes,
-                      createRecord: this.createRecord
-                    }}
-                    editorConfig={{
-                      type: 'record',
-                      action: 'add'
-                    }}
-                    closeEditorForm={this.cancelRecordCreation}
-                    displayMessage={this.props.displayMessage}
-                  />
-                )}
-                {this.state.complementingRecordAdd && (
-                  <EditorForm
-                    onShowMoreForm={this.onEditFormShowMoreRecordAdd}
-                    targetId={this.props.action.id}
-                    attributes={this.state.record.attributes}
-                    attributeTypes={this.props.attributeTypes}
-                    elementConfig={{
-                      elementTypes: this.props.recordTypes,
-                      createRecord: this.createRecord
-                    }}
-                    editorConfig={{
-                      type: 'record',
-                      action: 'complement',
-                      from: 'newRecord'
-                    }}
-                    complementRecordAdd={this.complementRecordAdd}
-                    closeEditorForm={this.cancelRecordComplement}
-                    displayMessage={this.props.displayMessage}
-                  />
-                )}
-              </div>
-              {!!recordElements.length && (
-                <div className='attribute-labels-container'>
-                  <div
-                    className={classnames('col-xs-12 records box', {
-                      'records-editing': this.props.documentState === 'edit'
-                    })}
-                  >
-                    <h4>Asiakirjat</h4>
-                    {recordElements}
-                  </div>
-                </div>
+              )}
+              {this.state.complementingRecordAdd && (
+                <EditorForm
+                  onShowMoreForm={this.onEditFormShowMoreRecordAdd}
+                  targetId={this.props.action.id}
+                  attributes={this.state.record.attributes}
+                  attributeTypes={this.props.attributeTypes}
+                  elementConfig={{
+                    elementTypes: this.props.recordTypes,
+                    createRecord: this.createRecord
+                  }}
+                  editorConfig={{
+                    type: 'record',
+                    action: 'complement',
+                    from: 'newRecord'
+                  }}
+                  complementRecordAdd={this.complementRecordAdd}
+                  closeEditorForm={this.cancelRecordComplement}
+                  displayMessage={this.props.displayMessage}
+                />
               )}
             </div>
-          )}
-          {this.state.deleting && (
-            <Popup
-              content={
-                <DeleteView
-                  type='action'
-                  target={this.state.typeSpecifier || this.state.type || '---'}
-                  action={() => this.delete()}
-                  cancel={() => this.cancelDeletion()}
-                />
-              }
-              closePopup={() => this.cancelDeletion()}
-            />
-          )}
-          {this.state.showReorderView && (
-            <Popup
-              content={
-                <ReorderView
-                  target='record'
-                  toggleReorderView={() => this.toggleReorderView()}
-                  keys={this.props.action.records}
-                  values={this.props.records}
-                  changeOrder={this.props.changeOrder}
-                  parent={this.props.action.id}
-                  attributeTypes={this.props.attributeTypes}
-                  parentName={this.state.typeSpecifier || this.state.type}
-                />
-              }
-              closePopup={() => this.toggleReorderView()}
-            />
-          )}
-          {this.state.showImportView && (
-            <Popup
-              content={
-                <ImportView
-                  level='record'
-                  toggleImportView={() => this.toggleImportView()}
-                  title='asiakirjoja'
-                  targetText={
-                    'toimenpiteeseen "' +
-                    this.getTargetText(action.attributes.TypeSpecifier) +
-                    '"'
-                  }
-                  itemsToImportText='asiakirjat'
-                  phasesOrder={this.props.phasesOrder}
-                  phases={this.props.phases}
-                  actions={this.props.actions}
-                  records={this.props.records}
-                  importItems={this.props.importItems}
-                  parent={action.id}
-                  parentName={action.name}
-                />
-              }
-              closePopup={() => this.toggleImportView()}
-            />
-          )}
-        </div>
-      </StickyContainer>
+            {!!recordElements.length && (
+              <div className='attribute-labels-container'>
+                <div
+                  className={classnames('col-xs-12 records box', {
+                    'records-editing': this.props.documentState === 'edit'
+                  })}
+                >
+                  <h4>Asiakirjat</h4>
+                  {recordElements}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+        {this.state.deleting && (
+          <Popup
+            content={
+              <DeleteView
+                type='action'
+                target={this.state.typeSpecifier || this.state.type || '---'}
+                action={() => this.delete()}
+                cancel={() => this.cancelDeletion()}
+              />
+            }
+            closePopup={() => this.cancelDeletion()}
+          />
+        )}
+        {this.state.showReorderView && (
+          <Popup
+            content={
+              <ReorderView
+                target='record'
+                toggleReorderView={() => this.toggleReorderView()}
+                keys={this.props.action.records}
+                values={this.props.records}
+                changeOrder={this.props.changeOrder}
+                parent={this.props.action.id}
+                attributeTypes={this.props.attributeTypes}
+                parentName={this.state.typeSpecifier || this.state.type}
+              />
+            }
+            closePopup={() => this.toggleReorderView()}
+          />
+        )}
+        {this.state.showImportView && (
+          <Popup
+            content={
+              <ImportView
+                level='record'
+                toggleImportView={() => this.toggleImportView()}
+                title='asiakirjoja'
+                targetText={
+                  'toimenpiteeseen "' +
+                  this.getTargetText(action.attributes.TypeSpecifier) +
+                  '"'
+                }
+                itemsToImportText='asiakirjat'
+                phasesOrder={this.props.phasesOrder}
+                phases={this.props.phases}
+                actions={this.props.actions}
+                records={this.props.records}
+                importItems={this.props.importItems}
+                parent={action.id}
+                parentName={action.name}
+              />
+            }
+            closePopup={() => this.toggleImportView()}
+          />
+        )}
+      </div>
     );
   }
 }
 
 Action.propTypes = {
-  action: React.PropTypes.object.isRequired,
-  actionTypes: React.PropTypes.object.isRequired,
-  actions: React.PropTypes.object.isRequired,
-  addRecord: React.PropTypes.func.isRequired,
-  attributeTypes: React.PropTypes.object.isRequired,
-  changeOrder: React.PropTypes.func.isRequired,
-  displayMessage: React.PropTypes.func.isRequired,
-  documentState: React.PropTypes.string.isRequired,
-  editAction: React.PropTypes.func.isRequired,
-  editActionAttribute: React.PropTypes.func.isRequired,
-  editRecord: React.PropTypes.func.isRequired,
-  editRecordAttribute: React.PropTypes.func.isRequired,
-  importItems: React.PropTypes.func.isRequired,
-  phases: React.PropTypes.object.isRequired,
-  phasesOrder: React.PropTypes.array.isRequired,
-  recordTypes: React.PropTypes.object.isRequired,
-  records: React.PropTypes.object.isRequired,
-  removeAction: React.PropTypes.func.isRequired,
-  removeRecord: React.PropTypes.func.isRequired,
-  setActionVisibility: React.PropTypes.func.isRequired,
-  setRecordVisibility: React.PropTypes.func.isRequired
+  action: PropTypes.object.isRequired,
+  actionTypes: PropTypes.object.isRequired,
+  actions: PropTypes.object.isRequired,
+  addRecord: PropTypes.func.isRequired,
+  attributeTypes: PropTypes.object.isRequired,
+  changeOrder: PropTypes.func.isRequired,
+  displayMessage: PropTypes.func.isRequired,
+  documentState: PropTypes.string.isRequired,
+  editAction: PropTypes.func.isRequired,
+  editActionAttribute: PropTypes.func.isRequired,
+  editRecord: PropTypes.func.isRequired,
+  editRecordAttribute: PropTypes.func.isRequired,
+  importItems: PropTypes.func.isRequired,
+  phases: PropTypes.object.isRequired,
+  phasesOrder: PropTypes.array.isRequired,
+  recordTypes: PropTypes.object.isRequired,
+  records: PropTypes.object.isRequired,
+  removeAction: PropTypes.func.isRequired,
+  removeRecord: PropTypes.func.isRequired,
+  setActionVisibility: PropTypes.func.isRequired,
+  setRecordVisibility: PropTypes.func.isRequired
 };
 
 export default Action;

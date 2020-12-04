@@ -1,26 +1,27 @@
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-export default function (WrappedComponent) {
+const KeyStrokeWrapper = function (WrappedComponent) {
   class KeyStrokeSupport extends Component {
     static propTypes = {
       cancel: PropTypes.func.isRequired,
       submit: PropTypes.func.isRequired
     };
 
-    constructor (props) {
+    constructor(props) {
       super(props);
       this.handleKeyDown = this.handleKeyDown.bind(this);
     }
 
-    componentWillMount () {
+    UNSAFE_componentWillMount() {
       document.addEventListener('keydown', this.handleKeyDown);
     }
 
-    componentWillUnmount () {
+    componentWillUnmount() {
       document.removeEventListener('keydown', this.handleKeyDown);
     }
 
-    handleKeyDown (e) {
+    handleKeyDown(e) {
       switch (e.keyCode) {
         case 13:
           this.props.submit(e);
@@ -28,13 +29,17 @@ export default function (WrappedComponent) {
         case 27:
           this.props.cancel(e);
           break;
+        default:
+          break;
       }
     }
 
-    render () {
-      return (<WrappedComponent {...this.props}/>);
+    render() {
+      return <WrappedComponent {...this.props} />;
     }
   }
 
   return KeyStrokeSupport;
 };
+
+export default KeyStrokeWrapper;

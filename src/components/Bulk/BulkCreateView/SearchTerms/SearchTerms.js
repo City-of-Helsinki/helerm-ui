@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { isEmpty, slice } from 'lodash';
 
-import { BULK_UPDATE_SEARCH_TERM_DEFAULT } from '../../../../../config/constants';
+import { BULK_UPDATE_SEARCH_TERM_DEFAULT } from '../../../../constants';
 import SearchTerm from './SearchTerm';
 
 import './SearchTerms.scss';

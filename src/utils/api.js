@@ -1,10 +1,8 @@
 import fetch from 'isomorphic-fetch';
 import Promise from 'promise-polyfill';
 import { forEach, merge } from 'lodash';
-import { store } from '../main.js';
-import { logoutUnauthorized } from '../components/Login/reducer';
-
-import { getStorageItem } from './storage';
+import { config } from '../config';
+import { getStorageItem, removeStorageItem } from './storage';
 
 /**
  * Which actions are allowed without authentication
@@ -22,7 +20,7 @@ if (!window.Promise) {
  * @extends Error
  */
 class Unauthorized extends Error {
-  constructor (message) {
+  constructor(message) {
     super(message);
     this.name = 'Unauthorized';
   }
@@ -35,7 +33,7 @@ class Unauthorized extends Error {
  * @param options
  * @returns {*}
  */
-export function get (endpoint, params = {}, options = {}) {
+export function get(endpoint, params = {}, options = {}) {
   return callApi(endpoint, params, options);
 }
 
@@ -47,7 +45,7 @@ export function get (endpoint, params = {}, options = {}) {
  * @param options
  * @returns {*}
  */
-export function post (endpoint, data, params = {}, options = {}) {
+export function post(endpoint, data, params = {}, options = {}) {
   if (typeof data !== 'string') {
     data = JSON.stringify(data);
     options.headers = merge(
@@ -55,7 +53,11 @@ export function post (endpoint, data, params = {}, options = {}) {
       options.headers
     );
   }
-  return callApi(endpoint, params, merge({ body: data, method: 'POST' }, options));
+  return callApi(
+    endpoint,
+    params,
+    merge({ body: data, method: 'POST' }, options)
+  );
 }
 
 /**
@@ -66,7 +68,7 @@ export function post (endpoint, data, params = {}, options = {}) {
  * @param options
  * @returns {*}
  */
-export function put (endpoint, data, params = {}, options = {}) {
+export function put(endpoint, data, params = {}, options = {}) {
   if (typeof data !== 'string') {
     data = JSON.stringify(data);
     options.headers = merge(
@@ -74,10 +76,14 @@ export function put (endpoint, data, params = {}, options = {}) {
       options.headers
     );
   }
-  return callApi(endpoint, params, merge({ body: data, method: 'PUT' }, options));
+  return callApi(
+    endpoint,
+    params,
+    merge({ body: data, method: 'PUT' }, options)
+  );
 }
 
-export function patch (endpoint, data, params = {}, options = {}) {
+export function patch(endpoint, data, params = {}, options = {}) {
   if (typeof data !== 'string') {
     data = JSON.stringify(data);
     options.headers = merge(
@@ -85,7 +91,11 @@ export function patch (endpoint, data, params = {}, options = {}) {
       options.headers
     );
   }
-  return callApi(endpoint, params, merge({ body: data, method: 'PATCH' }, options));
+  return callApi(
+    endpoint,
+    params,
+    merge({ body: data, method: 'PATCH' }, options)
+  );
 }
 
 /**
@@ -95,7 +105,7 @@ export function patch (endpoint, data, params = {}, options = {}) {
  * @param options
  * @returns {*}
  */
-export function del (endpoint, params = {}, options = { method: 'DELETE' }) {
+export function del(endpoint, params = {}, options = { method: 'DELETE' }) {
   return callApi(endpoint, params, options);
 }
 
@@ -106,20 +116,30 @@ export function del (endpoint, params = {}, options = { method: 'DELETE' }) {
  * @param options
  * @returns {*}
  */
-export function callApi (endpoint, params, options = {}) {
+export function callApi(endpoint, params, options = {}) {
   const token = getStorageItem('token');
   const defaultHeaders = new Headers();
   const url = getApiUrl(endpoint, params);
-  const finalOptions = merge({
-    method: 'GET',
-    credentials: 'include',
-    mode: 'cors'
-  }, options);
+  const finalOptions = merge(
+    {
+      method: 'GET',
+      credentials: 'include',
+      mode: 'cors'
+    },
+    options
+  );
 
   defaultHeaders.append('Accept', 'application/json');
 
-  if (!token && ALLOWED_METHODS_WITHOUT_AUTHENTICATION.indexOf(finalOptions.method) !== 0) {
-    throw Error(`Following methods for API-endpoint require authentication: ${ALLOWED_METHODS_WITHOUT_AUTHENTICATION.join(', ')}`);
+  if (
+    !token &&
+    ALLOWED_METHODS_WITHOUT_AUTHENTICATION.indexOf(finalOptions.method) !== 0
+  ) {
+    throw Error(
+      `Following methods for API-endpoint require authentication: ${ALLOWED_METHODS_WITHOUT_AUTHENTICATION.join(
+        ', '
+      )}`
+    );
   }
 
   if (token) {
@@ -127,16 +147,29 @@ export function callApi (endpoint, params, options = {}) {
   }
 
   if (options.headers) {
-    Object.keys(options.headers).map(key => {
+    Object.keys(options.headers).forEach((key) => {
       defaultHeaders.append(key, options.headers[key]);
     });
   }
 
   finalOptions.headers = defaultHeaders;
-  return fetch(url, finalOptions).then(res => {
+  return fetch(url, finalOptions).then((res) => {
     if (res.status === 401) {
-      // logout and forward to login
-      logoutUnauthorized()(store.dispatch);
+      // Actions dispatched based on the response cannot
+      // happen here, because it will introduce circular
+      // dependencies api -> reducer -> api (with or without
+      // intermediate modules). Pending a larger refactor,
+      // now it clears the token from localStorage and redirects
+      // user to logout endpoint (ending the sso session) or
+      // if the user was not logged in at all, redirects to login.
+      if (token) {
+        removeStorageItem('token');
+        window.location.assign(`/auth/logout?next=${window.location.origin}`);
+      } else {
+        window.location.assign(
+          `/auth/login/helsinki?next=${window.location.href}`
+        );
+      }
       throw new Unauthorized(url);
     }
     return res;
@@ -149,9 +182,14 @@ export function callApi (endpoint, params, options = {}) {
  * @param query
  * @returns {string}
  */
-export function getApiUrl (url, query = {}) {
+export function getApiUrl(url, query = {}) {
   const queryString = buildQueryString(query);
-  return [API_URL, API_VERSION, url, queryString].join('/');
+  return [
+    config.API_URL,
+    config.API_VERSION,
+    url,
+    queryString
+  ].join('/');
 }
 
 /**
@@ -159,7 +197,7 @@ export function getApiUrl (url, query = {}) {
  * @param query
  * @returns {string}
  */
-export function buildQueryString (query) {
+export function buildQueryString(query) {
   const pairs = [];
 
   forEach(query, (value, key) => {
@@ -168,5 +206,5 @@ export function buildQueryString (query) {
 
   return pairs.length ? '?' + pairs.join('&') : '';
 }
-
-export default { get, post, put, patch, del };
+const methods = { get, post, put, patch, del };
+export default methods;

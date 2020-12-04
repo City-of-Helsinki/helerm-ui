@@ -29,20 +29,16 @@ import {
   setRecordVisibilityAction
 } from './Record/reducer';
 
-import {
-  executeImportAction
-} from './ImportView/reducer';
+import { executeImportAction } from './ImportView/reducer';
 
-import {
-  receiveTemplateAction
-} from './CloneView/reducer';
+import { receiveTemplateAction } from './CloneView/reducer';
 
 import { executeOrderChangeAction } from './Reorder/reducer';
 
 import { default as api } from '../../utils/api';
 import { normalizeTosFromApi, normalizeTosForApi } from '../../utils/helpers';
 
-const initialState = {
+export const initialState = {
   id: null,
   function_id: null,
   parent: null,
@@ -78,7 +74,8 @@ export const CLEAR_TOS = 'clearTosAction';
 export const EDIT_META_DATA = 'editMetaDataAction';
 export const EDIT_VALID_DATE = 'editValidDateAction';
 export const SET_DOCUMENT_STATE = 'setDocumentStateAction';
-export const SET_CLASSIFICATION_VISIBILITY = 'setClassificationVisibilityAction';
+export const SET_CLASSIFICATION_VISIBILITY =
+  'setClassificationVisibilityAction';
 export const SET_METADATA_VISIBILITY = 'setMetadataVisibilityAction';
 export const SET_TOS_VISIBILITY = 'setTosVisibilityAction';
 export const SET_VERSION_VISIBILITY = 'setVersionVisibilityAction';
@@ -86,28 +83,30 @@ export const SET_VERSION_VISIBILITY = 'setVersionVisibilityAction';
 // ------------------------------------
 // Actions
 // ------------------------------------
-export function receiveTOS (tos) {
+export function receiveTOS(tos) {
   tos = normalizeTosFromApi(tos);
   const data = Object.assign({}, tos, { receivedAt: Date.now() });
 
   return createAction(RECEIVE_TOS)(data);
 }
 
-export function clearTOS () {
+export function clearTOS() {
   return createAction(CLEAR_TOS)();
 }
 
-export function resetTOS (originalTos) {
+export function resetTOS(originalTos) {
   return createAction(RESET_TOS)(originalTos);
 }
 
-export function editMetaData (attributes) {
+export function editMetaData(attributes) {
   let editedMetaData = {};
 
-  Object.keys(attributes).forEach(key => {
+  Object.keys(attributes).forEach((key) => {
     if (attributes.hasOwnProperty(key)) {
       if (attributes[key].checked === true) {
-        editedMetaData = Object.assign({}, editedMetaData, { [key]: attributes[key].value });
+        editedMetaData = Object.assign({}, editedMetaData, {
+          [key]: attributes[key].value
+        });
       }
     }
   });
@@ -115,30 +114,31 @@ export function editMetaData (attributes) {
   return createAction(EDIT_META_DATA)(editedMetaData);
 }
 
-export function editValidDates (validDate) {
+export function editValidDates(validDate) {
   return createAction(EDIT_VALID_DATE)(validDate);
 }
 
-export function setDocumentState (newState) {
+export function setDocumentState(newState) {
   return createAction(SET_DOCUMENT_STATE)(newState);
 }
 
-export function fetchTOS (tosId, params = {}) {
+export function fetchTOS(tosId, params = {}) {
   return function (dispatch) {
     dispatch(createAction(REQUEST_TOS)());
-    return api.get(`function/${tosId}`, params)
-      .then(res => {
+    return api
+      .get(`function/${tosId}`, params)
+      .then((res) => {
         if (!res.ok) {
           dispatch(createAction(TOS_ERROR)());
           throw new URIError(res.statusText);
         }
         return res.json();
       })
-      .then(json => dispatch(receiveTOS(json)));
+      .then((json) => dispatch(receiveTOS(json)));
   };
 }
 
-export function saveDraft () {
+export function saveDraft() {
   return function (dispatch, getState) {
     dispatch(createAction(REQUEST_TOS)());
     const tos = cloneDeep(getState().selectedTOS);
@@ -147,19 +147,21 @@ export function saveDraft () {
     const denormalizedTos = update(tos, { phases: { $set: finalPhases } });
     const currentVersion = tos.version;
 
-    return api.put(`function/${tos.id}`, denormalizedTos)
-      .then(res => {
+    return api
+      .put(`function/${tos.id}`, denormalizedTos)
+      .then((res) => {
         if (!res.ok) {
-          return res.json()
-            .then(json => {
-              const message = !isEmpty(json) ? values(json).join(',') : res.statusText;
-              dispatch(createAction(TOS_ERROR)());
-              throw Error(message);
-            });
+          return res.json().then((json) => {
+            const message = !isEmpty(json)
+              ? values(json).join(',')
+              : res.statusText;
+            dispatch(createAction(TOS_ERROR)());
+            throw Error(message);
+          });
         }
         return res.json();
       })
-      .then(json => {
+      .then((json) => {
         if (json.version !== currentVersion + 1) {
           alert(
             `Muokkasit luonnoksen versiota ${currentVersion}, ` +
@@ -170,43 +172,45 @@ export function saveDraft () {
           );
         }
         dispatch(receiveTOS(json));
+        return json;
       });
   };
 }
 
-export function changeStatus (status) {
+export function changeStatus(status) {
   return function (dispatch, getState) {
     dispatch(createAction(REQUEST_TOS)());
     const tos = Object.assign({}, getState().selectedTOS);
     const includeRelated = getState().navigation.includeRelated;
 
-    return api.patch(`function/${tos.id}`, { state: status })
-      .then(res => {
+    return api
+      .patch(`function/${tos.id}`, { state: status })
+      .then((res) => {
         if (!res.ok) {
           dispatch(createAction(TOS_ERROR)());
           throw Error(res.statusText);
         }
         return res.json();
       })
-      .then(json => dispatch(receiveTOS(json)))
+      .then((json) => dispatch(receiveTOS(json)))
       .then(dispatch(fetchNavigation(includeRelated)));
   };
 }
 
-export function setClassificationVisibility (visibility) {
+export function setClassificationVisibility(visibility) {
   return createAction(SET_CLASSIFICATION_VISIBILITY)(visibility);
 }
 
-export function setMetadataVisibility (visibility) {
+export function setMetadataVisibility(visibility) {
   return createAction(SET_METADATA_VISIBILITY)(visibility);
 }
 
-export function setTosVisibility (tos, basicVisibility, metaDataVisibility) {
+export function setTosVisibility(tos, basicVisibility, metaDataVisibility) {
   const allPhasesOpen = {};
   const allActionsOpen = {};
   const allRecordsOpen = {};
   const { actions, phases, records } = tos;
-  Object.keys(phases).forEach(key => {
+  Object.keys(phases).forEach((key) => {
     if (phases.hasOwnProperty(key)) {
       allPhasesOpen[key] = update(phases[key], {
         is_attributes_open: {
@@ -216,7 +220,7 @@ export function setTosVisibility (tos, basicVisibility, metaDataVisibility) {
           $set: basicVisibility
         }
       });
-      Object.keys(actions).forEach(actionKey => {
+      Object.keys(actions).forEach((actionKey) => {
         if (actions.hasOwnProperty(actionKey)) {
           allActionsOpen[actionKey] = update(actions[actionKey], {
             is_open: {
@@ -224,7 +228,7 @@ export function setTosVisibility (tos, basicVisibility, metaDataVisibility) {
             }
           });
         }
-        Object.keys(records).forEach(recordKey => {
+        Object.keys(records).forEach((recordKey) => {
           if (records.hasOwnProperty(recordKey)) {
             allRecordsOpen[recordKey] = update(records[recordKey], {
               is_open: {
@@ -245,7 +249,7 @@ export function setTosVisibility (tos, basicVisibility, metaDataVisibility) {
   });
 }
 
-export function setVersionVisibility (visibility) {
+export function setVersionVisibility(visibility) {
   return createAction(SET_VERSION_VISIBILITY)(visibility);
 }
 
@@ -315,17 +319,19 @@ const tosErrorAction = (state) => {
   const actions = {};
   const phases = {};
 
-  map(state.actions, action => {
+  map(state.actions, (action) => {
     Object.assign(actions, { [action.id]: action });
     return map(action.records, (record, recordIndex) => {
       if (record && typeof record !== 'undefined') {
         const recordId = typeof record === 'string' ? record : record.id;
-        return Object.assign(actions[action.id].records, { [recordIndex]: recordId });
+        return Object.assign(actions[action.id].records, {
+          [recordIndex]: recordId
+        });
       }
     });
   });
 
-  map(state.phases, phase => {
+  map(state.phases, (phase) => {
     Object.assign(phases, { [phase.id]: phase });
     return map(phase.actions, (action, actionIndex) => {
       if (action && typeof action !== 'undefined') {
@@ -354,8 +360,13 @@ const editMetaDataAction = (state, { payload }) => {
 
 const editValidDateAction = (state, { payload }) => {
   return update(state, {
-    valid_from: { $set: payload.validFrom !== undefined ? payload.validFrom : state.valid_from },
-    valid_to: { $set: payload.validTo !== undefined ? payload.validTo : state.valid_to }
+    valid_from: {
+      $set:
+        payload.validFrom !== undefined ? payload.validFrom : state.valid_from
+    },
+    valid_to: {
+      $set: payload.validTo !== undefined ? payload.validTo : state.valid_to
+    }
   });
 };
 
@@ -380,7 +391,13 @@ const setMetadataVisibilityAction = (state, { payload }) => {
 };
 
 const setTosVisibilityAction = (state, { payload }) => {
-  const { actions, phases, records, basicVisibility, metaDataVisibility } = payload;
+  const {
+    actions,
+    phases,
+    records,
+    basicVisibility,
+    metaDataVisibility
+  } = payload;
   return update(state, {
     actions: { $set: actions },
     is_classification_open: { $set: basicVisibility },
@@ -397,37 +414,40 @@ const setVersionVisibilityAction = (state, { payload }) => {
   });
 };
 
-export default handleActions({
-  requestTosAction,
-  receiveTosAction,
-  resetTosAction,
-  clearTosAction,
-  receiveTemplateAction,
-  tosErrorAction,
-  setActionVisibilityAction,
-  setClassificationVisibilityAction,
-  setMetadataVisibilityAction,
-  setPhaseAttributesVisibilityAction,
-  setPhaseVisibilityAction,
-  setPhasesVisibilityAction,
-  setRecordVisibilityAction,
-  setTosVisibilityAction,
-  setVersionVisibilityAction,
-  addActionAction,
-  addPhaseAction,
-  addRecordAction,
-  editActionAction,
-  editActionAttributeAction,
-  editPhaseAction,
-  editPhaseAttributeAction,
-  editRecordAction,
-  editRecordAttributeAction,
-  editMetaDataAction,
-  editValidDateAction,
-  removeActionAction,
-  removePhaseAction,
-  removeRecordAction,
-  setDocumentStateAction,
-  executeImportAction,
-  executeOrderChangeAction
-}, initialState);
+export default handleActions(
+  {
+    requestTosAction,
+    receiveTosAction,
+    resetTosAction,
+    clearTosAction,
+    receiveTemplateAction,
+    tosErrorAction,
+    setActionVisibilityAction,
+    setClassificationVisibilityAction,
+    setMetadataVisibilityAction,
+    setPhaseAttributesVisibilityAction,
+    setPhaseVisibilityAction,
+    setPhasesVisibilityAction,
+    setRecordVisibilityAction,
+    setTosVisibilityAction,
+    setVersionVisibilityAction,
+    addActionAction,
+    addPhaseAction,
+    addRecordAction,
+    editActionAction,
+    editActionAttributeAction,
+    editPhaseAction,
+    editPhaseAttributeAction,
+    editRecordAction,
+    editRecordAttributeAction,
+    editMetaDataAction,
+    editValidDateAction,
+    removeActionAction,
+    removePhaseAction,
+    removeRecordAction,
+    setDocumentStateAction,
+    executeImportAction,
+    executeOrderChangeAction
+  },
+  initialState
+);

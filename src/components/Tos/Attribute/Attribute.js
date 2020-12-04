@@ -1,12 +1,16 @@
 import React from 'react';
-import Select from 'react-select';
+import PropTypes from 'prop-types';
+import CreatableSelect from 'react-select/creatable';
 import classnames from 'classnames';
 import { includes, forEach, find, map } from 'lodash';
-
+import {
+  resolveSelectValues,
+  resolveReturnValues
+} from '../../../utils/helpers';
 import './Attribute.scss';
 
 export class Attribute extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.onChange = this.onChange.bind(this);
     this.submit = this.submit.bind(this);
@@ -16,19 +20,19 @@ export class Attribute extends React.Component {
     };
   }
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.state.attribute !== nextProps.attribute) {
       this.setState({ attribute: nextProps.attribute });
     }
   }
 
-  activateEditMode () {
+  activateEditMode() {
     if (this.state.mode !== 'edit') {
       this.changeState('edit');
     }
   }
 
-  onChange (option) {
+  onChange(option) {
     if (option instanceof Array) {
       const values = option.length ? map(option, 'value') : null;
       this.setState({
@@ -41,13 +45,13 @@ export class Attribute extends React.Component {
     }
   }
 
-  changeState (newState) {
+  changeState(newState) {
     if (this.props.documentState === 'edit') {
       this.setState({ mode: newState });
     }
   }
 
-  submit (event) {
+  submit(event) {
     event.preventDefault();
     if (this.props.attributeIndex === '') {
       this.props.updateTypeSpecifier(
@@ -72,7 +76,7 @@ export class Attribute extends React.Component {
     setTimeout(() => this.changeState('view'), 150);
   }
 
-  resolveBaseAttributePlaceholder () {
+  resolveBaseAttributePlaceholder() {
     const { parentType } = this.props;
 
     switch (parentType) {
@@ -87,17 +91,17 @@ export class Attribute extends React.Component {
     }
   }
 
-  resolvePlaceHolder (fieldName) {
+  resolvePlaceHolder(fieldName) {
     return `Valitse ${fieldName.toLowerCase()}...`;
   }
 
-  onPromptCreate (label) {
+  onPromptCreate(label) {
     return `Lisää "${label}"`;
   }
 
-  generateAttributeInput (attribute, currentAttribute) {
+  generateAttributeInput(attribute, currentAttribute) {
     if (attribute.values && attribute.values.length) {
-      const options = attribute.values.map(option => {
+      const options = attribute.values.map((option) => {
         return {
           value: option.value,
           label: option.value
@@ -121,20 +125,22 @@ export class Attribute extends React.Component {
           }
         });
       }
+      const multi = includes(attribute.multiIn, this.props.parentType);
       return (
-        <Select.Creatable
-          autoBlur={false}
-          openOnFocus={true}
+        <CreatableSelect
+          openMenuOnFocus={true}
           className='form-control edit-attribute__input'
-          clearable={true}
-          value={this.state.attribute}
-          onChange={this.onChange}
+          isClearable={true}
+          value={resolveSelectValues(options, this.state.attribute, multi)}
+          onChange={(emittedValue) =>
+            this.onChange(resolveReturnValues(emittedValue, multi))
+          }
           onBlur={this.submit}
           autoFocus={true}
           options={options}
-          multi={includes(attribute.multiIn, this.props.parentType)}
+          isMulti={multi}
           placeholder={this.resolvePlaceHolder(attribute.name)}
-          promptTextCreator={this.onPromptCreate}
+          formatCreateLabel={this.onPromptCreate}
           delimiter=';'
         />
       );
@@ -155,7 +161,7 @@ export class Attribute extends React.Component {
     }
   }
 
-  generateBasicAttributeInput (type, name) {
+  generateBasicAttributeInput(type, name) {
     if (type === '') {
       return (
         <form onSubmit={this.submit}>
@@ -173,9 +179,9 @@ export class Attribute extends React.Component {
     }
   }
 
-  generateBasicAttributeDropdown (typeOptions, activeElement) {
+  generateBasicAttributeDropdown(typeOptions, activeElement) {
     const options = [];
-    Object.keys(typeOptions).forEach(key => {
+    Object.keys(typeOptions).forEach((key) => {
       if (typeOptions.hasOwnProperty(key)) {
         options.push({
           label: typeOptions[key].value,
@@ -201,28 +207,26 @@ export class Attribute extends React.Component {
         }
       });
     }
-
     return (
       <form onSubmit={this.submit}>
-        <Select.Creatable
-          autoBlur={false}
-          openOnFocus={true}
-          className='col-xs-6 form-control edit-attribute__input'
-          clearable={true}
-          value={this.state.attribute}
-          onChange={option => this.onChange(option ? option.value : null)}
-          onBlur={this.submit}
+        <CreatableSelect
+          openMenuOnFocus={true}
+          isClearable={true}
           autoFocus={true}
+          className='col-xs-6 form-control edit-attribute__input'
+          value={resolveSelectValues(options, this.state.attribute)}
+          onChange={(option) => this.onChange(option ? option.value : null)}
+          onBlur={this.submit}
           options={options}
           placeholder={this.resolveBaseAttributePlaceholder() || 'Valitse...'}
-          promptTextCreator={this.onPromptCreate}
+          formatCreateLabel={this.onPromptCreate}
           delimiter=';'
         />
       </form>
     );
   }
 
-  render () {
+  render() {
     const {
       attribute,
       attributeIndex,
@@ -235,10 +239,10 @@ export class Attribute extends React.Component {
     let attributeValue;
     if (editable === false && attribute !== null) {
       return (
-        <a className='list-group-item col-xs-6 attribute-basic'>
+        <span className='list-group-item col-xs-6 attribute-basic'>
           <strong>{attributeIndex}:</strong>
           <div>{attribute || '\u00A0'}</div>
-        </a>
+        </span>
       );
     }
     if (this.state.mode === 'view') {
@@ -267,15 +271,13 @@ export class Attribute extends React.Component {
 
     if (attribute !== null || (attribute === null && type === 'basic')) {
       return (
-        <a
+        <span
           onClick={() => this.activateEditMode()}
-          className={
-            classnames([
-              'list-group-item col-xs-6 attribute',
-              showAttributes ? 'visible' : 'hidden',
-              type === 'basic' ? 'attribute-basic' : ''
-            ])
-          }
+          className={classnames([
+            'list-group-item col-xs-6 attribute',
+            showAttributes ? 'visible' : 'hidden',
+            type === 'basic' ? 'attribute-basic' : ''
+          ])}
         >
           <span className='table-key'>
             {attributeKey}
@@ -286,7 +288,7 @@ export class Attribute extends React.Component {
             } */}
           </span>
           {attributeValue}
-        </a>
+        </span>
       );
     }
     return null;
@@ -294,25 +296,22 @@ export class Attribute extends React.Component {
 }
 
 Attribute.propTypes = {
-  attribute: React.PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.array
-  ]),
-  attributeIndex: React.PropTypes.string,
-  attributeKey: React.PropTypes.string.isRequired,
-  attributeTypes: React.PropTypes.object,
-  documentState: React.PropTypes.string.isRequired,
-  editable: React.PropTypes.bool.isRequired,
-  elementId: React.PropTypes.string,
-  parentType: React.PropTypes.string,
-  showAttributes: React.PropTypes.bool.isRequired,
-  tosAttribute: React.PropTypes.bool,
-  type: React.PropTypes.string.isRequired,
-  typeOptions: React.PropTypes.object,
-  updateAttribute: React.PropTypes.func,
-  updateFunctionAttribute: React.PropTypes.func,
-  updateType: React.PropTypes.func,
-  updateTypeSpecifier: React.PropTypes.func
+  attribute: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+  attributeIndex: PropTypes.string,
+  attributeKey: PropTypes.string.isRequired,
+  attributeTypes: PropTypes.object,
+  documentState: PropTypes.string.isRequired,
+  editable: PropTypes.bool.isRequired,
+  elementId: PropTypes.string,
+  parentType: PropTypes.string,
+  showAttributes: PropTypes.bool.isRequired,
+  tosAttribute: PropTypes.bool,
+  type: PropTypes.string.isRequired,
+  typeOptions: PropTypes.object,
+  updateAttribute: PropTypes.func,
+  updateFunctionAttribute: PropTypes.func,
+  updateType: PropTypes.func,
+  updateTypeSpecifier: PropTypes.func
 };
 
 export default Attribute;

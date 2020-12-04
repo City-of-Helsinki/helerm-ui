@@ -124,8 +124,7 @@ table,
 
 // Forms ======================================================================
 
-.form-control,
-input, {
+.form-control, input {
   border-width: 2px;
   @include box-shadow(none);
 

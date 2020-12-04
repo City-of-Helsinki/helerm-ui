@@ -1,15 +1,16 @@
-import React, { PropTypes } from 'react';
-import { Link } from 'react-router';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { isArray } from 'lodash';
 
-import { TYPE_LABELS } from '../../../../config/constants';
+import { TYPE_LABELS } from '../../../constants';
 
 import './PreviewItem.scss';
 
 export const PreviewItem = ({ item, metadata, onClose }) => {
   const link = item.function
-    ? `view-tos/${item.function}`
-    : `view-classification/${item.id}`;
+    ? `/view-tos/${item.function}`
+    : `/view-classification/${item.id}`;
   const attributes = Object.keys(item.attributes).reduce((acc, key) => {
     if (item.attributes.hasOwnProperty(key) && item.attributes[key]) {
       acc.push({

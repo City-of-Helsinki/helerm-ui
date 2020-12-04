@@ -1,21 +1,21 @@
 import { combineReducers } from 'redux';
-import { routerReducer as routing } from 'react-router-redux';
+import { connectRouter } from 'connected-react-router';
 import { reducer as toastr } from 'react-redux-toastr';
 
-import { default as user } from '../components/Login/reducer';
-import { default as ui } from './uiReducer';
-import { default as selectedTOS } from '../components/Tos/reducer';
-import { default as navigation } from '../components/Navigation/reducer';
-import { default as validation } from '../components/Tos/ValidationBar/reducer';
-import { default as classification } from '../components/Classification/reducer';
-import { default as bulk } from '../components/Bulk/reducer';
-import { default as search } from '../components/FacetedSearch/reducer';
+import user from '../components/Login/reducer';
+import ui from './uiReducer';
+import selectedTOS from '../components/Tos/reducer';
+import navigation from '../components/Navigation/reducer';
+import validation from '../components/Tos/ValidationBar/reducer';
+import classification from '../components/Classification/reducer';
+import bulk from '../components/Bulk/reducer';
+import search from '../components/FacetedSearch/reducer';
 
-export const makeRootReducer = () => {
+export const makeRootReducer = (history) => {
   return combineReducers({
     navigation,
     validation,
-    routing,
+    router: connectRouter(history),
     selectedTOS,
     classification,
     toastr,

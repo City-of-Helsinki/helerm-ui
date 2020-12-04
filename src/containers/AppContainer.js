@@ -1,11 +1,17 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { registerLocale, setDefaultLocale } from 'react-datepicker';
+import fi from 'date-fns/locale/fi';
 import { Provider, connect } from 'react-redux';
-import { Router } from 'react-router';
+import { Router } from 'react-router-dom';
 import ReduxToastr from 'react-redux-toastr';
 
 import Loader from '../components/Loader';
 import { retrieveUserFromSession } from '../components/Login/reducer';
 import { fetchAttributeTypes, fetchTemplates } from '../store/uiReducer';
+
+registerLocale('fi', fi);
+setDefaultLocale('fi');
 
 class AppContainer extends Component {
   static propTypes = {
@@ -18,20 +24,22 @@ class AppContainer extends Component {
     user: PropTypes.object
   };
 
-  componentWillMount () {
+  UNSAFE_componentWillMount() {
     this.props.fetchAttributeTypes();
     this.props.fetchTemplates();
     this.props.retrieveUserFromSession();
   }
 
-  render () {
+  render() {
     const { user, routes, store, history } = this.props;
     return (
       <Provider store={store}>
         <div style={{ height: '100%' }}>
-          {user
-            ? <Router history={history}>{routes}</Router>
-            : <Loader show={true} />}
+          {user ? (
+            <Router history={history}>{routes}</Router>
+          ) : (
+            <Loader show={true} />
+          )}
           <ReduxToastr
             timeOut={4000}
             newestOnTop={true}
@@ -51,6 +59,10 @@ const mapStateToProps = ({ user }) => ({
   user: user.data
 });
 
-const mapDispatchToProps = { fetchAttributeTypes, fetchTemplates, retrieveUserFromSession };
+const mapDispatchToProps = {
+  fetchAttributeTypes,
+  fetchTemplates,
+  retrieveUserFromSession
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppContainer);
