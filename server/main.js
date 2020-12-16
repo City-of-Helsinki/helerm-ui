@@ -4,7 +4,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
-const path = require('path');
 const authRoutes = require('./routes/auth');
 const { passport } = require('./controllers/authController');
 
@@ -23,8 +22,5 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use('/auth', authRoutes);
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.resolve('./build')));
-}
 const port = process.env.PORT || 3030;
 app.listen(port, () => console.log(`server running on port ${port}`));

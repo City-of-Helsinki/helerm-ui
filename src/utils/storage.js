@@ -1,8 +1,5 @@
 import { get, isString } from 'lodash';
-import _debug from 'debug';
 import { config } from '../config';
-
-const debug = _debug('app:storage');
 
 /**
  *
@@ -27,7 +24,6 @@ export function setStorageItem(key, value, callback = null) {
   }
   try {
     localStorage.setItem(buildStorageKey(key), value);
-    debug('storage item set: %s -> %s', key, value);
     if (callback && typeof callback === 'function') {
       callback();
     }
@@ -43,7 +39,6 @@ export function setStorageItem(key, value, callback = null) {
  */
 export function removeStorageItem(key, callback = null) {
   localStorage.removeItem(buildStorageKey(key));
-  debug('storage item removed: %s', key);
   if (callback && typeof callback === 'function') {
     callback();
   }

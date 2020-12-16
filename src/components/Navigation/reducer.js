@@ -21,8 +21,8 @@ export const RECEIVE_NAVIGATION = 'receiveNavigationAction';
 export const SET_NAVIGATION_VISIBILITY = 'setNavigationVisibilityAction';
 export const NAVIGATION_ERROR = 'navigationErrorAction';
 
-export function requestNavigation() {
-  return createAction(REQUEST_NAVIGATION)();
+export function requestNavigation(value) {
+  return createAction(REQUEST_NAVIGATION)(value);
 }
 
 export function receiveNavigation(items, includeRelated, page) {
@@ -48,8 +48,23 @@ export function fetchNavigation(includeRelated = false, page = 1) {
   const pageSize = includeRelated
     ? config.SEARCH_PAGE_SIZE
     : config.RESULTS_PER_PAGE;
+
   return function (dispatch, getState) {
-    dispatch(requestNavigation());
+    const includeRelatedAlreadySet = getState().navigation.includeRelated;
+    const isFetching = getState().navigation.isFetching;
+    if (
+      includeRelatedAlreadySet &&
+      !includeRelated &&
+      isFetching &&
+      page === 1
+    ) {
+      // If we are in the middle of a recursive fetch, prevent firing another
+      // search (e.g. returning immediately from bulkview to main page,
+      // navigation tries to construct the classification tree menu
+      // and another state update from a finishing recursive fetch crashes it).
+      return;
+    }
+    dispatch(requestNavigation({ includeRelated }));
     return api
       .get('classification', {
         include_related: includeRelated,
@@ -90,12 +105,19 @@ const parsedNavigationAction = (state, { payload }) => {
   });
 };
 
-const requestNavigationAction = (state) => {
-  return update(state, {
+const requestNavigationAction = (state, { payload }) => {
+  let newState = {
     isFetching: {
       $set: true
     }
-  });
+  };
+  if (payload && payload.includeRelated) {
+    newState = {
+      ...newState,
+      includeRelated: { $set: payload.includeRelated }
+    };
+  }
+  return update(state, newState);
 };
 
 const receiveNavigationAction = (state, { payload }) => {

@@ -1,8 +1,13 @@
+import 'react-app-polyfill/ie11';
+import 'react-app-polyfill/stable';
+import 'fast-text-encoding/text';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { createBrowserHistory } from 'history';
 import PiwikReactRouter from 'piwik-react-router';
 import Raven from 'raven-js';
+import { registerLocale, setDefaultLocale } from 'react-datepicker';
+import fi from 'date-fns/locale/fi';
 
 import createStore from './store/createStore';
 import AppContainer from './containers/AppContainer';
@@ -13,6 +18,10 @@ const piwik = PiwikReactRouter({
   url: config.PIWIK_URL,
   siteId: config.PIWIK_ID
 });
+
+// Register a locale for all datepickers in the application
+registerLocale('fi', fi);
+setDefaultLocale('fi');
 
 // Sentry config
 if (config.SENTRY_DSN) {

@@ -20,10 +20,14 @@ export class Header extends React.Component {
     const gitVersion = config.GIT_VERSION;
     const siteTitle = config.SITE_TITLE;
     const feedbackUrl = config.FEEDBACK_URL;
+    const themeColor = config.SITE_THEME;
 
     return (
       <div className='header'>
-        <nav className='navbar navbar-inverse container-fluid'>
+        <nav
+          className='navbar navbar-inverse container-fluid'
+          style={{ backgroundColor: themeColor }}
+        >
           <Link
             to='/'
             className='brand-title navbar-brand logo'

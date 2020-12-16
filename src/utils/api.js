@@ -1,5 +1,4 @@
 import fetch from 'isomorphic-fetch';
-import Promise from 'promise-polyfill';
 import { forEach, merge } from 'lodash';
 import { config } from '../config';
 import { getStorageItem, removeStorageItem } from './storage';
@@ -10,10 +9,6 @@ import { getStorageItem, removeStorageItem } from './storage';
  */
 const ALLOWED_METHODS_WITHOUT_AUTHENTICATION = ['GET'];
 
-// Add Promise to window if not supported...
-if (!window.Promise) {
-  window.Promise = Promise;
-}
 
 /**
  * Custom error to throw when 401 is received
@@ -158,8 +153,8 @@ export function callApi(endpoint, params, options = {}) {
       // Actions dispatched based on the response cannot
       // happen here, because it will introduce circular
       // dependencies api -> reducer -> api (with or without
-      // intermediate modules). Pending a larger refactor,
-      // now it clears the token from localStorage and redirects
+      // intermediate modules).
+      // Now it clears the token from localStorage and redirects
       // user to logout endpoint (ending the sso session) or
       // if the user was not logged in at all, redirects to login.
       if (token) {

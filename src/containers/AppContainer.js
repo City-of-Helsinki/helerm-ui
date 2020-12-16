@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { registerLocale, setDefaultLocale } from 'react-datepicker';
-import fi from 'date-fns/locale/fi';
 import { Provider, connect } from 'react-redux';
 import { Router } from 'react-router-dom';
 import ReduxToastr from 'react-redux-toastr';
@@ -9,9 +7,6 @@ import ReduxToastr from 'react-redux-toastr';
 import Loader from '../components/Loader';
 import { retrieveUserFromSession } from '../components/Login/reducer';
 import { fetchAttributeTypes, fetchTemplates } from '../store/uiReducer';
-
-registerLocale('fi', fi);
-setDefaultLocale('fi');
 
 class AppContainer extends Component {
   static propTypes = {
