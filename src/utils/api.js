@@ -9,7 +9,6 @@ import { getStorageItem, removeStorageItem } from './storage';
  */
 const ALLOWED_METHODS_WITHOUT_AUTHENTICATION = ['GET'];
 
-
 /**
  * Custom error to throw when 401 is received
  * @extends Error
@@ -150,21 +149,12 @@ export function callApi(endpoint, params, options = {}) {
   finalOptions.headers = defaultHeaders;
   return fetch(url, finalOptions).then((res) => {
     if (res.status === 401) {
-      // Actions dispatched based on the response cannot
-      // happen here, because it will introduce circular
-      // dependencies api -> reducer -> api (with or without
-      // intermediate modules).
-      // Now it clears the token from localStorage and redirects
-      // user to logout endpoint (ending the sso session) or
-      // if the user was not logged in at all, redirects to login.
       if (token) {
         removeStorageItem('token');
-        window.location.assign(`/auth/logout?next=${window.location.origin}`);
-      } else {
-        window.location.assign(
-          `/auth/login/helsinki?next=${window.location.href}`
-        );
       }
+      window.location.assign(
+        `/auth/login/helsinki?next=${window.location.href}`
+      );
       throw new Unauthorized(url);
     }
     return res;
@@ -179,12 +169,7 @@ export function callApi(endpoint, params, options = {}) {
  */
 export function getApiUrl(url, query = {}) {
   const queryString = buildQueryString(query);
-  return [
-    config.API_URL,
-    config.API_VERSION,
-    url,
-    queryString
-  ].join('/');
+  return [config.API_URL, config.API_VERSION, url, queryString].join('/');
 }
 
 /**

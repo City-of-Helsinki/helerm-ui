@@ -43,6 +43,7 @@
     "passport": "^0.4.1",
     "passport-helsinki": "City-of-Helsinki/passport-helsinki",
     "piwik-react-router": "^0.12.1",
+    "pre-commit": "^1.2.2",
     "prettier": "^2.2.1",
     "prop-types": "^15.7.2",
     "raven-js": "^3.17.0",
@@ -75,6 +76,7 @@
     "test": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject"
   },
+  "pre-commit": ["test"],
   "eslintConfig": {
     "extends": [
       "react-app",
