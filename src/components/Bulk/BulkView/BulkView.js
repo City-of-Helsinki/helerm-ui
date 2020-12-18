@@ -317,10 +317,10 @@ export class BulkView extends React.Component {
           isError = true;
           changesEl.push(
             <h5
-              className="bulk-view-item-phase-error"
+              className='bulk-view-item-phase-error'
               key={`phase_${phase}_error`}
             >
-              <i className="fa fa-exclamation-triangle" />
+              <i className='fa fa-exclamation-triangle' />
               Käsittelyvaihetta {phase} ei löytynyt, massamuutosta ei voida
               tehdä tälle käsittelyprosessille
             </h5>
@@ -347,10 +347,10 @@ export class BulkView extends React.Component {
               isError = true;
               changesEl.push(
                 <h5
-                  className="bulk-view-item-action-error"
+                  className='bulk-view-item-action-error'
                   key={`action_${action}_error`}
                 >
-                  <i className="fa fa-exclamation-triangle" />
+                  <i className='fa fa-exclamation-triangle' />
                   Toimenpidettä {action} ei löytynyt, massamuutosta ei voida
                   tehdä tälle käsittelyprosessille
                 </h5>
@@ -395,10 +395,10 @@ export class BulkView extends React.Component {
                     isError = true;
                     changesEl.push(
                       <h5
-                        className="bulk-view-item-record-error"
+                        className='bulk-view-item-record-error'
                         key={`record_${record}_error`}
                       >
-                        <i className="fa fa-exclamation-triangle" />
+                        <i className='fa fa-exclamation-triangle' />
                         Asiakirjaa {record} ei löytynyt, massamuutosta ei voida
                         tehdä tälle käsittelyprosessille
                       </h5>
@@ -443,10 +443,10 @@ export class BulkView extends React.Component {
       });
     }
     return (
-      <div className="bulk-view-item" key={item.id}>
-        <div className="bulk-view-item-info">
-          <span className="bulk-view-item-path">{item.path.join(' > ')}</span>
-          <h4 className="bulk-view-item-name">{item.name}</h4>
+      <div className='bulk-view-item' key={item.id}>
+        <div className='bulk-view-item-info'>
+          <span className='bulk-view-item-path'>{item.path.join(' > ')}</span>
+          <h4 className='bulk-view-item-name'>{item.name}</h4>
           <div
             className={classnames('bulk-view-item-changes', {
               'bulk-view-item-errors': isError
@@ -455,12 +455,12 @@ export class BulkView extends React.Component {
             {changesEl}
           </div>
         </div>
-        <div className="bulk-view-item-state">
+        <div className='bulk-view-item-state'>
           <h4>{getStatusLabel(item.function_state)}</h4>
         </div>
-        <div className="bulk-view-item-action">
+        <div className='bulk-view-item-action'>
           <button
-            className="btn btn-danger"
+            className='btn btn-danger'
             onClick={() => this.onRemoveBulkItem(item.function)}
           >
             Poista
@@ -471,7 +471,7 @@ export class BulkView extends React.Component {
   }
 
   render() {
-    const { selectedBulk } = this.props;
+    const { selectedBulk, isFetchingNavigation } = this.props;
     const {
       isApproving,
       isDeleting,
@@ -483,18 +483,18 @@ export class BulkView extends React.Component {
     const isApproved = selectedBulk ? selectedBulk.is_approved : false;
 
     return (
-      <div className="bulk-view">
-        <div className="bulk-view-back">
-          <Link className="btn btn-link" to="/bulk">
-            <i className="fa fa-angle-left" /> Takaisin
+      <div className='bulk-view'>
+        <div className='bulk-view-back'>
+          <Link className='btn btn-link' to='/bulk'>
+            <i className='fa fa-angle-left' /> Takaisin
           </Link>
         </div>
         <div>
           <h3>Massamuutos esikatselu</h3>
         </div>
-        {!isValid && !isEmpty(itemList) && (
-          <div className="alert alert-danger">
-            <i className="fa fa-exclamation-triangle" />
+        {!isValid && !isEmpty(itemList) && !isFetchingNavigation && (
+          <div className='alert alert-danger'>
+            <i className='fa fa-exclamation-triangle' />
             Massamuutospaketissa on käsittelyprosesseja, joita ei voida
             varmistaa. Massamuutospakettia ei voida hyväksyä.
           </div>
@@ -514,14 +514,14 @@ export class BulkView extends React.Component {
           </div>
         )}
         {selectedBulk && (
-          <div className="bulk-view-changes-header">
-            <div className="bulk-view-changes">
+          <div className='bulk-view-changes-header'>
+            <div className='bulk-view-changes'>
               <h4>Tehdyt muutokset ({keys(selectedBulk.changes).length})</h4>
             </div>
-            <div className="bulk-view-actions">
+            <div className='bulk-view-actions'>
               <IsAllowed to={DELETE_BULKUPDATE}>
                 <button
-                  className="btn btn-danger"
+                  className='btn btn-danger'
                   disabled={!selectedBulk}
                   onClick={this.onDelete}
                 >
@@ -530,7 +530,7 @@ export class BulkView extends React.Component {
               </IsAllowed>
               <IsAllowed to={APPROVE_BULKUPDATE}>
                 <button
-                  className="btn btn-default"
+                  className='btn btn-default'
                   disabled={isApproved}
                   onClick={this.onReject}
                 >
@@ -539,7 +539,7 @@ export class BulkView extends React.Component {
               </IsAllowed>
               <IsAllowed to={APPROVE_BULKUPDATE}>
                 <button
-                  className="btn btn-primary"
+                  className='btn btn-primary'
                   disabled={isApproved || !isValid}
                   onClick={this.onApprove}
                 >
@@ -549,9 +549,11 @@ export class BulkView extends React.Component {
             </div>
           </div>
         )}
-        <div className="bulk-view-items">
-          {itemList.map((changedItem) => this.renderItemChanges(changedItem))}
-        </div>
+        {!isFetchingNavigation && (
+          <div className='bulk-view-items'>
+            {itemList.map((changedItem) => this.renderItemChanges(changedItem))}
+          </div>
+        )}
         {isApproving && (
           <Popup
             content={
@@ -559,12 +561,12 @@ export class BulkView extends React.Component {
                 <h3>Hyväksytäänkö massamuutos?</h3>
                 <div>
                   <button
-                    className="btn btn-primary"
+                    className='btn btn-primary'
                     onClick={this.onConfirmApprove}
                   >
                     Hyväksy
                   </button>
-                  <button className="btn btn-default" onClick={this.onCancel}>
+                  <button className='btn btn-default' onClick={this.onCancel}>
                     Peruuta
                   </button>
                 </div>
@@ -580,12 +582,12 @@ export class BulkView extends React.Component {
                 <h3>Poistetaanko massamuutos?</h3>
                 <div>
                   <button
-                    className="btn btn-danger"
+                    className='btn btn-danger'
                     onClick={this.onConfirmDelete}
                   >
                     Poista
                   </button>
-                  <button className="btn btn-default" onClick={this.onCancel}>
+                  <button className='btn btn-default' onClick={this.onCancel}>
                     Peruuta
                   </button>
                 </div>
@@ -604,12 +606,12 @@ export class BulkView extends React.Component {
                 </p>
                 <div>
                   <button
-                    className="btn btn-danger"
+                    className='btn btn-danger'
                     onClick={this.onConfirmReject}
                   >
                     Hylkää
                   </button>
-                  <button className="btn btn-default" onClick={this.onCancel}>
+                  <button className='btn btn-default' onClick={this.onCancel}>
                     Peruuta
                   </button>
                 </div>
@@ -628,12 +630,12 @@ export class BulkView extends React.Component {
                 </h4>
                 <div>
                   <button
-                    className="btn btn-danger"
+                    className='btn btn-danger'
                     onClick={this.onConfirmRemoveBulkItem}
                   >
                     Poista
                   </button>
-                  <button className="btn btn-default" onClick={this.onCancel}>
+                  <button className='btn btn-default' onClick={this.onCancel}>
                     Peruuta
                   </button>
                 </div>

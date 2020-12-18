@@ -1,4 +1,3 @@
-import LTT from 'list-to-tree';
 import { normalize, schema } from 'normalizr';
 import { toastr } from 'react-redux-toastr';
 import moment from 'moment';
@@ -15,43 +14,58 @@ export function convertToTree(itemList) {
   // ------------------------------------
   // Combine navigation number and names and
   // give each item in the navigation a level specific id for sorting.
-  // Because 'list-to-tree' cannot build a tree if option fields are not at
-  // root level, lift parent id from { id: parentId, version: parentVersion }
-  // to object root.
   // ------------------------------------
-  itemList.forEach((item) => {
-    item.name = item.code + ' ' + item.title;
-    item.sort_id = item.code.substring(item.code.length - 2, item.code.length);
-    item.path = [];
-    item.parent_id = item.parent ? item.parent.id : null;
+  const newList = itemList.map((item) => {
+    return {
+      name: item.code + ' ' + item.title,
+      sort_id: item.code.substring(item.code.length - 2, item.code.length),
+      path: [],
+      parent_id: item.parent ? item.parent.id : null,
+      ...item
+    };
   });
-  const ltt = new LTT(itemList, {
-    key_id: 'id',
-    key_parent: 'parent_id',
-    key_child: 'children'
-  });
-  const unOrderedTree = ltt.GetTree();
-  // ------------------------------------
-  // Sort the tree, as ltt doesnt automatically do it
-  // ------------------------------------
-  const sortTree = (tree) => {
-    tree = orderBy(tree, ['sort_id'], 'asc');
-    return tree.map((item) => {
-      if (item.children !== undefined) {
-        // ------------------------------------
-        // Generate path to show when navigation is minimized and Tos is shown
-        // ------------------------------------
-        item.path.push(item.name);
-        item.children.forEach((child) => {
-          item.path.map((path) => child.path.push(path));
-        });
-        item.children = orderBy(item.children, ['sort_id'], 'asc');
-        sortTree(item.children);
+
+  const dict = {};
+  newList.forEach((i) => (dict[i.id] = i));
+  const mem = new Set();
+
+  const resolveParent = (item) => {
+    if (item.parent_id !== null && !mem.has(item.id)) {
+      const parent = dict[item.parent_id];
+      if (!parent) {
+        // in case of a broken tree parent will be null
+        console.error(`Parent with id ${item.parent_id} not found`);
       }
-      return item;
-    });
+      if (Array.isArray(parent.children)) {
+        parent.children.push(item);
+        // keep the children sorted
+        parent.children.sort((a, b) => a.sort_id.localeCompare(b.sort_id));
+      } else {
+        parent.children = [item];
+      }
+      mem.add(item.id);
+      resolveParent(parent);
+    }
   };
-  return sortTree(unOrderedTree);
+
+  for (const item of newList) {
+    if (!mem.has(item.id)) {
+      resolveParent(item);
+    }
+  }
+  // recurse throught the tree to resolve paths for UI
+  const affixPath = (rootNode) => {
+    if (!rootNode.children) {
+      return;
+    }
+    for (const kid of rootNode.children) {
+      kid.path = kid.path.concat(...rootNode.path, rootNode.name);
+      affixPath(kid);
+    }
+  };
+  const roots = newList.filter((l) => l.parent_id === null);
+  roots.forEach((root) => affixPath(root));
+  return roots.sort((a, b) => a.sort_id.localeCompare(b.sort_id));
 }
 
 /**

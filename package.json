@@ -16,7 +16,7 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
-    "@wojtekmaj/enzyme-adapter-react-17": "^0.3.2",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.4.0",
     "body-parser": "^1.19.0",
     "bootstrap-sass": "^3.4.1",
     "classnames": "^2.2.6",
@@ -25,6 +25,7 @@
     "cookie-parser": "^1.4.5",
     "cookie-session": "^1.4.0",
     "debug": "^4.3.1",
+    "deep-freeze": "^0.0.1",
     "defiant.js": "1.4.5",
     "dotenv": "^8.2.0",
     "enzyme": "^3.11.0",
@@ -35,10 +36,9 @@
     "immutability-helper": "^3.1.1",
     "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
-    "list-to-tree": "1.1.0",
     "moment": "^2.29.1",
     "nested-objects": "0.0.2",
-    "node-sass": "^4.12.0",
+    "node-sass": "4.14.1",
     "normalizr": "^3.6.1",
     "passport": "^0.4.1",
     "passport-helsinki": "City-of-Helsinki/passport-helsinki",
@@ -76,7 +76,14 @@
     "test": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject"
   },
-  "pre-commit": ["test"],
+  "pre-commit": [
+    "test"
+  ],
+  "jest": {
+    "testMatch": [
+      "**/?(*.)+(spec|test).js"
+    ]
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
