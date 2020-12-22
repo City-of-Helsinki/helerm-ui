@@ -1,32 +1,45 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import './Login.scss';
+
 class Login extends React.Component {
-  constructor () {
+  constructor() {
     super();
 
     this.handleUserLinkClick = this.handleUserLinkClick.bind(this);
   }
 
-  handleUserLinkClick (e) {
+  handleUserLinkClick(e) {
     e.preventDefault();
     const { user } = this.props;
     const linkMethod = user.id ? this.props.logout : this.props.login;
     linkMethod();
   }
 
-  getUserLink () {
+  getUserLink() {
     const { user } = this.props;
-    const linkText = (user && user.id) ? 'Kirjaudu ulos' : 'Kirjaudu sisään';
+    const linkText = user && user.id ? 'Kirjaudu ulos' : 'Kirjaudu sisään';
 
     return (
-      <a className='navbar-link' href='' onClick={this.handleUserLinkClick}>{linkText}</a>
+      <span
+        className='login-button'
+        role='button'
+        onClick={this.handleUserLinkClick}
+      >
+        {linkText}
+      </span>
     );
   }
 
-  render () {
+  render() {
     const { user } = this.props;
-    const displayName = (user && user.id) ? user.displayName ? user.displayName : `${user.firstName}${user.lastName ? ' ' + user.lastName : ''}` : null;
+    const displayName =
+      user && user.id
+        ? user.displayName
+          ? user.displayName
+          : `${user.firstName}${user.lastName ? ' ' + user.lastName : ''}`
+        : null;
     return (
       <p className='navbar-text pull-right login-link'>
         {!!displayName && <small>{displayName}</small>}

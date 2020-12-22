@@ -34,6 +34,7 @@ import FacetedSearchResults from './FacetedSearchResults/FacetedSearchResults';
 import FacetedSearchSuggestions from './FacetedSearchSuggestions/FacetedSearchSuggestions';
 import PreviewItem from './PreviewItem/PreviewItem';
 import './FacetedSearch.scss';
+import { getDisplayLabelForAttribute } from '../../utils/attributeHelper';
 
 export class FacetedSearch extends React.Component {
   constructor(props) {
@@ -279,7 +280,19 @@ export class FacetedSearch extends React.Component {
             >
               <i className='fa fa-check' />
               <span>
-                {isArray(option.value) ? option.value.join(', ') : option.value}
+                {isArray(option.value)
+                  ? option.value
+                      .map((v) =>
+                        getDisplayLabelForAttribute({
+                          attributeValue: v,
+                          identifier: attribute.key
+                        })
+                      )
+                      .join(', ')
+                  : getDisplayLabelForAttribute({
+                      attributeValue: option.value,
+                      identifier: attribute.key
+                    })}
               </span>
               <span>({option.hits.length})</span>
             </div>
@@ -364,7 +377,19 @@ export class FacetedSearch extends React.Component {
 
   renderSelectedFacetButton(facet) {
     const { key, name, type, value } = facet;
-    const valueStr = isArray(value) ? value.join(',') : value;
+    const valueStr = isArray(value)
+      ? value
+          .map((v) =>
+            getDisplayLabelForAttribute({
+              attributeValue: v,
+              identifier: key
+            })
+          )
+          .join(', ')
+      : getDisplayLabelForAttribute({
+          attributeValue: value,
+          identifier: key
+        });
     const text = `${TYPE_LABELS[type]} / ${name}: ${valueStr}`;
     return (
       <button

@@ -94,9 +94,13 @@ export class CloneView extends React.Component {
               active: selectedMethod === METHOD_TEMPLATE
             })}
           >
-            <a href='' onClick={() => this.selectMethod(METHOD_TEMPLATE)}>
+            <span
+              className='import-button'
+              role='button'
+              onClick={() => this.selectMethod(METHOD_TEMPLATE)}
+            >
               Tuo kuvaus moduulista
-            </a>
+            </span>
           </li>
           <li
             role='presentation'
@@ -105,9 +109,13 @@ export class CloneView extends React.Component {
               active: selectedMethod === METHOD_FUNCTION
             })}
           >
-            <a href='' onClick={() => this.selectMethod(METHOD_FUNCTION)}>
+            <span
+              className='import-button'
+              role='button'
+              onClick={() => this.selectMethod(METHOD_FUNCTION)}
+            >
               Tuo kuvaus toisesta kuvauksesta
-            </a>
+            </span>
           </li>
         </ul>
 

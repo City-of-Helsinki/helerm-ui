@@ -16,7 +16,7 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
-    "@wojtekmaj/enzyme-adapter-react-17": "^0.4.0",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.4.1",
     "body-parser": "^1.19.0",
     "bootstrap-sass": "^3.4.1",
     "classnames": "^2.2.6",
@@ -73,7 +73,7 @@
     "start:dev": "concurrently --kill-others \"DEBUG=app:* node server/main.js\" \"PORT=3000 react-scripts start\"",
     "start:server": "NODE_ENV=production DEBUG=app:* node server/main.js",
     "build": "react-scripts build",
-    "test": "react-scripts test --watchAll=false",
+    "test": "react-scripts test --watchAll=false --verbose",
     "eject": "react-scripts eject"
   },
   "pre-commit": [

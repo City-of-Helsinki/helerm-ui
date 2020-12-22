@@ -949,17 +949,17 @@ export class BulkCreateView extends React.Component {
       );
     }
     return (
-      <div className="bulk-update-create">
+      <div className='bulk-update-create'>
         <Prompt
-            when={this.state.isDirty}
-            message='Muutoksia ei ole tallennettu, haluatko silti jatkaa?'
-          />
-        <div className="col-xs-12">
-          <Link className="btn btn-link" to="/bulk">
-            <i className="fa fa-angle-left" /> Takaisin
+          when={this.state.isDirty}
+          message='Muutoksia ei ole tallennettu, haluatko silti jatkaa?'
+        />
+        <div className='col-xs-12'>
+          <Link className='btn btn-link' to='/bulk'>
+            <i className='fa fa-angle-left' /> Takaisin
           </Link>
         </div>
-        <div className="col-xs-9 bulk-update-create-search">
+        <div className='col-xs-9 bulk-update-create-search'>
           <SearchTerms
             attributeTypes={attributeTypes}
             attributeValues={attributeValues}
@@ -989,25 +989,25 @@ export class BulkCreateView extends React.Component {
             />
           )}
         </div>
-        <div className="col-xs-3 bulk-update-create-side-content">
+        <div className='col-xs-3 bulk-update-create-side-content'>
           <IsAllowed to={CHANGE_BULKUPDATE}>
-            <div className="bulk-update-create-actions">
+            <div className='bulk-update-create-actions'>
               <button
-                className="btn btn-primary"
+                className='btn btn-primary'
                 disabled={isEmpty(conversions)}
                 onClick={this.onSave}
               >
                 Tallenna
               </button>
               <button
-                className="btn btn-default"
+                className='btn btn-default'
                 disabled={isEmpty(conversions)}
                 onClick={this.onCancel}
               >
                 Palauta
               </button>
               <button
-                className="btn btn-default"
+                className='btn btn-default'
                 disabled={isEmpty(conversions)}
                 onClick={this.onPreview}
               >
@@ -1037,7 +1037,7 @@ export class BulkCreateView extends React.Component {
                   <h3>Tallennetaanko massatilaus?</h3>
                   <p>Muutetaan: {selectedCount} käsittelyprosessia</p>
                   {!isValid && (
-                    <p className="alert-danger">
+                    <p className='alert-danger'>
                       HUOM! Esitarkastuksessa on virheitä. Katso esikatselu.
                     </p>
                   )}
@@ -1050,19 +1050,19 @@ export class BulkCreateView extends React.Component {
                       onChange={this.onChangeState}
                       autoFocus={true}
                       options={statusFilters}
-                      placeholder="Valitse massamuutospaketin tila..."
+                      placeholder='Valitse massamuutospaketin tila...'
                     />
                   </div>
                   <div>
                     <button
-                      className="btn btn-primary"
+                      className='btn btn-primary'
                       disabled={!isValid && state !== 'draft'}
                       onClick={this.onConfirmSave}
                     >
                       Tallenna massamuutos
                     </button>
                     <button
-                      className="btn btn-default"
+                      className='btn btn-default'
                       onClick={this.onCancelSave}
                     >
                       Peruuta

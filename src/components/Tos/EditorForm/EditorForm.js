@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './EditorForm.scss';
 import update from 'immutability-helper';
 import includes from 'lodash/includes';
 import capitalize from 'lodash/capitalize';
@@ -8,6 +7,8 @@ import sortBy from 'lodash/sortBy';
 
 import DropdownInput from '../DropdownInput/DropdownInput';
 import { validateConditionalRules } from '../../../utils/validators';
+import { getDisplayLabelForAttribute } from '../../../utils/attributeHelper';
+import './EditorForm.scss';
 
 export class EditorForm extends React.Component {
   constructor(props) {
@@ -210,7 +211,10 @@ export class EditorForm extends React.Component {
   mapOptions(array) {
     return array.map((item) => ({
       value: item.value,
-      label: item.value
+      label: getDisplayLabelForAttribute({
+        attributeValue: item.value,
+        id: item.id
+      })
     }));
   }
 
@@ -323,7 +327,7 @@ export class EditorForm extends React.Component {
 
   generateDropdown(elementTypes) {
     const type = `${capitalize(this.props.editorConfig.type)}Type`;
-
+    const elementTypesAsOptions = this.mapOptions(Object.values(elementTypes));
     return (
       <DropdownInput
         keyValue={type}
@@ -336,7 +340,7 @@ export class EditorForm extends React.Component {
             ? this.state.newAttributes[type].value
             : ''
         }
-        options={elementTypes}
+        options={elementTypesAsOptions}
         onChange={this.onChange}
         onInputChange={this.onFormInputChange}
         onSubmit={() => null}

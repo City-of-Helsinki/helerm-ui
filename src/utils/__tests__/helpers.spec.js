@@ -2,7 +2,8 @@ import deepFreeze from 'deep-freeze';
 import { convertToTree } from '../helpers';
 import {
   mockNavigationDataShort,
-  mockNavigationDataFullObjects
+  mockNavigationDataFullObjects,
+  mockNavigationDataOrphan
 } from '../__tests__/testdata/navigationMocks';
 
 describe('convertToTree', () => {
@@ -55,5 +56,10 @@ describe('convertToTree', () => {
         ]
       }
     ]);
+  });
+  it('Throws descriptive error when tree is broken', () => {
+    expect(() => convertToTree(mockNavigationDataOrphan)).toThrow(
+      /^Parent with id .* not found$/
+    );
   });
 });

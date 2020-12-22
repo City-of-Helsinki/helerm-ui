@@ -26,7 +26,7 @@ export function convertToTree(itemList) {
   });
 
   const dict = {};
-  newList.forEach((i) => (dict[i.id] = i));
+  newList.forEach((item) => (dict[item.id] = item));
   const mem = new Set();
 
   const resolveParent = (item) => {
@@ -34,7 +34,7 @@ export function convertToTree(itemList) {
       const parent = dict[item.parent_id];
       if (!parent) {
         // in case of a broken tree parent will be null
-        console.error(`Parent with id ${item.parent_id} not found`);
+        throw Error(`Parent with id ${item.parent_id} not found`);
       }
       if (Array.isArray(parent.children)) {
         parent.children.push(item);
@@ -350,7 +350,7 @@ export const resolveSelectValues = (options, receivedValue, multi = false) => {
   if (!receivedValue) {
     return null;
   }
-  if (multi && receivedValue instanceof Array) {
+  if (multi && Array.isArray(receivedValue)) {
     return options.filter(({ value }) => receivedValue.includes(value));
   }
   return options.find(({ value }) => value === receivedValue);
@@ -359,7 +359,7 @@ export const resolveSelectValues = (options, receivedValue, multi = false) => {
 /**
  * React-select can behave as multi- or single-select which have different
  * behaviours in emitting and displaying values. This general helper is used
- * when value(s) are returned to change handler.
+ * when value(s) are returned to the change handler.
  * Clearing the last element sets the value as null
  * while clearing the whole selection sets value as an empty array
  * (https://github.com/JedWatson/react-select/issues/3632)

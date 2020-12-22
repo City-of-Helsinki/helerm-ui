@@ -104,7 +104,7 @@ export const DropdownInput = ({
     Object.keys(options).forEach((key) => {
       if (options.hasOwnProperty(key)) {
         optionsArray.push({
-          label: options[key].value,
+          label: options[key].label ? options[key].label : options[key].value,
           value: options[key].value
         });
       }

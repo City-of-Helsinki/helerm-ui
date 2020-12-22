@@ -23,6 +23,7 @@ import {
 } from '../../../../constants';
 
 import './SearchTerms.scss';
+import { getDisplayLabelForAttribute } from '../../../../utils/attributeHelper';
 
 export class SearchTerm extends React.Component {
   constructor(props) {
@@ -113,8 +114,21 @@ export class SearchTerm extends React.Component {
     ) {
       valueOptions = attributeValues[attributeTarget][searchTerm.attribute].map(
         (value) => {
+          const displayLabel = isArray(value)
+            ? value
+                .map((v) =>
+                  getDisplayLabelForAttribute({
+                    attributeValue: v,
+                    identifier: searchTerm.attribute
+                  })
+                )
+                .join(', ')
+            : getDisplayLabelForAttribute({
+                attributeValue: value,
+                identifier: searchTerm.attribute
+              });
           return {
-            label: isArray(value) ? value.join(', ') : value,
+            label: displayLabel,
             value: isArray(value) ? JSON.stringify(value) : value
           };
         }
@@ -134,8 +148,21 @@ export class SearchTerm extends React.Component {
       !find(valueOptions, { value: searchTerm.value }) &&
       !isEmpty(searchTerm.value)
     ) {
+      const displayLabel = isArray(searchTerm.value)
+        ? searchTerm.value
+            .map((v) =>
+              getDisplayLabelForAttribute({
+                attributeValue: v,
+                identifier: searchTerm.attribute
+              })
+            )
+            .join(', ')
+        : getDisplayLabelForAttribute({
+            attributeValue: searchTerm.value,
+            identifier: searchTerm.attribute
+          });
       valueOptions.push({
-        label: searchTerm.value,
+        label: displayLabel,
         value: searchTerm.value
       });
     }
@@ -143,44 +170,41 @@ export class SearchTerm extends React.Component {
       ({ value }) => value === searchTerm.attribute
     );
     return (
-      <div className="search-term">
+      <div className='search-term'>
         <div>
           <strong>Taso</strong>
           <Select
-            className={'Select'}
             isClearable={false}
             value={BULK_UPDATE_SEARCH_TARGET.find(
               ({ value }) => value === searchTerm.target
             )}
             onChange={this.onChangeTarget}
             options={BULK_UPDATE_SEARCH_TARGET}
-            placeholder="Valitse..."
+            placeholder='Valitse...'
           />
         </div>
         <div>
           <strong>Kenttä</strong>
           <Select
-            className={'Select'}
             isDisabled={isEmpty(searchTerm.target)}
             isClearable={false}
             value={attributeValue || ''}
             onChange={this.onChangeAttribute}
             autoFocus={true}
             options={attributeOptions}
-            placeholder="Valitse..."
+            placeholder='Valitse...'
           />
         </div>
         <div>
           <strong>Vertaus</strong>
           <Select
-            className={'Select'}
             isClearable={false}
             value={BULK_UPDATE_SEARCH_COMPARISON.find(
               ({ value }) => value === searchTerm.equals
             )}
             onChange={this.onChangeEquals}
             options={BULK_UPDATE_SEARCH_COMPARISON}
-            placeholder="Valitse..."
+            placeholder='Valitse...'
           />
         </div>
         <div>
@@ -188,29 +212,29 @@ export class SearchTerm extends React.Component {
           <CreatableSelect
             isDisabled={isEmpty(searchTerm.attribute)}
             isClearable={false}
-            // Tsekkaa joku keissi, jossa tämä toteutuu eli searchTerm.value olisi taulukko
-            // value={isArray(searchTerm.value) ? JSON.stringify(searchTerm.value) : searchTerm.value}
-            value={valueOptions.find(({ value }) => value === searchTerm.value)}
+            value={
+              valueOptions.find(({ value }) => value === searchTerm.value) || ''
+            }
             onChange={this.onChangeValue}
             options={valueOptions}
-            placeholder="Valitse..."
+            placeholder='Valitse...'
           />
         </div>
-        <div className="search-term-action">
+        <div className='search-term-action'>
           <button
-            className="btn btn-primary"
+            className='btn btn-primary'
             onClick={this.props.onRemoveSearchTerm}
           >
-            <i className="fa fa-minus" />
+            <i className='fa fa-minus' />
           </button>
         </div>
-        <div className="search-term-action">
+        <div className='search-term-action'>
           {showAdd && (
             <button
-              className="btn btn-primary"
+              className='btn btn-primary'
               onClick={this.props.onAddSearchTerm}
             >
-              <i className="fa fa-plus" />
+              <i className='fa fa-plus' />
             </button>
           )}
         </div>

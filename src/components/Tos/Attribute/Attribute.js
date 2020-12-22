@@ -7,6 +7,7 @@ import {
   resolveSelectValues,
   resolveReturnValues
 } from '../../../utils/helpers';
+import { getDisplayLabelForAttribute } from '../../../utils/attributeHelper';
 import './Attribute.scss';
 
 export class Attribute extends React.Component {
@@ -104,7 +105,10 @@ export class Attribute extends React.Component {
       const options = attribute.values.map((option) => {
         return {
           value: option.value,
-          label: option.value
+          label: getDisplayLabelForAttribute({
+            attributeValue: option.value,
+            id: option.id
+          })
         };
       });
       if (currentAttribute) {
@@ -246,11 +250,20 @@ export class Attribute extends React.Component {
       );
     }
     if (this.state.mode === 'view') {
+      const resolveDisplayName = (attr) => {
+        if (!attr) return '';
+        return getDisplayLabelForAttribute({
+          attributeValue: attr,
+          identifier: attributeIndex
+        });
+      };
       attributeValue = (
         <div className='table-value'>
           {this.state.attribute instanceof Array
-            ? this.state.attribute.join(', ')
-            : this.state.attribute}
+            ? this.state.attribute
+                .map((attr) => resolveDisplayName(attr))
+                .join(', ')
+            : resolveDisplayName(this.state.attribute)}
         </div>
       );
     }

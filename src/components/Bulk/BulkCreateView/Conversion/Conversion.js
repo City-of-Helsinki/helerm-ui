@@ -16,6 +16,7 @@ import {
   resolveReturnValues,
   resolveSelectValues
 } from '../../../../utils/helpers';
+import { getDisplayLabelForAttribute } from '../../../../utils/attributeHelper';
 
 export class Conversion extends React.Component {
   constructor(props) {
@@ -93,12 +94,18 @@ export class Conversion extends React.Component {
     const attributeType = attributeTypes[attribute] || {};
     if (!isEmpty(attributeType) && !isEmpty(attributeType.values)) {
       const options = attributeType.values.map((item) => ({
-        label: item.value,
+        label: getDisplayLabelForAttribute({
+          attributeValue: item.value,
+          identifier: attribute
+        }),
         value: item.value
       }));
       if (!find(options, { value }) && !isEmpty(value)) {
         options.push({
-          label: value,
+          label: getDisplayLabelForAttribute({
+            attributeValue: value,
+            identifier: attribute
+          }),
           value
         });
       }
@@ -108,7 +115,7 @@ export class Conversion extends React.Component {
           <CreatableSelect
             isDisabled={isEmpty(attribute)}
             isClearable={true}
-            value={resolveSelectValues(options, value, multi)}
+            value={resolveSelectValues(options, value, multi) || ''}
             isMulti={multi}
             onChange={(emittedValue) =>
               this.onChangeValue(resolveReturnValues(emittedValue, multi))

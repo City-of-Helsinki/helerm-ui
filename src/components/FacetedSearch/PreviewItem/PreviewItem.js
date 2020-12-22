@@ -6,6 +6,7 @@ import { isArray } from 'lodash';
 import { TYPE_LABELS } from '../../../constants';
 
 import './PreviewItem.scss';
+import { getDisplayLabelForAttribute } from '../../../utils/attributeHelper';
 
 export const PreviewItem = ({ item, metadata, onClose }) => {
   const link = item.function
@@ -30,18 +31,41 @@ export const PreviewItem = ({ item, metadata, onClose }) => {
         </button>
       </div>
       <div className='faceted-search-preview-item-path'>
-        {item.path.map(path => (
+        {item.path.map((path) => (
           <div key={`preview-${path}`}>{path}</div>
         ))}
       </div>
-      <div className='faceted-search-preview-item-type'>{TYPE_LABELS[item.type]}</div>
-      <div className='faceted-search-preview-item-name'>
-        <Link to={link} target='_blank'>{item.name}</Link>
+      <div className='faceted-search-preview-item-type'>
+        {TYPE_LABELS[item.type]}
       </div>
-      {attributes.map(attr => (
-        <div className='faceted-search-preview-item-attribute' key={`preview-${attr.key}`}>
-          <div><strong>{attr.name}</strong></div>
-          <div>{isArray(attr.value) ? attr.value.join(', ') : attr.value}</div>
+      <div className='faceted-search-preview-item-name'>
+        <Link to={link} target='_blank'>
+          {item.name}
+        </Link>
+      </div>
+      {attributes.map((attr) => (
+        <div
+          className='faceted-search-preview-item-attribute'
+          key={`preview-${attr.key}`}
+        >
+          <div>
+            <strong>{attr.name}</strong>
+          </div>
+          <div>
+            {isArray(attr.value)
+              ? attr.value
+                  .map((v) =>
+                    getDisplayLabelForAttribute({
+                      attributeValue: v,
+                      identifier: attr.key
+                    })
+                  )
+                  .join(', ')
+              : getDisplayLabelForAttribute({
+                  attributeValue: attr.value,
+                  identifier: attr.key
+                })}
+          </div>
         </div>
       ))}
     </div>

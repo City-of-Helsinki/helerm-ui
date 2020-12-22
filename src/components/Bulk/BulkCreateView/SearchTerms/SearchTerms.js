@@ -80,7 +80,6 @@ export class SearchTerms extends React.Component {
     const { attributeTypes, attributeValues } = this.props;
     const { searchTerms } = this.state;
     const isValidTerms = this.validateTerms(searchTerms);
-
     return (
       <div className='search-terms'>
         <h3>Rajaa muutettavat kohteet</h3>
@@ -91,7 +90,7 @@ export class SearchTerms extends React.Component {
               attributeValues={attributeValues}
               key={searchTerm.id}
               onAddSearchTerm={this.onAddSearchTerm}
-              onChangeSearchTerm={(searchTerm) => this.onChangeSearchTerm(index, searchTerm)}
+              onChangeSearchTerm={(emittedSearchTerm) => this.onChangeSearchTerm(index, emittedSearchTerm)}
               onRemoveSearchTerm={() => this.onRemoveSearchTerm(index)}
               searchTerm={searchTerm}
               showAdd={index === searchTerms.length - 1}

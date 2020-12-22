@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import forEach from 'lodash/forEach';
-import Sticky from 'react-sticky-el';
 import update from 'immutability-helper';
 import './Phase.scss';
 
@@ -16,6 +15,7 @@ import DropdownInput from '../DropdownInput/DropdownInput';
 import ReorderView from '../Reorder/ReorderView';
 import ImportView from '../ImportView/ImportView';
 import EditorForm from '../EditorForm/EditorForm';
+import { getDisplayLabelForAttribute } from '../../../utils/attributeHelper';
 
 export class Phase extends React.Component {
   constructor(props) {
@@ -468,7 +468,10 @@ export class Phase extends React.Component {
     );
     let phaseType = (
       <span className={classNames} onClick={() => this.editType()}>
-        {this.state.type}
+        {getDisplayLabelForAttribute({
+          attributeValue: this.state.type,
+          identifier: 'PhaseType'
+        })}
       </span>
     );
 
@@ -489,13 +492,22 @@ export class Phase extends React.Component {
         );
       }
       if (this.state.editingType) {
+        const phaseTypesAsOptions = Object.values(this.props.phaseTypes).map(
+          (pt) => ({
+            value: pt.value,
+            label: getDisplayLabelForAttribute({
+              attributeValue: pt.value,
+              identifier: 'PhaseType'
+            })
+          })
+        );
         phaseType = (
           <div className='col-md-6 phase-title-dropdown'>
             <form onSubmit={this.updatePhaseType}>
               <DropdownInput
                 type={'phase'}
                 valueState={this.state.type}
-                options={this.props.phaseTypes}
+                options={phaseTypesAsOptions}
                 onChange={this.onTypeChange}
                 onInputChange={this.onTypeInputChange}
                 onSubmit={this.updatePhaseType}
@@ -508,17 +520,19 @@ export class Phase extends React.Component {
 
     if (phase.is_open && phase.actions.length) {
       return (
-        <Sticky
-          className={
-            'phase-title ' +
-            (phase.is_attributes_open ? 'phase-open' : 'phase-closed')
-          }
-        >
-          <div className='basic-attributes'>
-            {phaseType}
-            {typeSpecifier}
-          </div>
-        </Sticky>
+        // <Sticky
+        //   stickyClassName={
+        //     'phase-title ' +
+        //     (phase.is_attributes_open ? 'phase-open' : 'phase-closed')
+        //   }
+        // >
+        /* TODO: Fix sticky: Sticky will impose an absolute position which causes dropdown
+        menu to open under other elements */
+        <div className='basic-attributes'>
+          {phaseType}
+          {typeSpecifier}
+        </div>
+        // </Sticky>
       );
     }
     return (

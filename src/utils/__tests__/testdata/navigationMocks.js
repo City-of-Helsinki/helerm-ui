@@ -25,6 +25,33 @@ export const mockNavigationDataShort = [
   }
 ];
 
+export const mockNavigationDataOrphan = [
+  {
+    id: 'cee34db0de3e47fbb937b74dd87ea759',
+    code: '00',
+    title: 'Hallintoasiat',
+    parent: null
+  },
+  {
+    id: '7a5967d6a21d412d9c1fcdfebf2d3e19',
+    code: '00 00',
+    title: 'Hallintoasioiden ohjaus',
+    parent: {
+      id: 'cee34db0de3e47fbb937b74dd87ea759',
+      version: 1
+    }
+  },
+  {
+    id: 'fb61caa7ec9d4332b0737831fd829293',
+    code: '00 00 00',
+    title: 'Y HALO THAR!',
+    parent: {
+      id: 'i_dont_exist',
+      version: 1
+    }
+  }
+];
+
 export const mockNavigationDataFullObjects = [
   {
     id: 'cee34db0de3e47fbb937b74dd87ea759',

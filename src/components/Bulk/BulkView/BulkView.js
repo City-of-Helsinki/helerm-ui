@@ -13,6 +13,7 @@ import { formatDateTime, getStatusLabel } from '../../../utils/helpers';
 import IsAllowed from '../../../components/IsAllowed/IsAllowed';
 import Popup from '../../../components/Popup';
 import './BulkView.scss';
+import { getDisplayLabelForAttribute } from '../../../utils/attributeHelper';
 
 export class BulkView extends React.Component {
   constructor(props) {
@@ -304,8 +305,19 @@ export class BulkView extends React.Component {
         const currentValue = item.attributes[attribute] || ' ';
         changesEl.push(
           <h4 key={`function_${item.id}_attribute_${attribute}`}>
-            {getAttributeName(attribute)}: <span>({currentValue})</span>{' '}
-            {changes.attributes[attribute]}
+            {getAttributeName(attribute)}:{' '}
+            <span>
+              (
+              {getDisplayLabelForAttribute({
+                attributeValue: currentValue,
+                identifier: attribute
+              })}
+              )
+            </span>{' '}
+            {getDisplayLabelForAttribute({
+              attributeValue: changes.attributes[attribute],
+              identifier: attribute
+            })}
           </h4>
         );
       });
@@ -334,8 +346,19 @@ export class BulkView extends React.Component {
             changesEl.push(
               <h4 key={`phase_${phase}_attr_${attribute}`}>
                 {currentPhase.name || ''} &gt;
-                {getAttributeName(attribute)}: <span>({currentValue})</span>{' '}
-                {changes.phases[phase].attributes[attribute]}
+                {getAttributeName(attribute)}:{' '}
+                <span>
+                  (
+                  {getDisplayLabelForAttribute({
+                    attributeValue: currentValue,
+                    identifier: attribute
+                  })}
+                  )
+                </span>{' '}
+                {getDisplayLabelForAttribute({
+                  attributeValue: changes.phases[phase].attributes[attribute],
+                  identifier: attribute
+                })}
               </h4>
             );
           });
@@ -371,12 +394,21 @@ export class BulkView extends React.Component {
                       {currentPhase.name || ''} &gt;
                       {currentAction.name || ''} &gt;
                       {getAttributeName(attribute)}:{' '}
-                      <span>({currentValue})</span>{' '}
-                      {
-                        changes.phases[phase].actions[action].attributes[
-                          attribute
-                        ]
-                      }
+                      <span>
+                        (
+                        {getDisplayLabelForAttribute({
+                          attributeValue: currentValue,
+                          identifier: attribute
+                        })}
+                        )
+                      </span>{' '}
+                      {getDisplayLabelForAttribute({
+                        attributeValue:
+                          changes.phases[phase].actions[action].attributes[
+                            attribute
+                          ],
+                        identifier: attribute
+                      })}
                     </h4>
                   );
                 }
@@ -425,12 +457,21 @@ export class BulkView extends React.Component {
                           {currentAction.name || ''} &gt;
                           {currentRecord.name || ''} &gt;
                           {getAttributeName(attribute)}:{' '}
-                          <span>({currentValue})</span>{' '}
-                          {
-                            changes.phases[phase].actions[action].records[
-                              record
-                            ].attributes[attribute]
-                          }
+                          <span>
+                            (
+                            {getDisplayLabelForAttribute({
+                              attributeValue: currentValue,
+                              identifier: attribute
+                            })}
+                            )
+                          </span>{' '}
+                          {getDisplayLabelForAttribute({
+                            attributeValue:
+                              changes.phases[phase].actions[action].records[
+                                record
+                              ].attributes[attribute],
+                            identifier: attribute
+                          })}
                         </h4>
                       );
                     });
