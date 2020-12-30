@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import forEach from 'lodash/forEach';
 import update from 'immutability-helper';
-import './Phase.scss';
+import { RenderPropSticky } from 'react-sticky-el';
 
+import './Phase.scss';
 import Action from '../Action/Action';
 import Attributes from '../Attribute/Attributes';
 import AddElementInput from '../AddElementInput/AddElementInput';
@@ -48,6 +49,7 @@ export class Phase extends React.Component {
     this.onAddFormShowMoreAction = this.onAddFormShowMoreAction.bind(this);
     this.scrollToAction = this.scrollToAction.bind(this);
     this.scrollToActionRecord = this.scrollToActionRecord.bind(this);
+    this.updateTopOffsetForSticky = this.updateTopOffsetForSticky.bind(this);
 
     this.state = {
       typeSpecifier: this.props.phase.attributes.TypeSpecifier || null,
@@ -64,7 +66,8 @@ export class Phase extends React.Component {
       deleting: false,
       showReorderView: false,
       showImportView: false,
-      showMore: false
+      showMore: false,
+      topOffset: 0
     };
 
     this.actions = {};
@@ -82,6 +85,24 @@ export class Phase extends React.Component {
     if (nextProps.documentState === 'view') {
       this.disableEditMode();
     }
+  }
+
+  updateTopOffsetForSticky() {
+    // calculates heights for elements that are already sticking (navigation menu and tos header)
+    const headerEl = document.getElementById('single-tos-header-container');
+    const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 0;
+    const menuEl = document.getElementById('navigation-menu');
+    const menuHeight = menuEl ? menuEl.getBoundingClientRect().height : 0;
+    this.setState({ topOffset: headerHeight + menuHeight });
+  }
+
+  componentDidMount() {
+    this.updateTopOffsetForSticky();
+    window.addEventListener('resize', this.updateTopOffsetForSticky);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateTopOffsetForSticky);
   }
 
   onEditFormShowMorePhase(e) {
@@ -520,19 +541,39 @@ export class Phase extends React.Component {
 
     if (phase.is_open && phase.actions.length) {
       return (
-        // <Sticky
-        //   stickyClassName={
-        //     'phase-title ' +
-        //     (phase.is_attributes_open ? 'phase-open' : 'phase-closed')
-        //   }
-        // >
-        /* TODO: Fix sticky: Sticky will impose an absolute position which causes dropdown
-        menu to open under other elements */
-        <div className='basic-attributes'>
-          {phaseType}
-          {typeSpecifier}
-        </div>
-        // </Sticky>
+        <RenderPropSticky topOffset={-1 * this.state.topOffset}>
+          {({
+            isFixed,
+            wrapperStyles,
+            wrapperRef,
+            holderStyles,
+            holderRef
+          }) => (
+            <div ref={holderRef} style={holderStyles}>
+              <div
+                className={isFixed ? 'phase-title-sticky' : 'phase-title'}
+                style={
+                  isFixed
+                    ? {
+                        ...wrapperStyles,
+                        ...{
+                          position: 'fixed',
+                          top: this.state.topOffset,
+                          left: 0
+                        }
+                      }
+                    : wrapperStyles
+                }
+                ref={wrapperRef}
+              >
+                <div className='basic-attributes'>
+                  {phaseType}
+                  {typeSpecifier}
+                </div>
+              </div>
+            </div>
+          )}
+        </RenderPropSticky>
       );
     }
     return (

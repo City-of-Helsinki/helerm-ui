@@ -19,7 +19,7 @@
     margin-right: 15px;
   }
 }
-.action-title.sticky {
+.action-title-sticky {
   z-index: 7;
   background-color: $gray-lighter;
   padding: 0 67px;
@@ -27,6 +27,18 @@
   margin-left: 0;
   width: 100% !important;
   border-bottom: 1px solid #cfcfcf;
+}
+
+.validation-bar-open {
+  .action-title-sticky {
+    z-index: 7;
+    background-color: $gray-lighter;
+    padding: 0 67px;
+    left: 0px !important;
+    margin-left: 0;
+    width: 75% !important;
+    border-bottom: 1px solid #cfcfcf;
+  }
 }
 .records.box {
   padding: 0 10px;

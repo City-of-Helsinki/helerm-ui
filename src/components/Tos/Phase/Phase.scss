@@ -2,23 +2,24 @@
 
 .phase {
   padding-bottom: 40px;
-  >.box {
+  > .box {
     display: inline-block;
     width: 100%;
     background-color: $gray-lighter;
   }
 }
 .phase-title {
+  z-index: 2;
   position: relative;
   pointer-events: none;
   * {
-    pointer-events:all;
+    pointer-events: all;
   }
   &-input {
     margin-right: 15px;
   }
 }
-.phase-title.sticky {
+.phase-title-sticky {
   background-color: $gray-lighter;
   z-index: 8;
   margin-left: 0;
@@ -31,8 +32,17 @@
   }
 }
 .validation-bar-open {
-  .phase-title.sticky {
+  .phase-title-sticky {
+    background-color: $gray-lighter;
+    z-index: 8;
+    margin-left: 0;
     width: 75% !important;
+    left: 0px !important;
+    padding: 0 46px;
+    border-bottom: 1px solid #cfcfcf;
+    .basic-attributes {
+      padding-bottom: 0;
+    }
   }
 }
 .title-edit-button {
@@ -51,6 +61,7 @@
   position: absolute;
   right: 0;
   top: 0;
+  z-index: 3;
 }
 .phase-buttons button {
   margin: 0px 1px;

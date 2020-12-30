@@ -40,6 +40,7 @@ export class Action extends Component {
     this.complementRecordAdd = this.complementRecordAdd.bind(this);
     this.scrollToAction = this.scrollToAction.bind(this);
     this.scrollToRecord = this.scrollToRecord.bind(this);
+    this.updateTopOffsetForSticky = this.updateTopOffsetForSticky.bind(this);
 
     this.state = {
       attributes: this.props.action.attributes,
@@ -56,7 +57,8 @@ export class Action extends Component {
       showReorderView: false,
       type: this.props.action.attributes.ActionType || null,
       typeSpecifier: this.props.action.attributes.TypeSpecifier || null,
-      complementRecordAdd: false
+      complementRecordAdd: false,
+      topOffset: 0
     };
 
     this.records = {};
@@ -74,6 +76,32 @@ export class Action extends Component {
     if (nextProps.documentState === 'view') {
       this.disableEditMode();
     }
+  }
+
+  updateTopOffsetForSticky() {
+    // calculates heights for elements that are already sticking
+    // (navigation menu, tos header and phase title)
+    const headerEl = document.getElementById('single-tos-header-container');
+    const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 0;
+    const menuEl = document.getElementById('navigation-menu');
+    const menuHeight = menuEl ? menuEl.getBoundingClientRect().height : 0;
+    const phaseTitles = document.getElementsByClassName('phase-title-sticky');
+    let phaseTitleHeight = 35; // magic number for a title that fits on one row
+    if (phaseTitles.length) {
+      phaseTitleHeight = phaseTitles[
+        phaseTitles.length - 1
+      ].getBoundingClientRect().height;
+    }
+    this.setState({ topOffset: headerHeight + menuHeight + phaseTitleHeight });
+  }
+
+  componentDidMount() {
+    this.updateTopOffsetForSticky();
+    window.addEventListener('resize', this.updateTopOffsetForSticky);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateTopOffsetForSticky);
   }
 
   onEditFormShowMoreAction(e) {
@@ -443,7 +471,19 @@ export class Action extends Component {
 
     if (this.props.action.is_open && this.props.action.records.length) {
       return (
-        <Sticky className='action-title action-open'>
+        <Sticky
+          topOffset={-1 * this.state.topOffset}
+          bottomOffset={this.state.topOffset}
+          boundaryElement='.actions '
+          hideOnBoundaryHit={true}
+          stickyStyle={{
+            position: 'fixed',
+            top: this.state.topOffset,
+            left: 0
+          }}
+          stickyClassName='action-title-sticky'
+          className='action-title action-open'
+        >
           <div className='basic-attributes'>{typeSpecifier}</div>
         </Sticky>
       );

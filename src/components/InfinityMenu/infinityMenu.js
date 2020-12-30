@@ -569,6 +569,7 @@ export default class InfinityMenu extends Component {
 
     return (
       <div
+        id='navigation-menu'
         className={classnames('navigation-menu', {
           'navigation-open': this.props.isOpen
         })}

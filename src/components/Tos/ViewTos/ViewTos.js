@@ -67,6 +67,7 @@ export class ViewTOS extends React.Component {
     this.scrollToMetadata = this.scrollToMetadata.bind(this);
     this.scrollToType = this.scrollToType.bind(this);
     this.getClassificationInfo = this.getClassificationInfo.bind(this);
+    this.updateTopOffsetForSticky = this.updateTopOffsetForSticky.bind(this);
 
     this.state = {
       complementingMetaData: false,
@@ -86,10 +87,18 @@ export class ViewTOS extends React.Component {
       validFrom: null,
       validFromEditing: false,
       validTo: null,
-      validToEditing: false
+      validToEditing: false,
+      topOffset: 0
     };
 
     this.phases = {};
+  }
+
+  updateTopOffsetForSticky() {
+    // calculates heights for elements that are already sticking (navigation menu)
+    const menuEl = document.getElementById('navigation-menu');
+    const menuHeight = menuEl ? menuEl.getBoundingClientRect().height : 0;
+    this.setState({ topOffset: menuHeight });
   }
 
   componentDidMount() {
@@ -99,6 +108,8 @@ export class ViewTOS extends React.Component {
       params.version = version;
     }
     this.fetchTOS(id, params);
+    this.updateTopOffsetForSticky();
+    window.addEventListener('resize', this.updateTopOffsetForSticky);
     document.addEventListener('scroll', this.handleScroll);
   }
 
@@ -145,6 +156,7 @@ export class ViewTOS extends React.Component {
     this.props.clearClassification();
     this.props.setValidationVisibility(false);
     document.removeEventListener('scroll', this.handleScroll);
+    window.removeEventListener('resize', this.updateTopOffsetForSticky);
   }
 
   handleScroll(event) {
@@ -702,12 +714,18 @@ export class ViewTOS extends React.Component {
           />
           <div className='col-xs-12 single-tos-container'>
             <div
+              id='single-tos-header-container'
               ref={(element) => {
                 this.header = element;
               }}
             >
               <Sticky
-                topOffset={-48}
+                topOffset={-1 * this.state.topOffset}
+                stickyStyle={{
+                  position: 'fixed',
+                  top: this.state.topOffset,
+                  left: 0
+                }}
                 stickyClassName='single-tos-header-sticky'
               >
                 <div className='single-tos-header-wrapper'>
