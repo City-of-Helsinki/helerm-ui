@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link, routerShape, withRouter } from 'react-router';
+import { Link, withRouter, Prompt } from 'react-router-dom';
 import {
   cloneDeep,
   endsWith,
@@ -31,10 +31,15 @@ import {
   BULK_UPDATE_SEARCH_TERM_DEFAULT,
   BULK_UPDATE_SEARCH_UNEDITABLE_FUNCTION_ATTRIBUTES,
   statusFilters
-} from '../../../../config/constants';
-import { validateTOS, validatePhase, validateAction, validateRecord } from '../../../utils/validators';
-import IsAllowed from 'components/IsAllowed/IsAllowed';
-import Popup from 'components/Popup';
+} from '../../../constants';
+import {
+  validateTOS,
+  validatePhase,
+  validateAction,
+  validateRecord
+} from '../../../utils/validators';
+import IsAllowed from '../../../components/IsAllowed/IsAllowed';
+import Popup from '../../../components/Popup';
 import Conversion from './Conversion/Conversion';
 import Preview from './Preview/Preview';
 import SearchResults from './SearchResults/SearchResults';
@@ -44,7 +49,7 @@ import './BulkCreateView.scss';
 const PATH_EMPTY_NAME_REPLACEMENT = '---';
 
 export class BulkCreateView extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.getAttributeName = this.getAttributeName.bind(this);
@@ -62,7 +67,6 @@ export class BulkCreateView extends React.Component {
     this.onSelectAllSearchResults = this.onSelectAllSearchResults.bind(this);
     this.onSelectPreviewItem = this.onSelectPreviewItem.bind(this);
     this.onSelectSearchResult = this.onSelectSearchResult.bind(this);
-    this.routerWillLeave = this.routerWillLeave.bind(this);
 
     this.state = {
       attributeValues: {},
@@ -83,18 +87,18 @@ export class BulkCreateView extends React.Component {
         phases: 0,
         records: 0
       },
-      searchTerms: [{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }],
+      searchTerms: [
+        { ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }
+      ],
       state: 'draft'
     };
   }
 
-  componentDidMount () {
-    const { router, route } = this.props;
-    router.setRouteLeaveHook(route, this.routerWillLeave);
+  componentDidMount() {
     this.props.fetchNavigation(true);
   }
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { isFetching: wasFetching } = this.props;
     const { isFetching, items } = nextProps;
     if (wasFetching && !isFetching && items) {
@@ -119,24 +123,16 @@ export class BulkCreateView extends React.Component {
     }
   }
 
-  routerWillLeave (e) {
-    const { isDirty } = this.state;
-
-    if (isDirty) {
-      const message = 'Muutoksia ei ole tallennettu, haluatko silti jatkaa?';
-      (e || window.event).returnValue = message;
-      return message;
-    }
-  }
-
-  getAttributeValues (itemList) {
+  getAttributeValues(itemList) {
     const addAttributeValues = (acc, attributes, type) => {
-      keys(attributes || {}).forEach(attribute => {
+      keys(attributes || {}).forEach((attribute) => {
         if (attributes[attribute]) {
           if (!acc[type][attribute]) {
             acc[type][attribute] = [attributes[attribute]];
           } else if (isArray(attributes[attribute])) {
-            const isVal = some(acc[type][attribute], val => isEqual(attributes[attribute], val));
+            const isVal = some(acc[type][attribute], (val) =>
+              isEqual(attributes[attribute], val)
+            );
             if (!isVal) {
               acc[type][attribute].push(attributes[attribute]);
             }
@@ -146,42 +142,53 @@ export class BulkCreateView extends React.Component {
         }
       });
     };
-    return itemList.reduce((acc, item) => {
-      addAttributeValues(acc, item.attributes, 'function');
-      addAttributeValues(acc, {
-        code: item.code || '',
-        function_state: item.function_state || null,
-        valid_from: item.valid_from || null,
-        valid_to: item.valid_to || null
-      }, 'function');
-      item.phases.map(phase => {
-        addAttributeValues(acc, phase.attributes, 'phase');
-        phase.actions.map(action => {
-          addAttributeValues(acc, action.attributes, 'action');
-          action.records.map(record => {
-            addAttributeValues(acc, record.attributes, 'record');
+    return itemList.reduce(
+      (acc, item) => {
+        addAttributeValues(acc, item.attributes, 'function');
+        addAttributeValues(
+          acc,
+          {
+            code: item.code || '',
+            function_state: item.function_state || null,
+            valid_from: item.valid_from || null,
+            valid_to: item.valid_to || null
+          },
+          'function'
+        );
+        item.phases.forEach((phase) => {
+          addAttributeValues(acc, phase.attributes, 'phase');
+          phase.actions.forEach((action) => {
+            addAttributeValues(acc, action.attributes, 'action');
+            action.records.forEach((record) => {
+              addAttributeValues(acc, record.attributes, 'record');
+            });
           });
         });
-      });
-      return acc;
-    }, {
-      action: {},
-      function: {},
-      phase: {},
-      record: {}
-    });
+        return acc;
+      },
+      {
+        action: {},
+        function: {},
+        phase: {},
+        record: {}
+      }
+    );
   }
 
-  onConvert (conversion) {
+  onConvert(conversion) {
     const { searchResults, searchTerms } = this.state;
     const items = {};
     let isValid = true;
 
-    filter(searchResults, result => result.selected).forEach(result => {
+    filter(searchResults, (result) => result.selected).forEach((result) => {
       const changed = {};
       let isChanged = false;
       if (conversion.type === 'function') {
-        if (find(BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES, { value: conversion.attribute })) {
+        if (
+          find(BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES, {
+            value: conversion.attribute
+          })
+        ) {
           changed[conversion.attribute] = conversion.value;
         } else {
           changed.attributes = {
@@ -191,7 +198,7 @@ export class BulkCreateView extends React.Component {
         isChanged = true;
       } else if (!isEmpty(result.hit.phases)) {
         changed.phases = {};
-        keys(result.hit.phases).forEach(phase => {
+        keys(result.hit.phases).forEach((phase) => {
           changed.phases[phase] = {};
           if (conversion.type === 'phase') {
             changed.phases[phase].attributes = {
@@ -200,7 +207,7 @@ export class BulkCreateView extends React.Component {
             isChanged = true;
           } else if (!isEmpty(result.hit.phases[phase].actions)) {
             changed.phases[phase].actions = {};
-            keys(result.hit.phases[phase].actions).forEach(action => {
+            keys(result.hit.phases[phase].actions).forEach((action) => {
               changed.phases[phase].actions[action] = {};
               if (conversion.type === 'action') {
                 changed.phases[phase].actions[action] = {
@@ -209,16 +216,20 @@ export class BulkCreateView extends React.Component {
                   }
                 };
                 isChanged = true;
-              } else if (!isEmpty(result.hit.phases[phase].actions[action].records)) {
+              } else if (
+                !isEmpty(result.hit.phases[phase].actions[action].records)
+              ) {
                 changed.phases[phase].actions[action].records = {};
-                keys(result.hit.phases[phase].actions[action].records).forEach(record => {
-                  changed.phases[phase].actions[action].records[record] = {
-                    attributes: {
-                      [conversion.attribute]: conversion.value
-                    }
-                  };
-                  isChanged = true;
-                });
+                keys(result.hit.phases[phase].actions[action].records).forEach(
+                  (record) => {
+                    changed.phases[phase].actions[action].records[record] = {
+                      attributes: {
+                        [conversion.attribute]: conversion.value
+                      }
+                    };
+                    isChanged = true;
+                  }
+                );
               }
             });
           }
@@ -226,7 +237,7 @@ export class BulkCreateView extends React.Component {
       } else {
         changed.phases = {};
         if (!isEmpty(result.item.phases)) {
-          result.item.phases.forEach(phase => {
+          result.item.phases.forEach((phase) => {
             if (conversion.type === 'phase') {
               changed.phases[phase.id] = {
                 attributes: {
@@ -236,7 +247,7 @@ export class BulkCreateView extends React.Component {
               isChanged = true;
             } else if (!isEmpty(phase.actions)) {
               changed.phases[phase.id] = { actions: {} };
-              phase.actions.forEach(action => {
+              phase.actions.forEach((action) => {
                 if (conversion.type === 'action') {
                   changed.phases[phase.id].actions[action.id] = {
                     attributes: {
@@ -246,8 +257,10 @@ export class BulkCreateView extends React.Component {
                   isChanged = true;
                 } else if (!isEmpty(action.records)) {
                   changed.phases[phase.id].actions[action.id] = { records: {} };
-                  action.records.forEach(record => {
-                    changed.phases[phase.id].actions[action.id].records[record.id] = {
+                  action.records.forEach((record) => {
+                    changed.phases[phase.id].actions[action.id].records[
+                      record.id
+                    ] = {
                       attributes: {
                         [conversion.attribute]: conversion.value
                       }
@@ -287,7 +300,7 @@ export class BulkCreateView extends React.Component {
     });
   }
 
-  validateChangedItem (item, changed) {
+  validateChangedItem(item, changed) {
     const { attributeTypes } = this.props;
     const clonedItem = cloneDeep(item);
     const changedItem = merge(clonedItem, changed);
@@ -338,7 +351,7 @@ export class BulkCreateView extends React.Component {
     return errors;
   }
 
-  onSelectPreviewItem (id) {
+  onSelectPreviewItem(id) {
     const { conversionItems, isFinalPreview, previewItems } = this.state;
     if (previewItems && previewItems[id]) {
       this.setState({
@@ -352,33 +365,44 @@ export class BulkCreateView extends React.Component {
       this.setState({
         conversionItems: {
           ...conversionItems,
-          [id]: { ...conversionItems[id], selected: !conversionItems[id].selected }
+          [id]: {
+            ...conversionItems[id],
+            selected: !conversionItems[id].selected
+          }
         }
       });
     }
   }
 
-  onConfirmConvert () {
+  onConfirmConvert() {
     const { conversions, conversionItems, preview, previewItems } = this.state;
-    const selectedItems = pickBy(previewItems, item => item.selected);
-    const mergedItems = conversionItems ? merge(conversionItems, selectedItems) : selectedItems;
+    const selectedItems = pickBy(previewItems, (item) => item.selected);
+    const mergedItems = conversionItems
+      ? merge(conversionItems, selectedItems)
+      : selectedItems;
 
     this.setState({
       conversion: null,
       conversions: {
-        conversion: !isEmpty(conversions) ? [...conversions.conversion, ...preview.conversion] : preview.conversion,
-        searchTerms: !isEmpty(conversions) ? [...conversions.searchTerms, ...preview.searchTerms] : preview.searchTerms
+        conversion: !isEmpty(conversions)
+          ? [...conversions.conversion, ...preview.conversion]
+          : preview.conversion,
+        searchTerms: !isEmpty(conversions)
+          ? [...conversions.searchTerms, ...preview.searchTerms]
+          : preview.searchTerms
       },
       conversionItems: mergedItems,
       isDirty: true,
       preview: null,
       previewItems: null,
       searchResults: [],
-      searchTerms: [{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }]
+      searchTerms: [
+        { ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }
+      ]
     });
   }
 
-  onCancel () {
+  onCancel() {
     this.setState({
       conversions: null,
       conversionItems: null,
@@ -386,22 +410,37 @@ export class BulkCreateView extends React.Component {
     });
   }
 
-  onSave () {
+  onSave() {
     if (this.state.conversions) {
       const { conversionItems } = this.state;
-      const isErrors = some(keys(conversionItems), id => conversionItems[id].selected && !isEmpty(conversionItems[id].errors));
+      const isErrors = some(
+        keys(conversionItems),
+        (id) =>
+          conversionItems[id].selected && !isEmpty(conversionItems[id].errors)
+      );
       this.setState({ isSaving: true, state: 'draft', isValid: !isErrors });
     }
   }
 
-  onCancelSave () {
+  onCancelSave() {
     this.setState({ isSaving: false });
   }
 
-  onConfirmSave () {
+  onConfirmSave() {
     if (this.state.conversions) {
-      const { conversionItems, conversions: { conversion }, state } = this.state;
-      const description = conversion.map(conv => `${this.getTypeName(conv.type)}: ${this.getAttributeName(conv.attribute)} = ${conv.value}`).join(', ');
+      const {
+        conversionItems,
+        conversions: { conversion },
+        state
+      } = this.state;
+      const description = conversion
+        .map(
+          (conv) =>
+            `${this.getTypeName(conv.type)}: ${this.getAttributeName(
+              conv.attribute
+            )} = ${conv.value}`
+        )
+        .join(', ');
       const changes = keys(conversionItems).reduce((acc, id) => {
         if (conversionItems[id].selected) {
           const item = conversionItems[id].item;
@@ -414,7 +453,8 @@ export class BulkCreateView extends React.Component {
         changes,
         state
       };
-      this.props.saveBulkUpdate(bulkUpdate)
+      this.props
+        .saveBulkUpdate(bulkUpdate)
         .then(() => {
           this.setState({
             conversion: null,
@@ -425,16 +465,18 @@ export class BulkCreateView extends React.Component {
             preview: null,
             previewItems: null,
             searchResults: [],
-            searchTerms: [{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }]
+            searchTerms: [
+              { ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }
+            ]
           });
-          window.location.assign('/bulk');
+          this.props.history.push('/bulk');
           this.props.fetchNavigation(true);
           return this.props.displayMessage({
             title: 'Massamuutos',
             body: 'Massamuutos tallennettu!'
           });
         })
-        .catch(err => {
+        .catch((err) => {
           return this.props.displayMessage(
             {
               title: 'Virhe',
@@ -446,13 +488,13 @@ export class BulkCreateView extends React.Component {
     }
   }
 
-  onChangeState (state) {
+  onChangeState(state) {
     this.setState({
       state: state.value
     });
   }
 
-  onPreview () {
+  onPreview() {
     const { conversions, conversionItems } = this.state;
     this.setState({
       preview: conversions,
@@ -461,7 +503,7 @@ export class BulkCreateView extends React.Component {
     });
   }
 
-  onClosePreview () {
+  onClosePreview() {
     this.setState({
       preview: null,
       previewItems: null,
@@ -469,16 +511,16 @@ export class BulkCreateView extends React.Component {
     });
   }
 
-  isMatch (value, other, isEndsWith, isStartsWith, equals) {
+  isMatch(value, other, isEndsWith, isStartsWith, equals) {
     return (
       (isStartsWith && isEndsWith && includes(value, other)) ||
       (isStartsWith && startsWith(value, other)) ||
       (isEndsWith && endsWith(value, other)) ||
-      (equals === isEqual(value, other))
+      equals === isEqual(value, other)
     );
   }
 
-  compare (items, searchTerm) {
+  compare(items, searchTerm) {
     const { attribute, equals, target, value } = searchTerm;
     const isEndsWith = isString(value) && startsWith(value, '*');
     const isStartsWith = isString(value) && endsWith(value, '*');
@@ -486,9 +528,25 @@ export class BulkCreateView extends React.Component {
     const paths = [];
     const hits = [];
     let counter = 0;
-    items.forEach(item => {
-      if (item.attributes && item.attributes[attribute] && this.isMatch(item.attributes[attribute], trimmedValue, isEndsWith, isStartsWith, equals)) {
-        paths.push(`${item.name || PATH_EMPTY_NAME_REPLACEMENT} > ${this.getAttributeName(attribute)}: ${item.attributes[attribute]}`);
+    items.forEach((item) => {
+      if (
+        item.attributes &&
+        item.attributes[attribute] &&
+        this.isMatch(
+          item.attributes[attribute],
+          trimmedValue,
+          isEndsWith,
+          isStartsWith,
+          equals
+        )
+      ) {
+        paths.push(
+          `${
+            item.name || PATH_EMPTY_NAME_REPLACEMENT
+          } > ${this.getAttributeName(attribute)}: ${
+            item.attributes[attribute]
+          }`
+        );
         hits.push({
           id: item.id,
           attributes: {
@@ -504,19 +562,38 @@ export class BulkCreateView extends React.Component {
     return counter ? { hits, paths } : null;
   }
 
-  matchesAll (attributes, searchAttributes) {
+  matchesAll(attributes, searchAttributes) {
     return every(keys(searchAttributes), (attribute) => {
-      const { equals, isEndsWith, isStartsWith, value } = searchAttributes[attribute];
-      return attributes[attribute] ? this.isMatch(attributes[attribute], value, isEndsWith, isStartsWith, equals) : false;
+      const { equals, isEndsWith, isStartsWith, value } = searchAttributes[
+        attribute
+      ];
+      return attributes[attribute]
+        ? this.isMatch(
+            attributes[attribute],
+            value,
+            isEndsWith,
+            isStartsWith,
+            equals
+          )
+        : false;
     });
   }
 
-  compareNew (item, searchTerm) {
+  compareNew(item, searchTerm) {
     const paths = [];
     const hits = [];
-    if (item.attributes && this.matchesAll(item.attributes, searchTerm.attributes)) {
+    if (
+      item.attributes &&
+      this.matchesAll(item.attributes, searchTerm.attributes)
+    ) {
       mapKeys(searchTerm.attributes, (value, attribute) => {
-        paths.push(`${item.name || PATH_EMPTY_NAME_REPLACEMENT} > ${this.getAttributeName(attribute)}: ${item.attributes[attribute]}`);
+        paths.push(
+          `${
+            item.name || PATH_EMPTY_NAME_REPLACEMENT
+          } > ${this.getAttributeName(attribute)}: ${
+            item.attributes[attribute]
+          }`
+        );
         hits.push({
           id: item.id,
           attributes: {
@@ -528,30 +605,36 @@ export class BulkCreateView extends React.Component {
     return !isEmpty(hits) ? { hits, paths } : null;
   }
 
-  onSearch (searchTerms) {
+  onSearch(searchTerms) {
     const { itemList } = this.state;
-    const combinedSearchTerms = searchTerms.reduce((acc, searchTerm) => {
-      const { attribute, equals, target, value } = searchTerm;
-      const trimmedTarget = endsWith(target, 's') ? trimEnd(target, 's') : target;
-      const isEndsWith = isString(value) && startsWith(value, '*');
-      const isStartsWith = isString(value) && endsWith(value, '*');
-      const trimmedValue = isEndsWith || isStartsWith ? trim(value, '*') : value;
-      acc[trimmedTarget].attributes[attribute] = {
-        equals,
-        isEndsWith,
-        isStartsWith,
-        value: trimmedValue
-      };
-      if (endsWith(target, 's')) {
-        acc[trimmedTarget].all = true;
+    const combinedSearchTerms = searchTerms.reduce(
+      (acc, searchTerm) => {
+        const { attribute, equals, target, value } = searchTerm;
+        const trimmedTarget = endsWith(target, 's')
+          ? trimEnd(target, 's')
+          : target;
+        const isEndsWith = isString(value) && startsWith(value, '*');
+        const isStartsWith = isString(value) && endsWith(value, '*');
+        const trimmedValue =
+          isEndsWith || isStartsWith ? trim(value, '*') : value;
+        acc[trimmedTarget].attributes[attribute] = {
+          equals,
+          isEndsWith,
+          isStartsWith,
+          value: trimmedValue
+        };
+        if (endsWith(target, 's')) {
+          acc[trimmedTarget].all = true;
+        }
+        return acc;
+      },
+      {
+        action: { all: false, attributes: {} },
+        function: { attributes: {} },
+        phase: { all: false, attributes: {} },
+        record: { all: false, attributes: {} }
       }
-      return acc;
-    }, {
-      action: { all: false, attributes: {} },
-      function: { attributes: {} },
-      phase: { all: false, attributes: {} },
-      record: { all: false, attributes: {} }
-    });
+    );
 
     const searchResults = itemList.reduce((acc, item) => {
       const paths = [];
@@ -567,27 +650,69 @@ export class BulkCreateView extends React.Component {
       const isSubSearch = !actionsSuccess || !phasesSuccess || !recordsSuccess;
 
       if (!functionsSuccess) {
-        functionsSuccess = every(keys(combinedSearchTerms.function.attributes), attribute => {
-          const { equals, isEndsWith, isStartsWith, value } = combinedSearchTerms.function.attributes[attribute];
-          if (item[attribute] && this.isMatch(item[attribute], value, isEndsWith, isStartsWith, equals)) {
-            const functionAttribute = find([...BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES, ...BULK_UPDATE_SEARCH_UNEDITABLE_FUNCTION_ATTRIBUTES], { value: attribute });
-            paths.push(`${(functionAttribute ? functionAttribute.label : attribute)}: ${item[attribute]}`);
-            hit = merge(hit, { [attribute]: item[attribute] });
-            return true;
-          } else if (item.attributes[attribute] && this.isMatch(item.attributes[attribute], value, isEndsWith, isStartsWith, equals)) {
-            paths.push(`${this.getAttributeName(attribute)}: ${item.attributes[attribute]}`);
-            hit = merge(hit, { attributes: { [attribute]: item.attributes[attribute] } });
-            return true;
+        functionsSuccess = every(
+          keys(combinedSearchTerms.function.attributes),
+          (attribute) => {
+            const {
+              equals,
+              isEndsWith,
+              isStartsWith,
+              value
+            } = combinedSearchTerms.function.attributes[attribute];
+            if (
+              item[attribute] &&
+              this.isMatch(
+                item[attribute],
+                value,
+                isEndsWith,
+                isStartsWith,
+                equals
+              )
+            ) {
+              const functionAttribute = find(
+                [
+                  ...BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES,
+                  ...BULK_UPDATE_SEARCH_UNEDITABLE_FUNCTION_ATTRIBUTES
+                ],
+                { value: attribute }
+              );
+              paths.push(
+                `${functionAttribute ? functionAttribute.label : attribute}: ${
+                  item[attribute]
+                }`
+              );
+              hit = merge(hit, { [attribute]: item[attribute] });
+              return true;
+            } else if (
+              item.attributes[attribute] &&
+              this.isMatch(
+                item.attributes[attribute],
+                value,
+                isEndsWith,
+                isStartsWith,
+                equals
+              )
+            ) {
+              paths.push(
+                `${this.getAttributeName(attribute)}: ${
+                  item.attributes[attribute]
+                }`
+              );
+              hit = merge(hit, {
+                attributes: { [attribute]: item.attributes[attribute] }
+              });
+              return true;
+            }
+            return false;
           }
-          return false;
-        });
+        );
       }
 
       if (functionsSuccess && isSubSearch) {
         const phasePaths = [];
         let phaseHit = {};
         let phaseCounter = 0;
-        item.phases.forEach(phase => {
+        item.phases.forEach((phase) => {
           const phaseName = phase.name || PATH_EMPTY_NAME_REPLACEMENT;
           let phaseSuccess = isEmpty(combinedSearchTerms.phase.attributes);
           let actionSuccess = isEmpty(combinedSearchTerms.action.attributes);
@@ -599,67 +724,106 @@ export class BulkCreateView extends React.Component {
           if (!isEmpty(compared) && compared.paths.length) {
             phaseSuccess = true;
           }
-          if (phaseSuccess && !isEmpty(combinedSearchTerms.action.attributes) || !isEmpty(combinedSearchTerms.record.attributes)) {
-            phase.actions.forEach(action => {
+          if (
+            (phaseSuccess && !isEmpty(combinedSearchTerms.action.attributes)) ||
+            !isEmpty(combinedSearchTerms.record.attributes)
+          ) {
+            phase.actions.forEach((action) => {
               const actionName = action.name || PATH_EMPTY_NAME_REPLACEMENT;
-              let recordSuccess = isEmpty(combinedSearchTerms.record.attributes);
-              const comparedAction = this.compareNew(action, combinedSearchTerms.action);
+              let recordSuccess = isEmpty(
+                combinedSearchTerms.record.attributes
+              );
+              const comparedAction = this.compareNew(
+                action,
+                combinedSearchTerms.action
+              );
               if (!isEmpty(comparedAction) && comparedAction.paths.length) {
                 actionSuccess = true;
               }
-              if (actionSuccess && !isEmpty(combinedSearchTerms.record.attributes)) {
+              if (
+                actionSuccess &&
+                !isEmpty(combinedSearchTerms.record.attributes)
+              ) {
                 const recordPaths = [];
                 let recordHit = {};
                 let recordCounter = 0;
-                action.records.forEach(record => {
-                  const comparedRecord = this.compareNew(record, combinedSearchTerms.record);
+                action.records.forEach((record) => {
+                  const comparedRecord = this.compareNew(
+                    record,
+                    combinedSearchTerms.record
+                  );
                   if (!isEmpty(comparedRecord) && comparedRecord.paths.length) {
                     recordPaths.push(...comparedRecord.paths);
-                    comparedRecord.hits.forEach(comparedHit => {
-                      recordHit = merge(recordHit, { [comparedHit.id]: { attributes: comparedHit.attributes } });
+                    comparedRecord.hits.forEach((comparedHit) => {
+                      recordHit = merge(recordHit, {
+                        [comparedHit.id]: { attributes: comparedHit.attributes }
+                      });
                     });
                     recordCounter++;
                   }
                 });
-                if (!isEmpty(recordHit) && (combinedSearchTerms.record.all && action.records.length === recordCounter) || (!combinedSearchTerms.record.all && recordCounter)) {
-                  recordPaths.forEach(path => {
+                if (
+                  (!isEmpty(recordHit) &&
+                    combinedSearchTerms.record.all &&
+                    action.records.length === recordCounter) ||
+                  (!combinedSearchTerms.record.all && recordCounter)
+                ) {
+                  recordPaths.forEach((path) => {
                     actionPaths.push(`${phaseName} > ${actionName} > ${path}`);
                   });
-                  actionHit = merge(actionHit, { [action.id]: { records: recordHit } });
+                  actionHit = merge(actionHit, {
+                    [action.id]: { records: recordHit }
+                  });
                   recordSuccess = true;
                 }
               }
               if (recordSuccess) {
                 if (!isEmpty(comparedAction) && comparedAction.paths.length) {
                   actionPaths.unshift(...comparedAction.paths);
-                  comparedAction.hits.forEach(comparedHit => {
-                    actionHit = merge(actionHit, { [comparedHit.id]: { attributes: comparedHit.attributes } });
+                  comparedAction.hits.forEach((comparedHit) => {
+                    actionHit = merge(actionHit, {
+                      [comparedHit.id]: { attributes: comparedHit.attributes }
+                    });
                   });
                 }
                 actionCounter++;
                 actionSuccess = true;
               }
             });
-            if (!isEmpty(actionHit) && ((combinedSearchTerms.action.all && phase.actions.length === actionCounter) || (!combinedSearchTerms.action.all && actionCounter))) {
-              actionPaths.forEach(path => {
+            if (
+              !isEmpty(actionHit) &&
+              ((combinedSearchTerms.action.all &&
+                phase.actions.length === actionCounter) ||
+                (!combinedSearchTerms.action.all && actionCounter))
+            ) {
+              actionPaths.forEach((path) => {
                 phasePaths.push(`${phaseName} > ${path}`);
               });
-              phaseHit = merge(phaseHit, { [phase.id]: { actions: actionHit } });
+              phaseHit = merge(phaseHit, {
+                [phase.id]: { actions: actionHit }
+              });
               actionsSuccess = true;
             }
           }
           if (actionSuccess) {
             if (!isEmpty(compared) && compared.paths.length) {
               phasePaths.unshift(...compared.paths);
-              compared.hits.forEach(comparedHit => {
-                phaseHit = merge(phaseHit, { [comparedHit.id]: { attributes: comparedHit.attributes } });
+              compared.hits.forEach((comparedHit) => {
+                phaseHit = merge(phaseHit, {
+                  [comparedHit.id]: { attributes: comparedHit.attributes }
+                });
               });
             }
             phaseCounter++;
             phaseSuccess = true;
           }
         });
-        if (!isEmpty(phaseHit) && ((combinedSearchTerms.phase.all && item.phases.length === phaseCounter) || (!combinedSearchTerms.phase.all && phaseCounter))) {
+        if (
+          !isEmpty(phaseHit) &&
+          ((combinedSearchTerms.phase.all &&
+            item.phases.length === phaseCounter) ||
+            (!combinedSearchTerms.phase.all && phaseCounter))
+        ) {
           paths.push(...phasePaths);
           hit = merge(hit, { phases: phaseHit });
           phasesSuccess = true;
@@ -676,65 +840,80 @@ export class BulkCreateView extends React.Component {
       return acc;
     }, []);
 
-    const searchResultHits = searchResults.reduce((acc, result) => {
-      const { hit } = result;
-      if (hit.phases) {
-        keys(hit.phases).forEach(phaseId => {
-          acc.phases++;
-          const phase = hit.phases[phaseId];
-          if (phase && phase.actions) {
-            keys(phase.actions).forEach(actionId => {
-              acc.actions++;
-              const action = phase.actions[actionId];
-              if (action && action.records) {
-                acc.records += keys(action.records).length;
-              }
-            });
-          }
-        });
-      }
-      return acc;
-    }, { phases: 0, actions: 0, records: 0 });
+    const searchResultHits = searchResults.reduce(
+      (acc, result) => {
+        const { hit } = result;
+        if (hit.phases) {
+          keys(hit.phases).forEach((phaseId) => {
+            acc.phases++;
+            const phase = hit.phases[phaseId];
+            if (phase && phase.actions) {
+              keys(phase.actions).forEach((actionId) => {
+                acc.actions++;
+                const action = phase.actions[actionId];
+                if (action && action.records) {
+                  acc.records += keys(action.records).length;
+                }
+              });
+            }
+          });
+        }
+        return acc;
+      },
+      { phases: 0, actions: 0, records: 0 }
+    );
 
     this.setState({ searchResults, searchResultHits, searchTerms });
   }
 
-  resetSearch () {
+  resetSearch() {
     this.setState({ searchResults: [] });
   }
 
-  onSelectAllSearchResults (selected) {
-    const searchResults = this.state.searchResults.map(result => ({
+  onSelectAllSearchResults(selected) {
+    const searchResults = this.state.searchResults.map((result) => ({
       ...result,
       selected
     }));
     this.setState({ searchResults });
   }
 
-  onSelectSearchResult (index, selected) {
+  onSelectSearchResult(index, selected) {
     const { searchResults } = this.state;
     const searchResult = searchResults[index];
     const start = slice(searchResults, 0, index);
-    const end = index + 1 < searchResults.length ? slice(searchResults, index + 1, searchResults.length) : [];
+    const end =
+      index + 1 < searchResults.length
+        ? slice(searchResults, index + 1, searchResults.length)
+        : [];
     this.setState({
       searchResults: [...start, { ...searchResult, selected }, ...end]
     });
   }
 
-  getTypeName (type) {
-    const typeName = find(BULK_UPDATE_CONVERSION_TYPES, option => option.value === type);
+  getTypeName(type) {
+    const typeName = find(
+      BULK_UPDATE_CONVERSION_TYPES,
+      (option) => option.value === type
+    );
     return !isEmpty(typeName) ? typeName.label : type;
   }
 
-  getAttributeName (attribute) {
-    const attributeOption = find([...BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES, ...BULK_UPDATE_SEARCH_UNEDITABLE_FUNCTION_ATTRIBUTES], { value: attribute });
+  getAttributeName(attribute) {
+    const attributeOption = find(
+      [
+        ...BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES,
+        ...BULK_UPDATE_SEARCH_UNEDITABLE_FUNCTION_ATTRIBUTES
+      ],
+      { value: attribute }
+    );
     if (!isEmpty(attributeOption)) {
       return attributeOption.label;
     }
     return this.props.getAttributeName(attribute);
   }
 
-  render () {
+  render() {
     const { attributeTypes } = this.props;
     const {
       attributeValues,
@@ -750,7 +929,8 @@ export class BulkCreateView extends React.Component {
       searchTerms,
       state
     } = this.state;
-    const isSelectedResults = searchResults.filter(result => result.selected).length > 0;
+    const isSelectedResults =
+      searchResults.filter((result) => result.selected).length > 0;
     const selectedCount = filter(conversionItems, { selected: true }).length;
 
     if (!isEmpty(preview) && previewItems) {
@@ -768,9 +948,12 @@ export class BulkCreateView extends React.Component {
         />
       );
     }
-
     return (
       <div className='bulk-update-create'>
+        <Prompt
+          when={this.state.isDirty}
+          message='Muutoksia ei ole tallennettu, haluatko silti jatkaa?'
+        />
         <div className='col-xs-12'>
           <Link className='btn btn-link' to='/bulk'>
             <i className='fa fa-angle-left' /> Takaisin
@@ -834,25 +1017,36 @@ export class BulkCreateView extends React.Component {
           </IsAllowed>
           <h4>Muutoshistoria</h4>
           {isEmpty(conversions) && <p>Ei tapahtumia</p>}
-          {!isEmpty(conversions) && <p><strong>Muutetaan: {selectedCount} käsittelyprosessia</strong></p>}
-          {!isEmpty(conversions) && conversions.conversion.map((conversion, index) => (
-            <p key={`conversion-${index}`}>
-              {`${this.getTypeName(conversion.type)}: ${this.getAttributeName(conversion.attribute)} = ${conversion.value}`}
+          {!isEmpty(conversions) && (
+            <p>
+              <strong>Muutetaan: {selectedCount} käsittelyprosessia</strong>
             </p>
-          ))}
+          )}
+          {!isEmpty(conversions) &&
+            conversions.conversion.map((c, index) => (
+              <p key={`conversion-${index}`}>
+                {`${this.getTypeName(c.type)}: ${this.getAttributeName(
+                  c.attribute
+                )} = ${c.value}`}
+              </p>
+            ))}
           {this.state.isSaving && !isEmpty(conversions) && (
             <Popup
               content={
                 <div>
                   <h3>Tallennetaanko massatilaus?</h3>
                   <p>Muutetaan: {selectedCount} käsittelyprosessia</p>
-                  {!isValid && <p className='alert-danger'>HUOM! Esitarkastuksessa on virheitä. Katso esikatselu.</p>}
+                  {!isValid && (
+                    <p className='alert-danger'>
+                      HUOM! Esitarkastuksessa on virheitä. Katso esikatselu.
+                    </p>
+                  )}
                   <div>
                     <label>Valitse massamuutospaketin tila:</label>
                     <Select
-                      autoBlur={false}
-                      clearable={false}
-                      value={state}
+                      className={'Select'}
+                      isClearable={false}
+                      value={statusFilters.find(({ value }) => value === state)}
                       onChange={this.onChangeState}
                       autoFocus={true}
                       options={statusFilters}
@@ -867,7 +1061,10 @@ export class BulkCreateView extends React.Component {
                     >
                       Tallenna massamuutos
                     </button>
-                    <button className='btn btn-default' onClick={this.onCancelSave}>
+                    <button
+                      className='btn btn-default'
+                      onClick={this.onCancelSave}
+                    >
                       Peruuta
                     </button>
                   </div>
@@ -889,8 +1086,8 @@ BulkCreateView.propTypes = {
   getAttributeName: PropTypes.func.isRequired,
   isFetching: PropTypes.bool,
   items: PropTypes.array.isRequired,
-  route: PropTypes.object.isRequired,
-  router: routerShape.isRequired,
+  // route: PropTypes.object.isRequired,
+  // router: PropTypes.object.isRequired,
   saveBulkUpdate: PropTypes.func.isRequired
 };
 

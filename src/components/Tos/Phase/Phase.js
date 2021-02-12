@@ -1,25 +1,29 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import forEach from 'lodash/forEach';
-import { StickyContainer, Sticky } from 'react-sticky';
 import update from 'immutability-helper';
-import './Phase.scss';
+import { RenderPropSticky } from 'react-sticky-el';
 
+import './Phase.scss';
 import Action from '../Action/Action';
 import Attributes from '../Attribute/Attributes';
 import AddElementInput from '../AddElementInput/AddElementInput';
 import DeleteView from '../DeleteView/DeleteView';
-import Popup from 'components/Popup';
-import Dropdown from 'components/Dropdown';
+import Popup from '../../../components/Popup';
+import Dropdown from '../../../components/Dropdown';
 import DropdownInput from '../DropdownInput/DropdownInput';
 import ReorderView from '../Reorder/ReorderView';
 import ImportView from '../ImportView/ImportView';
 import EditorForm from '../EditorForm/EditorForm';
+import { getDisplayLabelForAttribute } from '../../../utils/attributeHelper';
 
 export class Phase extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
-    this.onActionDefaultAttributeChange = this.onActionDefaultAttributeChange.bind(this);
+    this.onActionDefaultAttributeChange = this.onActionDefaultAttributeChange.bind(
+      this
+    );
     this.onActionTypeChange = this.onActionTypeChange.bind(this);
     this.onActionTypeInputChange = this.onActionTypeInputChange.bind(this);
     this.onActionTypeSpecifierChange = this.onActionTypeSpecifierChange.bind(
@@ -45,6 +49,7 @@ export class Phase extends React.Component {
     this.onAddFormShowMoreAction = this.onAddFormShowMoreAction.bind(this);
     this.scrollToAction = this.scrollToAction.bind(this);
     this.scrollToActionRecord = this.scrollToActionRecord.bind(this);
+    this.updateTopOffsetForSticky = this.updateTopOffsetForSticky.bind(this);
 
     this.state = {
       typeSpecifier: this.props.phase.attributes.TypeSpecifier || null,
@@ -61,13 +66,14 @@ export class Phase extends React.Component {
       deleting: false,
       showReorderView: false,
       showImportView: false,
-      showMore: false
+      showMore: false,
+      topOffset: 0
     };
 
     this.actions = {};
   }
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.phase.attributes.TypeSpecifier) {
       this.setState({
         typeSpecifier: nextProps.phase.attributes.TypeSpecifier
@@ -81,38 +87,55 @@ export class Phase extends React.Component {
     }
   }
 
-  onEditFormShowMorePhase (e) {
-    e.preventDefault();
-    this.setState(prevState => ({
-      complementingPhase: !prevState.complementingPhase,
-      editingPhase: !prevState.editingPhase
-    })
-    );
+  updateTopOffsetForSticky() {
+    // calculates heights for elements that are already sticking (navigation menu and tos header)
+    const headerEl = document.getElementById('single-tos-header-container');
+    const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 0;
+    const menuEl = document.getElementById('navigation-menu');
+    const menuHeight = menuEl ? menuEl.getBoundingClientRect().height : 0;
+    this.setState({ topOffset: headerHeight + menuHeight });
   }
 
-  toggleReorderView () {
+  componentDidMount() {
+    this.updateTopOffsetForSticky();
+    window.addEventListener('resize', this.updateTopOffsetForSticky);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateTopOffsetForSticky);
+  }
+
+  onEditFormShowMorePhase(e) {
+    e.preventDefault();
+    this.setState((prevState) => ({
+      complementingPhase: !prevState.complementingPhase,
+      editingPhase: !prevState.editingPhase
+    }));
+  }
+
+  toggleReorderView() {
     const current = this.state.showReorderView;
     this.setState({ showReorderView: !current });
   }
 
-  toggleImportView () {
+  toggleImportView() {
     const current = this.state.showImportView;
     this.setState({ showImportView: !current });
   }
 
-  editTypeSpecifier () {
+  editTypeSpecifier() {
     if (this.props.documentState === 'edit') {
       this.setState({ editingTypeSpecifier: true, mode: 'edit' });
     }
   }
 
-  editType () {
+  editType() {
     if (this.props.documentState === 'edit') {
       this.setState({ editingType: true, mode: 'edit' });
     }
   }
 
-  editPhaseForm () {
+  editPhaseForm() {
     if (this.props.documentState === 'edit') {
       this.setState({ editingPhase: true, mode: 'edit' });
     }
@@ -124,7 +147,7 @@ export class Phase extends React.Component {
   //   }
   // }
 
-  disableEditMode () {
+  disableEditMode() {
     this.setState({
       editingTypeSpecifier: false,
       editingType: false,
@@ -134,11 +157,11 @@ export class Phase extends React.Component {
     });
   }
 
-  createNewAction () {
+  createNewAction() {
     this.setState({ mode: 'add' });
   }
 
-  addAction (event) {
+  addAction(event) {
     event.preventDefault();
     this.props.setPhaseVisibility(this.props.phaseIndex, true);
     this.props.addAction(
@@ -159,47 +182,47 @@ export class Phase extends React.Component {
     });
   }
 
-  cancelActionCreation (event) {
+  cancelActionCreation(event) {
     event.preventDefault();
     this.setState({ actionDefaultAttributes: {}, actionTypeSpecifier: '' });
     this.disableEditMode();
   }
 
-  cancelDeletion () {
+  cancelDeletion() {
     this.setState({ deleting: false });
   }
 
-  delete () {
+  delete() {
     this.setState({ deleting: false });
-    forEach(this.props.phase.actions, action => {
+    forEach(this.props.phase.actions, (action) => {
       this.props.removeAction(action, this.props.phase.id);
     });
     this.props.removePhase(this.props.phase.id);
   }
 
-  onActionDefaultAttributeChange (key, value) {
+  onActionDefaultAttributeChange(key, value) {
     const { actionDefaultAttributes } = this.state;
     actionDefaultAttributes[key] = value;
     this.setState({ actionDefaultAttributes });
   }
 
-  onActionTypeSpecifierChange (event) {
+  onActionTypeSpecifierChange(event) {
     this.setState({ actionTypeSpecifier: event.target.value });
   }
 
-  onActionTypeInputChange (event) {
+  onActionTypeInputChange(event) {
     this.setState({ actionType: event.target.value });
   }
 
-  onActionTypeChange (value) {
+  onActionTypeChange(value) {
     this.setState({ actionType: value });
   }
 
-  onTypeSpecifierChange (event) {
+  onTypeSpecifierChange(event) {
     this.setState({ typeSpecifier: event.target.value });
   }
 
-  onTypeChange (value) {
+  onTypeChange(value) {
     this.setState(
       update(this.state, {
         type: {
@@ -209,11 +232,11 @@ export class Phase extends React.Component {
     );
   }
 
-  onTypeInputChange (event) {
+  onTypeInputChange(event) {
     this.setState({ type: event.target.value });
   }
 
-  updateTypeSpecifier (event) {
+  updateTypeSpecifier(event) {
     event.preventDefault();
     const updatedTypeSpecifier = {
       typeSpecifier: this.state.typeSpecifier,
@@ -223,7 +246,7 @@ export class Phase extends React.Component {
     this.disableEditMode();
   }
 
-  updatePhaseType (event) {
+  updatePhaseType(event) {
     event.preventDefault();
     const updatedPhaseType = {
       type: this.state.type,
@@ -233,7 +256,7 @@ export class Phase extends React.Component {
     this.disableEditMode();
   }
 
-  updatePhaseAttribute (attribute, attributeIndex, phaseId) {
+  updatePhaseAttribute(attribute, attributeIndex, phaseId) {
     this.setState({
       attributes: {
         [attributeIndex]: attribute
@@ -243,7 +266,7 @@ export class Phase extends React.Component {
     this.props.editPhaseAttribute(updatedPhaseAttribute);
   }
 
-  editPhaseWithForm (attributes, phaseId, disableEditMode = true) {
+  editPhaseWithForm(attributes, phaseId, disableEditMode = true) {
     this.setState({
       attributes: attributes,
       typeSpecifier: attributes.TypeSpecifier,
@@ -255,10 +278,10 @@ export class Phase extends React.Component {
     }
   }
 
-  generateTypeOptions (typeOptions) {
+  generateTypeOptions(typeOptions) {
     const options = [];
 
-    Object.keys(typeOptions).forEach(key => {
+    Object.keys(typeOptions).forEach((key) => {
       if (typeOptions.hasOwnProperty(key)) {
         options.push({
           label: typeOptions[key].name,
@@ -270,27 +293,34 @@ export class Phase extends React.Component {
     return options;
   }
 
-  generateDefaultAttributes (attributeTypes, type, showMore) {
+  generateDefaultAttributes(attributeTypes, type, showMore) {
     const attributes = {};
-    Object.keys(attributeTypes).forEach(key => {
-      if (attributeTypes.hasOwnProperty(key) && ((this.state.showMore && attributeTypes[key].allowedIn.indexOf(type) >= 0 && key !== 'ActionType') || (!this.state.showMore && attributeTypes[key].defaultIn.indexOf(type) >= 0)) && key !== 'TypeSpecifier') {
+    Object.keys(attributeTypes).forEach((key) => {
+      if (
+        attributeTypes.hasOwnProperty(key) &&
+        ((this.state.showMore &&
+          attributeTypes[key].allowedIn.indexOf(type) >= 0 &&
+          key !== 'ActionType') ||
+          (!this.state.showMore &&
+            attributeTypes[key].defaultIn.indexOf(type) >= 0)) &&
+        key !== 'TypeSpecifier'
+      ) {
         attributes[key] = attributeTypes[key];
       }
     });
     return attributes;
   }
 
-  onAddFormShowMoreAction (e) {
+  onAddFormShowMoreAction(e) {
     e.preventDefault();
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       showMore: !prevState.showMore
-    })
-    );
+    }));
   }
 
-  generateActions (actions) {
+  generateActions(actions) {
     const elements = [];
-    Object.keys(actions).forEach(key => {
+    Object.keys(actions).forEach((key) => {
       if (actions.hasOwnProperty(key)) {
         elements.push(
           <Action
@@ -318,7 +348,9 @@ export class Phase extends React.Component {
             displayMessage={this.props.displayMessage}
             setActionVisibility={this.props.setActionVisibility}
             setRecordVisibility={this.props.setRecordVisibility}
-            ref={element => { this.actions[actions[key]] = element; }}
+            ref={(element) => {
+              this.actions[actions[key]] = element;
+            }}
           />
         );
       }
@@ -326,7 +358,7 @@ export class Phase extends React.Component {
     return elements;
   }
 
-  generateDropdownItems () {
+  generateDropdownItems() {
     return [
       {
         text: 'Uusi toimenpide',
@@ -367,16 +399,19 @@ export class Phase extends React.Component {
     ];
   }
 
-  showAttributeButton (attributes) {
+  showAttributeButton(attributes) {
     const { attributeTypes } = this.props;
     const actualAttributes = [];
-    Object.keys(attributes).forEach(key => {
+    Object.keys(attributes).forEach((key) => {
       if (key !== 'TypeSpecifier' && key !== 'PhaseType') {
         actualAttributes.push(key);
       }
     });
-    Object.keys(attributeTypes).forEach(key => {
-      if (attributeTypes.hasOwnProperty(key) && attributeTypes[key].defaultIn.indexOf('phase') >= 0) {
+    Object.keys(attributeTypes).forEach((key) => {
+      if (
+        attributeTypes.hasOwnProperty(key) &&
+        attributeTypes[key].defaultIn.indexOf('phase') >= 0
+      ) {
         actualAttributes.push(key);
       }
     });
@@ -386,7 +421,7 @@ export class Phase extends React.Component {
     return false;
   }
 
-  renderPhaseButtons () {
+  renderPhaseButtons() {
     const phaseDropdownItems = this.generateDropdownItems();
 
     return (
@@ -419,11 +454,17 @@ export class Phase extends React.Component {
         {this.showAttributeButton(this.props.phase.attributes) && (
           <button
             className='btn btn-info btn-xs record-button pull-right'
-            onClick={() => this.props.setPhaseAttributesVisibility(this.props.phaseIndex, !this.props.phase.is_attributes_open)}
+            onClick={() =>
+              this.props.setPhaseAttributesVisibility(
+                this.props.phaseIndex,
+                !this.props.phase.is_attributes_open
+              )
+            }
           >
             <span
               className={
-                'fa ' + (this.props.phase.is_attributes_open ? 'fa-minus' : 'fa-plus')
+                'fa ' +
+                (this.props.phase.is_attributes_open ? 'fa-minus' : 'fa-plus')
               }
               aria-hidden='true'
             />
@@ -433,7 +474,7 @@ export class Phase extends React.Component {
     );
   }
 
-  renderBasicAttributes () {
+  renderBasicAttributes() {
     const { phase } = this.props;
     const classNames = classnames([
       'col-md-6',
@@ -448,7 +489,10 @@ export class Phase extends React.Component {
     );
     let phaseType = (
       <span className={classNames} onClick={() => this.editType()}>
-        {this.state.type}
+        {getDisplayLabelForAttribute({
+          attributeValue: this.state.type,
+          identifier: 'PhaseType'
+        })}
       </span>
     );
 
@@ -469,13 +513,22 @@ export class Phase extends React.Component {
         );
       }
       if (this.state.editingType) {
+        const phaseTypesAsOptions = Object.values(this.props.phaseTypes).map(
+          (pt) => ({
+            value: pt.value,
+            label: getDisplayLabelForAttribute({
+              attributeValue: pt.value,
+              identifier: 'PhaseType'
+            })
+          })
+        );
         phaseType = (
           <div className='col-md-6 phase-title-dropdown'>
             <form onSubmit={this.updatePhaseType}>
               <DropdownInput
                 type={'phase'}
                 valueState={this.state.type}
-                options={this.props.phaseTypes}
+                options={phaseTypesAsOptions}
                 onChange={this.onTypeChange}
                 onInputChange={this.onTypeInputChange}
                 onSubmit={this.updatePhaseType}
@@ -488,17 +541,39 @@ export class Phase extends React.Component {
 
     if (phase.is_open && phase.actions.length) {
       return (
-        <Sticky
-          className={
-            'phase-title ' +
-            (phase.is_attributes_open ? 'phase-open' : 'phase-closed')
-          }
-        >
-          <div className='basic-attributes'>
-            {phaseType}
-            {typeSpecifier}
-          </div>
-        </Sticky>
+        <RenderPropSticky topOffset={-1 * this.state.topOffset}>
+          {({
+            isFixed,
+            wrapperStyles,
+            wrapperRef,
+            holderStyles,
+            holderRef
+          }) => (
+            <div ref={holderRef} style={holderStyles}>
+              <div
+                className={isFixed ? 'phase-title-sticky' : 'phase-title'}
+                style={
+                  isFixed
+                    ? {
+                        ...wrapperStyles,
+                        ...{
+                          position: 'fixed',
+                          top: this.state.topOffset,
+                          left: 0
+                        }
+                      }
+                    : wrapperStyles
+                }
+                ref={wrapperRef}
+              >
+                <div className='basic-attributes'>
+                  {phaseType}
+                  {typeSpecifier}
+                </div>
+              </div>
+            </div>
+          )}
+        </RenderPropSticky>
       );
     }
     return (
@@ -516,7 +591,7 @@ export class Phase extends React.Component {
     );
   }
 
-  getTargetName () {
+  getTargetName() {
     const hasType = this.state.type && this.state.type.length;
     const hasTypeSpecifier =
       this.state.typeSpecifier && this.state.typeSpecifier.length;
@@ -525,209 +600,209 @@ export class Phase extends React.Component {
     return (this.state.type || '') + slash + (this.state.typeSpecifier || '');
   }
 
-  scrollToPhase () {
+  scrollToPhase() {
     if (this.element) {
-      window.scrollTo(0, this.element.offsetParent.offsetTop + this.element.offsetTop);
+      window.scrollTo(
+        0,
+        this.element.offsetParent.offsetTop + this.element.offsetTop
+      );
     }
   }
 
-  scrollToAction (actionId) {
+  scrollToAction(actionId) {
     const element = this.actions[actionId] || null;
     if (element) {
       element.scrollToAction();
     }
   }
 
-  scrollToActionRecord (actionId, recordId) {
+  scrollToActionRecord(actionId, recordId) {
     const action = this.actions[actionId] || null;
     if (action) {
       action.scrollToRecord(recordId);
     }
   }
 
-  render () {
+  render() {
     const { phase, phaseIndex } = this.props;
     const actionElements = this.generateActions(phase.actions);
 
     return (
-      <StickyContainer>
-        <div className='phase' ref={element => { this.element = element; }}>
-          <div className='box'>
-            {this.state.mode === 'edit' &&
-              this.state.editingPhase && (
-              <EditorForm
-                onShowMore={this.onEditFormShowMorePhase}
-                targetId={this.props.phase.id}
-                attributes={this.props.phase.attributes}
+      <div
+        className='phase'
+        ref={(element) => {
+          this.element = element;
+        }}
+      >
+        <div className='box'>
+          {this.state.mode === 'edit' && this.state.editingPhase && (
+            <EditorForm
+              onShowMore={this.onEditFormShowMorePhase}
+              targetId={this.props.phase.id}
+              attributes={this.props.phase.attributes}
+              attributeTypes={this.props.attributeTypes}
+              elementConfig={{
+                elementTypes: this.props.phaseTypes,
+                editWithForm: this.editPhaseWithForm
+              }}
+              editorConfig={{
+                type: 'phase',
+                action: 'edit'
+              }}
+              closeEditorForm={this.disableEditMode}
+              displayMessage={this.props.displayMessage}
+            />
+          )}
+          {this.state.mode === 'edit' && this.state.complementingPhase && (
+            <EditorForm
+              onShowMore={this.onEditFormShowMorePhase}
+              targetId={this.props.phase.id}
+              attributes={this.props.phase.attributes}
+              attributeTypes={this.props.attributeTypes}
+              elementConfig={{
+                elementTypes: this.props.phaseTypes,
+                editWithForm: this.editPhaseWithForm
+              }}
+              editorConfig={{
+                type: 'phase',
+                action: 'complement'
+              }}
+              closeEditorForm={this.disableEditMode}
+              displayMessage={this.props.displayMessage}
+            />
+          )}
+          {!this.state.editingPhase && !this.state.complementingPhase && (
+            <div>
+              <Attributes
+                element={phase}
+                documentState={this.props.documentState}
+                type={'phase'}
                 attributeTypes={this.props.attributeTypes}
-                elementConfig={{
-                  elementTypes: this.props.phaseTypes,
-                  editWithForm: this.editPhaseWithForm
-                }}
-                editorConfig={{
-                  type: 'phase',
-                  action: 'edit'
-                }}
-                closeEditorForm={this.disableEditMode}
-                displayMessage={this.props.displayMessage}
+                typeOptions={this.props.phaseTypes}
+                renderBasicAttributes={this.renderBasicAttributes}
+                renderButtons={this.renderPhaseButtons}
+                updateTypeSpecifier={this.updateTypeSpecifier}
+                updateType={this.updatePhaseType}
+                updateAttribute={this.updatePhaseAttribute}
+                showAttributes={phase.is_attributes_open}
               />
-            )}
-            {this.state.mode === 'edit' &&
-              this.state.complementingPhase && (
-              <EditorForm
-                onShowMore={this.onEditFormShowMorePhase}
-                targetId={this.props.phase.id}
-                attributes={this.props.phase.attributes}
-                attributeTypes={this.props.attributeTypes}
-                elementConfig={{
-                  elementTypes: this.props.phaseTypes,
-                  editWithForm: this.editPhaseWithForm
-                }}
-                editorConfig={{
-                  type: 'phase',
-                  action: 'complement'
-                }}
-                closeEditorForm={this.disableEditMode}
-                displayMessage={this.props.displayMessage}
-              />
-            )}
-            {!this.state.editingPhase &&
-              !this.state.complementingPhase && (
-              <div>
-                <Attributes
-                  element={phase}
-                  documentState={this.props.documentState}
-                  type={'phase'}
-                  attributeTypes={this.props.attributeTypes}
-                  typeOptions={this.props.phaseTypes}
-                  renderBasicAttributes={this.renderBasicAttributes}
-                  renderButtons={this.renderPhaseButtons}
-                  updateTypeSpecifier={this.updateTypeSpecifier}
-                  updateType={this.updatePhaseType}
-                  updateAttribute={this.updatePhaseAttribute}
-                  showAttributes={phase.is_attributes_open}
+              {this.state.mode === 'add' && (
+                <AddElementInput
+                  type='action'
+                  submit={this.addAction}
+                  typeOptions={this.generateTypeOptions(this.props.actionTypes)}
+                  defaultAttributes={this.generateDefaultAttributes(
+                    this.props.attributeTypes,
+                    'action'
+                  )}
+                  newDefaultAttributes={this.state.actionDefaultAttributes}
+                  newTypeSpecifier={this.state.actionTypeSpecifier}
+                  newType={this.state.actionType}
+                  onDefaultAttributeChange={this.onActionDefaultAttributeChange}
+                  onTypeSpecifierChange={this.onActionTypeSpecifierChange}
+                  onTypeChange={this.onActionTypeChange}
+                  onTypeInputChange={this.onActionTypeInputChange}
+                  cancel={this.cancelActionCreation}
+                  onAddFormShowMore={this.onAddFormShowMoreAction}
+                  showMoreOrLess={this.state.showMore}
                 />
-                {this.state.mode === 'add' && (
-                  <AddElementInput
-                    type='action'
-                    submit={this.addAction}
-                    typeOptions={this.generateTypeOptions(
-                      this.props.actionTypes
-                    )}
-                    defaultAttributes={this.generateDefaultAttributes(
-                      this.props.attributeTypes,
-                      'action'
-                    )}
-                    newDefaultAttributes={this.state.actionDefaultAttributes}
-                    newTypeSpecifier={this.state.actionTypeSpecifier}
-                    newType={this.state.actionType}
-                    onDefaultAttributeChange={this.onActionDefaultAttributeChange}
-                    onTypeSpecifierChange={this.onActionTypeSpecifierChange}
-                    onTypeChange={this.onActionTypeChange}
-                    onTypeInputChange={this.onActionTypeInputChange}
-                    cancel={this.cancelActionCreation}
-                    onAddFormShowMore={this.onAddFormShowMoreAction}
-                    showMoreOrLess={this.state.showMore}
-
-                  />
-                )}
-                <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>
-                  {actionElements}
-                </div>
+              )}
+              <div className={'actions ' + (phase.is_open ? '' : 'hidden')}>
+                {actionElements}
               </div>
-            )}
-            {this.state.deleting && (
-              <Popup
-                content={
-                  <DeleteView
-                    type='phase'
-                    target={this.state.typeSpecifier || this.state.type || '---'}
-                    action={() => this.delete()}
-                    cancel={() => this.cancelDeletion()}
-                  />
-                }
-                closePopup={() => this.cancelDeletion()}
-              />
-            )}
-            {this.state.showReorderView && (
-              <Popup
-                content={
-                  <ReorderView
-                    target='action'
-                    toggleReorderView={() => this.toggleReorderView()}
-                    keys={this.props.phase.actions}
-                    values={this.props.actions}
-                    changeOrder={this.props.changeOrder}
-                    parent={phaseIndex}
-                    attributeTypes={this.props.attributeTypes}
-                    parentName={this.getTargetName()}
-                  />
-                }
-                closePopup={() => this.toggleReorderView()}
-              />
-            )}
-            {this.state.showImportView && (
-              <Popup
-                content={
-                  <ImportView
-                    level='action'
-                    toggleImportView={this.toggleImportView}
-                    title='toimenpiteitä'
-                    targetText={
-                      'käsittelyvaiheeseen "' + this.getTargetName() + '"'
-                    }
-                    itemsToImportText='toimenpiteet'
-                    phasesOrder={this.props.phasesOrder}
-                    phases={this.props.phases}
-                    actions={this.props.actions}
-                    records={this.props.records}
-                    importItems={this.props.importItems}
-                    parent={phaseIndex}
-                    showItems={() =>
-                      this.props.setPhaseVisibility(phaseIndex, true)
-                    }
-                  />
-                }
-                closePopup={() => this.toggleImportView()}
-              />
-            )}
-          </div>
+            </div>
+          )}
+          {this.state.deleting && (
+            <Popup
+              content={
+                <DeleteView
+                  type='phase'
+                  target={this.state.typeSpecifier || this.state.type || '---'}
+                  action={() => this.delete()}
+                  cancel={() => this.cancelDeletion()}
+                />
+              }
+              closePopup={() => this.cancelDeletion()}
+            />
+          )}
+          {this.state.showReorderView && (
+            <Popup
+              content={
+                <ReorderView
+                  target='action'
+                  toggleReorderView={() => this.toggleReorderView()}
+                  keys={this.props.phase.actions}
+                  values={this.props.actions}
+                  changeOrder={this.props.changeOrder}
+                  parent={phaseIndex}
+                  attributeTypes={this.props.attributeTypes}
+                  parentName={this.getTargetName()}
+                />
+              }
+              closePopup={() => this.toggleReorderView()}
+            />
+          )}
+          {this.state.showImportView && (
+            <Popup
+              content={
+                <ImportView
+                  level='action'
+                  toggleImportView={this.toggleImportView}
+                  title='toimenpiteitä'
+                  targetText={
+                    'käsittelyvaiheeseen "' + this.getTargetName() + '"'
+                  }
+                  itemsToImportText='toimenpiteet'
+                  phasesOrder={this.props.phasesOrder}
+                  phases={this.props.phases}
+                  actions={this.props.actions}
+                  records={this.props.records}
+                  importItems={this.props.importItems}
+                  parent={phaseIndex}
+                  showItems={() =>
+                    this.props.setPhaseVisibility(phaseIndex, true)
+                  }
+                />
+              }
+              closePopup={() => this.toggleImportView()}
+            />
+          )}
         </div>
-      </StickyContainer>
+      </div>
     );
   }
 }
 
 Phase.propTypes = {
-  actionTypes: React.PropTypes.object.isRequired,
-  actions: React.PropTypes.object.isRequired,
-  addAction: React.PropTypes.func.isRequired,
-  addRecord: React.PropTypes.func.isRequired,
-  attributeTypes: React.PropTypes.object.isRequired,
-  changeOrder: React.PropTypes.func.isRequired,
-  displayMessage: React.PropTypes.func.isRequired,
-  documentState: React.PropTypes.string.isRequired,
-  editAction: React.PropTypes.func.isRequired,
-  editActionAttribute: React.PropTypes.func.isRequired,
-  editPhase: React.PropTypes.func.isRequired,
-  editPhaseAttribute: React.PropTypes.func.isRequired,
-  editRecord: React.PropTypes.func.isRequired,
-  editRecordAttribute: React.PropTypes.func.isRequired,
-  importItems: React.PropTypes.func.isRequired,
-  phase: React.PropTypes.object.isRequired,
-  phaseIndex: React.PropTypes.string.isRequired,
-  phaseTypes: React.PropTypes.object.isRequired,
-  phases: React.PropTypes.object.isRequired || React.PropTypes.array.isRequired,
-  phasesOrder: React.PropTypes.array.isRequired,
-  recordTypes: React.PropTypes.object.isRequired,
-  records: React.PropTypes.object.isRequired,
-  removeAction: React.PropTypes.func.isRequired,
-  removePhase: React.PropTypes.func.isRequired,
-  removeRecord: React.PropTypes.func.isRequired,
-  setActionVisibility: React.PropTypes.func.isRequired,
-  setPhaseAttributesVisibility: React.PropTypes.func.isRequired,
-  setPhaseVisibility: React.PropTypes.func.isRequired,
-  setRecordVisibility: React.PropTypes.func.isRequired
+  actionTypes: PropTypes.object.isRequired,
+  actions: PropTypes.object.isRequired,
+  addAction: PropTypes.func.isRequired,
+  addRecord: PropTypes.func.isRequired,
+  attributeTypes: PropTypes.object.isRequired,
+  changeOrder: PropTypes.func.isRequired,
+  displayMessage: PropTypes.func.isRequired,
+  documentState: PropTypes.string.isRequired,
+  editAction: PropTypes.func.isRequired,
+  editActionAttribute: PropTypes.func.isRequired,
+  editPhase: PropTypes.func.isRequired,
+  editPhaseAttribute: PropTypes.func.isRequired,
+  editRecord: PropTypes.func.isRequired,
+  editRecordAttribute: PropTypes.func.isRequired,
+  importItems: PropTypes.func.isRequired,
+  phase: PropTypes.object.isRequired,
+  phaseIndex: PropTypes.string.isRequired,
+  phaseTypes: PropTypes.object.isRequired,
+  phases: PropTypes.object.isRequired || PropTypes.array.isRequired,
+  phasesOrder: PropTypes.array.isRequired,
+  recordTypes: PropTypes.object.isRequired,
+  records: PropTypes.object.isRequired,
+  removeAction: PropTypes.func.isRequired,
+  removePhase: PropTypes.func.isRequired,
+  removeRecord: PropTypes.func.isRequired,
+  setActionVisibility: PropTypes.func.isRequired,
+  setPhaseAttributesVisibility: PropTypes.func.isRequired,
+  setPhaseVisibility: PropTypes.func.isRequired,
+  setRecordVisibility: PropTypes.func.isRequired
 };
 
 Phase.defaultProps = {

@@ -1,4 +1,4 @@
-@import '../../styles/vendor/hel-components/variables';
+@import '../../../styles/vendor/hel-components/variables';
 
 $attribute-input-height: 31px;
 
@@ -17,6 +17,7 @@ $attribute-input-height: 31px;
 .basic-attributes {
   vertical-align: middle;
   .form-control {
+    z-index: 9;
     height: 34px;
   }
 

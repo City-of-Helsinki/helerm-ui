@@ -1,14 +1,17 @@
 import React from 'react';
-import Select from 'react-select';
+import PropTypes from 'prop-types';
+import CreatableSelect from 'react-select/creatable';
 import { find, forEach, includes, isEmpty, map } from 'lodash';
 import KeyStrokeSupport from '../../../decorators/key-stroke-support';
 import './AddElementInput.scss';
+import { resolveSelectValues } from '../../../utils/helpers';
+import { getDisplayLabelForAttribute } from '../../../utils/attributeHelper';
 
-function onPromptCreate (label) {
+function onPromptCreate(label) {
   return `Lisää "${label}"`;
 }
 
-function resolveHeader (type) {
+function resolveHeader(type) {
   if (type === 'phase') {
     return 'Uusi käsittelyvaihe';
   }
@@ -17,7 +20,7 @@ function resolveHeader (type) {
   }
 }
 
-function resolveTypePlaceHolder (type) {
+function resolveTypePlaceHolder(type) {
   if (type === 'phase') {
     return 'Käsittelyvaiheen tyyppi';
   }
@@ -26,7 +29,7 @@ function resolveTypePlaceHolder (type) {
   }
 }
 
-function resolveSpecifierPlaceHolder (type) {
+function resolveSpecifierPlaceHolder(type) {
   if (type === 'phase') {
     return 'Muu käsittelyvaihe';
   }
@@ -35,7 +38,7 @@ function resolveSpecifierPlaceHolder (type) {
   }
 }
 
-function resolveSelectPlaceHolder (type) {
+function resolveSelectPlaceHolder(type) {
   if (type === 'phase') {
     return 'Valitse käsittelyvaihe...';
   }
@@ -44,23 +47,23 @@ function resolveSelectPlaceHolder (type) {
   }
 }
 
-function resolvePlaceHolder (fieldName) {
+function resolvePlaceHolder(fieldName) {
   return `Valitse ${fieldName.toLowerCase()}...`;
 }
 
-function resolveSelectOptions (values, fieldValue) {
+function resolveSelectOptions(values, fieldValue) {
   const options = [];
-  Object.keys(values).forEach(key => {
+  Object.keys(values).forEach((key) => {
     options.push({
-      label: values[key].value,
+      label: getDisplayLabelForAttribute({
+        attributeValue: values[key].value,
+        id: values[key].id
+      }),
       value: values[key].value
     });
   });
   if (fieldValue) {
-    const valueArray =
-      fieldValue instanceof Array
-        ? fieldValue
-        : [fieldValue];
+    const valueArray = fieldValue instanceof Array ? fieldValue : [fieldValue];
     forEach(valueArray, function (value) {
       if (
         !find(options, function (option) {
@@ -77,11 +80,61 @@ function resolveSelectOptions (values, fieldValue) {
   return options;
 }
 
-function resolveSelectedOption (option) {
+function resolveSelectedOption(option) {
   if (option instanceof Array) {
     return option.length ? map(option, 'value') : null;
   }
   return option && option.value ? option.value : option;
+}
+
+function renderInput(
+  defaultAttributes,
+  newDefaultAttributes,
+  key,
+  onDefaultAttributeChange,
+  type,
+  submit
+) {
+  if (defaultAttributes[key].values.length !== 0) {
+    return (
+      <CreatableSelect
+        key={key}
+        openMenuOnFocus={true}
+        isClearable={true}
+        className={`form-control edit-${type}-type__input`}
+        value={resolveSelectValues(
+          resolveSelectOptions(
+            defaultAttributes[key].values,
+            newDefaultAttributes[key]
+          ),
+          newDefaultAttributes[key],
+          includes(defaultAttributes[key].multiIn, type)
+        )}
+        onChange={(option) =>
+          onDefaultAttributeChange(key, resolveSelectedOption(option))
+        }
+        isMulti={includes(defaultAttributes[key].multiIn, type)}
+        options={resolveSelectOptions(
+          defaultAttributes[key].values,
+          newDefaultAttributes[key]
+        )}
+        placeholder={resolvePlaceHolder(defaultAttributes[key].name)}
+        formatCreateLabel={onPromptCreate}
+        delimiter=';'
+      />
+    );
+  }
+  return (
+    <input
+      type='text'
+      className='form-control'
+      key={key}
+      value={newDefaultAttributes[key] || ''}
+      onChange={(e) => onDefaultAttributeChange(key, e.target.value)}
+      onSubmit={submit}
+      placeholder={defaultAttributes[key].name}
+    />
+  );
 }
 
 export const AddElementInput = ({
@@ -106,21 +159,22 @@ export const AddElementInput = ({
       {/* ActionType disabled for now. */}
       {type !== 'action' && (
         <div className='col-xs-12 col-md-6 add-element-col'>
-          {typeOptions.length !== 0
-            ? <Select.Creatable
-              autoBlur={true}
-              openOnFocus={true}
+          {typeOptions.length !== 0 ? (
+            <CreatableSelect
+              openMenuOnFocus={true}
               className={`form-control edit-${type}-type__input`}
-              clearable={true}
-              value={newType}
+              isClearable={true}
+              value={resolveSelectOptions(typeOptions, newType).find(
+                ({ value }) => value === newType
+              )}
               onChange={(option) => onTypeChange(option ? option.value : null)}
-              onBlur={() => null}
               autoFocus={false}
               options={resolveSelectOptions(typeOptions, newType)}
               placeholder={resolveSelectPlaceHolder(type)}
-              promptTextCreator={onPromptCreate}
+              formatCreateLabel={onPromptCreate}
             />
-            : <input
+          ) : (
+            <input
               type='text'
               className='form-control'
               value={newType}
@@ -128,7 +182,7 @@ export const AddElementInput = ({
               onSubmit={submit}
               placeholder={resolveTypePlaceHolder(type)}
             />
-          }
+          )}
         </div>
       )}
       <div className='col-xs-12 col-md-6 add-element-col'>
@@ -142,61 +196,48 @@ export const AddElementInput = ({
         />
       </div>
       {!isEmpty(defaultAttributes) &&
-      Object.keys(defaultAttributes).map(key => (
-        <div className='col-xs-12 col-md-6' key={`${type}_${key}`}>
-          { defaultAttributes[key].values.length !== 0
-            ? <Select.Creatable
-              autoBlur={true}
-              key={key}
-              openOnFocus={true}
-              className={`form-control edit-${type}-type__input`}
-              clearable={true}
-              value={newDefaultAttributes[key] || ''}
-              onChange={(option) => onDefaultAttributeChange(key, resolveSelectedOption(option))}
-              onBlur={() => null}
-              autoFocus={false}
-              multi={includes(defaultAttributes[key].multiIn, type)}
-              options={resolveSelectOptions(defaultAttributes[key].values, newDefaultAttributes[key])}
-              placeholder={resolvePlaceHolder(defaultAttributes[key].name)}
-              promptTextCreator={onPromptCreate}
-              delimiter=';'
-            />
-            : <input
-              type='text'
-              className='form-control'
-              key={key}
-              value={newDefaultAttributes[key] || ''}
-              onChange={(e) => onDefaultAttributeChange(key, e.target.value)}
-              onSubmit={submit}
-              placeholder={defaultAttributes[key].name}
-            />
-          }
-        </div>
-      ))}
+        Object.keys(defaultAttributes).map((key) => (
+          <div className='col-xs-12 col-md-6' key={`${type}_${key}`}>
+            {renderInput(
+              defaultAttributes,
+              newDefaultAttributes,
+              key,
+              onDefaultAttributeChange,
+              type,
+              submit
+            )}
+          </div>
+        ))}
       <div className='add-element-buttons'>
-        <button className='btn btn-success' onClick={onAddFormShowMore}>{showMoreOrLess ? 'Näytä vähemmän' : 'Näytä lisää'}</button>
-        <button className='btn btn-danger' onClick={cancel}>Peruuta</button>
-        <button className='btn btn-primary' type='submit'>OK</button>
+        <button className='btn btn-success' onClick={onAddFormShowMore}>
+          {showMoreOrLess ? 'Näytä vähemmän' : 'Näytä lisää'}
+        </button>
+        <button className='btn btn-danger' onClick={cancel}>
+          Peruuta
+        </button>
+        <button className='btn btn-primary' type='submit'>
+          OK
+        </button>
       </div>
     </form>
   );
 };
 
 AddElementInput.propTypes = {
-  cancel: React.PropTypes.func.isRequired,
-  defaultAttributes: React.PropTypes.object.isRequired,
-  newDefaultAttributes: React.PropTypes.object.isRequired,
-  newType: React.PropTypes.string.isRequired,
-  newTypeSpecifier: React.PropTypes.string.isRequired,
-  onAddFormShowMore: React.PropTypes.func.isRequired,
-  onDefaultAttributeChange: React.PropTypes.func.isRequired,
-  onTypeChange: React.PropTypes.func.isRequired,
-  onTypeInputChange: React.PropTypes.func.isRequired,
-  onTypeSpecifierChange: React.PropTypes.func.isRequired,
-  showMoreOrLess: React.PropTypes.bool,
-  submit: React.PropTypes.func.isRequired,
-  type: React.PropTypes.string.isRequired,
-  typeOptions: React.PropTypes.array.isRequired
+  cancel: PropTypes.func.isRequired,
+  defaultAttributes: PropTypes.object.isRequired,
+  newDefaultAttributes: PropTypes.object.isRequired,
+  newType: PropTypes.string.isRequired,
+  newTypeSpecifier: PropTypes.string.isRequired,
+  onAddFormShowMore: PropTypes.func.isRequired,
+  onDefaultAttributeChange: PropTypes.func.isRequired,
+  onTypeChange: PropTypes.func.isRequired,
+  onTypeInputChange: PropTypes.func.isRequired,
+  onTypeSpecifierChange: PropTypes.func.isRequired,
+  showMoreOrLess: PropTypes.bool,
+  submit: PropTypes.func.isRequired,
+  type: PropTypes.string.isRequired,
+  typeOptions: PropTypes.array.isRequired
 };
 
 export default KeyStrokeSupport(AddElementInput);

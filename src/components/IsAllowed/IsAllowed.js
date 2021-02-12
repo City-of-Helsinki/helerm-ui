@@ -1,4 +1,5 @@
-import React, { PropTypes, Children } from 'react';
+import React, { Children } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { checkPermissions } from '../../utils/helpers';

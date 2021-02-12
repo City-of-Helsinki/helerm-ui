@@ -1,26 +1,33 @@
 .helerm-info-view {
-    .helerm-navigation .navigation-menu .navigation-container {
-        position: relative;
-        float: left;
-        display: block;
-        min-height: 100vh;
-        height: auto;
-    }
-    .navigation-header {
-        display: none;
-    }
-    .navigation-toggle {
-        display: none;
-    }
-    .navigation-sticky {
-        transform: none !important;
-        position: relative !important;
-    }
+  .helerm-navigation .navigation-menu .navigation-container {
+    position: relative;
+    float: left;
+    display: block;
+    min-height: 100vh;
+    height: auto;
+  }
+  .navigation-header {
+    display: none;
+  }
+  .navigation-toggle {
+    display: none;
+  }
+  .navigation-sticky {
+    transform: none !important;
+    position: relative !important;
+  }
 }
 
 .info-view {
-    padding: 30px 15px;
-    width: 35vw;
-    float: right;
-    word-break: break-word;
+  padding: 30px 15px;
+  width: 35vw;
+  float: right;
+  word-break: break-word;
+}
+
+.info-view-center {
+  padding: 30px 15px;
+  width: 35vw;
+  margin: 0 auto;
+  word-break: break-word;
 }

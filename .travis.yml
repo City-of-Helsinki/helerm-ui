@@ -29,7 +29,7 @@ cache:
 
 # Our only test ATM is to build the product
 script:
-  - yarn run deploy:prod
+  - yarn run build
 
 # We gather codecov after successful builds
 after_success:

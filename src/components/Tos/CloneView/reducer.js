@@ -1,11 +1,12 @@
 import update from 'immutability-helper';
 import { createAction } from 'redux-actions';
 
-import { REQUEST_TOS, TOS_ERROR } from '../reducer';
 import { normalizeTosFromApi } from '../../../utils/helpers';
 import { default as api } from '../../../utils/api';
 
 export const RECEIVE_TEMPLATE = 'receiveTemplateAction';
+export const REQUEST_TOS = 'requestTosAction';
+export const TOS_ERROR = 'tosErrorAction';
 
 export function cloneFromTemplate (endpoint, id) {
   return function (dispatch) {

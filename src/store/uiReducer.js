@@ -2,9 +2,9 @@ import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
 import find from 'lodash/find';
 
-import { default as api } from '../utils/api';
+import api from '../utils/api';
 
-const initialState = {
+export const initialState = {
   isFetching: false,
   phaseTypes: {},
   actionTypes: {},
@@ -17,9 +17,9 @@ export const RECEIVE_ATTRIBUTE_TYPES = 'receiveAttributeTypesAction';
 export const RECEIVE_TEMPLATES = 'receiveTemplatesAction';
 export const ERROR_FROM_API = 'errorFromApiAction';
 
-export function receiveAttributeTypes (attributes, validationRules) {
+export function receiveAttributeTypes(attributes, validationRules) {
   const attributeTypeList = {};
-  attributes.results.map(result => {
+  attributes.results.forEach((result) => {
     if (result.values) {
       let allowedIn = [];
       let defaultIn = [];
@@ -30,25 +30,34 @@ export function receiveAttributeTypes (attributes, validationRules) {
       let allowValuesOutsideChoicesIn = [];
 
       // Add rules where attribute is allowed to be
-      Object.keys(validationRules).forEach(rule => {
-        if (validationRules.hasOwnProperty(rule) && validationRules[rule].properties[result.identifier]) {
+      Object.keys(validationRules).forEach((rule) => {
+        if (
+          validationRules.hasOwnProperty(rule) &&
+          validationRules[rule].properties[result.identifier]
+        ) {
           allowedIn.push(rule);
         }
       });
 
       // Add basic required if so
-      validationRules.record.required.map(rule => {
+      validationRules.record.required.forEach((rule) => {
         if (rule === result.identifier) {
           required = true;
         }
       });
 
       // Add rules where multi selection is allowed
-      Object.keys(validationRules).map(key => {
-        if (validationRules[key].properties[result.identifier] && validationRules[key].properties[result.identifier].anyOf) {
-          const anyOfArray = find(validationRules[key].properties[result.identifier].anyOf, (anyOf) => {
-            return anyOf.type === 'array';
-          });
+      Object.keys(validationRules).forEach((key) => {
+        if (
+          validationRules[key].properties[result.identifier] &&
+          validationRules[key].properties[result.identifier].anyOf
+        ) {
+          const anyOfArray = find(
+            validationRules[key].properties[result.identifier].anyOf,
+            (anyOf) => {
+              return anyOf.type === 'array';
+            }
+          );
           if (anyOfArray) {
             multiIn.push(key);
           }
@@ -56,64 +65,68 @@ export function receiveAttributeTypes (attributes, validationRules) {
       });
 
       // Add requiredIn attributes
-      Object.keys(validationRules).map(key => {
-        validationRules[key].required && validationRules[key].required.map(rule => {
-          if (rule === result.identifier) {
-            requiredIn.push(key);
-          }
-        });
+      Object.keys(validationRules).forEach((key) => {
+        validationRules[key].required &&
+          validationRules[key].required.forEach((rule) => {
+            if (rule === result.identifier) {
+              requiredIn.push(key);
+            }
+          });
       });
 
       // Add defaultIn attributes
       // hard coded now, todo: replace with backend definition
-      Object.keys(validationRules).map(key => {
+      Object.keys(validationRules).forEach((key) => {
         if (result.identifier === 'InformationSystem') {
           defaultIn.push(key);
         }
       });
 
       // Add conditional rules if any
-      Object.keys(validationRules).map(key => {
-        validationRules[key].allOf && validationRules[key].allOf.map(oneOf => {
-          Object.keys(oneOf).map(oneOfKey => {
-            const rules = oneOf[oneOfKey];
-            // We're only interested in required-keys
-            const required = rules[0].required;
+      Object.keys(validationRules).forEach((key) => {
+        validationRules[key].allOf &&
+          validationRules[key].allOf.forEach((oneOf) => {
+            Object.keys(oneOf).forEach((oneOfKey) => {
+              const rules = oneOf[oneOfKey];
+              // We're only interested in required-keys
+              const requiredKeys = rules[0].required;
 
-            required.map(requiredIndentifier => {
-              Object.keys(rules[0].properties).map(property => {
-                let values = [];
-                Object.keys(rules[0].properties[property]).map(key => {
-                  rules[0].properties[property][key].map(value => {
-                    values.push(value);
+              requiredKeys.forEach((requiredIndentifier) => {
+                Object.keys(rules[0].properties).forEach((property) => {
+                  let values = [];
+                  Object.keys(rules[0].properties[property]).forEach((pkey) => {
+                    rules[0].properties[property][pkey].forEach((value) => {
+                      values.push(value);
+                    });
                   });
-                });
 
-                const exists = !!find(requiredIf, (reqObj) => {
-                  return reqObj.key === property;
-                });
-
-                if (requiredIndentifier === result.identifier && !exists) {
-                  requiredIf.push({
-                    key: property,
-                    values
+                  const exists = !!find(requiredIf, (reqObj) => {
+                    return reqObj.key === property;
                   });
-                }
+
+                  if (requiredIndentifier === result.identifier && !exists) {
+                    requiredIf.push({
+                      key: property,
+                      values
+                    });
+                  }
+                });
               });
             });
           });
-        });
       });
 
       // Add allow values outside choices rule
-      Object.keys(validationRules).map(key => {
+      Object.keys(validationRules).forEach((key) => {
         validationRules[key].extra_validations &&
-        validationRules[key].extra_validations.allow_values_outside_choices &&
-        validationRules[key].extra_validations.allow_values_outside_choices.map(field => {
-          if (field === result.identifier) {
-            allowValuesOutsideChoicesIn.push(key);
-          }
-        });
+          validationRules[key].extra_validations.allow_values_outside_choices &&
+          validationRules[
+            key
+          ].extra_validations.allow_values_outside_choices.forEach((field) => {
+            if (field === result.identifier) {
+              allowValuesOutsideChoicesIn.push(key);
+            }
+          });
       });
 
       attributeTypeList[result.identifier] = {
@@ -134,32 +147,39 @@ export function receiveAttributeTypes (attributes, validationRules) {
   return createAction(RECEIVE_ATTRIBUTE_TYPES)(attributeTypeList);
 }
 
-export function receiveTemplates ({ results }) {
-  const onlyIdAndName = results.map(item => ({ id: item.id, name: item.name }));
+export function receiveTemplates({ results }) {
+  const onlyIdAndName = results.map((item) => ({
+    id: item.id,
+    name: item.name
+  }));
   return createAction(RECEIVE_TEMPLATES)(onlyIdAndName);
 }
 
-export function fetchAttributeTypes () {
+export function fetchAttributeTypes() {
   return function (dispatch) {
     dispatch(createAction('requestFromApiAction')());
-    return api.get('attribute/schemas')
-      .then(response => response.json())
-      .then(validationRules => {
-        return api.get('attribute', { page_size: 999 })
-          .then(response => response.json())
-          .then(json =>
-            dispatch(receiveAttributeTypes(json, validationRules)));
+    return api
+      .get('attribute/schemas')
+      .then((response) => response.json())
+      .then((validationRules) => {
+        return api
+          .get('attribute', { page_size: 999 })
+          .then((response) => response.json())
+          .then((json) =>
+            dispatch(receiveAttributeTypes(json, validationRules))
+          );
       })
       .catch(() => dispatch(createAction(ERROR_FROM_API)()));
   };
 }
 
-export function fetchTemplates () {
+export function fetchTemplates() {
   return function (dispatch) {
     dispatch(createAction('requestFromApiAction')());
-    return api.get('template')
-      .then(response => response.json())
-      .then(res => {
+    return api
+      .get('template')
+      .then((response) => response.json())
+      .then((res) => {
         dispatch(receiveTemplates(res));
       })
       .catch(() => dispatch(createAction(ERROR_FROM_API)()));
@@ -181,7 +201,7 @@ const receiveAttributeTypesAction = (state, { payload }) => {
   const recordTypeList = {};
 
   const trimList = (types, list) => {
-    types.values.map(result => {
+    types.values.forEach((result) => {
       const trimmedResult = result.id.replace(/-/g, '');
       list[trimmedResult] = {
         id: result.id,
@@ -217,9 +237,12 @@ const errorFromApiAction = (state) => {
   });
 };
 
-export default handleActions({
-  requestFromApiAction,
-  receiveAttributeTypesAction,
-  receiveTemplatesAction,
-  errorFromApiAction
-}, initialState);
+export default handleActions(
+  {
+    requestFromApiAction,
+    receiveAttributeTypesAction,
+    receiveTemplatesAction,
+    errorFromApiAction
+  },
+  initialState
+);

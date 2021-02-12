@@ -1,24 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
+import { resolveReturnValues, resolveSelectValues } from '../../utils/helpers';
 
-const SearchFilter = ({ placeholder, value, options, handleChange, multi, className, isVisible }) => {
+const SearchFilter = ({
+  placeholder,
+  value,
+  options,
+  handleChange,
+  multi,
+  className,
+  isVisible
+}) => {
   if (!isVisible) {
     return null;
   }
-
   return (
     <div className={className}>
       <Select
-        autoBlur={true}
+        className={'Select'}
+        noOptionsMessage={() => 'Ei valintoja'}
+        blurInputOnSelect={true}
         placeholder={placeholder}
-        value={value}
-        multi={multi}
-        joinValues={true}
-        clearable={false}
-        resetValue={options}
+        value={resolveSelectValues(options, value, multi)}
+        isMulti={multi}
         options={options}
-        onChange={handleChange}
+        isClearable={true}
+        onChange={(emittedValue) =>
+          handleChange(resolveReturnValues(emittedValue, multi))
+        }
       />
     </div>
   );

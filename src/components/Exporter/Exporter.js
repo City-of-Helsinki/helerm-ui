@@ -10,9 +10,21 @@ const CLASSIFICATION_ATTRIBUTES = [
   { attribute: 'code', name: 'Koodi', type: 'classification' },
   { attribute: 'name', name: 'Nimi', type: 'classification' },
   { attribute: 'description', name: 'Kuvaus', type: 'classification' },
-  { attribute: 'descriptionInternal', name: 'Sisäinen kuvaus', type: 'classification' },
-  { attribute: 'relatedClassification', name: 'Liittyvä tehtäväluokka', type: 'classification' },
-  { attribute: 'additionalInformation', name: 'Lisätiedot', type: 'classification' }
+  {
+    attribute: 'descriptionInternal',
+    name: 'Sisäinen kuvaus',
+    type: 'classification'
+  },
+  {
+    attribute: 'relatedClassification',
+    name: 'Liittyvä tehtäväluokka',
+    type: 'classification'
+  },
+  {
+    attribute: 'additionalInformation',
+    name: 'Lisätiedot',
+    type: 'classification'
+  }
 ];
 
 export const EXPORT_OPTIONS = [
@@ -57,7 +69,11 @@ const getAllAttributes = (item) => {
   });
 
   // // Add two blank, merge attributes of each items & sort alphabetically
-  return [ null, null, ...allAttributes.reduce((a, b) => [...new Set([...a, b])], []).sort() ];
+  return [
+    null,
+    null,
+    ...allAttributes.reduce((a, b) => [...new Set([...a, b])], []).sort()
+  ];
 };
 
 /**
@@ -81,7 +97,7 @@ const createWorkBook = (attributeTypes, filename, items) => {
 
   items.forEach((item) => {
     const headers = getAllAttributes(item);
-    const names = headers.map(header => {
+    const names = headers.map((header) => {
       return attributeTypes && attributeTypes.hasOwnProperty(header)
         ? attributeTypes[header].name || null
         : null;
@@ -109,25 +125,32 @@ const createWorkBook = (attributeTypes, filename, items) => {
 };
 
 const getAttributes = (attributeTypes, type) => {
-  return Object.keys(attributeTypes || {}).reduce((acc, attribute) => {
-    if (attributeTypes.hasOwnProperty(attribute) && attributeTypes[attribute].allowedIn && includes(attributeTypes[attribute].allowedIn, type)) {
-      acc.push({
-        attribute,
-        index: attributeTypes[attribute].index || 100,
-        name: attributeTypes[attribute].name,
-        type
-      });
-    }
-    return acc;
-  }, []).sort((a, b) => a.index - b.index);
+  return Object.keys(attributeTypes || {})
+    .reduce((acc, attribute) => {
+      if (
+        attributeTypes.hasOwnProperty(attribute) &&
+        attributeTypes[attribute].allowedIn &&
+        includes(attributeTypes[attribute].allowedIn, type)
+      ) {
+        acc.push({
+          attribute,
+          index: attributeTypes[attribute].index || 100,
+          name: attributeTypes[attribute].name,
+          type
+        });
+      }
+      return acc;
+    }, [])
+    .sort((a, b) => a.index - b.index);
 };
 
 const getItemAttributes = (attributes, item) => {
   const values = [];
-  attributes.forEach(attr => {
-    const value = item.attributes && item.attributes.hasOwnProperty(attr.attribute)
-      ? item.attributes[attr.attribute]
-      : null;
+  attributes.forEach((attr) => {
+    const value =
+      item.attributes && item.attributes.hasOwnProperty(attr.attribute)
+        ? item.attributes[attr.attribute]
+        : null;
     values.push(isArray(value) ? value.join(', ') : value);
   });
   return values;
@@ -142,7 +165,13 @@ const createSingleSheetWorkBook = (attributeTypes, filename, items) => {
   const attributes = [];
   const titles = [];
 
-  [...CLASSIFICATION_ATTRIBUTES, ...functionAttributes, ...phaseAttributes, ...actionAttributes, ...recordAttributes].forEach(attr => {
+  [
+    ...CLASSIFICATION_ATTRIBUTES,
+    ...functionAttributes,
+    ...phaseAttributes,
+    ...actionAttributes,
+    ...recordAttributes
+  ].forEach((attr) => {
     attributes.push(`${attr.type}.${attr.attribute}`);
     titles.push(attr.name);
   });
@@ -152,8 +181,10 @@ const createSingleSheetWorkBook = (attributeTypes, filename, items) => {
   items.forEach((item) => {
     const cols = [];
 
-    CLASSIFICATION_ATTRIBUTES.forEach(attr => {
-      cols.push(item.hasOwnProperty(attr.attribute) ? item[attr.attribute] : null);
+    CLASSIFICATION_ATTRIBUTES.forEach((attr) => {
+      cols.push(
+        item.hasOwnProperty(attr.attribute) ? item[attr.attribute] : null
+      );
     });
 
     cols.push(...getItemAttributes(functionAttributes, item));
@@ -166,16 +197,26 @@ const createSingleSheetWorkBook = (attributeTypes, filename, items) => {
 
         action.records.forEach((record) => {
           const recordCols = getItemAttributes(recordAttributes, record);
-          XLSX.utils.sheet_add_aoa(workSheet, [[...cols, ...phaseCols, ...actionCols, ...recordCols]], { origin: -1 });
+          XLSX.utils.sheet_add_aoa(
+            workSheet,
+            [[...cols, ...phaseCols, ...actionCols, ...recordCols]],
+            { origin: -1 }
+          );
         });
 
         if (isEmpty(action.records)) {
-          XLSX.utils.sheet_add_aoa(workSheet, [[...cols, ...phaseCols, ...actionCols]], { origin: -1 });
+          XLSX.utils.sheet_add_aoa(
+            workSheet,
+            [[...cols, ...phaseCols, ...actionCols]],
+            { origin: -1 }
+          );
         }
       });
 
       if (isEmpty(phase.actions)) {
-        XLSX.utils.sheet_add_aoa(workSheet, [[...cols, ...phaseCols]], { origin: -1 });
+        XLSX.utils.sheet_add_aoa(workSheet, [[...cols, ...phaseCols]], {
+          origin: -1
+        });
       }
     });
 
@@ -199,8 +240,14 @@ const Exporter = ({ attributeTypes, data, className, isVisible }) => {
   return (
     <div className={classnames('exporter', className)}>
       <Select
-        autoBlur={false}
-        clearable={false}
+        className={'Select'}
+        styles={{
+          container: (base) => ({
+            ...base,
+            minWidth: '320px'
+          })
+        }}
+        isClearable={false}
         value={null}
         onChange={(e) => {
           if (e.value === 0) {

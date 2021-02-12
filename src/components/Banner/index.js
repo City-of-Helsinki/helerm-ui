@@ -1,19 +1,23 @@
 import React from 'react';
-import Banner from './Banner';
 import { Link } from 'react-router';
-import head from 'lodash/head';
+import Banner from './Banner';
+import { config } from '../../config'
 
-export default () => {
-  const gitVersion = head(GIT_VERSION.split('-'));
+const BannerWrapper = () => {
+  const gitVersion = config.GIT_VERSION;
+  const siteTitle = config.SITE_TITLE;
+  const feedBackUrl = config.FEEDBACK_URL;
   return (
     <Banner>
-      <Banner.Element background='green'>BETA {SITE_TITLE} {gitVersion}</Banner.Element>
+      <Banner.Element background='green'>
+        BETA {siteTitle} {gitVersion}
+      </Banner.Element>
       <Banner.Element background='blue'>
         <a
           style={{ color: '#fff' }}
-          href={`${FEEDBACK_URL}`}
+          href={feedBackUrl}
           target='_blank'
-          rel='noopener norefer'
+          rel='noreferrer'
         >
           Anna palautetta
         </a>
@@ -26,3 +30,5 @@ export default () => {
     </Banner>
   );
 };
+
+export default BannerWrapper;

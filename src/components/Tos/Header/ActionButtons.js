@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import IsAllowed from 'components/IsAllowed/IsAllowed';
+import IsAllowed from '../../../components/IsAllowed/IsAllowed';
 import ActionButton from './ActionButton';
 
 import {
@@ -12,7 +12,7 @@ import {
   SENT_FOR_REVIEW,
   WAITING_FOR_APPROVAL,
   APPROVED
-} from '../../../../config/constants';
+} from '../../../constants';
 
 const ActionButtons = ({
   cancelEdit,
@@ -35,7 +35,7 @@ const ActionButtons = ({
       <span>
         <ActionButton
           className='btn pull-right'
-          type={editMode ? 'success' : 'success'}
+          type={'success'}
           action={editMode ? saveDraft : () => review(SENT_FOR_REVIEW)}
           label={editMode ? 'Tallenna luonnos' : 'Lähetä tarkastettavaksi'}
         />

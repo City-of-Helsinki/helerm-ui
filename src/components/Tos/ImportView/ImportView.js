@@ -1,10 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './ImportView.scss';
 import _ from 'lodash';
 import update from 'immutability-helper';
 
 export class ImportView extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       phasesOrder: this.props.phasesOrder,
@@ -13,15 +14,15 @@ export class ImportView extends React.Component {
     };
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount() {
     document.body.classList.add('noscroll');
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     document.body.classList.remove('noscroll');
   }
 
-  getTargetName (specifier, type) {
+  getTargetName(specifier, type) {
     const hasType = type && type.length;
     const hasTypeSpecifier = specifier && specifier.length;
     const slash = hasType && hasTypeSpecifier ? ' / ' : '';
@@ -29,11 +30,14 @@ export class ImportView extends React.Component {
     return (type || '') + slash + (specifier || '');
   }
 
-  generateImportableElements (level) {
+  generateImportableElements(level) {
     let elements;
     switch (level) {
       case 'phase':
-        elements = this.generateLinks(this.props.phases, this.state.phasesOrder);
+        elements = this.generateLinks(
+          this.props.phases,
+          this.state.phasesOrder
+        );
         break;
       case 'action':
         elements = this.generateActionItems();
@@ -42,36 +46,55 @@ export class ImportView extends React.Component {
         elements = this.generateRecordItems();
         break;
       default:
-        null;
+        elements = null;
     }
     return elements;
   }
 
-  generateActionItems () {
+  generateActionItems() {
     const { phases, phasesOrder } = this.props;
-    return phasesOrder.map(phase => {
-      const actionElements = this.generateLinks(this.props.actions, phases[phase].actions);
+    return phasesOrder.map((phase) => {
+      const actionElements = this.generateLinks(
+        this.props.actions,
+        phases[phase].actions
+      );
       return (
         <div key={phases[phase].id} className='col-xs-12'>
-          <span>{this.getTargetName(phases[phase].attributes.TypeSpecifier, phases[phase].attributes.PhaseType)}</span>
-          { actionElements }
+          <span>
+            {this.getTargetName(
+              phases[phase].attributes.TypeSpecifier,
+              phases[phase].attributes.PhaseType
+            )}
+          </span>
+          {actionElements}
         </div>
       );
     });
   }
 
-  generateRecordItems () {
+  generateRecordItems() {
     const { phases, phasesOrder, actions } = this.props;
-    return phasesOrder.map(phase => {
+    return phasesOrder.map((phase) => {
       let actionElements;
       if (_.keys(phases[phase].actions).length > 0) {
-        actionElements = phases[phase].actions.map(action => {
+        actionElements = phases[phase].actions.forEach((action) => {
           if (_.keys(actions[action].records).length > 0) {
-            const recordElements = this.generateLinks(this.props.records, actions[action].records);
+            const recordElements = this.generateLinks(
+              this.props.records,
+              actions[action].records
+            );
             return (
-              <div key={actions[action].id} className='import-action-record-wrapper'>
-                <span className='import-row-title import-action-title'>{this.getTargetName(actions[action].attributes.TypeSpecifier, actions[action].attributes.ActionType)}</span>
-                { recordElements }
+              <div
+                key={actions[action].id}
+                className='import-action-record-wrapper'
+              >
+                <span className='import-row-title import-action-title'>
+                  {this.getTargetName(
+                    actions[action].attributes.TypeSpecifier,
+                    actions[action].attributes.ActionType
+                  )}
+                </span>
+                {recordElements}
               </div>
             );
           }
@@ -79,33 +102,47 @@ export class ImportView extends React.Component {
       }
       let phaseTitle;
       if (phases[phase].actions.length > 0) {
-        phaseTitle = <span className='import-row-title import-phase-title'>{this.getTargetName(phases[phase].attributes.TypeSpecifier, phases[phase].attributes.PhaseType)}</span>;
+        phaseTitle = (
+          <span className='import-row-title import-phase-title'>
+            {this.getTargetName(
+              phases[phase].attributes.TypeSpecifier,
+              phases[phase].attributes.PhaseType
+            )}
+          </span>
+        );
       }
       return (
         <div key={phases[phase].id} className='import-wrapper'>
-          { phaseTitle }
-          { actionElements }
+          {phaseTitle}
+          {actionElements}
         </div>
       );
     });
   }
 
-  generateLinks (values, items) {
+  generateLinks(values, items) {
     let links = [];
     let itemsInArray = items;
     if (!items.length) {
       itemsInArray = Object.keys(items); // Because items mutates into object for unknown reason
     }
-    Object.keys(itemsInArray).forEach(key => {
+    Object.keys(itemsInArray).forEach((key) => {
       if (itemsInArray.hasOwnProperty(key)) {
         links.push(
           <div key={key} className='col-xs-12'>
-            <a
+            <span
               key={key}
-              href=''
-              onClick={(e) => this.selectForImport(e, values[itemsInArray[key]].id)}>
-              {this.getTargetName(values[itemsInArray[key]].attributes.TypeSpecifier, values[itemsInArray[key]].attributes[`${_.capitalize(this.props.level)}Type`])}
-            </a>
+              onClick={(e) =>
+                this.selectForImport(e, values[itemsInArray[key]].id)
+              }
+            >
+              {this.getTargetName(
+                values[itemsInArray[key]].attributes.TypeSpecifier,
+                values[itemsInArray[key]].attributes[
+                  `${_.capitalize(this.props.level)}Type`
+                ]
+              )}
+            </span>
           </div>
         );
       }
@@ -113,28 +150,38 @@ export class ImportView extends React.Component {
     return links;
   }
 
-  selectForImport (e, element) {
+  selectForImport(e, element) {
     e.preventDefault();
-    this.setState(update(this.state, {
-      selectedElements: {
-        $push: [element]
-      }
-    }));
+    this.setState(
+      update(this.state, {
+        selectedElements: {
+          $push: [element]
+        }
+      })
+    );
   }
 
-  removeFromImport (e, elementIndex) {
+  removeFromImport(e, elementIndex) {
     e.preventDefault();
-    this.setState(update(this.state, {
-      selectedElements: {
-        $splice: [[elementIndex, 1]]
-      }
-    }));
+    this.setState(
+      update(this.state, {
+        selectedElements: {
+          $splice: [[elementIndex, 1]]
+        }
+      })
+    );
   }
 
-  importItems () {
-    const { level, parent, importItems, toggleImportView, showItems } = this.props;
+  importItems() {
+    const {
+      level,
+      parent,
+      importItems,
+      toggleImportView,
+      showItems
+    } = this.props;
     const newElements = this.state.selectedElements;
-    newElements.map(element => {
+    newElements.forEach((element) => {
       importItems(element, level, parent);
     });
     if (typeof showItems === 'function') {
@@ -143,46 +190,66 @@ export class ImportView extends React.Component {
     toggleImportView();
   }
 
-  stop (e) {
+  stop(e) {
     e.stopPropagation();
   }
 
-  render () {
-    const { level, toggleImportView, title, itemsToImportText, targetText } = this.props;
+  render() {
+    const {
+      level,
+      toggleImportView,
+      title,
+      itemsToImportText,
+      targetText
+    } = this.props;
     const importableElements = this.generateImportableElements(level);
 
     return (
       <div className='row'>
-        <h3>Tuo {title} {targetText}</h3>
-        <h5 className='col-xs-6'>Valitse listalta tuotavat {itemsToImportText}</h5>
+        <h3>
+          Tuo {title} {targetText}
+        </h3>
+        <h5 className='col-xs-6'>
+          Valitse listalta tuotavat {itemsToImportText}
+        </h5>
         <h5 className='col-xs-6'>Tuotavat {itemsToImportText}</h5>
         <div className='col-xs-12'>
           <div className='col-xs-6 importable-elements '>
             {importableElements}
           </div>
           <div className='col-xs-6 importable-elements '>
-            { this.state.selectedElements.length > 0 &&
-            <div>
-              {this.state.selectedElements.map((element, index) => (
-                <a
-                  key={index}
-                  href=''
-                  onClick={(e) => this.removeFromImport(e, index)}
-                  className='col-xs-12'>
-                  {this.state.values[element].attributes.TypeSpecifier || this.state.values[element].attributes[`${_.capitalize(this.props.level)}Type`] || '-'}
-                </a>
-              ))}
-            </div>
-            }
+            {this.state.selectedElements.length > 0 && (
+              <div>
+                {this.state.selectedElements.map((element, index) => (
+                  <span
+                    key={index}
+                    onClick={(e) => this.removeFromImport(e, index)}
+                    className='col-xs-12'
+                  >
+                    {this.state.values[element].attributes.TypeSpecifier ||
+                      this.state.values[element].attributes[
+                        `${_.capitalize(this.props.level)}Type`
+                      ] ||
+                      '-'}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         </div>
         <div className='col-xs-12 button-row'>
           <button
             onClick={() => this.importItems()}
-            className='btn btn-primary pull-right'>
+            className='btn btn-primary pull-right'
+          >
             Tuo
           </button>
-          <button onClick={toggleImportView} className='btn btn-danger pull-right'>Peruuta</button>
+          <button
+            onClick={toggleImportView}
+            className='btn btn-danger pull-right'
+          >
+            Peruuta
+          </button>
         </div>
       </div>
     );
@@ -190,18 +257,18 @@ export class ImportView extends React.Component {
 }
 
 ImportView.propTypes = {
-  actions: React.PropTypes.object.isRequired,
-  importItems: React.PropTypes.func.isRequired,
-  itemsToImportText: React.PropTypes.string.isRequired,
-  level: React.PropTypes.string.isRequired,
-  parent: React.PropTypes.string,
-  phases: React.PropTypes.object.isRequired,
-  phasesOrder: React.PropTypes.array.isRequired,
-  records: React.PropTypes.object.isRequired,
-  showItems: React.PropTypes.func,
-  targetText: React.PropTypes.string.isRequired,
-  title: React.PropTypes.string.isRequired,
-  toggleImportView: React.PropTypes.func.isRequired
+  actions: PropTypes.object.isRequired,
+  importItems: PropTypes.func.isRequired,
+  itemsToImportText: PropTypes.string.isRequired,
+  level: PropTypes.string.isRequired,
+  parent: PropTypes.string,
+  phases: PropTypes.object.isRequired,
+  phasesOrder: PropTypes.array.isRequired,
+  records: PropTypes.object.isRequired,
+  showItems: PropTypes.func,
+  targetText: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  toggleImportView: PropTypes.func.isRequired
 };
 
 export default ImportView;

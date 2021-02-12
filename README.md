@@ -5,13 +5,13 @@
 
 This is a front-end project for Helsinki Electronic Records Management Classification System.
 
-The project structure is based on React Redux Starter Kit (https://github.com/davezuko/react-redux-starter-kit).
+The project structure is based on create-react-app (https://create-react-app.dev/).
 
 Looking for the backend code? It's in this repository: [helerm - Helsinki Electronic Records Management Classification System](https://github.com/City-of-Helsinki/helerm)
 
 ## Requirements
-* node `^4.5.0`
-* npm `^3.0.0`
+* node `^14.15.1`
+* npm `^6.14.8`
 
 ### Install from source
 
@@ -27,8 +27,8 @@ $ cd helerm-ui
 #### 2. Install depencies:
 
 ```bash
-$ yarn        # Install project dependencies
-$ yarn dev    # Compile and launch on local environment
+$ yarn              # Install project dependencies
+$ yarn start:dev    # Launch on local environment
 ```
 
 #### 3. Add needed environmental variables

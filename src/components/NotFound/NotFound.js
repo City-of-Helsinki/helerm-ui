@@ -1,7 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import './NotFound.scss';
-import hkiLogo from '../../static/assets/helsinki-vaakuna-helfisininen.svg';
+import hkiLogo from './helsinki-vaakuna-helfisininen.svg';
 
 export const NotFound = () => (
   <div className='not-found-container'>

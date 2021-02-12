@@ -1,8 +1,13 @@
 import React from 'react';
-import Select from 'react-select';
+import PropTypes from 'prop-types';
+import CreatableSelect from 'react-select/creatable';
 import { map, difference } from 'lodash';
+import {
+  resolveReturnValues,
+  resolveSelectValues
+} from '../../../utils/helpers';
 
-function resolvePlaceholder (type, formType) {
+function resolvePlaceholder(type, formType) {
   switch (type) {
     case 'phase':
       return 'Valitse käsittelyvaihe...';
@@ -25,11 +30,11 @@ function resolvePlaceholder (type, formType) {
   }
 }
 
-function onPromptCreate (label) {
+function onPromptCreate(label) {
   return `Lisää "${label}"`;
 }
 
-function getMissingValueOptions (value, options) {
+function getMissingValueOptions(value, options) {
   const valueArray = value instanceof Array ? value : [value];
   const optionValues = map(options, 'value');
   return difference(valueArray, optionValues);
@@ -61,7 +66,7 @@ export const DropdownInput = ({
 
   if (validation()) {
     if (type === 'form') {
-      const onFormInputChange = event => {
+      const onFormInputChange = (event) => {
         onInputChange(event.target.value, keyValue, 'value');
       };
       return (
@@ -85,7 +90,7 @@ export const DropdownInput = ({
       );
     }
   } else {
-    const onFieldChange = option => {
+    const onFieldChange = (option) => {
       if (option instanceof Array) {
         const values = option.length ? map(option, 'value') : null;
         const value = values && values.length === 1 ? values[0] : values;
@@ -96,37 +101,37 @@ export const DropdownInput = ({
           : onChange(option ? option.value : null);
       }
     };
-    Object.keys(options).forEach(key => {
+    Object.keys(options).forEach((key) => {
       if (options.hasOwnProperty(key)) {
         optionsArray.push({
-          label: options[key].value,
+          label: options[key].label ? options[key].label : options[key].value,
           value: options[key].value
         });
       }
     });
     const missingOptions = getMissingValueOptions(valueState, optionsArray);
-    missingOptions.forEach(option => {
+    missingOptions.forEach((option) => {
       optionsArray.push({
         label: option,
         value: option
       });
     });
     return (
-      <Select.Creatable
+      <CreatableSelect
         className={selectClassName}
         placeholder={resolvePlaceholder(type, formType) || 'Valitse...'}
-        value={valueState}
-        disabled={disabled}
-        autoBlur={false}
-        autoFocus={!(type === 'form')}
-        openOnFocus={true}
-        clearable={true}
+        value={resolveSelectValues(optionsArray, valueState, multi)}
+        isDisabled={disabled}
+        autoFocus={type !== 'form'}
+        openMenuOnFocus={true}
+        isClearable={true}
         options={optionsArray}
-        onChange={onFieldChange}
+        onChange={(emittedValue) =>
+          onFieldChange(resolveReturnValues(emittedValue, multi))
+        }
         onBlur={onSubmit}
-        promptTextCreator={onPromptCreate}
-        multi={multi}
-        removeSelected={false}
+        formatCreateLabel={onPromptCreate}
+        isMulti={multi}
         delimiter=';'
       />
     );
@@ -134,24 +139,18 @@ export const DropdownInput = ({
 };
 
 DropdownInput.propTypes = {
-  disabled: React.PropTypes.bool,
-  formType: React.PropTypes.string,
-  inputClassName: React.PropTypes.string,
-  keyValue: React.PropTypes.string,
-  multi: React.PropTypes.bool,
-  onChange: React.PropTypes.func.isRequired,
-  onInputChange: React.PropTypes.func.isRequired,
-  onSubmit: React.PropTypes.func.isRequired,
-  options: React.PropTypes.oneOfType([
-    React.PropTypes.object,
-    React.PropTypes.array
-  ]).isRequired,
-  selectClassName: React.PropTypes.string,
-  type: React.PropTypes.string.isRequired,
-  valueState: React.PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.array
-  ])
+  disabled: PropTypes.bool,
+  formType: PropTypes.string,
+  inputClassName: PropTypes.string,
+  keyValue: PropTypes.string,
+  multi: PropTypes.bool,
+  onChange: PropTypes.func.isRequired,
+  onInputChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  options: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired,
+  selectClassName: PropTypes.string,
+  type: PropTypes.string.isRequired,
+  valueState: PropTypes.oneOfType([PropTypes.string, PropTypes.array])
 };
 
 export default DropdownInput;

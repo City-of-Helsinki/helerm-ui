@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { map, find, forEach } from 'lodash';
 
@@ -18,7 +19,7 @@ import {
 import {
   VALIDATION_FILTER_ERROR,
   VALIDATION_FILTER_WARN
-} from '../../../../config/constants';
+} from '../../../constants';
 
 const ATTRIBUTE_NAME_FIELDS = ['PhaseType', 'ActionType', 'TypeSpecifier'];
 
@@ -247,12 +248,12 @@ export class ValidationBar extends Component {
 }
 
 ValidationBar.propTypes = {
-  attributeTypes: React.PropTypes.object.isRequired,
-  scrollToMetadata: React.PropTypes.func.isRequired,
-  scrollToType: React.PropTypes.func.isRequired,
-  selectedTOS: React.PropTypes.object.isRequired,
-  setValidationVisibility: React.PropTypes.func.isRequired,
-  top: React.PropTypes.number.isRequired
+  attributeTypes: PropTypes.object.isRequired,
+  scrollToMetadata: PropTypes.func.isRequired,
+  scrollToType: PropTypes.func.isRequired,
+  selectedTOS: PropTypes.object.isRequired,
+  setValidationVisibility: PropTypes.func.isRequired,
+  top: PropTypes.number.isRequired
 };
 
 export default ValidationBar;
