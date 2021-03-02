@@ -3,16 +3,20 @@ import PropTypes from 'prop-types';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 
-import EditorForm from 'components/Tos/EditorForm/EditorForm';
+import EditorForm from '../../../components/Tos/EditorForm/EditorForm';
 import { formatDateTime, getStatusLabel } from '../../../utils/helpers';
 
 export class VersionData extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.cancelVersionEdit = this.cancelVersionEdit.bind(this);
     this.editVersionWithForm = this.editVersionWithForm.bind(this);
-    this.generateEditorFormValidDateFields = this.generateEditorFormValidDateFields.bind(this);
-    this.generateEditorFormValidDateField = this.generateEditorFormValidDateField.bind(this);
+    this.generateEditorFormValidDateFields = this.generateEditorFormValidDateFields.bind(
+      this
+    );
+    this.generateEditorFormValidDateField = this.generateEditorFormValidDateField.bind(
+      this
+    );
     this.onValidDateChange = this.onValidDateChange.bind(this);
 
     this.state = {
@@ -24,7 +28,7 @@ export class VersionData extends React.Component {
     };
   }
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.selectedTOS.documentState === 'view') {
       this.setState({
         editing: false,
@@ -34,7 +38,7 @@ export class VersionData extends React.Component {
     }
   }
 
-  generateVersionDataButtons () {
+  generateVersionDataButtons() {
     const { selectedTOS, setVersionVisibility } = this.props;
     const {
       documentState,
@@ -60,9 +64,7 @@ export class VersionData extends React.Component {
           onClick={() => setVersionVisibility(!isVersionOpen)}
         >
           <span
-            className={
-              'fa ' + (isVersionOpen ? 'fa-minus' : 'fa-plus')
-            }
+            className={'fa ' + (isVersionOpen ? 'fa-minus' : 'fa-plus')}
             aria-hidden='true'
           />
         </button>
@@ -70,7 +72,7 @@ export class VersionData extends React.Component {
     );
   }
 
-  generateVersionData () {
+  generateVersionData() {
     const {
       modified_at: modifiedAt,
       state,
@@ -80,8 +82,18 @@ export class VersionData extends React.Component {
     } = this.props.selectedTOS;
     const { validFromEditing, validToEditing } = this.state;
     const formattedDateTime = formatDateTime(modifiedAt);
-    const validFromData = this.generateValidDateField('Voimassaolo alkaa', 'validFrom', validFrom, validFromEditing);
-    const validToData = this.generateValidDateField('Voimassaolo päättyy', 'validTo', validTo, validToEditing);
+    const validFromData = this.generateValidDateField(
+      'Voimassaolo alkaa',
+      'validFrom',
+      validFrom,
+      validFromEditing
+    );
+    const validToData = this.generateValidDateField(
+      'Voimassaolo päättyy',
+      'validTo',
+      validTo,
+      validToEditing
+    );
 
     return (
       <div>
@@ -92,7 +104,9 @@ export class VersionData extends React.Component {
           </div>
           <div className='list-group-item col-xs-6'>
             <strong>Muokkausajankohta, muokkaaja</strong>
-            <div>{`${formattedDateTime}${typeof modifiedBy === 'string' ? `, ${modifiedBy}` : ''}`}</div>
+            <div>{`${formattedDateTime}${
+              typeof modifiedBy === 'string' ? `, ${modifiedBy}` : ''
+            }`}</div>
           </div>
         </div>
         {!this.state.editing && (
@@ -105,99 +119,97 @@ export class VersionData extends React.Component {
     );
   }
 
-  generateValidDateField (label, field, value, editing) {
+  generateValidDateField(label, field, value, editing) {
     if (editing) {
       return (
         <div className='list-group-item col-xs-6 datepicker-field'>
           <strong>{label}:</strong>
           <DatePicker
             autoFocus={true}
-            dateFormat='D.M.YYYY'
+            dateFormat='dd.MM.yyyy'
             isClearable={true}
-            locale='fi-fi'
+            showYearDropdown
+            dateFormatCalendar='MMMM'
             placeholderText='PP.KK.VVVV'
-            selected={value ? moment(value) : null}
+            selected={value ? moment(value).toDate() : null}
             onChange={(date) => this.onValidDateChange(field, date)}
           />
         </div>
       );
     }
     return (
-      <a
+      <span
         onClick={() => this.activateValidDateEditMode(field)}
         className='list-group-item col-xs-6 attribute-basic'
       >
         <strong>{label}:</strong>
         <div>{value ? formatDateTime(value, 'D.M.YYYY') : '\u00A0'}</div>
-      </a>
+      </span>
     );
   }
 
-  generateEditorFormValidDateFields () {
+  generateEditorFormValidDateFields() {
     const { selectedTOS } = this.props;
     const validFromData = this.generateEditorFormValidDateField(
       'Voimassaolo alkaa',
       'validFrom',
-      selectedTOS.valid_from);
+      selectedTOS.valid_from
+    );
     const validToData = this.generateEditorFormValidDateField(
       'Voimassaolo päättyy',
       'validTo',
-      selectedTOS.valid_to);
+      selectedTOS.valid_to
+    );
 
     return [validFromData, validToData];
   }
 
-  generateEditorFormValidDateField (label, field, value) {
+  generateEditorFormValidDateField(label, field, value) {
     return (
       <div key={field} className='col-xs-12 col-lg-6 form-group'>
-        <label className='editor-form__label'>
-          {label}
-        </label>
+        <label className='editor-form__label'>{label}</label>
         <DatePicker
           className='form-control edit-record__input'
-          dateFormat='D.M.YYYY'
+          dateFormat='dd.MM.yyyy'
           isClearable={true}
-          locale='fi-fi'
+          showYearDropdown
+          dateFormatCalendar='MMMM'
           placeholderText='PP.KK.VVVV'
-          selected={value ? moment(value) : null}
+          selected={value ? moment(value).toDate() : null}
           onChange={(date) => this.onValidDateChange(field, date)}
         />
       </div>
     );
   }
 
-  onValidDateChange (key, date) {
-    const value = date ? date.format('YYYY-MM-DD') : null;
+  onValidDateChange(key, date) {
+    const value = date ? moment(date).format('YYYY-MM-DD') : null;
     if (value) {
       this.setState({ [`${key}Editing`]: false });
     }
     this.props.editValidDates({ [key]: value });
   }
 
-  activateValidDateEditMode (key) {
+  activateValidDateEditMode(key) {
     if (this.props.selectedTOS.documentState === 'edit') {
       this.setState({ [`${key}Editing`]: true });
     }
   }
 
-  editVersionWithForm () {
+  editVersionWithForm() {
     this.setState({
       editing: false
     });
   }
 
-  cancelVersionEdit () {
+  cancelVersionEdit() {
     const { validFrom, validTo } = this.state;
     this.setState({ editing: false });
     this.props.editValidDates({ validFrom, validTo });
   }
 
-  render () {
-    const {
-      attributeTypes,
-      displayMessage,
-      selectedTOS
-    } = this.props;
+  render() {
+    const { attributeTypes, displayMessage, selectedTOS } = this.props;
 
     const versionDataButtons = this.generateVersionDataButtons();
     const TOSVersionData = this.generateVersionData();
@@ -207,15 +219,11 @@ export class VersionData extends React.Component {
           <div className='col-xs-6'>
             <h4>Käsittelyprosessin version tiedot</h4>
           </div>
-          <div className='col-xs-6'>
-            {versionDataButtons}
-          </div>
+          <div className='col-xs-6'>{versionDataButtons}</div>
         </div>
         {selectedTOS.is_version_open && (
           <div className='row'>
-            <div className='col-xs-12'>
-              {TOSVersionData}
-            </div>
+            <div className='col-xs-12'>{TOSVersionData}</div>
           </div>
         )}
         {this.state.editing && (
@@ -236,7 +244,7 @@ export class VersionData extends React.Component {
       </div>
     );
   }
-};
+}
 
 VersionData.propTypes = {
   attributeTypes: PropTypes.object.isRequired,

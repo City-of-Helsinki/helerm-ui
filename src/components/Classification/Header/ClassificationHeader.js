@@ -1,8 +1,9 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import { EDIT } from '../../../../config/constants';
+import { EDIT } from '../../../constants';
 
-import IsAllowed from 'components/IsAllowed/IsAllowed';
+import IsAllowed from '../../../components/IsAllowed/IsAllowed';
 import ClassificationButton from './ClassificationButton';
 
 const ClassificationHeader = ({ code, title, createTos, functionAllowed }) => {

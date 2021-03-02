@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { findDOMNode } from 'react-dom';
 import { DragSource, DropTarget } from 'react-dnd';
 
@@ -11,7 +12,7 @@ const style = {
 };
 
 const itemSource = {
-  beginDrag (props) {
+  beginDrag(props) {
     return {
       id: props.id,
       index: props.index
@@ -20,7 +21,7 @@ const itemSource = {
 };
 
 const itemTarget = {
-  hover (props, monitor, component) {
+  hover(props, monitor, component) {
     const dragIndex = monitor.getItem().index;
     const hoverIndex = props.index;
 
@@ -66,27 +67,36 @@ const itemTarget = {
   }
 };
 
-@DropTarget('item', itemTarget, connect => ({
-  connectDropTarget: connect.dropTarget()
-}))
-@DragSource('item', itemSource, (connect, monitor) => ({
+const collectSource = (connect, monitor) => ({
   connectDragSource: connect.dragSource(),
   isDragging: monitor.isDragging()
-}))
+});
+
+const collectTarget = (connect) => ({
+  connectDropTarget: connect.dropTarget()
+});
 
 export class ReorderItem extends React.Component {
-  getLabels (labels) {
+  getLabels(labels) {
     const elements = [];
-    labels.forEach(label => {
+    labels.forEach((label) => {
       elements.push(
-        <span key={label} className='reorder-label'>{label}</span>
+        <span key={label} className='reorder-label'>
+          {label}
+        </span>
       );
     });
     return elements;
   }
 
-  render () {
-    const { isDragging, connectDragSource, connectDropTarget, labels, target } = this.props;
+  render() {
+    const {
+      isDragging,
+      connectDragSource,
+      connectDropTarget,
+      labels,
+      target
+    } = this.props;
     const opacity = isDragging ? 0 : 1;
     let border;
     switch (target) {
@@ -99,22 +109,28 @@ export class ReorderItem extends React.Component {
       default:
         border = '2px dashed gray';
     }
-    return connectDragSource(connectDropTarget(
-      <div style={{ ...style, opacity, border }}>
-        <i className='fa fa-arrows' aria-hidden='true' />
-        {' '}
-        {this.getLabels(labels)}
-      </div>
-    ));
+    return connectDragSource(
+      connectDropTarget(
+        <div style={{ ...style, opacity, border }}>
+          <i className='fa fa-arrows' aria-hidden='true' />{' '}
+          {this.getLabels(labels)}
+        </div>
+      )
+    );
   }
 }
 
 ReorderItem.propTypes = {
-  connectDragSource: React.PropTypes.func,
-  connectDropTarget: React.PropTypes.func,
-  isDragging: React.PropTypes.bool,
-  labels: React.PropTypes.array,
-  target: React.PropTypes.string.isRequired
+  connectDragSource: PropTypes.func,
+  connectDropTarget: PropTypes.func,
+  isDragging: PropTypes.bool,
+  labels: PropTypes.array,
+  target: PropTypes.string.isRequired
 };
 
-export default ReorderItem;
+// TODO: refactor to use new hook-API to get rid of this monstrosity
+export default DropTarget(
+  'item',
+  itemTarget,
+  collectTarget
+)(DragSource('item', itemSource, collectSource)(ReorderItem));

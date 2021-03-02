@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
 import './Record.scss';
 import Attributes from '../Attribute/Attributes';
 import DeleteView from '../DeleteView/DeleteView';
-import Dropdown from 'components/Dropdown';
+import Dropdown from '../../../components/Dropdown';
 import EditorForm from '../EditorForm/EditorForm';
-import Popup from 'components/Popup';
+import Popup from '../../../components/Popup';
 
-export class Record extends React.Component {
+export class Record extends Component {
   constructor (props) {
     super(props);
 
@@ -280,16 +281,15 @@ export class Record extends React.Component {
 }
 
 Record.propTypes = {
-  attributeTypes: React.PropTypes.object.isRequired,
-  // complementRecordForm: React.PropTypes.func.isRequired,
-  displayMessage: React.PropTypes.func.isRequired,
-  documentState: React.PropTypes.string.isRequired,
-  editRecord: React.PropTypes.func.isRequired,
-  editRecordAttribute: React.PropTypes.func.isRequired,
-  record: React.PropTypes.object.isRequired,
-  recordTypes: React.PropTypes.object.isRequired,
-  removeRecord: React.PropTypes.func.isRequired,
-  setRecordVisibility: React.PropTypes.func.isRequired
+  attributeTypes: PropTypes.object.isRequired,
+  displayMessage: PropTypes.func.isRequired,
+  documentState: PropTypes.string.isRequired,
+  editRecord: PropTypes.func.isRequired,
+  editRecordAttribute: PropTypes.func.isRequired,
+  record: PropTypes.object.isRequired,
+  recordTypes: PropTypes.object.isRequired,
+  removeRecord: PropTypes.func.isRequired,
+  setRecordVisibility: PropTypes.func.isRequired
 };
 
 export default Record;

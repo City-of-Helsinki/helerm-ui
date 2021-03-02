@@ -30,18 +30,18 @@ export function executeOrderChange (newOrder, itemType, itemParent, currentState
       return currentState;
   }
   const reorderedList = [];
-  affectedItems.map(item => {
+  affectedItems.forEach(item => {
     reorderedList.push(currentState.selectedTOS[itemLevel][item]);
   });
   const parentList = [];
-  reorderedList.map((item, index) => {
+  reorderedList.forEach((item, index) => {
     item.index = index + 1;
     parentList.push(item.id);
   });
   let itemList = Object.assign({}, currentState.selectedTOS[itemLevel]);
   Object.keys(itemList).forEach(key => {
     if (itemList.hasOwnProperty(key)) {
-      reorderedList.map(item => {
+      reorderedList.forEach(item => {
         if (itemList[key].id === item.id) {
           itemList[key] = item;
         }

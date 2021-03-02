@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
@@ -10,7 +11,7 @@ import update from 'immutability-helper';
 import InfinityMenu from '../InfinityMenu/infinityMenu';
 import SearchFilter from './SearchFilter';
 
-import { statusFilters, navigationStateFilters } from '../../../config/constants';
+import { statusFilters, navigationStateFilters } from '../../constants';
 
 import './Navigation.scss';
 
@@ -32,9 +33,9 @@ export class Navigation extends React.Component {
     router: PropTypes.object,
     setNavigationVisibility: PropTypes.func.isRequired,
     tosPath: PropTypes.array.isRequired
-  }
+  };
 
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       filters: navigationStateFilters,
@@ -45,11 +46,11 @@ export class Navigation extends React.Component {
     };
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.fetchNavigation(this.isDetailSearch());
   }
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { itemsTimestamp: nextTimestamp, items } = nextProps;
     const { itemsTimestamp: currentTimestamp } = this.props;
     const isReceivingNewlyFetchedItems = nextTimestamp !== currentTimestamp;
@@ -59,7 +60,7 @@ export class Navigation extends React.Component {
     }
   }
 
-  receiveItemsAndResetNavigation (items) {
+  receiveItemsAndResetNavigation(items) {
     this.setState({
       tree: items,
       filters: navigationStateFilters
@@ -68,7 +69,7 @@ export class Navigation extends React.Component {
     this.stopSearching();
   }
 
-  updateNavigation () {
+  updateNavigation() {
     this.stopSearching();
     this.props.fetchNavigation(this.isDetailSearch());
   }
@@ -79,18 +80,18 @@ export class Navigation extends React.Component {
       searchInputs: [''],
       searchTimestamp: 0
     });
-  }
+  };
 
   toggleNavigationVisibility = () => {
     const currentVisibility = this.props.is_open;
     this.props.setNavigationVisibility(!currentVisibility);
-  }
+  };
 
   onNodeMouseClick = (event, tree, node, level, keyPath) => {
     this.setState({
       tree
     });
-  }
+  };
 
   onLeafMouseClick = (event, leaf) => {
     if (leaf.function) {
@@ -100,53 +101,60 @@ export class Navigation extends React.Component {
     }
 
     return this.toggleNavigationVisibility();
-  }
+  };
 
   setSearchInput = (index, value) => {
     const isDetailSearch = this.isDetailSearch();
-    this.setState(update(this.state, {
-      isSearchChanged: {
-        $set: !isDetailSearch
-      },
-      searchInputs: {
-        [index]: {
-          $set: value
+    this.setState(
+      update(this.state, {
+        isSearchChanged: {
+          $set: !isDetailSearch
+        },
+        searchInputs: {
+          [index]: {
+            $set: value
+          }
+        },
+        searchTimestamp: {
+          $set: Date.now()
         }
-      },
-      searchTimestamp: {
-        $set: Date.now()
-      }
-    }));
+      })
+    );
     if (isDetailSearch) {
       setTimeout(this.onSearchTimeout, SEARCH_TIMEOUT);
     }
-  }
+  };
 
   addSearchInput = () => {
-    this.setState(update(this.state, {
-      searchInputs: {
-        $push: ['']
-      }
-    }));
-  }
+    this.setState(
+      update(this.state, {
+        searchInputs: {
+          $push: ['']
+        }
+      })
+    );
+  };
 
   removeSearchInput = (index) => {
-    const searchInputs = this.state.searchInputs.length === 1
-      ? { $set: [''] }
-      : { $splice: [[index, 1]] };
-    this.setState(update(this.state, {
-      searchInputs,
-      searchTimestamp: {
-        $set: Date.now()
-      },
-      isSearchChanged: {
-        $set: false
-      }
-    }));
+    const searchInputs =
+      this.state.searchInputs.length === 1
+        ? { $set: [''] }
+        : { $splice: [[index, 1]] };
+    this.setState(
+      update(this.state, {
+        searchInputs,
+        searchTimestamp: {
+          $set: Date.now()
+        },
+        isSearchChanged: {
+          $set: false
+        }
+      })
+    );
     if (this.state.searchInputs[index].length > 0) {
       setTimeout(this.onSearchTimeout, SEARCH_TIMEOUT);
     }
-  }
+  };
 
   onSearchTimeout = () => {
     if (!this.state.isSearchChanged) {
@@ -154,7 +162,7 @@ export class Navigation extends React.Component {
         this.setState({ isSearchChanged: true });
       }
     }
-  }
+  };
 
   getFilteredTree = () => {
     const { items } = this.props;
@@ -171,7 +179,9 @@ export class Navigation extends React.Component {
       const itemFilters = [];
       const itemValue = get(item, currentPath.concat([nextPath]).join('.'));
       if (isArray(itemValue)) {
-        Object.keys(itemValue).forEach((index) => itemFilters.push(currentPath.concat([nextPath, index])));
+        Object.keys(itemValue).forEach((index) =>
+          itemFilters.push(currentPath.concat([nextPath, index]))
+        );
       } else if (!isEmpty(itemValue)) {
         itemFilters.push(currentPath.concat([nextPath]));
       }
@@ -201,23 +211,27 @@ export class Navigation extends React.Component {
 
     // The actual filtering
     const filterFunction = (item) => {
-      const matchesFilters = Object.keys(filters).map((key) => {
-        const currentFilter = filters[key].values;
-        const paths = filters[key].path;
-        if (currentFilter.length) {
-          return paths.some((path) => {
-            const filterPaths = getItemFilterPaths(path, item);
-            return filterPaths.some((filterPath) => {
-              if (includes(currentFilter, get(item, filterPath.join('.')))) {
-                return true;
-              }
+      const matchesFilters = Object.keys(filters)
+        .map((key) => {
+          const currentFilter = filters[key].values;
+          const paths = filters[key].path;
+          if (currentFilter.length) {
+            return paths.some((path) => {
+              const filterPaths = getItemFilterPaths(path, item);
+              return filterPaths.some((filterPath) => {
+                return includes(currentFilter, get(item, filterPath.join('.')));
+              });
             });
-          });
-        }
-        return true;
-      }).every((item) => !!item);
+          }
+          return true;
+        })
+        .every((finalItem) => !!finalItem);
 
-      return matchesFilters || item.children && (item.children = item.children.filter(filterFunction)).length;
+      return (
+        matchesFilters ||
+        (item.children &&
+          (item.children = item.children.filter(filterFunction)).length)
+      );
     };
 
     // Modify filtered items to be open
@@ -235,50 +249,78 @@ export class Navigation extends React.Component {
 
   hasFilters = () => {
     const { filters } = this.state;
-    return !!Object.keys(filters).map((key) => filters[key].values.length).reduce((a, b) => a + b, 0);
-  }
+    return !!Object.keys(filters)
+      .map((key) => filters[key].values.length)
+      .reduce((a, b) => a + b, 0);
+  };
 
   isDetailSearch = () => {
-    return this.props.router.isActive('filter');
-  }
+    return this.props.match.path === '/filter';
+  };
 
   handleFilterChange = (filterValues, filterName) => {
     const mappedValues = filterValues.map(({ value }) => value);
 
-    return this.setState({
-      filters: { ...this.state.filters, [filterName]: { ...this.state.filters[filterName], values: mappedValues } }
-    }, () => {
-      return this.setState({ tree: this.getFilteredTree() });
-    });
-  }
+    return this.setState(
+      {
+        filters: {
+          ...this.state.filters,
+          [filterName]: {
+            ...this.state.filters[filterName],
+            values: mappedValues
+          }
+        }
+      },
+      () => {
+        return this.setState({ tree: this.getFilteredTree() });
+      }
+    );
+  };
 
   getFilters = () => {
     const { attributeTypes, isUser } = this.props;
     const isDetailSearch = this.isDetailSearch();
-    const statusFilterOptions = isUser ? statusFilters : filter(statusFilters, { default:true });
-    const statusFilterPlaceholder = this.props.isUser ? 'Suodata viimeisen tilan mukaan...' : 'Suodata tilan mukaan...';
-    const retentionPeriods = attributeTypes && attributeTypes.RetentionPeriod ? attributeTypes.RetentionPeriod.values : [];
-    const retentionPeriodOptions = retentionPeriods.map((option) => ({ value: option.value, label: option.value }));
+    const statusFilterOptions = isUser
+      ? statusFilters
+      : filter(statusFilters, { default: true });
+    const statusFilterPlaceholder = this.props.isUser
+      ? 'Suodata viimeisen tilan mukaan...'
+      : 'Suodata tilan mukaan...';
+    const retentionPeriods =
+      attributeTypes && attributeTypes.RetentionPeriod
+        ? attributeTypes.RetentionPeriod.values
+        : [];
+    const retentionPeriodOptions = retentionPeriods.map((option) => ({
+      value: option.value,
+      label: option.value
+    }));
 
     return (
       <div className={classnames({ 'filters row': isDetailSearch })}>
         <SearchFilter
-          className={classnames({ '': !isDetailSearch, 'col-sm-6': isDetailSearch })}
+          className={classnames({
+            '': !isDetailSearch,
+            'col-sm-6': isDetailSearch
+          })}
           placeholder={statusFilterPlaceholder}
           value={this.state.filters.statusFilters.values}
           options={statusFilterOptions}
-          handleChange={(values) => this.handleFilterChange(values, 'statusFilters')}
+          handleChange={(values) =>
+            this.handleFilterChange(values, 'statusFilters')
+          }
         />
         <SearchFilter
           placeholder={'Suodata säilytysajan mukaan'}
           value={this.state.filters.retentionPeriodFilters.values}
           options={retentionPeriodOptions}
-          handleChange={(values) => this.handleFilterChange(values, 'retentionPeriodFilters')}
+          handleChange={(values) =>
+            this.handleFilterChange(values, 'retentionPeriodFilters')
+          }
           isVisible={isDetailSearch}
         />
       </div>
     );
-  }
+  };
 
   createNavigationTitle = () => {
     if (!this.props.is_open && this.props.tosPath.length) {
@@ -288,17 +330,25 @@ export class Navigation extends React.Component {
     }
 
     return 'Navigaatio';
-  }
+  };
 
-  render () {
-    const { onLeafMouseClick, isFetching, attributeTypes, items, itemsTimestamp } = this.props;
+  render() {
+    const {
+      onLeafMouseClick,
+      isFetching,
+      attributeTypes,
+      items,
+      itemsTimestamp
+    } = this.props;
     const { isSearchChanged, searchInputs } = this.state;
 
     if (!isFetching && isEmpty(items) && !isEmpty(itemsTimestamp)) {
       return (
         <div className='container-fluid helerm-navigation'>
           <div className='navigation-error'>
-            <div className='alert alert-danger'>Järjestelmä ei ole käytettävissä. Yritä hetken päästä uudestaan.</div>
+            <div className='alert alert-danger'>
+              Järjestelmä ei ole käytettävissä. Yritä hetken päästä uudestaan.
+            </div>
           </div>
         </div>
       );
@@ -310,10 +360,16 @@ export class Navigation extends React.Component {
           attributeTypes={attributeTypes}
           isOpen={this.props.is_open}
           isSearchChanged={isSearchChanged}
-          isSearching={searchInputs.filter(input => input.length > 0).length > 0}
+          isSearching={
+            searchInputs.filter((input) => input.length > 0).length > 0
+          }
           isFetching={isFetching}
           items={items}
-          onLeafMouseClick={onLeafMouseClick ? (event, leaf) => onLeafMouseClick(event, leaf) : this.onLeafMouseClick}
+          onLeafMouseClick={
+            onLeafMouseClick
+              ? (event, leaf) => onLeafMouseClick(event, leaf)
+              : this.onLeafMouseClick
+          }
           onNodeMouseClick={this.onNodeMouseClick}
           path={this.props.tosPath}
           removeSearchInput={this.removeSearchInput}
@@ -331,4 +387,3 @@ export class Navigation extends React.Component {
 }
 
 export default Navigation;
-

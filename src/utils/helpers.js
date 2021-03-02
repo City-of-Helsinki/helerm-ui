@@ -1,4 +1,3 @@
-import LTT from 'list-to-tree';
 import { normalize, schema } from 'normalizr';
 import { toastr } from 'react-redux-toastr';
 import moment from 'moment';
@@ -9,52 +8,64 @@ import {
   SENT_FOR_REVIEW,
   WAITING_FOR_APPROVAL,
   APPROVED
-} from '../../config/constants';
+} from '../constants';
 
-export function convertToTree (itemList) {
+export function convertToTree(itemList) {
   // ------------------------------------
   // Combine navigation number and names and
   // give each item in the navigation a level specific id for sorting.
-  // Because 'list-to-tree' cannot build a tree if option fields are not at
-  // root level, lift parent id from { id: parentId, version: parentVersion }
-  // to object root.
   // ------------------------------------
-  itemList.map(item => {
-    item.name = item.code + ' ' + item.title;
-    item.sort_id = item.code.substring(
-      item.code.length - 2,
-      item.code.length
-    );
-    item.path = [];
-    item.parent_id = item.parent ? item.parent.id : null;
+  const newList = itemList.map((item) => {
+    return {
+      name: item.code + ' ' + item.title,
+      sort_id: item.code.substring(item.code.length - 2, item.code.length),
+      path: [],
+      parent_id: item.parent ? item.parent.id : null,
+      ...item
+    };
   });
-  const ltt = new LTT(itemList, {
-    key_id: 'id',
-    key_parent: 'parent_id',
-    key_child: 'children'
-  });
-  const unOrderedTree = ltt.GetTree();
-  // ------------------------------------
-  // Sort the tree, as ltt doesnt automatically do it
-  // ------------------------------------
-  const sortTree = tree => {
-    tree = orderBy(tree, ['sort_id'], 'asc');
-    return tree.map(item => {
-      if (item.children !== undefined) {
-        // ------------------------------------
-        // Generate path to show when navigation is minimized and Tos is shown
-        // ------------------------------------
-        item.path.push(item.name);
-        item.children.map(child => {
-          item.path.map(path => child.path.push(path));
-        });
-        item.children = orderBy(item.children, ['sort_id'], 'asc');
-        sortTree(item.children);
+
+  const dict = {};
+  newList.forEach((item) => (dict[item.id] = item));
+  const mem = new Set();
+
+  const resolveParent = (item) => {
+    if (item.parent_id !== null && !mem.has(item.id)) {
+      const parent = dict[item.parent_id];
+      if (!parent) {
+        // in case of a broken tree parent will be null
+        throw Error(`Parent with id ${item.parent_id} not found`);
       }
-      return item;
-    });
+      if (Array.isArray(parent.children)) {
+        parent.children.push(item);
+        // keep the children sorted
+        parent.children.sort((a, b) => a.sort_id.localeCompare(b.sort_id));
+      } else {
+        parent.children = [item];
+      }
+      mem.add(item.id);
+      resolveParent(parent);
+    }
   };
-  return sortTree(unOrderedTree);
+
+  for (const item of newList) {
+    if (!mem.has(item.id)) {
+      resolveParent(item);
+    }
+  }
+  // recurse throught the tree to resolve paths for UI
+  const affixPath = (rootNode) => {
+    if (!rootNode.children) {
+      return;
+    }
+    for (const kid of rootNode.children) {
+      kid.path = kid.path.concat(...rootNode.path, rootNode.name);
+      affixPath(kid);
+    }
+  };
+  const roots = newList.filter((l) => l.parent_id === null);
+  roots.forEach((root) => affixPath(root));
+  return roots.sort((a, b) => a.sort_id.localeCompare(b.sort_id));
 }
 
 /**
@@ -62,17 +73,17 @@ export function convertToTree (itemList) {
  * @param tos
  * @returns {{entities: any, result: any}}
  */
-export function normalizeTosFromApi (tos) {
-  tos.phases.map((phase, phaseIndex) => {
-    phase.index = phase.index || phaseIndex;
-    phase.is_attributes_open = false;
-    phase.is_open = false;
-    phase.actions.map((action, actionIndex) => {
-      action.index = action.index || actionIndex;
-      action.is_open = false;
-      action.records.map((record, recordIndex) => {
-        record.index = record.index || recordIndex;
-        record.is_open = false;
+export function normalizeTosFromApi(tos) {
+  tos.phases.forEach((p, phaseIndex) => {
+    p.index = p.index || phaseIndex;
+    p.is_attributes_open = false;
+    p.is_open = false;
+    p.actions.forEach((a, actionIndex) => {
+      a.index = a.index || actionIndex;
+      a.is_open = false;
+      a.records.forEach((r, recordIndex) => {
+        r.index = r.index || recordIndex;
+        r.is_open = false;
       });
     });
   });
@@ -98,11 +109,11 @@ export function normalizeTosFromApi (tos) {
  * @param tos
  * @returns {*}
  */
-export function normalizeTosForApi (tos) {
+export function normalizeTosForApi(tos) {
   // TODO: needs some serious refactoring...
   const tosCopy = Object.assign({}, tos);
   const finalTos = trimAttributes(tosCopy);
-  const phases = map(finalTos.phases, phase => Object.assign({}, phase));
+  const phases = map(finalTos.phases, (phase) => Object.assign({}, phase));
   const finalPhases = [];
 
   phases.map((phase, phaseIndex) => {
@@ -130,46 +141,40 @@ export function normalizeTosForApi (tos) {
  * @param tosCopy
  * @returns {*}
  */
-export function trimAttributes (tosCopy) {
-  Object.keys(tosCopy.phases).forEach(phase => {
+export function trimAttributes(tosCopy) {
+  Object.keys(tosCopy.phases).forEach((phase) => {
     if (tosCopy.phases.hasOwnProperty(phase)) {
-      Object.keys(tosCopy.phases[phase].attributes).forEach(attribute => {
+      Object.keys(tosCopy.phases[phase].attributes).forEach((attribute) => {
         if (
           tosCopy.phases[phase].attributes.hasOwnProperty(attribute) &&
-          (
-            tosCopy.phases[phase].attributes[attribute] === '' ||
-            tosCopy.phases[phase].attributes[attribute] === null
-          )
+          (tosCopy.phases[phase].attributes[attribute] === '' ||
+            tosCopy.phases[phase].attributes[attribute] === null)
         ) {
           delete tosCopy.phases[phase].attributes[attribute];
         }
       });
     }
   });
-  Object.keys(tosCopy.actions).forEach(action => {
+  Object.keys(tosCopy.actions).forEach((action) => {
     if (tosCopy.actions.hasOwnProperty(action)) {
-      Object.keys(tosCopy.actions[action].attributes).forEach(attribute => {
+      Object.keys(tosCopy.actions[action].attributes).forEach((attribute) => {
         if (
           tosCopy.actions[action].attributes.hasOwnProperty(attribute) &&
-          (
-            tosCopy.actions[action].attributes[attribute] === '' ||
-            tosCopy.actions[action].attributes[attribute] === null
-          )
+          (tosCopy.actions[action].attributes[attribute] === '' ||
+            tosCopy.actions[action].attributes[attribute] === null)
         ) {
           delete tosCopy.actions[action].attributes[attribute];
         }
       });
     }
   });
-  Object.keys(tosCopy.records).forEach(record => {
+  Object.keys(tosCopy.records).forEach((record) => {
     if (tosCopy.records.hasOwnProperty(record)) {
-      Object.keys(tosCopy.records[record].attributes).forEach(attribute => {
+      Object.keys(tosCopy.records[record].attributes).forEach((attribute) => {
         if (
           tosCopy.records[record].attributes.hasOwnProperty(attribute) &&
-          (
-            tosCopy.records[record].attributes[attribute] === '' ||
-            tosCopy.records[record].attributes[attribute] === null
-          )
+          (tosCopy.records[record].attributes[attribute] === '' ||
+            tosCopy.records[record].attributes[attribute] === null)
         ) {
           delete tosCopy.records[record].attributes[attribute];
         }
@@ -186,12 +191,12 @@ export function trimAttributes (tosCopy) {
  * @param id
  * @returns {*}
  */
-export function itemById (items, id) {
-  let searchResult = find(items, item => item.id === id);
+export function itemById(items, id) {
+  let searchResult = find(items, (item) => item.id === id);
 
   if (!searchResult) {
-    let filteredItems = filter(items, item => item.children);
-    let subset = flatten(map(filteredItems, item => item.children));
+    let filteredItems = filter(items, (item) => item.children);
+    let subset = flatten(map(filteredItems, (item) => item.children));
 
     if (subset.length !== 0) {
       return itemById(subset, id);
@@ -209,9 +214,9 @@ export function itemById (items, id) {
  * @param h
  * @returns {Window}
  */
-export function centeredPopUp (url, title, w, h) {
-  const left = screen.width / 2 - w / 2;
-  const top = screen.height / 2 - h / 2;
+export function centeredPopUp(url, title, w, h) {
+  const left = window.screen.width / 2 - w / 2;
+  const top = window.screen.height / 2 - h / 2;
   return window.open(
     url,
     title,
@@ -234,7 +239,7 @@ export function centeredPopUp (url, title, w, h) {
  * @param permission
  * @returns {*}
  */
-export function checkPermissions (user, permission) {
+export function checkPermissions(user, permission) {
   return !isEmpty(user) && includes(user.permissions, permission);
 }
 
@@ -243,7 +248,7 @@ export function checkPermissions (user, permission) {
  * @param status
  * @returns {*}
  */
-export function getStatusLabel (status) {
+export function getStatusLabel(status) {
   switch (status) {
     case DRAFT:
       return 'Luonnos';
@@ -263,7 +268,7 @@ export function getStatusLabel (status) {
  * @param message
  * @param opts
  */
-export function displayMessage (message, opts = { type: 'success' }) {
+export function displayMessage(message, opts = { type: 'success' }) {
   const { title, body } = message;
   return toastr[opts.type](title, body, opts);
 }
@@ -274,7 +279,7 @@ export function displayMessage (message, opts = { type: 'success' }) {
  * @param format
  * @returns {string}
  */
-export function formatDateTime (dateTime, format = 'DD.MM.YYYY HH:mm') {
+export function formatDateTime(dateTime, format = 'DD.MM.YYYY HH:mm') {
   return moment(dateTime).format(format);
 }
 
@@ -284,7 +289,7 @@ export function formatDateTime (dateTime, format = 'DD.MM.YYYY HH:mm') {
  * @param type
  * @returns {Array}
  */
-export function getBaseValues (attributeTypes, type) {
+export function getBaseValues(attributeTypes, type) {
   const baseValues = [
     { index: attributeTypes['PhaseType'].index, type: 'PhaseType' },
     { index: attributeTypes['RecordType'].index, type: 'RecordType' },
@@ -292,7 +297,7 @@ export function getBaseValues (attributeTypes, type) {
     { index: attributeTypes['TypeSpecifier'].index, type: 'TypeSpecifier' }
   ];
   const orderedBaseValues = orderBy(baseValues, ['index']);
-  return orderedBaseValues.map(baseValue => baseValue.type);
+  return orderedBaseValues.map((baseValue) => baseValue.type);
 }
 
 /**
@@ -301,7 +306,7 @@ export function getBaseValues (attributeTypes, type) {
  * @param  {string} relativePath
  * @return {string}
  */
-export function getNewPath (absolutePath, relativePath) {
+export function getNewPath(absolutePath, relativePath) {
   const pathParts = absolutePath.split('/').filter(Boolean);
   const relativeParts = relativePath.split('/').filter(Boolean);
 
@@ -332,3 +337,39 @@ export function getNewPath (absolutePath, relativePath) {
       .join('/')
   );
 }
+
+/**
+ * React-select can behave as multi- or single-select which have different
+ * behaviours in emitting and displaying values. This general helper is used
+ * when value(s) are mapped to be displayed.
+ * @param options
+ * @param receivedValue
+ * @returns {null | Array<*> | * }
+ */
+export const resolveSelectValues = (options, receivedValue, multi = false) => {
+  if (!receivedValue) {
+    return null;
+  }
+  if (multi && Array.isArray(receivedValue)) {
+    return options.filter(({ value }) => receivedValue.includes(value));
+  }
+  return options.find(({ value }) => value === receivedValue);
+};
+
+/**
+ * React-select can behave as multi- or single-select which have different
+ * behaviours in emitting and displaying values. This general helper is used
+ * when value(s) are returned to the change handler.
+ * Clearing the last element sets the value as null
+ * while clearing the whole selection sets value as an empty array
+ * (https://github.com/JedWatson/react-select/issues/3632)
+ * @param {Array<any>}options
+ * @param {any | Array<any>} receivedValue
+ * @returns {null | Array<*> | * }
+ */
+export const resolveReturnValues = (emittedValue, multi = false) => {
+  if (multi && !emittedValue) {
+    return [];
+  }
+  return emittedValue;
+};

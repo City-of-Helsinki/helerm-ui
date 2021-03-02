@@ -4,16 +4,22 @@ import { find, includes, isArray, isEmpty, keys, map, sortBy } from 'lodash';
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import Select from 'react-select';
+import CreatableSelect from 'react-select/creatable';
 
 import {
   BULK_UPDATE_CONVERSION_TYPES,
   BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES
-} from '../../../../../config/constants';
+} from '../../../../constants';
 
 import './Conversion.scss';
+import {
+  resolveReturnValues,
+  resolveSelectValues
+} from '../../../../utils/helpers';
+import { getDisplayLabelForAttribute } from '../../../../utils/attributeHelper';
 
 export class Conversion extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.onChangeAttribute = this.onChangeAttribute.bind(this);
@@ -29,14 +35,14 @@ export class Conversion extends React.Component {
     };
   }
 
-  onChangeAttribute (option) {
+  onChangeAttribute(option) {
     this.setState({
       attribute: option.value,
       value: ''
     });
   }
 
-  onChangeType (option) {
+  onChangeType(option) {
     this.setState({
       type: option.value,
       attribute: '',
@@ -44,7 +50,7 @@ export class Conversion extends React.Component {
     });
   }
 
-  onChangeValue (option) {
+  onChangeValue(option) {
     if (isArray(option)) {
       const values = option.length ? map(option, 'value') : null;
       this.setState({
@@ -57,53 +63,63 @@ export class Conversion extends React.Component {
     }
   }
 
-  onChangeValidDate (date) {
-    const value = date ? date.format('YYYY-MM-DD') : '';
+  onChangeValidDate(date) {
+    const value = date ? moment(date).format('YYYY-MM-DD') : '';
     this.setState({ value });
   }
 
-  onConvert () {
+  onConvert() {
     const { attribute, type, value } = this.state;
     this.props.onConvert({ attribute, type, value });
   }
 
-  getAttributeOptions (attributeTypes, type) {
+  getAttributeOptions(attributeTypes, type) {
     const attributes = [...BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES];
-    return sortBy(keys(attributeTypes).reduce((acc, key) => {
-      const attribute = attributeTypes[key];
-      if (includes(attribute.allowedIn, type)) {
-        acc.push({
-          label: attribute.name,
-          value: key
-        });
-      }
-      return acc;
-    }, attributes), ['label']);
+    return sortBy(
+      keys(attributeTypes).reduce((acc, key) => {
+        const attribute = attributeTypes[key];
+        if (includes(attribute.allowedIn, type)) {
+          acc.push({
+            label: attribute.name,
+            value: key
+          });
+        }
+        return acc;
+      }, attributes),
+      ['label']
+    );
   }
 
-  getValueField (attributeTypes, type, attribute, value) {
+  getValueField(attributeTypes, type, attribute, value) {
     const attributeType = attributeTypes[attribute] || {};
     if (!isEmpty(attributeType) && !isEmpty(attributeType.values)) {
-      const options = attributeType.values.map(item => ({
-        label: item.value,
+      const options = attributeType.values.map((item) => ({
+        label: getDisplayLabelForAttribute({
+          attributeValue: item.value,
+          identifier: attribute
+        }),
         value: item.value
       }));
-      if (!find(options, { value })) {
+      if (!find(options, { value }) && !isEmpty(value)) {
         options.push({
-          label: value,
+          label: getDisplayLabelForAttribute({
+            attributeValue: value,
+            identifier: attribute
+          }),
           value
         });
       }
       if (includes(attributeType.allowValuesOutsideChoicesIn, type)) {
+        const multi = includes(attributeType.multiIn, attribute);
         return (
-          <Select.Creatable
-            autoBlur={false}
-            disabled={isEmpty(attribute)}
-            openOnFocus={true}
-            clearable={true}
-            value={value}
-            multi={includes(attributeType.multiIn, attribute)}
-            onChange={this.onChangeValue}
+          <CreatableSelect
+            isDisabled={isEmpty(attribute)}
+            isClearable={true}
+            value={resolveSelectValues(options, value, multi) || ''}
+            isMulti={multi}
+            onChange={(emittedValue) =>
+              this.onChangeValue(resolveReturnValues(emittedValue, multi))
+            }
             autoFocus={true}
             options={options}
           />
@@ -111,15 +127,13 @@ export class Conversion extends React.Component {
       }
       return (
         <Select
-          autoBlur={false}
-          disabled={isEmpty(attribute)}
-          openOnFocus={true}
-          clearable={true}
-          value={value}
-          onChange={this.onChangeValue}
+          className={'Select'}
           autoFocus={true}
+          isDisabled={isEmpty(attribute)}
+          isClearable={true}
+          value={options.find((o) => o.value === value)}
+          onChange={this.onChangeValue}
           options={options}
-          multi={false}
         />
       );
     } else if (includes(['valid_from', 'valid_to'], attribute)) {
@@ -127,11 +141,12 @@ export class Conversion extends React.Component {
         <div className='conversion-date-field'>
           <DatePicker
             autoFocus={true}
-            dateFormat='D.M.YYYY'
+            dateFormat='dd.MM.yyyy'
+            showYearDropdown
+            dateFormatCalendar='MMMM'
             isClearable={true}
-            locale='fi-fi'
             placeholderText='PP.KK.VVVV'
-            selected={value ? moment(value) : null}
+            selected={value ? moment(value).toDate() : null}
             onChange={this.onChangeValidDate}
           />
         </div>
@@ -142,42 +157,39 @@ export class Conversion extends React.Component {
         className='form-control'
         disabled={isEmpty(attribute)}
         value={value}
-        onChange={({ target: { value } }) => this.onChangeValue(value)}
+        onChange={({ target }) => this.onChangeValue(target.value)}
         autoFocus={true}
       />
     );
   }
 
-  render () {
+  render() {
     const { attribute, type, value } = this.state;
     const { attributeTypes, disabled } = this.props;
     const attributes = this.getAttributeOptions(attributeTypes, type);
-
     return (
       <div className='conversion'>
         <div className='col-xs-3'>
           <span className='conversion-label'>Kohdistus</span>
           <Select
-            autoBlur={false}
-            openOnFocus={true}
-            clearable={false}
-            value={type}
+            className={'Select'}
+            isClearable={false}
+            value={BULK_UPDATE_CONVERSION_TYPES.find(
+              (convType) => convType.value === type
+            )}
             onChange={this.onChangeType}
-            autoFocus={true}
             options={BULK_UPDATE_CONVERSION_TYPES}
           />
         </div>
         <div className='col-xs-3'>
           <span className='conversion-label'>Kenttä</span>
           <Select
-            autoBlur={false}
-            openOnFocus={true}
-            clearable={false}
-            value={attribute}
-            onChange={this.onChangeAttribute}
+            className={'Select'}
+            isClearable={false}
             autoFocus={true}
+            value={attributes.find((a) => a.value === attribute) || ''}
+            onChange={this.onChangeAttribute}
             options={attributes}
-            multi={false}
           />
         </div>
         <div className='col-xs-3'>
@@ -188,7 +200,8 @@ export class Conversion extends React.Component {
           <button
             className='btn btn-primary'
             disabled={isEmpty(attribute) || disabled}
-            onClick={this.onConvert}>
+            onClick={this.onConvert}
+          >
             Muuta
           </button>
         </div>
@@ -202,10 +215,7 @@ Conversion.propTypes = {
   conversion: PropTypes.shape({
     attribute: PropTypes.string,
     type: PropTypes.string,
-    value: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.array
-    ])
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.array])
   }),
   disabled: PropTypes.bool.isRequired,
   onConvert: PropTypes.func.isRequired

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 
 import { fetchBulkUpdates } from './reducer';
 import BulkListView from './BulkListView';

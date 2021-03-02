@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './DeleteView.scss';
 
-export class DeleteView extends React.Component {
-  constructor (props) {
+export class DeleteView extends Component {
+  constructor(props) {
     super(props);
     this.state = {
       type: {
@@ -24,20 +25,27 @@ export class DeleteView extends React.Component {
     };
   }
 
-  render () {
+  render() {
     return (
-      <div className='delete-view row'>
-        <h3>Olet poistamassa {this.state.type[this.props.type].name} &quot;{this.props.target}&quot;</h3>
-        { this.state.type[this.props.type].children &&
-          <span className='has-children-text'>Huomioi, että
-            kaikki {this.state.type[this.props.type].childrenText} sisältämät
-            tiedot poistetaan
+      <div className="delete-view row">
+        <h3>
+          Olet poistamassa {this.state.type[this.props.type].name} &quot;
+          {this.props.target}&quot;
+        </h3>
+        {this.state.type[this.props.type].children && (
+          <span className="has-children-text">
+            Huomioi, että kaikki {this.state.type[this.props.type].childrenText}{' '}
+            sisältämät tiedot poistetaan
           </span>
-        }
+        )}
         <h4>Vahvista poisto</h4>
-        <div className='popup-buttons'>
-          <button onClick={this.props.cancel} className='btn btn-default'>Peruuta</button>
-          <button onClick={this.props.action} className='btn btn-delete'>Poista</button>
+        <div className="popup-buttons">
+          <button onClick={this.props.cancel} className="btn btn-default">
+            Peruuta
+          </button>
+          <button onClick={this.props.action} className="btn btn-delete">
+            Poista
+          </button>
         </div>
       </div>
     );
@@ -45,10 +53,10 @@ export class DeleteView extends React.Component {
 }
 
 DeleteView.propTypes = {
-  action: React.PropTypes.func.isRequired,
-  cancel: React.PropTypes.func.isRequired,
-  target: React.PropTypes.string.isRequired,
-  type: React.PropTypes.string.isRequired
+  action: PropTypes.func.isRequired,
+  cancel: PropTypes.func.isRequired,
+  target: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired
 };
 
 export default DeleteView;

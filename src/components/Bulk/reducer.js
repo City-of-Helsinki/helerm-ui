@@ -2,7 +2,7 @@ import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
 import { isArray, orderBy } from 'lodash';
 
-import { DEFAULT_PAGE_SIZE } from '../../../config/constants';
+import { DEFAULT_PAGE_SIZE } from '../../constants';
 import { default as api } from '../../utils/api.js';
 
 const initialState = {
