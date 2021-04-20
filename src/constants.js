@@ -53,6 +53,13 @@ export const navigationStateFilters = {
   }
 };
 
+export const USER_LOGIN_STATUS = {
+  NONE: 'NONE',
+  INITIALIZING: 'INITIALIZING',
+  AUTHORIZED: 'AUTHORIZED',
+  UNAUTHORIZED: 'UNAUTHORIZED'
+};
+
 // header height
 export const HEADER_HEIGHT = 60;
 

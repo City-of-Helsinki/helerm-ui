@@ -12,6 +12,7 @@ import ClassificationTreeContainer from './components/ClassificationTree/Classif
 import ViewInfo from './components/Info/ViewInfo';
 import PrintTOS from './components/Tos/Print/PrintView';
 import NotFound from './components/NotFound/NotFound';
+import LoginCallbackContainer from './components/LoginCallback/LoginCallbackContainer'
 
 const Routes = () => {
   return (
@@ -19,6 +20,11 @@ const Routes = () => {
       <Route exact path='/info'>
         <InfoLayout>
           <ViewInfo />
+        </InfoLayout>
+      </Route>
+      <Route exact path='/callback'>
+        <InfoLayout>
+          <LoginCallbackContainer />
         </InfoLayout>
       </Route>
       <Route exact path='/bulk'>

@@ -20,6 +20,22 @@ const THEMES = {
   white: '#ffffff'
 };
 
+function envValueToBoolean(value, defaultValue) {
+  const strValue = String(value).toLowerCase();
+  if (
+    value === false ||
+    strValue === '' ||
+    strValue === 'false' ||
+    strValue === '0'
+  ) {
+    return false;
+  }
+  if (value === true || strValue === 'true' || strValue === '1') {
+    return true;
+  }
+  return defaultValue;
+}
+
 export const config = {
   NODE_ENV: process.env.NODE_ENV,
   API_URL: process.env.REACT_APP_API_URL,
@@ -41,5 +57,11 @@ export const config = {
     consts.DEFAULT_FACETED_SEARCH_LENGTH,
   SITE_THEME: THEMES[process.env.REACT_APP_SITE_THEME] || THEMES['coat'],
   SENTRY_DSN: process.env.REACT_APP_SENTRY_DSN,
-  SENTRY_REPORT_DIALOG: process.env.REACT_APP_SENTRY_REPORT_DIALOG
+  SENTRY_REPORT_DIALOG: process.env.REACT_APP_SENTRY_REPORT_DIALOG,
+  OIDC_URL: process.env.REACT_APP_OIDC_URL,
+  OIDC_CLIENT_ID: process.env.REACT_APP_OIDC_CLIENT_ID,
+  OIDC_RESPONSE_TYPE: process.env.REACT_APP_OIDC_RESPONSE_TYPE,
+  OIDC_SCOPE: process.env.REACT_APP_OIDC_SCOPE,
+  OIDC_TOKEN_URL: process.env.REACT_APP_OIDC_TOKEN_URL,
+  OIDC_LOGGING: envValueToBoolean(process.env.REACT_APP_OIDC_LOGGING, false),
 };

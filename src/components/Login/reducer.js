@@ -1,14 +1,16 @@
-import fetch from 'isomorphic-fetch';
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
-import { isEmpty, get, isString } from 'lodash';
+import { get } from 'lodash';
 
 import api from '../../utils/api';
-import { setStorageItem, removeStorageItem } from '../../utils/storage';
+import { getClient } from '../../utils/oidcClient'
+import { removeStorageItem, getStorageItem } from '../../utils/storage';
+import { USER_LOGIN_STATUS } from '../../constants'
 
 const initialState = {
   data: null,
-  isFetching: false
+  isFetching: false,
+  status: USER_LOGIN_STATUS.NONE,
 };
 
 export const RECEIVE_USERDATA = 'receiveUserDataAction';
@@ -17,6 +19,7 @@ export const RETRIEVE_USERDATA = 'retrieveUserFromSessionAction';
 export const ERROR_USERDATA = 'errorUserDataAction';
 export const LOGIN = 'login';
 export const LOGOUT = 'logout';
+export const LOGIN_STATUS = 'loginStatusAction';
 
 export function receiveUserData(user) {
   return createAction(RECEIVE_USERDATA)(user);
@@ -26,58 +29,71 @@ export function clearUserData() {
   return createAction(CLEAR_USERDATA)();
 }
 
+export function handleLoginCallback() {
+  return function (dispatch) {
+    dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.INITIALIZING));
+    return getClient().handleCallback()
+      .then(res => {
+        dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.AUTHORIZED));
+        dispatch(retrieveUserFromSession())
+      })
+      .catch((err) => {
+        dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.UNAUTHORIZED));
+      });
+  };
+}
+
 export function retrieveUserFromSession() {
   return function (dispatch) {
+    const id = getStorageItem('user')
+    const token = getStorageItem('oidctoken')
+    if (!id || !token) {
+      dispatch(createAction(ERROR_USERDATA)());
+      dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.NONE));
+      return null
+    }
     dispatch(createAction(RETRIEVE_USERDATA)());
-    return fetch(`/auth/me?${+new Date()}`, {
-      method: 'GET',
-      credentials: 'same-origin'
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then((user) => {
-        if (isString(user.token) && !isEmpty(user.token)) {
-          setStorageItem('token', user.token);
-          const url = `user/${user.id}`;
-          return api
-            .get(url)
-            .then((helermUserData) => {
-              if (helermUserData.status === 401) {
-                return logout()(dispatch);
-              }
-              return helermUserData.json();
-            })
-            .then((helermUser) => {
-              const permissions = get(helermUser, 'permissions', []);
-              const userWithPermissions = Object.assign({}, user, {
-                permissions: permissions
-              });
-              return dispatch(receiveUserData(userWithPermissions));
-            })
-            .catch(() => {
-              dispatch(createAction(ERROR_USERDATA)());
-            });
+    dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.INITIALIZING));
+    const url = `user/${id}`;
+    return api
+      .get(url)
+      .then((helermUserData) => {
+        if (helermUserData.status === 401) {
+          return logout()(dispatch);
         }
-        return dispatch(receiveUserData(user));
+        return helermUserData.json();
       })
-      .catch(() => {
+      .then((helermUser) => {
+        const permissions = get(helermUser, 'permissions', []);
+        const userWithPermissions = {
+          id,
+          firstName: helermUser.first_name,
+          lastName: helermUser.last_name,
+          permissions,
+        };
+        return dispatch(receiveUserData(userWithPermissions));
+      })
+      .catch((err) => {
         dispatch(createAction(ERROR_USERDATA)());
       });
   };
 }
 
 export function login() {
-  window.location.assign(`/auth/login/helsinki?next=${window.location.href}`);
-  return createAction(LOGIN);
+  return function (dispatch) {
+    getClient().login();
+    dispatch(createAction(LOGIN));
+  };
 }
 
 export function logout() {
   return function (dispatch) {
     dispatch(createAction(LOGOUT));
     removeStorageItem('token');
+    removeStorageItem('oidctoken');
+    removeStorageItem('user');
+    getClient().logout();
     dispatch(clearUserData());
-    window.location.assign(`/auth/logout?next=${window.location.origin}`);
   };
 }
 
@@ -85,8 +101,10 @@ export function logoutUnauthorized() {
   return function (dispatch) {
     dispatch(createAction(LOGOUT));
     removeStorageItem('token');
+    removeStorageItem('oidctoken');
+    removeStorageItem('user');
+    getClient().logout();
     dispatch(clearUserData());
-    window.location.assign(`/auth/login/helsinki?next=${window.location.href}`);
   };
 }
 
@@ -115,12 +133,19 @@ const errorUserDataAction = (state) => {
   });
 };
 
+const loginStatusAction = (state, { payload }) => {
+  return update(state, {
+    status: { $set: payload },
+  });
+}
+
 export default handleActions(
   {
     receiveUserDataAction,
     clearUserDataAction,
     retrieveUserFromSessionAction,
-    errorUserDataAction
+    errorUserDataAction,
+    loginStatusAction,
   },
   initialState
 );

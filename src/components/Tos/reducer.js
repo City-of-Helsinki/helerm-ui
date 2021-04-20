@@ -173,6 +173,10 @@ export function saveDraft() {
         }
         dispatch(receiveTOS(json));
         return json;
+      })
+      .catch(() => {
+        dispatch(createAction(TOS_ERROR)());
+        throw Error('Luonnoksen tallennus epäonnistui');
       });
   };
 }
