@@ -40,6 +40,7 @@
     "nested-objects": "0.0.2",
     "node-sass": "4.14.1",
     "normalizr": "^3.6.1",
+    "oidc-client": "^1.11.5",
     "passport": "^0.4.1",
     "passport-helsinki": "City-of-Helsinki/passport-helsinki",
     "piwik-react-router": "^0.12.1",
@@ -70,7 +71,7 @@
     "xlsx": "^0.16.9"
   },
   "scripts": {
-    "start:dev": "concurrently --kill-others \"DEBUG=app:* node server/main.js\" \"PORT=3000 react-scripts start\"",
+    "start:dev": "concurrently --kill-others \"PORT=3000 react-scripts start\"",
     "start:server": "NODE_ENV=production DEBUG=app:* node server/main.js",
     "build": "react-scripts build",
     "test": "react-scripts test --watchAll=false --verbose",
