@@ -40,6 +40,7 @@
     "nested-objects": "0.0.2",
     "node-sass": "4.14.1",
     "normalizr": "^3.6.1",
+    "oidc-client": "^1.11.5",
     "passport": "^0.4.1",
     "passport-helsinki": "City-of-Helsinki/passport-helsinki",
     "piwik-react-router": "^0.12.1",
@@ -58,7 +59,7 @@
     "react-redux": "^7.2.2",
     "react-redux-toastr": "^7.6.5",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^4.0.1",
+    "react-scripts": "^4.0.3",
     "react-select": "^3.1.1",
     "react-sticky-el": "^2.0.5",
     "redux": "^4.0.5",
@@ -70,8 +71,8 @@
     "xlsx": "^0.16.9"
   },
   "scripts": {
-    "start:dev": "concurrently --kill-others \"DEBUG=app:* node server/main.js\" \"PORT=3000 react-scripts start\"",
-    "start:server": "NODE_ENV=production DEBUG=app:* node server/main.js",
+    "start:dev": "concurrently --kill-others \"PORT=3000 react-scripts start\"",
+    "start:server": "NODE_ENV=production",
     "build": "react-scripts build",
     "test": "react-scripts test --watchAll=false --verbose",
     "eject": "react-scripts eject"

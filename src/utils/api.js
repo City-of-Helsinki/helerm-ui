@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import { forEach, merge } from 'lodash';
 import { config } from '../config';
+import { getClient } from './oidcClient';
 import { getStorageItem, removeStorageItem } from './storage';
 
 /**
@@ -111,7 +112,7 @@ export function del(endpoint, params = {}, options = { method: 'DELETE' }) {
  * @returns {*}
  */
 export function callApi(endpoint, params, options = {}) {
-  const token = getStorageItem('token');
+  const token = getStorageItem('oidctoken');
   const defaultHeaders = new Headers();
   const url = getApiUrl(endpoint, params);
   const finalOptions = merge(
@@ -137,7 +138,7 @@ export function callApi(endpoint, params, options = {}) {
   }
 
   if (token) {
-    defaultHeaders.append('Authorization', `JWT ${token}`);
+    defaultHeaders.append('Authorization', `Bearer ${token}`);
   }
 
   if (options.headers) {
@@ -151,10 +152,10 @@ export function callApi(endpoint, params, options = {}) {
     if (res.status === 401) {
       if (token) {
         removeStorageItem('token');
+        removeStorageItem('oidctoken');
+        removeStorageItem('user');
       }
-      window.location.assign(
-        `/auth/login/helsinki?next=${window.location.href}`
-      );
+      getClient().login();
       throw new Unauthorized(url);
     }
     return res;

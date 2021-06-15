@@ -7,6 +7,7 @@ import ReduxToastr from 'react-redux-toastr';
 import Loader from '../components/Loader';
 import { retrieveUserFromSession } from '../components/Login/reducer';
 import { fetchAttributeTypes, fetchTemplates } from '../store/uiReducer';
+import { ClientProvider } from './ClientProvider'
 
 class AppContainer extends Component {
   static propTypes = {
@@ -28,24 +29,26 @@ class AppContainer extends Component {
   render() {
     const { user, routes, store, history } = this.props;
     return (
-      <Provider store={store}>
-        <div style={{ height: '100%' }}>
-          {user ? (
-            <Router history={history}>{routes}</Router>
-          ) : (
-            <Loader show={true} />
-          )}
-          <ReduxToastr
-            timeOut={4000}
-            newestOnTop={true}
-            preventDuplicates={true}
-            position='top-right'
-            transitionIn='fadeIn'
-            transitionOut='bounceOutUp'
-            progressBar={true}
-          />
-        </div>
-      </Provider>
+      <ClientProvider>
+        <Provider store={store}>
+          <div style={{ height: '100%' }}>
+            {user ? (
+              <Router history={history}>{routes}</Router>
+            ) : (
+              <Loader show={true} />
+            )}
+            <ReduxToastr
+              timeOut={4000}
+              newestOnTop={true}
+              preventDuplicates={true}
+              position='top-right'
+              transitionIn='fadeIn'
+              transitionOut='bounceOutUp'
+              progressBar={true}
+            />
+          </div>
+        </Provider>
+      </ClientProvider>
     );
   }
 }
