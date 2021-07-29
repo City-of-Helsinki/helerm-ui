@@ -21,8 +21,10 @@ class AppContainer extends Component {
   };
 
   UNSAFE_componentWillMount() {
-    this.props.fetchAttributeTypes();
-    this.props.fetchTemplates();
+    if (!window.location.href.includes('/renew')) {
+      this.props.fetchAttributeTypes();
+      this.props.fetchTemplates();
+    }
     this.props.retrieveUserFromSession();
   }
 
