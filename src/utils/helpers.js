@@ -273,6 +273,22 @@ export function displayMessage(message, opts = { type: 'success' }) {
   return toastr[opts.type](title, body, opts);
 }
 
+export function confirmMessage(message, options = { onOk: () => {}, onCancel: () => {}}) {
+  toastr.removeByType('confirm');
+  toastr.confirm(
+    null,
+    {
+      ...options,
+      component: () => (
+        <div className="confirm-toastr-component">
+            <div><i className='fa fa-exclamation-triangle' /></div>
+            <div>{message}</div>
+        </div>
+      )
+    }
+  );
+}
+
 /**
  * Format datetime-object
  * @param dateTime
