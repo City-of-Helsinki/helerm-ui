@@ -68,7 +68,7 @@
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
     "remark-gfm": "^1.0.0",
-    "xlsx": "^0.16.9"
+    "xlsx": "0.17.1"
   },
   "scripts": {
     "start:dev": "concurrently --kill-others \"PORT=3000 react-scripts start\"",
