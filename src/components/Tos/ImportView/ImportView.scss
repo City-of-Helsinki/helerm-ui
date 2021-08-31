@@ -1,3 +1,5 @@
+@import '../../../styles/vendor/hel-components/variables';
+
 .importable-elements {
   height: 100%;
   height: 65vh;
@@ -6,23 +8,29 @@
   border: 1px 0px 1px 1px solid #ededed;
   padding-top: 10px
 }
+.importable-element-link {
+  padding: 10px 0;
+}
+.importable-element-link:hover {
+  cursor: pointer;
+  color: $link-color;
+}
 .import-wrapper {
-  margin-bottom: 9px;
+  display: block;
+  padding: 10px 0;
 }
 .import-row-title {
-  display: inline-block;
-  border-left-width: 3px;
-  border-left-style: solid;
-  padding: 4px 7px;
+  display: block;
+  padding: 10px 0;
+}
+.import-row-link:hover {
+  cursor: pointer;
+  color: $link-color;
 }
 .import-phase-title {
-  border-left-color: salmon;
   display: block;
 }
-.import-action-title {
-  border-left-color: #658fcd;
-}
 .import-action-record-wrapper {
-  display: inline-block;
-  margin-left: 11px;
+  display: block;
+  padding-left: 20px;
 }

@@ -2,7 +2,7 @@ import fetch from 'isomorphic-fetch';
 import { forEach, merge } from 'lodash';
 import { config } from '../config';
 import { getClient } from './oidcClient';
-import { getStorageItem, removeStorageItem } from './storage';
+import { getStorageItem } from './storage';
 
 /**
  * Which actions are allowed without authentication
@@ -150,12 +150,7 @@ export function callApi(endpoint, params, options = {}) {
   finalOptions.headers = defaultHeaders;
   return fetch(url, finalOptions).then((res) => {
     if (res.status === 401) {
-      if (token) {
-        removeStorageItem('token');
-        removeStorageItem('oidctoken');
-        removeStorageItem('user');
-      }
-      getClient().login();
+      getClient().handleAPITokenExpired();
       throw new Unauthorized(url);
     }
     return res;

@@ -7,7 +7,7 @@
   }
 
   .nav-tabs {
-    margin-bottom: 15px;
+    padding: 15px 0;
 
     > li > a {
       cursor: pointer;
@@ -24,9 +24,24 @@
 
   .import-button {
     color: $brand-primary;
+    margin-right: 15px;
     &:hover {
       cursor: pointer;
       text-decoration: underline;
+    }
+  }
+
+  .helerm-navigation .navigation-menu {
+    .navigation-header {
+      display: none;
+    }
+
+    .navigation-container {
+      position: static;
+
+      .navigation-toggle {
+        display: none;
+      }
     }
   }
 }

@@ -60,13 +60,15 @@ export class ImportView extends React.Component {
       );
       return (
         <div key={phases[phase].id} className='col-xs-12'>
-          <span>
+          <span className='import-row-title'>
             {this.getTargetName(
               phases[phase].attributes.TypeSpecifier,
               phases[phase].attributes.PhaseType
             )}
           </span>
-          {actionElements}
+          <div className='import-action-record-wrapper'>
+            {actionElements}
+          </div>
         </div>
       );
     });
@@ -75,26 +77,28 @@ export class ImportView extends React.Component {
   generateRecordItems() {
     const { phases, phasesOrder, actions } = this.props;
     return phasesOrder.map((phase) => {
-      let actionElements;
+      const actionElements = [];
       if (_.keys(phases[phase].actions).length > 0) {
-        actionElements = phases[phase].actions.forEach((action) => {
+        phases[phase].actions.forEach((action) => {
           if (_.keys(actions[action].records).length > 0) {
             const recordElements = this.generateLinks(
               this.props.records,
               actions[action].records
             );
-            return (
+            actionElements.push(
               <div
                 key={actions[action].id}
                 className='import-action-record-wrapper'
               >
-                <span className='import-row-title import-action-title'>
+                <span className='import-row-title'>
                   {this.getTargetName(
                     actions[action].attributes.TypeSpecifier,
                     actions[action].attributes.ActionType
                   )}
                 </span>
-                {recordElements}
+                <div className='import-action-record-wrapper'>
+                  {recordElements}
+                </div>
               </div>
             );
           }
@@ -129,9 +133,10 @@ export class ImportView extends React.Component {
     Object.keys(itemsInArray).forEach((key) => {
       if (itemsInArray.hasOwnProperty(key)) {
         links.push(
-          <div key={key} className='col-xs-12'>
+          <div key={key} className='import-row-title'>
             <span
               key={key}
+              className='import-row-link'
               onClick={(e) =>
                 this.selectForImport(e, values[itemsInArray[key]].id)
               }
@@ -224,7 +229,7 @@ export class ImportView extends React.Component {
                   <span
                     key={index}
                     onClick={(e) => this.removeFromImport(e, index)}
-                    className='col-xs-12'
+                    className='col-xs-12 importable-element-link'
                   >
                     {this.state.values[element].attributes.TypeSpecifier ||
                       this.state.values[element].attributes[

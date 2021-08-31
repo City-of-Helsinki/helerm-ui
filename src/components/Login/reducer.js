@@ -4,7 +4,7 @@ import { get } from 'lodash';
 
 import api from '../../utils/api';
 import { getClient } from '../../utils/oidcClient'
-import { removeStorageItem, getStorageItem } from '../../utils/storage';
+import { getStorageItem } from '../../utils/storage';
 import { USER_LOGIN_STATUS } from '../../constants'
 
 const initialState = {
@@ -36,6 +36,19 @@ export function handleLoginCallback() {
       .then(res => {
         dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.AUTHORIZED));
         dispatch(retrieveUserFromSession())
+      })
+      .catch((err) => {
+        dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.UNAUTHORIZED));
+      });
+  };
+}
+
+export function handleRenewCallback() {
+  return function (dispatch) {
+    dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.INITIALIZING));
+    return getClient().handleRenewCallback()
+      .then(res => {
+        dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.AUTHORIZED));
       })
       .catch((err) => {
         dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.UNAUTHORIZED));
@@ -89,9 +102,6 @@ export function login() {
 export function logout() {
   return function (dispatch) {
     dispatch(createAction(LOGOUT));
-    removeStorageItem('token');
-    removeStorageItem('oidctoken');
-    removeStorageItem('user');
     getClient().logout();
     dispatch(clearUserData());
   };
@@ -100,9 +110,6 @@ export function logout() {
 export function logoutUnauthorized() {
   return function (dispatch) {
     dispatch(createAction(LOGOUT));
-    removeStorageItem('token');
-    removeStorageItem('oidctoken');
-    removeStorageItem('user');
     getClient().logout();
     dispatch(clearUserData());
   };

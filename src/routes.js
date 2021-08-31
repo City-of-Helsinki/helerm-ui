@@ -13,6 +13,7 @@ import ViewInfo from './components/Info/ViewInfo';
 import PrintTOS from './components/Tos/Print/PrintView';
 import NotFound from './components/NotFound/NotFound';
 import LoginCallbackContainer from './components/LoginCallback/LoginCallbackContainer'
+import RenewCallbackContainer from './components/RenewCallback/RenewCallbackContainer'
 
 const Routes = () => {
   return (
@@ -26,6 +27,9 @@ const Routes = () => {
         <InfoLayout>
           <LoginCallbackContainer />
         </InfoLayout>
+      </Route>
+      <Route exact path='/renew'>
+        <RenewCallbackContainer />
       </Route>
       <Route exact path='/bulk'>
         <InfoLayout />
