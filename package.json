@@ -38,7 +38,7 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
     "nested-objects": "0.0.2",
-    "node-sass": "4.14.1",
+    "node-sass": "7.0.0",
     "normalizr": "^3.6.1",
     "oidc-client": "^1.11.5",
     "passport": "^0.4.1",
