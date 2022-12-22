@@ -35,7 +35,7 @@
     "http-proxy-middleware": "^1.0.6",
     "immutability-helper": "^3.1.1",
     "isomorphic-fetch": "^3.0.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "moment": "^2.29.1",
     "nested-objects": "0.0.2",
     "node-sass": "4.14.1",
