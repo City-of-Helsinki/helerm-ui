@@ -3,8 +3,8 @@
   "version": "0.4.0",
   "description": "UI for Helsinki Electronic Records Management Classification System",
   "engines": {
-    "node": ">=14.15.1",
-    "npm": "^6.14.8"
+    "node": ">=16",
+    "npm": "^8.19.3"
   },
   "repository": {
     "type": "git",
@@ -38,7 +38,6 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
     "nested-objects": "0.0.2",
-    "node-sass": "4.14.1",
     "normalizr": "^3.6.1",
     "oidc-client": "^1.11.5",
     "passport": "^0.4.1",
@@ -104,5 +103,8 @@
       "last 1 safari version",
       "ie 11"
     ]
+  },
+  "devDependencies": {
+    "sass": "^1.58.1"
   }
 }
