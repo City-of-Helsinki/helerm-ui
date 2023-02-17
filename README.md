@@ -26,9 +26,15 @@ $ cd helerm-ui
 
 #### 2. Install depencies:
 
+1. Running the app locally
 ```bash
 $ yarn              # Install project dependencies
 $ yarn start:dev    # Launch on local environment
+```
+
+2. Running the app in docker
+```bash
+$ yarn start:docker # Launches the containerized version of the application
 ```
 
 #### 3. Add needed environmental variables
