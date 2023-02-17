@@ -11,6 +11,8 @@
   "license": "MIT",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.3.0",
+    "@sentry/react": "^7.37.2",
+    "@sentry/tracing": "^7.37.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.8.0",
     "bootstrap-sass": "^3.4.1",
@@ -33,7 +35,6 @@
     "piwik-react-router": "^0.12.1",
     "pre-commit": "^1.2.2",
     "prop-types": "^15.8.1",
-    "raven-js": "^3.17.0",
     "raw.macro": "^0.4.2",
     "react": "^17.0.1",
     "react-app-polyfill": "^2.0.0",
