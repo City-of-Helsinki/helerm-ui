@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import Select from 'react-select';
 import { includes, isArray, isEmpty } from 'lodash';
-import XLSX from 'xlsx';
+import * as XLSX from 'xlsx';
 import moment from 'moment';
 
 const CLASSIFICATION_ATTRIBUTES = [
