@@ -95,5 +95,8 @@
   },
   "devDependencies": {
     "prettier": "^2.3.2"
+  },
+  "resolutions": {
+    "postcss-custom-properties": "^13.1.3"
   }
 }
