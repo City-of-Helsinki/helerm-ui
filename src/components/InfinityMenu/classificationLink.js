@@ -6,7 +6,7 @@ const stopPropagation = ev => ev.stopPropagation();
 
 const ClassificationLink = ({ id }) => (
   <Link to={`/view-classification/${id}`} onClick={stopPropagation} title='Avaa luokituksen tiedot'>
-    <i className='fa fa-info-circle' />
+    <i className='fa-solid fa-circle-info' />
   </Link>
 );
 

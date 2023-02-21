@@ -150,7 +150,7 @@ export class CloneView extends React.Component {
                 onClick={this.clearSelected}
                 className='btn btn-xs btn-default pull-right'
               >
-                Tyhjennä valinta <i className='fa fa-close' />
+                Tyhjennä valinta <i className='fa-solid fa-xmark' />
               </button>
             </div>
             <button
@@ -158,7 +158,7 @@ export class CloneView extends React.Component {
               className='btn btn-success pull-right'
               disabled={!hasSelectedItem}
             >
-              Tuo <i className='fa fa-clone' />
+              Tuo <i className='fa-solid fa-clone' />
             </button>
             <button
               onClick={this.toggleCloneView}

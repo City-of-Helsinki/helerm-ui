@@ -247,7 +247,7 @@ export class EditorForm extends React.Component {
                 <label className='editor-form__label'>
                   {attributeTypes[key].name}
                   {/* { attributeTypes[key].required &&
-                  <span className='fa fa-asterisk required-asterisk'/>
+                  <span className='fa-solid fa-asterisk required-asterisk'/>
                   } */}
                 </label>
                 <DropdownInput
@@ -286,7 +286,7 @@ export class EditorForm extends React.Component {
                 <label className='editor-form__label'>
                   {attributeTypes[key].name}
                   {/* { attributeTypes[key].required &&
-                  <span className='fa fa-asterisk required-asterisk'/>
+                  <span className='fa-solid fa-asterisk required-asterisk'/>
                   } */}
                 </label>
                 {key === 'AdditionalInformation' ? (
@@ -604,7 +604,7 @@ export class EditorForm extends React.Component {
             <label className='editor-form__label'>
               {this.resolveTypeDescription()}
             </label>
-            {/* <span className='fa fa-asterisk required-asterisk'/> */}
+            {/* <span className='fa-solid fa-asterisk required-asterisk'/> */}
             {dropdownInput}
           </div>
         )}
@@ -612,7 +612,7 @@ export class EditorForm extends React.Component {
           <label className='editor-form__label'>
             {this.resolveSpecifierDescription()}
           </label>
-          {/* <span className='fa fa-asterisk required-asterisk'/> */}
+          {/* <span className='fa-solid fa-asterisk required-asterisk'/> */}
           <input
             className='col-xs-6 form-control edit-record__input'
             placeholder={this.resolveSpecifierPlaceholder()}

@@ -142,7 +142,7 @@ export class Preview extends React.Component {
     }
     return (
       <div className='preview-errors'>
-        <h4><i className='fa fa-exclamation-triangle' /> Esitarkastus:</h4>
+        <h4><i className='fa-solid fa-triangle-exclamation' /> Esitarkastus:</h4>
         {elem}
       </div>
     );
@@ -157,7 +157,7 @@ export class Preview extends React.Component {
         <div className='row'>
           <div className='col-xs-12'>
             <button className='btn btn-link' onClick={this.props.onClose}>
-              <i className='fa fa-angle-left' /> Takaisin
+              <i className='fa-solid fa-angle-left' /> Takaisin
             </button>
           </div>
           <div className='col-xs-12'>
@@ -189,7 +189,7 @@ export class Preview extends React.Component {
                   this.props.onSelect(id);
                 }}
               >
-                <i className='fa fa-check' />
+                <i className='fa-solid fa-check' />
               </div>
             </div>
             <div className='col-xs-9'>

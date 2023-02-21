@@ -332,7 +332,7 @@ export class BulkView extends React.Component {
               className='bulk-view-item-phase-error'
               key={`phase_${phase}_error`}
             >
-              <i className='fa fa-exclamation-triangle' />
+              <i className='fa-solid fa-triangle-exclamation' />
               Käsittelyvaihetta {phase} ei löytynyt, massamuutosta ei voida
               tehdä tälle käsittelyprosessille
             </h5>
@@ -373,7 +373,7 @@ export class BulkView extends React.Component {
                   className='bulk-view-item-action-error'
                   key={`action_${action}_error`}
                 >
-                  <i className='fa fa-exclamation-triangle' />
+                  <i className='fa-solid fa-triangle-exclamation' />
                   Toimenpidettä {action} ei löytynyt, massamuutosta ei voida
                   tehdä tälle käsittelyprosessille
                 </h5>
@@ -430,7 +430,7 @@ export class BulkView extends React.Component {
                         className='bulk-view-item-record-error'
                         key={`record_${record}_error`}
                       >
-                        <i className='fa fa-exclamation-triangle' />
+                        <i className='fa-solid fa-triangle-exclamation' />
                         Asiakirjaa {record} ei löytynyt, massamuutosta ei voida
                         tehdä tälle käsittelyprosessille
                       </h5>
@@ -527,7 +527,7 @@ export class BulkView extends React.Component {
       <div className='bulk-view'>
         <div className='bulk-view-back'>
           <Link className='btn btn-link' to='/bulk'>
-            <i className='fa fa-angle-left' /> Takaisin
+            <i className='fa-solid fa-angle-left' /> Takaisin
           </Link>
         </div>
         <div>
@@ -535,7 +535,7 @@ export class BulkView extends React.Component {
         </div>
         {!isValid && !isEmpty(itemList) && !isFetchingNavigation && (
           <div className='alert alert-danger'>
-            <i className='fa fa-exclamation-triangle' />
+            <i className='fa-solid fa-triangle-exclamation' />
             Massamuutospaketissa on käsittelyprosesseja, joita ei voida
             varmistaa. Massamuutospakettia ei voida hyväksyä.
           </div>

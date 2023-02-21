@@ -576,7 +576,7 @@ export class ViewTOS extends React.Component {
           onClick={() => this.props.setMetadataVisibility(!isOpen)}
         >
           <span
-            className={'fa ' + (isOpen ? 'fa-minus' : 'fa-plus')}
+            className={'fa-solid ' + (isOpen ? 'fa-minus' : 'fa-plus')}
             aria-hidden='true'
           />
         </button>

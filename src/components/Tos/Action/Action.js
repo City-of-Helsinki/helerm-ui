@@ -408,7 +408,7 @@ export class Action extends Component {
           >
             <span
               className={
-                'fa ' + (this.props.action.is_open ? 'fa-minus' : 'fa-plus')
+                'fa-solid ' + (this.props.action.is_open ? 'fa-minus' : 'fa-plus')
               }
               aria-hidden='true'
             />

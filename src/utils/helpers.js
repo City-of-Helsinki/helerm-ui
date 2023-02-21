@@ -281,7 +281,7 @@ export function confirmMessage(message, options = { onOk: () => {}, onCancel: ()
       ...options,
       component: () => (
         <div className="confirm-toastr-component">
-            <div><i className='fa fa-exclamation-triangle' /></div>
+            <div><i className='fa-solid fa-triangle-exclamation' /></div>
             <div>{message}</div>
         </div>
       )

@@ -278,7 +278,7 @@ export class FacetedSearch extends React.Component {
               key={`${attribute.type}-${attribute.key}-${option.value}-${index}`}
               onClick={() => this.onClickAttributeOption(attribute, option)}
             >
-              <i className='fa fa-check' />
+              <i className='fa-solid fa-check' />
               <span>
                 {isArray(option.value)
                   ? option.value
@@ -398,7 +398,7 @@ export class FacetedSearch extends React.Component {
         onClick={() => this.onRemoveFacet(key, type, value)}
       >
         <span>{text}</span>
-        <i className='fa fa-times' />
+        <i className='fa-solid fa-xmark' />
         <span className='tooltiptext'>{text}</span>
       </button>
     );
@@ -508,7 +508,7 @@ export class FacetedSearch extends React.Component {
             <div className='faceted-search-list'>
               {isFetching && (
                 <div className='faceted-search-loader'>
-                  <span className='fa fa-2x fa-spinner fa-spin' />
+                  <span className='fa-solid fa-2x fa-spinner fa-spin' />
                 </div>
               )}
               {this.renderSelectedFacets()}

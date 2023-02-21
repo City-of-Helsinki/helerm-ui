@@ -9,7 +9,7 @@ const Popup = ({ content, closePopup }) => {
   return (
     <div className='popup-outer-background' onClick={closePopup}>
       <div className='popup-inner-background' onClick={(e) => stop(e)}>
-        <button className='popup__close' onClick={closePopup}><i className='fa fa-close'/></button>
+        <button className='popup__close' onClick={closePopup}><i className='fa-solid fa-xmark'/></button>
         { content }
       </div>
     </div>

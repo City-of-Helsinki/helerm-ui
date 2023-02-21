@@ -33,7 +33,7 @@ const TosHeader = ({
             <h3>
               {tosName}{' '}
               <Link to={`/view-classification/${classificationId}`} title='Avaa luokituksen tiedot'>
-                <i className='fa fa-info-circle'/>
+                <i className='fa-solid fa-circle-info'/>
               </Link>
             </h3>
           </span>

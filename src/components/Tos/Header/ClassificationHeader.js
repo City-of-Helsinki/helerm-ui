@@ -21,7 +21,7 @@ const ClassificationHeader = ({
           >
             <span
               className={
-                'fa ' + (isOpen ? 'fa-minus' : 'fa-plus')
+                'fa-solid ' + (isOpen ? 'fa-minus' : 'fa-plus')
               }
               aria-hidden='true'
             />

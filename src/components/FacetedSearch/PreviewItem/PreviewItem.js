@@ -27,7 +27,7 @@ export const PreviewItem = ({ item, metadata, onClose }) => {
       <div className='faceted-search-preview-item-title'>
         Esikatselu
         <button className='btn btn-sm btn-link pull-right' onClick={onClose}>
-          <i className='fa fa-times' />
+          <i className='fa-solid fa-xmark' />
         </button>
       </div>
       <div className='faceted-search-preview-item-path'>

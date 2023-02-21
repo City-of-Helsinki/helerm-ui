@@ -176,7 +176,7 @@ export class Record extends Component {
                 !this.props.record.is_open
               )}>
               <span
-                className={'fa ' + (this.props.record.is_open ? 'fa-minus' : 'fa-plus')}
+                className={'fa-solid ' + (this.props.record.is_open ? 'fa-minus' : 'fa-plus')}
                 aria-hidden='true'
               />
             </button>

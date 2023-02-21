@@ -440,7 +440,7 @@ export class Phase extends React.Component {
           >
             <span
               className={
-                'fa ' + (this.props.phase.is_open ? 'fa-minus' : 'fa-plus')
+                'fa-solid ' + (this.props.phase.is_open ? 'fa-minus' : 'fa-plus')
               }
               aria-hidden='true'
             />
@@ -463,7 +463,7 @@ export class Phase extends React.Component {
           >
             <span
               className={
-                'fa ' +
+                'fa-solid ' +
                 (this.props.phase.is_attributes_open ? 'fa-minus' : 'fa-plus')
               }
               aria-hidden='true'

@@ -225,7 +225,7 @@ export class SearchTerm extends React.Component {
             className='btn btn-primary'
             onClick={this.props.onRemoveSearchTerm}
           >
-            <i className='fa fa-minus' />
+            <i className='fa-solid fa-minus' />
           </button>
         </div>
         <div className='search-term-action'>
@@ -234,7 +234,7 @@ export class SearchTerm extends React.Component {
               className='btn btn-primary'
               onClick={this.props.onAddSearchTerm}
             >
-              <i className='fa fa-plus' />
+              <i className='fa-solid fa-plus' />
             </button>
           )}
         </div>

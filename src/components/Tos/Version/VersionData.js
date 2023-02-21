@@ -64,7 +64,7 @@ export class VersionData extends React.Component {
           onClick={() => setVersionVisibility(!isVersionOpen)}
         >
           <span
-            className={'fa ' + (isVersionOpen ? 'fa-minus' : 'fa-plus')}
+            className={'fa-solid ' + (isVersionOpen ? 'fa-minus' : 'fa-plus')}
             aria-hidden='true'
           />
         </button>

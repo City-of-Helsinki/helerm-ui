@@ -46,7 +46,7 @@ const ActionButtons = ({
           label={editMode ? 'Peruuta muokkaus' : 'Muokkaa'}
         />
         {/* {editMode &&
-        <span className='fa fa-asterisk required-asterisk required-legend'> = Pakollinen tieto</span>
+        <span className='fa-solid fa-asterisk required-asterisk required-legend'> = Pakollinen tieto</span>
         } */}
       </span>
     </IsAllowed>

@@ -25,7 +25,7 @@ export class Dropdown extends React.Component {
           key={index}
           className={classnames('btn btn-sm dropdown-row', item.style)}
           onClick={() => this.handleClick(index)}>
-          <span className={classnames('fa dropdown-icon', item.icon)}/>
+          <span className={classnames('fa-solid dropdown-icon', item.icon)}/>
           {item.text}
         </button>
       );
@@ -49,7 +49,7 @@ export class Dropdown extends React.Component {
           className={classnames('btn btn-primary', { 'btn-sm': small }, { 'btn-xs': extraSmall })}
           onClick={() => this.setState((state) => ({ open: !state.open }))}
         >
-          <span className='fa fa-bars'/>
+          <span className='fa-solid fa-bars'/>
         </button>
         { this.state.open &&
         <DropdownMenuWrapper

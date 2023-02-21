@@ -51,13 +51,13 @@ export class ValidationBar extends Component {
       : [];
     const mappedInvalidAttributes = map(invalidAttributes, (item, index) => (
       <div key={index} className='missing-attribute'>
-        <i className='fa fa-times-circle' />{' '}
+        <i className='fa-solid fa-circle-xmark' />{' '}
         {this.props.attributeTypes[item].name}
       </div>
     ));
     const mappedWarnAttributes = map(warnAttributes, (item, index) => (
       <div key={index} className='warn-attribute'>
-        <i className='fa fa-exclamation-circle' />{' '}
+        <i className='fa-solid fa-circle-exclamation' />{' '}
         {this.props.attributeTypes[item].name}
       </div>
     ));
@@ -141,7 +141,7 @@ export class ValidationBar extends Component {
               {map(invalidAttributes, (item, key) => {
                 return (
                   <div key={key} className='missing-attribute'>
-                    <i className='fa fa-exclamation-triangle' />{' '}
+                    <i className='fa-solid fa-triangle-exclamation' />{' '}
                     {attributeTypes[item].name}
                   </div>
                 );
@@ -149,7 +149,7 @@ export class ValidationBar extends Component {
               {map(warnAttributes, (item, key) => {
                 return (
                   <div key={key} className='warn-attribute'>
-                    <i className='fa fa-exclamation-circle' />{' '}
+                    <i className='fa-solid fa-circle-exclamation' />{' '}
                     {attributeTypes[item].name}
                   </div>
                 );
@@ -186,7 +186,7 @@ export class ValidationBar extends Component {
         </div>
       );
     }
-    return <div className='no-missing-attributes'><div className='fa fa-check-circle' /></div>;
+    return <div className='no-missing-attributes'><div className='fa-solid fa-circle-check' /></div>;
   }
 
   renderContent () {
@@ -211,7 +211,7 @@ export class ValidationBar extends Component {
             <button
               className='sidebar-close-button pull-right'
               onClick={() => setValidationVisibility(false)}>
-              <i className='fa fa-times' />
+              <i className='fa-solid fa-xmark' />
             </button>
           </h3>
           <div className='sidebar-filter'>
@@ -229,7 +229,7 @@ export class ValidationBar extends Component {
                 { 'btn-default': filter === VALIDATION_FILTER_WARN }
               )}
               onClick={() => this.onFilterChange(VALIDATION_FILTER_WARN)}>
-              <i className='fa fa-exclamation-circle' /> Huomautukset
+              <i className='fa-solid fa-circle-exclamation' /> Huomautukset
             </button>
             <button
               className={classnames(
@@ -237,7 +237,7 @@ export class ValidationBar extends Component {
                 { 'btn-default': filter === VALIDATION_FILTER_ERROR }
               )}
               onClick={() => this.onFilterChange(VALIDATION_FILTER_ERROR)}>
-              <i className='fa fa-exclamation-triangle' /> Virheet
+              <i className='fa-solid fa-triangle-exclamation' /> Virheet
             </button>
           </div>
         </div>

@@ -297,7 +297,7 @@ export class Attribute extends React.Component {
             {/* { type === 'attribute' &&
             this.props.documentState === 'edit' &&
             attributeTypes[attributeIndex].required &&
-            <span className='fa fa-asterisk required-asterisk'/>
+            <span className='fa-solid fa-asterisk required-asterisk'/>
             } */}
           </span>
           {attributeValue}

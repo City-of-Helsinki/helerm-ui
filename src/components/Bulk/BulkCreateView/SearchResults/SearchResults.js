@@ -36,7 +36,7 @@ export class SearchResults extends React.Component {
               })}
               onClick={() => this.props.onSelectAll(!allSelected)}
             >
-              <i className='fa fa-check' />
+              <i className='fa-solid fa-check' />
             </div>
           </div>
           <div className='col-xs-8 search-result-header-amounts'>
@@ -70,7 +70,7 @@ export class SearchResults extends React.Component {
                   this.props.onSelect(index, !result.selected);
                 }}
               >
-                <i className='fa fa-check' />
+                <i className='fa-solid fa-check' />
               </div>
             </div>
             <div className='col-xs-8'>

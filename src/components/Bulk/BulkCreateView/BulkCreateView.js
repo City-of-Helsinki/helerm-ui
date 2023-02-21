@@ -956,7 +956,7 @@ export class BulkCreateView extends React.Component {
         />
         <div className='col-xs-12'>
           <Link className='btn btn-link' to='/bulk'>
-            <i className='fa fa-angle-left' /> Takaisin
+            <i className='fa-solid fa-angle-left' /> Takaisin
           </Link>
         </div>
         <div className='col-xs-9 bulk-update-create-search'>

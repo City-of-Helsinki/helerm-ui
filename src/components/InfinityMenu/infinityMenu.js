@@ -518,7 +518,7 @@ export default class InfinityMenu extends Component {
               onClick={() => this.props.removeSearchInput(index)}
               title='Poista hakuehto'
             >
-              <span className='fa fa-minus' aria-hidden='true' />
+              <span className='fa-solid fa-minus' aria-hidden='true' />
             </button>
             {index + 1 === searchInputs.length && (
               <button
@@ -526,7 +526,7 @@ export default class InfinityMenu extends Component {
                 onClick={this.props.addSearchInput}
                 title='Lisää hakuehto'
               >
-                <span className='fa fa-plus' aria-hidden='true' />
+                <span className='fa-solid fa-plus' aria-hidden='true' />
               </button>
             )}
           </div>
@@ -581,7 +581,7 @@ export default class InfinityMenu extends Component {
                 className='pull-left nav-button'
                 onClick={this.props.toggleNavigationVisibility}
               >
-                <span className={'fa fa-list'} aria-hidden='true' />
+                <span className={'fa-solid fa-list'} aria-hidden='true' />
               </button>
               {!!this.props.path.length && (
                 <ol
@@ -608,7 +608,7 @@ export default class InfinityMenu extends Component {
                     className='nav-button'
                     onClick={this.props.toggleNavigationVisibility}
                   >
-                    <span className={'fa fa-times'} aria-hidden='true' />
+                    <span className={'fa-solid fa-xmark'} aria-hidden='true' />
                   </button>
                 </div>
                 <div className='navigation-filters clearfix'>
@@ -645,7 +645,7 @@ export default class InfinityMenu extends Component {
                         className='btn btn-primary btn-sm'
                         to='/classification-tree'
                       >
-                        <span className='fa fa-info' aria-hidden='true' />
+                        <span className='fa-solid fa-info' aria-hidden='true' />
                       </Link>
                     </div>
                   )}

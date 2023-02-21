@@ -112,7 +112,7 @@ export class ReorderItem extends React.Component {
     return connectDragSource(
       connectDropTarget(
         <div style={{ ...style, opacity, border }}>
-          <i className='fa fa-arrows' aria-hidden='true' />{' '}
+          <i className='fa-solid fa-arrows' aria-hidden='true' />{' '}
           {this.getLabels(labels)}
         </div>
       )

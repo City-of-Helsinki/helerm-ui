@@ -68,7 +68,7 @@ export class FacetedSearchHelp extends React.Component {
     return (
       <div className='faceted-search-help'>
         <button className='btn btn-link' onClick={this.onToggleHelp}>
-          <i className='fa fa-question' />
+          <i className='fa-solid fa-question' />
         </button>
         <div
           className={classnames('popover', { show: this.state.show })}
