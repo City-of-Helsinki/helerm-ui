@@ -4,7 +4,7 @@
   padding: 15px 30px;
   width: 100%;
 
-  .alert .fa {
+  .alert .fa-solid {
     margin-right: 10px;
   }
 
@@ -16,7 +16,7 @@
     .bulk-view-changes {
       flex: 1 1 auto;
     }
-    
+
     button {
       margin-left: 15px;
     }
@@ -56,7 +56,7 @@
       color: $brand-danger;
     }
 
-    .fa {
+    .fa-solid {
       margin-right: 10px;
     }
   }
