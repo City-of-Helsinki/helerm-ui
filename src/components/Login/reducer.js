@@ -1,3 +1,4 @@
+/* eslint-disable import/no-named-as-default-member */
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
 import { get } from 'lodash';
@@ -29,38 +30,19 @@ export function clearUserData() {
   return createAction(CLEAR_USERDATA)();
 }
 
-export function handleLoginCallback() {
-  return function (dispatch) {
-    dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.INITIALIZING));
-    return getClient().handleCallback()
-      .then(res => {
-        dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.AUTHORIZED));
-        dispatch(retrieveUserFromSession())
-      })
-      .catch((err) => {
-        dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.UNAUTHORIZED));
-      });
-  };
-}
-
-export function handleRenewCallback() {
-  return function (dispatch) {
-    dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.INITIALIZING));
-    return getClient().handleRenewCallback()
-      .then(res => {
-        dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.AUTHORIZED));
-      })
-      .catch((err) => {
-        dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.UNAUTHORIZED));
-      });
+export function logout() {
+  return (dispatch) => {
+    dispatch(createAction(LOGOUT));
+    getClient().logout();
+    dispatch(clearUserData());
   };
 }
 
 export function retrieveUserFromSession() {
-  return function (dispatch) {
+  return (dispatch) => {
     const id = getStorageItem('user')
     const token = getStorageItem('oidctoken')
-    if (!id || !token) {
+    if (!id || !token) {
       dispatch(createAction(ERROR_USERDATA)());
       dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.NONE));
       return null
@@ -86,29 +68,48 @@ export function retrieveUserFromSession() {
         };
         return dispatch(receiveUserData(userWithPermissions));
       })
-      .catch((err) => {
+      .catch(() => {
         dispatch(createAction(ERROR_USERDATA)());
       });
   };
 }
 
+export function handleLoginCallback() {
+  return (dispatch) => {
+    dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.INITIALIZING));
+    return getClient().handleCallback()
+      .then(() => {
+        dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.AUTHORIZED));
+        dispatch(retrieveUserFromSession())
+      })
+      .catch(() => {
+        dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.UNAUTHORIZED));
+      });
+  };
+}
+
+export function handleRenewCallback() {
+  return (dispatch) => {
+    dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.INITIALIZING));
+    return getClient().handleRenewCallback()
+      .then(() => {
+        dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.AUTHORIZED));
+      })
+      .catch(() => {
+        dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.UNAUTHORIZED));
+      });
+  };
+}
+
 export function login() {
-  return function (dispatch) {
+  return (dispatch) => {
     getClient().login();
     dispatch(createAction(LOGIN));
   };
 }
 
-export function logout() {
-  return function (dispatch) {
-    dispatch(createAction(LOGOUT));
-    getClient().logout();
-    dispatch(clearUserData());
-  };
-}
-
 export function logoutUnauthorized() {
-  return function (dispatch) {
+  return (dispatch) => {
     dispatch(createAction(LOGOUT));
     getClient().logout();
     dispatch(clearUserData());
@@ -120,31 +121,23 @@ const retrieveUserFromSessionAction = (state) =>
     isFetching: { $set: true }
   });
 
-const receiveUserDataAction = (state, { payload }) => {
-  return update(state, {
-    data: { $set: payload },
-    isFetching: { $set: false }
-  });
-};
+const receiveUserDataAction = (state, { payload }) => update(state, {
+  data: { $set: payload },
+  isFetching: { $set: false }
+});
 
-const clearUserDataAction = (state) => {
-  return update(state, {
-    $set: initialState
-  });
-};
+const clearUserDataAction = (state) => update(state, {
+  $set: initialState
+});
 
-const errorUserDataAction = (state) => {
-  return update(state, {
-    data: { $set: {} },
-    isFetching: { $set: false }
-  });
-};
+const errorUserDataAction = (state) => update(state, {
+  data: { $set: {} },
+  isFetching: { $set: false }
+});
 
-const loginStatusAction = (state, { payload }) => {
-  return update(state, {
-    status: { $set: payload },
-  });
-}
+const loginStatusAction = (state, { payload }) => update(state, {
+  status: { $set: payload },
+})
 
 export default handleActions(
   {

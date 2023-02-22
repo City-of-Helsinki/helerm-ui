@@ -1,15 +1,17 @@
+/* eslint-disable camelcase */
+/* eslint-disable import/no-named-as-default-member */
 import update from 'immutability-helper';
 import { createAction } from 'redux-actions';
 
 import { normalizeTosFromApi } from '../../../utils/helpers';
-import { default as api } from '../../../utils/api';
+import api from '../../../utils/api';
 
 export const RECEIVE_TEMPLATE = 'receiveTemplateAction';
 export const REQUEST_TOS = 'requestTosAction';
 export const TOS_ERROR = 'tosErrorAction';
 
-export function cloneFromTemplate (endpoint, id) {
-  return function (dispatch) {
+export function cloneFromTemplate(endpoint, id) {
+  return (dispatch) => {
     dispatch(createAction(REQUEST_TOS)());
     return api.get(`${endpoint}/${id}`)
       .then(res => {

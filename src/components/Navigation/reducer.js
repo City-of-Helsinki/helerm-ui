@@ -1,9 +1,12 @@
+/* eslint-disable import/no-named-as-default-member */
+/* eslint-disable consistent-return */
+/* eslint-disable camelcase */
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
 
-import { config } from '../../config';
+import config from '../../config';
 import { convertToTree } from '../../utils/helpers';
-import { default as api } from '../../utils/api.js';
+import api from '../../utils/api';
 
 export const initialState = {
   includeRelated: false,
@@ -49,9 +52,9 @@ export function fetchNavigation(includeRelated = false, page = 1) {
     ? config.SEARCH_PAGE_SIZE
     : config.RESULTS_PER_PAGE;
 
-  return function (dispatch, getState) {
+  return (dispatch, getState) => {
     const includeRelatedAlreadySet = getState().navigation.includeRelated;
-    const isFetching = getState().navigation.isFetching;
+    const { isFetching } = getState().navigation;
     if (
       includeRelatedAlreadySet &&
       !includeRelated &&
@@ -88,22 +91,18 @@ export function fetchNavigation(includeRelated = false, page = 1) {
   };
 }
 
-const navigationErrorAction = (state) => {
-  return update(state, {
-    list: { $set: [] },
-    isFetching: { $set: false },
-    items: { $set: [] },
-    timestamp: { $set: Date.now().toString() }
-  });
-};
+const navigationErrorAction = (state) => update(state, {
+  list: { $set: [] },
+  isFetching: { $set: false },
+  items: { $set: [] },
+  timestamp: { $set: Date.now().toString() }
+});
 
-const parsedNavigationAction = (state, { payload }) => {
-  return update(state, {
-    isFetching: { $set: false },
-    items: { $set: payload.items },
-    timestamp: { $set: Date.now().toString() }
-  });
-};
+const parsedNavigationAction = (state, { payload }) => update(state, {
+  isFetching: { $set: false },
+  items: { $set: payload.items },
+  timestamp: { $set: Date.now().toString() }
+});
 
 const requestNavigationAction = (state, { payload }) => {
   let newState = {
@@ -120,19 +119,15 @@ const requestNavigationAction = (state, { payload }) => {
   return update(state, newState);
 };
 
-const receiveNavigationAction = (state, { payload }) => {
-  return update(state, {
-    includeRelated: { $set: payload.includeRelated },
-    list: payload.page > 1 ? { $push: payload.items } : { $set: payload.items },
-    page: { $set: payload.page }
-  });
-};
+const receiveNavigationAction = (state, { payload }) => update(state, {
+  includeRelated: { $set: payload.includeRelated },
+  list: payload.page > 1 ? { $push: payload.items } : { $set: payload.items },
+  page: { $set: payload.page }
+});
 
-const setNavigationVisibilityAction = (state, { payload }) => {
-  return update(state, {
-    is_open: { $set: payload }
-  });
-};
+const setNavigationVisibilityAction = (state, { payload }) => update(state, {
+  is_open: { $set: payload }
+});
 
 export default handleActions(
   {

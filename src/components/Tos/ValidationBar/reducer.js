@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
 
@@ -7,15 +8,13 @@ const initialState = {
 
 export const SET_VALIDATION_VISIBILITY = 'setValidationVisibilityAction';
 
-export function setValidationVisibility (value) {
+export function setValidationVisibility(value) {
   return createAction(SET_VALIDATION_VISIBILITY)(value);
 }
 
-const setValidationVisibilityAction = (state, { payload }) => {
-  return update(state, {
-    is_open: { $set: payload }
-  });
-};
+const setValidationVisibilityAction = (state, { payload }) => update(state, {
+  is_open: { $set: payload }
+});
 
 export default handleActions({
   setValidationVisibilityAction

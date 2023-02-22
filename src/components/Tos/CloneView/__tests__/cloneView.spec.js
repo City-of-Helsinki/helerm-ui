@@ -1,7 +1,7 @@
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme, { shallow } from 'enzyme';
 import React from 'react';
-import { CloneView } from '../CloneView';
+import CloneView from '../CloneView';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -11,7 +11,7 @@ describe('(Component) CloneView', () => {
   beforeEach(() => {
     const props = {
       templates: [],
-      setNavigationVisibility: () => {}
+      setNavigationVisibility: () => { }
     };
     _wrapper = shallow(<CloneView {...props} />);
   });

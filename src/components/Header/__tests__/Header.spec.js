@@ -1,7 +1,7 @@
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme, { shallow } from 'enzyme';
 import React from 'react';
-import { Header } from '../Header';
+import Header from '../Header';
 
 // a quick fix before the official enzyme adapter for React 17 is out
 // https://github.com/enzymejs/enzyme/issues/2429

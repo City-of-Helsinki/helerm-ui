@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import update from 'immutability-helper';
 import { createAction } from 'redux-actions';
 import { indexOf } from 'lodash';
@@ -8,54 +9,52 @@ export const EDIT_RECORD_ATTRIBUTE = 'editRecordAttributeAction';
 export const REMOVE_RECORD = 'removeRecordAction';
 export const SET_RECORD_VISIBILITY = 'setRecordVisibilityAction';
 
-export function addRecord (attributes, actionId) {
+export function addRecord(attributes, actionId) {
   const recordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
   const newAttributes = {};
   Object.keys(attributes).forEach(key => {
-    if (attributes.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(attributes, key)) {
       if (attributes[key].checked === true) {
         newAttributes[key] = attributes[key].value;
       }
     }
   });
 
-  const newRecord = Object.assign({}, {
+  const newRecord = {
     id: recordId,
     action: actionId,
     attributes: newAttributes,
     is_open: false
-  });
+  };
 
   return createAction(ADD_RECORD)({ actionId, recordId, newRecord });
 }
 
-export function editRecord (attributes, recordId) {
-  let editedAttributes = {};
+export function editRecord(attributes, recordId) {
+  const editedAttributes = {};
 
   Object.keys(attributes).forEach(key => {
-    if (attributes.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(attributes, key)) {
       if (attributes[key].checked === true) {
         editedAttributes[key] = attributes[key].value;
       }
     }
   });
 
-  const editedRecord = Object.assign({}, {
-    attributes: editedAttributes
-  });
+  const editedRecord = { attributes: editedAttributes };
 
   return createAction(EDIT_RECORD)({ editedRecord, recordId });
 }
 
-export function editRecordAttribute (editedRecord) {
+export function editRecordAttribute(editedRecord) {
   return createAction(EDIT_RECORD_ATTRIBUTE)(editedRecord);
 }
 
-export function removeRecord (recordToRemove, actionId) {
+export function removeRecord(recordToRemove, actionId) {
   return createAction(REMOVE_RECORD)({ recordToRemove, actionId });
 }
 
-export function setRecordVisibility (record, visibility) {
+export function setRecordVisibility(record, visibility) {
   return createAction(SET_RECORD_VISIBILITY)({ record, visibility });
 }
 
@@ -63,37 +62,33 @@ export function setRecordVisibility (record, visibility) {
 // Action Handlers
 // ------------------------------------
 
-export const addRecordAction = (state, { payload }) => {
-  return update(state, {
-    actions: {
-      [payload.actionId]: {
-        records: {
-          $push: [payload.recordId]
-        }
-      }
-    },
-    records: {
-      [payload.recordId]: {
-        $set: payload.newRecord
+export const addRecordAction = (state, { payload }) => update(state, {
+  actions: {
+    [payload.actionId]: {
+      records: {
+        $push: [payload.recordId]
       }
     }
-  });
-};
+  },
+  records: {
+    [payload.recordId]: {
+      $set: payload.newRecord
+    }
+  }
+});
 
-export const editRecordAction = (state, { payload }) => {
-  return update(state, {
-    records: {
-      [payload.recordId]: {
-        attributes: {
-          $set: payload.editedRecord.attributes
-        }
+export const editRecordAction = (state, { payload }) => update(state, {
+  records: {
+    [payload.recordId]: {
+      attributes: {
+        $set: payload.editedRecord.attributes
       }
     }
-  });
-};
+  }
+});
 
 export const editRecordAttributeAction = (state, { payload }) => {
-  if (payload.hasOwnProperty('typeSpecifier')) {
+  if (Object.prototype.hasOwnProperty.call(payload, 'typeSpecifier')) {
     return update(state, {
       records: {
         [payload.recordId]: {
@@ -105,7 +100,7 @@ export const editRecordAttributeAction = (state, { payload }) => {
         }
       }
     });
-  } else if (payload.hasOwnProperty('type')) {
+  } if (Object.prototype.hasOwnProperty.call(payload, 'type')) {
     return update(state, {
       records: {
         [payload.recordId]: {
@@ -117,7 +112,7 @@ export const editRecordAttributeAction = (state, { payload }) => {
         }
       }
     });
-  } else if (payload.hasOwnProperty('tosAttribute')) {
+  } if (Object.prototype.hasOwnProperty.call(payload, 'tosAttribute')) {
     return update(state, {
       attributes: {
         [payload.attributeIndex]: {
@@ -125,19 +120,19 @@ export const editRecordAttributeAction = (state, { payload }) => {
         }
       }
     });
-  } else {
-    return update(state, {
-      records: {
-        [payload.recordId]: {
-          attributes: {
-            [payload.attributeIndex]: {
-              $set: payload.attribute
-            }
+  }
+  return update(state, {
+    records: {
+      [payload.recordId]: {
+        attributes: {
+          [payload.attributeIndex]: {
+            $set: payload.attribute
           }
         }
       }
-    });
-  }
+    }
+  });
+
 };
 
 export const removeRecordAction = (state, { payload }) => {
@@ -164,14 +159,12 @@ export const removeRecordAction = (state, { payload }) => {
   });
 };
 
-export const setRecordVisibilityAction = (state, { payload }) => {
-  return update(state, {
-    records: {
-      [payload.record]: {
-        is_open: {
-          $set: payload.visibility
-        }
+export const setRecordVisibilityAction = (state, { payload }) => update(state, {
+  records: {
+    [payload.record]: {
+      is_open: {
+        $set: payload.visibility
       }
     }
-  });
-};
+  }
+});
