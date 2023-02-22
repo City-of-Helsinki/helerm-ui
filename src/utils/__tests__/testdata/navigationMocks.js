@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 export const mockNavigationDataShort = [
   {
     id: 'cee34db0de3e47fbb937b74dd87ea759',

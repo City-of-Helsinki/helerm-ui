@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import { forEach, merge } from 'lodash';
-import { config } from '../config';
+
+import config from '../config';
 import { getClient } from './oidcClient';
 import { getStorageItem } from './storage';
 
@@ -23,85 +24,28 @@ class Unauthorized extends Error {
 
 /**
  *
- * @param endpoint
- * @param params
- * @param options
- * @returns {*}
+ * @param query
+ * @returns {string}
  */
-export function get(endpoint, params = {}, options = {}) {
-  return callApi(endpoint, params, options);
+export function buildQueryString(query) {
+  const pairs = [];
+
+  forEach(query, (value, key) => {
+    pairs.push([key, value].join('='));
+  });
+
+  return pairs.length ? `?${pairs.join('&')}` : '';
 }
 
 /**
  *
- * @param endpoint
- * @param data
- * @param params
- * @param options
- * @returns {*}
+ * @param url
+ * @param query
+ * @returns {string}
  */
-export function post(endpoint, data, params = {}, options = {}) {
-  if (typeof data !== 'string') {
-    data = JSON.stringify(data);
-    options.headers = merge(
-      { 'Content-Type': 'application/json' },
-      options.headers
-    );
-  }
-  return callApi(
-    endpoint,
-    params,
-    merge({ body: data, method: 'POST' }, options)
-  );
-}
-
-/**
- *
- * @param endpoint
- * @param data
- * @param params
- * @param options
- * @returns {*}
- */
-export function put(endpoint, data, params = {}, options = {}) {
-  if (typeof data !== 'string') {
-    data = JSON.stringify(data);
-    options.headers = merge(
-      { 'Content-Type': 'application/json' },
-      options.headers
-    );
-  }
-  return callApi(
-    endpoint,
-    params,
-    merge({ body: data, method: 'PUT' }, options)
-  );
-}
-
-export function patch(endpoint, data, params = {}, options = {}) {
-  if (typeof data !== 'string') {
-    data = JSON.stringify(data);
-    options.headers = merge(
-      { 'Content-Type': 'application/json' },
-      options.headers
-    );
-  }
-  return callApi(
-    endpoint,
-    params,
-    merge({ body: data, method: 'PATCH' }, options)
-  );
-}
-
-/**
- *
- * @param endpoint
- * @param params
- * @param options
- * @returns {*}
- */
-export function del(endpoint, params = {}, options = { method: 'DELETE' }) {
-  return callApi(endpoint, params, options);
+export function getApiUrl(url, query = {}) {
+  const queryString = buildQueryString(query);
+  return [config.API_URL, config.API_VERSION, url, queryString].join('/');
 }
 
 /**
@@ -159,28 +103,93 @@ export function callApi(endpoint, params, options = {}) {
 
 /**
  *
- * @param url
- * @param query
- * @returns {string}
+ * @param endpoint
+ * @param params
+ * @param options
+ * @returns {*}
  */
-export function getApiUrl(url, query = {}) {
-  const queryString = buildQueryString(query);
-  return [config.API_URL, config.API_VERSION, url, queryString].join('/');
+export function get(endpoint, params = {}, options = {}) {
+  return callApi(endpoint, params, options);
 }
 
 /**
  *
- * @param query
- * @returns {string}
+ * @param endpoint
+ * @param data
+ * @param params
+ * @param options
+ * @returns {*}
  */
-export function buildQueryString(query) {
-  const pairs = [];
-
-  forEach(query, (value, key) => {
-    pairs.push([key, value].join('='));
-  });
-
-  return pairs.length ? '?' + pairs.join('&') : '';
+export function post(endpoint, data, params = {}, options = {}) {
+  if (typeof data !== 'string') {
+    // eslint-disable-next-line no-param-reassign
+    data = JSON.stringify(data);
+    // eslint-disable-next-line no-param-reassign
+    options.headers = merge(
+      { 'Content-Type': 'application/json' },
+      options.headers
+    );
+  }
+  return callApi(
+    endpoint,
+    params,
+    merge({ body: data, method: 'POST' }, options)
+  );
 }
+
+/**
+ *
+ * @param endpoint
+ * @param data
+ * @param params
+ * @param options
+ * @returns {*}
+ */
+export function put(endpoint, data, params = {}, options = {}) {
+  if (typeof data !== 'string') {
+    // eslint-disable-next-line no-param-reassign
+    data = JSON.stringify(data);
+    // eslint-disable-next-line no-param-reassign
+    options.headers = merge(
+      { 'Content-Type': 'application/json' },
+      options.headers
+    );
+  }
+  return callApi(
+    endpoint,
+    params,
+    merge({ body: data, method: 'PUT' }, options)
+  );
+}
+
+export function patch(endpoint, data, params = {}, options = {}) {
+  if (typeof data !== 'string') {
+    // eslint-disable-next-line no-param-reassign
+    data = JSON.stringify(data);
+    // eslint-disable-next-line no-param-reassign
+    options.headers = merge(
+      { 'Content-Type': 'application/json' },
+      options.headers
+    );
+  }
+  return callApi(
+    endpoint,
+    params,
+    merge({ body: data, method: 'PATCH' }, options)
+  );
+}
+
+/**
+ *
+ * @param endpoint
+ * @param params
+ * @param options
+ * @returns {*}
+ */
+export function del(endpoint, params = {}, options = { method: 'DELETE' }) {
+  return callApi(endpoint, params, options);
+}
+
 const methods = { get, post, put, patch, del };
+
 export default methods;

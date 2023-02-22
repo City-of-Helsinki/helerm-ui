@@ -1,3 +1,7 @@
+/* eslint-disable default-param-last */
+/* eslint-disable camelcase */
+/* eslint-disable import/no-named-as-default-member */
+/* eslint-disable no-param-reassign */
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
 import {
@@ -23,8 +27,8 @@ import {
   TYPE_PHASE,
   TYPE_RECORD
 } from '../../constants';
-import { config } from '../../config';
-import { default as api } from '../../utils/api.js';
+import config from '../../config';
+import api from '../../utils/api';
 
 const initialState = {
   actions: [],
@@ -74,7 +78,7 @@ export function receivedNavigation() {
 
 export function updateAttributeTypes(attributeTypes) {
   const attributes = Object.keys(attributeTypes).reduce((acc, key) => {
-    if (attributeTypes.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(attributeTypes, key)) {
       const attr = attributeTypes[key];
       attr.allowedIn.forEach((type) => {
         acc.push({
@@ -109,7 +113,7 @@ export function updateAttributeTypes(attributeTypes) {
 
 export function fetchClassifications(page = 1) {
   const pageSize = config.SEARCH_PAGE_SIZE;
-  return function (dispatch, getState) {
+  return (dispatch, getState) => {
     if (page === 1) {
       dispatch(updateAttributeTypes(getState().ui.attributeTypes));
     }
@@ -125,14 +129,75 @@ export function fetchClassifications(page = 1) {
         dispatch(receiveNavigation(json.results, page));
         return json;
       })
-      .then((json) => {
-        return dispatch(
-          json.next ? fetchClassifications(page + 1) : receivedNavigation()
-        );
-      })
+      .then((json) => dispatch(
+        json.next ? fetchClassifications(page + 1) : receivedNavigation()
+      ))
       .catch(() => dispatch(createAction(CLASSIFICATIONS_ERROR)()));
   };
 }
+
+const getFilteredHits = (filteredAttributes, type) => {
+  const ids = filter(filteredAttributes, { type }).reduce((acc, attribute) => {
+    const hits = attribute.options.reduce((optAcc, option) => {
+      optAcc.push(...option.hits);
+      return optAcc;
+    }, []);
+    acc.push(...hits);
+    return acc;
+  }, []);
+  return uniq(ids);
+};
+
+const getFacetHits = (facets) => {
+  const byKeys = facets.reduce((acc, facet) => {
+    if (Object.prototype.hasOwnProperty.call(acc, facet.key)) {
+      acc[facet.key].push(...facet.hits);
+    } else {
+      acc[facet.key] = [...facet.hits];
+    }
+    return acc;
+  }, {});
+  const ids = Object.keys(byKeys || {}).reduce((acc, key, index) => {
+    const hits = [];
+    if (Object.prototype.hasOwnProperty.call(byKeys, key)) {
+      byKeys[key].forEach((hit) => {
+        if ((index === 0 && isEmpty(acc)) || includes(acc, hit)) {
+          hits.push(hit);
+        }
+      });
+    }
+    return hits;
+  }, []);
+  return uniq(ids);
+};
+
+const getFacetAttributesForType = (attributes, items, type) => {
+  const typeAttributes = cloneDeep(filter(attributes, { type }));
+  typeAttributes.forEach((attribute) => {
+    items.forEach((item) => {
+      if (
+        item.attributes &&
+        Object.prototype.hasOwnProperty.call(item.attributes, attribute.key) &&
+        !isEmpty(item.attributes[attribute.key])
+      ) {
+        const index = findIndex(attribute.options, {
+          value: item.attributes[attribute.key]
+        });
+        if (index >= 0) {
+          attribute.options[index].hits.push(item.id);
+        } else {
+          attribute.options.push({
+            hits: [item.id],
+            ref: toLower(item.attributes[attribute.key]),
+            value: item.attributes[attribute.key],
+            selected: false
+          });
+        }
+      }
+    });
+  });
+  return typeAttributes;
+};
 
 export function searchItems(searchTerm, isSuggestionsOnly = false, type) {
   const TERM_AND = 'AND';
@@ -172,25 +237,23 @@ export function searchItems(searchTerm, isSuggestionsOnly = false, type) {
   );
   const { andTerms, notTerms, orTerms } = splitted;
 
-  return function (dispatch, getState) {
-    const attributes = getState().search.attributes;
+  return (dispatch, getState) => {
+    const { attributes } = getState().search;
     const filteredAttributes = searchTerm
       ? attributes.reduce((acc, attr) => {
-          const options = filter(attr.options, (option) => {
-            return (
-              (isEmpty(andTerms) ||
-                every(andTerms, (st) => includes(option.ref, st))) &&
-              (isEmpty(orTerms) ||
-                some(orTerms, (st) => includes(option.ref, st))) &&
-              (isEmpty(notTerms) ||
-                every(notTerms, (st) => !includes(option.ref, st)))
-            );
-          });
-          if (!isEmpty(options)) {
-            acc.push({ ...attr, options, open: false, showAll: false });
-          }
-          return acc;
-        }, [])
+        const options = filter(attr.options, (option) => (
+          (isEmpty(andTerms) ||
+            every(andTerms, (st) => includes(option.ref, st))) &&
+          (isEmpty(orTerms) ||
+            some(orTerms, (st) => includes(option.ref, st))) &&
+          (isEmpty(notTerms) ||
+            every(notTerms, (st) => !includes(option.ref, st)))
+        ));
+        if (!isEmpty(options)) {
+          acc.push({ ...attr, options, open: false, showAll: false });
+        }
+        return acc;
+      }, [])
       : attributes;
 
     const classifications = getFilteredHits(
@@ -237,24 +300,24 @@ export function searchItems(searchTerm, isSuggestionsOnly = false, type) {
             : [],
         phases:
           type === TYPE_PHASE ||
-          (!type && isEmpty(classifications) && isEmpty(functions))
+            (!type && isEmpty(classifications) && isEmpty(functions))
             ? phases
             : [],
         actions:
           type === TYPE_ACTION ||
-          (!type &&
-            isEmpty(classifications) &&
-            isEmpty(functions) &&
-            isEmpty(phases))
+            (!type &&
+              isEmpty(classifications) &&
+              isEmpty(functions) &&
+              isEmpty(phases))
             ? actions
             : [],
         records:
           type === TYPE_RECORD ||
-          (!type &&
-            isEmpty(classifications) &&
-            isEmpty(functions) &&
-            isEmpty(phases) &&
-            isEmpty(actions))
+            (!type &&
+              isEmpty(classifications) &&
+              isEmpty(functions) &&
+              isEmpty(phases) &&
+              isEmpty(actions))
             ? records
             : [],
         suggestions: [],
@@ -269,7 +332,7 @@ export function resetSuggestions() {
 }
 
 export function filterItems(selectedFacets) {
-  return function (dispatch, getState) {
+  return (dispatch, getState) => {
     let classifications = getFacetHits(selectedFacets[TYPE_CLASSIFICATION]);
     let functions = getFacetHits(selectedFacets[TYPE_FUNCTION]);
     let phases = getFacetHits(selectedFacets[TYPE_PHASE]);
@@ -292,7 +355,7 @@ export function filterItems(selectedFacets) {
         })
       );
     }
-    const filteredAttributes = getState().search.filteredAttributes;
+    const { filteredAttributes } = getState().search;
     classifications = getFilteredHits(filteredAttributes, TYPE_CLASSIFICATION);
     functions = isEmpty(classifications)
       ? getFilteredHits(filteredAttributes, TYPE_FUNCTION)
@@ -307,9 +370,9 @@ export function filterItems(selectedFacets) {
         : [];
     records =
       isEmpty(classifications) &&
-      isEmpty(functions) &&
-      isEmpty(phases) &&
-      isEmpty(actions)
+        isEmpty(functions) &&
+        isEmpty(phases) &&
+        isEmpty(actions)
         ? getFilteredHits(filteredAttributes, TYPE_RECORD)
         : [];
     return dispatch(
@@ -336,24 +399,18 @@ export function toggleShowAllAttributeOptions(attribute) {
   return createAction(TOGGLE_SHOW_ALL_ATTRIBUTE_OPTIONS)(attribute);
 }
 
-const classificationsErrorAction = (state) => {
-  return update(state, {
-    isFetching: { $set: false },
-    items: { $set: [] }
-  });
-};
+const classificationsErrorAction = (state) => update(state, {
+  isFetching: { $set: false },
+  items: { $set: [] }
+});
 
-const classificationsReadyAction = (state) => {
-  return update(state, {
-    isFetching: { $set: false }
-  });
-};
+const classificationsReadyAction = (state) => update(state, {
+  isFetching: { $set: false }
+});
 
-const requestClassificationsAction = (state) => {
-  return update(state, {
-    isFetching: { $set: true }
-  });
-};
+const requestClassificationsAction = (state) => update(state, {
+  isFetching: { $set: true }
+});
 
 const receiveClassificationsAction = (state, { payload }) => {
   const { items, page } = payload;
@@ -521,11 +578,9 @@ const receiveClassificationsAction = (state, { payload }) => {
   });
 };
 
-const searchSuggestionsAction = (state, { payload }) => {
-  return update(state, {
-    suggestions: { $set: payload }
-  });
-};
+const searchSuggestionsAction = (state, { payload }) => update(state, {
+  suggestions: { $set: payload }
+});
 
 const searchItemsAction = (state, { payload }) => {
   const { classifications, functions, phases, actions, records } = state;
@@ -570,13 +625,11 @@ const searchItemsAction = (state, { payload }) => {
     }
   ].reduce((acc, current) => {
     if (!isEmpty(current.facet)) {
-      return filter(current.items, (item) => {
-        return (
-          includes(current.facet, item.id) &&
-          (isEmpty(acc) ||
-            (!isEmpty(acc) && some(acc, (a) => includes(item.parents, a.id))))
-        );
-      });
+      return filter(current.items, (item) => (
+        includes(current.facet, item.id) &&
+        (isEmpty(acc) ||
+          (!isEmpty(acc) && some(acc, (a) => includes(item.parents, a.id))))
+      ));
     }
     return acc;
   }, []);
@@ -585,7 +638,7 @@ const searchItemsAction = (state, { payload }) => {
     if (!isEmpty(terms)) {
       const matchedAttributes = Object.keys(item.attributes || {}).reduce(
         (acc, key) => {
-          if (item.attributes.hasOwnProperty(key) && key !== 'name') {
+          if (Object.prototype.hasOwnProperty.call(item.attributes, key) && key !== 'name') {
             const attrValue = isArray(item.attributes[key])
               ? item.attributes[key].join(', ')
               : item.attributes[key];
@@ -593,12 +646,10 @@ const searchItemsAction = (state, { payload }) => {
               new RegExp(term, 'gi').test(attrValue)
             );
             if (isHit) {
-              const value = terms.reduce((valAcc, term) => {
-                return valAcc.replace(
-                  new RegExp(term, 'gi'),
-                  (match) => `<mark>${match}</mark>`
-                );
-              }, attrValue);
+              const value = terms.reduce((valAcc, term) => valAcc.replace(
+                new RegExp(term, 'gi'),
+                (match) => `<mark>${match}</mark>`
+              ), attrValue);
               acc.push({ key, value });
             }
           }
@@ -611,12 +662,10 @@ const searchItemsAction = (state, { payload }) => {
         matchedAttributes,
         matchedName: isEmpty(terms)
           ? item.name
-          : terms.reduce((acc, term) => {
-              return acc.replace(
-                new RegExp(term, 'gi'),
-                (match) => `<mark>${match}</mark>`
-              );
-            }, item.name || '')
+          : terms.reduce((acc, term) => acc.replace(
+            new RegExp(term, 'gi'),
+            (match) => `<mark>${match}</mark>`
+          ), item.name || '')
       };
     }
     return item;
@@ -652,13 +701,11 @@ const searchItemsAction = (state, { payload }) => {
   });
 };
 
-const setAttributeTypesAction = (state, { payload }) => {
-  return update(state, {
-    attributes: { $set: payload.attributes },
-    metadata: { $set: payload.metadata },
-    filteredAttributes: { $set: payload.attributes }
-  });
-};
+const setAttributeTypesAction = (state, { payload }) => update(state, {
+  attributes: { $set: payload.attributes },
+  metadata: { $set: payload.metadata },
+  filteredAttributes: { $set: payload.attributes }
+});
 
 const toggleAttributeAction = (state, { payload }) => {
   const { key, open, showAll, type } = payload;
@@ -674,6 +721,21 @@ const toggleAttributeAction = (state, { payload }) => {
     });
   }
   return state;
+};
+
+const getSelectedItemsForType = (attributes, type, items) => {
+  const ids = filter(attributes, { type }).reduce((acc, attribute) => {
+    const attrHits = attribute.options.reduce((valAcc, val) => {
+      if (val.selected) {
+        valAcc.push(...val.hits);
+      }
+      return valAcc;
+    }, []);
+    acc.push(...attrHits);
+    return acc;
+  }, []);
+  const uniqIds = uniq(ids);
+  return filter(items, (item) => includes(uniqIds, item.id));
 };
 
 const toggleAttributeOptionAction = (state, { payload }) => {
@@ -744,84 +806,6 @@ const toggleShowAllAttributeOptionsAction = (state, { payload }) => {
     });
   }
   return state;
-};
-
-const getFacetAttributesForType = (attributes, items, type) => {
-  const typeAttributes = cloneDeep(filter(attributes, { type }));
-  typeAttributes.forEach((attribute) => {
-    items.forEach((item) => {
-      if (
-        item.attributes &&
-        item.attributes.hasOwnProperty(attribute.key) &&
-        !isEmpty(item.attributes[attribute.key])
-      ) {
-        const index = findIndex(attribute.options, {
-          value: item.attributes[attribute.key]
-        });
-        if (index >= 0) {
-          attribute.options[index].hits.push(item.id);
-        } else {
-          attribute.options.push({
-            hits: [item.id],
-            ref: toLower(item.attributes[attribute.key]),
-            value: item.attributes[attribute.key],
-            selected: false
-          });
-        }
-      }
-    });
-  });
-  return typeAttributes;
-};
-
-const getSelectedItemsForType = (attributes, type, items) => {
-  const ids = filter(attributes, { type }).reduce((acc, attribute) => {
-    const attrHits = attribute.options.reduce((valAcc, val) => {
-      if (val.selected) {
-        valAcc.push(...val.hits);
-      }
-      return valAcc;
-    }, []);
-    acc.push(...attrHits);
-    return acc;
-  }, []);
-  const uniqIds = uniq(ids);
-  return filter(items, (item) => includes(uniqIds, item.id));
-};
-
-const getFacetHits = (facets) => {
-  const byKeys = facets.reduce((acc, facet) => {
-    if (acc.hasOwnProperty(facet.key)) {
-      acc[facet.key].push(...facet.hits);
-    } else {
-      acc[facet.key] = [...facet.hits];
-    }
-    return acc;
-  }, {});
-  const ids = Object.keys(byKeys || {}).reduce((acc, key, index) => {
-    const hits = [];
-    if (byKeys.hasOwnProperty(key)) {
-      byKeys[key].forEach((hit) => {
-        if ((index === 0 && isEmpty(acc)) || includes(acc, hit)) {
-          hits.push(hit);
-        }
-      });
-    }
-    return hits;
-  }, []);
-  return uniq(ids);
-};
-
-const getFilteredHits = (filteredAttributes, type) => {
-  const ids = filter(filteredAttributes, { type }).reduce((acc, attribute) => {
-    const hits = attribute.options.reduce((optAcc, option) => {
-      optAcc.push(...option.hits);
-      return optAcc;
-    }, []);
-    acc.push(...hits);
-    return acc;
-  }, []);
-  return uniq(ids);
 };
 
 export default handleActions(

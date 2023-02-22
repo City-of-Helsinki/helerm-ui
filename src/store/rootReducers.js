@@ -11,19 +11,17 @@ import classification from '../components/Classification/reducer';
 import bulk from '../components/Bulk/reducer';
 import search from '../components/FacetedSearch/reducer';
 
-export const makeRootReducer = (history) => {
-  return combineReducers({
-    navigation,
-    validation,
-    router: connectRouter(history),
-    selectedTOS,
-    classification,
-    toastr,
-    user,
-    ui,
-    bulk,
-    search
-  });
-};
+const makeRootReducer = (history) => combineReducers({
+  navigation,
+  validation,
+  router: connectRouter(history),
+  selectedTOS,
+  classification,
+  toastr,
+  user,
+  ui,
+  bulk,
+  search
+});
 
 export default makeRootReducer;

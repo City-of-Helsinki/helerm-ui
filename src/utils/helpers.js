@@ -1,3 +1,5 @@
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable camelcase */
 import { normalize, schema } from 'normalizr';
 import { toastr } from 'react-redux-toastr';
 import moment from 'moment';
@@ -15,17 +17,16 @@ export function convertToTree(itemList) {
   // Combine navigation number and names and
   // give each item in the navigation a level specific id for sorting.
   // ------------------------------------
-  const newList = itemList.map((item) => {
-    return {
-      name: item.code + ' ' + item.title,
-      sort_id: item.code.substring(item.code.length - 2, item.code.length),
-      path: [],
-      parent_id: item.parent ? item.parent.id : null,
-      ...item
-    };
-  });
+  const newList = itemList.map((item) => ({
+    name: `${item.code} ${item.title}`,
+    sort_id: item.code.substring(item.code.length - 2, item.code.length),
+    path: [],
+    parent_id: item.parent ? item.parent.id : null,
+    ...item
+  }));
 
   const dict = {};
+  // eslint-disable-next-line no-return-assign
   newList.forEach((item) => (dict[item.id] = item));
   const mem = new Set();
 
@@ -48,6 +49,7 @@ export function convertToTree(itemList) {
     }
   };
 
+  // eslint-disable-next-line no-restricted-syntax
   for (const item of newList) {
     if (!mem.has(item.id)) {
       resolveParent(item);
@@ -58,6 +60,7 @@ export function convertToTree(itemList) {
     if (!rootNode.children) {
       return;
     }
+    // eslint-disable-next-line no-restricted-syntax
     for (const kid of rootNode.children) {
       kid.path = kid.path.concat(...rootNode.path, rootNode.name);
       affixPath(kid);
@@ -75,14 +78,21 @@ export function convertToTree(itemList) {
  */
 export function normalizeTosFromApi(tos) {
   tos.phases.forEach((p, phaseIndex) => {
+    // eslint-disable-next-line no-param-reassign
     p.index = p.index || phaseIndex;
+    // eslint-disable-next-line no-param-reassign
     p.is_attributes_open = false;
+    // eslint-disable-next-line no-param-reassign
     p.is_open = false;
     p.actions.forEach((a, actionIndex) => {
+      // eslint-disable-next-line no-param-reassign
       a.index = a.index || actionIndex;
+      // eslint-disable-next-line no-param-reassign
       a.is_open = false;
       a.records.forEach((r, recordIndex) => {
+        // eslint-disable-next-line no-param-reassign
         r.index = r.index || recordIndex;
+        // eslint-disable-next-line no-param-reassign
         r.is_open = false;
       });
     });
@@ -105,19 +115,71 @@ export function normalizeTosFromApi(tos) {
 }
 
 /**
+ * Remove empty attributes for API
+ * @param tosCopy
+ * @returns {*}
+ */
+export function trimAttributes(tosCopy) {
+  Object.keys(tosCopy.phases).forEach((phase) => {
+    if (Object.prototype.hasOwnProperty.call(tosCopy.phases, phase)) {
+      Object.keys(tosCopy.phases[phase].attributes).forEach((attribute) => {
+        if (
+          Object.prototype.hasOwnProperty.call(tosCopy.phases[phase].attributes, attribute) &&
+          (tosCopy.phases[phase].attributes[attribute] === '' ||
+            tosCopy.phases[phase].attributes[attribute] === null)
+        ) {
+          // eslint-disable-next-line no-param-reassign
+          delete tosCopy.phases[phase].attributes[attribute];
+        }
+      });
+    }
+  });
+  Object.keys(tosCopy.actions).forEach((action) => {
+    if (Object.prototype.hasOwnProperty.call(tosCopy.actions, action)) {
+      Object.keys(tosCopy.actions[action].attributes).forEach((attribute) => {
+        if (
+          Object.prototype.hasOwnProperty.call(tosCopy.actions[action].attributes, attribute) &&
+          (tosCopy.actions[action].attributes[attribute] === '' ||
+            tosCopy.actions[action].attributes[attribute] === null)
+        ) {
+          // eslint-disable-next-line no-param-reassign
+          delete tosCopy.actions[action].attributes[attribute];
+        }
+      });
+    }
+  });
+  Object.keys(tosCopy.records).forEach((record) => {
+    if (Object.prototype.hasOwnProperty.call(tosCopy.records, record)) {
+      Object.keys(tosCopy.records[record].attributes).forEach((attribute) => {
+        if (
+          Object.prototype.hasOwnProperty.call(tosCopy.records[record].attributes, attribute) &&
+          (tosCopy.records[record].attributes[attribute] === '' ||
+            tosCopy.records[record].attributes[attribute] === null)
+        ) {
+          // eslint-disable-next-line no-param-reassign
+          delete tosCopy.records[record].attributes[attribute];
+        }
+      });
+    }
+  });
+
+  return tosCopy;
+}
+
+/**
  * Normalize tos for API
  * @param tos
  * @returns {*}
  */
 export function normalizeTosForApi(tos) {
   // TODO: needs some serious refactoring...
-  const tosCopy = Object.assign({}, tos);
+  const tosCopy = { ...tos };
   const finalTos = trimAttributes(tosCopy);
-  const phases = map(finalTos.phases, (phase) => Object.assign({}, phase));
+  const phases = map(finalTos.phases, (phase) => ({ ...phase }));
   const finalPhases = [];
 
   phases.map((phase, phaseIndex) => {
-    finalPhases.push(Object.assign({}, phase));
+    finalPhases.push({ ...phase });
     return phase.actions.map((action, actionIndex) => {
       const actionId = typeof action === 'string' ? action : action.id;
       Object.assign(finalPhases[phaseIndex].actions, {
@@ -137,66 +199,17 @@ export function normalizeTosForApi(tos) {
 }
 
 /**
- * Remove empty attributes for API
- * @param tosCopy
- * @returns {*}
- */
-export function trimAttributes(tosCopy) {
-  Object.keys(tosCopy.phases).forEach((phase) => {
-    if (tosCopy.phases.hasOwnProperty(phase)) {
-      Object.keys(tosCopy.phases[phase].attributes).forEach((attribute) => {
-        if (
-          tosCopy.phases[phase].attributes.hasOwnProperty(attribute) &&
-          (tosCopy.phases[phase].attributes[attribute] === '' ||
-            tosCopy.phases[phase].attributes[attribute] === null)
-        ) {
-          delete tosCopy.phases[phase].attributes[attribute];
-        }
-      });
-    }
-  });
-  Object.keys(tosCopy.actions).forEach((action) => {
-    if (tosCopy.actions.hasOwnProperty(action)) {
-      Object.keys(tosCopy.actions[action].attributes).forEach((attribute) => {
-        if (
-          tosCopy.actions[action].attributes.hasOwnProperty(attribute) &&
-          (tosCopy.actions[action].attributes[attribute] === '' ||
-            tosCopy.actions[action].attributes[attribute] === null)
-        ) {
-          delete tosCopy.actions[action].attributes[attribute];
-        }
-      });
-    }
-  });
-  Object.keys(tosCopy.records).forEach((record) => {
-    if (tosCopy.records.hasOwnProperty(record)) {
-      Object.keys(tosCopy.records[record].attributes).forEach((attribute) => {
-        if (
-          tosCopy.records[record].attributes.hasOwnProperty(attribute) &&
-          (tosCopy.records[record].attributes[attribute] === '' ||
-            tosCopy.records[record].attributes[attribute] === null)
-        ) {
-          delete tosCopy.records[record].attributes[attribute];
-        }
-      });
-    }
-  });
-
-  return tosCopy;
-}
-
-/**
  * Find item by id (nested array with `children`-key)
  * @param items
  * @param id
  * @returns {*}
  */
 export function itemById(items, id) {
-  let searchResult = find(items, (item) => item.id === id);
+  const searchResult = find(items, (item) => item.id === id);
 
   if (!searchResult) {
-    let filteredItems = filter(items, (item) => item.children);
-    let subset = flatten(map(filteredItems, (item) => item.children));
+    const filteredItems = filter(items, (item) => item.children);
+    const subset = flatten(map(filteredItems, (item) => item.children));
 
     if (subset.length !== 0) {
       return itemById(subset, id);
@@ -273,7 +286,7 @@ export function displayMessage(message, opts = { type: 'success' }) {
   return toastr[opts.type](title, body, opts);
 }
 
-export function confirmMessage(message, options = { onOk: () => {}, onCancel: () => {}}) {
+export function confirmMessage(message, options = { onOk: () => { }, onCancel: () => { } }) {
   toastr.removeByType('confirm');
   toastr.confirm(
     null,
@@ -281,8 +294,8 @@ export function confirmMessage(message, options = { onOk: () => {}, onCancel: ()
       ...options,
       component: () => (
         <div className="confirm-toastr-component">
-            <div><i className='fa-solid fa-triangle-exclamation' /></div>
-            <div>{message}</div>
+          <div><i className='fa-solid fa-triangle-exclamation' /></div>
+          <div>{message}</div>
         </div>
       )
     }
@@ -305,12 +318,12 @@ export function formatDateTime(dateTime, format = 'DD.MM.YYYY HH:mm') {
  * @param type
  * @returns {Array}
  */
-export function getBaseValues(attributeTypes, type) {
+export function getBaseValues(attributeTypes) {
   const baseValues = [
-    { index: attributeTypes['PhaseType'].index, type: 'PhaseType' },
-    { index: attributeTypes['RecordType'].index, type: 'RecordType' },
-    { index: attributeTypes['ActionType'].index, type: 'ActionType' },
-    { index: attributeTypes['TypeSpecifier'].index, type: 'TypeSpecifier' }
+    { index: attributeTypes.PhaseType.index, type: 'PhaseType' },
+    { index: attributeTypes.RecordType.index, type: 'RecordType' },
+    { index: attributeTypes.ActionType.index, type: 'ActionType' },
+    { index: attributeTypes.TypeSpecifier.index, type: 'TypeSpecifier' }
   ];
   const orderedBaseValues = orderBy(baseValues, ['index']);
   return orderedBaseValues.map((baseValue) => baseValue.type);
@@ -335,8 +348,7 @@ export function getNewPath(absolutePath, relativePath) {
   }
 
   return (
-    '/' +
-    relativeParts
+    `/${relativeParts
       .reduce((absoluteParts, part) => {
         switch (part) {
           case '..': {
@@ -350,7 +362,7 @@ export function getNewPath(absolutePath, relativePath) {
           }
         }
       }, pathParts)
-      .join('/')
+      .join('/')}`
   );
 }
 

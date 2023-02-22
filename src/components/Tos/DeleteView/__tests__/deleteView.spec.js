@@ -1,7 +1,7 @@
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme, { mount } from 'enzyme';
 import React from 'react';
-import { DeleteView } from '../DeleteView';
+import DeleteView from '../DeleteView';
 
 Enzyme.configure({ adapter: new Adapter() });
 
