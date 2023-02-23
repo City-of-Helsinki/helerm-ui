@@ -1,5 +1,4 @@
 /* eslint-disable no-restricted-syntax */
-import { store } from '../index';
 
 /**
  * Attributes should be displayed in the UI as "value name",
@@ -9,6 +8,7 @@ import { store } from '../index';
  * If it doesn't find any name it simply passes back the value received
  * as argument.
  * @param {string} attributeValue
+ * @param {object} attributeTypes
  * @param {string?} id
  * @param {string?} identifier
  * @param {string?} name
@@ -17,9 +17,9 @@ const getDisplayLabelForAttribute = ({
   attributeValue,
   id = null,
   identifier = null,
-  name = null
+  name = null,
+  attributeTypes
 }) => {
-  const { attributeTypes } = store.getState().ui;
 
   if (identifier) {
     const identifierContent = attributeTypes[identifier];
