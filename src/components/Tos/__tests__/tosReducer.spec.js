@@ -1,5 +1,7 @@
+/* eslint-disable no-underscore-dangle */
 import { cloneDeep } from 'lodash';
 import { createAction } from 'redux-actions';
+
 import tosReducer, { initialState } from '../reducer';
 
 describe('(Redux Module) Tos', () => {

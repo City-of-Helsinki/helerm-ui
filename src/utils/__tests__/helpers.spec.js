@@ -1,10 +1,12 @@
+/* eslint-disable camelcase */
 import deepFreeze from 'deep-freeze';
+
 import { convertToTree } from '../helpers';
 import {
   mockNavigationDataShort,
   mockNavigationDataFullObjects,
   mockNavigationDataOrphan
-} from '../__tests__/testdata/navigationMocks';
+} from "./testdata/navigationMocks";
 
 describe('convertToTree', () => {
   it('Parsing list to tree does not mutate original list', () => {

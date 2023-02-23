@@ -1,8 +1,10 @@
 import { createBrowserHistory as mockHistory } from 'history';
+
 import createStore from '../createStore';
 
 describe('(Store) createStore', () => {
-  let store, history;
+  let store;
+  let history;
 
   beforeEach(() => {
     history = mockHistory()

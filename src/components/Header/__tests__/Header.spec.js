@@ -1,11 +1,13 @@
+/* eslint-disable no-underscore-dangle */
 import { createBrowserHistory as mockHistory } from 'history';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme, { mount } from 'enzyme';
 import React from 'react';
-import Header from '../Header';
-import storeCreator from '../../../store/createStore';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
+
+import Header from '../Header';
+import storeCreator from '../../../store/createStore';
 
 // a quick fix before the official enzyme adapter for React 17 is out
 // https://github.com/enzymejs/enzyme/issues/2429

@@ -1,5 +1,8 @@
-import navigationReducer, { requestNavigation, initialState } from '../reducer';
+/* eslint-disable no-underscore-dangle */
 import { cloneDeep } from 'lodash';
+
+import navigationReducer, { requestNavigation, initialState } from '../reducer';
+
 
 describe('(Redux Module) Navigation', () => {
   describe('(Reducer) NavigationReducer', () => {
