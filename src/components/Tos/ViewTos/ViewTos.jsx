@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable react/prop-types */
 /* eslint-disable class-methods-use-this */

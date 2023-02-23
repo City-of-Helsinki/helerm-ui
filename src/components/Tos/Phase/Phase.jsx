@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable react/no-unused-class-component-methods */
 /* eslint-disable jsx-a11y/no-autofocus */
