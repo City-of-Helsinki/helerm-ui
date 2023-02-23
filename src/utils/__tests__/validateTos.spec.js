@@ -1,5 +1,4 @@
 import { validateTOS, validateTOSWarnings } from '../validators';
-
 import attributeRules from './testdata/attributeRules.json';
 import validTOS from './testdata/validTOS.json';
 import TOSmissingSSN from './testdata/TOSmissingSSN.json';

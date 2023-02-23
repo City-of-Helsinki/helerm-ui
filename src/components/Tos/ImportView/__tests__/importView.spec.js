@@ -1,6 +1,8 @@
+/* eslint-disable no-underscore-dangle */
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme, { mount } from 'enzyme';
 import React from 'react';
+
 import ImportView from '../ImportView';
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -12,9 +14,9 @@ describe('(Component) ImportView', () => {
     _wrapper = mount(
       <ImportView
         level='phase'
-        title={''}
-        targetText={''}
-        itemsToImportText={''}
+        title=""
+        targetText=""
+        itemsToImportText=""
         phases={{}}
         phasesOrder={[]}
         actions={{}}

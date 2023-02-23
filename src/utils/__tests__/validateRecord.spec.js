@@ -1,5 +1,4 @@
 import { validateRecord, validateRecordWarnings } from '../validators';
-
 import attributeRules from './testdata/attributeRules.json';
 import record from './testdata/record.json';
 

@@ -1,6 +1,8 @@
+/* eslint-disable no-underscore-dangle */
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme, { mount } from 'enzyme';
 import React from 'react';
+
 import DeleteView from '../DeleteView';
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -12,7 +14,7 @@ describe('(Component) DeleteView', () => {
     _wrapper = mount(
       <DeleteView
         type='action'
-        target={''}
+        target=""
         action={() => null}
         cancel={() => null}
       />

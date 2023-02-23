@@ -1,6 +1,7 @@
 {
   "env": {
-    "browser": true
+    "browser": true,
+    "jest": true
   },
   "extends": [
     "plugin:react/recommended",
@@ -17,8 +18,7 @@
     }
   },
   "ignorePatterns": [
-    "*.scss",
-    "*.spec.js"
+    "*.scss"
   ],
   "plugins": [
     "react",

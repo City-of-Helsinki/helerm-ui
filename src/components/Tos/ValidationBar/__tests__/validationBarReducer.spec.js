@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+/* eslint-disable no-underscore-dangle */
 import validationReducer, { setValidationVisibility } from '../reducer';
 
 describe('(Redux Module) Validation', () => {
