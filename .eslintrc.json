@@ -18,7 +18,9 @@
     }
   },
   "ignorePatterns": [
-    "*.scss"
+    "*.scss",
+    "*.css",
+    "*.module.css"
   ],
   "plugins": [
     "react",
@@ -76,15 +78,6 @@
           ]
         ],
         "newlines-between": "always"
-      }
-    ],
-    "camelcase": [
-      "error",
-      {
-        "ignoreDestructuring": true,
-        "allow": [
-          "^UNSAFE_"
-        ]
       }
     ]
   },

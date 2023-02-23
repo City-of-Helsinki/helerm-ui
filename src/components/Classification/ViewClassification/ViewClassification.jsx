@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable operator-assignment */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable react/forbid-prop-types */
