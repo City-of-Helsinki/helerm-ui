@@ -82,8 +82,6 @@ class Attribute extends React.Component {
     switch (parentType) {
       case 'phase':
         return 'Valitse käsittelyvaihe...';
-      // case 'action':
-      //   return '';
       case 'record':
         return 'Valitse asiakirjatyyppi...';
       default:

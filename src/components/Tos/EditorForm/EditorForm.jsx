@@ -269,10 +269,7 @@ class EditorForm extends React.Component {
         }
       });
     } else {
-      attributeElements.push(
-        // <div key='no-fields' className='no-fields'>Ei täydennettäviä metatietoja</div>
-        <div key='no-fields' />,
-      );
+      attributeElements.push(<div key='no-fields' />);
     }
 
     return attributeElements;
@@ -355,9 +352,7 @@ class EditorForm extends React.Component {
         if (action === 'edit' || action === 'complement') {
           return 'Muokkaa käsittelyvaihetta';
         }
-        // if (action === 'complement') {
-        //   return 'Täydennä käsittelyvaihetta';
-        // }
+
         break;
       }
       case 'action': {
@@ -367,9 +362,6 @@ class EditorForm extends React.Component {
         if (action === 'edit' || action === 'complement') {
           return 'Muokkaa toimenpidettä';
         }
-        // if (action === 'complement') {
-        //   return 'Täydennä toimenpidettä';
-        // }
         break;
       }
       case 'record': {
@@ -379,9 +371,6 @@ class EditorForm extends React.Component {
         if (action === 'edit' && 'complement') {
           return 'Muokkaa asiakirjaa';
         }
-        // if (action === 'complement') {
-        //   return 'Täydennä asiakirjaa';
-        // }
         break;
       }
       default: {
@@ -526,9 +515,6 @@ class EditorForm extends React.Component {
   }
 
   renderDescriptions() {
-    // const { attributeTypes } = this.props;
-    // const typeName = attributeTypes ? attributeTypes[`${capitalize(this.props.editorConfig.type)}Type`].name : '';
-    // const specifierName = attributeTypes ? attributeTypes.TypeSpecifier.name : '';
     const dropdownInput = this.generateDropdown(this.props.elementConfig.elementTypes);
 
     return (

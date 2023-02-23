@@ -147,15 +147,6 @@ class Record extends Component {
                   style: 'btn-primary',
                   action: () => this.editRecordForm(),
                 },
-                // {
-                //   text: 'Täydennä metatietoja',
-                //   icon: 'fa-plus-square',
-                //   style: 'btn-primary',
-                //   action: () => this.props.complementRecordForm(
-                //     this.props.record.id,
-                //     this.props.record.attributes
-                //   )
-                // },
                 {
                   text: 'Poista asiakirja',
                   icon: 'fa-trash',

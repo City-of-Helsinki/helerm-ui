@@ -172,12 +172,6 @@ class Phase extends React.Component {
     }
   }
 
-  // complementPhaseForm () {
-  //   if (this.props.documentState === 'edit') {
-  //     this.setState({ complementingPhase: true, mode: 'edit' });
-  //   }
-  // }
-
   disableEditMode() {
     this.setState({
       editingTypeSpecifier: false,
@@ -382,12 +376,6 @@ class Phase extends React.Component {
         style: 'btn-primary',
         action: () => this.editPhaseForm(),
       },
-      // {
-      //   text: 'Täydennä metatietoja',
-      //   icon: 'fa-plus-square',
-      //   style: 'btn-primary',
-      //   action: () => this.complementPhaseForm()
-      // },
       {
         text: 'Järjestä toimenpiteitä',
         icon: 'fa-th-list',
