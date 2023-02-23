@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable jsx-a11y/no-autofocus */
 /* eslint-disable class-methods-use-this */
@@ -90,24 +91,18 @@ class Conversion extends React.Component {
     const attributeType = attributeTypes[attribute] || {};
     if (!isEmpty(attributeType) && !isEmpty(attributeType.values)) {
       const options = attributeType.values.map((item) => ({
-        label: getDisplayLabelForAttribute(
-          {
-            attributeValue: item.value,
-            identifier: attribute,
-          },
-          attributeTypes,
-        ),
+        label: getDisplayLabelForAttribute({
+          attributeValue: item.value,
+          identifier: attribute,
+        }),
         value: item.value,
       }));
       if (!find(options, { value }) && !isEmpty(value)) {
         options.push({
-          label: getDisplayLabelForAttribute(
-            {
-              attributeValue: value,
-              identifier: attribute,
-            },
-            attributeTypes,
-          ),
+          label: getDisplayLabelForAttribute({
+            attributeValue: value,
+            identifier: attribute,
+          }),
           value,
         });
       }

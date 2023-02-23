@@ -1,6 +1,4 @@
-/* eslint-disable react/no-children-prop */
 /* eslint-disable react/prop-types */
-/* eslint-disable operator-assignment */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
@@ -21,7 +19,7 @@ const markdown = raw('./content_fi.md');
 class InfoView extends Component {
   componentDidMount() {
     if (document.body) {
-      document.body.className = document.body.className + InfoView.BODY_CLASS;
+      document.body.className += InfoView.BODY_CLASS;
     }
     this.props.setNavigationVisibility(true);
   }
@@ -36,7 +34,7 @@ class InfoView extends Component {
     const classname = this.props.match.path === '/info' ? 'info-view-center' : 'info-view';
     return (
       <div className={classname}>
-        <ReactMarkdown plugins={[gfm]} children={markdown} />
+        <ReactMarkdown plugins={[gfm]}>{markdown}</ReactMarkdown>
       </div>
     );
   }

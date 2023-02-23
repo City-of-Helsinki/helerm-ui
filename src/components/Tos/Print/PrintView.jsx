@@ -1,7 +1,6 @@
 /* eslint-disable operator-assignment */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable react/prop-types */
-/* eslint-disable no-shadow */
 /* eslint-disable react/forbid-prop-types */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
@@ -22,7 +21,7 @@ import './PrintView.scss';
 
 class PrintView extends Component {
   componentDidMount() {
-    const { fetchTOS, TOS, match } = this.props;
+    const { fetchTOS: fetch, TOS, match } = this.props;
     this.addBodyClass();
     if (match && match.path === '/view-tos/:id/print') {
       this.props.setNavigationVisibility(false);
@@ -33,7 +32,7 @@ class PrintView extends Component {
       if (typeof version !== 'undefined') {
         params.version = match.params.version;
       }
-      fetchTOS(match.params.id, params).catch((err) => {
+      fetch(match.params.id, params).catch((err) => {
         if (err instanceof URIError) {
           // We have a 404 from API
           this.props.push(`/404?tos-id=${match.params.id}`);

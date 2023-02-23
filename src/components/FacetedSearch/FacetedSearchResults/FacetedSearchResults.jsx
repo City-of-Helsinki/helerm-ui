@@ -25,7 +25,7 @@ const FacetedSearchResults = ({ items, highlightedId, metadata, onSelectItem }) 
           <div className='faceted-search-results-item-type'>{TYPE_LABELS[item.type]}</div>
           <div
             className='faceted-search-results-item-title'
-            dangerouslySetInnerHTML={{ __html: item.matchedName || item.name }} // eslint-disable-line
+            dangerouslySetInnerHTML={{ __html: item.matchedName || item.name }}
           />
           <div className='faceted-search-results-item-path'>{item.path ? item.path.join(' > ') : ''}</div>
           {(item.matchedAttributes || []).map((attr) => (
@@ -34,7 +34,7 @@ const FacetedSearchResults = ({ items, highlightedId, metadata, onSelectItem }) 
               key={`${item.id}-${attr.key}`}
               dangerouslySetInnerHTML={{
                 __html: `${metadata[attr.key] ? metadata[attr.key].name : attr.key}: ${attr.value}`,
-              }} // eslint-disable-line
+              }}
             />
           ))}
         </div>

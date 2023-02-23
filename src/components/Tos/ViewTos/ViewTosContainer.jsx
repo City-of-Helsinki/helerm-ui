@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { push } from 'connected-react-router';

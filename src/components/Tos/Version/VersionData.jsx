@@ -1,8 +1,8 @@
+/* eslint-disable import/no-cycle */
 /* eslint-disable camelcase */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable react/button-has-type */
 import React from 'react';
 import PropTypes from 'prop-types';
 import DatePicker from 'react-datepicker';
@@ -54,7 +54,11 @@ class VersionData extends React.Component {
     return (
       <div className='pull-right'>
         {isEdit && (
-          <button className='btn btn-link' onClick={() => this.setState({ editing: true, validFrom, validTo })}>
+          <button
+            type='button'
+            className='btn btn-link'
+            onClick={() => this.setState({ editing: true, validFrom, validTo })}
+          >
             Muokkaa version tietoja
           </button>
         )}

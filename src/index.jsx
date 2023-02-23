@@ -1,3 +1,6 @@
+/* eslint-disable import/no-cycle */
+/* eslint-disable import/prefer-default-export */
+/* eslint-disable no-underscore-dangle */
 /** @jsxRuntime classic */
 import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
@@ -37,10 +40,9 @@ Sentry.init({
 // Store Instantiation
 // ========================================================
 const browserHistory = createBrowserHistory();
-// eslint-disable-next-line no-underscore-dangle
 const initialState = window.___INITIAL_STATE__;
 
-const store = createStore(browserHistory, initialState);
+export const store = createStore(browserHistory, initialState);
 
 const history = piwik.connectToHistory(browserHistory);
 

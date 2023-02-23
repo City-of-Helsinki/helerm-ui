@@ -1,8 +1,6 @@
+/* eslint-disable import/no-cycle */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable react/no-array-index-key */
-/* eslint-disable react/no-access-state-in-setstate */
-/* eslint-disable react/no-unused-class-component-methods */
-/* eslint-disable react/prop-types */
 /* eslint-disable camelcase */
 /* eslint-disable no-param-reassign */
 /* eslint-disable class-methods-use-this */
@@ -599,11 +597,14 @@ class BulkCreateView extends React.Component {
   }
 
   onSelectAllSearchResults(selected) {
-    const searchResults = this.state.searchResults.map((result) => ({
-      ...result,
-      selected,
-    }));
-    this.setState({ searchResults });
+    this.setState((prev) => {
+      const searchResults = prev.searchResults.map((result) => ({
+        ...result,
+        selected,
+      }));
+
+      return { searchResults };
+    });
   }
 
   onSelectSearchResult(index, selected) {
@@ -740,40 +741,6 @@ class BulkCreateView extends React.Component {
       (isEndsWith && endsWith(value, other)) ||
       equals === isEqual(value, other)
     );
-  }
-
-  compare(items, searchTerm) {
-    const { attribute, equals, target, value } = searchTerm;
-    const isEndsWith = isString(value) && startsWith(value, '*');
-    const isStartsWith = isString(value) && endsWith(value, '*');
-    const trimmedValue = isEndsWith || isStartsWith ? trim(value, '*') : value;
-    const paths = [];
-    const hits = [];
-    let counter = 0;
-    items.forEach((item) => {
-      if (
-        item.attributes &&
-        item.attributes[attribute] &&
-        this.isMatch(item.attributes[attribute], trimmedValue, isEndsWith, isStartsWith, equals)
-      ) {
-        paths.push(
-          `${item.name || PATH_EMPTY_NAME_REPLACEMENT} > ${this.getAttributeName(attribute)}: ${
-            item.attributes[attribute]
-          }`,
-        );
-        hits.push({
-          id: item.id,
-          attributes: {
-            [attribute]: item.attributes[attribute],
-          },
-        });
-        counter += 1;
-      }
-    });
-    if (includes(['phases', 'actions', 'records'], target)) {
-      return counter && counter === items.length ? { hits, paths } : null;
-    }
-    return counter ? { hits, paths } : null;
   }
 
   matchesAll(attributes, searchAttributes) {
@@ -966,6 +933,7 @@ BulkCreateView.propTypes = {
   isFetching: PropTypes.bool,
   items: PropTypes.array.isRequired,
   saveBulkUpdate: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 export default withRouter(BulkCreateView);

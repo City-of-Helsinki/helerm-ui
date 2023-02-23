@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';

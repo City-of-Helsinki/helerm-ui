@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-/* eslint-disable operator-assignment */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable react/forbid-prop-types */
 import React from 'react';
@@ -46,7 +45,7 @@ class ViewClassification extends React.Component {
 
   addBodyClass() {
     if (document.body) {
-      document.body.className = document.body.className + ViewClassification.BODY_CLASS;
+      document.body.className += ViewClassification.BODY_CLASS;
     }
   }
 
