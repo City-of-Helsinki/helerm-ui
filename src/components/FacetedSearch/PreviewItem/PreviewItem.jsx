@@ -1,14 +1,13 @@
+/* eslint-disable import/no-cycle */
 /* eslint-disable react/forbid-prop-types */
-/* eslint-disable import/order */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { isArray } from 'lodash';
 
-import { TYPE_LABELS } from '../../../constants';
-
 import './PreviewItem.scss';
 import getDisplayLabelForAttribute from '../../../utils/attributeHelper';
+import { TYPE_LABELS } from '../../../constants';
 
 const PreviewItem = ({ item, metadata, onClose }) => {
   const link = item.function ? `/view-tos/${item.function}` : `/view-classification/${item.id}`;

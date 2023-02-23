@@ -1,5 +1,5 @@
+/* eslint-disable import/no-cycle */
 /* eslint-disable react/forbid-prop-types */
-/* eslint-disable no-continue */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable consistent-return */
 /* eslint-disable class-methods-use-this */
@@ -91,16 +91,13 @@ class EditorForm extends React.Component {
             newAttributes[attributeType].value
           ) {
             attributesToShow.push(attributeType);
-            continue;
           }
         }
         if (attributeTypes[attributeType].required || includes(getAttributeKeys(attributes), attributeType)) {
           attributesToShow.push(attributeType);
-          continue;
         }
         if (includes(attributeTypes[attributeType].defaultIn, this.props.editorConfig.type)) {
           attributesToShow.push(attributeType);
-          continue;
         }
       }
     }

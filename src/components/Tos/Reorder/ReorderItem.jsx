@@ -1,10 +1,8 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-param-reassign */
-/* eslint-disable react/no-find-dom-node */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { findDOMNode } from 'react-dom';
 import { DragSource, DropTarget } from 'react-dnd';
 
 const style = {
@@ -25,7 +23,7 @@ const itemSource = {
 };
 
 const itemTarget = {
-  hover(props, monitor, component) {
+  hover(props, monitor) {
     const dragIndex = monitor.getItem().index;
     const hoverIndex = props.index;
 
@@ -35,7 +33,7 @@ const itemTarget = {
     }
 
     // Determine rectangle on screen
-    const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
+    const hoverBoundingRect = this.node.getBoundingClientRect();
 
     // Get vertical middle
     const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;

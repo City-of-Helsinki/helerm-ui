@@ -1,9 +1,9 @@
+/* eslint-disable import/no-cycle */
 /* eslint-disable camelcase */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable jsx-a11y/no-autofocus */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable react/no-unused-class-component-methods */
 /* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable class-methods-use-this */
 import React, { Component } from 'react';
@@ -159,12 +159,6 @@ class Action extends Component {
   editTypeSpecifier() {
     if (this.props.documentState === 'edit') {
       this.setState({ editingTypeSpecifier: true, mode: 'edit' });
-    }
-  }
-
-  editType() {
-    if (this.props.documentState === 'edit') {
-      this.setState({ editingType: true, mode: 'edit' });
     }
   }
 
