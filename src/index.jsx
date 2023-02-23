@@ -14,6 +14,7 @@ import fi from 'date-fns/locale/fi';
 import createStore from './store/createStore';
 import AppContainer from './containers/AppContainer';
 import config from './config';
+import routes from './routes';
 
 // Piwik Configuration
 const piwik = PiwikReactRouter({
@@ -39,14 +40,14 @@ const browserHistory = createBrowserHistory();
 // eslint-disable-next-line no-underscore-dangle
 const initialState = window.___INITIAL_STATE__;
 
-// eslint-disable-next-line import/prefer-default-export
-export const store = createStore(browserHistory, initialState);
+const store = createStore(browserHistory, initialState);
 
 const history = piwik.connectToHistory(browserHistory);
 
 // // ========================================================
 // // Go!
 // // ========================================================
-const routes = require('./routes').default(store);
-
-ReactDOM.render(<AppContainer history={history} store={store} routes={routes} />, document.getElementById('root'));
+ReactDOM.render(
+  <AppContainer history={history} store={store} routes={routes(store)} />,
+  document.getElementById('root'),
+);

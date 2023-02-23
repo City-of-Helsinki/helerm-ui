@@ -90,18 +90,24 @@ class Conversion extends React.Component {
     const attributeType = attributeTypes[attribute] || {};
     if (!isEmpty(attributeType) && !isEmpty(attributeType.values)) {
       const options = attributeType.values.map((item) => ({
-        label: getDisplayLabelForAttribute({
-          attributeValue: item.value,
-          identifier: attribute,
-        }),
+        label: getDisplayLabelForAttribute(
+          {
+            attributeValue: item.value,
+            identifier: attribute,
+          },
+          attributeTypes,
+        ),
         value: item.value,
       }));
       if (!find(options, { value }) && !isEmpty(value)) {
         options.push({
-          label: getDisplayLabelForAttribute({
-            attributeValue: value,
-            identifier: attribute,
-          }),
+          label: getDisplayLabelForAttribute(
+            {
+              attributeValue: value,
+              identifier: attribute,
+            },
+            attributeTypes,
+          ),
           value,
         });
       }

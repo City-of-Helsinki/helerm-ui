@@ -47,7 +47,7 @@ AppContainer.propTypes = {
   fetchTemplates: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   retrieveUserFromSession: PropTypes.func.isRequired,
-  routes: PropTypes.object.isRequired,
+  routes: PropTypes.node.isRequired,
   store: PropTypes.object.isRequired,
   user: PropTypes.object,
 };
