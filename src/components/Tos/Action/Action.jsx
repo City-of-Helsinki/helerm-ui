@@ -342,12 +342,6 @@ class Action extends Component {
         style: 'btn-primary',
         action: () => this.editActionForm(),
       },
-      // {
-      //   text: 'Täydennä metatietoja',
-      //   icon: 'fa-plus-square',
-      //   style: 'btn-primary',
-      //   action: () => this.complementActionForm()
-      // },
       {
         text: 'Järjestä asiakirjoja',
         icon: 'fa-table-list',
@@ -440,11 +434,6 @@ class Action extends Component {
         {this.state.typeSpecifier}
       </span>
     );
-    // let actionType =
-    //   (<span className={classNames} onClick={() => this.editType()}>
-    //     {this.state.type}
-    //   </span>
-    // );
 
     if (this.state.mode === 'edit') {
       if (this.state.editingTypeSpecifier) {
@@ -462,22 +451,6 @@ class Action extends Component {
           </div>
         );
       }
-      // if (this.state.editingType) {
-      //   actionType = (
-      //     <div className='col-md-6'>
-      //       <form onSubmit={this.updateActionType}>
-      //         <DropdownInput
-      //           type={'action'}
-      //           valueState={this.state.type}
-      //           options={this.props.actionTypes}
-      //           onChange={this.onTypeChange}
-      //           onInputChange={this.onTypeInputChange}
-      //           onSubmit={this.updateActionType}
-      //         />
-      //       </form>
-      //     </div>
-      //   );
-      // }
     }
 
     if (this.props.action.is_open && this.props.action.records.length) {

@@ -12,10 +12,6 @@ function resolvePlaceholder(type, formType) {
   switch (type) {
     case 'phase':
       return 'Valitse käsittelyvaihe...';
-    // case 'action':
-    //   return '';
-    // case 'record':
-    //   return '';
     case 'form':
       if (formType) {
         if (formType === 'phase') {
