@@ -149,7 +149,7 @@ class FacetedSearch extends React.Component {
     });
   }
 
-  onRemoveFacet(key, type, value) {
+  onRemoveFacet = (key, type, value) => {
     const { selectedFacets } = this.state;
     const facets = selectedFacets[type];
     if (facets) {
@@ -168,7 +168,7 @@ class FacetedSearch extends React.Component {
         );
       }
     }
-  }
+  };
 
   onSearchInputChange(e) {
     const suggestSize = config.FACETED_SEARCH_LENGTH;

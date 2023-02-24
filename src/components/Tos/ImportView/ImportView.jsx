@@ -37,6 +37,28 @@ class ImportView extends React.Component {
     return (type || '') + slash + (specifier || '');
   }
 
+  selectForImport = (e, element) => {
+    e.preventDefault();
+    this.setState((prev) =>
+      update(prev, {
+        selectedElements: {
+          $push: [element],
+        },
+      }),
+    );
+  };
+
+  removeFromImport = (e, elementIndex) => {
+    e.preventDefault();
+    this.setState((prev) =>
+      update(prev, {
+        selectedElements: {
+          $splice: [[elementIndex, 1]],
+        },
+      }),
+    );
+  };
+
   generateImportableElements(level) {
     let elements;
     switch (level) {
@@ -131,28 +153,6 @@ class ImportView extends React.Component {
       }
     });
     return links;
-  }
-
-  selectForImport(e, element) {
-    e.preventDefault();
-    this.setState((prev) =>
-      update(prev, {
-        selectedElements: {
-          $push: [element],
-        },
-      }),
-    );
-  }
-
-  removeFromImport(e, elementIndex) {
-    e.preventDefault();
-    this.setState((prev) =>
-      update(prev, {
-        selectedElements: {
-          $splice: [[elementIndex, 1]],
-        },
-      }),
-    );
   }
 
   importItems() {

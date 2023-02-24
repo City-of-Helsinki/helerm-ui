@@ -4,6 +4,8 @@
     "jest": true
   },
   "extends": [
+    "react-app",
+    "react-app/jest",
     "plugin:react/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
@@ -83,5 +85,10 @@
   },
   "globals": {
     "JSX": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }

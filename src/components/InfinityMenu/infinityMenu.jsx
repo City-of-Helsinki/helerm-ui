@@ -281,7 +281,7 @@ class InfinityMenu extends Component {
     return prevs;
   }
 
-  createSnapshots(tree) {
+  createSnapshots = (tree) => {
     const snapshots = tree.reduce((prev, curr, key) => {
       if (key === undefined) {
         return prev;
@@ -289,19 +289,9 @@ class InfinityMenu extends Component {
       return this.findSnapshot(prev, curr);
     }, {});
     this.setState({ snapshots });
-  }
+  };
 
-  findSnapshot(snapshots, node) {
-    if (!node.children) {
-      snapshots[node.id] = Defiant.getSnapshot(node);
-      return snapshots;
-    }
-    return node.children.length
-      ? node.children.reduce((prev, curr) => this.findSnapshot(prev, curr), snapshots)
-      : snapshots;
-  }
-
-  filterTree(searchInputs, tree, isDetailSearch) {
+  filterTree = (searchInputs, tree, isDetailSearch) => {
     const filters = isDetailSearch ? this.getDetailFilters(searchInputs) : searchInputs[0];
     const filteredTree = filters
       ? tree.reduce((prev, curr, key) => {
@@ -312,6 +302,16 @@ class InfinityMenu extends Component {
         }, [])
       : tree;
     this.setState({ filteredTree });
+  };
+
+  findSnapshot(snapshots, node) {
+    if (!node.children) {
+      snapshots[node.id] = Defiant.getSnapshot(node);
+      return snapshots;
+    }
+    return node.children.length
+      ? node.children.reduce((prev, curr) => this.findSnapshot(prev, curr), snapshots)
+      : snapshots;
   }
 
   findFiltered(trees, node, key, filters) {

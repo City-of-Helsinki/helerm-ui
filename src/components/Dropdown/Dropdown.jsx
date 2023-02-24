@@ -14,17 +14,17 @@ class Dropdown extends React.Component {
     };
   }
 
-  handleClick(index) {
+  handleClick = (index) => {
     this.setState({ open: false });
     this.props.items[index].action();
-  }
+  };
 
-  handleClickOutsideMenu(event) {
+  handleClickOutsideMenu = (event) => {
     const shouldCloseMenu = this.button && !this.button.contains(event.target);
     if (shouldCloseMenu) {
       this.setState({ open: false });
     }
-  }
+  };
 
   generateRows(dropdownItems) {
     return dropdownItems.map((item, index) => (
