@@ -38,12 +38,12 @@ class EditorForm extends React.Component {
    * @param  {string} field
    * @return {void}
    */
-  onBlur(value, key, field) {
+  onBlur = (value, key, field) => {
     this.setState(
       (state) => update(state, this.createUpdate(value, key, field)),
       () => this.resolveOnSubmit(null, this.props.targetId, false),
     );
-  }
+  };
 
   /**
    * @param  {*} value

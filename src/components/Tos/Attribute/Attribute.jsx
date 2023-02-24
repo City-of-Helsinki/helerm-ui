@@ -49,15 +49,15 @@ class Attribute extends React.Component {
     }
   }
 
+  changeState = (newState) => {
+    if (this.props.documentState === 'edit') {
+      this.setState({ mode: newState });
+    }
+  };
+
   activateEditMode() {
     if (this.state.mode !== 'edit') {
       this.changeState('edit');
-    }
-  }
-
-  changeState(newState) {
-    if (this.props.documentState === 'edit') {
-      this.setState({ mode: newState });
     }
   }
 

@@ -17,13 +17,13 @@ class DropdownMenuWrapper extends React.Component {
     });
   }
 
-  handleClickOutside(event) {
+  handleClickOutside = (event) => {
     const happenedOutside = this.wrapper && !this.wrapper.contains(event.target);
 
     if (happenedOutside) {
       this.props.onClickOutside(event);
     }
-  }
+  };
 
   render() {
     const {
