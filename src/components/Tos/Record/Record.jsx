@@ -63,12 +63,12 @@ class Record extends Component {
     }
   }
 
-  mergeChildAttributesToStateAttributes(stateAttrs, childattrs) {
+  mergeChildAttributesToStateAttributes = (stateAttrs, childattrs) => {
     const newAttrs = {};
     // Gather attributes from child & assign them to current state record
     Object.keys(stateAttrs).map((key) => Object.assign(newAttrs, { [key]: childattrs[key] && childattrs[key].value }));
     return newAttrs;
-  }
+  };
 
   onEditFormShowMoreRecord(e, { newAttributes }) {
     e.preventDefault();
