@@ -92,7 +92,7 @@ class Navigation extends React.Component {
     }
   };
 
-  getFilters() {
+  getFilters = () => {
     const { attributeTypes, isUser } = this.props;
     const isDetailSearch = this.isDetailSearch();
     const statusFilterOptions = isUser ? statusFilters : filter(statusFilters, { default: true });
@@ -125,9 +125,9 @@ class Navigation extends React.Component {
         />
       </div>
     );
-  }
+  };
 
-  getFilteredTree() {
+  getFilteredTree = () => {
     const { items } = this.props;
     const { filters } = this.state;
 
@@ -198,7 +198,7 @@ class Navigation extends React.Component {
     };
 
     return items.map(deepCopy).filter(filterFunction).map(setAllOpen);
-  }
+  };
 
   setSearchInput = (index, value) => {
     const isDetailSearch = this.isDetailSearch();
@@ -231,14 +231,6 @@ class Navigation extends React.Component {
     this.stopSearching();
   };
 
-  stopSearching = () => {
-    this.setState({
-      isSearchChanged: false,
-      searchInputs: [''],
-      searchTimestamp: 0,
-    });
-  };
-
   addSearchInput = () => {
     this.setState(
       update(this.state, {
@@ -267,33 +259,39 @@ class Navigation extends React.Component {
     }
   };
 
-  updateNavigation() {
-    this.stopSearching();
-    this.props.fetchNavigation(this.isDetailSearch());
-  }
-
-  toggleNavigationVisibility() {
+  toggleNavigationVisibility = () => {
     const currentVisibility = this.props.is_open;
     this.props.setNavigationVisibility(!currentVisibility);
-  }
+  };
 
-  hasFilters() {
+  hasFilters = () => {
     const { filters } = this.state;
     return !!Object.keys(filters)
       .map((key) => filters[key].values.length)
       .reduce((a, b) => a + b, 0);
-  }
+  };
 
-  isDetailSearch() {
-    return this.props.match.path === '/filter';
-  }
+  isDetailSearch = () => this.props.match.path === '/filter';
 
-  createNavigationTitle() {
+  createNavigationTitle = () => {
     if (!this.props.is_open && this.props.tosPath.length) {
       return this.props.tosPath.map((section, index) => <div key={index}>{section}</div>);
     }
 
     return 'Navigaatio';
+  };
+
+  stopSearching() {
+    this.setState({
+      isSearchChanged: false,
+      searchInputs: [''],
+      searchTimestamp: 0,
+    });
+  }
+
+  updateNavigation() {
+    this.stopSearching();
+    this.props.fetchNavigation(this.isDetailSearch());
   }
 
   render() {

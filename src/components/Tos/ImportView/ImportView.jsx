@@ -37,7 +37,7 @@ class ImportView extends React.Component {
     return (type || '') + slash + (specifier || '');
   }
 
-  selectForImport = (e, element) => {
+  selectForImport(e, element) {
     e.preventDefault();
     this.setState((prev) =>
       update(prev, {
@@ -46,9 +46,9 @@ class ImportView extends React.Component {
         },
       }),
     );
-  };
+  }
 
-  removeFromImport = (e, elementIndex) => {
+  removeFromImport(e, elementIndex) {
     e.preventDefault();
     this.setState((prev) =>
       update(prev, {
@@ -57,7 +57,7 @@ class ImportView extends React.Component {
         },
       }),
     );
-  };
+  }
 
   generateImportableElements(level) {
     let elements;
