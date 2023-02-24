@@ -35,13 +35,13 @@ class FacetedSearchHelp extends React.Component {
     this.removeListeners();
   }
 
-  handleClickOutside(event) {
+  handleClickOutside = (event) => {
     const happenedOutside = this.wrapper && !this.wrapper.contains(event.target);
 
     if (happenedOutside) {
       this.onToggleHelp();
     }
-  }
+  };
 
   onToggleHelp() {
     this.setState({ show: !this.state.show }, () => {

@@ -38,9 +38,9 @@ class Record extends Component {
     };
   }
 
-  setMode = (value) => {
+  setMode(value) {
     this.setState({ mode: value });
-  };
+  }
 
   disableEditMode() {
     this.setState({
@@ -112,14 +112,14 @@ class Record extends Component {
     this.props.editRecordAttribute(updatedRecordAttribute);
   }
 
-  cancelDeletion = () => {
+  cancelDeletion() {
     this.setState({ deleting: false });
-  };
+  }
 
-  delete = () => {
+  delete() {
     this.setState({ deleting: false });
     this.props.removeRecord(this.props.record.id, this.props.record.action);
-  };
+  }
 
   showAttributeButton(attributes) {
     const actualAttributes = [];
