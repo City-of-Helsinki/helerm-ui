@@ -1,3 +1,6 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-return-assign */
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable camelcase */
 import { normalize, schema } from 'normalizr';
@@ -26,7 +29,6 @@ export function convertToTree(itemList) {
   }));
 
   const dict = {};
-  // eslint-disable-next-line no-return-assign
   newList.forEach((item) => (dict[item.id] = item));
   const mem = new Set();
 
@@ -49,7 +51,6 @@ export function convertToTree(itemList) {
     }
   };
 
-  // eslint-disable-next-line no-restricted-syntax
   for (const item of newList) {
     if (!mem.has(item.id)) {
       resolveParent(item);
@@ -60,7 +61,6 @@ export function convertToTree(itemList) {
     if (!rootNode.children) {
       return;
     }
-    // eslint-disable-next-line no-restricted-syntax
     for (const kid of rootNode.children) {
       kid.path = kid.path.concat(...rootNode.path, rootNode.name);
       affixPath(kid);
@@ -78,21 +78,14 @@ export function convertToTree(itemList) {
  */
 export function normalizeTosFromApi(tos) {
   tos.phases.forEach((p, phaseIndex) => {
-    // eslint-disable-next-line no-param-reassign
     p.index = p.index || phaseIndex;
-    // eslint-disable-next-line no-param-reassign
     p.is_attributes_open = false;
-    // eslint-disable-next-line no-param-reassign
     p.is_open = false;
     p.actions.forEach((a, actionIndex) => {
-      // eslint-disable-next-line no-param-reassign
       a.index = a.index || actionIndex;
-      // eslint-disable-next-line no-param-reassign
       a.is_open = false;
       a.records.forEach((r, recordIndex) => {
-        // eslint-disable-next-line no-param-reassign
         r.index = r.index || recordIndex;
-        // eslint-disable-next-line no-param-reassign
         r.is_open = false;
       });
     });
@@ -128,7 +121,6 @@ export function trimAttributes(tosCopy) {
           (tosCopy.phases[phase].attributes[attribute] === '' ||
             tosCopy.phases[phase].attributes[attribute] === null)
         ) {
-          // eslint-disable-next-line no-param-reassign
           delete tosCopy.phases[phase].attributes[attribute];
         }
       });
@@ -142,7 +134,6 @@ export function trimAttributes(tosCopy) {
           (tosCopy.actions[action].attributes[attribute] === '' ||
             tosCopy.actions[action].attributes[attribute] === null)
         ) {
-          // eslint-disable-next-line no-param-reassign
           delete tosCopy.actions[action].attributes[attribute];
         }
       });
@@ -156,7 +147,6 @@ export function trimAttributes(tosCopy) {
           (tosCopy.records[record].attributes[attribute] === '' ||
             tosCopy.records[record].attributes[attribute] === null)
         ) {
-          // eslint-disable-next-line no-param-reassign
           delete tosCopy.records[record].attributes[attribute];
         }
       });

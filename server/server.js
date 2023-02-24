@@ -1,7 +1,10 @@
+/* eslint-disable no-console */
+/* eslint-disable import/order */
 const express = require('express');
+
 const app = express();
 app.disable("x-powered-by");
-var cors = require('cors');
+const cors = require('cors');
 
 
 // serve up production assets
@@ -11,9 +14,10 @@ app.use(express.static('client/build'));
 const path = require('path');
 
 const dotenv = require('dotenv');
+
 dotenv.config({path: path.resolve(__dirname, '..', '.env')});
 
-let corsOptions = {
+const corsOptions = {
     origin: process.env.REACT_APP_API_URL,
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable no-param-reassign */
 /* eslint-disable import/no-named-as-default-member */
 /* eslint-disable camelcase */
@@ -67,7 +68,6 @@ export function receiveAttributeTypes(attributes, validationRules) {
 
       // Add requiredIn attributes
       Object.keys(validationRules).forEach((key) => {
-        // eslint-disable-next-line no-unused-expressions
         validationRules[key].required &&
           validationRules[key].required.forEach((rule) => {
             if (rule === result.identifier) {
@@ -86,7 +86,6 @@ export function receiveAttributeTypes(attributes, validationRules) {
 
       // Add conditional rules if any
       Object.keys(validationRules).forEach((key) => {
-        // eslint-disable-next-line no-unused-expressions
         validationRules[key].allOf &&
           validationRules[key].allOf.forEach((oneOf) => {
             Object.keys(oneOf).forEach((oneOfKey) => {
@@ -119,7 +118,6 @@ export function receiveAttributeTypes(attributes, validationRules) {
 
       // Add allow values outside choices rule
       Object.keys(validationRules).forEach((key) => {
-        // eslint-disable-next-line no-unused-expressions
         validationRules[key].extra_validations &&
           validationRules[key].extra_validations.allow_values_outside_choices &&
           validationRules[
