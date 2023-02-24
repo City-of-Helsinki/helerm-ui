@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import fetch from 'isomorphic-fetch';
 import { forEach, merge } from 'lodash';
 
@@ -122,9 +123,7 @@ export function get(endpoint, params = {}, options = {}) {
  */
 export function post(endpoint, data, params = {}, options = {}) {
   if (typeof data !== 'string') {
-    // eslint-disable-next-line no-param-reassign
     data = JSON.stringify(data);
-    // eslint-disable-next-line no-param-reassign
     options.headers = merge(
       { 'Content-Type': 'application/json' },
       options.headers
@@ -147,9 +146,7 @@ export function post(endpoint, data, params = {}, options = {}) {
  */
 export function put(endpoint, data, params = {}, options = {}) {
   if (typeof data !== 'string') {
-    // eslint-disable-next-line no-param-reassign
     data = JSON.stringify(data);
-    // eslint-disable-next-line no-param-reassign
     options.headers = merge(
       { 'Content-Type': 'application/json' },
       options.headers
@@ -164,9 +161,7 @@ export function put(endpoint, data, params = {}, options = {}) {
 
 export function patch(endpoint, data, params = {}, options = {}) {
   if (typeof data !== 'string') {
-    // eslint-disable-next-line no-param-reassign
     data = JSON.stringify(data);
-    // eslint-disable-next-line no-param-reassign
     options.headers = merge(
       { 'Content-Type': 'application/json' },
       options.headers
