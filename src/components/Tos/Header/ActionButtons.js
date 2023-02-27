@@ -96,14 +96,14 @@ const ActionButtons = ({
         <ActionButton
           className='btn pull-right'
           type='primary'
-          icon='fa-file-o'
+          icon='fa-file'
           action={saveDraft}
           label={'Luo luonnos'}
         />
         <ActionButton
           className='btn pull-right'
           type='secondary'
-          icon='fa-refresh'
+          icon='fa-rotate'
           action={() => fetchTos(tosId, { state: 'approved' })}
           label={'Hae viimeisin hyväksytty versio'}
         />

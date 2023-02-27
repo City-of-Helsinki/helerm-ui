@@ -255,7 +255,7 @@ export class FacetedSearch extends React.Component {
           onClick={() => this.onClickAttribute(attribute)}
         >
           <i
-            className={classnames('fa', {
+            className={classnames('fa-solid', {
               'fa-minus': attribute.open,
               'fa-plus': !attribute.open
             })}
@@ -346,7 +346,7 @@ export class FacetedSearch extends React.Component {
           </span>
           <button className='btn btn-link'>
             <i
-              className={classnames('fa', {
+              className={classnames('fa-solid', {
                 'fa-angle-down': !isOpen,
                 'fa-angle-up': isOpen
               })}

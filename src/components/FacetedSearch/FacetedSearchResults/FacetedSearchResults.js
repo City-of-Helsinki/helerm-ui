@@ -39,7 +39,7 @@ export const FacetedSearchResults = ({
             ))}
           </div>
           <div className='faceted-search-results-item-link'>
-            <i className={classnames('fa', {
+            <i className={classnames('fa-solid', {
               'fa-angle-right': item.id !== highlightedId,
               'fa-angle-left': item.id === highlightedId
             })} />

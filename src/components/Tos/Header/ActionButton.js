@@ -8,7 +8,7 @@ const ActionButton = ({ type, action, label, style, ...rest }) => (
     style={style}
     className={classnames('btn', `btn-${type}`, `${rest.className}`)}
     onClick={action}>
-    {rest.icon && <i className={classnames('fa', `${rest.icon}`)}/>} {label}
+    {rest.icon && <i className={classnames('fa-solid', `${rest.icon}`)}/>} {label}
   </button>
 );
 

@@ -327,7 +327,7 @@ export class Action extends Component {
     return [
       {
         text: 'Uusi asiakirja',
-        icon: 'fa-file-text',
+        icon: 'fa-file-lines',
         style: 'btn-primary',
         action: () => this.createNewRecord()
       },
@@ -345,7 +345,7 @@ export class Action extends Component {
       // },
       {
         text: 'Järjestä asiakirjoja',
-        icon: 'fa-th-list',
+        icon: 'fa-table-list',
         style: 'btn-primary',
         action: () => this.toggleReorderView()
       },
