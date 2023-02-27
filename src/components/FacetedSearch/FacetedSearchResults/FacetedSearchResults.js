@@ -9,7 +9,7 @@ import { TYPE_LABELS } from '../../../constants';
 
 import './FacetedSearchResults.scss';
 
-export const FacetedSearchResults = ({
+const FacetedSearchResults = ({
   items,
   highlightedId,
   metadata,
