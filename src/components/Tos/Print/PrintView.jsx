@@ -10,7 +10,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import get from 'lodash/get';
 
-import { fetchTOS } from '../reducer';
+import { fetchTOS as fetchTosReducer } from '../reducer';
 import { setNavigationVisibility } from '../../Navigation/reducer';
 import { getStatusLabel, formatDateTime, getNewPath, itemById } from '../../../utils/helpers';
 import MetaDataTable from './MetaDataTable';
@@ -21,7 +21,7 @@ import './PrintView.scss';
 
 class PrintView extends Component {
   componentDidMount() {
-    const { fetchTOS: fetch, TOS, match } = this.props;
+    const { fetchTOS, TOS, match } = this.props;
     this.addBodyClass();
     if (match && match.path === '/view-tos/:id/print') {
       this.props.setNavigationVisibility(false);
@@ -32,7 +32,7 @@ class PrintView extends Component {
       if (typeof version !== 'undefined') {
         params.version = match.params.version;
       }
-      fetch(match.params.id, params).catch((err) => {
+      fetchTOS(match.params.id, params).catch((err) => {
         if (err instanceof URIError) {
           // We have a 404 from API
           this.props.push(`/404?tos-id=${match.params.id}`);
@@ -165,7 +165,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchTOS: bindActionCreators(fetchTOS, dispatch),
+  fetchTOS: bindActionCreators(fetchTosReducer, dispatch),
   push: (path) => dispatch(push(path)),
   setNavigationVisibility: bindActionCreators(setNavigationVisibility, dispatch),
 });
