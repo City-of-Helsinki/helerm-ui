@@ -8,6 +8,9 @@ app.use(express.static('client/build'));
 // serve up the index.html if express does'nt recognize the route
 const path = require('path');
 
+const dotenv = require('dotenv');
+dotenv.config({path: path.resolve(__dirname, '..', '.env')});
+
 app.use('/', express.static(path.resolve(__dirname, '..', 'build')));
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, "..", 'build', 'index.html'));
