@@ -33,8 +33,14 @@ $ yarn start:dev    # Launch on local environment
 ```
 
 2. Running the app in docker
+
+Requires you to setup a port where the application will be running to your .env file, f.ex.
 ```bash
-$ yarn start:docker # Launches the containerized version of the application
+PORT=3000
+```
+
+```bash
+$ docker-compose up --build # Launches the containerized version of the application
 ```
 
 #### 3. Add needed environmental variables
