@@ -4,8 +4,13 @@ FROM helsinkitest/node:14-slim as deployable
 # Hardcode $HOME to /app, as yarn will need to put some stray files inside $HOME
 # In Openshift $HOME would be / by default
 ENV HOME /app
-# Most files from source tree are needed at runtime
-COPY  . .
+
+COPY ./.env .
+COPY ./package.json .
+COPY ./yarn.lock .
+COPY ./src ./src
+COPY ./server ./server
+COPY ./public ./public
 
 # Official image has npm log verbosity as info. More info - https://github.com/nodejs/docker-node#verbosity
 ENV NPM_CONFIG_LOGLEVEL warn
