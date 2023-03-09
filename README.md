@@ -24,15 +24,25 @@ $ git clone https://github.com/City-of-Helsinki/helerm-ui.git
 $ cd helerm-ui
 ```
 
-#### 2. Install depencies:
+#### 2. Install project dependencies
 
-1. Running the app locally
 ```bash
 $ yarn              # Install project dependencies
-$ yarn start:dev    # Launch on local environment
 ```
 
-2. Running the app in docker
+#### 3. Add needed environmental variables
+Add these by copying the `.env.example` to `.env` and adding the values to the file, or directly through process.env.
+
+You will need to have the CLIENT_* and JWT_TOKEN parameters for the Helsinki Tunnistamo, or **run your own https://github.com/City-of-Helsinki/tunnistamo instance**.
+
+### Running the app locally:
+
+```bash
+$ yarn start:dev    # Launch on local environment
+```
+Navigate to [http://localhost:3000](http://localhost:3000)
+
+### Running the app in docker
 
 Requires you to setup a port where the application will be running to your .env file, f.ex.
 ```bash
@@ -42,10 +52,6 @@ PORT=3000
 ```bash
 $ docker-compose up --build # Launches the containerized version of the application
 ```
+Navigate to [http://localhost:3000](http://localhost:3000)
 
-#### 3. Add needed environmental variables
-Add these by copying the `.env.example` to `.env` and adding the values to the file, or directly through process.env.
 
-You will need to have the CLIENT_* and JWT_TOKEN parameters for the Helsinki Tunnistamo, or **run your own https://github.com/City-of-Helsinki/tunnistamo instance**.
-
-#### 4. Navigate to [http://localhost:3000](http://localhost:3000)
