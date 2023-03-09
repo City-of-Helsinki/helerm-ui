@@ -78,7 +78,8 @@ class SearchResults extends React.Component {
               {result.paths.map((path, pathIndex) => {
                 // stuff of nightmares, but we need to combine attribute
                 // value to possibly existing attribute name for the UI
-                const regex = new RegExp(/(.*):(.*)/);
+                const regex = new RegExp(/(.{1,100}):(.{1,100})/);
+
                 const captured = regex.exec(path);
                 let pathName = path;
                 if (captured && captured.length === 3) {
