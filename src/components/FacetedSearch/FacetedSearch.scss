@@ -40,7 +40,7 @@
 
   &-loader {
     text-align: center;
-    
+
     .fa-spinner {
       font-size: 30px;
       color: $brand-primary;
@@ -83,7 +83,7 @@
         color: $brand-primary;
         font-size: 14px;
 
-        .fa {
+        .fa-solid {
           margin-right: 5px;
         }
 
@@ -104,14 +104,14 @@
       &-attribute-value {
         padding: 3px 3px 3px 36px;
 
-        .fa {
+        .fa-solid {
           display: none;
         }
 
         &-selected {
           padding-left: 17px;
 
-          .fa {
+          .fa-solid {
             display: inline-block;
             color: $gray;
           }
@@ -222,7 +222,7 @@
         text-overflow: ellipsis;
       }
 
-      .fa {
+      .fa-solid {
         margin-left: 5px;
       }
 

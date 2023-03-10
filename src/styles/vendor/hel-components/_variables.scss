@@ -2,7 +2,7 @@
 // Variables
 // --------------------------------------------------
 
-$fa-font-path:        "~font-awesome/fonts" !default;
+$fa-font-path:        "~@fortawesome/fontawesome-free/webfonts" !default;
 
 // Helper variables
 
@@ -366,7 +366,7 @@ $grid-gutter-width:         30px !default;
 //** Point at which the navbar becomes uncollapsed.
 $grid-float-breakpoint:     $screen-sm-min !default;
 //** Point at which the navbar begins collapsing.
-$grid-float-breakpoint-max: ($grid-float-breakpoint - 1) !default;
+$grid-float-breakpoint-max: calc($grid-float-breakpoint - 1px) !default;
 
 
 //== Container sizes
@@ -374,17 +374,17 @@ $grid-float-breakpoint-max: ($grid-float-breakpoint - 1) !default;
 //## Define the maximum width of `.container` for different screen sizes.
 
 // Small screen / tablet
-$container-tablet:             ((720px + $grid-gutter-width)) !default;
+$container-tablet:             calc((720px + $grid-gutter-width)) !default;
 //** For `@screen-sm-min` and up.
 $container-sm:                 $container-tablet !default;
 
 // Medium screen / desktop
-$container-desktop:            ((940px + $grid-gutter-width)) !default;
+$container-desktop:            calc((940px + $grid-gutter-width)) !default;
 //** For `@screen-md-min` and up.
 $container-md:                 $container-desktop !default;
 
 // Large screen / wide desktop
-$container-large-desktop:      ((1140px + $grid-gutter-width)) !default;
+$container-large-desktop:      calc((1140px + $grid-gutter-width)) !default;
 //** For `@screen-lg-min` and up.
 $container-lg:                 $container-large-desktop !default;
 
@@ -397,8 +397,8 @@ $container-lg:                 $container-large-desktop !default;
 $navbar-height:                    60px !default;
 $navbar-margin-bottom:             0 !default;
 $navbar-border-radius:             $border-radius-base !default;
-$navbar-padding-horizontal:        floor(($grid-gutter-width / 2)) !default;
-$navbar-padding-vertical:          (($navbar-height - $line-height-computed) / 2) !default;
+$navbar-padding-horizontal:        calc(($grid-gutter-width / 2)) !default;
+$navbar-padding-vertical:          calc(($navbar-height - $line-height-computed) / 2) !default;
 $navbar-collapse-max-height:       340px !default;
 
 $navbar-default-color:             $brand-info !default;

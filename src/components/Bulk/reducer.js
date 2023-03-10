@@ -1,9 +1,11 @@
+/* eslint-disable import/no-named-as-default-member */
+/* eslint-disable camelcase */
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
 import { isArray, orderBy } from 'lodash';
 
 import { DEFAULT_PAGE_SIZE } from '../../constants';
-import { default as api } from '../../utils/api.js';
+import api from '../../utils/api';
 
 const initialState = {
   selectedBulk: null,
@@ -34,13 +36,13 @@ export const UPDATE_BULK_UPDATE_RECEIVE = 'updateBulkUpdateReceiveAction';
 export const UPDATE_BULK_UPDATE_ERROR = 'updateBulkUpdateErrorAction';
 export const CLEAR_SELECTED_BULK_UPDATE = 'clearSelectedBulkUpdateAction';
 
-export function receiveFetchBulkUpdates (resp) {
+export function receiveFetchBulkUpdates(resp) {
   const results = resp.results || [];
   return createAction(FETCH_BULK_UPDATES_RECEIVE)(results);
 }
 
-export function fetchBulkUpdates (includeApproved = false) {
-  return function (dispatch) {
+export function fetchBulkUpdates(includeApproved = false) {
+  return (dispatch) => {
     dispatch(createAction(FETCH_BULK_UPDATES_REQUEST));
     return api.get('bulk-update', includeApproved ? { include_approved: true, page_size: DEFAULT_PAGE_SIZE } : {})
       .then(response => response.json())
@@ -51,8 +53,8 @@ export function fetchBulkUpdates (includeApproved = false) {
   };
 }
 
-export function fetchBulkUpdate (id) {
-  return function (dispatch) {
+export function fetchBulkUpdate(id) {
+  return (dispatch) => {
     dispatch(createAction(FETCH_BULK_UPDATE_REQUEST));
     return api.get(`bulk-update/${id}`, { include_approved: true })
       .then(response => response.json())
@@ -63,8 +65,8 @@ export function fetchBulkUpdate (id) {
   };
 }
 
-export function approveBulkUpdate (id) {
-  return function (dispatch) {
+export function approveBulkUpdate(id) {
+  return (dispatch) => {
     dispatch(createAction(APPROVE_BULK_UPDATE_REQUEST));
     return api.post(`bulk-update/${id}/approve`)
       .then(res => {
@@ -74,14 +76,12 @@ export function approveBulkUpdate (id) {
         }
         return true;
       })
-      .then(success => {
-        return dispatch(createAction(APPROVE_BULK_UPDATE_RECEIVE)(success));
-      });
+      .then(success => dispatch(createAction(APPROVE_BULK_UPDATE_RECEIVE)(success)));
   };
 }
 
-export function deleteBulkUpdate (id) {
-  return function (dispatch) {
+export function deleteBulkUpdate(id) {
+  return (dispatch) => {
     dispatch(createAction(DELETE_BULK_UPDATE_REQUEST));
     return api.del(`bulk-update/${id}`)
       .then(res => {
@@ -97,8 +97,8 @@ export function deleteBulkUpdate (id) {
   };
 }
 
-export function saveBulkUpdate (bulkUpdate) {
-  return function (dispatch) {
+export function saveBulkUpdate(bulkUpdate) {
+  return (dispatch) => {
     dispatch(createAction(SAVE_BULK_UPDATE_REQUEST)());
     return api.post('bulk-update', bulkUpdate)
       .then(response => response.json())
@@ -109,8 +109,8 @@ export function saveBulkUpdate (bulkUpdate) {
   };
 }
 
-export function updateBulkUpdate (id, bulkUpdate) {
-  return function (dispatch) {
+export function updateBulkUpdate(id, bulkUpdate) {
+  return (dispatch) => {
     dispatch(createAction(UPDATE_BULK_UPDATE_REQUEST)());
     return api.patch(`bulk-update/${id}`, bulkUpdate)
       .then(response => response.json())
@@ -121,58 +121,42 @@ export function updateBulkUpdate (id, bulkUpdate) {
   };
 }
 
-export function clearSelectedBulkUpdate () {
+export function clearSelectedBulkUpdate() {
   return createAction(CLEAR_SELECTED_BULK_UPDATE)();
 }
 
-const approveBulkUpdateErrorAction = (state) => {
-  return update(state, {
-    isFetching: { $set: false }
-  });
-};
+const approveBulkUpdateErrorAction = (state) => update(state, {
+  isFetching: { $set: false }
+});
 
-const approveBulkUpdateReceiveAction = (state, { payload }) => {
-  return update(state, {
-    isFetching: { $set: false }
-  });
-};
+const approveBulkUpdateReceiveAction = (state) => update(state, {
+  isFetching: { $set: false }
+});
 
-const approveBulkUpdateRequestAction = (state) => {
-  return update(state, {
-    isFetching: { $set: true }
-  });
-};
+const approveBulkUpdateRequestAction = (state) => update(state, {
+  isFetching: { $set: true }
+});
 
-const deleteBulkUpdateErrorAction = (state) => {
-  return update(state, {
-    isFetching: { $set: false }
-  });
-};
+const deleteBulkUpdateErrorAction = (state) => update(state, {
+  isFetching: { $set: false }
+});
 
-const deleteBulkUpdateReceiveAction = (state, { payload }) => {
-  return update(state, {
-    selectedBulk: { $set: null },
-    isFetching: { $set: false }
-  });
-};
+const deleteBulkUpdateReceiveAction = (state) => update(state, {
+  selectedBulk: { $set: null },
+  isFetching: { $set: false }
+});
 
-const deleteBulkUpdateRequestAction = (state) => {
-  return update(state, {
-    isFetching: { $set: true }
-  });
-};
+const deleteBulkUpdateRequestAction = (state) => update(state, {
+  isFetching: { $set: true }
+});
 
-const fetchBulkUpdatesErrorAction = (state) => {
-  return update(state, {
-    isFetching: { $set: false }
-  });
-};
+const fetchBulkUpdatesErrorAction = (state) => update(state, {
+  isFetching: { $set: false }
+});
 
-const fetchBulkUpdatesRequestAction = (state) => {
-  return update(state, {
-    isFetching: { $set: true }
-  });
-};
+const fetchBulkUpdatesRequestAction = (state) => update(state, {
+  isFetching: { $set: true }
+});
 
 const fetchBulkUpdatesReceiveAction = (state, { payload }) => {
   const sortedBulkUpdates = isArray(payload) ? orderBy(payload, ['created_at'], ['desc']) : [];
@@ -182,67 +166,47 @@ const fetchBulkUpdatesReceiveAction = (state, { payload }) => {
   });
 };
 
-const fetchBulkUpdateErrorAction = (state) => {
-  return update(state, {
-    isFetchingSelected: { $set: false }
-  });
-};
+const fetchBulkUpdateErrorAction = (state) => update(state, {
+  isFetchingSelected: { $set: false }
+});
 
-const fetchBulkUpdateRequestAction = (state) => {
-  return update(state, {
-    isFetchingSelected: { $set: true }
-  });
-};
+const fetchBulkUpdateRequestAction = (state) => update(state, {
+  isFetchingSelected: { $set: true }
+});
 
-const fetchBulkUpdateReceiveAction = (state, { payload }) => {
-  return update(state, {
-    selectedBulk: { $set: payload },
-    isFetchingSelected: { $set: false }
-  });
-};
+const fetchBulkUpdateReceiveAction = (state, { payload }) => update(state, {
+  selectedBulk: { $set: payload },
+  isFetchingSelected: { $set: false }
+});
 
-const saveBulkUpdateErrorAction = (state) => {
-  return update(state, {
-    isSaving: { $set: false }
-  });
-};
+const saveBulkUpdateErrorAction = (state) => update(state, {
+  isSaving: { $set: false }
+});
 
-const saveBulkUpdateRequestAction = (state) => {
-  return update(state, {
-    isSaving: { $set: true }
-  });
-};
+const saveBulkUpdateRequestAction = (state) => update(state, {
+  isSaving: { $set: true }
+});
 
-const saveBulkUpdateReceiveAction = (state, { payload }) => {
-  return update(state, {
-    isSaving: { $set: false }
-  });
-};
+const saveBulkUpdateReceiveAction = (state) => update(state, {
+  isSaving: { $set: false }
+});
 
-const updateBulkUpdateErrorAction = (state) => {
-  return update(state, {
-    isUpdating: { $set: false }
-  });
-};
+const updateBulkUpdateErrorAction = (state) => update(state, {
+  isUpdating: { $set: false }
+});
 
-const updateBulkUpdateRequestAction = (state) => {
-  return update(state, {
-    isUpdating: { $set: true }
-  });
-};
+const updateBulkUpdateRequestAction = (state) => update(state, {
+  isUpdating: { $set: true }
+});
 
-const updateBulkUpdateReceiveAction = (state, { payload }) => {
-  return update(state, {
-    selectedBulk: { $set: payload },
-    isUpdating: { $set: false }
-  });
-};
+const updateBulkUpdateReceiveAction = (state, { payload }) => update(state, {
+  selectedBulk: { $set: payload },
+  isUpdating: { $set: false }
+});
 
-const clearSelectedBulkUpdateAction = (state) => {
-  return update(state, {
-    selectedBulk: { $set: null }
-  });
-};
+const clearSelectedBulkUpdateAction = (state) => update(state, {
+  selectedBulk: { $set: null }
+});
 
 export default handleActions({
   approveBulkUpdateErrorAction,

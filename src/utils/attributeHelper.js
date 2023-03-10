@@ -1,3 +1,6 @@
+/* eslint-disable import/no-cycle */
+/* eslint-disable no-restricted-syntax */
+
 import { store } from '../index';
 
 /**
@@ -12,13 +15,15 @@ import { store } from '../index';
  * @param {string?} identifier
  * @param {string?} name
  */
-export const getDisplayLabelForAttribute = ({
+const getDisplayLabelForAttribute = ({
   attributeValue,
   id = null,
   identifier = null,
   name = null
 }) => {
-  const attributeTypes = store.getState().ui.attributeTypes;
+
+  const { attributeTypes } = store.getState().ui;
+
   if (identifier) {
     const identifierContent = attributeTypes[identifier];
     if (identifierContent && identifierContent.values) {
@@ -54,3 +59,5 @@ export const getDisplayLabelForAttribute = ({
   }
   return attributeValue;
 };
+
+export default getDisplayLabelForAttribute;

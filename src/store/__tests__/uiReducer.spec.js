@@ -1,4 +1,6 @@
+/* eslint-disable no-underscore-dangle */
 import { cloneDeep } from 'lodash';
+
 import uiReducer, { initialState } from '../uiReducer';
 
 describe('(Redux Module) UI', () => {

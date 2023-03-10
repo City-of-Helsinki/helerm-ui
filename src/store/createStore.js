@@ -1,7 +1,9 @@
+/* eslint-disable import/no-import-module-exports */
 import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { routerMiddleware } from 'connected-react-router';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
+
 import makeRootReducer from './rootReducers';
 
 const storeCreator = (history, initialState = {}) => {
@@ -17,8 +19,7 @@ const storeCreator = (history, initialState = {}) => {
 
   if (module.hot) {
     module.hot.accept('./rootReducers', () => {
-      const reducers = require('./rootReducers').default;
-      store.replaceReducer(reducers(store.asyncReducers));
+      store.replaceReducer(makeRootReducer(store.asyncReducers));
     });
   }
 

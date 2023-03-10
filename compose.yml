@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  app:
+    platform: linux/amd64
+    ports: 
+      - ${PORT}:${PORT}
+    build: 
+      context: .
+    container_name: helerm-ui

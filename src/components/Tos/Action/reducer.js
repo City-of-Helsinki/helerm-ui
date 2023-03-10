@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import update from 'immutability-helper';
 import { includes, indexOf } from 'lodash';
 import { createAction } from 'redux-actions';
@@ -8,13 +9,13 @@ export const EDIT_ACTION_ATTRIBUTE = 'editActionAttributeAction';
 export const REMOVE_ACTION = 'removeActionAction';
 export const SET_ACTION_VISIBILITY = 'setActionVisibilityAction';
 
-export function addAction (typeSpecifier, actionType, actionAttibutes, phaseIndex) {
+export function addAction(typeSpecifier, actionType, actionAttibutes, phaseIndex) {
   const actionId = Math.random().toString(36).replace(/[^a-z]+/g, '');
-  const attributes = Object.assign(
-    {},
-    { TypeSpecifier: typeSpecifier, ActionType: actionType },
-    actionAttibutes
-  );
+  const attributes = {
+
+    TypeSpecifier: typeSpecifier, ActionType: actionType,
+    ...actionAttibutes
+  };
   const newAction = {
     id: actionId,
     phase: phaseIndex,
@@ -25,31 +26,29 @@ export function addAction (typeSpecifier, actionType, actionAttibutes, phaseInde
   return createAction(ADD_ACTION)(newAction);
 }
 
-export function editAction (attributes, actionId) {
-  let editedAttributes = {};
+export function editAction(attributes, actionId) {
+  const editedAttributes = {};
 
   Object.keys(attributes).forEach(key => {
-    if (attributes.hasOwnProperty(key) && attributes[key].checked) {
+    if (Object.prototype.hasOwnProperty.call(attributes, key) && attributes[key].checked) {
       editedAttributes[key] = attributes[key].value;
     }
   });
 
-  const editedAction = Object.assign({}, {
-    attributes: editedAttributes
-  });
+  const editedAction = { attributes: editedAttributes };
 
   return createAction(EDIT_ACTION)({ editedAction, actionId });
 }
 
-export function editActionAttribute (editedActionAttribute) {
+export function editActionAttribute(editedActionAttribute) {
   return createAction(EDIT_ACTION_ATTRIBUTE)(editedActionAttribute);
 }
 
-export function removeAction (actionToRemove, phaseId) {
+export function removeAction(actionToRemove, phaseId) {
   return createAction(REMOVE_ACTION)({ actionToRemove, phaseId });
 }
 
-export function setActionVisibility (action, visibility) {
+export function setActionVisibility(action, visibility) {
   return createAction(SET_ACTION_VISIBILITY)({ action, visibility });
 }
 
@@ -57,37 +56,33 @@ export function setActionVisibility (action, visibility) {
 // Action Handlers
 // ------------------------------------
 
-export const addActionAction = (state, { payload }) => {
-  return update(state, {
-    phases: {
-      [payload.phase]: {
-        actions: {
-          $push: [payload.id]
-        }
-      }
-    },
-    actions: {
-      [payload.id]: {
-        $set: payload
+export const addActionAction = (state, { payload }) => update(state, {
+  phases: {
+    [payload.phase]: {
+      actions: {
+        $push: [payload.id]
       }
     }
-  });
-};
+  },
+  actions: {
+    [payload.id]: {
+      $set: payload
+    }
+  }
+});
 
-export const editActionAction = (state, { payload }) => {
-  return update(state, {
-    actions: {
-      [payload.actionId]: {
-        attributes: {
-          $set: payload.editedAction.attributes
-        }
+export const editActionAction = (state, { payload }) => update(state, {
+  actions: {
+    [payload.actionId]: {
+      attributes: {
+        $set: payload.editedAction.attributes
       }
     }
-  });
-};
+  }
+});
 
 export const editActionAttributeAction = (state, { payload }) => {
-  if (payload.hasOwnProperty('typeSpecifier')) {
+  if (Object.prototype.hasOwnProperty.call(payload, 'typeSpecifier')) {
     return update(state, {
       actions: {
         [payload.actionId]: {
@@ -99,7 +94,7 @@ export const editActionAttributeAction = (state, { payload }) => {
         }
       }
     });
-  } else if (payload.hasOwnProperty('type')) {
+  } if (Object.prototype.hasOwnProperty.call(payload, 'type')) {
     return update(state, {
       actions: {
         [payload.actionId]: {
@@ -111,23 +106,23 @@ export const editActionAttributeAction = (state, { payload }) => {
         }
       }
     });
-  } else {
-    return update(state, {
-      actions: {
-        [payload.actionId]: {
-          attributes: {
-            [payload.attributeIndex]: {
-              $set: payload.attribute
-            }
+  }
+  return update(state, {
+    actions: {
+      [payload.actionId]: {
+        attributes: {
+          [payload.attributeIndex]: {
+            $set: payload.attribute
           }
         }
       }
-    });
-  }
+    }
+  });
+
 };
 
 export const removeActionAction = (state, { payload }) => {
-  const stateCopy = Object.assign({}, state);
+  const stateCopy = { ...state };
   const actionIndex = indexOf(
     stateCopy.phases[payload.phaseId].actions,
     payload.actionToRemove
@@ -158,14 +153,12 @@ export const removeActionAction = (state, { payload }) => {
   });
 };
 
-export const setActionVisibilityAction = (state, { payload }) => {
-  return update(state, {
-    actions: {
-      [payload.action]: {
-        is_open: {
-          $set: payload.visibility
-        }
+export const setActionVisibilityAction = (state, { payload }) => update(state, {
+  actions: {
+    [payload.action]: {
+      is_open: {
+        $set: payload.visibility
       }
     }
-  });
-};
+  }
+});

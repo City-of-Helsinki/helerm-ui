@@ -20,13 +20,13 @@
   }
 
   .missing-attribute {
-    .fa {
+    .fa-solid {
       color: $brand-danger;
     }
   }
 
   .warn-attribute {
-    .fa {
+    .fa-solid {
       color: $brand-warning;
     }
   }
@@ -53,13 +53,13 @@
     }
 
     .sidebar-filter-warn {
-      .fa {
+      .fa-solid {
         color: $brand-warning;
       }
     }
 
     .sidebar-filter-error {
-      .fa {
+      .fa-solid {
         color: $brand-danger;
       }
     }
@@ -77,7 +77,7 @@
     h5 {
       margin: 0 0 10px;
       color: $link-color;
-      
+
       &:hover {
         cursor: pointer;
       }
@@ -96,7 +96,7 @@
 
     .parent-name {
       color: $link-color;
-      
+
       &:hover {
         cursor: pointer;
       }

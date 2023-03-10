@@ -1,3 +1,8 @@
+/* eslint-disable consistent-return */
+/* eslint-disable no-alert */
+/* eslint-disable import/no-named-as-default-member */
+/* eslint-disable camelcase */
+/* eslint-disable no-param-reassign */
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
 import { cloneDeep, isEmpty, map, values } from 'lodash';
@@ -10,7 +15,6 @@ import {
   removeActionAction,
   setActionVisibilityAction
 } from './Action/reducer';
-
 import {
   addPhaseAction,
   editPhaseAction,
@@ -20,7 +24,6 @@ import {
   setPhaseVisibilityAction,
   setPhasesVisibilityAction
 } from './Phase/reducer';
-
 import {
   addRecordAction,
   editRecordAction,
@@ -28,14 +31,10 @@ import {
   removeRecordAction,
   setRecordVisibilityAction
 } from './Record/reducer';
-
 import { executeImportAction } from './ImportView/reducer';
-
 import { receiveTemplateAction } from './CloneView/reducer';
-
 import { executeOrderChangeAction } from './Reorder/reducer';
-
-import { default as api } from '../../utils/api';
+import api from '../../utils/api';
 import { normalizeTosFromApi, normalizeTosForApi } from '../../utils/helpers';
 
 export const initialState = {
@@ -85,7 +84,7 @@ export const SET_VERSION_VISIBILITY = 'setVersionVisibilityAction';
 // ------------------------------------
 export function receiveTOS(tos) {
   tos = normalizeTosFromApi(tos);
-  const data = Object.assign({}, tos, { receivedAt: Date.now() });
+  const data = { ...tos, receivedAt: Date.now() };
 
   return createAction(RECEIVE_TOS)(data);
 }
@@ -102,11 +101,9 @@ export function editMetaData(attributes) {
   let editedMetaData = {};
 
   Object.keys(attributes).forEach((key) => {
-    if (attributes.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(attributes, key)) {
       if (attributes[key].checked === true) {
-        editedMetaData = Object.assign({}, editedMetaData, {
-          [key]: attributes[key].value
-        });
+        editedMetaData = { ...editedMetaData, [key]: attributes[key].value };
       }
     }
   });
@@ -123,7 +120,7 @@ export function setDocumentState(newState) {
 }
 
 export function fetchTOS(tosId, params = {}) {
-  return function (dispatch) {
+  return (dispatch) => {
     dispatch(createAction(REQUEST_TOS)());
     return api
       .get(`function/${tosId}`, params)
@@ -139,7 +136,7 @@ export function fetchTOS(tosId, params = {}) {
 }
 
 export function saveDraft() {
-  return function (dispatch, getState) {
+  return (dispatch, getState) => {
     dispatch(createAction(REQUEST_TOS)());
     const tos = cloneDeep(getState().selectedTOS);
     const newTos = cloneDeep(tos);
@@ -165,10 +162,9 @@ export function saveDraft() {
         if (json.version !== currentVersion + 1) {
           alert(
             `Muokkasit luonnoksen versiota ${currentVersion}, ` +
-              `mutta tallennettaessa versionumero kasvoi enemmän ` +
-              `kuin yhdellä. Tarkistathan, että tallentamasi luonnoksen (versio ${
-                json.version
-              }) tiedot ovat ajantasalla.`
+            `mutta tallennettaessa versionumero kasvoi enemmän ` +
+            `kuin yhdellä. Tarkistathan, että tallentamasi luonnoksen (versio ${json.version
+            }) tiedot ovat ajantasalla.`
           );
         }
         dispatch(receiveTOS(json));
@@ -182,10 +178,10 @@ export function saveDraft() {
 }
 
 export function changeStatus(status) {
-  return function (dispatch, getState) {
+  return (dispatch, getState) => {
     dispatch(createAction(REQUEST_TOS)());
-    const tos = Object.assign({}, getState().selectedTOS);
-    const includeRelated = getState().navigation.includeRelated;
+    const tos = { ...getState().selectedTOS };
+    const { includeRelated } = getState().navigation;
 
     return api
       .patch(`function/${tos.id}`, { state: status })
@@ -215,7 +211,7 @@ export function setTosVisibility(tos, basicVisibility, metaDataVisibility) {
   const allRecordsOpen = {};
   const { actions, phases, records } = tos;
   Object.keys(phases).forEach((key) => {
-    if (phases.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(phases, key)) {
       allPhasesOpen[key] = update(phases[key], {
         is_attributes_open: {
           $set: metaDataVisibility
@@ -225,7 +221,7 @@ export function setTosVisibility(tos, basicVisibility, metaDataVisibility) {
         }
       });
       Object.keys(actions).forEach((actionKey) => {
-        if (actions.hasOwnProperty(actionKey)) {
+        if (Object.prototype.hasOwnProperty.call(actions, actionKey)) {
           allActionsOpen[actionKey] = update(actions[actionKey], {
             is_open: {
               $set: metaDataVisibility
@@ -233,7 +229,7 @@ export function setTosVisibility(tos, basicVisibility, metaDataVisibility) {
           });
         }
         Object.keys(records).forEach((recordKey) => {
-          if (records.hasOwnProperty(recordKey)) {
+          if (Object.prototype.hasOwnProperty.call(records, recordKey)) {
             allRecordsOpen[recordKey] = update(records[recordKey], {
               is_open: {
                 $set: metaDataVisibility
@@ -260,13 +256,11 @@ export function setVersionVisibility(visibility) {
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
-const requestTosAction = (state) => {
-  return update(state, {
-    isFetching: {
-      $set: true
-    }
-  });
-};
+const requestTosAction = (state) => update(state, {
+  isFetching: {
+    $set: true
+  }
+});
 
 const receiveTosAction = (state, { payload }) => {
   const tos = payload.entities.tos[payload.result];
@@ -305,18 +299,14 @@ const receiveTosAction = (state, { payload }) => {
   });
 };
 
-const resetTosAction = (state, { payload }) => {
-  return update(state, {
-    $merge: payload,
-    documentState: {
-      $set: 'view'
-    }
-  });
-};
+const resetTosAction = (state, { payload }) => update(state, {
+  $merge: payload,
+  documentState: {
+    $set: 'view'
+  }
+});
 
-const clearTosAction = () => {
-  return initialState;
-};
+const clearTosAction = () => initialState;
 
 const tosErrorAction = (state) => {
   // TODO: Find out what mutates store so hard...
@@ -354,45 +344,35 @@ const tosErrorAction = (state) => {
   });
 };
 
-const editMetaDataAction = (state, { payload }) => {
-  return update(state, {
-    attributes: {
-      $set: payload
-    }
-  });
-};
+const editMetaDataAction = (state, { payload }) => update(state, {
+  attributes: {
+    $set: payload
+  }
+});
 
-const editValidDateAction = (state, { payload }) => {
-  return update(state, {
-    valid_from: {
-      $set:
-        payload.validFrom !== undefined ? payload.validFrom : state.valid_from
-    },
-    valid_to: {
-      $set: payload.validTo !== undefined ? payload.validTo : state.valid_to
-    }
-  });
-};
+const editValidDateAction = (state, { payload }) => update(state, {
+  valid_from: {
+    $set:
+      payload.validFrom !== undefined ? payload.validFrom : state.valid_from
+  },
+  valid_to: {
+    $set: payload.validTo !== undefined ? payload.validTo : state.valid_to
+  }
+});
 
-const setDocumentStateAction = (state, { payload }) => {
-  return update(state, {
-    documentState: {
-      $set: payload
-    }
-  });
-};
+const setDocumentStateAction = (state, { payload }) => update(state, {
+  documentState: {
+    $set: payload
+  }
+});
 
-const setClassificationVisibilityAction = (state, { payload }) => {
-  return update(state, {
-    is_classification_open: { $set: payload }
-  });
-};
+const setClassificationVisibilityAction = (state, { payload }) => update(state, {
+  is_classification_open: { $set: payload }
+});
 
-const setMetadataVisibilityAction = (state, { payload }) => {
-  return update(state, {
-    is_open: { $set: payload }
-  });
-};
+const setMetadataVisibilityAction = (state, { payload }) => update(state, {
+  is_open: { $set: payload }
+});
 
 const setTosVisibilityAction = (state, { payload }) => {
   const {
@@ -412,11 +392,9 @@ const setTosVisibilityAction = (state, { payload }) => {
   });
 };
 
-const setVersionVisibilityAction = (state, { payload }) => {
-  return update(state, {
-    is_version_open: { $set: payload }
-  });
-};
+const setVersionVisibilityAction = (state, { payload }) => update(state, {
+  is_version_open: { $set: payload }
+});
 
 export default handleActions(
   {

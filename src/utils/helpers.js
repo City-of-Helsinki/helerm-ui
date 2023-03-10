@@ -1,3 +1,8 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-return-assign */
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable camelcase */
 import { normalize, schema } from 'normalizr';
 import { toastr } from 'react-redux-toastr';
 import moment from 'moment';
@@ -15,15 +20,13 @@ export function convertToTree(itemList) {
   // Combine navigation number and names and
   // give each item in the navigation a level specific id for sorting.
   // ------------------------------------
-  const newList = itemList.map((item) => {
-    return {
-      name: item.code + ' ' + item.title,
-      sort_id: item.code.substring(item.code.length - 2, item.code.length),
-      path: [],
-      parent_id: item.parent ? item.parent.id : null,
-      ...item
-    };
-  });
+  const newList = itemList.map((item) => ({
+    name: `${item.code} ${item.title}`,
+    sort_id: item.code.substring(item.code.length - 2, item.code.length),
+    path: [],
+    parent_id: item.parent ? item.parent.id : null,
+    ...item
+  }));
 
   const dict = {};
   newList.forEach((item) => (dict[item.id] = item));
@@ -105,19 +108,68 @@ export function normalizeTosFromApi(tos) {
 }
 
 /**
+ * Remove empty attributes for API
+ * @param tosCopy
+ * @returns {*}
+ */
+export function trimAttributes(tosCopy) {
+  Object.keys(tosCopy.phases).forEach((phase) => {
+    if (Object.prototype.hasOwnProperty.call(tosCopy.phases, phase)) {
+      Object.keys(tosCopy.phases[phase].attributes).forEach((attribute) => {
+        if (
+          Object.prototype.hasOwnProperty.call(tosCopy.phases[phase].attributes, attribute) &&
+          (tosCopy.phases[phase].attributes[attribute] === '' ||
+            tosCopy.phases[phase].attributes[attribute] === null)
+        ) {
+          delete tosCopy.phases[phase].attributes[attribute];
+        }
+      });
+    }
+  });
+  Object.keys(tosCopy.actions).forEach((action) => {
+    if (Object.prototype.hasOwnProperty.call(tosCopy.actions, action)) {
+      Object.keys(tosCopy.actions[action].attributes).forEach((attribute) => {
+        if (
+          Object.prototype.hasOwnProperty.call(tosCopy.actions[action].attributes, attribute) &&
+          (tosCopy.actions[action].attributes[attribute] === '' ||
+            tosCopy.actions[action].attributes[attribute] === null)
+        ) {
+          delete tosCopy.actions[action].attributes[attribute];
+        }
+      });
+    }
+  });
+  Object.keys(tosCopy.records).forEach((record) => {
+    if (Object.prototype.hasOwnProperty.call(tosCopy.records, record)) {
+      Object.keys(tosCopy.records[record].attributes).forEach((attribute) => {
+        if (
+          Object.prototype.hasOwnProperty.call(tosCopy.records[record].attributes, attribute) &&
+          (tosCopy.records[record].attributes[attribute] === '' ||
+            tosCopy.records[record].attributes[attribute] === null)
+        ) {
+          delete tosCopy.records[record].attributes[attribute];
+        }
+      });
+    }
+  });
+
+  return tosCopy;
+}
+
+/**
  * Normalize tos for API
  * @param tos
  * @returns {*}
  */
 export function normalizeTosForApi(tos) {
   // TODO: needs some serious refactoring...
-  const tosCopy = Object.assign({}, tos);
+  const tosCopy = { ...tos };
   const finalTos = trimAttributes(tosCopy);
-  const phases = map(finalTos.phases, (phase) => Object.assign({}, phase));
+  const phases = map(finalTos.phases, (phase) => ({ ...phase }));
   const finalPhases = [];
 
   phases.map((phase, phaseIndex) => {
-    finalPhases.push(Object.assign({}, phase));
+    finalPhases.push({ ...phase });
     return phase.actions.map((action, actionIndex) => {
       const actionId = typeof action === 'string' ? action : action.id;
       Object.assign(finalPhases[phaseIndex].actions, {
@@ -137,66 +189,17 @@ export function normalizeTosForApi(tos) {
 }
 
 /**
- * Remove empty attributes for API
- * @param tosCopy
- * @returns {*}
- */
-export function trimAttributes(tosCopy) {
-  Object.keys(tosCopy.phases).forEach((phase) => {
-    if (tosCopy.phases.hasOwnProperty(phase)) {
-      Object.keys(tosCopy.phases[phase].attributes).forEach((attribute) => {
-        if (
-          tosCopy.phases[phase].attributes.hasOwnProperty(attribute) &&
-          (tosCopy.phases[phase].attributes[attribute] === '' ||
-            tosCopy.phases[phase].attributes[attribute] === null)
-        ) {
-          delete tosCopy.phases[phase].attributes[attribute];
-        }
-      });
-    }
-  });
-  Object.keys(tosCopy.actions).forEach((action) => {
-    if (tosCopy.actions.hasOwnProperty(action)) {
-      Object.keys(tosCopy.actions[action].attributes).forEach((attribute) => {
-        if (
-          tosCopy.actions[action].attributes.hasOwnProperty(attribute) &&
-          (tosCopy.actions[action].attributes[attribute] === '' ||
-            tosCopy.actions[action].attributes[attribute] === null)
-        ) {
-          delete tosCopy.actions[action].attributes[attribute];
-        }
-      });
-    }
-  });
-  Object.keys(tosCopy.records).forEach((record) => {
-    if (tosCopy.records.hasOwnProperty(record)) {
-      Object.keys(tosCopy.records[record].attributes).forEach((attribute) => {
-        if (
-          tosCopy.records[record].attributes.hasOwnProperty(attribute) &&
-          (tosCopy.records[record].attributes[attribute] === '' ||
-            tosCopy.records[record].attributes[attribute] === null)
-        ) {
-          delete tosCopy.records[record].attributes[attribute];
-        }
-      });
-    }
-  });
-
-  return tosCopy;
-}
-
-/**
  * Find item by id (nested array with `children`-key)
  * @param items
  * @param id
  * @returns {*}
  */
 export function itemById(items, id) {
-  let searchResult = find(items, (item) => item.id === id);
+  const searchResult = find(items, (item) => item.id === id);
 
   if (!searchResult) {
-    let filteredItems = filter(items, (item) => item.children);
-    let subset = flatten(map(filteredItems, (item) => item.children));
+    const filteredItems = filter(items, (item) => item.children);
+    const subset = flatten(map(filteredItems, (item) => item.children));
 
     if (subset.length !== 0) {
       return itemById(subset, id);
@@ -273,7 +276,7 @@ export function displayMessage(message, opts = { type: 'success' }) {
   return toastr[opts.type](title, body, opts);
 }
 
-export function confirmMessage(message, options = { onOk: () => {}, onCancel: () => {}}) {
+export function confirmMessage(message, options = { onOk: () => { }, onCancel: () => { } }) {
   toastr.removeByType('confirm');
   toastr.confirm(
     null,
@@ -281,8 +284,8 @@ export function confirmMessage(message, options = { onOk: () => {}, onCancel: ()
       ...options,
       component: () => (
         <div className="confirm-toastr-component">
-            <div><i className='fa fa-exclamation-triangle' /></div>
-            <div>{message}</div>
+          <div><i className='fa-solid fa-triangle-exclamation' /></div>
+          <div>{message}</div>
         </div>
       )
     }
@@ -305,12 +308,12 @@ export function formatDateTime(dateTime, format = 'DD.MM.YYYY HH:mm') {
  * @param type
  * @returns {Array}
  */
-export function getBaseValues(attributeTypes, type) {
+export function getBaseValues(attributeTypes) {
   const baseValues = [
-    { index: attributeTypes['PhaseType'].index, type: 'PhaseType' },
-    { index: attributeTypes['RecordType'].index, type: 'RecordType' },
-    { index: attributeTypes['ActionType'].index, type: 'ActionType' },
-    { index: attributeTypes['TypeSpecifier'].index, type: 'TypeSpecifier' }
+    { index: attributeTypes.PhaseType.index, type: 'PhaseType' },
+    { index: attributeTypes.RecordType.index, type: 'RecordType' },
+    { index: attributeTypes.ActionType.index, type: 'ActionType' },
+    { index: attributeTypes.TypeSpecifier.index, type: 'TypeSpecifier' }
   ];
   const orderedBaseValues = orderBy(baseValues, ['index']);
   return orderedBaseValues.map((baseValue) => baseValue.type);
@@ -335,8 +338,7 @@ export function getNewPath(absolutePath, relativePath) {
   }
 
   return (
-    '/' +
-    relativeParts
+    `/${relativeParts
       .reduce((absoluteParts, part) => {
         switch (part) {
           case '..': {
@@ -350,7 +352,7 @@ export function getNewPath(absolutePath, relativePath) {
           }
         }
       }, pathParts)
-      .join('/')
+      .join('/')}`
   );
 }
 

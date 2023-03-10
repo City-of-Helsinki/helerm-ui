@@ -8,11 +8,11 @@ import { includes, difference, uniq } from 'lodash';
  * @returns {Boolean}
  */
 export const validateConditionalRules = (key, attributeTypes, attributes) => {
-  const requiredIf = attributeTypes[key].requiredIf;
+  const { requiredIf } = attributeTypes[key];
   let valid = false;
-  Object.keys(attributes).forEach(attribute => {
+  Object.keys(attributes).forEach((attribute) => {
     // for each attribute
-    requiredIf.forEach(item => {
+    requiredIf.forEach((item) => {
       // for each item in requiredIf
       if (item.key === attribute) {
         // if requiredIf has attribute
@@ -33,18 +33,20 @@ export const validateConditionalRules = (key, attributeTypes, attributes) => {
  * @param  {string} type
  * @return {Validator}]
  */
-const createValidateErrors = type => (obj, rules) => {
+const createValidateErrors = (type) => (obj, rules) => {
   const errors = [];
-  Object.keys(rules).forEach(key => {
-    if (rules.hasOwnProperty(key)) {
+  Object.keys(rules).forEach((key) => {
+    if (Object.prototype.hasOwnProperty.call(rules, key)) {
       const rule = rules[key];
       const isRequired = rules[key].required;
       const isRequiredInType = includes(rule.requiredIn, type);
       const objHasRuleAttribute = !!obj.attributes[key];
       const isAttributeAllowedInType = includes(rules[key].allowedIn, type);
       const isValid =
-        includes(rule.values.map(obj => obj.value), obj.attributes[key]) ||
-        rule.values.length === 0;
+        includes(
+          rule.values.map(({ value }) => value),
+          obj.attributes[key]
+        ) || rule.values.length === 0;
       const allowValuesOutsideChoices = includes(
         rule.allowValuesOutsideChoicesIn,
         type
@@ -59,15 +61,15 @@ const createValidateErrors = type => (obj, rules) => {
 
       const isConditionallyRequired = rule.requiredIf.length !== 0;
       if (isConditionallyRequired) {
-        rule.requiredIf.forEach(item => {
+        rule.requiredIf.forEach((item) => {
           const predicateValue = obj.attributes[item.key];
           const hasPredicate = typeof predicateValue === 'string';
-          const isRequired =
+          const isPredicateRequired =
             hasPredicate && includes(item.values, predicateValue);
 
           if (
-            (isRequired && !objHasRuleAttribute) ||
-            (!isRequired && objHasRuleAttribute)
+            (isPredicateRequired && !objHasRuleAttribute) ||
+            (!isPredicateRequired && objHasRuleAttribute)
           ) {
             errors.push(key);
           }
@@ -78,14 +80,20 @@ const createValidateErrors = type => (obj, rules) => {
   return errors;
 };
 
+const isValueValidOption = (value, options) => {
+  const valueArray = value instanceof Array ? value : [value];
+  const optionValues = options.map((option) => option.value);
+  return difference(valueArray, optionValues).length === 0;
+};
+
 /**
  * @param  {string} type
  * @return {Validator}]
  */
-const createValidateWarnings = type => (obj, rules) => {
+const createValidateWarnings = (type) => (obj, rules) => {
   const warnings = [];
-  Object.keys(rules).forEach(key => {
-    if (rules.hasOwnProperty(key)) {
+  Object.keys(rules).forEach((key) => {
+    if (Object.prototype.hasOwnProperty.call(rules, key)) {
       const rule = rules[key];
       const attributeValue = obj.attributes[key];
       const allowOutsideValues = includes(
@@ -148,11 +156,3 @@ export const validateRecord = createValidateErrors('record');
  * Validate Record against warn rules
  */
 export const validateRecordWarnings = createValidateWarnings('record');
-
-const isValueValidOption = (value, options) => {
-  const valueArray = value instanceof Array ? value : [value];
-  const optionValues = options.map(option => {
-    return option.value;
-  });
-  return difference(valueArray, optionValues).length === 0;
-};

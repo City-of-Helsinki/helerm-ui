@@ -2,10 +2,7 @@
   "name": "helerm-ui",
   "version": "0.4.0",
   "description": "UI for Helsinki Electronic Records Management Classification System",
-  "engines": {
-    "node": ">=14.15.1",
-    "npm": "^6.14.8"
-  },
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/City-of-Helsinki/helerm-ui.git"
@@ -13,41 +10,42 @@
   "author": "City of Helsinki",
   "license": "MIT",
   "dependencies": {
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
-    "@wojtekmaj/enzyme-adapter-react-17": "^0.4.1",
-    "body-parser": "^1.19.0",
+    "@fortawesome/fontawesome-free": "^6.3.0",
+    "@sentry/react": "^7.37.2",
+    "@sentry/tracing": "^7.37.2",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.8.0",
     "bootstrap-sass": "^3.4.1",
-    "classnames": "^2.2.6",
+    "classnames": "^2.3.2",
     "concurrently": "^5.3.0",
-    "connected-react-router": "^6.8.0",
-    "cookie-parser": "^1.4.5",
-    "cookie-session": "^1.4.0",
-    "debug": "^4.3.1",
+    "connected-react-router": "^6.9.3",
+    "cors": "^2.8.5",
+    "date-fns": "^2.29.3",
     "deep-freeze": "^0.0.1",
     "defiant.js": "1.4.5",
-    "dotenv": "^8.2.0",
+    "dotenv": "^16.0.3",
     "enzyme": "^3.11.0",
-    "express": "^4.17.1",
-    "fast-text-encoding": "^1.0.3",
-    "font-awesome": "^4.7.0",
-    "http-proxy-middleware": "^1.0.6",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "express": "^4.17.3",
+    "fast-text-encoding": "^1.0.6",
+    "history": "^4.9.0",
     "immutability-helper": "^3.1.1",
     "isomorphic-fetch": "^3.0.0",
-    "jsonwebtoken": "^8.5.1",
-    "moment": "^2.29.1",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
     "nested-objects": "0.0.2",
-    "node-sass": "4.14.1",
-    "normalizr": "^3.6.1",
+    "normalizr": "^3.6.2",
     "oidc-client": "^1.11.5",
-    "passport": "^0.4.1",
-    "passport-helsinki": "City-of-Helsinki/passport-helsinki",
     "piwik-react-router": "^0.12.1",
     "pre-commit": "^1.2.2",
-    "prettier": "^2.2.1",
-    "prop-types": "^15.7.2",
-    "raven-js": "^3.17.0",
+    "prettier": "^2.8.4",
+    "prop-types": "^15.8.1",
     "raw.macro": "^0.4.2",
     "react": "^17.0.1",
     "react-app-polyfill": "^2.0.0",
@@ -64,18 +62,20 @@
     "react-sticky-el": "^2.0.5",
     "redux": "^4.0.5",
     "redux-actions": "^2.6.5",
-    "redux-connect": "^10.0.0",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
     "remark-gfm": "^1.0.0",
-    "xlsx": "0.17.1"
+    "sass": "^1.58.2",
+    "xlsx": "0.18.5"
   },
   "scripts": {
     "start:dev": "concurrently --kill-others \"PORT=3000 react-scripts start\"",
     "start:server": "NODE_ENV=production",
+    "start:docker": "NODE_ENV=production node server",
     "build": "react-scripts build",
     "test": "react-scripts test --watchAll=false --verbose",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "yarn eslint \"src/**/*.{js,jsx}\""
   },
   "pre-commit": [
     "test"
@@ -83,12 +83,6 @@
   "jest": {
     "testMatch": [
       "**/?(*.)+(spec|test).js"
-    ]
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
     ]
   },
   "browserslist": {
@@ -104,5 +98,8 @@
       "last 1 safari version",
       "ie 11"
     ]
+  },
+  "resolutions": {
+    "postcss-custom-properties": "^13.1.3"
   }
 }
