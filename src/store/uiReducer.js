@@ -1,3 +1,7 @@
+/* eslint-disable no-unused-expressions */
+/* eslint-disable no-param-reassign */
+/* eslint-disable import/no-named-as-default-member */
+/* eslint-disable camelcase */
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
 import find from 'lodash/find';
@@ -21,18 +25,18 @@ export function receiveAttributeTypes(attributes, validationRules) {
   const attributeTypeList = {};
   attributes.results.forEach((result) => {
     if (result.values) {
-      let allowedIn = [];
-      let defaultIn = [];
+      const allowedIn = [];
+      const defaultIn = [];
       let required = false;
-      let requiredIn = [];
-      let requiredIf = [];
-      let multiIn = [];
-      let allowValuesOutsideChoicesIn = [];
+      const requiredIn = [];
+      const requiredIf = [];
+      const multiIn = [];
+      const allowValuesOutsideChoicesIn = [];
 
       // Add rules where attribute is allowed to be
       Object.keys(validationRules).forEach((rule) => {
         if (
-          validationRules.hasOwnProperty(rule) &&
+          Object.prototype.hasOwnProperty.call(validationRules, rule) &&
           validationRules[rule].properties[result.identifier]
         ) {
           allowedIn.push(rule);
@@ -54,9 +58,7 @@ export function receiveAttributeTypes(attributes, validationRules) {
         ) {
           const anyOfArray = find(
             validationRules[key].properties[result.identifier].anyOf,
-            (anyOf) => {
-              return anyOf.type === 'array';
-            }
+            (anyOf) => anyOf.type === 'array'
           );
           if (anyOfArray) {
             multiIn.push(key);
@@ -93,16 +95,14 @@ export function receiveAttributeTypes(attributes, validationRules) {
 
               requiredKeys.forEach((requiredIndentifier) => {
                 Object.keys(rules[0].properties).forEach((property) => {
-                  let values = [];
+                  const values = [];
                   Object.keys(rules[0].properties[property]).forEach((pkey) => {
                     rules[0].properties[property][pkey].forEach((value) => {
                       values.push(value);
                     });
                   });
 
-                  const exists = !!find(requiredIf, (reqObj) => {
-                    return reqObj.key === property;
-                  });
+                  const exists = !!find(requiredIf, (reqObj) => reqObj.key === property);
 
                   if (requiredIndentifier === result.identifier && !exists) {
                     requiredIf.push({
@@ -156,25 +156,23 @@ export function receiveTemplates({ results }) {
 }
 
 export function fetchAttributeTypes() {
-  return function (dispatch) {
+  return (dispatch) => {
     dispatch(createAction('requestFromApiAction')());
     return api
       .get('attribute/schemas')
       .then((response) => response.json())
-      .then((validationRules) => {
-        return api
-          .get('attribute', { page_size: 999 })
-          .then((response) => response.json())
-          .then((json) =>
-            dispatch(receiveAttributeTypes(json, validationRules))
-          );
-      })
+      .then((validationRules) => api
+        .get('attribute', { page_size: 999 })
+        .then((response) => response.json())
+        .then((json) =>
+          dispatch(receiveAttributeTypes(json, validationRules))
+        ))
       .catch(() => dispatch(createAction(ERROR_FROM_API)()));
   };
 }
 
 export function fetchTemplates() {
-  return function (dispatch) {
+  return (dispatch) => {
     dispatch(createAction('requestFromApiAction')());
     return api
       .get('template')
@@ -186,11 +184,9 @@ export function fetchTemplates() {
   };
 }
 
-const requestFromApiAction = (state) => {
-  return update(state, {
-    isFetching: { $set: true }
-  });
-};
+const requestFromApiAction = (state) => update(state, {
+  isFetching: { $set: true }
+});
 
 const receiveAttributeTypesAction = (state, { payload }) => {
   const phaseTypes = payload.PhaseType;
@@ -222,20 +218,16 @@ const receiveAttributeTypesAction = (state, { payload }) => {
   });
 };
 
-const receiveTemplatesAction = (state, { payload }) => {
-  return update(state, {
-    templates: {
-      $set: payload
-    },
-    isFetching: { $set: false }
-  });
-};
+const receiveTemplatesAction = (state, { payload }) => update(state, {
+  templates: {
+    $set: payload
+  },
+  isFetching: { $set: false }
+});
 
-const errorFromApiAction = (state) => {
-  return update(state, {
-    isFetching: { $set: false }
-  });
-};
+const errorFromApiAction = (state) => update(state, {
+  isFetching: { $set: false }
+});
 
 export default handleActions(
   {
