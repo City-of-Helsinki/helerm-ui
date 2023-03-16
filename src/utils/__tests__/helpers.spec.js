@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import deepFreeze from 'deep-freeze';
 
 import { convertToTree } from '../helpers';
@@ -7,6 +6,8 @@ import {
   mockNavigationDataFullObjects,
   mockNavigationDataOrphan
 } from "./testdata/navigationMocks";
+
+const ADMINISTRATIVE_MATTERS = '00 Hallintoasiat';
 
 describe('convertToTree', () => {
   it('Parsing list to tree does not mutate original list', () => {
@@ -18,7 +19,7 @@ describe('convertToTree', () => {
     const res = convertToTree(mockNavigationDataShort);
     expect(res).toEqual([
       {
-        name: '00 Hallintoasiat',
+        name: ADMINISTRATIVE_MATTERS,
         sort_id: '00',
         path: [],
         parent_id: null,
@@ -30,7 +31,7 @@ describe('convertToTree', () => {
           {
             name: '00 00 Hallintoasioiden ohjaus',
             sort_id: '00',
-            path: ['00 Hallintoasiat'],
+            path: [ADMINISTRATIVE_MATTERS],
             parent_id: 'cee34db0de3e47fbb937b74dd87ea759',
             id: '7a5967d6a21d412d9c1fcdfebf2d3e19',
             code: '00 00',
@@ -43,7 +44,7 @@ describe('convertToTree', () => {
               {
                 name: '00 00 00 Y HALO THAR!',
                 sort_id: '00',
-                path: ['00 Hallintoasiat', '00 00 Hallintoasioiden ohjaus'],
+                path: [ADMINISTRATIVE_MATTERS, '00 00 Hallintoasioiden ohjaus'],
                 parent_id: '7a5967d6a21d412d9c1fcdfebf2d3e19',
                 id: 'fb61caa7ec9d4332b0737831fd829293',
                 title: 'Y HALO THAR!',

@@ -1,3 +1,4 @@
+/* eslint-disable jest/valid-title */
 import { validateTOS, validateTOSWarnings } from '../validators';
 import attributeRules from './testdata/attributeRules.json';
 import validTOS from './testdata/validTOS.json';
@@ -5,12 +6,15 @@ import TOSmissingSSN from './testdata/TOSmissingSSN.json';
 import unallowedPublicityClassTOS from './testdata/unallowedPublicityClassTOS.json';
 import errorsAndWarningsTOS from './testdata/errorsAndWarningsTOS.json';
 
+const SHOULD_RETURN_ARRAY_STRING = 'Should return an array';
+const SHOULD_HAVE_ONE_ERROR_STRING = 'Should have one error';
+
 describe('(TOS validation)', () => {
   describe('(TOS validation errors) Error validation', () => {
     describe('Valid TOS', () => {
       const errors = validateTOS(validTOS, attributeRules);
 
-      it('Should return an array', () => {
+      it(SHOULD_RETURN_ARRAY_STRING, () => {
         expect(Array.isArray(errors)).toEqual(true);
       });
 
@@ -22,11 +26,11 @@ describe('(TOS validation)', () => {
     describe('Single missing value (SocialSecurityNumber)', () => {
       const errors = validateTOS(TOSmissingSSN, attributeRules);
 
-      it('Should return an array', () => {
+      it(SHOULD_RETURN_ARRAY_STRING, () => {
         expect(Array.isArray(errors)).toEqual(true);
       });
 
-      it('Should have one error', () => {
+      it(SHOULD_HAVE_ONE_ERROR_STRING, () => {
         expect(errors.length).toEqual(1);
       });
     });
@@ -34,11 +38,11 @@ describe('(TOS validation)', () => {
     describe('Single value outside allowed values (PublicityClass)', () => {
       const errors = validateTOS(unallowedPublicityClassTOS, attributeRules);
 
-      it('Should return an array', () => {
+      it(SHOULD_RETURN_ARRAY_STRING, () => {
         expect(Array.isArray(errors)).toEqual(true);
       });
 
-      it('Should have one error', () => {
+      it(SHOULD_HAVE_ONE_ERROR_STRING, () => {
         expect(errors.length).toEqual(1);
       });
 
@@ -59,7 +63,7 @@ describe('(TOS validation)', () => {
         attributeRules
       );
 
-      it('Should return an array', () => {
+      it(SHOULD_RETURN_ARRAY_STRING, () => {
         expect(Array.isArray(errors)).toEqual(true);
       });
 
@@ -81,11 +85,11 @@ describe('(TOS validation)', () => {
         attributeRules
       );
 
-      it('Should return an array', () => {
+      it(SHOULD_RETURN_ARRAY_STRING, () => {
         expect(Array.isArray(errors)).toEqual(true);
       });
 
-      it('Should have one error', () => {
+      it(SHOULD_HAVE_ONE_ERROR_STRING, () => {
         expect(errors.length).toEqual(1);
       });
 
@@ -105,7 +109,7 @@ describe('(TOS validation)', () => {
         attributeRules
       );
 
-      it('Should return an array', () => {
+      it(SHOULD_RETURN_ARRAY_STRING, () => {
         expect(Array.isArray(errors)).toEqual(true);
       });
 
@@ -119,7 +123,7 @@ describe('(TOS validation)', () => {
     describe('No warnings', () => {
       const warnings = validateTOSWarnings(validTOS, attributeRules);
 
-      it('Should return an array', () => {
+      it(SHOULD_RETURN_ARRAY_STRING, () => {
         expect(Array.isArray(warnings)).toEqual(true);
       });
 
@@ -140,7 +144,7 @@ describe('(TOS validation)', () => {
         attributeRules
       );
 
-      it('Should return an array', () => {
+      it(SHOULD_RETURN_ARRAY_STRING, () => {
         expect(Array.isArray(warnings)).toEqual(true);
       });
 
@@ -159,7 +163,7 @@ describe('(TOS validation)', () => {
         attributeRules
       );
 
-      it('Should return an array', () => {
+      it(SHOULD_RETURN_ARRAY_STRING, () => {
         expect(Array.isArray(warnings)).toEqual(true);
       });
 

@@ -108,14 +108,6 @@ export function login() {
   };
 }
 
-export function logoutUnauthorized() {
-  return (dispatch) => {
-    dispatch(createAction(LOGOUT));
-    getClient().logout();
-    dispatch(clearUserData());
-  };
-}
-
 const retrieveUserFromSessionAction = (state) =>
   update(state, {
     isFetching: { $set: true }

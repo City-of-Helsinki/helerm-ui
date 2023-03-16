@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable no-case-declarations */
 import update from 'immutability-helper';
 import { createAction } from 'redux-actions';

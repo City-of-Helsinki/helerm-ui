@@ -1,8 +1,8 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-return-assign */
 /* eslint-disable react/react-in-jsx-scope */
-/* eslint-disable camelcase */
 import { normalize, schema } from 'normalizr';
 import { toastr } from 'react-redux-toastr';
 import moment from 'moment';

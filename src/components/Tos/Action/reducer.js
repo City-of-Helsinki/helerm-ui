@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import update from 'immutability-helper';
 import { includes, indexOf } from 'lodash';
 import { createAction } from 'redux-actions';
@@ -94,7 +93,9 @@ export const editActionAttributeAction = (state, { payload }) => {
         }
       }
     });
-  } if (Object.prototype.hasOwnProperty.call(payload, 'type')) {
+  }
+
+  if (Object.prototype.hasOwnProperty.call(payload, 'type')) {
     return update(state, {
       actions: {
         [payload.actionId]: {
@@ -107,6 +108,7 @@ export const editActionAttributeAction = (state, { payload }) => {
       }
     });
   }
+
   return update(state, {
     actions: {
       [payload.actionId]: {

@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable import/no-cycle */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable no-restricted-syntax */
@@ -85,13 +86,12 @@ class EditorForm extends React.Component {
         Object.prototype.hasOwnProperty.call(attributeTypes, attributeType) &&
         includes(attributeTypes[attributeType].allowedIn, this.props.editorConfig.type)
       ) {
-        if (attributeTypes[attributeType].requiredIf.length) {
-          if (
-            validateConditionalRules(attributeType, attributeTypes, newAttributes) ||
-            newAttributes[attributeType].value
-          ) {
-            attributesToShow.push(attributeType);
-          }
+        if (
+          (attributeTypes[attributeType].requiredIf.length &&
+            validateConditionalRules(attributeType, attributeTypes, newAttributes)) ||
+          newAttributes[attributeType].value
+        ) {
+          attributesToShow.push(attributeType);
         }
         if (attributeTypes[attributeType].required || includes(getAttributeKeys(attributes), attributeType)) {
           attributesToShow.push(attributeType);
@@ -175,9 +175,7 @@ class EditorForm extends React.Component {
       attributesToShow.splice(attributesToShow.indexOf('TypeSpecifier'), 1);
     }
 
-    const sortedAttributes = sortBy(attributesToShow, (attribute) => this.props.attributeTypes[attribute].index);
-
-    return sortedAttributes;
+    return sortBy(attributesToShow, (attribute) => this.props.attributeTypes[attribute].index);
   }
 
   mapOptions(array) {
@@ -392,22 +390,7 @@ class EditorForm extends React.Component {
     }
   }
 
-  resolveSpecifierDescription() {
-    const { type } = this.props.editorConfig;
-
-    switch (type) {
-      case 'phase':
-        return 'Muu käsittelyvaihe';
-      case 'action':
-        return 'Toimenpide';
-      case 'record':
-        return 'Asiakirjatyypin tarkenne';
-      default:
-        return '';
-    }
-  }
-
-  resolveSpecifierPlaceholder() {
+  resolveSpecifier() {
     const { type } = this.props.editorConfig;
 
     switch (type) {
@@ -527,11 +510,11 @@ class EditorForm extends React.Component {
           </div>
         )}
         <div className='col-xs-12 col-lg-6 form-group'>
-          <label className='editor-form__label'>{this.resolveSpecifierDescription()}</label>
+          <label className='editor-form__label'>{this.resolveSpecifier()}</label>
           {/* <span className='fa-solid fa-asterisk required-asterisk'/> */}
           <input
             className='col-xs-6 form-control edit-record__input'
-            placeholder={this.resolveSpecifierPlaceholder()}
+            placeholder={this.resolveSpecifier()}
             value={this.state.newAttributes.TypeSpecifier.value || ''}
             onChange={(e) => this.onChange(e.target.value, 'TypeSpecifier', 'value')}
           />

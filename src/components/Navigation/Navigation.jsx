@@ -85,10 +85,8 @@ class Navigation extends React.Component {
   };
 
   onSearchTimeout = () => {
-    if (!this.state.isSearchChanged) {
-      if (Date.now() - this.state.searchTimestamp >= SEARCH_TIMEOUT) {
-        this.setState({ isSearchChanged: true });
-      }
+    if (!this.state.isSearchChanged && Date.now() - this.state.searchTimestamp >= SEARCH_TIMEOUT) {
+      this.setState({ isSearchChanged: true });
     }
   };
 

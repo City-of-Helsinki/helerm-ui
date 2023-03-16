@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import update from 'immutability-helper';
 import { createAction } from 'redux-actions';
 
@@ -33,10 +32,8 @@ export function editPhase(attributes, phaseId) {
   const editedAttributes = {};
 
   Object.keys(attributes).forEach(key => {
-    if (Object.prototype.hasOwnProperty.call(attributes, key)) {
-      if (attributes[key].checked === true) {
-        editedAttributes[key] = attributes[key].value;
-      }
+    if (Object.prototype.hasOwnProperty.call(attributes, key) && attributes[key].checked) {
+      editedAttributes[key] = attributes[key].value;
     }
   });
 
@@ -106,7 +103,9 @@ export const editPhaseAttributeAction = (state, { payload }) => {
         }
       }
     });
-  } if (Object.prototype.hasOwnProperty.call(payload, 'type')) {
+  }
+
+  if (Object.prototype.hasOwnProperty.call(payload, 'type')) {
     return update(state, {
       phases: {
         [payload.phaseId]: {
@@ -119,6 +118,7 @@ export const editPhaseAttributeAction = (state, { payload }) => {
       }
     });
   }
+
   return update(state, {
     phases: {
       [payload.phaseId]: {

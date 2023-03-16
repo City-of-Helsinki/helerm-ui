@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import update from 'immutability-helper';
 import { createAction } from 'redux-actions';
 import { indexOf } from 'lodash';
@@ -13,10 +12,8 @@ export function addRecord(attributes, actionId) {
   const recordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
   const newAttributes = {};
   Object.keys(attributes).forEach(key => {
-    if (Object.prototype.hasOwnProperty.call(attributes, key)) {
-      if (attributes[key].checked === true) {
-        newAttributes[key] = attributes[key].value;
-      }
+    if (Object.prototype.hasOwnProperty.call(attributes, key) && attributes[key].checked) {
+      newAttributes[key] = attributes[key].value;
     }
   });
 
@@ -34,10 +31,8 @@ export function editRecord(attributes, recordId) {
   const editedAttributes = {};
 
   Object.keys(attributes).forEach(key => {
-    if (Object.prototype.hasOwnProperty.call(attributes, key)) {
-      if (attributes[key].checked === true) {
-        editedAttributes[key] = attributes[key].value;
-      }
+    if (Object.prototype.hasOwnProperty.call(attributes, key) && attributes[key].checked) {
+      editedAttributes[key] = attributes[key].value;
     }
   });
 
@@ -100,7 +95,9 @@ export const editRecordAttributeAction = (state, { payload }) => {
         }
       }
     });
-  } if (Object.prototype.hasOwnProperty.call(payload, 'type')) {
+  }
+
+  if (Object.prototype.hasOwnProperty.call(payload, 'type')) {
     return update(state, {
       records: {
         [payload.recordId]: {
@@ -112,7 +109,9 @@ export const editRecordAttributeAction = (state, { payload }) => {
         }
       }
     });
-  } if (Object.prototype.hasOwnProperty.call(payload, 'tosAttribute')) {
+  }
+
+  if (Object.prototype.hasOwnProperty.call(payload, 'tosAttribute')) {
     return update(state, {
       attributes: {
         [payload.attributeIndex]: {
@@ -121,6 +120,7 @@ export const editRecordAttributeAction = (state, { payload }) => {
       }
     });
   }
+
   return update(state, {
     records: {
       [payload.recordId]: {

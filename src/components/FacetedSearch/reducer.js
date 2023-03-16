@@ -1,5 +1,5 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable default-param-last */
-/* eslint-disable camelcase */
 /* eslint-disable import/no-named-as-default-member */
 /* eslint-disable no-param-reassign */
 import update from 'immutability-helper';

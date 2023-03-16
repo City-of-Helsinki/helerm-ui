@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable jsx-a11y/no-autofocus */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable consistent-return */

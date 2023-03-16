@@ -131,10 +131,8 @@ class Record extends Component {
         actualAttributes.push(key);
       }
     });
-    if (actualAttributes.length) {
-      return true;
-    }
-    return false;
+
+    return !!actualAttributes.length;
   }
 
   renderRecordButtons() {

@@ -27,6 +27,8 @@ import ImportView from '../ImportView/ImportView';
 import EditorForm from '../EditorForm/EditorForm';
 import getDisplayLabelForAttribute from '../../../utils/attributeHelper';
 
+const BUTTON_PRIMARY = 'btn-primary';
+
 class Phase extends React.Component {
   constructor(props) {
     super(props);
@@ -367,25 +369,25 @@ class Phase extends React.Component {
       {
         text: 'Uusi toimenpide',
         icon: 'fa-file-text',
-        style: 'btn-primary',
+        style: BUTTON_PRIMARY,
         action: () => this.createNewAction(),
       },
       {
         text: 'Muokkaa käsittelyvaihetta',
         icon: 'fa-pencil',
-        style: 'btn-primary',
+        style: BUTTON_PRIMARY,
         action: () => this.editPhaseForm(),
       },
       {
         text: 'Järjestä toimenpiteitä',
         icon: 'fa-th-list',
-        style: 'btn-primary',
+        style: BUTTON_PRIMARY,
         action: () => this.toggleReorderView(),
       },
       {
         text: 'Tuo toimenpiteitä',
         icon: 'fa-download',
-        style: 'btn-primary',
+        style: BUTTON_PRIMARY,
         action: () => this.toggleImportView(),
       },
       {
@@ -413,10 +415,8 @@ class Phase extends React.Component {
         actualAttributes.push(key);
       }
     });
-    if (actualAttributes.length) {
-      return true;
-    }
-    return false;
+
+    return !!actualAttributes.length;
   }
 
   scrollToActionRecord(actionId, recordId) {

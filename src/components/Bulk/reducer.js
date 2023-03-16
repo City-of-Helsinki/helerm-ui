@@ -125,38 +125,32 @@ export function clearSelectedBulkUpdate() {
   return createAction(CLEAR_SELECTED_BULK_UPDATE)();
 }
 
-const approveBulkUpdateErrorAction = (state) => update(state, {
-  isFetching: { $set: false }
+const setIsFetching = (state, fetching) => update(state, {
+  isFetching: { $set: fetching }
 });
 
-const approveBulkUpdateReceiveAction = (state) => update(state, {
-  isFetching: { $set: false }
+const setIsSaving = (state, saving) => update(state, {
+  isSaving: { $set: saving }
 });
 
-const approveBulkUpdateRequestAction = (state) => update(state, {
-  isFetching: { $set: true }
-});
+const approveBulkUpdateErrorAction = (state) => setIsFetching(state, false);
 
-const deleteBulkUpdateErrorAction = (state) => update(state, {
-  isFetching: { $set: false }
-});
+const approveBulkUpdateReceiveAction = (state) => setIsFetching(state, false);
+
+const approveBulkUpdateRequestAction = (state) => setIsFetching(state, true);
+
+const deleteBulkUpdateErrorAction = (state) => setIsFetching(state, false);
 
 const deleteBulkUpdateReceiveAction = (state) => update(state, {
   selectedBulk: { $set: null },
   isFetching: { $set: false }
 });
 
-const deleteBulkUpdateRequestAction = (state) => update(state, {
-  isFetching: { $set: true }
-});
+const deleteBulkUpdateRequestAction = (state) => setIsFetching(state, true);
 
-const fetchBulkUpdatesErrorAction = (state) => update(state, {
-  isFetching: { $set: false }
-});
+const fetchBulkUpdatesErrorAction = (state) => setIsFetching(state, false);
 
-const fetchBulkUpdatesRequestAction = (state) => update(state, {
-  isFetching: { $set: true }
-});
+const fetchBulkUpdatesRequestAction = (state) => setIsFetching(state, true);
 
 const fetchBulkUpdatesReceiveAction = (state, { payload }) => {
   const sortedBulkUpdates = isArray(payload) ? orderBy(payload, ['created_at'], ['desc']) : [];
@@ -179,17 +173,11 @@ const fetchBulkUpdateReceiveAction = (state, { payload }) => update(state, {
   isFetchingSelected: { $set: false }
 });
 
-const saveBulkUpdateErrorAction = (state) => update(state, {
-  isSaving: { $set: false }
-});
+const saveBulkUpdateErrorAction = (state) => setIsSaving(state, false)
 
-const saveBulkUpdateRequestAction = (state) => update(state, {
-  isSaving: { $set: true }
-});
+const saveBulkUpdateRequestAction = (state) => setIsSaving(state, true)
 
-const saveBulkUpdateReceiveAction = (state) => update(state, {
-  isSaving: { $set: false }
-});
+const saveBulkUpdateReceiveAction = (state) => setIsSaving(state, false)
 
 const updateBulkUpdateErrorAction = (state) => update(state, {
   isUpdating: { $set: false }

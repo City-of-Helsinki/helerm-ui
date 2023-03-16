@@ -1,3 +1,5 @@
+/* eslint-disable sonarjs/no-duplicate-string */
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable import/no-cycle */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable class-methods-use-this */
@@ -239,7 +241,7 @@ class BulkView extends React.Component {
   }
 
   validateBulkUpdate(itemList) {
-    const isValid = !isEmpty(itemList)
+    return !isEmpty(itemList)
       ? every(itemList, (listItem) => {
           const { changes, item } = listItem;
           if (!isEmpty(changes.phases)) {
@@ -259,10 +261,8 @@ class BulkView extends React.Component {
                   if (action && !isEmpty(actionChange.records)) {
                     return every(keys(actionChange.records), (recordId) => {
                       const record = action.records ? find(action.records, { id: recordId }) : null;
-                      if (!record) {
-                        return false;
-                      }
-                      return true;
+
+                      return !!record;
                     });
                   }
                   return true;
@@ -274,7 +274,6 @@ class BulkView extends React.Component {
           return true;
         })
       : false;
-    return isValid;
   }
 
   renderItemChanges(changedItem) {

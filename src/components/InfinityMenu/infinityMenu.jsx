@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable camelcase */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -124,7 +125,10 @@ class InfinityMenu extends Component {
         filters.push(filter);
       }
     });
-    return filters.length ? `//*[${filters.join(` ${filterCondition} `)}]` : '';
+
+    const filterConditionString = ` ${filterCondition} `;
+
+    return filters.length ? `//*[${filters.join(filterConditionString)}]` : '';
   }
 
   setDisplayTree(tree, prevs, curr, keyPath) {

@@ -1,7 +1,6 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-alert */
 /* eslint-disable import/no-named-as-default-member */
-/* eslint-disable camelcase */
 /* eslint-disable no-param-reassign */
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
@@ -101,10 +100,8 @@ export function editMetaData(attributes) {
   let editedMetaData = {};
 
   Object.keys(attributes).forEach((key) => {
-    if (Object.prototype.hasOwnProperty.call(attributes, key)) {
-      if (attributes[key].checked === true) {
-        editedMetaData = { ...editedMetaData, [key]: attributes[key].value };
-      }
+    if (Object.prototype.hasOwnProperty.call(attributes, key) && attributes[key].checked) {
+      editedMetaData = { ...editedMetaData, [key]: attributes[key].value };
     }
   });
 
