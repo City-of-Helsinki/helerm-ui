@@ -1,6 +1,5 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable camelcase */
-/* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -380,7 +379,7 @@ class InfinityMenu extends Component {
     };
     return searchInputs.map((input, index) => (
       <div
-        key={index}
+        key={input}
         className={classnames({
           'col-xs-12 filters filters-detail-search-input': isDetailSearch,
           'col-sm-6': !isDetailSearch,
@@ -477,7 +476,7 @@ class InfinityMenu extends Component {
                       className={classnames({
                         active: index === this.props.path.length,
                       })}
-                      key={index}
+                      key={item}
                     >
                       {item}
                     </li>

@@ -1,7 +1,5 @@
 /* eslint-disable camelcase */
-/* eslint-disable react/no-array-index-key */
 /* eslint-disable react/forbid-prop-types */
-/* eslint-disable react/no-unused-class-component-methods */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable class-methods-use-this */
@@ -167,10 +165,6 @@ class ImportView extends React.Component {
     toggleImportView();
   }
 
-  stop(e) {
-    e.stopPropagation();
-  }
-
   render() {
     const { level, toggleImportView, title, itemsToImportText, targetText } = this.props;
     const importableElements = this.generateImportableElements(level);
@@ -189,7 +183,7 @@ class ImportView extends React.Component {
               <div>
                 {this.state.selectedElements.map((element, index) => (
                   <span
-                    key={index}
+                    key={element}
                     onClick={(e) => this.removeFromImport(e, index)}
                     className='col-xs-12 importable-element-link'
                   >

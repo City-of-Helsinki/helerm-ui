@@ -2,6 +2,8 @@ import update from 'immutability-helper';
 import { createAction } from 'redux-actions';
 import { indexOf } from 'lodash';
 
+import { randomActionId } from '../../../utils/helpers';
+
 export const ADD_RECORD = 'addRecordAction';
 export const EDIT_RECORD = 'editRecordAction';
 export const EDIT_RECORD_ATTRIBUTE = 'editRecordAttributeAction';
@@ -9,7 +11,7 @@ export const REMOVE_RECORD = 'removeRecordAction';
 export const SET_RECORD_VISIBILITY = 'setRecordVisibilityAction';
 
 export function addRecord(attributes, actionId) {
-  const recordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+  const recordId = randomActionId();
   const newAttributes = {};
   Object.keys(attributes).forEach(key => {
     if (Object.prototype.hasOwnProperty.call(attributes, key) && attributes[key].checked) {

@@ -2,6 +2,8 @@ import update from 'immutability-helper';
 import { includes, indexOf } from 'lodash';
 import { createAction } from 'redux-actions';
 
+import { randomActionId } from '../../../utils/helpers';
+
 export const ADD_ACTION = 'addActionAction';
 export const EDIT_ACTION = 'editActionAction';
 export const EDIT_ACTION_ATTRIBUTE = 'editActionAttributeAction';
@@ -9,7 +11,10 @@ export const REMOVE_ACTION = 'removeActionAction';
 export const SET_ACTION_VISIBILITY = 'setActionVisibilityAction';
 
 export function addAction(typeSpecifier, actionType, actionAttibutes, phaseIndex) {
-  const actionId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+
+
+  const actionId = randomActionId();
+
   const attributes = {
 
     TypeSpecifier: typeSpecifier, ActionType: actionType,

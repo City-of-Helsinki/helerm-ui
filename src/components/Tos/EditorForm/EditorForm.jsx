@@ -208,12 +208,7 @@ class EditorForm extends React.Component {
                   value={this.state.newAttributes[key].checked}
                   onChange={() => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}
                 />
-                <label className='editor-form__label'>
-                  {attributeTypes[key].name}
-                  {/* { attributeTypes[key].required &&
-                  <span className='fa-solid fa-asterisk required-asterisk'/>
-                  } */}
-                </label>
+                <label className='editor-form__label'>{attributeTypes[key].name}</label>
                 <DropdownInput
                   keyValue={key}
                   type='form'
@@ -238,12 +233,7 @@ class EditorForm extends React.Component {
                   value={this.state.newAttributes[key].checked}
                   onChange={() => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}
                 />
-                <label className='editor-form__label'>
-                  {attributeTypes[key].name}
-                  {/* { attributeTypes[key].required &&
-                  <span className='fa-solid fa-asterisk required-asterisk'/>
-                  } */}
-                </label>
+                <label className='editor-form__label'>{attributeTypes[key].name}</label>
                 {key === 'AdditionalInformation' ? (
                   <textarea
                     className='form-control edit-record__input additional-information'
@@ -505,13 +495,11 @@ class EditorForm extends React.Component {
         {this.props.editorConfig.type !== 'action' && (
           <div className='col-xs-12 col-lg-6 form-group'>
             <label className='editor-form__label'>{this.resolveTypeDescription()}</label>
-            {/* <span className='fa-solid fa-asterisk required-asterisk'/> */}
             {dropdownInput}
           </div>
         )}
         <div className='col-xs-12 col-lg-6 form-group'>
           <label className='editor-form__label'>{this.resolveSpecifier()}</label>
-          {/* <span className='fa-solid fa-asterisk required-asterisk'/> */}
           <input
             className='col-xs-6 form-control edit-record__input'
             placeholder={this.resolveSpecifier()}

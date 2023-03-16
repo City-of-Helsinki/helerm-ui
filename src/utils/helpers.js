@@ -391,3 +391,12 @@ export const resolveReturnValues = (emittedValue, multi = false) => {
   }
   return emittedValue;
 };
+
+
+export const randomActionId = () => {
+  const { crypto } = window;
+  const array = new Uint32Array(1);
+  const random = crypto.getRandomValues(array);
+
+  return random.toString(36).replace(/[^a-z]+/g, '');
+};

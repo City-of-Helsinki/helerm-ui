@@ -1,7 +1,6 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable camelcase */
 /* eslint-disable react/forbid-prop-types */
-/* eslint-disable react/no-unused-class-component-methods */
 /* eslint-disable jsx-a11y/no-autofocus */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -376,12 +375,6 @@ class Phase extends React.Component {
     }
   }
 
-  scrollToPhase() {
-    if (this.element) {
-      window.scrollTo(0, this.element.offsetParent.offsetTop + this.element.offsetTop);
-    }
-  }
-
   renderPhaseButtons() {
     const phaseDropdownItems = this.generateDropdownItems();
 
@@ -529,12 +522,7 @@ class Phase extends React.Component {
     const actionElements = this.generateActions(phase.actions);
 
     return (
-      <div
-        className='phase'
-        ref={(element) => {
-          this.element = element;
-        }}
-      >
+      <div className='phase'>
         <div className='box'>
           {this.state.mode === 'edit' && this.state.editingPhase && (
             <EditorForm

@@ -1,6 +1,5 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable react/forbid-prop-types */
-/* eslint-disable react/no-array-index-key */
 /* eslint-disable prefer-regex-literals */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -75,7 +74,7 @@ class SearchResults extends React.Component {
             <div className='col-xs-8'>
               <span className='search-result-item-path'>{result.item.path.join(' > ')}</span>
               <h4 className='search-result-item-name'>{result.item.name}</h4>
-              {result.paths.map((path, pathIndex) => {
+              {result.paths.map((path) => {
                 // stuff of nightmares, but we need to combine attribute
                 // value to possibly existing attribute name for the UI
                 const regex = new RegExp(/(.{1,100}):(.{1,100})/);
@@ -94,7 +93,7 @@ class SearchResults extends React.Component {
                     .join(', ');
                   pathName = `${captured[1].trim()}: ${mappedValue}`;
                 }
-                return <h4 key={`${result.item.function}${pathIndex}`}>{pathName}</h4>;
+                return <h4 key={`${result.item.function}-${pathName}`}>{pathName}</h4>;
               })}
             </div>
             <div className='col-xs-3 search-result-item-state'>

@@ -2,7 +2,6 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable react/no-unused-state */
 /* eslint-disable class-methods-use-this */
-/* eslint-disable react/no-unused-class-component-methods */
 import React from 'react';
 import PropTypes from 'prop-types';
 import './ReorderView.scss';
@@ -60,10 +59,6 @@ class ReorderView extends React.Component {
         },
       }),
     );
-  }
-
-  stop(e) {
-    e.stopPropagation();
   }
 
   render() {

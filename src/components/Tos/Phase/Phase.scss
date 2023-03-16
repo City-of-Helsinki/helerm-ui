@@ -7,6 +7,10 @@
     width: 100%;
     background-color: $gray-lighter;
   }
+
+  .add-element {
+    margin: 15px 5px;
+  }
 }
 .phase-title {
   z-index: 2;
@@ -116,11 +120,5 @@
   .phase-title-dropdown {
     position: relative;
     z-index: 5;
-  }
-}
-
-.phase {
-  .add-element {
-    margin: 15px 5px;
   }
 }

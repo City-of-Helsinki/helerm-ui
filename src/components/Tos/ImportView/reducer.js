@@ -4,6 +4,8 @@ import update from 'immutability-helper';
 import { createAction } from 'redux-actions';
 import map from 'lodash/map';
 
+import { randomActionId } from '../../../utils/helpers';
+
 export const EXECUTE_IMPORT = 'executeImportAction';
 
 export function executeImport(newItem, level, itemParent, currentState) {
@@ -21,15 +23,15 @@ export function executeImport(newItem, level, itemParent, currentState) {
           phaseIndexes.push(importPhases[key].index);
         }
       });
-      const newPhaseId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+      const newPhaseId = randomActionId();
 
       if (importPhases[newItem].actions) {
         importPhases[newItem].actions.forEach(childAction => {
-          const newActionId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+          const newActionId = randomActionId();
           const newActionRecords = [];
           if (importActions[childAction].records) {
             importActions[childAction].records.forEach(childRecord => {
-              const newRecordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+              const newRecordId = randomActionId();
               const newRecord = { ...importRecords[childRecord], id: newRecordId, action: newActionId };
               newActionRecords.push(newRecordId);
               newRecords[newRecordId] = newRecord;
@@ -56,12 +58,12 @@ export function executeImport(newItem, level, itemParent, currentState) {
           actionIndexes.push(importActions[key].index);
         }
       });
-      const newActionId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+      const newActionId = randomActionId();
       const newActionRecords = [];
 
       if (importActions[newItem].records) {
         importActions[newItem].records.forEach(childRecord => {
-          const newRecordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+          const newRecordId = randomActionId();
           const newRecord = { ...importRecords[childRecord], id: newRecordId, action: newActionId };
           newActionRecords.push(newRecordId);
           newRecords[newRecordId] = newRecord;
@@ -83,7 +85,7 @@ export function executeImport(newItem, level, itemParent, currentState) {
           recordIndexes.push(importRecords[key].index);
         }
       });
-      const newRecordId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+      const newRecordId = randomActionId();
 
       const newRecordIndex = recordIndexes.length > 0 ? Math.max.apply(null, recordIndexes) + 1 : 1;
       const newRecordName = `${importRecords[newItem].name || ''} (KOPIO)`;

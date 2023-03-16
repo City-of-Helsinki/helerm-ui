@@ -199,7 +199,7 @@ const getFacetAttributesForType = (attributes, items, type) => {
   return typeAttributes;
 };
 
-export function searchItems(searchTerm, isSuggestionsOnly = false, type) {
+export function searchItems(searchTerm, type, isSuggestionsOnly = false) {
   const TERM_AND = 'AND';
   const TERM_NOT = 'NOT';
   const TERM_OR = 'OR';

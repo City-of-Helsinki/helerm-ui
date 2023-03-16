@@ -1,7 +1,6 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable import/no-cycle */
 /* eslint-disable react/forbid-prop-types */
-/* eslint-disable react/no-array-index-key */
 /* eslint-disable camelcase */
 /* eslint-disable no-param-reassign */
 /* eslint-disable class-methods-use-this */
@@ -421,7 +420,7 @@ class BulkCreateView extends React.Component {
       };
       let actionsSuccess = isEmpty(combinedSearchTerms.action.attributes);
       let functionsSuccess = isEmpty(combinedSearchTerms.function.attributes);
-      let phasesSuccess = isEmpty(combinedSearchTerms.phase.attributes);
+      const phasesSuccess = isEmpty(combinedSearchTerms.phase.attributes);
       const recordsSuccess = isEmpty(combinedSearchTerms.record.attributes);
       const isSubSearch = !actionsSuccess || !phasesSuccess || !recordsSuccess;
 
@@ -557,7 +556,6 @@ class BulkCreateView extends React.Component {
         ) {
           paths.push(...phasePaths);
           hit = merge(hit, { phases: phaseHit });
-          phasesSuccess = true;
         }
       }
       if ((functionsSuccess && !isSubSearch) || !isEmpty(hit.phases)) {
@@ -877,8 +875,8 @@ class BulkCreateView extends React.Component {
             </p>
           )}
           {!isEmpty(conversions) &&
-            conversions.conversion.map((c, index) => (
-              <p key={`conversion-${index}`}>
+            conversions.conversion.map((c) => (
+              <p key={`${c.type}-${c.value}`}>
                 {`${this.getTypeName(c.type)}: ${this.getAttributeName(c.attribute)} = ${c.value}`}
               </p>
             ))}

@@ -18,7 +18,6 @@ import Attributes from '../Attribute/Attributes';
 import EditorForm from '../EditorForm/EditorForm';
 import Popup from '../../Popup';
 import Dropdown from '../../Dropdown';
-// import DropdownInput from '../DropdownInput/DropdownInput';
 import DeleteView from '../DeleteView/DeleteView';
 import ReorderView from '../Reorder/ReorderView';
 import ImportView from '../ImportView/ImportView';

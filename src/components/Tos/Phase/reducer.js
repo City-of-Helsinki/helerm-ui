@@ -1,6 +1,8 @@
 import update from 'immutability-helper';
 import { createAction } from 'redux-actions';
 
+import { randomActionId } from '../../../utils/helpers';
+
 export const ADD_PHASE = 'addPhaseAction';
 export const EDIT_PHASE = 'editPhaseAction';
 export const EDIT_PHASE_ATTRIBUTE = 'editPhaseAttributeAction';
@@ -10,7 +12,7 @@ export const SET_PHASE_VISIBILITY = 'setPhaseVisibilityAction';
 export const SET_PHASES_VISIBILITY = 'setPhasesVisibilityAction';
 
 export function addPhase(typeSpecifier, phaseType, phaseAttributes, parent) {
-  const phaseId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+  const phaseId = randomActionId();
   const attributes = {
 
     TypeSpecifier: typeSpecifier, PhaseType: phaseType,

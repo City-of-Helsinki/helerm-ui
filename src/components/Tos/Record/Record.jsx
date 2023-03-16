@@ -3,7 +3,6 @@
 /* eslint-disable consistent-return */
 /* eslint-disable react/sort-comp */
 /* eslint-disable class-methods-use-this */
-/* eslint-disable react/no-unused-class-component-methods */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
@@ -36,10 +35,6 @@ class Record extends Component {
       editingRecord: false,
       mode: 'view',
     };
-  }
-
-  setMode(value) {
-    this.setState({ mode: value });
   }
 
   disableEditMode() {

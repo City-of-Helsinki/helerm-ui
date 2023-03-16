@@ -1,7 +1,5 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable react/forbid-prop-types */
-/* eslint-disable react/no-unused-class-component-methods */
-/* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
@@ -89,7 +87,7 @@ class FacetedSearch extends React.Component {
 
   onClickAllByType(type) {
     const { searchTerm } = this.state;
-    this.props.searchItems(searchTerm, false, type);
+    this.props.searchItems(searchTerm, type, false);
   }
 
   onClickAttribute(attribute) {
@@ -174,7 +172,7 @@ class FacetedSearch extends React.Component {
     const suggestSize = config.FACETED_SEARCH_LENGTH;
     this.setState({ searchTerm: e.target.value }, () => {
       if (this.state.searchTerm.length >= suggestSize) {
-        this.props.searchItems(this.state.searchTerm, true);
+        this.props.searchItems(this.state.searchTerm, null, true);
       } else {
         this.props.resetSuggestions();
       }
@@ -209,7 +207,7 @@ class FacetedSearch extends React.Component {
         facetsOpen: [type],
       },
       () => {
-        this.props.searchItems(searchTerm, false, type);
+        this.props.searchItems(searchTerm, type, false);
       },
     );
   }
@@ -245,12 +243,12 @@ class FacetedSearch extends React.Component {
           <span>({total})</span>
         </div>
         {attribute.open &&
-          options.map((option, index) => (
+          options.map((option) => (
             <div
               className={classnames('faceted-search-facets-item-attribute-value', {
                 'faceted-search-facets-item-attribute-value-selected': this.isOptionSelected(attribute, option),
               })}
-              key={`${attribute.type}-${attribute.key}-${option.value}-${index}`}
+              key={`${attribute.type}-${attribute.key}-${option.value}`}
               onClick={() => this.onClickAttributeOption(attribute, option)}
             >
               <i className='fa-solid fa-check' />
@@ -418,9 +416,6 @@ class FacetedSearch extends React.Component {
                 type='search'
                 placeholder='Vapaasanahaku'
                 onChange={this.onSearchInputChange}
-                ref={(field) => {
-                  this.searchField = field;
-                }}
                 value={searchTerm}
               />
               {!isEmpty(suggestions) && (

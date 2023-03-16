@@ -36,9 +36,6 @@ const ActionButtons = ({
           action={editMode ? cancelEdit : () => setDocumentState('edit')}
           label={editMode ? 'Peruuta muokkaus' : 'Muokkaa'}
         />
-        {/* {editMode &&
-        <span className='fa-solid fa-asterisk required-asterisk required-legend'> = Pakollinen tieto</span>
-        } */}
       </span>
     </IsAllowed>
   );
@@ -79,13 +76,7 @@ const ActionButtons = ({
   const draftable = (
     <IsAllowed to={EDIT}>
       <span>
-        <ActionButton
-          className='btn pull-right'
-          type='primary'
-          icon='fa-file'
-          action={saveDraft}
-          label='Luo luonnos'
-        />
+        <ActionButton className='btn pull-right' type='primary' icon='fa-file' action={saveDraft} label='Luo luonnos' />
         <ActionButton
           className='btn pull-right'
           type='secondary'
