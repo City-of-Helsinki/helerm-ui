@@ -29,7 +29,7 @@ import FacetedSearchResults from './FacetedSearchResults/FacetedSearchResults';
 import FacetedSearchSuggestions from './FacetedSearchSuggestions/FacetedSearchSuggestions';
 import PreviewItem from './PreviewItem/PreviewItem';
 import './FacetedSearch.scss';
-import getDisplayLabelForAttribute from '../../utils/attributeHelper';
+import { getDisplayLabelForAttribute } from '../../utils/attributeHelper';
 
 class FacetedSearch extends React.Component {
   constructor(props) {

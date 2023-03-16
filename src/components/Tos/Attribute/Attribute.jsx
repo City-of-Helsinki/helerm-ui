@@ -13,7 +13,7 @@ import classnames from 'classnames';
 import { includes, forEach, find, map } from 'lodash';
 
 import { resolveSelectValues, resolveReturnValues } from '../../../utils/helpers';
-import getDisplayLabelForAttribute from '../../../utils/attributeHelper';
+import { getDisplayLabelForAttribute } from '../../../utils/attributeHelper';
 import './Attribute.scss';
 
 class Attribute extends React.Component {

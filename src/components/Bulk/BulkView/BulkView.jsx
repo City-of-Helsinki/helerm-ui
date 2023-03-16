@@ -20,7 +20,7 @@ import { formatDateTime, getStatusLabel } from '../../../utils/helpers';
 import IsAllowed from '../../IsAllowed/IsAllowed';
 import Popup from '../../Popup';
 import './BulkView.scss';
-import getDisplayLabelForAttribute from '../../../utils/attributeHelper';
+import { getDisplayLabelForAttribute } from '../../../utils/attributeHelper';
 
 class BulkView extends React.Component {
   constructor(props) {

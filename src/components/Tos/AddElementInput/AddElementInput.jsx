@@ -9,7 +9,7 @@ import { find, forEach, includes, isEmpty, map } from 'lodash';
 import KeyStrokeSupport from '../../../decorators/key-stroke-support';
 import './AddElementInput.scss';
 import { resolveSelectValues } from '../../../utils/helpers';
-import getDisplayLabelForAttribute from '../../../utils/attributeHelper';
+import { getDisplayLabelForAttribute } from '../../../utils/attributeHelper';
 
 function onPromptCreate(label) {
   return `Lisää "${label}"`;

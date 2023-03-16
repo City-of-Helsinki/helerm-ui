@@ -13,7 +13,7 @@ import CreatableSelect from 'react-select/creatable';
 import { BULK_UPDATE_CONVERSION_TYPES, BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES } from '../../../../constants';
 import './Conversion.scss';
 import { resolveReturnValues, resolveSelectValues } from '../../../../utils/helpers';
-import getDisplayLabelForAttribute from '../../../../utils/attributeHelper';
+import { getDisplayLabelForAttribute } from '../../../../utils/attributeHelper';
 
 class Conversion extends React.Component {
   constructor(props) {

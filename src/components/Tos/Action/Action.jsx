@@ -22,8 +22,8 @@ import Dropdown from '../../Dropdown';
 import DeleteView from '../DeleteView/DeleteView';
 import ReorderView from '../Reorder/ReorderView';
 import ImportView from '../ImportView/ImportView';
-
-const BUTTON_PRIMARY = 'btn-primary';
+import { DROPDOWN_ITEMS } from '../../../constants';
+import { attributeButton } from '../../../utils/attributeHelper';
 
 class Action extends Component {
   constructor(props) {
@@ -307,57 +307,12 @@ class Action extends Component {
 
   generateDropdownItems() {
     return [
-      {
-        text: 'Uusi asiakirja',
-        icon: 'fa-file-lines',
-        style: BUTTON_PRIMARY,
-        action: () => this.createNewRecord(),
-      },
-      {
-        text: 'Muokkaa toimenpidettä',
-        icon: 'fa-pencil',
-        style: BUTTON_PRIMARY,
-        action: () => this.editActionForm(),
-      },
-      {
-        text: 'Järjestä asiakirjoja',
-        icon: 'fa-table-list',
-        style: BUTTON_PRIMARY,
-        action: () => this.toggleReorderView(),
-      },
-      {
-        text: 'Tuo asiakirjoja',
-        icon: 'fa-download',
-        style: BUTTON_PRIMARY,
-        action: () => this.toggleImportView(),
-      },
-      {
-        text: 'Poista toimenpide',
-        icon: 'fa-trash',
-        style: 'btn-delete',
-        action: () => this.setState({ deleting: true }),
-      },
+      { ...DROPDOWN_ITEMS[0], text: 'Uusi asiakirja', action: () => this.createNewRecord() },
+      { ...DROPDOWN_ITEMS[1], text: 'Muokkaa toimenpidettä', action: () => this.editActionForm() },
+      { ...DROPDOWN_ITEMS[2], text: 'Järjestä asiakirjoja', action: () => this.toggleReorderView() },
+      { ...DROPDOWN_ITEMS[3], text: 'Tuo asiakirjoja', action: () => this.toggleImportView() },
+      { ...DROPDOWN_ITEMS[4], text: 'Poista toimenpide', action: () => this.setState({ deleting: true }) },
     ];
-  }
-
-  showAttributeButton(attributes) {
-    const { attributeTypes } = this.props;
-    const actualAttributes = [];
-    Object.keys(attributes).forEach((key) => {
-      if (key !== 'TypeSpecifier' && key !== 'ActionType') {
-        actualAttributes.push(key);
-      }
-    });
-    Object.keys(attributeTypes).forEach((key) => {
-      if (
-        Object.prototype.hasOwnProperty.call(attributeTypes, key) &&
-        attributeTypes[key].defaultIn.indexOf('action') >= 0
-      ) {
-        actualAttributes.push(key);
-      }
-    });
-
-    return !!actualAttributes.length;
   }
 
   scrollToAction() {
@@ -385,7 +340,7 @@ class Action extends Component {
             <Dropdown items={actionDropdownItems} extraSmall />
           </span>
         )}
-        {this.showAttributeButton(this.props.action.attributes) && (
+        {attributeButton(this.props.action.attributes, this.props.attributeTypes) && (
           <button
             type='button'
             className='btn btn-info btn-xs record-button pull-right'

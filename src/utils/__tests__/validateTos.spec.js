@@ -10,13 +10,15 @@ const SHOULD_RETURN_ARRAY_STRING = 'Should return an array';
 const SHOULD_HAVE_ONE_ERROR_STRING = 'Should have one error';
 
 describe('(TOS validation)', () => {
+  const shouldReturnArray = (items) => it(SHOULD_RETURN_ARRAY_STRING, () => {
+    expect(Array.isArray(items)).toEqual(true);
+  })
+
   describe('(TOS validation errors) Error validation', () => {
     describe('Valid TOS', () => {
       const errors = validateTOS(validTOS, attributeRules);
 
-      it(SHOULD_RETURN_ARRAY_STRING, () => {
-        expect(Array.isArray(errors)).toEqual(true);
-      });
+      shouldReturnArray(errors);
 
       it('Should not have errors', () => {
         expect(errors.length).toEqual(0);
@@ -26,9 +28,7 @@ describe('(TOS validation)', () => {
     describe('Single missing value (SocialSecurityNumber)', () => {
       const errors = validateTOS(TOSmissingSSN, attributeRules);
 
-      it(SHOULD_RETURN_ARRAY_STRING, () => {
-        expect(Array.isArray(errors)).toEqual(true);
-      });
+      shouldReturnArray(errors);
 
       it(SHOULD_HAVE_ONE_ERROR_STRING, () => {
         expect(errors.length).toEqual(1);
@@ -38,9 +38,7 @@ describe('(TOS validation)', () => {
     describe('Single value outside allowed values (PublicityClass)', () => {
       const errors = validateTOS(unallowedPublicityClassTOS, attributeRules);
 
-      it(SHOULD_RETURN_ARRAY_STRING, () => {
-        expect(Array.isArray(errors)).toEqual(true);
-      });
+      shouldReturnArray(errors);
 
       it(SHOULD_HAVE_ONE_ERROR_STRING, () => {
         expect(errors.length).toEqual(1);
@@ -63,9 +61,7 @@ describe('(TOS validation)', () => {
         attributeRules
       );
 
-      it(SHOULD_RETURN_ARRAY_STRING, () => {
-        expect(Array.isArray(errors)).toEqual(true);
-      });
+      shouldReturnArray(errors);
 
       it('Should not have errors', () => {
         expect(errors.length).toEqual(0);
@@ -85,9 +81,7 @@ describe('(TOS validation)', () => {
         attributeRules
       );
 
-      it(SHOULD_RETURN_ARRAY_STRING, () => {
-        expect(Array.isArray(errors)).toEqual(true);
-      });
+      shouldReturnArray(errors);
 
       it(SHOULD_HAVE_ONE_ERROR_STRING, () => {
         expect(errors.length).toEqual(1);
@@ -109,9 +103,7 @@ describe('(TOS validation)', () => {
         attributeRules
       );
 
-      it(SHOULD_RETURN_ARRAY_STRING, () => {
-        expect(Array.isArray(errors)).toEqual(true);
-      });
+      shouldReturnArray(errors);
 
       it('Should have no errors', () => {
         expect(errors.length).toEqual(0);
@@ -123,9 +115,7 @@ describe('(TOS validation)', () => {
     describe('No warnings', () => {
       const warnings = validateTOSWarnings(validTOS, attributeRules);
 
-      it(SHOULD_RETURN_ARRAY_STRING, () => {
-        expect(Array.isArray(warnings)).toEqual(true);
-      });
+      shouldReturnArray(warnings);
 
       it('Should not have warnings', () => {
         expect(warnings.length).toEqual(0);
@@ -144,9 +134,7 @@ describe('(TOS validation)', () => {
         attributeRules
       );
 
-      it(SHOULD_RETURN_ARRAY_STRING, () => {
-        expect(Array.isArray(warnings)).toEqual(true);
-      });
+      shouldReturnArray(warnings);
 
       it('Should have one warning', () => {
         expect(warnings.length).toEqual(1);
@@ -163,9 +151,7 @@ describe('(TOS validation)', () => {
         attributeRules
       );
 
-      it(SHOULD_RETURN_ARRAY_STRING, () => {
-        expect(Array.isArray(warnings)).toEqual(true);
-      });
+      shouldReturnArray(warnings);
 
       it('Should have no warnings', () => {
         expect(warnings.length).toEqual(0);

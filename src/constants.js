@@ -164,3 +164,37 @@ export const FACETED_SEARCH_DEFAULT_ATTRIBUTES = [{
   name: 'Voimassaolo päättyy',
   type: TYPE_FUNCTION
 }];
+
+
+const BUTTON_PRIMARY = 'btn-primary';
+
+export const DROPDOWN_ITEMS = [{
+  text: undefined,
+  icon: 'fa-file-lines',
+  style: BUTTON_PRIMARY,
+  action: undefined,
+},
+{
+  text: undefined,
+  icon: 'fa-pencil',
+  style: BUTTON_PRIMARY,
+  action: undefined,
+},
+{
+  text: undefined,
+  icon: 'fa-table-list',
+  style: BUTTON_PRIMARY,
+  action: undefined,
+},
+{
+  text: 'Tuo asiakirjoja',
+  icon: 'fa-download',
+  style: BUTTON_PRIMARY,
+  action: undefined,
+},
+{
+  text: 'Poista toimenpide',
+  icon: 'fa-trash',
+  style: 'btn-delete',
+  action: undefined,
+},]

@@ -25,9 +25,12 @@ import DropdownInput from '../DropdownInput/DropdownInput';
 import ReorderView from '../Reorder/ReorderView';
 import ImportView from '../ImportView/ImportView';
 import EditorForm from '../EditorForm/EditorForm';
-import getDisplayLabelForAttribute from '../../../utils/attributeHelper';
-
-const BUTTON_PRIMARY = 'btn-primary';
+import {
+  getDisplayLabelForAttribute,
+  generateDefaultAttributes,
+  attributeButton,
+} from '../../../utils/attributeHelper';
+import { DROPDOWN_ITEMS } from '../../../constants';
 
 class Phase extends React.Component {
   constructor(props) {
@@ -284,21 +287,6 @@ class Phase extends React.Component {
     return options;
   }
 
-  generateDefaultAttributes(attributeTypes, type) {
-    const attributes = {};
-    Object.keys(attributeTypes).forEach((key) => {
-      if (
-        Object.prototype.hasOwnProperty.call(attributeTypes, key) &&
-        ((this.state.showMore && attributeTypes[key].allowedIn.indexOf(type) >= 0 && key !== 'ActionType') ||
-          (!this.state.showMore && attributeTypes[key].defaultIn.indexOf(type) >= 0)) &&
-        key !== 'TypeSpecifier'
-      ) {
-        attributes[key] = attributeTypes[key];
-      }
-    });
-    return attributes;
-  }
-
   updateTopOffsetForSticky() {
     // calculates heights for elements that are already sticking (navigation menu and tos header)
     const headerEl = document.getElementById('single-tos-header-container');
@@ -366,57 +354,12 @@ class Phase extends React.Component {
 
   generateDropdownItems() {
     return [
-      {
-        text: 'Uusi toimenpide',
-        icon: 'fa-file-text',
-        style: BUTTON_PRIMARY,
-        action: () => this.createNewAction(),
-      },
-      {
-        text: 'Muokkaa käsittelyvaihetta',
-        icon: 'fa-pencil',
-        style: BUTTON_PRIMARY,
-        action: () => this.editPhaseForm(),
-      },
-      {
-        text: 'Järjestä toimenpiteitä',
-        icon: 'fa-th-list',
-        style: BUTTON_PRIMARY,
-        action: () => this.toggleReorderView(),
-      },
-      {
-        text: 'Tuo toimenpiteitä',
-        icon: 'fa-download',
-        style: BUTTON_PRIMARY,
-        action: () => this.toggleImportView(),
-      },
-      {
-        text: 'Poista käsittelyvaihe',
-        icon: 'fa-trash',
-        style: 'btn-delete',
-        action: () => this.setState({ deleting: true }),
-      },
+      { ...DROPDOWN_ITEMS[0], text: 'Uusi toimenpide', action: () => this.createNewAction() },
+      { ...DROPDOWN_ITEMS[1], text: 'Muokkaa käsittelyvaihetta', action: () => this.editPhaseForm() },
+      { ...DROPDOWN_ITEMS[2], text: 'Järjestä toimenpiteitä', action: () => this.toggleReorderView() },
+      { ...DROPDOWN_ITEMS[3], text: 'Tuo toimenpiteitä', action: () => this.toggleImportView() },
+      { ...DROPDOWN_ITEMS[4], text: 'Poista käsittelyvaihe', action: () => this.setState({ deleting: true }) },
     ];
-  }
-
-  showAttributeButton(attributes) {
-    const { attributeTypes } = this.props;
-    const actualAttributes = [];
-    Object.keys(attributes).forEach((key) => {
-      if (key !== 'TypeSpecifier' && key !== 'PhaseType') {
-        actualAttributes.push(key);
-      }
-    });
-    Object.keys(attributeTypes).forEach((key) => {
-      if (
-        Object.prototype.hasOwnProperty.call(attributeTypes, key) &&
-        attributeTypes[key].defaultIn.indexOf('phase') >= 0
-      ) {
-        actualAttributes.push(key);
-      }
-    });
-
-    return !!actualAttributes.length;
   }
 
   scrollToActionRecord(actionId, recordId) {
@@ -459,7 +402,7 @@ class Phase extends React.Component {
             <Dropdown items={phaseDropdownItems} small />
           </span>
         )}
-        {this.showAttributeButton(this.props.phase.attributes) && (
+        {attributeButton(this.props.phase.attributes, this.props.attributeTypes) && (
           <button
             type='button'
             className='btn btn-info btn-xs record-button pull-right'
@@ -649,7 +592,7 @@ class Phase extends React.Component {
                   type='action'
                   submit={this.addAction}
                   typeOptions={this.generateTypeOptions(this.props.actionTypes)}
-                  defaultAttributes={this.generateDefaultAttributes(this.props.attributeTypes, 'action')}
+                  defaultAttributes={generateDefaultAttributes(this.props.attributeTypes, 'action')}
                   newDefaultAttributes={this.state.actionDefaultAttributes}
                   newTypeSpecifier={this.state.actionTypeSpecifier}
                   newType={this.state.actionType}

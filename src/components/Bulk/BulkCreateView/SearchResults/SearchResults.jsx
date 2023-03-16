@@ -12,7 +12,7 @@ import { every, filter, isEqual } from 'lodash';
 
 import { getStatusLabel } from '../../../../utils/helpers';
 import './SearchResults.scss';
-import getDisplayLabelForAttribute from '../../../../utils/attributeHelper';
+import { getDisplayLabelForAttribute } from '../../../../utils/attributeHelper';
 
 class SearchResults extends React.Component {
   getStateCount(searchResults, state) {

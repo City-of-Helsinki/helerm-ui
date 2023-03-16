@@ -13,7 +13,7 @@ import sortBy from 'lodash/sortBy';
 
 import DropdownInput from '../DropdownInput/DropdownInput';
 import { validateConditionalRules } from '../../../utils/validators';
-import getDisplayLabelForAttribute from '../../../utils/attributeHelper';
+import { getDisplayLabelForAttribute } from '../../../utils/attributeHelper';
 import './EditorForm.scss';
 
 class EditorForm extends React.Component {
