@@ -62,7 +62,8 @@ export function setPhaseVisibility(phase, visibility) {
 
 export function setPhasesVisibility(phases, value) {
   const allPhasesOpen = {};
-  Object.keys(phases).keys(key => {
+
+  Object.keys(phases).forEach((key) => {
     if (Object.prototype.hasOwnProperty.call(phases, key)) {
       allPhasesOpen[key] = update(phases[key], {
         is_open: {
@@ -70,7 +71,8 @@ export function setPhasesVisibility(phases, value) {
         }
       });
     }
-  });
+  })
+
   return createAction(SET_PHASES_VISIBILITY)(allPhasesOpen);
 }
 

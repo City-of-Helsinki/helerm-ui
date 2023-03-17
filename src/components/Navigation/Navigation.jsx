@@ -180,7 +180,7 @@ class Navigation extends React.Component {
         })
         .every((finalItem) => !!finalItem);
 
-      return matchesFilters || (item.children && (item.children = item.children.filter(filterFunction)).length);
+      return matchesFilters || (item.children && item.children.filter(filterFunction).length);
     };
 
     // Modify filtered items to be open

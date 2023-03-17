@@ -7,7 +7,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/forbid-prop-types */
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _get from 'lodash/get';
 import cloneDeep from 'lodash/cloneDeep';

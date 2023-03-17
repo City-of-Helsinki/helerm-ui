@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-/* eslint-disable no-nested-ternary */
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -16,16 +14,37 @@ const mapDispatchToProps = (dispatch) => ({
   setNavigationVisibility: bindActionCreators(setNavigationVisibility, dispatch),
 });
 
+const getTOS = (selectedTOS, items, classification) => {
+  if (selectedTOS.classification) {
+    return itemById(items, selectedTOS.classification.id);
+  }
+
+  if (classification.id) {
+    return itemById(items, classification.id);
+  }
+
+  return null;
+};
+
+const getTOSPath = (ownProps, tos) => {
+  if (ownProps.tosPath) {
+    return ownProps.tosPath;
+  }
+
+  if (tos) {
+    return tos.path;
+  }
+
+  return [];
+};
+
 const mapStateToProps = (state, ownProps) => {
   const { items, timestamp } = state.navigation;
   const { attributeTypes } = state.ui;
   const { selectedTOS, classification } = state;
-  const tos = selectedTOS.classification
-    ? itemById(items, selectedTOS.classification.id)
-    : classification.id
-    ? itemById(items, classification.id)
-    : null;
-  const tosPath = ownProps.tosPath ? ownProps.tosPath : tos ? tos.path : [];
+
+  const tos = getTOS(selectedTOS, items, classification);
+  const tosPath = getTOSPath(ownProps, tos);
 
   return {
     attributeTypes,
