@@ -11,8 +11,6 @@ export const REMOVE_ACTION = 'removeActionAction';
 export const SET_ACTION_VISIBILITY = 'setActionVisibilityAction';
 
 export function addAction(typeSpecifier, actionType, actionAttibutes, phaseIndex) {
-
-
   const actionId = randomActionId();
 
   const attributes = {

@@ -392,7 +392,6 @@ export const resolveReturnValues = (emittedValue, multi = false) => {
   return emittedValue;
 };
 
-
 export const randomActionId = () => {
   const { crypto } = window;
   const array = new Uint32Array(1);

@@ -165,7 +165,6 @@ export const FACETED_SEARCH_DEFAULT_ATTRIBUTES = [{
   type: TYPE_FUNCTION
 }];
 
-
 const BUTTON_PRIMARY = 'btn-primary';
 
 export const DROPDOWN_ITEMS = [{
