@@ -93,7 +93,7 @@ class VersionData extends React.Component {
     const validFromData = this.generateValidDateField('Voimassaolo alkaa', 'validFrom', validFrom, validFromEditing);
     const validToData = this.generateValidDateField('Voimassaolo päättyy', 'validTo', validTo, validToEditing);
 
-    const modifiedByString = typeof modifiedBy === 'string' && `, ${modifiedBy}`;
+    const modifiedByString = typeof modifiedBy === 'string' ? `, ${modifiedBy}` : '';
 
     return (
       <div>

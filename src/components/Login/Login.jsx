@@ -40,9 +40,7 @@ class Login extends React.Component {
         return user.displayName;
       }
 
-      const lastName = user.lastName ? ` ${user.lastName}` : '';
-
-      return `${user.firstName}${lastName}`;
+      return user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName;
     }
 
     return null;

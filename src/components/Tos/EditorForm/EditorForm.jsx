@@ -87,9 +87,8 @@ class EditorForm extends React.Component {
         includes(attributeTypes[attributeType].allowedIn, this.props.editorConfig.type)
       ) {
         if (
-          (attributeTypes[attributeType].requiredIf.length &&
-            validateConditionalRules(attributeType, attributeTypes, newAttributes)) ||
-          newAttributes[attributeType].value
+          attributeTypes[attributeType].requiredIf.length &&
+          (validateConditionalRules(attributeType, attributeTypes, newAttributes) || newAttributes[attributeType].value)
         ) {
           attributesToShow.push(attributeType);
         }
