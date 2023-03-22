@@ -140,87 +140,6 @@
     }
   }
 
-  .navigation-menu-items {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    position: relative;
-  }
-
-  .nav-title {
-    font-size: 1.8rem;
-    letter-spacing: 0.03rem;
-    text-decoration: underline;
-    margin: 0 0 0.5rem 35px;
-    line-height: 3.4rem;
-    display: block;
-    position: relative;
-  }
-
-  .nav-title:after {
-    content: '';
-    width: 9px;
-    height: 9px;
-    position: absolute;
-    left: -15px;
-    border-radius: 50%;
-    background: $black90;
-    top: 50%;
-    margin-top: -5px;
-  }
-
-  .nav-title:before {
-    left: -35px;
-    position: absolute;
-    content: '';
-    border-left: 1px solid $black90;
-    border-bottom: 1px solid $black90;
-    top: -50%;
-    width: 20px;
-    height: 100%;
-  }
-
-  .nav-main-title {
-    padding: 0 0 0 10px;
-    position: relative;
-  }
-
-  .nav-main-title:before {
-    content: '';
-    left: 0;
-    top: 20px;
-    border-left: 1px solid $black90;
-    position: absolute;
-    height: 20px;
-  }
-
-  .nav-main-title:after {
-    width: 9px;
-    height: 9px;
-    position: absolute;
-    left: -4px;
-    top: 14px;
-    content: '';
-    border-radius: 50%;
-    background: $black90;
-  }
-
-  .nav-section {
-    margin: -1.7rem 0 -1.7rem 24px;
-    padding: 1.7rem 0;
-    position: relative;
-  }
-
-  .nav-section:after {
-    position: absolute;
-    left: -24px;
-    border-left: 1px solid $black90;
-    height: 100%;
-    content: '';
-    top: 0;
-  }
-
   .react-infinity-menu-default-search-input {
     display: block;
     position: relative;
@@ -235,10 +154,6 @@
     background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
     border: 2px solid $input-border;
     border-radius: $input-border-radius; // Note: This has no effect on <select>s in some browsers, due to the limited stylability of <select>s in CSS.
-    &::placeholder,
-    &::-webkit-input-placeholder,
-    &:-ms-input-placeholder {
-    }
 
     // Unstyle the caret on `<select>`s in IE10+.
     &::-ms-expand {
@@ -299,10 +214,6 @@
     cursor: pointer;
   }
 
-  .infinity-menu-display-tree-container > .infinity-menu-node-container {
-    text-transform: uppercase;
-  }
-
   .infinity-menu-node-container:hover {
     color: $link-hover-color;
     cursor: pointer;
@@ -336,6 +247,7 @@
 
   .infinity-menu-display-tree-container > .infinity-menu-node-container {
     left: 1px;
+    text-transform: uppercase;
   }
 
   .infinity-menu-leaf-container:after {
@@ -376,8 +288,7 @@
     z-index: 2;
   }
 
-  .infinity-menu-display-tree-container
-    > .infinity-menu-node-container:first-child:before {
+  .infinity-menu-display-tree-container > .infinity-menu-node-container:first-child:before {
     border-left: none;
   }
 
@@ -426,9 +337,8 @@
   .nav-title {
     font-size: 1.8rem;
     letter-spacing: 0.03rem;
-    margin-bottom: 0.5rem;
     text-decoration: underline;
-    margin: 0 0 0 35px;
+    margin: 0 0 0.5rem 35px;
     line-height: 3.4rem;
     display: block;
     position: relative;

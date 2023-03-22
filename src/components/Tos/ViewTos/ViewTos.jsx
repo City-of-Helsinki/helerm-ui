@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable import/no-cycle */
 /* eslint-disable camelcase */
 /* eslint-disable react/forbid-prop-types */
@@ -25,13 +26,8 @@ import VersionData from '../Version/VersionData';
 import VersionSelector from '../VersionSelector/VersionSelector';
 import Popup from '../../Popup';
 import { getStatusLabel } from '../../../utils/helpers';
-import {
-  validateTOS,
-  validatePhase,
-  validateAction,
-  validateRecord,
-  validateConditionalRules,
-} from '../../../utils/validators';
+import { generateDefaultAttributes } from '../../../utils/attributeHelper';
+import { validateTOS, validatePhase, validateAction, validateRecord } from '../../../utils/validators';
 
 import './ViewTos.scss';
 
@@ -460,29 +456,6 @@ class ViewTOS extends React.Component {
     });
   }
 
-  generateDefaultAttributes(attributeTypes, type) {
-    const attributes = {};
-    Object.keys(attributeTypes).forEach((key) => {
-      if (
-        Object.prototype.hasOwnProperty.call(attributeTypes, key) &&
-        ((this.state.showMore && attributeTypes[key].allowedIn.indexOf(type) >= 0 && key !== 'PhaseType') ||
-          (!this.state.showMore && attributeTypes[key].defaultIn.indexOf(type) >= 0)) &&
-        key !== 'TypeSpecifier'
-      ) {
-        attributes[key] = attributeTypes[key];
-
-        if (attributeTypes[key].requiredIf.length) {
-          if (validateConditionalRules(key, attributeTypes)) {
-            attributes[key] = attributeTypes[key];
-          }
-        } else {
-          attributes[key] = attributeTypes[key];
-        }
-      }
-    });
-    return attributes;
-  }
-
   generateTypeOptions(typeOptions) {
     const options = [];
 
@@ -773,7 +746,7 @@ class ViewTOS extends React.Component {
                           type='phase'
                           submit={this.createNewPhase}
                           typeOptions={this.generateTypeOptions(this.props.phaseTypes)}
-                          defaultAttributes={this.generateDefaultAttributes(attributeTypes, 'phase')}
+                          defaultAttributes={generateDefaultAttributes(attributeTypes, 'phase')}
                           newDefaultAttributes={this.state.phaseDefaultAttributes}
                           newTypeSpecifier={this.state.phaseTypeSpecifier}
                           newType={this.state.phaseType}

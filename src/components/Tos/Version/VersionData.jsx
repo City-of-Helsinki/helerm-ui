@@ -93,6 +93,8 @@ class VersionData extends React.Component {
     const validFromData = this.generateValidDateField('Voimassaolo alkaa', 'validFrom', validFrom, validFromEditing);
     const validToData = this.generateValidDateField('Voimassaolo päättyy', 'validTo', validTo, validToEditing);
 
+    const modifiedByString = typeof modifiedBy === 'string' ? `, ${modifiedBy}` : '';
+
     return (
       <div>
         <div className='metadata-data-row__primary'>
@@ -102,7 +104,7 @@ class VersionData extends React.Component {
           </div>
           <div className='list-group-item col-xs-6'>
             <strong>Muokkausajankohta, muokkaaja</strong>
-            <div>{`${formattedDateTime}${typeof modifiedBy === 'string' ? `, ${modifiedBy}` : ''}`}</div>
+            <div>{`${formattedDateTime}${modifiedByString}`}</div>
           </div>
         </div>
         {!this.state.editing && (

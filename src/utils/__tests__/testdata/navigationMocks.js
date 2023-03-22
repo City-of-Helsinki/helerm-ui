@@ -1,4 +1,5 @@
-/* eslint-disable camelcase */
+const TITLE_ADMINISTRATIVE_DIRECTING = 'Hallintoasioiden ohjaus';
+
 export const mockNavigationDataShort = [
   {
     id: 'cee34db0de3e47fbb937b74dd87ea759',
@@ -9,7 +10,7 @@ export const mockNavigationDataShort = [
   {
     id: '7a5967d6a21d412d9c1fcdfebf2d3e19',
     code: '00 00',
-    title: 'Hallintoasioiden ohjaus',
+    title: TITLE_ADMINISTRATIVE_DIRECTING,
     parent: {
       id: 'cee34db0de3e47fbb937b74dd87ea759',
       version: 1
@@ -36,7 +37,7 @@ export const mockNavigationDataOrphan = [
   {
     id: '7a5967d6a21d412d9c1fcdfebf2d3e19',
     code: '00 00',
-    title: 'Hallintoasioiden ohjaus',
+    title: TITLE_ADMINISTRATIVE_DIRECTING,
     parent: {
       id: 'cee34db0de3e47fbb937b74dd87ea759',
       version: 1
@@ -93,7 +94,7 @@ export const mockNavigationDataFullObjects = [
     valid_from: null,
     valid_to: null,
     code: '00 00',
-    title: 'Hallintoasioiden ohjaus',
+    title: TITLE_ADMINISTRATIVE_DIRECTING,
     parent: {
       id: 'cee34db0de3e47fbb937b74dd87ea759',
       version: 1

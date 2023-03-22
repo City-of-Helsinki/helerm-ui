@@ -1,5 +1,4 @@
 /* eslint-disable import/no-named-as-default-member */
-/* eslint-disable camelcase */
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
 
@@ -93,14 +92,17 @@ export function createTos() {
   };
 }
 
-// ------------------------------------
-// Action Handlers
-// ------------------------------------
-const requestClassificationAction = state => update(state, {
+const setIsFetching = (state) => update(state, {
   isFetching: {
     $set: true
   }
-});
+})
+
+
+// ------------------------------------
+// Action Handlers
+// ------------------------------------
+const requestClassificationAction = state => setIsFetching(state);
 
 const receiveClassificationAction = (state, { payload }) => update(state, {
   $merge: payload
@@ -112,11 +114,7 @@ const classificationErrorAction = state => update(state, {
   classification: { $set: null }
 });
 
-const createTosAction = state => update(state, {
-  isFetching: {
-    $set: true
-  }
-});
+const createTosAction = state => setIsFetching(state);
 
 const receiveNewTosAction = (state, { payload }) => update(state, {
   function: {

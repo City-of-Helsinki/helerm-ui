@@ -12,6 +12,8 @@ import { getStorageItem } from './storage';
  */
 const ALLOWED_METHODS_WITHOUT_AUTHENTICATION = ['GET'];
 
+const CONTENT_TYPE_JSON = 'application/json';
+
 /**
  * Custom error to throw when 401 is received
  * @extends Error
@@ -69,7 +71,7 @@ export function callApi(endpoint, params, options = {}) {
     options
   );
 
-  defaultHeaders.append('Accept', 'application/json');
+  defaultHeaders.append('Accept', CONTENT_TYPE_JSON);
 
   if (
     !token &&
@@ -125,7 +127,7 @@ export function post(endpoint, data, params = {}, options = {}) {
   if (typeof data !== 'string') {
     data = JSON.stringify(data);
     options.headers = merge(
-      { 'Content-Type': 'application/json' },
+      { 'Content-Type': CONTENT_TYPE_JSON },
       options.headers
     );
   }
@@ -148,7 +150,7 @@ export function put(endpoint, data, params = {}, options = {}) {
   if (typeof data !== 'string') {
     data = JSON.stringify(data);
     options.headers = merge(
-      { 'Content-Type': 'application/json' },
+      { 'Content-Type': CONTENT_TYPE_JSON },
       options.headers
     );
   }
@@ -163,7 +165,7 @@ export function patch(endpoint, data, params = {}, options = {}) {
   if (typeof data !== 'string') {
     data = JSON.stringify(data);
     options.headers = merge(
-      { 'Content-Type': 'application/json' },
+      { 'Content-Type': CONTENT_TYPE_JSON },
       options.headers
     );
   }

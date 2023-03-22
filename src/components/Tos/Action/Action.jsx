@@ -18,10 +18,11 @@ import Attributes from '../Attribute/Attributes';
 import EditorForm from '../EditorForm/EditorForm';
 import Popup from '../../Popup';
 import Dropdown from '../../Dropdown';
-// import DropdownInput from '../DropdownInput/DropdownInput';
 import DeleteView from '../DeleteView/DeleteView';
 import ReorderView from '../Reorder/ReorderView';
 import ImportView from '../ImportView/ImportView';
+import { DROPDOWN_ITEMS } from '../../../constants';
+import { attributeButton } from '../../../utils/attributeHelper';
 
 class Action extends Component {
   constructor(props) {
@@ -33,7 +34,6 @@ class Action extends Component {
     this.cancelRecordCreation = this.cancelRecordCreation.bind(this);
     this.editActionForm = this.editActionForm.bind(this);
     this.editActionWithForm = this.editActionWithForm.bind(this);
-    this.complementRecordForm = this.complementRecordForm.bind(this);
     this.cancelRecordComplement = this.cancelRecordComplement.bind(this);
     this.updateTypeSpecifier = this.updateTypeSpecifier.bind(this);
     this.updateActionType = this.updateActionType.bind(this);
@@ -42,7 +42,7 @@ class Action extends Component {
     this.renderBasicAttributes = this.renderBasicAttributes.bind(this);
     this.disableEditMode = this.disableEditMode.bind(this);
     this.onEditFormShowMoreAction = this.onEditFormShowMoreAction.bind(this);
-    this.onEditFormShowMoreRecordAdd = this.onEditFormShowMoreRecordAdd.bind(this);
+    this.onEditFormShowMore = this.onEditFormShowMore.bind(this);
     this.complementRecordAdd = this.complementRecordAdd.bind(this);
     this.scrollToAction = this.scrollToAction.bind(this);
     this.scrollToRecord = this.scrollToRecord.bind(this);
@@ -93,7 +93,7 @@ class Action extends Component {
     window.removeEventListener('resize', this.updateTopOffsetForSticky);
   }
 
-  onEditFormShowMoreRecordAdd(e, recordAttributes) {
+  onEditFormShowMore(e, recordAttributes) {
     // TODO: handle merge the attributes of createNewRecordForm here
     e.preventDefault();
     const newAttrs = {};
@@ -254,30 +254,6 @@ class Action extends Component {
     this.setState({ creatingRecord: false });
   }
 
-  complementRecordForm(e, recordAttributes) {
-    e.preventDefault();
-    const newAttrs = {};
-    Object.keys(recordAttributes).forEach((key) => {
-      if (recordAttributes[key] && recordAttributes[key].value) {
-        Object.assign(newAttrs, { [key]: recordAttributes[key].value });
-      }
-    });
-    this.setState(
-      {
-        record: {
-          ...this.state.record,
-          attributes: newAttrs,
-        },
-      },
-      () => {
-        this.setState({
-          complementingRecordAdd: !this.state.complementingRecordAdd,
-          creatingRecord: !this.state.creatingRecord,
-        });
-      },
-    );
-  }
-
   cancelRecordComplement() {
     this.setState({
       complementingRecordAdd: false,
@@ -330,59 +306,12 @@ class Action extends Component {
 
   generateDropdownItems() {
     return [
-      {
-        text: 'Uusi asiakirja',
-        icon: 'fa-file-lines',
-        style: 'btn-primary',
-        action: () => this.createNewRecord(),
-      },
-      {
-        text: 'Muokkaa toimenpidettä',
-        icon: 'fa-pencil',
-        style: 'btn-primary',
-        action: () => this.editActionForm(),
-      },
-      {
-        text: 'Järjestä asiakirjoja',
-        icon: 'fa-table-list',
-        style: 'btn-primary',
-        action: () => this.toggleReorderView(),
-      },
-      {
-        text: 'Tuo asiakirjoja',
-        icon: 'fa-download',
-        style: 'btn-primary',
-        action: () => this.toggleImportView(),
-      },
-      {
-        text: 'Poista toimenpide',
-        icon: 'fa-trash',
-        style: 'btn-delete',
-        action: () => this.setState({ deleting: true }),
-      },
+      { ...DROPDOWN_ITEMS[0], text: 'Uusi asiakirja', action: () => this.createNewRecord() },
+      { ...DROPDOWN_ITEMS[1], text: 'Muokkaa toimenpidettä', action: () => this.editActionForm() },
+      { ...DROPDOWN_ITEMS[2], text: 'Järjestä asiakirjoja', action: () => this.toggleReorderView() },
+      { ...DROPDOWN_ITEMS[3], text: 'Tuo asiakirjoja', action: () => this.toggleImportView() },
+      { ...DROPDOWN_ITEMS[4], text: 'Poista toimenpide', action: () => this.setState({ deleting: true }) },
     ];
-  }
-
-  showAttributeButton(attributes) {
-    const { attributeTypes } = this.props;
-    const actualAttributes = [];
-    Object.keys(attributes).forEach((key) => {
-      if (key !== 'TypeSpecifier' && key !== 'ActionType') {
-        actualAttributes.push(key);
-      }
-    });
-    Object.keys(attributeTypes).forEach((key) => {
-      if (
-        Object.prototype.hasOwnProperty.call(attributeTypes, key) &&
-        attributeTypes[key].defaultIn.indexOf('action') >= 0
-      ) {
-        actualAttributes.push(key);
-      }
-    });
-    if (actualAttributes.length) {
-      return true;
-    }
-    return false;
   }
 
   scrollToAction() {
@@ -410,7 +339,7 @@ class Action extends Component {
             <Dropdown items={actionDropdownItems} extraSmall />
           </span>
         )}
-        {this.showAttributeButton(this.props.action.attributes) && (
+        {attributeButton(this.props.action.attributes, this.props.attributeTypes) && (
           <button
             type='button'
             className='btn btn-info btn-xs record-button pull-right'
@@ -435,22 +364,20 @@ class Action extends Component {
       </span>
     );
 
-    if (this.state.mode === 'edit') {
-      if (this.state.editingTypeSpecifier) {
-        typeSpecifier = (
-          <div className='col-xs-11 action-title-input row'>
-            <form onSubmit={this.updateTypeSpecifier}>
-              <input
-                className='input-title form-control col-xs-11'
-                value={this.state.typeSpecifier || ''}
-                onChange={this.onTypeSpecifierChange}
-                onBlur={this.updateTypeSpecifier}
-                autoFocus
-              />
-            </form>
-          </div>
-        );
-      }
+    if (this.state.mode === 'edit' && this.state.editingTypeSpecifier) {
+      typeSpecifier = (
+        <div className='col-xs-11 action-title-input row'>
+          <form onSubmit={this.updateTypeSpecifier}>
+            <input
+              className='input-title form-control col-xs-11'
+              value={this.state.typeSpecifier || ''}
+              onChange={this.onTypeSpecifierChange}
+              onBlur={this.updateTypeSpecifier}
+              autoFocus
+            />
+          </form>
+        </div>
+      );
     }
 
     if (this.props.action.is_open && this.props.action.records.length) {
@@ -546,7 +473,7 @@ class Action extends Component {
               />
               {this.state.creatingRecord && (
                 <EditorForm
-                  onShowMoreForm={this.complementRecordForm}
+                  onShowMoreForm={this.onEditFormShowMore}
                   targetId={this.props.action.id}
                   attributes={this.state.record.attributes}
                   attributeTypes={this.props.attributeTypes}
@@ -564,7 +491,7 @@ class Action extends Component {
               )}
               {this.state.complementingRecordAdd && (
                 <EditorForm
-                  onShowMoreForm={this.onEditFormShowMoreRecordAdd}
+                  onShowMoreForm={this.onEditFormShowMore}
                   targetId={this.props.action.id}
                   attributes={this.state.record.attributes}
                   attributeTypes={this.props.attributeTypes}

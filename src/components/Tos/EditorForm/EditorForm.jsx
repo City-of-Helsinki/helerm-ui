@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable import/no-cycle */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable no-restricted-syntax */
@@ -12,7 +13,7 @@ import sortBy from 'lodash/sortBy';
 
 import DropdownInput from '../DropdownInput/DropdownInput';
 import { validateConditionalRules } from '../../../utils/validators';
-import getDisplayLabelForAttribute from '../../../utils/attributeHelper';
+import { getDisplayLabelForAttribute } from '../../../utils/attributeHelper';
 import './EditorForm.scss';
 
 class EditorForm extends React.Component {
@@ -85,13 +86,11 @@ class EditorForm extends React.Component {
         Object.prototype.hasOwnProperty.call(attributeTypes, attributeType) &&
         includes(attributeTypes[attributeType].allowedIn, this.props.editorConfig.type)
       ) {
-        if (attributeTypes[attributeType].requiredIf.length) {
-          if (
-            validateConditionalRules(attributeType, attributeTypes, newAttributes) ||
-            newAttributes[attributeType].value
-          ) {
-            attributesToShow.push(attributeType);
-          }
+        if (
+          attributeTypes[attributeType].requiredIf.length &&
+          (validateConditionalRules(attributeType, attributeTypes, newAttributes) || newAttributes[attributeType].value)
+        ) {
+          attributesToShow.push(attributeType);
         }
         if (attributeTypes[attributeType].required || includes(getAttributeKeys(attributes), attributeType)) {
           attributesToShow.push(attributeType);
@@ -175,9 +174,7 @@ class EditorForm extends React.Component {
       attributesToShow.splice(attributesToShow.indexOf('TypeSpecifier'), 1);
     }
 
-    const sortedAttributes = sortBy(attributesToShow, (attribute) => this.props.attributeTypes[attribute].index);
-
-    return sortedAttributes;
+    return sortBy(attributesToShow, (attribute) => this.props.attributeTypes[attribute].index);
   }
 
   mapOptions(array) {
@@ -210,12 +207,7 @@ class EditorForm extends React.Component {
                   value={this.state.newAttributes[key].checked}
                   onChange={() => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}
                 />
-                <label className='editor-form__label'>
-                  {attributeTypes[key].name}
-                  {/* { attributeTypes[key].required &&
-                  <span className='fa-solid fa-asterisk required-asterisk'/>
-                  } */}
-                </label>
+                <label className='editor-form__label'>{attributeTypes[key].name}</label>
                 <DropdownInput
                   keyValue={key}
                   type='form'
@@ -240,12 +232,7 @@ class EditorForm extends React.Component {
                   value={this.state.newAttributes[key].checked}
                   onChange={() => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}
                 />
-                <label className='editor-form__label'>
-                  {attributeTypes[key].name}
-                  {/* { attributeTypes[key].required &&
-                  <span className='fa-solid fa-asterisk required-asterisk'/>
-                  } */}
-                </label>
+                <label className='editor-form__label'>{attributeTypes[key].name}</label>
                 {key === 'AdditionalInformation' ? (
                   <textarea
                     className='form-control edit-record__input additional-information'
@@ -392,22 +379,7 @@ class EditorForm extends React.Component {
     }
   }
 
-  resolveSpecifierDescription() {
-    const { type } = this.props.editorConfig;
-
-    switch (type) {
-      case 'phase':
-        return 'Muu käsittelyvaihe';
-      case 'action':
-        return 'Toimenpide';
-      case 'record':
-        return 'Asiakirjatyypin tarkenne';
-      default:
-        return '';
-    }
-  }
-
-  resolveSpecifierPlaceholder() {
+  resolveSpecifier() {
     const { type } = this.props.editorConfig;
 
     switch (type) {
@@ -522,16 +494,14 @@ class EditorForm extends React.Component {
         {this.props.editorConfig.type !== 'action' && (
           <div className='col-xs-12 col-lg-6 form-group'>
             <label className='editor-form__label'>{this.resolveTypeDescription()}</label>
-            {/* <span className='fa-solid fa-asterisk required-asterisk'/> */}
             {dropdownInput}
           </div>
         )}
         <div className='col-xs-12 col-lg-6 form-group'>
-          <label className='editor-form__label'>{this.resolveSpecifierDescription()}</label>
-          {/* <span className='fa-solid fa-asterisk required-asterisk'/> */}
+          <label className='editor-form__label'>{this.resolveSpecifier()}</label>
           <input
             className='col-xs-6 form-control edit-record__input'
-            placeholder={this.resolveSpecifierPlaceholder()}
+            placeholder={this.resolveSpecifier()}
             value={this.state.newAttributes.TypeSpecifier.value || ''}
             onChange={(e) => this.onChange(e.target.value, 'TypeSpecifier', 'value')}
           />

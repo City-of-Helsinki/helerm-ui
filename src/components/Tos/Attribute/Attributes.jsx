@@ -1,6 +1,5 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable react/forbid-prop-types */
-/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
@@ -57,9 +56,9 @@ const Attributes = ({
   }
 
   function generateBasicAttributes(descriptions) {
-    return descriptions.map((description, index) => (
+    return descriptions.map((description) => (
       <Attribute
-        key={index}
+        key={`${element.id}-${description.type}`}
         elementId={element.id}
         attributeIndex={description.type}
         attributeKey=''

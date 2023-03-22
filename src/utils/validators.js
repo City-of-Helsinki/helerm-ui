@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 import { includes, difference, uniq } from 'lodash';
 
 /**
@@ -14,12 +15,8 @@ export const validateConditionalRules = (key, attributeTypes, attributes) => {
     // for each attribute
     requiredIf.forEach((item) => {
       // for each item in requiredIf
-      if (item.key === attribute) {
-        // if requiredIf has attribute
-        if (includes(item.values, attributes[attribute].value)) {
-          // if requiredIf has same value as attribute
-          valid = true;
-        }
+      if (item.key === attribute && includes(item.values, attributes[attribute].value)) {
+        valid = true;
       }
     });
   });

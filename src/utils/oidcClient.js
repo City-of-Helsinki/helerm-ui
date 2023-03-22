@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import Oidc, { UserManager, WebStorageStateStore } from 'oidc-client';
 import fetch from 'isomorphic-fetch';
 

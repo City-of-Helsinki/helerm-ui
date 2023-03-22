@@ -15,7 +15,7 @@ import {
   BULK_UPDATE_SEARCH_TERM_DEFAULT,
 } from '../../../../constants';
 import './SearchTerms.scss';
-import getDisplayLabelForAttribute from '../../../../utils/attributeHelper';
+import { getDisplayLabelForAttribute } from '../../../../utils/attributeHelper';
 
 class SearchTerm extends React.Component {
   constructor(props) {

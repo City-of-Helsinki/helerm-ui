@@ -1,9 +1,7 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable camelcase */
-/* eslint-disable react/no-array-index-key */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-access-state-in-setstate */
-/* eslint-disable react/no-unused-class-component-methods */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-return-assign */
 import React from 'react';
@@ -85,10 +83,8 @@ class Navigation extends React.Component {
   };
 
   onSearchTimeout = () => {
-    if (!this.state.isSearchChanged) {
-      if (Date.now() - this.state.searchTimestamp >= SEARCH_TIMEOUT) {
-        this.setState({ isSearchChanged: true });
-      }
+    if (!this.state.isSearchChanged && Date.now() - this.state.searchTimestamp >= SEARCH_TIMEOUT) {
+      this.setState({ isSearchChanged: true });
     }
   };
 
@@ -184,7 +180,7 @@ class Navigation extends React.Component {
         })
         .every((finalItem) => !!finalItem);
 
-      return matchesFilters || (item.children && (item.children = item.children.filter(filterFunction)).length);
+      return matchesFilters || (item.children && item.children.filter(filterFunction).length);
     };
 
     // Modify filtered items to be open
@@ -275,7 +271,7 @@ class Navigation extends React.Component {
 
   createNavigationTitle = () => {
     if (!this.props.is_open && this.props.tosPath.length) {
-      return this.props.tosPath.map((section, index) => <div key={index}>{section}</div>);
+      return this.props.tosPath.map((section) => <div key={section}>{section}</div>);
     }
 
     return 'Navigaatio';
@@ -287,11 +283,6 @@ class Navigation extends React.Component {
       searchInputs: [''],
       searchTimestamp: 0,
     });
-  }
-
-  updateNavigation() {
-    this.stopSearching();
-    this.props.fetchNavigation(this.isDetailSearch());
   }
 
   render() {

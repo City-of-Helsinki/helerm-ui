@@ -1,6 +1,7 @@
-/* eslint-disable camelcase */
 import update from 'immutability-helper';
 import { createAction } from 'redux-actions';
+
+import { randomActionId } from '../../../utils/helpers';
 
 export const ADD_PHASE = 'addPhaseAction';
 export const EDIT_PHASE = 'editPhaseAction';
@@ -11,7 +12,7 @@ export const SET_PHASE_VISIBILITY = 'setPhaseVisibilityAction';
 export const SET_PHASES_VISIBILITY = 'setPhasesVisibilityAction';
 
 export function addPhase(typeSpecifier, phaseType, phaseAttributes, parent) {
-  const phaseId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+  const phaseId = randomActionId();
   const attributes = {
 
     TypeSpecifier: typeSpecifier, PhaseType: phaseType,
@@ -33,10 +34,8 @@ export function editPhase(attributes, phaseId) {
   const editedAttributes = {};
 
   Object.keys(attributes).forEach(key => {
-    if (Object.prototype.hasOwnProperty.call(attributes, key)) {
-      if (attributes[key].checked === true) {
-        editedAttributes[key] = attributes[key].value;
-      }
+    if (Object.prototype.hasOwnProperty.call(attributes, key) && attributes[key].checked) {
+      editedAttributes[key] = attributes[key].value;
     }
   });
 
@@ -63,7 +62,8 @@ export function setPhaseVisibility(phase, visibility) {
 
 export function setPhasesVisibility(phases, value) {
   const allPhasesOpen = {};
-  Object.keys(phases).keys(key => {
+
+  Object.keys(phases).forEach((key) => {
     if (Object.prototype.hasOwnProperty.call(phases, key)) {
       allPhasesOpen[key] = update(phases[key], {
         is_open: {
@@ -71,7 +71,8 @@ export function setPhasesVisibility(phases, value) {
         }
       });
     }
-  });
+  })
+
   return createAction(SET_PHASES_VISIBILITY)(allPhasesOpen);
 }
 
@@ -106,7 +107,9 @@ export const editPhaseAttributeAction = (state, { payload }) => {
         }
       }
     });
-  } if (Object.prototype.hasOwnProperty.call(payload, 'type')) {
+  }
+
+  if (Object.prototype.hasOwnProperty.call(payload, 'type')) {
     return update(state, {
       phases: {
         [payload.phaseId]: {
@@ -119,6 +122,7 @@ export const editPhaseAttributeAction = (state, { payload }) => {
       }
     });
   }
+
   return update(state, {
     phases: {
       [payload.phaseId]: {

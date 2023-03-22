@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
@@ -30,7 +29,7 @@ class Dropdown extends React.Component {
     return dropdownItems.map((item, index) => (
       <button
         type='button'
-        key={index}
+        key={item.text}
         className={classnames('btn btn-sm dropdown-row', item.style)}
         onClick={() => this.handleClick(index)}
       >

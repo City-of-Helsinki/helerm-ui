@@ -1,7 +1,7 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-param-reassign */
 /* eslint-disable import/no-named-as-default-member */
-/* eslint-disable camelcase */
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
 import find from 'lodash/find';

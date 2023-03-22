@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -26,12 +25,7 @@ class DropdownMenuWrapper extends React.Component {
   };
 
   render() {
-    const {
-      children,
-      onClickOutside: _ignore_onClickOutside,
-      listenEvents: _ignore_listenEvents,
-      ...divProps
-    } = this.props;
+    const { children, onClickOutside, listenEvents, ...divProps } = this.props;
     return (
       <div
         ref={(wrapper) => {

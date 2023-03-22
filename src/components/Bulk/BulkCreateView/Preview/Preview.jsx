@@ -1,7 +1,7 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
@@ -174,8 +174,8 @@ class Preview extends React.Component {
             <p>
               <strong>{`Muutetaan: ${selectedCount} käsittelyprosessia`}</strong>
             </p>
-            {conversions.map((conversion, index) => (
-              <p key={`conv-${index}`}>
+            {conversions.map((conversion) => (
+              <p key={`${conversion.type}-${conversion.value}`}>
                 {`${getTypeName(conversion.type)}: ${getAttributeName(conversion.attribute)} = ${conversion.value}`}
               </p>
             ))}

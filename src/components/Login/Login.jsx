@@ -32,14 +32,23 @@ class Login extends React.Component {
     );
   }
 
-  render() {
+  getDisplayName() {
     const { user } = this.props;
-    const displayName =
-      user && user.id
-        ? user.displayName
-          ? user.displayName
-          : `${user.firstName}${user.lastName ? ` ${user.lastName}` : ''}`
-        : null;
+
+    if (user && user.id) {
+      if (user.displayName) {
+        return user.displayName;
+      }
+
+      return user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName;
+    }
+
+    return null;
+  }
+
+  render() {
+    const displayName = this.getDisplayName();
+
     return (
       <p className='navbar-text pull-right login-link'>
         {!!displayName && <small>{displayName}</small>}

@@ -1,5 +1,5 @@
 # ==========================================
-FROM helsinkitest/node:16-slim as deployable
+FROM helsinkitest/node:16-slim AS deployable
 # ==========================================
 # Hardcode $HOME to /app, as yarn will need to put some stray files inside $HOME
 # In Openshift $HOME would be / by default

@@ -1,9 +1,7 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable consistent-return */
-/* eslint-disable react/sort-comp */
 /* eslint-disable class-methods-use-this */
-/* eslint-disable react/no-unused-class-component-methods */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
@@ -38,9 +36,31 @@ class Record extends Component {
     };
   }
 
-  setMode(value) {
-    this.setState({ mode: value });
+  onEditFormShowMoreRecord(e, { newAttributes }) {
+    e.preventDefault();
+    this.setState((prevState) => {
+      const newAttrs = this.mergeChildAttributesToStateAttributes(prevState.attributes, newAttributes);
+
+      return {
+        complementingRecord: !prevState.complementingRecord,
+        editingRecord: !prevState.editingRecord,
+        attributes: {
+          ...prevState.attributes,
+          ...newAttrs,
+        },
+      };
+    });
   }
+
+  mergeChildAttributesToStateAttributes = (stateAttrs, childattrs) => {
+    const newAttrs = {};
+    // Gather attributes from child & assign them to current state record
+    Object.keys(stateAttrs).forEach((key) => {
+      Object.assign(newAttrs, { [key]: childattrs[key] && childattrs[key].value });
+    });
+
+    return newAttrs;
+  };
 
   disableEditMode() {
     this.setState({
@@ -61,32 +81,6 @@ class Record extends Component {
     if (disableEditMode) {
       this.disableEditMode();
     }
-  }
-
-  mergeChildAttributesToStateAttributes = (stateAttrs, childattrs) => {
-    const newAttrs = {};
-    // Gather attributes from child & assign them to current state record
-    Object.keys(stateAttrs).forEach((key) => {
-      Object.assign(newAttrs, { [key]: childattrs[key] && childattrs[key].value });
-    });
-
-    return newAttrs;
-  };
-
-  onEditFormShowMoreRecord(e, { newAttributes }) {
-    e.preventDefault();
-    this.setState((prevState) => {
-      const newAttrs = this.mergeChildAttributesToStateAttributes(prevState.attributes, newAttributes);
-
-      return {
-        complementingRecord: !prevState.complementingRecord,
-        editingRecord: !prevState.editingRecord,
-        attributes: {
-          ...prevState.attributes,
-          ...newAttrs,
-        },
-      };
-    });
   }
 
   updateTypeSpecifier(typeSpecifier, recordId) {
@@ -131,10 +125,15 @@ class Record extends Component {
         actualAttributes.push(key);
       }
     });
-    if (actualAttributes.length) {
-      return true;
+
+    return !!actualAttributes.length;
+  }
+
+  scrollToRecord(topOffset) {
+    if (this.element) {
+      const parentOffset = this.element.offsetParent ? this.element.offsetParent.offsetTop : 0;
+      window.scrollTo(0, topOffset + parentOffset + this.element.offsetTop);
     }
-    return false;
   }
 
   renderRecordButtons() {
@@ -171,13 +170,6 @@ class Record extends Component {
           )}
         </div>
       );
-    }
-  }
-
-  scrollToRecord(topOffset) {
-    if (this.element) {
-      const parentOffset = this.element.offsetParent ? this.element.offsetParent.offsetTop : 0;
-      window.scrollTo(0, topOffset + parentOffset + this.element.offsetTop);
     }
   }
 

@@ -1,5 +1,5 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable camelcase */
-/* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -7,7 +7,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/forbid-prop-types */
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _get from 'lodash/get';
 import cloneDeep from 'lodash/cloneDeep';
@@ -124,7 +124,10 @@ class InfinityMenu extends Component {
         filters.push(filter);
       }
     });
-    return filters.length ? `//*[${filters.join(` ${filterCondition} `)}]` : '';
+
+    const filterConditionString = ` ${filterCondition} `;
+
+    return filters.length ? `//*[${filters.join(filterConditionString)}]` : '';
   }
 
   setDisplayTree(tree, prevs, curr, keyPath) {
@@ -376,7 +379,7 @@ class InfinityMenu extends Component {
     };
     return searchInputs.map((input, index) => (
       <div
-        key={index}
+        key={input}
         className={classnames({
           'col-xs-12 filters filters-detail-search-input': isDetailSearch,
           'col-sm-6': !isDetailSearch,
@@ -473,7 +476,7 @@ class InfinityMenu extends Component {
                       className={classnames({
                         active: index === this.props.path.length,
                       })}
-                      key={index}
+                      key={item}
                     >
                       {item}
                     </li>

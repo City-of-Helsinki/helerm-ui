@@ -1,7 +1,8 @@
-/* eslint-disable camelcase */
 import update from 'immutability-helper';
 import { includes, indexOf } from 'lodash';
 import { createAction } from 'redux-actions';
+
+import { randomActionId } from '../../../utils/helpers';
 
 export const ADD_ACTION = 'addActionAction';
 export const EDIT_ACTION = 'editActionAction';
@@ -10,7 +11,8 @@ export const REMOVE_ACTION = 'removeActionAction';
 export const SET_ACTION_VISIBILITY = 'setActionVisibilityAction';
 
 export function addAction(typeSpecifier, actionType, actionAttibutes, phaseIndex) {
-  const actionId = Math.random().toString(36).replace(/[^a-z]+/g, '');
+  const actionId = randomActionId();
+
   const attributes = {
 
     TypeSpecifier: typeSpecifier, ActionType: actionType,
@@ -94,7 +96,9 @@ export const editActionAttributeAction = (state, { payload }) => {
         }
       }
     });
-  } if (Object.prototype.hasOwnProperty.call(payload, 'type')) {
+  }
+
+  if (Object.prototype.hasOwnProperty.call(payload, 'type')) {
     return update(state, {
       actions: {
         [payload.actionId]: {
@@ -107,6 +111,7 @@ export const editActionAttributeAction = (state, { payload }) => {
       }
     });
   }
+
   return update(state, {
     actions: {
       [payload.actionId]: {

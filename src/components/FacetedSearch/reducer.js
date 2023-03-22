@@ -1,5 +1,4 @@
-/* eslint-disable default-param-last */
-/* eslint-disable camelcase */
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable import/no-named-as-default-member */
 /* eslint-disable no-param-reassign */
 import update from 'immutability-helper';
@@ -199,7 +198,7 @@ const getFacetAttributesForType = (attributes, items, type) => {
   return typeAttributes;
 };
 
-export function searchItems(searchTerm, isSuggestionsOnly = false, type) {
+export function searchItems(searchTerm, type, isSuggestionsOnly = false) {
   const TERM_AND = 'AND';
   const TERM_NOT = 'NOT';
   const TERM_OR = 'OR';

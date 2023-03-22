@@ -11,6 +11,8 @@ export const APPROVE_BULKUPDATE = 'approve_bulkupdate';
 export const CHANGE_BULKUPDATE = 'change_bulkupdate';
 export const DELETE_BULKUPDATE = 'delete_bulkupdate';
 
+const HANDLING_PROCESS = 'Käsittelyprosessi';
+
 export const TYPE_CLASSIFICATION = 'classification';
 export const TYPE_FUNCTION = 'function';
 export const TYPE_PHASE = 'phase';
@@ -19,7 +21,7 @@ export const TYPE_RECORD = 'record';
 export const TYPE_LABELS = {
   action: 'Toimenpide',
   classification: 'Tehtäväluokka',
-  function: 'Käsittelyprosessi',
+  function: HANDLING_PROCESS,
   phase: 'Käsittelyvaihe',
   record: 'Asiakirja'
 };
@@ -69,7 +71,7 @@ export const VALIDATION_FILTER_WARN = 'warning';
 
 // mass update
 export const BULK_UPDATE_CONVERSION_TYPES = [{
-  label: 'Käsittelyprosessi',
+  label: HANDLING_PROCESS,
   value: 'function'
 }, {
   label: 'Vaihe',
@@ -82,7 +84,7 @@ export const BULK_UPDATE_CONVERSION_TYPES = [{
   value: 'record'
 }];
 export const BULK_UPDATE_SEARCH_TARGET = [{
-  label: 'Käsittelyprosessi',
+  label: HANDLING_PROCESS,
   value: 'function'
 }, {
   label: 'Vaihe',
@@ -162,3 +164,36 @@ export const FACETED_SEARCH_DEFAULT_ATTRIBUTES = [{
   name: 'Voimassaolo päättyy',
   type: TYPE_FUNCTION
 }];
+
+const BUTTON_PRIMARY = 'btn-primary';
+
+export const DROPDOWN_ITEMS = [{
+  text: undefined,
+  icon: 'fa-file-lines',
+  style: BUTTON_PRIMARY,
+  action: undefined,
+},
+{
+  text: undefined,
+  icon: 'fa-pencil',
+  style: BUTTON_PRIMARY,
+  action: undefined,
+},
+{
+  text: undefined,
+  icon: 'fa-table-list',
+  style: BUTTON_PRIMARY,
+  action: undefined,
+},
+{
+  text: 'Tuo asiakirjoja',
+  icon: 'fa-download',
+  style: BUTTON_PRIMARY,
+  action: undefined,
+},
+{
+  text: 'Poista toimenpide',
+  icon: 'fa-trash',
+  style: 'btn-delete',
+  action: undefined,
+},]

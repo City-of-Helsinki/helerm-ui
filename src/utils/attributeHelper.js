@@ -1,7 +1,9 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable import/no-cycle */
 /* eslint-disable no-restricted-syntax */
 
 import { store } from '../index';
+import { validateConditionalRules } from './validators';
 
 /**
  * Attributes should be displayed in the UI as "value name",
@@ -15,7 +17,7 @@ import { store } from '../index';
  * @param {string?} identifier
  * @param {string?} name
  */
-const getDisplayLabelForAttribute = ({
+export const getDisplayLabelForAttribute = ({
   attributeValue,
   id = null,
   identifier = null,
@@ -60,4 +62,42 @@ const getDisplayLabelForAttribute = ({
   return attributeValue;
 };
 
-export default getDisplayLabelForAttribute;
+export const generateDefaultAttributes = (attributeTypes, type) => {
+  const attributes = {};
+  Object.keys(attributeTypes).forEach((key) => {
+    if (
+      Object.prototype.hasOwnProperty.call(attributeTypes, key) &&
+      ((this.state.showMore && attributeTypes[key].allowedIn.indexOf(type) >= 0 && key !== 'PhaseType') ||
+        (!this.state.showMore && attributeTypes[key].defaultIn.indexOf(type) >= 0)) &&
+      key !== 'TypeSpecifier'
+    ) {
+      if (attributeTypes[key].requiredIf.length) {
+        if (validateConditionalRules(key, attributeTypes)) {
+          attributes[key] = attributeTypes[key];
+        }
+      } else {
+        attributes[key] = attributeTypes[key];
+      }
+    }
+  });
+  return attributes;
+}
+
+export const attributeButton = (attributes, attributeTypes) => {
+  const actualAttributes = [];
+  Object.keys(attributes).forEach((key) => {
+    if (key !== 'TypeSpecifier' && key !== 'ActionType') {
+      actualAttributes.push(key);
+    }
+  });
+  Object.keys(attributeTypes).forEach((key) => {
+    if (
+      Object.prototype.hasOwnProperty.call(attributeTypes, key) &&
+      attributeTypes[key].defaultIn.indexOf('action') >= 0
+    ) {
+      actualAttributes.push(key);
+    }
+  });
+
+  return !!actualAttributes.length;
+}

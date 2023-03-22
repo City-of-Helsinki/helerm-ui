@@ -1,8 +1,8 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-return-assign */
-/* eslint-disable react/react-in-jsx-scope */
-/* eslint-disable camelcase */
+import React from 'react';
 import { normalize, schema } from 'normalizr';
 import { toastr } from 'react-redux-toastr';
 import moment from 'moment';
@@ -390,4 +390,12 @@ export const resolveReturnValues = (emittedValue, multi = false) => {
     return [];
   }
   return emittedValue;
+};
+
+export const randomActionId = () => {
+  const { crypto } = window;
+  const array = new Uint32Array(1);
+  const random = crypto.getRandomValues(array);
+
+  return random.toString(36).replace(/[^a-z]+/g, '');
 };
