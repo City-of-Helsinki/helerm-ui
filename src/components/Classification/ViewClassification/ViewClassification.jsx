@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 
 import ClassificationHeader from '../Header/ClassificationHeader';
-import VersionSelector from '../VersionSelector/VersionSelector';
+import VersionSelector from '../../VersionSelector/VersionSelector';
 
 import './ViewClassification.scss';
 
@@ -15,6 +15,7 @@ class ViewClassification extends React.Component {
     super(props);
     this.createTos = this.createTos.bind(this);
     this.fetchClassification = this.fetchClassification.bind(this);
+    this.onVersionSelectorChange = this.onVersionSelectorChange.bind(this);
   }
 
   componentDidMount() {
@@ -41,6 +42,10 @@ class ViewClassification extends React.Component {
   componentWillUnmount() {
     this.removeBodyClass();
     this.props.clearClassification();
+  }
+
+  onVersionSelectorChange(item) {
+    this.props.history.push(`/view-classification/${this.props.classification.id}/version/${item.value}`);
   }
 
   addBodyClass() {
@@ -101,6 +106,7 @@ class ViewClassification extends React.Component {
 
   render() {
     const { classification } = this.props;
+
     if (classification && classification.id) {
       const descriptionInternal = this.renderClassificationData('Sisäinen kuvaus', classification.description_internal);
       const description = this.renderClassificationData('Kuvaus', classification.description);
@@ -120,9 +126,11 @@ class ViewClassification extends React.Component {
           />
           <div className='classification-version-selector'>
             <VersionSelector
-              classificationId={classification.id}
+              versionId={classification.id}
               currentVersion={classification.version}
               versions={classification.version_history}
+              onChange={this.onVersionSelectorChange}
+              label='Versio:'
             />
           </div>
           <div className='single-classification-content'>
@@ -162,6 +170,7 @@ ViewClassification.propTypes = {
   match: PropTypes.object.isRequired,
   push: PropTypes.func.isRequired,
   setNavigationVisibility: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 ViewClassification.BODY_CLASS = 'helerm-classification-view';

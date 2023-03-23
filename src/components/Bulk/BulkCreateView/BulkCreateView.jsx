@@ -546,7 +546,6 @@ class BulkCreateView extends React.Component {
               });
             }
             phaseCounter += 1;
-            phaseSuccess = true;
           }
         });
         if (
