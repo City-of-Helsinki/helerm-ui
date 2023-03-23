@@ -251,14 +251,7 @@ class Attribute extends React.Component {
             type === 'basic' ? 'attribute-basic' : '',
           ])}
         >
-          <span className='table-key'>
-            {attributeKey}
-            {/* { type === 'attribute' &&
-            this.props.documentState === 'edit' &&
-            attributeTypes[attributeIndex].required &&
-            <span className='fa-solid fa-asterisk required-asterisk'/>
-            } */}
-          </span>
+          <span className='table-key'>{attributeKey}</span>
           {attributeValue}
         </span>
       );

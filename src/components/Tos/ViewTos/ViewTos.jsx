@@ -23,7 +23,7 @@ import TosHeader from '../Header/TosHeader';
 import ClassificationHeader from '../Header/ClassificationHeader';
 import ValidationBarContainer from '../ValidationBar/ValidationBarContainer';
 import VersionData from '../Version/VersionData';
-import VersionSelector from '../VersionSelector/VersionSelector';
+import VersionSelector from '../../VersionSelector/VersionSelector';
 import Popup from '../../Popup';
 import { getStatusLabel } from '../../../utils/helpers';
 import { generateDefaultAttributes } from '../../../utils/attributeHelper';
@@ -53,6 +53,7 @@ class ViewTOS extends React.Component {
     this.setPhaseVisibility = this.setPhaseVisibility.bind(this);
     this.updateFunctionAttribute = this.updateFunctionAttribute.bind(this);
     this.setTosVisibility = this.setTosVisibility.bind(this);
+    this.onVersionSelectorChange = this.onVersionSelectorChange.bind(this);
     this.setValidationVisibility = this.setValidationVisibility.bind(this);
     this.review = this.review.bind(this);
     this.onEditFormShowMoreMetaData = this.onEditFormShowMoreMetaData.bind(this);
@@ -175,6 +176,10 @@ class ViewTOS extends React.Component {
     this.setState((prevState) => ({
       showMore: !prevState.showMore,
     }));
+  }
+
+  onVersionSelectorChange(item) {
+    this.props.history.push(`/view-tos/${this.props.selectedTOS.id}/version/${item.value}`);
   }
 
   setTosVisibility(basicDataVisibility, metaDataVisibility) {
@@ -656,9 +661,11 @@ class ViewTOS extends React.Component {
                     setVisibility={setClassificationVisibility}
                   />
                   <VersionSelector
-                    tosId={selectedTOS.id}
+                    versionId={selectedTOS.id}
                     currentVersion={selectedTOS.version}
                     versions={selectedTOS.version_history}
+                    onChange={this.onVersionSelectorChange}
+                    label='Käsittelyprosessin versio:'
                   />
                   <VersionData
                     attributeTypes={attributeTypes}
@@ -903,6 +910,7 @@ ViewTOS.propTypes = {
   setVersionVisibility: PropTypes.func.isRequired,
   showValidationBar: PropTypes.bool.isRequired,
   templates: PropTypes.array.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 export default withRouter(ViewTOS);
