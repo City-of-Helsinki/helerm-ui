@@ -18,7 +18,7 @@ import Select from 'react-select';
 import Defiant from 'defiant.js';
 import Sticky from 'react-sticky-el';
 
-import SearchInput from './searchInput';
+import SearchInput from './SearchInput';
 import ClassificationLink from './classificationLink';
 import EmptyTree from './EmptyTree';
 import Exporter from '../Exporter';
