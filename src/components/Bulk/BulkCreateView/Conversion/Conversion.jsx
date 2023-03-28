@@ -206,7 +206,7 @@ class Conversion extends React.Component {
 }
 
 Conversion.propTypes = {
-  attributeTypes: PropTypes.object,
+  attributeTypes: PropTypes.object.isRequired,
   conversion: PropTypes.shape({
     attribute: PropTypes.string,
     type: PropTypes.string,

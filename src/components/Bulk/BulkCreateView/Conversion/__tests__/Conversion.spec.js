@@ -5,8 +5,8 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme, { mount } from 'enzyme';
-import storeCreator from '../../../store/createStore';
-import Conversion from '../BulkCreateView/Conversion/Conversion';
+import storeCreator from '../../../../../store/createStore';
+import Conversion from '../Conversion';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -21,7 +21,7 @@ describe('(Component) Conversion', () => {
     beforeEach(() => {
     _wrapper = mount(<Provider store={store}>
         <Router history={history}>
-            <Conversion disabled={false} onConvert={dummyFunction} />
+            <Conversion disabled={false} onConvert={dummyFunction} attributeTypes={{}} />
         </Router>
     </Provider>);
     });

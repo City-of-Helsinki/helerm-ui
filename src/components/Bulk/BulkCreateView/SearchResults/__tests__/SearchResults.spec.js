@@ -22,7 +22,7 @@ describe('(Component) SearchResult', () => {
     beforeEach(() => {
     _wrapper = mount(<Provider store={store}>
         <Router history={history}>
-            <SearchResults onSelect={dummyFunction} onSelectAll={dummyFunction} searchResults={dummyArray} ></SearchResults>
+            <SearchResults onSelect={dummyFunction} onSelectAll={dummyFunction} searchResults={dummyArray} hits={{phases: 0, actions: 0, records: 0}}></SearchResults>
         </Router>
     </Provider>);
     });

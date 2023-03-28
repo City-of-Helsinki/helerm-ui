@@ -5,7 +5,7 @@ import { Switch, Route } from 'react-router-dom';
 import CoreLayout from './layouts/CoreLayout/CoreLayout';
 import InfoLayout from './layouts/InfoLayout/InfoLayout';
 import BulkListViewContainer from './components/Bulk/BulkListViewContainer';
-import BulkCreateViewContainer from './components/Bulk/BulkCreateView/BulkCreateViewContainer';
+// import BulkCreateViewContainer from './components/Bulk/BulkCreateView/BulkCreateViewContainer';
 import BulkViewContainer from './components/Bulk/BulkView/BulkViewContainer';
 import FacetedSearchContainer from './components/FacetedSearch/FacetedSearchContainer';
 import ViewTOSContainer from './components/Tos/ViewTos/ViewTosContainer';
@@ -39,10 +39,6 @@ const Routes = () => (
     <Route exact path='/bulk/view/:id'>
       <InfoLayout />
       <BulkViewContainer />
-    </Route>
-    <Route exact path='/bulk/create'>
-      <InfoLayout />
-      <BulkCreateViewContainer />
     </Route>
     <Route exact path={['/', '/filter']}>
       <CoreLayout>

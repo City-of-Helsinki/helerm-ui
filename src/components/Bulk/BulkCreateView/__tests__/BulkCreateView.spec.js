@@ -17,11 +17,20 @@ describe('(Component) BulkCreateView', () => {
     const history = mockHistory();
     const store = storeCreator(history, {});
     const dummyFunction = () => { return 'testFunction'; }
+    const dummyArray = [];
+    const dummyObject = {};
 
     beforeEach(() => {
     _wrapper = mount(<Provider store={store}>
         <Router history={history}>
-            <BulkCreateView />
+            <BulkCreateView 
+                displayMessage={dummyFunction}
+                fetchNavigation={dummyFunction}
+                getAttributeName={dummyFunction}
+                saveBulkUpdate={dummyFunction}
+                items={dummyArray}
+                history={dummyObject}/>
+
         </Router>
     </Provider>);
     });
