@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme, { mount } from 'enzyme';
+
 import storeCreator from '../../../../../store/createStore';
 import SearchResults from '../SearchResults';
 
@@ -16,13 +17,13 @@ describe('(Component) SearchResult', () => {
 
     const history = mockHistory();
     const store = storeCreator(history, {});
-    const dummyFunction = () => { return 'testFunction'; }
+    const dummyFunction = () => 'testFunction'
     const dummyArray = [];
 
     beforeEach(() => {
     _wrapper = mount(<Provider store={store}>
         <Router history={history}>
-            <SearchResults onSelect={dummyFunction} onSelectAll={dummyFunction} searchResults={dummyArray} hits={{phases: 0, actions: 0, records: 0}}></SearchResults>
+            <SearchResults onSelect={dummyFunction} onSelectAll={dummyFunction} searchResults={dummyArray} hits={{phases: 0, actions: 0, records: 0}} />
         </Router>
     </Provider>);
     });

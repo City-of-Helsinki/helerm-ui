@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme, { mount } from 'enzyme';
+
 import storeCreator from '../../../../../store/createStore';
 import Preview from '../Preview';
 
@@ -16,7 +17,7 @@ describe('(Component) Preview', () => {
 
     const history = mockHistory();
     const store = storeCreator(history, {});
-    const dummyFunction = () => { return 'testFunction'; }
+    const dummyFunction = () => 'testFunction'
 
     beforeEach(() => {
     _wrapper = mount(<Provider store={store}>
@@ -25,7 +26,7 @@ describe('(Component) Preview', () => {
                 conversions={[]}
                 getAttributeName={dummyFunction}
                 getTypeName={dummyFunction}
-                isFinalPreview={true}
+                isFinalPreview
                 items={{}}
                 onClose={dummyFunction}
                 onConfirm={dummyFunction}

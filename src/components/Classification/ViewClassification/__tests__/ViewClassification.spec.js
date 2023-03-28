@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme, { mount } from 'enzyme';
+
 import storeCreator from '../../../../store/createStore';
 import ViewClassification from '../ViewClassification';
 
@@ -16,7 +17,7 @@ describe('(Component) ViewClassification', () => {
 
     const history = mockHistory();
     const store = storeCreator(history, {});
-    const dummyFunction = () => { return 'test' };
+    const dummyFunction = () => 'test';
 
     beforeEach(() => {
     _wrapper = mount(<Provider store={store}>
