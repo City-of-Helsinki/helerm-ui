@@ -173,9 +173,10 @@ export function createOidcClient() {
       .signinRedirectCallback()
       .then((loadedUser) => {
         if (loadedUser && loadedUser.access_token) {
-          return fetchApiToken(loadedUser);
+          resolve(fetchApiToken(loadedUser));
         }
-        return false;
+
+        resolve();
       })
       .then(() => {
         isLogging = false;
