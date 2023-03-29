@@ -67,6 +67,11 @@
     "react/require-default-props": [
       0
     ],
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    },
     "import/extensions": "off",
     "import/order": [
       "error",
@@ -91,11 +96,6 @@
   "settings": {
     "react": {
       "version": "detect"
-    },
-    "import/resolver": {
-      "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx"]
-      }
     }
   }
 }
