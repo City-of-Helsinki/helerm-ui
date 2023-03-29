@@ -1,16 +1,14 @@
 # Continuous integration (CI) triggers cause a pipeline to run whenever you push 
 # an update to the specified branches or you push specified tags.
+
 trigger:
-  batch: true
-  branches:
+  tags:
     include:
-    - main
-    # other examples:
-#    - release/*
-#    - refs/tags/*
+    - release-*    
   paths:
     exclude:
     - README.md
+
 
 # Pull request (PR) triggers cause a pipeline to run whenever a pull request is 
 # opened with one of the specified target branches, or when updates are made to 
@@ -45,6 +43,6 @@ extends:
   # Filename in Azure DevOps Repository (note possible -ui or -api)
   # Django example: azure-pipelines-tiedonohjaus-api-release.yml
   # Drupal example: azure-pipelines-drupal-release.yml
-  template: azure-pipelines-build-tiedonohjaus-ui.yml@tiedonohjaus-pipelines
+  template: azure-pipelines-build-tiedonohjaus-ui-release-staging.yml@tiedonohjaus-pipelines
   #parameters:
     #imagetag: ${{ parameters.imagetag }}
