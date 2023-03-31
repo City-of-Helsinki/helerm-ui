@@ -5,8 +5,6 @@ import React from 'react';
 
 import Action from '../Action';
 
-import { getBaseValues } from '../../../../utils/helpers';
-
 Enzyme.configure({ adapter: new Adapter() });
 
 describe('(Component) Action', () => {
@@ -21,13 +19,13 @@ describe('(Component) Action', () => {
         testi1: {},
         testi2: {}
     }
-    const testFunc = () => { return }
+    const testFunc = () => true
     beforeEach(() => {
         _wrapper = mount(
         <Action
             action={{attributes: {showAttributes: false}, is_open: true, records: []}}
             actionTypes={{}}
-            actions={{records:records}}
+            actions={{records}}
             addRecord={testFunc}
             attributeTypes={attributeTypes}
             changeOrder={testFunc}
