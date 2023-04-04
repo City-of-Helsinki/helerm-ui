@@ -30,13 +30,9 @@ describe('(Component) SearchTerm', () => {
                 fetchBulkUpdate={dummyFunction}
                 fetchNavigation={dummyFunction}
                 getAttributeName={dummyFunction}
-                // isFetchingNavigation: PropTypes.bool,
-                // isUpdating: PropTypes.bool,
                 items={[]}
-                // itemsIncludeRelated: PropTypes.bool,
                 match={{}}
                 push={dummyFunction}
-                // selectedBulk: PropTypes.object,
                 updateBulkUpdate={dummyFunction}
             />
         </Router>
