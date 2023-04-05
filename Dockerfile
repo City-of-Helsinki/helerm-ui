@@ -5,7 +5,6 @@ FROM helsinkitest/node:16-slim AS deployable
 # In Openshift $HOME would be / by default
 ENV HOME /app
 
-COPY ./.env .
 COPY ./package.json .
 COPY ./yarn.lock .
 COPY ./src ./src
@@ -17,6 +16,7 @@ COPY ./.prettierrc .
 # Official image has npm log verbosity as info. More info - https://github.com/nodejs/docker-node#verbosity
 ENV NPM_CONFIG_LOGLEVEL warn
 
+ARG PORT
 EXPOSE ${PORT}
 # Yarn
 ENV YARN_VERSION 1.22.19
