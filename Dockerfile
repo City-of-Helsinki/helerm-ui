@@ -5,7 +5,6 @@ FROM helsinkitest/node:16-slim AS deployable
 # In Openshift $HOME would be / by default
 ENV HOME /app
 
-#COPY ./.env .
 COPY ./package.json .
 COPY ./yarn.lock .
 COPY ./src ./src
