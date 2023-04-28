@@ -2,7 +2,7 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable no-restricted-syntax */
 
-import { store } from '../index';
+import { store } from '../init';
 import { validateConditionalRules } from './validators';
 
 /**

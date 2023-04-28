@@ -14,7 +14,7 @@ import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
 import update from 'immutability-helper';
 
-import InfinityMenu from '../InfinityMenu/infinityMenu';
+import InfinityMenu from '../InfinityMenu/InfinityMenu';
 import SearchFilter from './SearchFilter';
 import { statusFilters, navigationStateFilters } from '../../constants';
 

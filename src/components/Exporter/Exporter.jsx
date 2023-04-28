@@ -253,7 +253,7 @@ const Exporter = ({ attributeTypes, data, className, isVisible }) => {
 Exporter.propTypes = {
   attributeTypes: PropTypes.object,
   className: PropTypes.string,
-  data: PropTypes.array,
+  data: PropTypes.array.isRequired,
   isVisible: PropTypes.bool,
 };
 
