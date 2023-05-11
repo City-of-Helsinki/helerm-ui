@@ -31,7 +31,6 @@ RUN yarn
 
 COPY .eslintrc.json .eslintignore .prettierrc .env /app/
 COPY ./src /app/src
-COPY ./server /app/server
 COPY ./public /app/public
 
 # ==========================================

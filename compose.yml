@@ -8,4 +8,7 @@ services:
     build:
       context: .
       target: ${DOCKER_TARGET:-development}
+    volumes:
+      - '.:/app'
+      - '/app/node_modules'
     container_name: helerm-ui
