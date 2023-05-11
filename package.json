@@ -71,8 +71,6 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:server": "NODE_ENV=production",
-    "start:docker": "NODE_ENV=production node server",
     "compress": "gzipper compress ./build",
     "build": "react-scripts build",
     "test": "react-scripts test --watchAll=false --verbose",
