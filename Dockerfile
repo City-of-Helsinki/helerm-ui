@@ -11,6 +11,11 @@ RUN yum -y install yarn
 # Official image has npm log verbosity as info. More info - https://github.com/nodejs/docker-node#verbosity
 ENV NPM_CONFIG_LOGLEVEL warn
 
+# set our node environment, either development or production
+# defaults to production, compose overrides this to development on build and run
+ARG NODE_ENV=production
+ENV NODE_ENV $NODE_ENV
+
 # Yarn
 ENV YARN_VERSION 1.22.19
 RUN yarn policies set-version $YARN_VERSION
@@ -26,6 +31,8 @@ RUN chown -R default:root /app
 # Install npm dependencies and build the bundle
 # ENV PATH /app/node_modules/.bin:$PATH
 
+USER default
+
 # RUN yarn config set network-timeout 300000
 RUN yarn cache clean --force
 RUN yarn
@@ -36,12 +43,17 @@ COPY ./src /app/src
 COPY ./server /app/server
 COPY ./public /app/public
 
-RUN yarn build
+# ==========================================
+FROM appbase AS development
+# ==========================================
 
-USER default
+WORKDIR /app
+
+# Set NODE_ENV to development in the development container
+ARG NODE_ENV=development
+ENV NODE_ENV $NODE_ENV
 
 ARG PORT
-EXPOSE ${PORT}
 
 # RUN bash /tools/apt-install.sh build-essential
 
@@ -52,5 +64,8 @@ EXPOSE ${PORT}
 # Run the frontend server using arbitrary user to simulate
 # Openshift when running using fe. Docker. Under actual
 # Openshift, the user will be random
-USER 158435:0
-CMD [ "yarn", "start:docker"]
+# USER 158435:0
+
+CMD [ "yarn", "start:dev"]
+
+EXPOSE ${PORT}
