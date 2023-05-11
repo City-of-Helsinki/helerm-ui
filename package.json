@@ -34,6 +34,7 @@
     "eslint-plugin-sonarjs": "^0.18.0",
     "express": "^4.17.3",
     "fast-text-encoding": "^1.0.6",
+    "gzipper": "^7.2.0",
     "history": "^4.9.0",
     "immutability-helper": "^3.1.1",
     "isomorphic-fetch": "^3.0.0",
@@ -69,9 +70,10 @@
     "xlsx": "0.18.5"
   },
   "scripts": {
-    "start:dev": "react-scripts start",
+    "start": "react-scripts start",
     "start:server": "NODE_ENV=production",
     "start:docker": "NODE_ENV=production node server",
+    "compress": "gzipper compress ./build",
     "build": "react-scripts build",
     "test": "react-scripts test --watchAll=false --verbose",
     "eject": "react-scripts eject",

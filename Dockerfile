@@ -66,6 +66,36 @@ ARG PORT
 # Openshift, the user will be random
 # USER 158435:0
 
-CMD [ "yarn", "start:dev"]
+CMD [ "yarn", "start"]
+
+EXPOSE ${PORT}
+
+# ==========================================
+FROM appbase AS staticbuilder
+# ==========================================
+
+WORKDIR /app
+
+RUN yarn build
+RUN yarn compress
+
+# =============================
+FROM registry.access.redhat.com/ubi8/nginx-120 AS production
+# =============================
+
+USER root
+
+RUN chgrp -R 0 /usr/share/nginx/html && \
+    chmod -R g=u /usr/share/nginx/html
+
+# Copy static build
+COPY --from=staticbuilder /app/build /usr/share/nginx/html
+
+# Copy nginx config
+COPY .prod/nginx.conf /etc/nginx/nginx.conf
+
+USER 1001
+
+CMD ["/bin/bash", "-c", "nginx -g \"daemon off;\""]
 
 EXPOSE ${PORT}
