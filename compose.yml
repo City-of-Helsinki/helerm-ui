@@ -4,7 +4,7 @@ services:
   app:
     platform: linux/amd64
     ports:
-      - ${PORT}:${PORT}
+      - ${PORT}:8000
     build:
       context: .
       target: ${DOCKER_TARGET:-development}

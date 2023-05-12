@@ -43,11 +43,11 @@ WORKDIR /app
 ARG NODE_ENV=development
 ENV NODE_ENV $NODE_ENV
 
-ARG PORT
+ENV PORT 8000
 
 CMD [ "yarn", "start"]
 
-EXPOSE ${PORT}
+EXPOSE 8000
 
 # ==========================================
 FROM appbase AS staticbuilder
@@ -76,6 +76,8 @@ ARG REACT_APP_SITE_THEME
 ARG REACT_APP_SITE_TITLE
 ARG REACT_APP_STORAGE_PREFIX
 
+ARG PORT
+
 RUN yarn build
 RUN yarn compress
 
@@ -98,4 +100,4 @@ USER 1001
 
 CMD ["/bin/bash", "-c", "nginx -g \"daemon off;\""]
 
-EXPOSE ${PORT}
+EXPOSE 8000

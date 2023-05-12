@@ -39,14 +39,19 @@ You will need to have the CLIENT_* and JWT_TOKEN parameters for the Helsinki Tun
 ```bash
 $ yarn start    # Launch on local environment
 ```
-Navigate to [http://localhost:8088](http://localhost:8088)
+Navigate to [http://localhost:3000](http://localhost:3000)
 
 ### Running the app in Docker
+
+Requires a port where the application will be running to your .env file, f.ex.
+```bash
+PORT=3000
+```
 
 ```bash
 $ docker compose up --build # Launches the containerized version of the application
 ```
-Navigate to [http://localhost:8088](http://localhost:8088)
+Navigate to [http://localhost:3000](http://localhost:3000)
 
 ### Running production version with Docker
 
@@ -57,6 +62,6 @@ $ DOCKER_TARGET=production docker compose build
 ```bash
 $ docker compose up -d
 ```
-Navigate to [http://localhost:8088](http://localhost:8088)
+Navigate to [http://localhost:3000](http://localhost:3000)
 
 
