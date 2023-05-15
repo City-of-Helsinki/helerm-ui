@@ -29,7 +29,7 @@ USER default
 RUN yarn cache clean --force
 RUN yarn
 
-COPY .eslintrc.json .eslintignore .prettierrc .env /app/
+COPY .eslintrc.json .eslintignore .prettierrc /app/
 COPY ./src /app/src
 COPY ./public /app/public
 
