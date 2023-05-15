@@ -3,8 +3,12 @@ version: '3.8'
 services:
   app:
     platform: linux/amd64
-    ports: 
-      - ${PORT}:${PORT}
-    build: 
+    ports:
+      - 3000:8080
+    build:
       context: .
+      target: ${DOCKER_TARGET:-development}
+    volumes:
+      - '.:/app'
+      - '/app/node_modules'
     container_name: helerm-ui
