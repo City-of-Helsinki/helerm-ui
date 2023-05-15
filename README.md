@@ -43,11 +43,6 @@ Navigate to [http://localhost:3000](http://localhost:3000)
 
 ### Running the app in Docker
 
-Requires a port where the application will be running to your .env file, f.ex.
-```bash
-PORT=3000
-```
-
 ```bash
 $ docker compose up --build # Launches the containerized version of the application
 ```
