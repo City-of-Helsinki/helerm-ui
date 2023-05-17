@@ -379,7 +379,8 @@ class InfinityMenu extends Component {
     };
     return searchInputs.map((input, index) => (
       <div
-        key={input}
+        // eslint-disable-next-line react/no-array-index-key
+        key={index}
         className={classnames({
           'col-xs-12 filters filters-detail-search-input': isDetailSearch,
           'col-sm-6': !isDetailSearch,
@@ -476,7 +477,8 @@ class InfinityMenu extends Component {
                       className={classnames({
                         active: index === this.props.path.length,
                       })}
-                      key={item}
+                      // eslint-disable-next-line react/no-array-index-key
+                      key={index}
                     >
                       {item}
                     </li>
