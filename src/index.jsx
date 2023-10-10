@@ -8,7 +8,7 @@ import 'fast-text-encoding';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as Sentry from '@sentry/react';
-import { BrowserTracing } from '@sentry/tracing';
+import { BrowserTracing } from '@sentry/browser';
 import { registerLocale, setDefaultLocale } from 'react-datepicker';
 import fi from 'date-fns/locale/fi';
 

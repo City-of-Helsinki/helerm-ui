@@ -1843,7 +1843,7 @@
     "@sentry/utils" "7.73.0"
     tslib "^2.4.1 || ^1.9.3"
 
-"@sentry/browser@7.73.0":
+"@sentry/browser@7.73.0", "@sentry/browser@^7.73.0":
   version "7.73.0"
   resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-7.73.0.tgz#a8eaeb50cf16ca32f0039a81719c503d7045495f"
   integrity sha512-e301hUixcJ5+HNKCJwajFF5smF4opXEFSclyWsJuFNufv5J/1C1SDhbwG2JjBt5zzdSoKWJKT1ewR6vpICyoDw==
@@ -1883,13 +1883,6 @@
     "@sentry/core" "7.73.0"
     "@sentry/types" "7.73.0"
     "@sentry/utils" "7.73.0"
-
-"@sentry/tracing@^7.37.2":
-  version "7.73.0"
-  resolved "https://registry.yarnpkg.com/@sentry/tracing/-/tracing-7.73.0.tgz#0998aab726a7af18744fd694c6d199f5d1dd1a3d"
-  integrity sha512-LOQR6Hkc8ZoflCXWtMlxTbCBEwv0MSOr3vesnRsmlFG8TW1YUIneU+wKnVxToWAZ8fq+6ubclnuIUKHfqTk/Tg==
-  dependencies:
-    "@sentry-internal/tracing" "7.73.0"
 
 "@sentry/types@7.73.0":
   version "7.73.0"
