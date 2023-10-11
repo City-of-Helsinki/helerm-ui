@@ -8,14 +8,14 @@ import 'fast-text-encoding';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as Sentry from '@sentry/react';
-import { BrowserTracing } from '@sentry/tracing';
+import { BrowserTracing } from '@sentry/browser';
 import { registerLocale, setDefaultLocale } from 'react-datepicker';
 import fi from 'date-fns/locale/fi';
 
 import AppContainer from './containers/AppContainer';
 import config from './config';
 import routes from './routes';
-import { store, history } from './init'
+import { store, browserHistory } from './init'
 
 // Register a locale for all datepickers in the application
 registerLocale('fi', fi);
@@ -33,6 +33,6 @@ Sentry.init({
 // // Go!
 // // ========================================================
 ReactDOM.render(
-  <AppContainer history={history} store={store} routes={routes(store)} />,
+  <AppContainer history={browserHistory} store={store} routes={routes(store)} />,
   document.getElementById('root'),
 );

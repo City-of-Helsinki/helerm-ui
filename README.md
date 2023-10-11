@@ -10,7 +10,7 @@ The project structure is based on create-react-app (https://create-react-app.dev
 Looking for the backend code? It's in this repository: [helerm - Helsinki Electronic Records Management Classification System](https://github.com/City-of-Helsinki/helerm)
 
 ## Requirements
-* node `^16.19.0`
+* Node v18 LTS (nvm use)
 
 ### Install from source
 
