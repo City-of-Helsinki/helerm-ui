@@ -16,13 +16,6 @@ pr: none
 # By default, use self-hosted agents
 pool: Default
 
-# Image tag name for Fuse projects
-#parameters:
-#- name: imagetag
-#  displayName: Image tag to be built and/or deployed
-#  type: string
-#  default: latest
-
 resources:
   repositories:
   # Azure DevOps repository
@@ -33,8 +26,4 @@ resources:
 
 extends:
   # Filename in Azure DevOps Repository (note possible -ui or -api)
-  # Django example: azure-pipelines-tiedonohjaus-api-release.yml
-  # Drupal example: azure-pipelines-drupal-release.yml
   template: azure-pipelines-build-tiedonohjaus-ui-dev.yml@tiedonohjaus-pipelines
-  #parameters:
-    #imagetag: ${{ parameters.imagetag }}
