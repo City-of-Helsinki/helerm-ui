@@ -8,6 +8,7 @@ import { confirmMessage, displayMessage } from './helpers';
 let client = null;
 let isLogging = false;
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export function createOidcClient() {
   const location = window.location.origin;
   const isRenew = window.location.href.includes('/renew');
@@ -67,27 +68,37 @@ export function createOidcClient() {
 
   const fetchApiToken = async (user) => {
     const tokenHeaders = new Headers();
+
     tokenHeaders.append('Authorization', `Bearer ${user.access_token}`);
     tokenHeaders.append('Content-Type', 'application/json');
+
     const requestOptions = {
       method: 'POST',
       headers: tokenHeaders,
     };
+
     setStorageItem('accesstoken', user.access_token);
 
-    return fetch(config.OIDC_TOKEN_URL, requestOptions)
-      .then((res) => res.json())
-      .then((resp) => {
-        const values = Object.values(resp);
+    try {
+      const response = await fetch(config.OIDC_TOKEN_URL, requestOptions);
+
+      if (response.ok) {
+        const json = await response.json();
+
+        const values = Object.values(json);
         const token = (values && values[0]) || null;
+
         setStorageItem('oidctoken', token);
         setStorageItem('user', user.profile.sub);
-        return true;
-      })
-      .catch(() => {
+      } else {
         removeStorageData();
-        return false;
-      });
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+
+      removeStorageData();
+    }
   };
 
   if (!isRenew) {
@@ -144,7 +155,7 @@ export function createOidcClient() {
       if (user && accessToken && user.access_token !== accessToken) {
         await fetchApiToken(user);
       }
-    });
+    })
   }
 
   if (config.OIDC_LOGGING) {
