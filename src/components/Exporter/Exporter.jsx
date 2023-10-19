@@ -70,7 +70,7 @@ const getAllAttributes = (item) => {
   });
 
   // // Add two blank, merge attributes of each items & sort alphabetically
-  return [null, null, ...allAttributes.reduce((a, b) => [...new Set([...a, b])], []).sort()];
+  return [null, null, ...allAttributes.reduce((a, b) => [...new Set([...a, b])], []).sort((a, b) => a - b)];
 };
 
 /**
