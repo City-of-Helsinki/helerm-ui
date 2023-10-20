@@ -124,8 +124,10 @@ PrintView.propTypes = {
   getAttributeName: PropTypes.func.isRequired,
   location: PropTypes.object.isRequired,
   params: PropTypes.object,
+  match: PropTypes.object.isRequired,
   push: PropTypes.func.isRequired,
   sortAttributeKeys: PropTypes.func.isRequired,
+  setNavigationVisibility: PropTypes.func.isRequired,
 };
 
 PrintView.BODY_CLASS = 'helerm-tos-print-view';

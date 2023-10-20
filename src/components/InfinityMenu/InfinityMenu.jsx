@@ -570,11 +570,9 @@ InfinityMenu.propTypes = {
 };
 
 InfinityMenu.defaultProps = {
-  disableDefaultHeaderContent: false,
   emptyTreeComponent: EmptyTree,
   emptyTreeComponentProps: {},
   filter: (node, searchInput) => node.name.toLowerCase().indexOf(searchInput.toLowerCase()) >= 0,
-  headerContent: null,
   headerProps: {},
   maxLeaves: Infinity,
   onLeafMouseClick: () => {},

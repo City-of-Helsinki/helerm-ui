@@ -87,9 +87,9 @@ const DropdownInput = ({
       const value = values && values.length === 1 ? values[0] : values;
       type === 'form' ? onChange(value, keyValue, 'value') : onChange(value);
     } else {
-      type === 'form'
-        ? onChange(option ? option.value : null, keyValue, 'value')
-        : onChange(option ? option.value : null);
+      const value = option ? option.value : null;
+
+      type === 'form' ? onChange(value, keyValue, 'value') : onChange(value);
     }
   };
   Object.keys(options).forEach((key) => {

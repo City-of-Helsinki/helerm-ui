@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 /* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
@@ -42,6 +43,7 @@ class InfoView extends Component {
 
 InfoView.propTypes = {
   setNavigationVisibility: PropTypes.func,
+  match: PropTypes.object.isRequired,
 };
 
 InfoView.BODY_CLASS = 'helerm-info-view';

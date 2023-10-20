@@ -338,6 +338,7 @@ Navigation.propTypes = {
   push: PropTypes.func.isRequired,
   setNavigationVisibility: PropTypes.func.isRequired,
   tosPath: PropTypes.array.isRequired,
+  match: PropTypes.object.isRequired,
 };
 
 export default Navigation;

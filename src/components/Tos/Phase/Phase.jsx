@@ -655,7 +655,7 @@ class Phase extends React.Component {
 
 Phase.propTypes = {
   actionTypes: PropTypes.object.isRequired,
-  actions: PropTypes.object.isRequired,
+  actions: PropTypes.object,
   addAction: PropTypes.func.isRequired,
   addRecord: PropTypes.func.isRequired,
   attributeTypes: PropTypes.object.isRequired,
@@ -675,7 +675,7 @@ Phase.propTypes = {
   phases: PropTypes.object.isRequired || PropTypes.array.isRequired,
   phasesOrder: PropTypes.array.isRequired,
   recordTypes: PropTypes.object.isRequired,
-  records: PropTypes.object.isRequired,
+  records: PropTypes.object,
   removeAction: PropTypes.func.isRequired,
   removePhase: PropTypes.func.isRequired,
   removeRecord: PropTypes.func.isRequired,
