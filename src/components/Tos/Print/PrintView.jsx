@@ -5,7 +5,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { bindActionCreators, compose } from 'redux';
+import { bindActionCreators, compose } from '@reduxjs/toolkit';
 import { withRouter, Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import get from 'lodash/get';

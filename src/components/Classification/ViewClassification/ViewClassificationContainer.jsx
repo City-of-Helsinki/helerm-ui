@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators } from '@reduxjs/toolkit';
 import { push } from 'connected-react-router';
 
 import { displayMessage } from '../../../utils/helpers';

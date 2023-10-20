@@ -1,4 +1,4 @@
-import { bindActionCreators } from 'redux';
+import { bindActionCreators } from '@reduxjs/toolkit';
 import { connect } from 'react-redux';
 
 import { USER_LOGIN_STATUS } from '../../constants';

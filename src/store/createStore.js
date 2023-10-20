@@ -1,20 +1,21 @@
 /* eslint-disable import/no-import-module-exports */
-import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { routerMiddleware } from 'connected-react-router';
-import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
+import { configureStore } from '@reduxjs/toolkit';
 
 import makeRootReducer from './rootReducers';
+
 
 const storeCreator = (history, initialState = {}) => {
   // ======================================================
   // Store Instantiation and HMR Setup
   // ======================================================
-  const store = createStore(
-    makeRootReducer(history),
-    initialState,
-    composeWithDevTools(applyMiddleware(routerMiddleware(history), thunk))
-  );
+  const store = configureStore({
+    middleware: [thunk, routerMiddleware(history)],
+    reducer: makeRootReducer(history),
+    initialState
+  });
+
   store.asyncReducers = {};
 
   if (module.hot) {

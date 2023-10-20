@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators } from '@reduxjs/toolkit';
 import { goBack } from 'connected-react-router';
 
 import ClassificationTree from './ClassificationTree';
