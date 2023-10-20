@@ -192,8 +192,8 @@ class ViewTOS extends React.Component {
 
   getClassificationInfo(tosResponse, tosId) {
     const { payload } = tosResponse;
-    if (payload && payload.entities && payload.entities.tos && payload.entities.tos[tosId]) {
-      const tos = payload.entities.tos[tosId];
+    if (payload?.entities?.tos?.[tosId]) {
+      const tos = payload?.entities?.tos?.[tosId];
       return tos.classification;
     }
     return null;
@@ -289,7 +289,7 @@ class ViewTOS extends React.Component {
       }
     } else if (type === 'action') {
       const action = this.props.selectedTOS.actions[id];
-      if (action && action.phase) {
+      if (action?.phase) {
         const phase = this.phases[action.phase] || null;
         if (phase) {
           phase.scrollToAction(id);
@@ -297,9 +297,9 @@ class ViewTOS extends React.Component {
       }
     } else if (type === 'record') {
       const record = this.props.selectedTOS.records[id];
-      if (record && record.action) {
+      if (record?.action) {
         const action = this.props.selectedTOS.actions[record.action];
-        if (action && action.phase) {
+        if (action?.phase) {
           const phase = this.phases[action.phase] || null;
           if (phase) {
             phase.scrollToActionRecord(record.action, id);
@@ -326,7 +326,7 @@ class ViewTOS extends React.Component {
     return this.props
       .saveDraft()
       .then((res) => {
-        if (res && res.version && res.id) {
+        if (res?.version && res?.id) {
           // fetch tos so that history will be intact and url shows up-to-date version
           this.props.history.push(`/view-tos/${res.id}/version/${res.version}`);
         }

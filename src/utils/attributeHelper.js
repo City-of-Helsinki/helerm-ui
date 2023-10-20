@@ -28,12 +28,12 @@ export const getDisplayLabelForAttribute = ({
 
   if (identifier) {
     const identifierContent = attributeTypes[identifier];
-    if (identifierContent && identifierContent.values) {
-      const foundItem = identifierContent.values.find(
+    if (identifierContent?.values) {
+      const foundItem = identifierContent?.values.find(
         (item) => item.value === attributeValue
       );
-      if (foundItem && foundItem.name) {
-        return `${foundItem.value} ${foundItem.name}`;
+      if (foundItem?.name) {
+        return `${foundItem.value} ${foundItem?.name}`;
       }
     }
   } else if (id) {
@@ -42,8 +42,8 @@ export const getDisplayLabelForAttribute = ({
         const foundItem = attributeTypes[identifierKey].values.find(
           (item) => item.id === id && item.value === attributeValue
         );
-        if (foundItem && foundItem.name) {
-          return `${foundItem.value} ${foundItem.name}`;
+        if (foundItem?.name) {
+          return `${foundItem.value} ${foundItem?.name}`;
         }
       }
     }
@@ -53,8 +53,8 @@ export const getDisplayLabelForAttribute = ({
         const foundItem = attributeTypes[identifierKey].values.find(
           (item) => item.value === attributeValue
         );
-        if (foundItem && foundItem.name) {
-          return `${foundItem.value} ${foundItem.name}`;
+        if (foundItem?.name) {
+          return `${foundItem.value} ${foundItem?.name}`;
         }
       }
     }

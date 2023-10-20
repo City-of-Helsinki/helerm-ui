@@ -54,7 +54,7 @@ class ValidationBar extends Component {
       const nameAttribute = section.attributes
         ? find(ATTRIBUTE_NAME_FIELDS, (field) => !!section.attributes[field])
         : '';
-      if (invalidAttributes.length || warnAttributes.length || (children && children.length)) {
+      if (invalidAttributes.length || warnAttributes.length || children?.length) {
         return (
           <div className={`sidebar-content-${type}`} key={section.id}>
             <div className='parent-name' onClick={() => this.props.scrollToType(type, section.id)}>

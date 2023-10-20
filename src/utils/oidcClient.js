@@ -86,7 +86,7 @@ export function createOidcClient() {
         const json = await response.json();
 
         const values = Object.values(json);
-        const token = (values && values[0]) || null;
+        const token = (values?.[0]) || null;
 
         setStorageItem('oidctoken', token);
         setStorageItem('user', user.profile.sub);
@@ -183,7 +183,7 @@ export function createOidcClient() {
     manager
       .signinRedirectCallback()
       .then((loadedUser) => {
-        if (loadedUser && loadedUser.access_token) {
+        if (loadedUser?.access_token) {
           resolve(fetchApiToken(loadedUser));
         }
 
