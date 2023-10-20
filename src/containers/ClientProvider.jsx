@@ -7,7 +7,9 @@ export const ClientContext = React.createContext(null);
 
 const ClientProvider = ({ children }) => {
   const client = getClient();
-  return <ClientContext.Provider value={{ client }}>{children}</ClientContext.Provider>;
+  const clientMemo = React.useMemo(() => ({ client }), [client]);
+
+  return <ClientContext.Provider value={clientMemo}>{children}</ClientContext.Provider>;
 };
 
 ClientProvider.propTypes = {
