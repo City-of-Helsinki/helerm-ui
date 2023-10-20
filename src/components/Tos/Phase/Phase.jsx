@@ -157,11 +157,11 @@ class Phase extends React.Component {
   }
 
   getTargetName() {
-    const hasType = this.state.type && this.state.type.length;
-    const hasTypeSpecifier = this.state.typeSpecifier && this.state.typeSpecifier.length;
+    const hasType = this.state?.type.length;
+    const hasTypeSpecifier = this.state?.typeSpecifier.length;
     const slash = hasType && hasTypeSpecifier ? ' / ' : '';
 
-    return (this.state.type || '') + slash + (this.state.typeSpecifier || '');
+    return (this.state?.type || '') + slash + (this.state?.typeSpecifier || '');
   }
 
   editType() {

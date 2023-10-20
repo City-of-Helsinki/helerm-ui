@@ -84,7 +84,7 @@ function resolveSelectedOption(option) {
   if (option instanceof Array) {
     return option.length ? map(option, 'value') : null;
   }
-  return option && option.value ? option.value : option;
+  return option?.value ? option?.value : option;
 }
 
 function renderInput(defaultAttributes, newDefaultAttributes, key, onDefaultAttributeChange, type, submit) {

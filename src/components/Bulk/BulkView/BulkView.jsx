@@ -328,7 +328,7 @@ class BulkView extends React.Component {
         }
         if (currentPhase && !isEmpty(changes.phases[phase].attributes)) {
           keys(changes.phases[phase].attributes).forEach((attribute) => {
-            const currentValue = (currentPhase.attributes && currentPhase.attributes[attribute]) || ' ';
+            const currentValue = currentPhase?.attributes?.[attribute] || ' ';
             changesEl.push(
               <h4 key={`phase_${phase}_attr_${attribute}`}>
                 {currentPhase.name || ''} &gt;
@@ -363,7 +363,7 @@ class BulkView extends React.Component {
             }
             if (currentAction && !isEmpty(changes.phases[phase].actions[action].attributes)) {
               keys(changes.phases[phase].actions[action].attributes).forEach((attribute) => {
-                const currentValue = (currentAction.attributes && currentAction.attributes[attribute]) || ' ';
+                const currentValue = currentAction?.attributes?.[attribute] || ' ';
                 changesEl.push(
                   <h4 key={`action_${action}_attr_${attribute}`}>
                     {currentPhase.name || ''} &gt;
@@ -401,7 +401,7 @@ class BulkView extends React.Component {
                 }
                 if (currentRecord && !isEmpty(changes.phases[phase].actions[action].records[record].attributes)) {
                   keys(changes.phases[phase].actions[action].records[record].attributes).forEach((attribute) => {
-                    const currentValue = (currentRecord.attributes && currentRecord.attributes[attribute]) || ' ';
+                    const currentValue = currentRecord?.attributes?.[attribute] || ' ';
                     changesEl.push(
                       <h4 key={`record_${record}_attr_${attribute}`}>
                         {currentPhase.name || ''} &gt;

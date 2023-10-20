@@ -76,13 +76,13 @@ class Action extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.action && nextProps.action.attributes.TypeSpecifier) {
+    if (nextProps?.action.attributes.TypeSpecifier) {
       this.setState({
-        typeSpecifier: nextProps.action.attributes.TypeSpecifier,
+        typeSpecifier: nextProps?.action.attributes.TypeSpecifier,
       });
     }
-    if (nextProps.action && nextProps.action.attributes.ActionType) {
-      this.setState({ type: nextProps.action.attributes.ActionType });
+    if (nextProps?.action.attributes.ActionType) {
+      this.setState({ type: nextProps?.action.attributes.ActionType });
     }
     if (nextProps.documentState === 'view') {
       this.disableEditMode();
@@ -98,8 +98,8 @@ class Action extends Component {
     e.preventDefault();
     const newAttrs = {};
     Object.keys(recordAttributes).forEach((key) => {
-      if (recordAttributes[key] && recordAttributes[key].value) {
-        Object.assign(newAttrs, { [key]: recordAttributes[key].value });
+      if (recordAttributes?.[key].value) {
+        Object.assign(newAttrs, { [key]: recordAttributes?.[key].value });
       }
     });
     this.setState(
@@ -410,7 +410,7 @@ class Action extends Component {
   render() {
     // TODO: Handle errors where we don't have an valid action (i.e 400 error from API)
     const { action } = this.props;
-    const recordElements = action && action.records ? this.generateRecords(action.records) : [];
+    const recordElements = action?.records ? this.generateRecords(action?.records) : [];
 
     return (
       <div

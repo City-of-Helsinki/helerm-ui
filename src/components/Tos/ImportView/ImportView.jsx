@@ -28,7 +28,7 @@ class ImportView extends React.Component {
   }
 
   getTargetName(specifier, type) {
-    const hasType = type && type.length;
+    const hasType = type?.length;
     const hasTypeSpecifier = specifier && specifier.length;
     const slash = hasType && hasTypeSpecifier ? ' / ' : '';
 

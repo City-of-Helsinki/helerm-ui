@@ -242,11 +242,11 @@ class BulkCreateView extends React.Component {
 
   onSelectPreviewItem(id) {
     const { conversionItems, isFinalPreview, previewItems } = this.state;
-    if (previewItems && previewItems[id]) {
+    if (previewItems?.[id]) {
       this.setState({
         previewItems: {
           ...previewItems,
-          [id]: { ...previewItems[id], selected: !previewItems[id].selected },
+          [id]: { ...previewItems?.[id], selected: !previewItems?.[id].selected },
         },
       });
     }
@@ -575,12 +575,12 @@ class BulkCreateView extends React.Component {
           keys(hit.phases).forEach((phaseId) => {
             acc.phases += 1;
             const phase = hit.phases[phaseId];
-            if (phase && phase.actions) {
-              keys(phase.actions).forEach((actionId) => {
+            if (phase?.actions) {
+              keys(phase?.actions).forEach((actionId) => {
                 acc.actions += 1;
-                const action = phase.actions[actionId];
-                if (action && action.records) {
-                  acc.records += keys(action.records).length;
+                const action = phase?.actions[actionId];
+                if (action?.records) {
+                  acc.records += keys(action?.records).length;
                 }
               });
             }

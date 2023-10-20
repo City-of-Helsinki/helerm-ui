@@ -42,7 +42,7 @@ class Preview extends React.Component {
         const currentPhase = find(item.phases, { id: phase });
         if (!isEmpty(changed.phases[phase].attributes)) {
           keys(changed.phases[phase].attributes).forEach((attribute) => {
-            const currentValue = (currentPhase && currentPhase.attributes && currentPhase.attributes[attribute]) || ' ';
+            const currentValue = currentPhase?.attributes?.[attribute] || ' ';
             changes.push(
               <h4 key={`phase_${phase}_attr_${attribute}`}>
                 {currentPhase.name || ''} &gt;
@@ -57,8 +57,7 @@ class Preview extends React.Component {
             const currentAction = find(currentPhase.actions, { id: action });
             if (!isEmpty(changed.phases[phase].actions[action].attributes)) {
               keys(changed.phases[phase].actions[action].attributes).forEach((attribute) => {
-                const currentValue =
-                  (currentAction && currentAction.attributes && currentAction.attributes[attribute]) || ' ';
+                const currentValue = currentAction?.attributes?.[attribute] || ' ';
                 changes.push(
                   <h4 key={`action_${action}_attr_${attribute}`}>
                     {currentPhase.name || ''} &gt;
@@ -74,8 +73,7 @@ class Preview extends React.Component {
                 const currentRecord = find(currentAction.records, { id: record });
                 if (!isEmpty(changed.phases[phase].actions[action].records[record].attributes)) {
                   keys(changed.phases[phase].actions[action].records[record].attributes).forEach((attribute) => {
-                    const currentValue =
-                      (currentRecord && currentRecord.attributes && currentRecord.attributes[attribute]) || ' ';
+                    const currentValue = currentRecord?.attributes?.[attribute] || ' ';
                     changes.push(
                       <h4 key={`record_${record}_attr_${attribute}`}>
                         {currentPhase.name || ''} &gt;

@@ -45,7 +45,7 @@ class Attribute extends React.Component {
       });
     } else {
       this.setState({
-        attribute: option && option.value ? option.value : option,
+        attribute: option?.value ? option?.value : option,
       });
     }
   }
@@ -95,8 +95,8 @@ class Attribute extends React.Component {
   }
 
   generateAttributeInput(attribute, currentAttribute) {
-    if (attribute.values && attribute.values.length) {
-      const options = attribute.values.map((option) => ({
+    if (attribute?.values.length) {
+      const options = attribute?.values.map((option) => ({
         value: option.value,
         label: getDisplayLabelForAttribute({
           attributeValue: option.value,
