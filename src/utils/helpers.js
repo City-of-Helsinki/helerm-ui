@@ -330,7 +330,7 @@ export function getNewPath(absolutePath, relativePath) {
   const relativeParts = relativePath.split('/').filter(Boolean);
 
   // Assume that all relative paths start with any other character than '/'.
-  const isRelativeRelative = relativePath.charAt(0) !== '/';
+  const isRelativeRelative = !relativePath.startsWith('/');
 
   if (!isRelativeRelative) {
     // Assume that supposed relative path is aboslute if it's not relative.
