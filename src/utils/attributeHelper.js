@@ -66,7 +66,7 @@ export const generateDefaultAttributes = (attributeTypes, type) => {
   const attributes = {};
   Object.keys(attributeTypes).forEach((key) => {
     if (
-      Object.prototype.hasOwnProperty.call(attributeTypes, key) &&
+      Object.hasOwn(attributeTypes, key) &&
       ((this.state.showMore && attributeTypes[key].allowedIn.indexOf(type) >= 0 && key !== 'PhaseType') ||
         (!this.state.showMore && attributeTypes[key].defaultIn.indexOf(type) >= 0)) &&
       key !== 'TypeSpecifier'
@@ -92,7 +92,7 @@ export const attributeButton = (attributes, attributeTypes) => {
   });
   Object.keys(attributeTypes).forEach((key) => {
     if (
-      Object.prototype.hasOwnProperty.call(attributeTypes, key) &&
+      Object.hasOwn(attributeTypes, key) &&
       attributeTypes[key].defaultIn.indexOf('action') >= 0
     ) {
       actualAttributes.push(key);

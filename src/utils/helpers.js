@@ -114,10 +114,10 @@ export function normalizeTosFromApi(tos) {
  */
 export function trimAttributes(tosCopy) {
   Object.keys(tosCopy.phases).forEach((phase) => {
-    if (Object.prototype.hasOwnProperty.call(tosCopy.phases, phase)) {
+    if (Object.hasOwn(tosCopy.phases, phase)) {
       Object.keys(tosCopy.phases[phase].attributes).forEach((attribute) => {
         if (
-          Object.prototype.hasOwnProperty.call(tosCopy.phases[phase].attributes, attribute) &&
+          Object.hasOwn(tosCopy.phases[phase].attributes, attribute) &&
           (tosCopy.phases[phase].attributes[attribute] === '' ||
             tosCopy.phases[phase].attributes[attribute] === null)
         ) {
@@ -127,10 +127,10 @@ export function trimAttributes(tosCopy) {
     }
   });
   Object.keys(tosCopy.actions).forEach((action) => {
-    if (Object.prototype.hasOwnProperty.call(tosCopy.actions, action)) {
+    if (Object.hasOwn(tosCopy.actions, action)) {
       Object.keys(tosCopy.actions[action].attributes).forEach((attribute) => {
         if (
-          Object.prototype.hasOwnProperty.call(tosCopy.actions[action].attributes, attribute) &&
+          Object.hasOwn(tosCopy.actions[action].attributes, attribute) &&
           (tosCopy.actions[action].attributes[attribute] === '' ||
             tosCopy.actions[action].attributes[attribute] === null)
         ) {
@@ -140,10 +140,10 @@ export function trimAttributes(tosCopy) {
     }
   });
   Object.keys(tosCopy.records).forEach((record) => {
-    if (Object.prototype.hasOwnProperty.call(tosCopy.records, record)) {
+    if (Object.hasOwn(tosCopy.records, record)) {
       Object.keys(tosCopy.records[record].attributes).forEach((attribute) => {
         if (
-          Object.prototype.hasOwnProperty.call(tosCopy.records[record].attributes, attribute) &&
+          Object.hasOwn(tosCopy.records[record].attributes, attribute) &&
           (tosCopy.records[record].attributes[attribute] === '' ||
             tosCopy.records[record].attributes[attribute] === null)
         ) {

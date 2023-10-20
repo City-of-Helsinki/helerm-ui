@@ -36,7 +36,7 @@ export function executeOrderChange(newOrder, itemType, itemParent, currentState)
   });
   let itemList = { ...currentState.selectedTOS[itemLevel] };
   Object.keys(itemList).forEach(key => {
-    if (Object.prototype.hasOwnProperty.call(itemList, key)) {
+    if (Object.hasOwn(itemList, key)) {
       reorderedList.forEach(item => {
         if (itemList[key].id === item.id) {
           itemList[key] = item;

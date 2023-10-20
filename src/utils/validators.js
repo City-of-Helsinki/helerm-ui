@@ -33,7 +33,7 @@ export const validateConditionalRules = (key, attributeTypes, attributes) => {
 const createValidateErrors = (type) => (obj, rules) => {
   const errors = [];
   Object.keys(rules).forEach((key) => {
-    if (Object.prototype.hasOwnProperty.call(rules, key)) {
+    if (Object.hasOwn(rules, key)) {
       const rule = rules[key];
       const isRequired = rules[key].required;
       const isRequiredInType = includes(rule.requiredIn, type);
@@ -90,7 +90,7 @@ const isValueValidOption = (value, options) => {
 const createValidateWarnings = (type) => (obj, rules) => {
   const warnings = [];
   Object.keys(rules).forEach((key) => {
-    if (Object.prototype.hasOwnProperty.call(rules, key)) {
+    if (Object.hasOwn(rules, key)) {
       const rule = rules[key];
       const attributeValue = obj.attributes[key];
       const allowOutsideValues = includes(

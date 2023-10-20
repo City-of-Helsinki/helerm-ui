@@ -34,7 +34,7 @@ export function editPhase(attributes, phaseId) {
   const editedAttributes = {};
 
   Object.keys(attributes).forEach(key => {
-    if (Object.prototype.hasOwnProperty.call(attributes, key) && attributes[key].checked) {
+    if (Object.hasOwn(attributes, key) && attributes[key].checked) {
       editedAttributes[key] = attributes[key].value;
     }
   });
@@ -64,7 +64,7 @@ export function setPhasesVisibility(phases, value) {
   const allPhasesOpen = {};
 
   Object.keys(phases).forEach((key) => {
-    if (Object.prototype.hasOwnProperty.call(phases, key)) {
+    if (Object.hasOwn(phases, key)) {
       allPhasesOpen[key] = update(phases[key], {
         is_open: {
           $set: value
@@ -95,7 +95,7 @@ export const editPhaseAction = (state, { payload }) => update(state, {
 });
 
 export const editPhaseAttributeAction = (state, { payload }) => {
-  if (Object.prototype.hasOwnProperty.call(payload, 'typeSpecifier')) {
+  if (Object.hasOwn(payload, 'typeSpecifier')) {
     return update(state, {
       phases: {
         [payload.phaseId]: {
@@ -109,7 +109,7 @@ export const editPhaseAttributeAction = (state, { payload }) => {
     });
   }
 
-  if (Object.prototype.hasOwnProperty.call(payload, 'type')) {
+  if (Object.hasOwn(payload, 'type')) {
     return update(state, {
       phases: {
         [payload.phaseId]: {

@@ -12,7 +12,7 @@ import { TYPE_LABELS } from '../../../constants';
 const PreviewItem = ({ item, metadata, onClose }) => {
   const link = item.function ? `/view-tos/${item.function}` : `/view-classification/${item.id}`;
   const attributes = Object.keys(item.attributes).reduce((acc, key) => {
-    if (Object.prototype.hasOwnProperty.call(item.attributes, key) && item.attributes[key]) {
+    if (Object.hasOwn(item.attributes, key) && item.attributes[key]) {
       acc.push({
         key,
         name: metadata[key] ? metadata[key].name : key,

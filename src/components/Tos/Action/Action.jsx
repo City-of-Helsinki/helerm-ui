@@ -281,7 +281,7 @@ class Action extends Component {
   generateRecords(records) {
     const elements = [];
     Object.keys(records).forEach((key) => {
-      if (Object.prototype.hasOwnProperty.call(this.props.records, records[key])) {
+      if (Object.hasOwn(this.props.records, records[key])) {
         elements.push(
           <Record
             key={key}

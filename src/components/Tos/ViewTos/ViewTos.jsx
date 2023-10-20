@@ -258,7 +258,7 @@ class ViewTOS extends React.Component {
   evaluateAttributes(items, validate, attributeTypes) {
     let isValid = true;
     Object.keys(items).forEach((item) => {
-      if (Object.prototype.hasOwnProperty.call(items, item)) {
+      if (Object.hasOwn(items, item)) {
         const validAttributes = validate(items[item], attributeTypes).length === 0;
         if (!validAttributes) {
           isValid = false;
@@ -465,7 +465,7 @@ class ViewTOS extends React.Component {
     const options = [];
 
     Object.keys(typeOptions).forEach((key) => {
-      if (Object.prototype.hasOwnProperty.call(typeOptions, key)) {
+      if (Object.hasOwn(typeOptions, key)) {
         options.push({
           label: typeOptions[key].value,
           value: typeOptions[key].value,
@@ -508,7 +508,7 @@ class ViewTOS extends React.Component {
     const attributeElements = [];
 
     Object.keys(attributeTypes).forEach((key) => {
-      if ((Object.prototype.hasOwnProperty.call(attributes, key) && attributes[key]) || key === 'InformationSystem') {
+      if ((Object.hasOwn(attributes, key) && attributes[key]) || key === 'InformationSystem') {
         attributeElements.push(
           <Attribute
             key={key}
@@ -542,7 +542,7 @@ class ViewTOS extends React.Component {
     const phaseElements = [];
     if (phases) {
       Object.keys(phases).forEach((key) => {
-        if (Object.prototype.hasOwnProperty.call(phases, key)) {
+        if (Object.hasOwn(phases, key)) {
           phaseElements.push(
             <Phase
               key={key}

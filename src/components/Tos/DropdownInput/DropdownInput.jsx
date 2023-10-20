@@ -93,7 +93,7 @@ const DropdownInput = ({
     }
   };
   Object.keys(options).forEach((key) => {
-    if (Object.prototype.hasOwnProperty.call(options, key)) {
+    if (Object.hasOwn(options, key)) {
       optionsArray.push({
         label: options[key].label ? options[key].label : options[key].value,
         value: options[key].value,

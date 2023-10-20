@@ -133,7 +133,7 @@ class ImportView extends React.Component {
       itemsInArray = Object.keys(items); // Because items mutates into object for unknown reason
     }
     Object.keys(itemsInArray).forEach((key) => {
-      if (Object.prototype.hasOwnProperty.call(itemsInArray, key)) {
+      if (Object.hasOwn(itemsInArray, key)) {
         links.push(
           <div key={key} className='import-row-title'>
             <span

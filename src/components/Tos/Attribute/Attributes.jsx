@@ -25,7 +25,7 @@ const Attributes = ({
   const defaultAttributes = [];
   Object.keys(attributeTypes).forEach((key) => {
     if (
-      Object.prototype.hasOwnProperty.call(attributeTypes, key) &&
+      Object.hasOwn(attributeTypes, key) &&
       attributeTypes[key].defaultIn.indexOf(type) >= 0 &&
       !includes(unwantedAttributes, key)
     ) {
@@ -100,7 +100,7 @@ const Attributes = ({
 
     Object.keys(attributeTypes).forEach((key) => {
       if (
-        Object.prototype.hasOwnProperty.call(attr, key) &&
+        Object.hasOwn(attr, key) &&
         attr[key] &&
         attributeTypes[key] &&
         !includes(unwantedAttributes, key) &&

@@ -168,7 +168,7 @@ class Attribute extends React.Component {
   generateBasicAttributeDropdown(typeOptions) {
     const options = [];
     Object.keys(typeOptions).forEach((key) => {
-      if (Object.prototype.hasOwnProperty.call(typeOptions, key)) {
+      if (Object.hasOwn(typeOptions, key)) {
         options.push({
           label: typeOptions[key].value,
           value: typeOptions[key].value,

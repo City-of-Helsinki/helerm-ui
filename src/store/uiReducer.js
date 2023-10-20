@@ -36,7 +36,7 @@ export function receiveAttributeTypes(attributes, validationRules) {
       // Add rules where attribute is allowed to be
       Object.keys(validationRules).forEach((rule) => {
         if (
-          Object.prototype.hasOwnProperty.call(validationRules, rule) &&
+          Object.hasOwn(validationRules, rule) &&
           validationRules[rule].properties[result.identifier]
         ) {
           allowedIn.push(rule);

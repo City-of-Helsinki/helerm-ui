@@ -19,7 +19,7 @@ export function executeImport(newItem, level, itemParent, currentState) {
     case 'phase':
       const phaseIndexes = [];
       Object.keys(importPhases).forEach(key => {
-        if (Object.prototype.hasOwnProperty.call(importPhases, key)) {
+        if (Object.hasOwn(importPhases, key)) {
           phaseIndexes.push(importPhases[key].index);
         }
       });
@@ -54,7 +54,7 @@ export function executeImport(newItem, level, itemParent, currentState) {
     case 'action':
       const actionIndexes = [];
       Object.keys(importActions).forEach(key => {
-        if (Object.prototype.hasOwnProperty.call(importActions, key)) {
+        if (Object.hasOwn(importActions, key)) {
           actionIndexes.push(importActions[key].index);
         }
       });
@@ -81,7 +81,7 @@ export function executeImport(newItem, level, itemParent, currentState) {
     case 'record':
       const recordIndexes = [];
       Object.keys(importRecords).forEach(key => {
-        if (Object.prototype.hasOwnProperty.call(importRecords, key)) {
+        if (Object.hasOwn(importRecords, key)) {
           recordIndexes.push(importRecords[key].index);
         }
       });

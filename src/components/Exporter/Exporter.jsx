@@ -95,9 +95,7 @@ const createWorkBook = (attributeTypes, filename, items) => {
   items.forEach((item) => {
     const headers = getAllAttributes(item);
     const names = headers.map((header) =>
-      attributeTypes && Object.prototype.hasOwnProperty.call(attributeTypes, header)
-        ? attributeTypes[header].name || null
-        : null,
+      attributeTypes && Object.hasOwn(attributeTypes, header) ? attributeTypes[header].name || null : null,
     );
     const rows = [];
 
@@ -125,7 +123,7 @@ const getAttributes = (attributeTypes, type) =>
   Object.keys(attributeTypes || {})
     .reduce((acc, attribute) => {
       if (
-        Object.prototype.hasOwnProperty.call(attributeTypes, attribute) &&
+        Object.hasOwn(attributeTypes, attribute) &&
         attributeTypes[attribute].allowedIn &&
         includes(attributeTypes[attribute].allowedIn, type)
       ) {
@@ -144,9 +142,7 @@ const getItemAttributes = (attributes, item) => {
   const values = [];
   attributes.forEach((attr) => {
     const value =
-      item.attributes && Object.prototype.hasOwnProperty.call(item.attributes, attr.attribute)
-        ? item.attributes[attr.attribute]
-        : null;
+      item.attributes && Object.hasOwn(item.attributes, attr.attribute) ? item.attributes[attr.attribute] : null;
     values.push(isArray(value) ? value.join(', ') : value);
   });
   return values;
@@ -178,7 +174,7 @@ const createSingleSheetWorkBook = (attributeTypes, filename, items) => {
     const cols = [];
 
     CLASSIFICATION_ATTRIBUTES.forEach((attr) => {
-      cols.push(Object.prototype.hasOwnProperty.call(item, attr.attribute) ? item[attr.attribute] : null);
+      cols.push(Object.hasOwn(item, attr.attribute) ? item[attr.attribute] : null);
     });
 
     cols.push(...getItemAttributes(functionAttributes, item));

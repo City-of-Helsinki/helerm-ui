@@ -83,7 +83,7 @@ class EditorForm extends React.Component {
     const getAttributeKeys = (attr) => Object.keys(attr);
     for (const attributeType in attributeTypes) {
       if (
-        Object.prototype.hasOwnProperty.call(attributeTypes, attributeType) &&
+        Object.hasOwn(attributeTypes, attributeType) &&
         includes(attributeTypes[attributeType].allowedIn, this.props.editorConfig.type)
       ) {
         if (
@@ -108,10 +108,7 @@ class EditorForm extends React.Component {
     const { newAttributes } = this.state;
     const complementAttributes = [];
     Object.keys(attributeTypes).forEach((key) => {
-      if (
-        Object.prototype.hasOwnProperty.call(attributeTypes, key) &&
-        includes(attributeTypes[key].allowedIn, this.props.editorConfig.type)
-      ) {
+      if (Object.hasOwn(attributeTypes, key) && includes(attributeTypes[key].allowedIn, this.props.editorConfig.type)) {
         if (attributeTypes[key].requiredIf.length) {
           if (validateConditionalRules(key, attributeTypes, newAttributes) || newAttributes[key].value) {
             complementAttributes.push(key);
@@ -129,7 +126,7 @@ class EditorForm extends React.Component {
     const { attributes } = this.props;
     let initialState = {};
     Object.keys(attributeTypes).forEach((key) => {
-      if (Object.prototype.hasOwnProperty.call(attributeTypes, key)) {
+      if (Object.hasOwn(attributeTypes, key)) {
         initialState = {
           ...initialState,
           [key]: {
@@ -196,7 +193,7 @@ class EditorForm extends React.Component {
 
     if (attributesToShow.length) {
       attributesToShow.forEach((key) => {
-        if (Object.prototype.hasOwnProperty.call(attributeTypes, key)) {
+        if (Object.hasOwn(attributeTypes, key)) {
           if (attributeTypes[key].values.length) {
             const options = this.mapOptions(attributeTypes[key].values);
             attributeElements.push(
@@ -284,7 +281,7 @@ class EditorForm extends React.Component {
   filterAttributes(attributes) {
     const filteredAttributes = { ...attributes };
     Object.keys(filteredAttributes).forEach((key) => {
-      if (Object.prototype.hasOwnProperty.call(filteredAttributes, key) && !filteredAttributes[key].value) {
+      if (Object.hasOwn(filteredAttributes, key) && !filteredAttributes[key].value) {
         delete filteredAttributes[key];
       }
     });

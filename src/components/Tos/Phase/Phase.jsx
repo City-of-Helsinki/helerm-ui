@@ -275,7 +275,7 @@ class Phase extends React.Component {
     const options = [];
 
     Object.keys(typeOptions).forEach((key) => {
-      if (Object.prototype.hasOwnProperty.call(typeOptions, key)) {
+      if (Object.hasOwn(typeOptions, key)) {
         options.push({
           label: typeOptions[key].name,
           value: typeOptions[key].name,
@@ -314,7 +314,7 @@ class Phase extends React.Component {
   generateActions(actions) {
     const elements = [];
     Object.keys(actions).forEach((key) => {
-      if (Object.prototype.hasOwnProperty.call(actions, key)) {
+      if (Object.hasOwn(actions, key)) {
         elements.push(
           <Action
             key={key}

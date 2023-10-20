@@ -77,7 +77,7 @@ export function receivedNavigation() {
 
 export function updateAttributeTypes(attributeTypes) {
   const attributes = Object.keys(attributeTypes).reduce((acc, key) => {
-    if (Object.prototype.hasOwnProperty.call(attributeTypes, key)) {
+    if (Object.hasOwn(attributeTypes, key)) {
       const attr = attributeTypes[key];
       attr.allowedIn.forEach((type) => {
         acc.push({
@@ -149,7 +149,7 @@ const getFilteredHits = (filteredAttributes, type) => {
 
 const getFacetHits = (facets) => {
   const byKeys = facets.reduce((acc, facet) => {
-    if (Object.prototype.hasOwnProperty.call(acc, facet.key)) {
+    if (Object.hasOwn(acc, facet.key)) {
       acc[facet.key].push(...facet.hits);
     } else {
       acc[facet.key] = [...facet.hits];
@@ -158,7 +158,7 @@ const getFacetHits = (facets) => {
   }, {});
   const ids = Object.keys(byKeys || {}).reduce((acc, key, index) => {
     const hits = [];
-    if (Object.prototype.hasOwnProperty.call(byKeys, key)) {
+    if (Object.hasOwn(byKeys, key)) {
       byKeys[key].forEach((hit) => {
         if ((index === 0 && isEmpty(acc)) || includes(acc, hit)) {
           hits.push(hit);
@@ -176,7 +176,7 @@ const getFacetAttributesForType = (attributes, items, type) => {
     items.forEach((item) => {
       if (
         item.attributes &&
-        Object.prototype.hasOwnProperty.call(item.attributes, attribute.key) &&
+        Object.hasOwn(item.attributes, attribute.key) &&
         !isEmpty(item.attributes[attribute.key])
       ) {
         const index = findIndex(attribute.options, {
@@ -637,7 +637,7 @@ const searchItemsAction = (state, { payload }) => {
     if (!isEmpty(terms)) {
       const matchedAttributes = Object.keys(item.attributes || {}).reduce(
         (acc, key) => {
-          if (Object.prototype.hasOwnProperty.call(item.attributes, key) && key !== 'name') {
+          if (Object.hasOwn(item.attributes, key) && key !== 'name') {
             const attrValue = isArray(item.attributes[key])
               ? item.attributes[key].join(', ')
               : item.attributes[key];
