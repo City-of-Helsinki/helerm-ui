@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable jsx-a11y/no-autofocus */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable consistent-return */
@@ -85,6 +84,7 @@ const DropdownInput = ({
     if (option instanceof Array) {
       const values = option.length ? map(option, 'value') : null;
       const value = values && values.length === 1 ? values[0] : values;
+
       type === 'form' ? onChange(value, keyValue, 'value') : onChange(value);
     } else {
       const value = option ? option.value : null;
@@ -92,6 +92,7 @@ const DropdownInput = ({
       type === 'form' ? onChange(value, keyValue, 'value') : onChange(value);
     }
   };
+
   Object.keys(options).forEach((key) => {
     if (Object.hasOwn(options, key)) {
       optionsArray.push({
@@ -100,13 +101,16 @@ const DropdownInput = ({
       });
     }
   });
+
   const missingOptions = getMissingValueOptions(valueState, optionsArray);
+
   missingOptions.forEach((option) => {
     optionsArray.push({
       label: option,
       value: option,
     });
   });
+
   return (
     <CreatableSelect
       className={selectClassName}

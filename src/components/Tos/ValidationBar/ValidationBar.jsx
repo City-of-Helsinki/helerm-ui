@@ -6,7 +6,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { map, find, forEach } from 'lodash';
+import { map, find } from 'lodash';
 
 import './ValidationBar.scss';
 
@@ -110,49 +110,45 @@ class ValidationBar extends Component {
 
   generateInvalidAttributes() {
     const { selectedTOS } = this.props;
+
     const showInvalidAttributes = this.getFilterByStatus(VALIDATION_FILTER_ERROR);
     const showWarnAttributes = this.getFilterByStatus(VALIDATION_FILTER_WARN);
-    const invalidPhases = [];
-    forEach(selectedTOS.phases, (phase, index) => {
-      const invalidActions = [];
-      forEach(phase.actions, (actionId) => {
-        const action = selectedTOS.actions[actionId];
-        const invalidRecords = [];
-        forEach(action.records, (recordId) => {
-          const invalidRecord = this.getInvalidSection(
-            'record',
-            selectedTOS.records[recordId],
-            showInvalidAttributes ? validateRecord : null,
-            showWarnAttributes ? validateRecordWarnings : null,
-          );
-          if (invalidRecord) {
-            invalidRecords.push(invalidRecord);
-          }
-        });
-        const invalidAction = this.getInvalidSection(
-          'action',
-          action,
-          showInvalidAttributes ? validateAction : null,
-          showWarnAttributes ? validateActionWarnings : null,
-          invalidRecords,
-        );
-        if (invalidAction) {
-          invalidActions.push(invalidAction);
-        }
-      });
-      const invalidPhase = this.getInvalidSection(
-        'phase',
-        phase,
-        showInvalidAttributes ? validatePhase : null,
-        showWarnAttributes ? validatePhaseWarnings : null,
-        invalidActions,
-      );
-      if (invalidPhase) {
-        invalidPhases.push(<div key={index}>{invalidPhase}</div>);
-      }
-    });
 
-    return invalidPhases;
+    const phaseActionIds = selectedTOS.phases.filter((phase) => phase.actions);
+
+    const invalidRecords = phaseActionIds
+      .map((actionId) => selectedTOS.actions[actionId].records)
+      .map((recordId) =>
+        this.getInvalidSection(
+          'record',
+          selectedTOS.records[recordId],
+          showInvalidAttributes ? validateRecord : null,
+          showWarnAttributes ? validateRecordWarnings : null,
+        ),
+      );
+
+    const invalidActions = phaseActionIds.map((actionId) =>
+      this.getInvalidSection(
+        'action',
+        selectedTOS.actions[actionId],
+        showInvalidAttributes ? validateAction : null,
+        showWarnAttributes ? validateActionWarnings : null,
+        invalidRecords,
+      ),
+    );
+
+    return selectedTOS.phases
+      .map((phase) => ({
+        id: phase.id,
+        invalidSection: this.getInvalidSection(
+          'phase',
+          phase,
+          showInvalidAttributes ? validatePhase : null,
+          showWarnAttributes ? validatePhaseWarnings : null,
+          invalidActions,
+        ),
+      }))
+      .map(({ id, invalidSection }) => <div key={id}>{invalidSection}</div>);
   }
 
   renderInvalidContent() {

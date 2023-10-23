@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/cognitive-complexity */
 import { includes, difference, uniq } from 'lodash';
 
 /**
@@ -31,50 +30,50 @@ export const validateConditionalRules = (key, attributeTypes, attributes) => {
  * @return {Validator}]
  */
 const createValidateErrors = (type) => (obj, rules) => {
-  const errors = [];
-  Object.keys(rules).forEach((key) => {
-    if (Object.hasOwn(rules, key)) {
-      const rule = rules[key];
-      const isRequired = rules[key].required;
-      const isRequiredInType = includes(rule.requiredIn, type);
+  const keys = Object.keys(rules).filter((key) => Object.hasOwn(rules, key))
+
+  const errors = keys.filter((key) => {
+    const rule = rules[key];
+
+    const isRequired = rules[key].required;
+    const isRequiredInType = includes(rule.requiredIn, type);
+    const objHasRuleAttribute = Boolean(obj.attributes[key]);
+
+    const isAttributeAllowedInType = includes(rules[key].allowedIn, type);
+    const isValid =
+      includes(
+        rule.values.map(({ value }) => value),
+        obj.attributes[key]
+      ) || rule.values.length === 0;
+    const allowValuesOutsideChoices = includes(
+      rule.allowValuesOutsideChoicesIn,
+      type
+    );
+
+    return (isRequired && isRequiredInType && !objHasRuleAttribute) ||
+      (objHasRuleAttribute && !isValid && !allowValuesOutsideChoices) ||
+      (!isAttributeAllowedInType && objHasRuleAttribute)
+  })
+
+  const conditionallyRequired = keys
+    .filter(((key) => rules[key].requiredIf.length > 0))
+    .map((key) => ({ key, items: rules[key].requiredIf }))
+    .filter(({ key, items }) => items.some((item) => {
+      const predicateValue = obj.attributes[item.key];
+      const hasPredicate = typeof predicateValue === 'string';
+
+      const isPredicateRequired =
+        hasPredicate && includes(item.values, predicateValue);
+
       const objHasRuleAttribute = !!obj.attributes[key];
-      const isAttributeAllowedInType = includes(rules[key].allowedIn, type);
-      const isValid =
-        includes(
-          rule.values.map(({ value }) => value),
-          obj.attributes[key]
-        ) || rule.values.length === 0;
-      const allowValuesOutsideChoices = includes(
-        rule.allowValuesOutsideChoicesIn,
-        type
-      );
-      if (
-        (isRequired && isRequiredInType && !objHasRuleAttribute) ||
-        (objHasRuleAttribute && !isValid && !allowValuesOutsideChoices) ||
-        (!isAttributeAllowedInType && objHasRuleAttribute)
-      ) {
-        errors.push(key);
-      }
 
-      const isConditionallyRequired = rule.requiredIf.length !== 0;
-      if (isConditionallyRequired) {
-        rule.requiredIf.forEach((item) => {
-          const predicateValue = obj.attributes[item.key];
-          const hasPredicate = typeof predicateValue === 'string';
-          const isPredicateRequired =
-            hasPredicate && includes(item.values, predicateValue);
+      return (isPredicateRequired && !objHasRuleAttribute) ||
+        (!isPredicateRequired && objHasRuleAttribute)
+    }))
+    .map(({ key }) => key);
 
-          if (
-            (isPredicateRequired && !objHasRuleAttribute) ||
-            (!isPredicateRequired && objHasRuleAttribute)
-          ) {
-            errors.push(key);
-          }
-        });
-      }
-    }
-  });
-  return errors;
+
+  return [...errors, ...conditionallyRequired];
 };
 
 const isValueValidOption = (value, options) => {

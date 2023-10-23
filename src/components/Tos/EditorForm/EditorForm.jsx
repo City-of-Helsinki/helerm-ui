@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable import/no-cycle */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable no-restricted-syntax */
@@ -79,27 +78,33 @@ class EditorForm extends React.Component {
 
   getAttributesToShow(attributeTypes, attributes) {
     const { newAttributes } = this.state;
-    const attributesToShow = [];
+
     const getAttributeKeys = (attr) => Object.keys(attr);
-    for (const attributeType in attributeTypes) {
-      if (
-        Object.hasOwn(attributeTypes, attributeType) &&
-        includes(attributeTypes[attributeType].allowedIn, this.props.editorConfig.type)
-      ) {
+
+    const attributesToShow = Object.keys(attributeTypes)
+      .filter(
+        (key) =>
+          Object.hasOwn(attributeTypes, attributeTypes[key]) &&
+          includes(attributeTypes[attributeTypes[key]].allowedIn, this.props.editorConfig.type),
+      )
+      .filter((key) => {
         if (
-          attributeTypes[attributeType].requiredIf.length &&
-          (validateConditionalRules(attributeType, attributeTypes, newAttributes) || newAttributes[attributeType].value)
+          attributeTypes[attributeTypes[key]].requiredIf.length &&
+          (validateConditionalRules(attributeTypes[key], attributeTypes, newAttributes) ||
+            newAttributes[attributeTypes[key]].value)
         ) {
-          attributesToShow.push(attributeType);
+          return true;
         }
-        if (attributeTypes[attributeType].required || includes(getAttributeKeys(attributes), attributeType)) {
-          attributesToShow.push(attributeType);
+
+        if (
+          attributeTypes[attributeTypes[key]].required ||
+          includes(getAttributeKeys(attributes), attributeTypes[key])
+        ) {
+          return true;
         }
-        if (includes(attributeTypes[attributeType].defaultIn, this.props.editorConfig.type)) {
-          attributesToShow.push(attributeType);
-        }
-      }
-    }
+
+        return !!includes(attributeTypes[attributeTypes[key]].defaultIn, this.props.editorConfig.type);
+      });
 
     return this.prepareAttributes(attributesToShow);
   }
@@ -189,74 +194,77 @@ class EditorForm extends React.Component {
       this.props.editorConfig.action === 'complement'
         ? this.getComplementAttributes(attributeTypes)
         : this.getAttributesToShow(attributeTypes, this.props.attributes);
-    const attributeElements = [];
 
-    if (attributesToShow.length) {
-      attributesToShow.forEach((key) => {
-        if (Object.hasOwn(attributeTypes, key)) {
-          if (attributeTypes[key].values.length) {
-            const options = this.mapOptions(attributeTypes[key].values);
-            attributeElements.push(
-              <div key={key} className='col-xs-12 col-lg-6 form-group'>
-                <input
-                  type='checkbox'
-                  checked={this.getCheckedState(key)}
-                  value={this.state.newAttributes[key].checked}
-                  onChange={() => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}
-                />
-                <label className='editor-form__label'>{attributeTypes[key].name}</label>
-                <DropdownInput
-                  keyValue={key}
-                  type='form'
-                  selectClassName='Select form-control editor-form__select'
-                  inputClassName='form-control edit-attribute__input'
-                  disabled={!this.state.newAttributes[key].checked}
-                  valueState={this.getActiveValue(key)}
-                  options={options}
-                  onChange={this.onChange}
-                  onInputChange={this.onFormInputChange}
-                  onSubmit={() => null}
-                  multi={includes(attributeTypes[key].multiIn, this.props.editorConfig.type)}
-                />
-              </div>,
-            );
-          } else if (attributeTypes[key].values.length === 0) {
-            attributeElements.push(
-              <div key={key} className='col-xs-12 col-lg-6 form-group'>
-                <input
-                  type='checkbox'
-                  checked={this.getCheckedState(key)}
-                  value={this.state.newAttributes[key].checked}
-                  onChange={() => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}
-                />
-                <label className='editor-form__label'>{attributeTypes[key].name}</label>
-                {key === 'AdditionalInformation' ? (
-                  <textarea
-                    className='form-control edit-record__input additional-information'
-                    value={this.getActiveValue(key)}
-                    placeholder={attributeTypes[key].name}
-                    onChange={(e) => this.onChange(e.target.value, key, 'value')}
-                    disabled={!this.state.newAttributes[key].checked}
-                  />
-                ) : (
-                  <input
-                    className='form-control edit-record__input'
-                    value={this.getActiveValue(key)}
-                    placeholder={attributeTypes[key].name}
-                    onChange={(e) => this.onChange(e.target.value, key, 'value')}
-                    disabled={!this.state.newAttributes[key].checked}
-                  />
-                )}
-              </div>,
-            );
-          }
-        }
-      });
-    } else {
-      attributeElements.push(<div key='no-fields' />);
+    if (!attributesToShow.length) {
+      return [<div key='no-fields' />];
     }
 
-    return attributeElements;
+    return attributesToShow
+      .filter((key) => Object.hasOwn(attributeTypes, key))
+      .map((key) => {
+        if (attributeTypes[key].values.length) {
+          const options = this.mapOptions(attributeTypes[key].values);
+
+          return (
+            <div key={key} className='col-xs-12 col-lg-6 form-group'>
+              <input
+                type='checkbox'
+                checked={this.getCheckedState(key)}
+                value={this.state.newAttributes[key].checked}
+                onChange={() => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}
+              />
+              <label className='editor-form__label'>{attributeTypes[key].name}</label>
+              <DropdownInput
+                keyValue={key}
+                type='form'
+                selectClassName='Select form-control editor-form__select'
+                inputClassName='form-control edit-attribute__input'
+                disabled={!this.state.newAttributes[key].checked}
+                valueState={this.getActiveValue(key)}
+                options={options}
+                onChange={this.onChange}
+                onInputChange={this.onFormInputChange}
+                onSubmit={() => null}
+                multi={includes(attributeTypes[key].multiIn, this.props.editorConfig.type)}
+              />
+            </div>
+          );
+        }
+
+        if (attributeTypes[key].values.length === 0) {
+          return (
+            <div key={key} className='col-xs-12 col-lg-6 form-group'>
+              <input
+                type='checkbox'
+                checked={this.getCheckedState(key)}
+                value={this.state.newAttributes[key].checked}
+                onChange={() => this.onChange(!this.state.newAttributes[key].checked, key, 'checked')}
+              />
+              <label className='editor-form__label'>{attributeTypes[key].name}</label>
+              {key === 'AdditionalInformation' ? (
+                <textarea
+                  className='form-control edit-record__input additional-information'
+                  value={this.getActiveValue(key)}
+                  placeholder={attributeTypes[key].name}
+                  onChange={(e) => this.onChange(e.target.value, key, 'value')}
+                  disabled={!this.state.newAttributes[key].checked}
+                />
+              ) : (
+                <input
+                  className='form-control edit-record__input'
+                  value={this.getActiveValue(key)}
+                  placeholder={attributeTypes[key].name}
+                  onChange={(e) => this.onChange(e.target.value, key, 'value')}
+                  disabled={!this.state.newAttributes[key].checked}
+                />
+              )}
+            </div>
+          );
+        }
+
+        return null;
+      })
+      .filter(Boolean);
   }
 
   generateDropdown(elementTypes) {
@@ -319,6 +327,7 @@ class EditorForm extends React.Component {
     this.props.elementConfig.editWithForm(this.filterAttributes(newAttributes), targetId, stopEditing);
   }
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   resolveLabel() {
     const { type, action } = this.props.editorConfig;
 
@@ -397,6 +406,7 @@ class EditorForm extends React.Component {
    * @param  {boolean} [stopEditing=true]
    * @return {void}
    */
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   resolveOnSubmit(e, targetId, stopEditing = true) {
     if (e) {
       e.preventDefault();

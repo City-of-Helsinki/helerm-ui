@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable import/no-cycle */
 /* eslint-disable camelcase */
 /* eslint-disable react/forbid-prop-types */
@@ -282,28 +281,22 @@ class ViewTOS extends React.Component {
   }
 
   scrollToType(type, id) {
-    if (type === 'phase') {
-      const element = this.phases[id] || null;
-      if (element) {
-        element.scrollToPhase();
-      }
+    if (type === 'phase' && this.phases[id]) {
+      this.phases[id].scrollToPhase();
     } else if (type === 'action') {
       const action = this.props.selectedTOS.actions[id];
-      if (action?.phase) {
-        const phase = this.phases[action.phase] || null;
-        if (phase) {
-          phase.scrollToAction(id);
-        }
+
+      if (action?.phase && this.phases[action?.phase]) {
+        this.phases[action?.phase].scrollToAction(id);
       }
     } else if (type === 'record') {
       const record = this.props.selectedTOS.records[id];
+
       if (record?.action) {
-        const action = this.props.selectedTOS.actions[record.action];
-        if (action?.phase) {
-          const phase = this.phases[action.phase] || null;
-          if (phase) {
-            phase.scrollToActionRecord(record.action, id);
-          }
+        const action = this.props.selectedTOS.actions[record?.action];
+
+        if (action?.phase && this.phases[action?.phase]) {
+          this.phases[action?.phase].scrollToActionRecord(record?.action, id);
         }
       }
     }

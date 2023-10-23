@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable import/no-cycle */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable camelcase */
@@ -126,6 +125,7 @@ class BulkCreateView extends React.Component {
     const items = {};
     let isValid = true;
 
+    // eslint-disable-next-line sonarjs/cognitive-complexity
     filter(searchResults, (result) => result.selected).forEach((result) => {
       const changed = {};
       let isChanged = false;
@@ -411,6 +411,7 @@ class BulkCreateView extends React.Component {
       },
     );
 
+    // eslint-disable-next-line sonarjs/cognitive-complexity
     const searchResults = itemList.reduce((acc, item) => {
       const paths = [];
       let hit = {
@@ -681,54 +682,78 @@ class BulkCreateView extends React.Component {
     return !isEmpty(typeName) ? typeName.label : type;
   }
 
+  getItemErrors(phases, attributeTypes) {
+    const actions = phases.map((phase) => phase.action);
+    const records = actions.map((action) => action.records);
+
+    const recordsReduced = records.reduce((acc, record) => {
+      const recordErrors = validateRecord(record, attributeTypes);
+
+      if (!isEmpty(recordErrors)) {
+        acc[record.id] = {
+          attributes: recordErrors,
+        };
+      }
+
+      return acc;
+    }, {});
+
+    const actionsReduced = actions.reduce((acc, action) => {
+      const actionErrors = validateAction(action, attributeTypes);
+
+      if (!isEmpty(actionErrors)) {
+        acc[action.id] = {
+          attributes: actionErrors,
+        };
+      }
+
+      if (!isEmpty(recordsReduced)) {
+        acc = merge(acc, { [action.id]: { recordsReduced } });
+      }
+
+      return acc;
+    }, {});
+
+    return phases.reduce((acc, phase) => {
+      const phaseErrors = validatePhase(phase, attributeTypes);
+
+      if (!isEmpty(phaseErrors)) {
+        acc[phase.id] = {
+          attributes: phaseErrors,
+        };
+      }
+
+      if (!isEmpty(actionsReduced)) {
+        acc = merge(acc, { [phase.id]: { actionsReduced } });
+      }
+
+      return acc;
+    }, {});
+  }
+
   validateChangedItem(item, changed) {
     const { attributeTypes } = this.props;
+
     const clonedItem = cloneDeep(item);
     const changedItem = merge(clonedItem, changed);
-    const errors = {};
     const functionErrors = validateTOS(changedItem, attributeTypes);
+
+    const errors = {};
 
     if (!isEmpty(functionErrors)) {
       errors.attributes = functionErrors;
     }
-    if (!isEmpty(changedItem.phases)) {
-      const phases = changedItem.phases.reduce((phaseAcc, phase) => {
-        const phaseErrors = validatePhase(phase, attributeTypes);
-        const actions = phase.actions.reduce((actionAcc, action) => {
-          const actionErrors = validateAction(action, attributeTypes);
-          const records = action.records.reduce((recordAcc, record) => {
-            const recordErrors = validateRecord(record, attributeTypes);
-            if (!isEmpty(recordErrors)) {
-              recordAcc[record.id] = {
-                attributes: recordErrors,
-              };
-            }
-            return recordAcc;
-          }, {});
-          if (!isEmpty(actionErrors)) {
-            actionAcc[action.id] = {
-              attributes: actionErrors,
-            };
-          }
-          if (!isEmpty(records)) {
-            actionAcc = merge(actionAcc, { [action.id]: { records } });
-          }
-          return actionAcc;
-        }, {});
-        if (!isEmpty(phaseErrors)) {
-          phaseAcc[phase.id] = {
-            attributes: isEmpty(phaseErrors) ? undefined : phaseErrors,
-          };
-        }
-        if (!isEmpty(actions)) {
-          phaseAcc = merge(phaseAcc, { [phase.id]: { actions } });
-        }
-        return phaseAcc;
-      }, {});
-      if (!isEmpty(phases)) {
-        errors.phases = phases;
+
+    const { phases } = changedItem;
+
+    if (!isEmpty(phases)) {
+      const itemErrors = this.getItemErrors(phases, attributeTypes);
+
+      if (!isEmpty(itemErrors)) {
+        errors.phases = itemErrors;
       }
     }
+
     return errors;
   }
 
