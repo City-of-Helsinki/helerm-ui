@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -47,44 +46,47 @@ class ValidationBar extends Component {
   }
 
   getInvalidSection(type, section, validateRequired, validateWarn, children) {
-    if (section) {
-      const { attributeTypes } = this.props;
-      const invalidAttributes = validateRequired ? validateRequired(section, attributeTypes) : [];
-      const warnAttributes = validateWarn ? validateWarn(section, attributeTypes) : [];
-      const nameAttribute = section.attributes
-        ? find(ATTRIBUTE_NAME_FIELDS, (field) => !!section.attributes[field])
-        : '';
-      if (invalidAttributes.length || warnAttributes.length || children?.length) {
-        return (
-          <div className={`sidebar-content-${type}`} key={section.id}>
-            <div
-              className='parent-name'
-              onClick={() => this.props.scrollToType(type, section.id)}
-              onKeyUp={(e) => {
-                if (e.key === 'Enter') {
-                  this.props.scrollToType(type, section.id);
-                }
-              }}
-            >
-              {nameAttribute ? section.attributes[nameAttribute] : ''}
-            </div>
-            <div className='missing-attributes'>
-              {map(invalidAttributes, (item, key) => (
-                <div key={key} className='missing-attribute'>
-                  <i className='fa-solid fa-triangle-exclamation' /> {attributeTypes[item].name}
-                </div>
-              ))}
-              {map(warnAttributes, (item, key) => (
-                <div key={key} className='warn-attribute'>
-                  <i className='fa-solid fa-circle-exclamation' /> {attributeTypes[item].name}
-                </div>
-              ))}
-            </div>
-            {children}
-          </div>
-        );
-      }
+    if (!section) {
+      return null;
     }
+
+    const { attributeTypes } = this.props;
+
+    const invalidAttributes = validateRequired ? validateRequired(section, attributeTypes) : [];
+    const warnAttributes = validateWarn ? validateWarn(section, attributeTypes) : [];
+    const nameAttribute = section.attributes ? find(ATTRIBUTE_NAME_FIELDS, (field) => !!section.attributes[field]) : '';
+
+    if (invalidAttributes.length || warnAttributes.length || children?.length) {
+      return (
+        <div className={`sidebar-content-${type}`} key={section.id}>
+          <div
+            className='parent-name'
+            onClick={() => this.props.scrollToType(type, section.id)}
+            onKeyUp={(e) => {
+              if (e.key === 'Enter') {
+                this.props.scrollToType(type, section.id);
+              }
+            }}
+          >
+            {nameAttribute ? section.attributes[nameAttribute] : ''}
+          </div>
+          <div className='missing-attributes'>
+            {map(invalidAttributes, (item, key) => (
+              <div key={key} className='missing-attribute'>
+                <i className='fa-solid fa-triangle-exclamation' /> {attributeTypes[item].name}
+              </div>
+            ))}
+            {map(warnAttributes, (item, key) => (
+              <div key={key} className='warn-attribute'>
+                <i className='fa-solid fa-circle-exclamation' /> {attributeTypes[item].name}
+              </div>
+            ))}
+          </div>
+          {children}
+        </div>
+      );
+    }
+
     return null;
   }
 
