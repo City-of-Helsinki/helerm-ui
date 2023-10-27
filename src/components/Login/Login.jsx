@@ -26,9 +26,9 @@ class Login extends React.Component {
     const linkText = user?.id ? 'Kirjaudu ulos' : 'Kirjaudu sisään';
 
     return (
-      <span className='login-button' role='button' onClick={this.handleUserLinkClick}>
+      <button className='btn btn-link login-button' type='button' onClick={this.handleUserLinkClick}>
         {linkText}
-      </span>
+      </button>
     );
   }
 
