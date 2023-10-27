@@ -140,6 +140,11 @@ class ImportView extends React.Component {
               key={key}
               className='import-row-link'
               onClick={(e) => this.selectForImport(e, values[itemsInArray[key]].id)}
+              onKeyUp={(e) => {
+                if (e.key === 'Enter') {
+                  this.selectForImport(e, values[itemsInArray[key]].id);
+                }
+              }}
             >
               {this.getTargetName(
                 values[itemsInArray[key]].attributes.TypeSpecifier,
@@ -185,6 +190,11 @@ class ImportView extends React.Component {
                   <span
                     key={element}
                     onClick={(e) => this.removeFromImport(e, index)}
+                    onKeyUp={(e) => {
+                      if (e.key === 'Enter') {
+                        this.removeFromImport(e, index);
+                      }
+                    }}
                     className='col-xs-12 importable-element-link'
                   >
                     {this.state.values[element].attributes.TypeSpecifier ||

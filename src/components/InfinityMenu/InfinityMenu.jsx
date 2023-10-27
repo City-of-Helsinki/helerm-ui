@@ -187,6 +187,11 @@ class InfinityMenu extends Component {
               onMouseDown={(e) => (this.props.onLeafMouseDown ? this.props.onLeafMouseDown(e, curr) : null)}
               onMouseUp={(e) => (this.props.onLeafMouseUp ? this.props.onLeafMouseUp(e, curr) : null)}
               onClick={(e) => (this.props.onLeafMouseClick ? this.props.onLeafMouseClick(e, curr) : null)}
+              onKeyUp={(e) => {
+                if (this.props.onLeafMouseClick && e.key === 'Enter') {
+                  this.props.onLeafMouseClick(e, curr);
+                }
+              }}
             >
               <span>
                 {curr.name} <ClassificationLink id={curr.id} />
@@ -200,6 +205,11 @@ class InfinityMenu extends Component {
             key={itemKey}
             className='infinity-menu-load-more-container'
             onClick={(e) => this.onLoadMoreClick(tree, curr, keyPath, e)}
+            onKeyUp={(e) => {
+              if (e.key === 'Enter') {
+                this.onLoadMoreClick(tree, curr, keyPath, e);
+              }
+            }}
           >
             <span>Näytä lisää</span>
           </li>,
@@ -226,6 +236,11 @@ class InfinityMenu extends Component {
             <div
               key={key}
               onClick={(e) => this.onNodeClick(tree, curr, keyPath, e)}
+              onKeyUp={(e) => {
+                if (e.key === 'Enter') {
+                  this.onNodeClick(tree, curr, keyPath, e);
+                }
+              }}
               className={classnames('infinity-menu-node-container', {
                 opened: !!curr.isOpen,
               })}
@@ -256,6 +271,11 @@ class InfinityMenu extends Component {
           <div
             key={key}
             onClick={(e) => this.onNodeClick(tree, curr, keyPath, e)}
+            onKeyUp={(e) => {
+              if (e.key === 'Enter') {
+                this.onNodeClick(tree, curr, keyPath, e);
+              }
+            }}
             className={classnames('infinity-menu-node-container', {
               opened: !!curr.isOpen,
             })}
@@ -481,7 +501,15 @@ class InfinityMenu extends Component {
                 <span className='fa-solid fa-list' aria-hidden='true' />
               </button>
               {!!this.props.path.length && (
-                <ol className='breadcrumb' onClick={this.props.toggleNavigationVisibility}>
+                <ol
+                  className='breadcrumb'
+                  onClick={this.props.toggleNavigationVisibility}
+                  onKeyUp={(e) => {
+                    if (e.key === 'Enter') {
+                      this.props.toggleNavigationVisibility();
+                    }
+                  }}
+                >
                   {this.props.path.map((item, index) => (
                     <li
                       className={classnames({

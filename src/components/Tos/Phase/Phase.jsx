@@ -413,6 +413,7 @@ class Phase extends React.Component {
     );
   }
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   renderBasicAttributes() {
     const { phase } = this.props;
     const classNames = classnames([
@@ -422,12 +423,28 @@ class Phase extends React.Component {
       this.props.documentState === 'edit' ? 'editable' : null,
     ]);
     let typeSpecifier = (
-      <span className={classNames} onClick={() => this.editTypeSpecifier()}>
+      <span
+        className={classNames}
+        onClick={() => this.editTypeSpecifier()}
+        onKeyUp={(e) => {
+          if (e.key === 'Enter') {
+            this.editTypeSpecifier();
+          }
+        }}
+      >
         {this.state.typeSpecifier}
       </span>
     );
     let phaseType = (
-      <span className={classNames} onClick={() => this.editType()}>
+      <span
+        className={classNames}
+        onClick={() => this.editType()}
+        onKeyUp={(e) => {
+          if (e.key === 'Enter') {
+            this.editType();
+          }
+        }}
+      >
         {getDisplayLabelForAttribute({
           attributeValue: this.state.type,
           identifier: 'PhaseType',

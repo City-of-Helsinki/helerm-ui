@@ -359,7 +359,15 @@ class Action extends Component {
       this.props.documentState === 'edit' ? 'editable' : null,
     ]);
     let typeSpecifier = (
-      <span className={classNames} onClick={() => this.editTypeSpecifier()}>
+      <span
+        className={classNames}
+        onClick={() => this.editTypeSpecifier()}
+        onKeyUp={(e) => {
+          if (e.key === 'Enter') {
+            this.editTypeSpecifier();
+          }
+        }}
+      >
         {this.state.typeSpecifier}
       </span>
     );

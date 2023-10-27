@@ -256,6 +256,11 @@ class Attribute extends React.Component {
     return (
       <span
         onClick={() => this.activateEditMode()}
+        onKeyUp={(e) => {
+          if (e.key === 'Enter') {
+            this.activateEditMode();
+          }
+        }}
         className={classnames([
           'list-group-item col-xs-6 attribute',
           showAttributes ? 'visible' : 'hidden',

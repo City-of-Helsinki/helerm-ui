@@ -57,7 +57,15 @@ class ValidationBar extends Component {
       if (invalidAttributes.length || warnAttributes.length || children?.length) {
         return (
           <div className={`sidebar-content-${type}`} key={section.id}>
-            <div className='parent-name' onClick={() => this.props.scrollToType(type, section.id)}>
+            <div
+              className='parent-name'
+              onClick={() => this.props.scrollToType(type, section.id)}
+              onKeyUp={(e) => {
+                if (e.key === 'Enter') {
+                  this.props.scrollToType(type, section.id);
+                }
+              }}
+            >
               {nameAttribute ? section.attributes[nameAttribute] : ''}
             </div>
             <div className='missing-attributes'>
@@ -159,7 +167,18 @@ class ValidationBar extends Component {
     if (invalidTOSAttributes || invalidAttributes.length > 0) {
       return (
         <div className='sidebar-invalid-content'>
-          {invalidTOSAttributes && <h5 onClick={this.props.scrollToMetadata}>Käsittelyprosessi</h5>}
+          {invalidTOSAttributes && (
+            <h5
+              onClick={this.props.scrollToMetadata}
+              onKeyUp={(e) => {
+                if (e.key === 'Enter') {
+                  this.props.scrollToMetadata();
+                }
+              }}
+            >
+              Käsittelyprosessi
+            </h5>
+          )}
           {invalidTOSAttributes}
           {invalidAttributes}
         </div>

@@ -202,6 +202,11 @@ class Preview extends React.Component {
                 onClick={() => {
                   this.props.onSelect(id);
                 }}
+                onKeyUp={(event) => {
+                  if (event.key === 'Enter') {
+                    this.props.onSelect(id);
+                  }
+                }}
               >
                 <i className='fa-solid fa-check' />
               </div>
