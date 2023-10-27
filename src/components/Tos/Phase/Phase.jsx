@@ -164,6 +164,82 @@ class Phase extends React.Component {
     return (this.state?.type || '') + slash + (this.state?.typeSpecifier || '');
   }
 
+  getTypeSpecifier(classNames) {
+    if (this.state.mode === 'edit' && this.state.editingTypeSpecifier) {
+      return (
+        <div className='col-md-5 phase-title-input row'>
+          <form onSubmit={this.updateTypeSpecifier}>
+            <input
+              className='input-title form-control'
+              value={this.state.typeSpecifier || ''}
+              onChange={this.onTypeSpecifierChange}
+              onBlur={this.updateTypeSpecifier}
+              autoFocus
+            />
+          </form>
+        </div>
+      );
+    }
+
+    return (
+      <span
+        className={classNames}
+        onClick={() => this.editTypeSpecifier()}
+        onKeyUp={(e) => {
+          if (e.key === 'Enter') {
+            this.editTypeSpecifier();
+          }
+        }}
+      >
+        {this.state.typeSpecifier}
+      </span>
+    );
+  }
+
+  getPhaseType(classNames) {
+    if (this.state.mode === 'edit' && this.state.editingType) {
+      const phaseTypesAsOptions = Object.values(this.props.phaseTypes).map((pt) => ({
+        value: pt.value,
+        label: getDisplayLabelForAttribute({
+          attributeValue: pt.value,
+          identifier: 'PhaseType',
+        }),
+      }));
+
+      return (
+        <div className='col-md-6 phase-title-dropdown'>
+          <form onSubmit={this.updatePhaseType}>
+            <DropdownInput
+              type='phase'
+              valueState={this.state.type}
+              options={phaseTypesAsOptions}
+              onChange={this.onTypeChange}
+              onInputChange={this.onTypeInputChange}
+              onSubmit={this.updatePhaseType}
+            />
+          </form>
+        </div>
+      );
+    }
+
+    return (
+      <span
+        className={classNames}
+        onClick={() => this.editType()}
+        onKeyUp={(e) => {
+          if (e.key === 'Enter') {
+            this.editType();
+          }
+        }}
+      >
+        {getDisplayLabelForAttribute({
+          attributeValue: this.state.type,
+          identifier: 'PhaseType',
+        })}
+      </span>
+    );
+  }
+
   editType() {
     if (this.props.documentState === 'edit') {
       this.setState({ editingType: true, mode: 'edit' });
@@ -413,85 +489,18 @@ class Phase extends React.Component {
     );
   }
 
-  // eslint-disable-next-line sonarjs/cognitive-complexity
   renderBasicAttributes() {
     const { phase } = this.props;
+
     const classNames = classnames([
       'col-md-6',
       'basic-attribute',
       'phase-basic-attribute',
       this.props.documentState === 'edit' ? 'editable' : null,
     ]);
-    let typeSpecifier = (
-      <span
-        className={classNames}
-        onClick={() => this.editTypeSpecifier()}
-        onKeyUp={(e) => {
-          if (e.key === 'Enter') {
-            this.editTypeSpecifier();
-          }
-        }}
-      >
-        {this.state.typeSpecifier}
-      </span>
-    );
-    let phaseType = (
-      <span
-        className={classNames}
-        onClick={() => this.editType()}
-        onKeyUp={(e) => {
-          if (e.key === 'Enter') {
-            this.editType();
-          }
-        }}
-      >
-        {getDisplayLabelForAttribute({
-          attributeValue: this.state.type,
-          identifier: 'PhaseType',
-        })}
-      </span>
-    );
 
-    if (this.state.mode === 'edit') {
-      if (this.state.editingTypeSpecifier) {
-        typeSpecifier = (
-          <div className='col-md-5 phase-title-input row'>
-            <form onSubmit={this.updateTypeSpecifier}>
-              <input
-                className='input-title form-control'
-                value={this.state.typeSpecifier || ''}
-                onChange={this.onTypeSpecifierChange}
-                onBlur={this.updateTypeSpecifier}
-                autoFocus
-              />
-            </form>
-          </div>
-        );
-      }
-      if (this.state.editingType) {
-        const phaseTypesAsOptions = Object.values(this.props.phaseTypes).map((pt) => ({
-          value: pt.value,
-          label: getDisplayLabelForAttribute({
-            attributeValue: pt.value,
-            identifier: 'PhaseType',
-          }),
-        }));
-        phaseType = (
-          <div className='col-md-6 phase-title-dropdown'>
-            <form onSubmit={this.updatePhaseType}>
-              <DropdownInput
-                type='phase'
-                valueState={this.state.type}
-                options={phaseTypesAsOptions}
-                onChange={this.onTypeChange}
-                onInputChange={this.onTypeInputChange}
-                onSubmit={this.updatePhaseType}
-              />
-            </form>
-          </div>
-        );
-      }
-    }
+    const typeSpecifier = this.getTypeSpecifier(classNames);
+    const phaseType = this.getPhaseType(classNames);
 
     if (phase.is_open && phase.actions.length) {
       return (
@@ -524,6 +533,7 @@ class Phase extends React.Component {
         </RenderPropSticky>
       );
     }
+
     return (
       <div className={`phase-title ${phase.is_attributes_open ? 'phase-open' : 'phase-closed'}`}>
         <div className='basic-attributes'>
