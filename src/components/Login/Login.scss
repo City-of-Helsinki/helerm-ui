@@ -1,7 +1,12 @@
+.login-link {
+  display: flex;
+  align-items: center;
+}
+
 .login-button {
-  background: transparent;
   padding: 0 !important;
   outline: 0;
+  border: 0 !important;
 
   &:hover {
     cursor: pointer;
