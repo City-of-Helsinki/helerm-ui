@@ -56,7 +56,7 @@ const createValidateErrors = (type) => (obj, rules) => {
   })
 
   const conditionallyRequired = keys
-    .filter(((key) => rules[key].requiredIf.length > 0))
+    .filter((key) => rules[key].requiredIf.length > 0)
     .map((key) => ({ key, items: rules[key].requiredIf }))
     .filter(({ key, items }) => items.some((item) => {
       const predicateValue = obj.attributes[item.key];
