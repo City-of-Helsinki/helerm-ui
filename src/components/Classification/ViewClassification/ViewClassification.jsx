@@ -107,7 +107,7 @@ class ViewClassification extends React.Component {
   render() {
     const { classification } = this.props;
 
-    if (classification && classification.id) {
+    if (classification?.id) {
       const descriptionInternal = this.renderClassificationData('Sisäinen kuvaus', classification.description_internal);
       const description = this.renderClassificationData('Kuvaus', classification.description);
       const relatedClassification = this.renderClassificationData(
