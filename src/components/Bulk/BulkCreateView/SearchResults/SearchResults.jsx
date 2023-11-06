@@ -35,6 +35,11 @@ class SearchResults extends React.Component {
                 'search-result-item-checked': allSelected,
               })}
               onClick={() => this.props.onSelectAll(!allSelected)}
+              onKeyUp={(event) => {
+                if (event.key === 'Enter') {
+                  this.props.onSelectAll(!allSelected);
+                }
+              }}
             >
               <i className='fa-solid fa-check' />
             </div>
@@ -66,6 +71,11 @@ class SearchResults extends React.Component {
                 })}
                 onClick={() => {
                   this.props.onSelect(index, !result.selected);
+                }}
+                onKeyUp={(event) => {
+                  if (event.key === 'Enter') {
+                    this.props.onSelect(index, !result.selected);
+                  }
                 }}
               >
                 <i className='fa-solid fa-check' />

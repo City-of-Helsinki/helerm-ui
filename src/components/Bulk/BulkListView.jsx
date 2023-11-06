@@ -72,7 +72,16 @@ class BulkListView extends React.Component {
             </div>
             <div className='bulk-updates'>
               {filteredBulkUpdates.map((bulk) => (
-                <div className='bulk-update' key={bulk.id} onClick={() => this.onClickBulkUpdate(bulk.id)}>
+                <div
+                  className='bulk-update'
+                  key={bulk.id}
+                  onClick={() => this.onClickBulkUpdate(bulk.id)}
+                  onKeyUp={(event) => {
+                    if (event.key === 'Enter') {
+                      this.onClickBulkUpdate(bulk.id);
+                    }
+                  }}
+                >
                   <div className='bulk-update-info'>
                     <div>Paketti ID: {bulk.id}</div>
                     <div>Luotu: {formatDateTime(bulk.created_at)}</div>

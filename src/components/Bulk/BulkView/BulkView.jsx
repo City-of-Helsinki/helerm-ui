@@ -472,9 +472,8 @@ class BulkView extends React.Component {
         </div>
         {!isValid && !isEmpty(itemList) && !isFetchingNavigation && (
           <div className='alert alert-danger'>
-            <i className='fa-solid fa-triangle-exclamation' />
-            Massamuutospaketissa on käsittelyprosesseja, joita ei voida varmistaa. Massamuutospakettia ei voida
-            hyväksyä.
+            <i className='fa-solid fa-triangle-exclamation' /> Massamuutospaketissa on käsittelyprosesseja, joita ei
+            voida varmistaa. Massamuutospakettia ei voida hyväksyä.
           </div>
         )}
         {selectedBulk && (

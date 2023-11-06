@@ -77,7 +77,16 @@ class FacetedSearchSuggestions extends React.Component {
       >
         <div className='faceted-search-suggestions-title'>Rajaukset</div>
         {suggestions.map((item) => (
-          <div className='faceted-search-suggestion' key={item.type} onClick={() => onSelect(item.type)}>
+          <div
+            className='faceted-search-suggestion'
+            key={item.type}
+            onClick={() => onSelect(item.type)}
+            onKeyUp={(event) => {
+              if (event.key === 'Enter') {
+                onSelect(item.type);
+              }
+            }}
+          >
             {TYPE_LABELS[item.type]} ({item.hits.length})
           </div>
         ))}
