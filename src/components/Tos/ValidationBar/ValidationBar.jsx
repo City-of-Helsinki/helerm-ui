@@ -207,7 +207,7 @@ class ValidationBar extends Component {
       <div className='validation-bar' style={{ top: top + 47 }}>
         <div className='validation-bar-header'>
           <h3>
-            Esitarkastus
+            Esitarkastus{' '}
             <button
               type='button'
               className='sidebar-close-button pull-right'

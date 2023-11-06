@@ -80,7 +80,6 @@ class CloneView extends React.Component {
       <div className='row clone__view'>
         <ul className='nav nav-tabs disabled'>
           <li
-            role='presentation'
             className={classnames({
               disabled: hasSelectedItem,
               active: selectedMethod === METHOD_TEMPLATE,
@@ -100,7 +99,6 @@ class CloneView extends React.Component {
             </span>
           </li>
           <li
-            role='presentation'
             className={classnames({
               disabled: hasSelectedItem,
               active: selectedMethod === METHOD_FUNCTION,
