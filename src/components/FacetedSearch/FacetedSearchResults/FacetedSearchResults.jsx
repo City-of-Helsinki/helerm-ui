@@ -20,6 +20,11 @@ const FacetedSearchResults = ({ items, highlightedId, metadata, onSelectItem }) 
         })}
         key={item.id}
         onClick={() => onSelectItem(item)}
+        onKeyUp={(event) => {
+          if (event.key === 'Enter') {
+            onSelectItem(item);
+          }
+        }}
       >
         <div className='faceted-search-results-item-info'>
           <div className='faceted-search-results-item-type'>{TYPE_LABELS[item.type]}</div>

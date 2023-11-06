@@ -86,7 +86,16 @@ class CloneView extends React.Component {
               active: selectedMethod === METHOD_TEMPLATE,
             })}
           >
-            <span className='import-button' role='button' onClick={() => this.selectMethod(METHOD_TEMPLATE)}>
+            <span
+              className='import-button'
+              role='button'
+              onClick={() => this.selectMethod(METHOD_TEMPLATE)}
+              onKeyUp={(event) => {
+                if (event.key === 'Enter') {
+                  this.selectMethod(METHOD_TEMPLATE);
+                }
+              }}
+            >
               Tuo kuvaus moduulista
             </span>
           </li>
@@ -97,7 +106,16 @@ class CloneView extends React.Component {
               active: selectedMethod === METHOD_FUNCTION,
             })}
           >
-            <span className='import-button' role='button' onClick={() => this.selectMethod(METHOD_FUNCTION)}>
+            <span
+              className='import-button'
+              role='button'
+              onClick={() => this.selectMethod(METHOD_FUNCTION)}
+              onKeyUp={(event) => {
+                if (event.key === 'Enter') {
+                  this.selectMethod(METHOD_FUNCTION);
+                }
+              }}
+            >
               Tuo kuvaus toisesta kuvauksesta
             </span>
           </li>

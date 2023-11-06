@@ -10,8 +10,24 @@ const Popup = ({ content, closePopup }) => {
     e.stopPropagation();
   };
   return (
-    <div className='popup-outer-background' onClick={closePopup}>
-      <div className='popup-inner-background' onClick={(e) => stop(e)}>
+    <div
+      className='popup-outer-background'
+      onClick={closePopup}
+      onKeyUp={(event) => {
+        if (event.key === 'Enter') {
+          closePopup();
+        }
+      }}
+    >
+      <div
+        className='popup-inner-background'
+        onClick={(e) => stop(e)}
+        onKeyUp={(event) => {
+          if (event.key === 'Enter') {
+            stop(event);
+          }
+        }}
+      >
         <button type='button' className='popup__close' onClick={closePopup}>
           <i className='fa-solid fa-xmark' />
         </button>

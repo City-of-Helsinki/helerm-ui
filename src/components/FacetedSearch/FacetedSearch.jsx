@@ -232,7 +232,15 @@ class FacetedSearch extends React.Component {
     ).length;
     return (
       <div key={attribute.key}>
-        <div className='faceted-search-facets-item-attribute' onClick={() => this.onClickAttribute(attribute)}>
+        <div
+          className='faceted-search-facets-item-attribute'
+          onClick={() => this.onClickAttribute(attribute)}
+          onKeyUp={(event) => {
+            if (event.key === 'Enter') {
+              this.onClickAttribute(attribute);
+            }
+          }}
+        >
           <i
             className={classnames('fa-solid', {
               'fa-minus': attribute.open,
@@ -250,6 +258,11 @@ class FacetedSearch extends React.Component {
               })}
               key={`${attribute.type}-${attribute.key}-${option.value}`}
               onClick={() => this.onClickAttributeOption(attribute, option)}
+              onKeyUp={(event) => {
+                if (event.key === 'Enter') {
+                  this.onClickAttributeOption(attribute, option);
+                }
+              }}
             >
               <i className='fa-solid fa-check' />
               <span>
@@ -271,7 +284,15 @@ class FacetedSearch extends React.Component {
             </div>
           ))}
         {attribute.open && orderedOptions.length > FACET_ATTRIBUTE_SIZE && (
-          <div className='faceted-search-facets-item-attribute-more' onClick={() => this.onClickShowAll(attribute)}>
+          <div
+            className='faceted-search-facets-item-attribute-more'
+            onClick={() => this.onClickShowAll(attribute)}
+            onKeyUp={(event) => {
+              if (event.key === 'Enter') {
+                this.onClickShowAll(attribute);
+              }
+            }}
+          >
             {attribute.showAll ? 'Vähemmän' : `Lisää (${hidden})`}
           </div>
         )}
@@ -307,7 +328,15 @@ class FacetedSearch extends React.Component {
 
     return (
       <div className='faceted-search-facets-item' key={`facet-${type}`}>
-        <div className='faceted-search-facets-item-title' onClick={() => this.onToggleFacet(type)}>
+        <div
+          className='faceted-search-facets-item-title'
+          onClick={() => this.onToggleFacet(type)}
+          onKeyUp={(event) => {
+            if (event.key === 'Enter') {
+              this.onToggleFacet(type);
+            }
+          }}
+        >
           <span>
             {TYPE_LABELS[type]} ({totalHits})
           </span>
@@ -323,7 +352,15 @@ class FacetedSearch extends React.Component {
         {isOpen && !isEmpty(orderedAttributes) && (
           <div className='faceted-search-facets-item-attributes'>
             <div>
-              <div className='faceted-search-facets-item-attribute' onClick={() => this.onClickAllByType(type)}>
+              <div
+                className='faceted-search-facets-item-attribute'
+                onClick={() => this.onClickAllByType(type)}
+                onKeyUp={(event) => {
+                  if (event.key === 'Enter') {
+                    this.onClickAllByType(type);
+                  }
+                }}
+              >
                 <span>
                   <strong>Kaikki</strong>
                 </span>

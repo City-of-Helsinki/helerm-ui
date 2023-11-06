@@ -75,6 +75,11 @@ class FacetedSearchHelp extends React.Component {
         <div
           className={classnames('popover', { show: this.state.show })}
           onClick={this.onToggleHelp}
+          onKeyUp={(event) => {
+            if (event.key === 'Enter') {
+              this.onToggleHelp();
+            }
+          }}
           ref={(wrapper) => {
             this.wrapper = wrapper;
           }}

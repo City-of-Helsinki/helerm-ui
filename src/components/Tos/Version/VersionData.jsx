@@ -136,7 +136,15 @@ class VersionData extends React.Component {
       );
     }
     return (
-      <span onClick={() => this.activateValidDateEditMode(field)} className='list-group-item col-xs-6 attribute-basic'>
+      <span
+        onClick={() => this.activateValidDateEditMode(field)}
+        onKeyUp={(event) => {
+          if (event.key === 'Enter') {
+            this.activateValidDateEditMode(field);
+          }
+        }}
+        className='list-group-item col-xs-6 attribute-basic'
+      >
         <strong>{label}:</strong>
         <div>{value ? formatDateTime(value, 'D.M.YYYY') : '\u00A0'}</div>
       </span>
