@@ -28,7 +28,7 @@ class ImportView extends React.Component {
   }
 
   getTargetName(specifier, type) {
-    const hasType = type && type.length;
+    const hasType = type?.length;
     const hasTypeSpecifier = specifier && specifier.length;
     const slash = hasType && hasTypeSpecifier ? ' / ' : '';
 
@@ -133,13 +133,18 @@ class ImportView extends React.Component {
       itemsInArray = Object.keys(items); // Because items mutates into object for unknown reason
     }
     Object.keys(itemsInArray).forEach((key) => {
-      if (Object.prototype.hasOwnProperty.call(itemsInArray, key)) {
+      if (Object.hasOwn(itemsInArray, key)) {
         links.push(
           <div key={key} className='import-row-title'>
             <span
               key={key}
               className='import-row-link'
               onClick={(e) => this.selectForImport(e, values[itemsInArray[key]].id)}
+              onKeyUp={(e) => {
+                if (e.key === 'Enter') {
+                  this.selectForImport(e, values[itemsInArray[key]].id);
+                }
+              }}
             >
               {this.getTargetName(
                 values[itemsInArray[key]].attributes.TypeSpecifier,
@@ -185,6 +190,11 @@ class ImportView extends React.Component {
                   <span
                     key={element}
                     onClick={(e) => this.removeFromImport(e, index)}
+                    onKeyUp={(e) => {
+                      if (e.key === 'Enter') {
+                        this.removeFromImport(e, index);
+                      }
+                    }}
                     className='col-xs-12 importable-element-link'
                   >
                     {this.state.values[element].attributes.TypeSpecifier ||

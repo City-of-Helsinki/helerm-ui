@@ -100,7 +100,7 @@ export function editMetaData(attributes) {
   let editedMetaData = {};
 
   Object.keys(attributes).forEach((key) => {
-    if (Object.prototype.hasOwnProperty.call(attributes, key) && attributes[key].checked) {
+    if (Object.hasOwn(attributes, key) && attributes[key].checked) {
       editedMetaData = { ...editedMetaData, [key]: attributes[key].value };
     }
   });
@@ -208,7 +208,7 @@ export function setTosVisibility(tos, basicVisibility, metaDataVisibility) {
   const allRecordsOpen = {};
   const { actions, phases, records } = tos;
   Object.keys(phases).forEach((key) => {
-    if (Object.prototype.hasOwnProperty.call(phases, key)) {
+    if (Object.hasOwn(phases, key)) {
       allPhasesOpen[key] = update(phases[key], {
         is_attributes_open: {
           $set: metaDataVisibility
@@ -218,7 +218,7 @@ export function setTosVisibility(tos, basicVisibility, metaDataVisibility) {
         }
       });
       Object.keys(actions).forEach((actionKey) => {
-        if (Object.prototype.hasOwnProperty.call(actions, actionKey)) {
+        if (Object.hasOwn(actions, actionKey)) {
           allActionsOpen[actionKey] = update(actions[actionKey], {
             is_open: {
               $set: metaDataVisibility
@@ -226,7 +226,7 @@ export function setTosVisibility(tos, basicVisibility, metaDataVisibility) {
           });
         }
         Object.keys(records).forEach((recordKey) => {
-          if (Object.prototype.hasOwnProperty.call(records, recordKey)) {
+          if (Object.hasOwn(records, recordKey)) {
             allRecordsOpen[recordKey] = update(records[recordKey], {
               is_open: {
                 $set: metaDataVisibility

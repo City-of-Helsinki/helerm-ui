@@ -76,13 +76,13 @@ class Action extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.action && nextProps.action.attributes.TypeSpecifier) {
+    if (nextProps?.action.attributes.TypeSpecifier) {
       this.setState({
-        typeSpecifier: nextProps.action.attributes.TypeSpecifier,
+        typeSpecifier: nextProps?.action.attributes.TypeSpecifier,
       });
     }
-    if (nextProps.action && nextProps.action.attributes.ActionType) {
-      this.setState({ type: nextProps.action.attributes.ActionType });
+    if (nextProps?.action.attributes.ActionType) {
+      this.setState({ type: nextProps?.action.attributes.ActionType });
     }
     if (nextProps.documentState === 'view') {
       this.disableEditMode();
@@ -98,8 +98,8 @@ class Action extends Component {
     e.preventDefault();
     const newAttrs = {};
     Object.keys(recordAttributes).forEach((key) => {
-      if (recordAttributes[key] && recordAttributes[key].value) {
-        Object.assign(newAttrs, { [key]: recordAttributes[key].value });
+      if (recordAttributes?.[key].value) {
+        Object.assign(newAttrs, { [key]: recordAttributes?.[key].value });
       }
     });
     this.setState(
@@ -281,7 +281,7 @@ class Action extends Component {
   generateRecords(records) {
     const elements = [];
     Object.keys(records).forEach((key) => {
-      if (Object.prototype.hasOwnProperty.call(this.props.records, records[key])) {
+      if (Object.hasOwn(this.props.records, records[key])) {
         elements.push(
           <Record
             key={key}
@@ -359,7 +359,15 @@ class Action extends Component {
       this.props.documentState === 'edit' ? 'editable' : null,
     ]);
     let typeSpecifier = (
-      <span className={classNames} onClick={() => this.editTypeSpecifier()}>
+      <span
+        className={classNames}
+        onClick={() => this.editTypeSpecifier()}
+        onKeyUp={(e) => {
+          if (e.key === 'Enter') {
+            this.editTypeSpecifier();
+          }
+        }}
+      >
         {this.state.typeSpecifier}
       </span>
     );
@@ -410,7 +418,7 @@ class Action extends Component {
   render() {
     // TODO: Handle errors where we don't have an valid action (i.e 400 error from API)
     const { action } = this.props;
-    const recordElements = action && action.records ? this.generateRecords(action.records) : [];
+    const recordElements = action?.records ? this.generateRecords(action?.records) : [];
 
     return (
       <div

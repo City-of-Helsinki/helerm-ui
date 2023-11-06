@@ -55,7 +55,7 @@ class Conversion extends React.Component {
       });
     } else {
       this.setState({
-        value: option && option.value ? option.value : option,
+        value: option?.value ? option?.value : option,
       });
     }
   }

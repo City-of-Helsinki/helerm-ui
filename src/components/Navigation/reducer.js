@@ -110,10 +110,10 @@ const requestNavigationAction = (state, { payload }) => {
       $set: true
     }
   };
-  if (payload && payload.includeRelated) {
+  if (payload?.includeRelated) {
     newState = {
       ...newState,
-      includeRelated: { $set: payload.includeRelated }
+      includeRelated: { $set: payload?.includeRelated }
     };
   }
   return update(state, newState);

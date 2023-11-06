@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable camelcase */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
@@ -130,6 +129,7 @@ class InfinityMenu extends Component {
     return filters.length ? `//*[${filters.join(filterConditionString)}]` : '';
   }
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   setDisplayTree(tree, prevs, curr, keyPath) {
     const currLevel = Math.floor(keyPath.length / 2);
     const currCustomComponent =
@@ -187,6 +187,11 @@ class InfinityMenu extends Component {
               onMouseDown={(e) => (this.props.onLeafMouseDown ? this.props.onLeafMouseDown(e, curr) : null)}
               onMouseUp={(e) => (this.props.onLeafMouseUp ? this.props.onLeafMouseUp(e, curr) : null)}
               onClick={(e) => (this.props.onLeafMouseClick ? this.props.onLeafMouseClick(e, curr) : null)}
+              onKeyUp={(e) => {
+                if (this.props.onLeafMouseClick && e.key === 'Enter') {
+                  this.props.onLeafMouseClick(e, curr);
+                }
+              }}
             >
               <span>
                 {curr.name} <ClassificationLink id={curr.id} />
@@ -200,6 +205,11 @@ class InfinityMenu extends Component {
             key={itemKey}
             className='infinity-menu-load-more-container'
             onClick={(e) => this.onLoadMoreClick(tree, curr, keyPath, e)}
+            onKeyUp={(e) => {
+              if (e.key === 'Enter') {
+                this.onLoadMoreClick(tree, curr, keyPath, e);
+              }
+            }}
           >
             <span>Näytä lisää</span>
           </li>,
@@ -226,6 +236,11 @@ class InfinityMenu extends Component {
             <div
               key={key}
               onClick={(e) => this.onNodeClick(tree, curr, keyPath, e)}
+              onKeyUp={(e) => {
+                if (e.key === 'Enter') {
+                  this.onNodeClick(tree, curr, keyPath, e);
+                }
+              }}
               className={classnames('infinity-menu-node-container', {
                 opened: !!curr.isOpen,
               })}
@@ -256,6 +271,11 @@ class InfinityMenu extends Component {
           <div
             key={key}
             onClick={(e) => this.onNodeClick(tree, curr, keyPath, e)}
+            onKeyUp={(e) => {
+              if (e.key === 'Enter') {
+                this.onNodeClick(tree, curr, keyPath, e);
+              }
+            }}
             className={classnames('infinity-menu-node-container', {
               opened: !!curr.isOpen,
             })}
@@ -284,15 +304,20 @@ class InfinityMenu extends Component {
     return prevs;
   }
 
-  createSnapshots = (tree) => {
-    const snapshots = tree.reduce((prev, curr, key) => {
-      if (key === undefined) {
-        return prev;
+  getNodeMatchesSearchFilter(filters, node) {
+    if (filters.length) {
+      if (this.props.isDetailSearch) {
+        const snapshot = this.state.snapshots[node.id] ? this.state.snapshots[node.id] : null;
+        const result = snapshot ? JSON.search(snapshot, filters) : [];
+
+        return result.length > 0;
       }
-      return this.findSnapshot(prev, curr);
-    }, {});
-    this.setState({ snapshots });
-  };
+
+      return this.props.filter(node, filters);
+    }
+
+    return true;
+  }
 
   filterTree = (searchInputs, tree, isDetailSearch) => {
     const filters = isDetailSearch ? this.getDetailFilters(searchInputs) : searchInputs[0];
@@ -307,6 +332,16 @@ class InfinityMenu extends Component {
     this.setState({ filteredTree });
   };
 
+  createSnapshots = (tree) => {
+    const snapshots = tree.reduce((prev, curr, key) => {
+      if (key === undefined) {
+        return prev;
+      }
+      return this.findSnapshot(prev, curr);
+    }, {});
+    this.setState({ snapshots });
+  };
+
   findSnapshot(snapshots, node) {
     if (!node.children) {
       snapshots[node.id] = Defiant.getSnapshot(node);
@@ -319,23 +354,17 @@ class InfinityMenu extends Component {
 
   findFiltered(trees, node, key, filters) {
     const newNode = cloneDeep(node);
+
     if (!node.children) {
-      let nodeMatchesSearchFilter = true;
-      if (filters.length) {
-        if (this.props.isDetailSearch) {
-          const snapshot = this.state.snapshots[node.id] ? this.state.snapshots[node.id] : null;
-          const result = snapshot ? JSON.search(snapshot, filters) : [];
-          nodeMatchesSearchFilter = result.length > 0;
-        } else {
-          nodeMatchesSearchFilter = this.props.filter(node, filters);
-        }
-      }
+      const nodeMatchesSearchFilter = this.getNodeMatchesSearchFilter(filters, node);
+
       if (nodeMatchesSearchFilter) {
         newNode.isSearchDisplay = true;
         trees.push(newNode);
       }
       return trees;
     }
+
     const filteredSubFolder = node.children.length
       ? node.children.reduce((p, c, k) => this.findFiltered(p, c, k, filters), [])
       : [];
@@ -349,6 +378,7 @@ class InfinityMenu extends Component {
       newNode.maxLeaves = newNode.maxLeaves ? newNode.maxLeaves : this.props.maxLeaves;
       trees.push(newNode);
     }
+
     return trees;
   }
 
@@ -471,7 +501,15 @@ class InfinityMenu extends Component {
                 <span className='fa-solid fa-list' aria-hidden='true' />
               </button>
               {!!this.props.path.length && (
-                <ol className='breadcrumb' onClick={this.props.toggleNavigationVisibility}>
+                <ol
+                  className='breadcrumb'
+                  onClick={this.props.toggleNavigationVisibility}
+                  onKeyUp={(e) => {
+                    if (e.key === 'Enter') {
+                      this.props.toggleNavigationVisibility();
+                    }
+                  }}
+                >
                   {this.props.path.map((item, index) => (
                     <li
                       className={classnames({
@@ -570,11 +608,9 @@ InfinityMenu.propTypes = {
 };
 
 InfinityMenu.defaultProps = {
-  disableDefaultHeaderContent: false,
   emptyTreeComponent: EmptyTree,
   emptyTreeComponentProps: {},
   filter: (node, searchInput) => node.name.toLowerCase().indexOf(searchInput.toLowerCase()) >= 0,
-  headerContent: null,
   headerProps: {},
   maxLeaves: Infinity,
   onLeafMouseClick: () => {},

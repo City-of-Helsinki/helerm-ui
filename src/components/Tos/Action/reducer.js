@@ -32,7 +32,7 @@ export function editAction(attributes, actionId) {
   const editedAttributes = {};
 
   Object.keys(attributes).forEach(key => {
-    if (Object.prototype.hasOwnProperty.call(attributes, key) && attributes[key].checked) {
+    if (Object.hasOwn(attributes, key) && attributes[key].checked) {
       editedAttributes[key] = attributes[key].value;
     }
   });
@@ -84,7 +84,7 @@ export const editActionAction = (state, { payload }) => update(state, {
 });
 
 export const editActionAttributeAction = (state, { payload }) => {
-  if (Object.prototype.hasOwnProperty.call(payload, 'typeSpecifier')) {
+  if (Object.hasOwn(payload, 'typeSpecifier')) {
     return update(state, {
       actions: {
         [payload.actionId]: {
@@ -98,7 +98,7 @@ export const editActionAttributeAction = (state, { payload }) => {
     });
   }
 
-  if (Object.prototype.hasOwnProperty.call(payload, 'type')) {
+  if (Object.hasOwn(payload, 'type')) {
     return update(state, {
       actions: {
         [payload.actionId]: {

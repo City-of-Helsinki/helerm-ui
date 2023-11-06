@@ -23,19 +23,19 @@ class Login extends React.Component {
 
   getUserLink() {
     const { user } = this.props;
-    const linkText = user && user.id ? 'Kirjaudu ulos' : 'Kirjaudu sisään';
+    const linkText = user?.id ? 'Kirjaudu ulos' : 'Kirjaudu sisään';
 
     return (
-      <span className='login-button' role='button' onClick={this.handleUserLinkClick}>
+      <button className='btn btn-link login-button' type='button' onClick={this.handleUserLinkClick}>
         {linkText}
-      </span>
+      </button>
     );
   }
 
   getDisplayName() {
     const { user } = this.props;
 
-    if (user && user.id) {
+    if (user?.id) {
       if (user.displayName) {
         return user.displayName;
       }

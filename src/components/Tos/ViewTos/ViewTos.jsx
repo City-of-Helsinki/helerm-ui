@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable import/no-cycle */
 /* eslint-disable camelcase */
 /* eslint-disable react/forbid-prop-types */
@@ -192,8 +191,8 @@ class ViewTOS extends React.Component {
 
   getClassificationInfo(tosResponse, tosId) {
     const { payload } = tosResponse;
-    if (payload && payload.entities && payload.entities.tos && payload.entities.tos[tosId]) {
-      const tos = payload.entities.tos[tosId];
+    if (payload?.entities?.tos?.[tosId]) {
+      const tos = payload?.entities?.tos?.[tosId];
       return tos.classification;
     }
     return null;
@@ -258,7 +257,7 @@ class ViewTOS extends React.Component {
   evaluateAttributes(items, validate, attributeTypes) {
     let isValid = true;
     Object.keys(items).forEach((item) => {
-      if (Object.prototype.hasOwnProperty.call(items, item)) {
+      if (Object.hasOwn(items, item)) {
         const validAttributes = validate(items[item], attributeTypes).length === 0;
         if (!validAttributes) {
           isValid = false;
@@ -282,28 +281,22 @@ class ViewTOS extends React.Component {
   }
 
   scrollToType(type, id) {
-    if (type === 'phase') {
-      const element = this.phases[id] || null;
-      if (element) {
-        element.scrollToPhase();
-      }
+    if (type === 'phase' && this.phases[id]) {
+      this.phases[id].scrollToPhase();
     } else if (type === 'action') {
       const action = this.props.selectedTOS.actions[id];
-      if (action && action.phase) {
-        const phase = this.phases[action.phase] || null;
-        if (phase) {
-          phase.scrollToAction(id);
-        }
+
+      if (action?.phase && this.phases[action?.phase]) {
+        this.phases[action?.phase].scrollToAction(id);
       }
     } else if (type === 'record') {
       const record = this.props.selectedTOS.records[id];
-      if (record && record.action) {
-        const action = this.props.selectedTOS.actions[record.action];
-        if (action && action.phase) {
-          const phase = this.phases[action.phase] || null;
-          if (phase) {
-            phase.scrollToActionRecord(record.action, id);
-          }
+
+      if (record?.action) {
+        const action = this.props.selectedTOS.actions[record?.action];
+
+        if (action?.phase && this.phases[action?.phase]) {
+          this.phases[action?.phase].scrollToActionRecord(record?.action, id);
         }
       }
     }
@@ -326,7 +319,7 @@ class ViewTOS extends React.Component {
     return this.props
       .saveDraft()
       .then((res) => {
-        if (res && res.version && res.id) {
+        if (res?.version && res?.id) {
           // fetch tos so that history will be intact and url shows up-to-date version
           this.props.history.push(`/view-tos/${res.id}/version/${res.version}`);
         }
@@ -465,7 +458,7 @@ class ViewTOS extends React.Component {
     const options = [];
 
     Object.keys(typeOptions).forEach((key) => {
-      if (Object.prototype.hasOwnProperty.call(typeOptions, key)) {
+      if (Object.hasOwn(typeOptions, key)) {
         options.push({
           label: typeOptions[key].value,
           value: typeOptions[key].value,
@@ -508,7 +501,7 @@ class ViewTOS extends React.Component {
     const attributeElements = [];
 
     Object.keys(attributeTypes).forEach((key) => {
-      if ((Object.prototype.hasOwnProperty.call(attributes, key) && attributes[key]) || key === 'InformationSystem') {
+      if ((Object.hasOwn(attributes, key) && attributes[key]) || key === 'InformationSystem') {
         attributeElements.push(
           <Attribute
             key={key}
@@ -542,7 +535,7 @@ class ViewTOS extends React.Component {
     const phaseElements = [];
     if (phases) {
       Object.keys(phases).forEach((key) => {
-        if (Object.prototype.hasOwnProperty.call(phases, key)) {
+        if (Object.hasOwn(phases, key)) {
           phaseElements.push(
             <Phase
               key={key}

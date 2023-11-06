@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable import/no-cycle */
 /* eslint-disable camelcase */
 /* eslint-disable react/forbid-prop-types */
@@ -45,9 +44,40 @@ class Attribute extends React.Component {
       });
     } else {
       this.setState({
-        attribute: option && option.value ? option.value : option,
+        attribute: option?.value ? option?.value : option,
       });
     }
+  }
+
+  getAttributeValue(attribute, attributeIndex, attributeTypes, type) {
+    if (this.state.mode === 'view') {
+      const resolveDisplayName = (attr) => {
+        if (!attr) return '';
+        return getDisplayLabelForAttribute({
+          attributeValue: attr,
+          identifier: attributeIndex,
+        });
+      };
+
+      return (
+        <div className='table-value'>
+          {this.state.attribute instanceof Array
+            ? this.state.attribute.map((attr) => resolveDisplayName(attr)).join(', ')
+            : resolveDisplayName(this.state.attribute)}
+        </div>
+      );
+    }
+
+    if (this.state.mode === 'edit') {
+      if (type === 'attribute') {
+        return this.generateAttributeInput(attributeTypes[attributeIndex], this.state.attribute);
+      }
+      if (type === 'basic') {
+        return this.generateBasicAttributeInput(attributeIndex, attribute);
+      }
+    }
+
+    return null;
   }
 
   changeState(newState) {
@@ -95,8 +125,8 @@ class Attribute extends React.Component {
   }
 
   generateAttributeInput(attribute, currentAttribute) {
-    if (attribute.values && attribute.values.length) {
-      const options = attribute.values.map((option) => ({
+    if (attribute?.values.length) {
+      const options = attribute?.values.map((option) => ({
         value: option.value,
         label: getDisplayLabelForAttribute({
           attributeValue: option.value,
@@ -168,7 +198,7 @@ class Attribute extends React.Component {
   generateBasicAttributeDropdown(typeOptions) {
     const options = [];
     Object.keys(typeOptions).forEach((key) => {
-      if (Object.prototype.hasOwnProperty.call(typeOptions, key)) {
+      if (Object.hasOwn(typeOptions, key)) {
         options.push({
           label: typeOptions[key].value,
           value: typeOptions[key].value,
@@ -207,7 +237,11 @@ class Attribute extends React.Component {
 
   render() {
     const { attribute, attributeIndex, showAttributes, attributeKey, attributeTypes, editable, type } = this.props;
-    let attributeValue;
+
+    if (attribute === null || (attribute !== null && type !== 'basic')) {
+      return null;
+    }
+
     if (editable === false && attribute !== null) {
       return (
         <span className='list-group-item col-xs-6 attribute-basic'>
@@ -216,47 +250,27 @@ class Attribute extends React.Component {
         </span>
       );
     }
-    if (this.state.mode === 'view') {
-      const resolveDisplayName = (attr) => {
-        if (!attr) return '';
-        return getDisplayLabelForAttribute({
-          attributeValue: attr,
-          identifier: attributeIndex,
-        });
-      };
-      attributeValue = (
-        <div className='table-value'>
-          {this.state.attribute instanceof Array
-            ? this.state.attribute.map((attr) => resolveDisplayName(attr)).join(', ')
-            : resolveDisplayName(this.state.attribute)}
-        </div>
-      );
-    }
-    if (this.state.mode === 'edit') {
-      if (type === 'attribute') {
-        attributeValue = this.generateAttributeInput(attributeTypes[attributeIndex], this.state.attribute);
-      }
-      if (type === 'basic') {
-        attributeValue = this.generateBasicAttributeInput(attributeIndex, attribute);
-      }
-    }
 
-    if (attribute !== null || (attribute === null && type === 'basic')) {
-      return (
-        <span
-          onClick={() => this.activateEditMode()}
-          className={classnames([
-            'list-group-item col-xs-6 attribute',
-            showAttributes ? 'visible' : 'hidden',
-            type === 'basic' ? 'attribute-basic' : '',
-          ])}
-        >
-          <span className='table-key'>{attributeKey}</span>
-          {attributeValue}
-        </span>
-      );
-    }
-    return null;
+    const attributeValue = this.getAttributeValue(attribute, attributeIndex, attributeTypes, type);
+
+    return (
+      <span
+        onClick={() => this.activateEditMode()}
+        onKeyUp={(e) => {
+          if (e.key === 'Enter') {
+            this.activateEditMode();
+          }
+        }}
+        className={classnames([
+          'list-group-item col-xs-6 attribute',
+          showAttributes ? 'visible' : 'hidden',
+          type === 'basic' ? 'attribute-basic' : '',
+        ])}
+      >
+        <span className='table-key'>{attributeKey}</span>
+        {attributeValue}
+      </span>
+    );
   }
 }
 

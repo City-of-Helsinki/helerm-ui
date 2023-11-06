@@ -36,7 +36,7 @@ export function receiveAttributeTypes(attributes, validationRules) {
       // Add rules where attribute is allowed to be
       Object.keys(validationRules).forEach((rule) => {
         if (
-          Object.prototype.hasOwnProperty.call(validationRules, rule) &&
+          Object.hasOwn(validationRules, rule) &&
           validationRules[rule].properties[result.identifier]
         ) {
           allowedIn.push(rule);
@@ -53,11 +53,10 @@ export function receiveAttributeTypes(attributes, validationRules) {
       // Add rules where multi selection is allowed
       Object.keys(validationRules).forEach((key) => {
         if (
-          validationRules[key].properties[result.identifier] &&
-          validationRules[key].properties[result.identifier].anyOf
+          validationRules[key].properties[result.identifier]?.anyOf
         ) {
           const anyOfArray = find(
-            validationRules[key].properties[result.identifier].anyOf,
+            validationRules[key].properties[result.identifier]?.anyOf,
             (anyOf) => anyOf.type === 'array'
           );
           if (anyOfArray) {
@@ -68,12 +67,11 @@ export function receiveAttributeTypes(attributes, validationRules) {
 
       // Add requiredIn attributes
       Object.keys(validationRules).forEach((key) => {
-        validationRules[key].required &&
-          validationRules[key].required.forEach((rule) => {
-            if (rule === result.identifier) {
-              requiredIn.push(key);
-            }
-          });
+        validationRules[key]?.required.forEach((rule) => {
+          if (rule === result.identifier) {
+            requiredIn.push(key);
+          }
+        });
       });
 
       // Add defaultIn attributes
@@ -86,47 +84,44 @@ export function receiveAttributeTypes(attributes, validationRules) {
 
       // Add conditional rules if any
       Object.keys(validationRules).forEach((key) => {
-        validationRules[key].allOf &&
-          validationRules[key].allOf.forEach((oneOf) => {
-            Object.keys(oneOf).forEach((oneOfKey) => {
-              const rules = oneOf[oneOfKey];
-              // We're only interested in required-keys
-              const requiredKeys = rules[0].required;
+        validationRules[key]?.allOf.forEach((oneOf) => {
+          Object.keys(oneOf).forEach((oneOfKey) => {
+            const rules = oneOf[oneOfKey];
+            // We're only interested in required-keys
+            const requiredKeys = rules[0].required;
 
-              requiredKeys.forEach((requiredIndentifier) => {
-                Object.keys(rules[0].properties).forEach((property) => {
-                  const values = [];
-                  Object.keys(rules[0].properties[property]).forEach((pkey) => {
-                    rules[0].properties[property][pkey].forEach((value) => {
-                      values.push(value);
-                    });
+            requiredKeys.forEach((requiredIndentifier) => {
+              Object.keys(rules[0].properties).forEach((property) => {
+                const values = [];
+                Object.keys(rules[0].properties[property]).forEach((pkey) => {
+                  rules[0].properties[property][pkey].forEach((value) => {
+                    values.push(value);
                   });
-
-                  const exists = !!find(requiredIf, (reqObj) => reqObj.key === property);
-
-                  if (requiredIndentifier === result.identifier && !exists) {
-                    requiredIf.push({
-                      key: property,
-                      values
-                    });
-                  }
                 });
+
+                const exists = !!find(requiredIf, (reqObj) => reqObj.key === property);
+
+                if (requiredIndentifier === result.identifier && !exists) {
+                  requiredIf.push({
+                    key: property,
+                    values
+                  });
+                }
               });
             });
           });
+        });
       });
 
       // Add allow values outside choices rule
       Object.keys(validationRules).forEach((key) => {
-        validationRules[key].extra_validations &&
-          validationRules[key].extra_validations.allow_values_outside_choices &&
-          validationRules[
-            key
-          ].extra_validations.allow_values_outside_choices.forEach((field) => {
-            if (field === result.identifier) {
-              allowValuesOutsideChoicesIn.push(key);
-            }
-          });
+        validationRules[
+          key
+        ].extra_validations?.allow_values_outside_choices?.forEach((field) => {
+          if (field === result.identifier) {
+            allowValuesOutsideChoicesIn.push(key);
+          }
+        });
       });
 
       attributeTypeList[result.identifier] = {

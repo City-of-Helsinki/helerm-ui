@@ -1,6 +1,6 @@
 /* eslint-disable import/no-cycle */
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators } from '@reduxjs/toolkit';
 import { get } from 'lodash';
 
 import { fetchNavigation } from '../../Navigation/reducer';

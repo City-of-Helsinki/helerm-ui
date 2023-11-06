@@ -157,11 +157,87 @@ class Phase extends React.Component {
   }
 
   getTargetName() {
-    const hasType = this.state.type && this.state.type.length;
-    const hasTypeSpecifier = this.state.typeSpecifier && this.state.typeSpecifier.length;
+    const hasType = this.state?.type.length;
+    const hasTypeSpecifier = this.state?.typeSpecifier.length;
     const slash = hasType && hasTypeSpecifier ? ' / ' : '';
 
-    return (this.state.type || '') + slash + (this.state.typeSpecifier || '');
+    return (this.state?.type || '') + slash + (this.state?.typeSpecifier || '');
+  }
+
+  getTypeSpecifier(classNames) {
+    if (this.state.mode === 'edit' && this.state.editingTypeSpecifier) {
+      return (
+        <div className='col-md-5 phase-title-input row'>
+          <form onSubmit={this.updateTypeSpecifier}>
+            <input
+              className='input-title form-control'
+              value={this.state.typeSpecifier || ''}
+              onChange={this.onTypeSpecifierChange}
+              onBlur={this.updateTypeSpecifier}
+              autoFocus
+            />
+          </form>
+        </div>
+      );
+    }
+
+    return (
+      <span
+        className={classNames}
+        onClick={() => this.editTypeSpecifier()}
+        onKeyUp={(e) => {
+          if (e.key === 'Enter') {
+            this.editTypeSpecifier();
+          }
+        }}
+      >
+        {this.state.typeSpecifier}
+      </span>
+    );
+  }
+
+  getPhaseType(classNames) {
+    if (this.state.mode === 'edit' && this.state.editingType) {
+      const phaseTypesAsOptions = Object.values(this.props.phaseTypes).map((pt) => ({
+        value: pt.value,
+        label: getDisplayLabelForAttribute({
+          attributeValue: pt.value,
+          identifier: 'PhaseType',
+        }),
+      }));
+
+      return (
+        <div className='col-md-6 phase-title-dropdown'>
+          <form onSubmit={this.updatePhaseType}>
+            <DropdownInput
+              type='phase'
+              valueState={this.state.type}
+              options={phaseTypesAsOptions}
+              onChange={this.onTypeChange}
+              onInputChange={this.onTypeInputChange}
+              onSubmit={this.updatePhaseType}
+            />
+          </form>
+        </div>
+      );
+    }
+
+    return (
+      <span
+        className={classNames}
+        onClick={() => this.editType()}
+        onKeyUp={(e) => {
+          if (e.key === 'Enter') {
+            this.editType();
+          }
+        }}
+      >
+        {getDisplayLabelForAttribute({
+          attributeValue: this.state.type,
+          identifier: 'PhaseType',
+        })}
+      </span>
+    );
   }
 
   editType() {
@@ -275,7 +351,7 @@ class Phase extends React.Component {
     const options = [];
 
     Object.keys(typeOptions).forEach((key) => {
-      if (Object.prototype.hasOwnProperty.call(typeOptions, key)) {
+      if (Object.hasOwn(typeOptions, key)) {
         options.push({
           label: typeOptions[key].name,
           value: typeOptions[key].name,
@@ -314,7 +390,7 @@ class Phase extends React.Component {
   generateActions(actions) {
     const elements = [];
     Object.keys(actions).forEach((key) => {
-      if (Object.prototype.hasOwnProperty.call(actions, key)) {
+      if (Object.hasOwn(actions, key)) {
         elements.push(
           <Action
             key={key}
@@ -415,66 +491,16 @@ class Phase extends React.Component {
 
   renderBasicAttributes() {
     const { phase } = this.props;
+
     const classNames = classnames([
       'col-md-6',
       'basic-attribute',
       'phase-basic-attribute',
       this.props.documentState === 'edit' ? 'editable' : null,
     ]);
-    let typeSpecifier = (
-      <span className={classNames} onClick={() => this.editTypeSpecifier()}>
-        {this.state.typeSpecifier}
-      </span>
-    );
-    let phaseType = (
-      <span className={classNames} onClick={() => this.editType()}>
-        {getDisplayLabelForAttribute({
-          attributeValue: this.state.type,
-          identifier: 'PhaseType',
-        })}
-      </span>
-    );
 
-    if (this.state.mode === 'edit') {
-      if (this.state.editingTypeSpecifier) {
-        typeSpecifier = (
-          <div className='col-md-5 phase-title-input row'>
-            <form onSubmit={this.updateTypeSpecifier}>
-              <input
-                className='input-title form-control'
-                value={this.state.typeSpecifier || ''}
-                onChange={this.onTypeSpecifierChange}
-                onBlur={this.updateTypeSpecifier}
-                autoFocus
-              />
-            </form>
-          </div>
-        );
-      }
-      if (this.state.editingType) {
-        const phaseTypesAsOptions = Object.values(this.props.phaseTypes).map((pt) => ({
-          value: pt.value,
-          label: getDisplayLabelForAttribute({
-            attributeValue: pt.value,
-            identifier: 'PhaseType',
-          }),
-        }));
-        phaseType = (
-          <div className='col-md-6 phase-title-dropdown'>
-            <form onSubmit={this.updatePhaseType}>
-              <DropdownInput
-                type='phase'
-                valueState={this.state.type}
-                options={phaseTypesAsOptions}
-                onChange={this.onTypeChange}
-                onInputChange={this.onTypeInputChange}
-                onSubmit={this.updatePhaseType}
-              />
-            </form>
-          </div>
-        );
-      }
-    }
+    const typeSpecifier = this.getTypeSpecifier(classNames);
+    const phaseType = this.getPhaseType(classNames);
 
     if (phase.is_open && phase.actions.length) {
       return (
@@ -507,6 +533,7 @@ class Phase extends React.Component {
         </RenderPropSticky>
       );
     }
+
     return (
       <div className={`phase-title ${phase.is_attributes_open ? 'phase-open' : 'phase-closed'}`}>
         <div className='basic-attributes'>
@@ -655,7 +682,7 @@ class Phase extends React.Component {
 
 Phase.propTypes = {
   actionTypes: PropTypes.object.isRequired,
-  actions: PropTypes.object.isRequired,
+  actions: PropTypes.object,
   addAction: PropTypes.func.isRequired,
   addRecord: PropTypes.func.isRequired,
   attributeTypes: PropTypes.object.isRequired,
@@ -675,7 +702,7 @@ Phase.propTypes = {
   phases: PropTypes.object.isRequired || PropTypes.array.isRequired,
   phasesOrder: PropTypes.array.isRequired,
   recordTypes: PropTypes.object.isRequired,
-  records: PropTypes.object.isRequired,
+  records: PropTypes.object,
   removeAction: PropTypes.func.isRequired,
   removePhase: PropTypes.func.isRequired,
   removeRecord: PropTypes.func.isRequired,

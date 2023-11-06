@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -6,7 +5,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { map, find, forEach } from 'lodash';
+import { map, find } from 'lodash';
 
 import './ValidationBar.scss';
 
@@ -47,36 +46,47 @@ class ValidationBar extends Component {
   }
 
   getInvalidSection(type, section, validateRequired, validateWarn, children) {
-    if (section) {
-      const { attributeTypes } = this.props;
-      const invalidAttributes = validateRequired ? validateRequired(section, attributeTypes) : [];
-      const warnAttributes = validateWarn ? validateWarn(section, attributeTypes) : [];
-      const nameAttribute = section.attributes
-        ? find(ATTRIBUTE_NAME_FIELDS, (field) => !!section.attributes[field])
-        : '';
-      if (invalidAttributes.length || warnAttributes.length || (children && children.length)) {
-        return (
-          <div className={`sidebar-content-${type}`} key={section.id}>
-            <div className='parent-name' onClick={() => this.props.scrollToType(type, section.id)}>
-              {nameAttribute ? section.attributes[nameAttribute] : ''}
-            </div>
-            <div className='missing-attributes'>
-              {map(invalidAttributes, (item, key) => (
-                <div key={key} className='missing-attribute'>
-                  <i className='fa-solid fa-triangle-exclamation' /> {attributeTypes[item].name}
-                </div>
-              ))}
-              {map(warnAttributes, (item, key) => (
-                <div key={key} className='warn-attribute'>
-                  <i className='fa-solid fa-circle-exclamation' /> {attributeTypes[item].name}
-                </div>
-              ))}
-            </div>
-            {children}
-          </div>
-        );
-      }
+    if (!section) {
+      return null;
     }
+
+    const { attributeTypes } = this.props;
+
+    const invalidAttributes = validateRequired ? validateRequired(section, attributeTypes) : [];
+    const warnAttributes = validateWarn ? validateWarn(section, attributeTypes) : [];
+    const nameAttribute = section.attributes ? find(ATTRIBUTE_NAME_FIELDS, (field) => !!section.attributes[field]) : '';
+
+    if (invalidAttributes.length || warnAttributes.length || children?.length) {
+      return (
+        <div className={`sidebar-content-${type}`} key={section.id}>
+          <div
+            className='parent-name'
+            onClick={() => this.props.scrollToType(type, section.id)}
+            onKeyUp={(e) => {
+              if (e.key === 'Enter') {
+                this.props.scrollToType(type, section.id);
+              }
+            }}
+          >
+            {nameAttribute ? section.attributes[nameAttribute] : ''}
+          </div>
+          <div className='missing-attributes'>
+            {map(invalidAttributes, (item, key) => (
+              <div key={key} className='missing-attribute'>
+                <i className='fa-solid fa-triangle-exclamation' /> {attributeTypes[item].name}
+              </div>
+            ))}
+            {map(warnAttributes, (item, key) => (
+              <div key={key} className='warn-attribute'>
+                <i className='fa-solid fa-circle-exclamation' /> {attributeTypes[item].name}
+              </div>
+            ))}
+          </div>
+          {children}
+        </div>
+      );
+    }
+
     return null;
   }
 
@@ -110,49 +120,45 @@ class ValidationBar extends Component {
 
   generateInvalidAttributes() {
     const { selectedTOS } = this.props;
+
     const showInvalidAttributes = this.getFilterByStatus(VALIDATION_FILTER_ERROR);
     const showWarnAttributes = this.getFilterByStatus(VALIDATION_FILTER_WARN);
-    const invalidPhases = [];
-    forEach(selectedTOS.phases, (phase, index) => {
-      const invalidActions = [];
-      forEach(phase.actions, (actionId) => {
-        const action = selectedTOS.actions[actionId];
-        const invalidRecords = [];
-        forEach(action.records, (recordId) => {
-          const invalidRecord = this.getInvalidSection(
-            'record',
-            selectedTOS.records[recordId],
-            showInvalidAttributes ? validateRecord : null,
-            showWarnAttributes ? validateRecordWarnings : null,
-          );
-          if (invalidRecord) {
-            invalidRecords.push(invalidRecord);
-          }
-        });
-        const invalidAction = this.getInvalidSection(
-          'action',
-          action,
-          showInvalidAttributes ? validateAction : null,
-          showWarnAttributes ? validateActionWarnings : null,
-          invalidRecords,
-        );
-        if (invalidAction) {
-          invalidActions.push(invalidAction);
-        }
-      });
-      const invalidPhase = this.getInvalidSection(
-        'phase',
-        phase,
-        showInvalidAttributes ? validatePhase : null,
-        showWarnAttributes ? validatePhaseWarnings : null,
-        invalidActions,
-      );
-      if (invalidPhase) {
-        invalidPhases.push(<div key={index}>{invalidPhase}</div>);
-      }
-    });
 
-    return invalidPhases;
+    const phaseActionIds = selectedTOS.phases.filter((phase) => phase.actions);
+
+    const invalidRecords = phaseActionIds
+      .map((actionId) => selectedTOS.actions[actionId].records)
+      .map((recordId) =>
+        this.getInvalidSection(
+          'record',
+          selectedTOS.records[recordId],
+          showInvalidAttributes ? validateRecord : null,
+          showWarnAttributes ? validateRecordWarnings : null,
+        ),
+      );
+
+    const invalidActions = phaseActionIds.map((actionId) =>
+      this.getInvalidSection(
+        'action',
+        selectedTOS.actions[actionId],
+        showInvalidAttributes ? validateAction : null,
+        showWarnAttributes ? validateActionWarnings : null,
+        invalidRecords,
+      ),
+    );
+
+    return selectedTOS.phases
+      .map((phase) => ({
+        id: phase.id,
+        invalidSection: this.getInvalidSection(
+          'phase',
+          phase,
+          showInvalidAttributes ? validatePhase : null,
+          showWarnAttributes ? validatePhaseWarnings : null,
+          invalidActions,
+        ),
+      }))
+      .map(({ id, invalidSection }) => <div key={id}>{invalidSection}</div>);
   }
 
   renderInvalidContent() {
@@ -163,7 +169,18 @@ class ValidationBar extends Component {
     if (invalidTOSAttributes || invalidAttributes.length > 0) {
       return (
         <div className='sidebar-invalid-content'>
-          {invalidTOSAttributes && <h5 onClick={this.props.scrollToMetadata}>Käsittelyprosessi</h5>}
+          {invalidTOSAttributes && (
+            <h5
+              onClick={this.props.scrollToMetadata}
+              onKeyUp={(e) => {
+                if (e.key === 'Enter') {
+                  this.props.scrollToMetadata();
+                }
+              }}
+            >
+              Käsittelyprosessi
+            </h5>
+          )}
           {invalidTOSAttributes}
           {invalidAttributes}
         </div>

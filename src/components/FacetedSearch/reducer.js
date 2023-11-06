@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable import/no-named-as-default-member */
 /* eslint-disable no-param-reassign */
 import update from 'immutability-helper';
@@ -77,7 +76,7 @@ export function receivedNavigation() {
 
 export function updateAttributeTypes(attributeTypes) {
   const attributes = Object.keys(attributeTypes).reduce((acc, key) => {
-    if (Object.prototype.hasOwnProperty.call(attributeTypes, key)) {
+    if (Object.hasOwn(attributeTypes, key)) {
       const attr = attributeTypes[key];
       attr.allowedIn.forEach((type) => {
         acc.push({
@@ -149,7 +148,7 @@ const getFilteredHits = (filteredAttributes, type) => {
 
 const getFacetHits = (facets) => {
   const byKeys = facets.reduce((acc, facet) => {
-    if (Object.prototype.hasOwnProperty.call(acc, facet.key)) {
+    if (Object.hasOwn(acc, facet.key)) {
       acc[facet.key].push(...facet.hits);
     } else {
       acc[facet.key] = [...facet.hits];
@@ -158,7 +157,7 @@ const getFacetHits = (facets) => {
   }, {});
   const ids = Object.keys(byKeys || {}).reduce((acc, key, index) => {
     const hits = [];
-    if (Object.prototype.hasOwnProperty.call(byKeys, key)) {
+    if (Object.hasOwn(byKeys, key)) {
       byKeys[key].forEach((hit) => {
         if ((index === 0 && isEmpty(acc)) || includes(acc, hit)) {
           hits.push(hit);
@@ -176,7 +175,7 @@ const getFacetAttributesForType = (attributes, items, type) => {
     items.forEach((item) => {
       if (
         item.attributes &&
-        Object.prototype.hasOwnProperty.call(item.attributes, attribute.key) &&
+        Object.hasOwn(item.attributes, attribute.key) &&
         !isEmpty(item.attributes[attribute.key])
       ) {
         const index = findIndex(attribute.options, {
@@ -197,6 +196,29 @@ const getFacetAttributesForType = (attributes, items, type) => {
   });
   return typeAttributes;
 };
+
+const getSearchTermsFilteredAttributes = (searchTerm, attributes, andTerms, orTerms, notTerms) => {
+  if (!searchTerm) {
+    return attributes
+  }
+
+  return attributes.reduce((acc, attr) => {
+    const options = filter(attr.options, (option) => (
+      (isEmpty(andTerms) ||
+        every(andTerms, (st) => includes(option.ref, st))) &&
+      (isEmpty(orTerms) ||
+        some(orTerms, (st) => includes(option.ref, st))) &&
+      (isEmpty(notTerms) ||
+        every(notTerms, (st) => !includes(option.ref, st)))
+    ));
+
+    if (!isEmpty(options)) {
+      acc.push({ ...attr, options, open: false, showAll: false });
+    }
+
+    return acc;
+  }, []);
+}
 
 export function searchItems(searchTerm, type, isSuggestionsOnly = false) {
   const TERM_AND = 'AND';
@@ -238,31 +260,19 @@ export function searchItems(searchTerm, type, isSuggestionsOnly = false) {
 
   return (dispatch, getState) => {
     const { attributes } = getState().search;
-    const filteredAttributes = searchTerm
-      ? attributes.reduce((acc, attr) => {
-        const options = filter(attr.options, (option) => (
-          (isEmpty(andTerms) ||
-            every(andTerms, (st) => includes(option.ref, st))) &&
-          (isEmpty(orTerms) ||
-            some(orTerms, (st) => includes(option.ref, st))) &&
-          (isEmpty(notTerms) ||
-            every(notTerms, (st) => !includes(option.ref, st)))
-        ));
-        if (!isEmpty(options)) {
-          acc.push({ ...attr, options, open: false, showAll: false });
-        }
-        return acc;
-      }, [])
-      : attributes;
+
+    const filteredAttributes = getSearchTermsFilteredAttributes(searchTerm, attributes, andTerms, orTerms, notTerms);
 
     const classifications = getFilteredHits(
       filteredAttributes,
       TYPE_CLASSIFICATION
     );
+
     const functions = getFilteredHits(filteredAttributes, TYPE_FUNCTION);
     const phases = getFilteredHits(filteredAttributes, TYPE_PHASE);
     const actions = getFilteredHits(filteredAttributes, TYPE_ACTION);
     const records = getFilteredHits(filteredAttributes, TYPE_RECORD);
+
     const suggestions = [
       {
         type: TYPE_CLASSIFICATION,
@@ -285,9 +295,11 @@ export function searchItems(searchTerm, type, isSuggestionsOnly = false) {
         hits: records
       }
     ];
+
     if (isSuggestionsOnly) {
       return dispatch(createAction(SEARCH_SUGGESTIONS)(suggestions));
     }
+
     return dispatch(
       createAction(SEARCH_ITEMS)({
         classifications:
@@ -411,6 +423,7 @@ const requestClassificationsAction = (state) => update(state, {
   isFetching: { $set: true }
 });
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 const receiveClassificationsAction = (state, { payload }) => {
   const { items, page } = payload;
   const isAdd = page > 1;
@@ -581,6 +594,7 @@ const searchSuggestionsAction = (state, { payload }) => update(state, {
   suggestions: { $set: payload }
 });
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 const searchItemsAction = (state, { payload }) => {
   const { classifications, functions, phases, actions, records } = state;
   const { filteredAttributes } = payload;
@@ -637,7 +651,7 @@ const searchItemsAction = (state, { payload }) => {
     if (!isEmpty(terms)) {
       const matchedAttributes = Object.keys(item.attributes || {}).reduce(
         (acc, key) => {
-          if (Object.prototype.hasOwnProperty.call(item.attributes, key) && key !== 'name') {
+          if (Object.hasOwn(item.attributes, key) && key !== 'name') {
             const attrValue = isArray(item.attributes[key])
               ? item.attributes[key].join(', ')
               : item.attributes[key];

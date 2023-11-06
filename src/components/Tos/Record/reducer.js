@@ -14,7 +14,7 @@ export function addRecord(attributes, actionId) {
   const recordId = randomActionId();
   const newAttributes = {};
   Object.keys(attributes).forEach(key => {
-    if (Object.prototype.hasOwnProperty.call(attributes, key) && attributes[key].checked) {
+    if (Object.hasOwn(attributes, key) && attributes[key].checked) {
       newAttributes[key] = attributes[key].value;
     }
   });
@@ -33,7 +33,7 @@ export function editRecord(attributes, recordId) {
   const editedAttributes = {};
 
   Object.keys(attributes).forEach(key => {
-    if (Object.prototype.hasOwnProperty.call(attributes, key) && attributes[key].checked) {
+    if (Object.hasOwn(attributes, key) && attributes[key].checked) {
       editedAttributes[key] = attributes[key].value;
     }
   });
@@ -85,7 +85,7 @@ export const editRecordAction = (state, { payload }) => update(state, {
 });
 
 export const editRecordAttributeAction = (state, { payload }) => {
-  if (Object.prototype.hasOwnProperty.call(payload, 'typeSpecifier')) {
+  if (Object.hasOwn(payload, 'typeSpecifier')) {
     return update(state, {
       records: {
         [payload.recordId]: {
@@ -99,7 +99,7 @@ export const editRecordAttributeAction = (state, { payload }) => {
     });
   }
 
-  if (Object.prototype.hasOwnProperty.call(payload, 'type')) {
+  if (Object.hasOwn(payload, 'type')) {
     return update(state, {
       records: {
         [payload.recordId]: {
@@ -113,7 +113,7 @@ export const editRecordAttributeAction = (state, { payload }) => {
     });
   }
 
-  if (Object.prototype.hasOwnProperty.call(payload, 'tosAttribute')) {
+  if (Object.hasOwn(payload, 'tosAttribute')) {
     return update(state, {
       attributes: {
         [payload.attributeIndex]: {

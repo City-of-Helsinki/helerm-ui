@@ -28,12 +28,12 @@ export const getDisplayLabelForAttribute = ({
 
   if (identifier) {
     const identifierContent = attributeTypes[identifier];
-    if (identifierContent && identifierContent.values) {
-      const foundItem = identifierContent.values.find(
+    if (identifierContent?.values) {
+      const foundItem = identifierContent?.values.find(
         (item) => item.value === attributeValue
       );
-      if (foundItem && foundItem.name) {
-        return `${foundItem.value} ${foundItem.name}`;
+      if (foundItem?.name) {
+        return `${foundItem.value} ${foundItem?.name}`;
       }
     }
   } else if (id) {
@@ -42,8 +42,8 @@ export const getDisplayLabelForAttribute = ({
         const foundItem = attributeTypes[identifierKey].values.find(
           (item) => item.id === id && item.value === attributeValue
         );
-        if (foundItem && foundItem.name) {
-          return `${foundItem.value} ${foundItem.name}`;
+        if (foundItem?.name) {
+          return `${foundItem.value} ${foundItem?.name}`;
         }
       }
     }
@@ -53,8 +53,8 @@ export const getDisplayLabelForAttribute = ({
         const foundItem = attributeTypes[identifierKey].values.find(
           (item) => item.value === attributeValue
         );
-        if (foundItem && foundItem.name) {
-          return `${foundItem.value} ${foundItem.name}`;
+        if (foundItem?.name) {
+          return `${foundItem.value} ${foundItem?.name}`;
         }
       }
     }
@@ -66,7 +66,7 @@ export const generateDefaultAttributes = (attributeTypes, type) => {
   const attributes = {};
   Object.keys(attributeTypes).forEach((key) => {
     if (
-      Object.prototype.hasOwnProperty.call(attributeTypes, key) &&
+      Object.hasOwn(attributeTypes, key) &&
       ((this.state.showMore && attributeTypes[key].allowedIn.indexOf(type) >= 0 && key !== 'PhaseType') ||
         (!this.state.showMore && attributeTypes[key].defaultIn.indexOf(type) >= 0)) &&
       key !== 'TypeSpecifier'
@@ -92,7 +92,7 @@ export const attributeButton = (attributes, attributeTypes) => {
   });
   Object.keys(attributeTypes).forEach((key) => {
     if (
-      Object.prototype.hasOwnProperty.call(attributeTypes, key) &&
+      Object.hasOwn(attributeTypes, key) &&
       attributeTypes[key].defaultIn.indexOf('action') >= 0
     ) {
       actualAttributes.push(key);

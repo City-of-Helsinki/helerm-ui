@@ -1,7 +1,8 @@
+/* eslint-disable react/forbid-prop-types */
 /* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators } from '@reduxjs/toolkit';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
@@ -42,6 +43,7 @@ class InfoView extends Component {
 
 InfoView.propTypes = {
   setNavigationVisibility: PropTypes.func,
+  match: PropTypes.object.isRequired,
 };
 
 InfoView.BODY_CLASS = 'helerm-info-view';

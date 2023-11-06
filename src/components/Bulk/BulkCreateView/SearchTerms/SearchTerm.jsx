@@ -56,9 +56,9 @@ class SearchTerm extends React.Component {
 
   onChangeValue(option) {
     const { searchTerm } = this.props;
-    if (option && option.value) {
+    if (option?.value) {
       const value =
-        startsWith(option.value, '[') && endsWith(option.value, ']') ? JSON.parse(option.value) : option.value;
+        startsWith(option?.value, '[') && endsWith(option?.value, ']') ? JSON.parse(option?.value) : option?.value;
       this.props.onChangeSearchTerm({
         ...searchTerm,
         value,

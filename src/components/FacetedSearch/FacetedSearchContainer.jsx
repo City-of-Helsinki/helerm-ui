@@ -1,5 +1,5 @@
 /* eslint-disable import/no-cycle */
-import { bindActionCreators } from 'redux';
+import { bindActionCreators } from '@reduxjs/toolkit';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { push } from 'connected-react-router';

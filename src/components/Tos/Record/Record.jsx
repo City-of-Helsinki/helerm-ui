@@ -56,7 +56,7 @@ class Record extends Component {
     const newAttrs = {};
     // Gather attributes from child & assign them to current state record
     Object.keys(stateAttrs).forEach((key) => {
-      Object.assign(newAttrs, { [key]: childattrs[key] && childattrs[key].value });
+      Object.assign(newAttrs, { [key]: childattrs[key]?.value });
     });
 
     return newAttrs;

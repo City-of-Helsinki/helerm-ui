@@ -1,4 +1,4 @@
-import { bindActionCreators } from 'redux';
+import { bindActionCreators } from '@reduxjs/toolkit';
 import { connect } from 'react-redux';
 
 import { login, logout } from './reducer';

@@ -93,8 +93,7 @@ class Navigation extends React.Component {
     const isDetailSearch = this.isDetailSearch();
     const statusFilterOptions = isUser ? statusFilters : filter(statusFilters, { default: true });
     const statusFilterPlaceholder = this.props.isUser ? 'Suodata viimeisen tilan mukaan...' : 'Suodata tilan mukaan...';
-    const retentionPeriods =
-      attributeTypes && attributeTypes.RetentionPeriod ? attributeTypes.RetentionPeriod.values : [];
+    const retentionPeriods = attributeTypes?.RetentionPeriod ? attributeTypes?.RetentionPeriod.values : [];
     const retentionPeriodOptions = retentionPeriods.map((option) => ({
       value: option.value,
       label: option.value,
@@ -180,7 +179,7 @@ class Navigation extends React.Component {
         })
         .every((finalItem) => !!finalItem);
 
-      return matchesFilters || (item.children && item.children.filter(filterFunction).length);
+      return matchesFilters || item.children?.filter(filterFunction).length;
     };
 
     // Modify filtered items to be open
@@ -339,6 +338,7 @@ Navigation.propTypes = {
   push: PropTypes.func.isRequired,
   setNavigationVisibility: PropTypes.func.isRequired,
   tosPath: PropTypes.array.isRequired,
+  match: PropTypes.object.isRequired,
 };
 
 export default Navigation;

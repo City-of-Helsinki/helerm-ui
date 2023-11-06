@@ -5,7 +5,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { bindActionCreators, compose } from 'redux';
+import { bindActionCreators, compose } from '@reduxjs/toolkit';
 import { withRouter, Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import get from 'lodash/get';
@@ -124,8 +124,10 @@ PrintView.propTypes = {
   getAttributeName: PropTypes.func.isRequired,
   location: PropTypes.object.isRequired,
   params: PropTypes.object,
+  match: PropTypes.object.isRequired,
   push: PropTypes.func.isRequired,
   sortAttributeKeys: PropTypes.func.isRequired,
+  setNavigationVisibility: PropTypes.func.isRequired,
 };
 
 PrintView.BODY_CLASS = 'helerm-tos-print-view';
@@ -147,7 +149,7 @@ const denormalizeTOS = (tos) => ({
 });
 
 const getClassification = (tos, items) => {
-  if (tos && tos.classification && items) {
+  if (tos?.classification && items) {
     return itemById(items, tos.classification.id);
   }
   return null;
