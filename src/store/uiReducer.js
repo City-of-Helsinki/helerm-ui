@@ -8,6 +8,7 @@ import find from 'lodash/find';
 
 import api from '../utils/api';
 
+
 export const initialState = {
   isFetching: false,
   phaseTypes: {},
@@ -23,15 +24,12 @@ export const ERROR_FROM_API = 'errorFromApiAction';
 
 export function receiveAttributeTypes(attributes, validationRules) {
   const attributeTypeList = {};
+
   attributes.results.forEach((result) => {
     if (result.values) {
       const allowedIn = [];
       const defaultIn = [];
       let required = false;
-      const requiredIn = [];
-      const requiredIf = [];
-      const multiIn = [];
-      const allowValuesOutsideChoicesIn = [];
 
       // Add rules where attribute is allowed to be
       Object.keys(validationRules).forEach((rule) => {
@@ -51,28 +49,14 @@ export function receiveAttributeTypes(attributes, validationRules) {
       });
 
       // Add rules where multi selection is allowed
-      Object.keys(validationRules).forEach((key) => {
-        if (
-          validationRules[key].properties[result.identifier]?.anyOf
-        ) {
-          const anyOfArray = find(
-            validationRules[key].properties[result.identifier]?.anyOf,
-            (anyOf) => anyOf.type === 'array'
-          );
-          if (anyOfArray) {
-            multiIn.push(key);
-          }
-        }
-      });
+      const multiIn = Object.keys(validationRules)
+        .filter((key) => validationRules[key].properties[result.identifier]?.anyOf)
+        .filter((key) => find(validationRules[key].properties[result.identifier]?.anyOf, (item) => item.type === 'array'));
 
       // Add requiredIn attributes
-      Object.keys(validationRules).forEach((key) => {
-        validationRules[key]?.required.forEach((rule) => {
-          if (rule === result.identifier) {
-            requiredIn.push(key);
-          }
-        });
-      });
+      const requiredIn = Object.keys(validationRules)
+        .filter((key) => validationRules[key]?.required)
+        .filter((key) => validationRules[key]?.required.some((rule) => rule === result.identifier));
 
       // Add defaultIn attributes
       // hard coded now, todo: replace with backend definition
@@ -83,46 +67,29 @@ export function receiveAttributeTypes(attributes, validationRules) {
       });
 
       // Add conditional rules if any
-      Object.keys(validationRules).forEach((key) => {
-        validationRules[key]?.allOf.forEach((oneOf) => {
-          Object.keys(oneOf).forEach((oneOfKey) => {
-            const rules = oneOf[oneOfKey];
-            // We're only interested in required-keys
-            const requiredKeys = rules[0].required;
+      const requiredMap = Object.keys(validationRules)
+        .filter((key) => validationRules[key]?.allOf)
+        .map((key) => (validationRules[key]?.allOf))
+        .flatMap((allOfs) => allOfs.flatMap((allOf) => allOf.oneOf))
+        .filter((oneOf) => oneOf.required.length > 0)
+        .filter((oneOf) => oneOf.required.some((requiredKey) => result.identifier === requiredKey))
+        .map((oneOf) => oneOf.properties)
+        .map((properties) => Object.keys(properties).map((propertyKey) => {
+          const property = properties[propertyKey];
+          const values = Object.keys(property).map((valueKey) => property[valueKey]).flatMap((value) => value)
 
-            requiredKeys.forEach((requiredIndentifier) => {
-              Object.keys(rules[0].properties).forEach((property) => {
-                const values = [];
-                Object.keys(rules[0].properties[property]).forEach((pkey) => {
-                  rules[0].properties[property][pkey].forEach((value) => {
-                    values.push(value);
-                  });
-                });
+          return { key: propertyKey, values }
+        }))
+        .flatMap((items) => items);
 
-                const exists = !!find(requiredIf, (reqObj) => reqObj.key === property);
-
-                if (requiredIndentifier === result.identifier && !exists) {
-                  requiredIf.push({
-                    key: property,
-                    values
-                  });
-                }
-              });
-            });
-          });
-        });
-      });
+      const requiredIf = requiredMap
+        .filter((value, index, self) => index === self.findIndex((item) => item.key === value.key));
 
       // Add allow values outside choices rule
-      Object.keys(validationRules).forEach((key) => {
-        validationRules[
-          key
-        ].extra_validations?.allow_values_outside_choices?.forEach((field) => {
-          if (field === result.identifier) {
-            allowValuesOutsideChoicesIn.push(key);
-          }
-        });
-      });
+      const allowValuesOutsideChoicesIn = Object.keys(validationRules)
+        .filter((key) => validationRules[key].extra_validations)
+        .filter((key) => validationRules[key].extra_validations?.allow_values_outside_choices)
+        .filter((key) => validationRules[key].extra_validations?.allow_values_outside_choices?.some((field) => field === result.identifier));
 
       attributeTypeList[result.identifier] = {
         index: result.index,

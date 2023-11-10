@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<SearchInputs /> renders correctly 1`] = `
+<div>
+  <div
+    class="col-xs-12 filters filters-detail-search-input"
+  >
+    <input
+      class="react-infinity-menu-default-search-input"
+      placeholder="Etsi..."
+      type="search"
+      value=""
+    />
+    <div
+      class="filters-detail-search-input-buttons"
+    >
+      <button
+        class="btn btn-info btn-sm"
+        title="Poista hakuehto"
+        type="button"
+      >
+        <span
+          aria-hidden="true"
+          class="fa-solid fa-minus"
+        />
+      </button>
+      <button
+        class="btn btn-info btn-sm"
+        title="Lisää hakuehto"
+        type="button"
+      >
+        <span
+          aria-hidden="true"
+          class="fa-solid fa-plus"
+        />
+      </button>
+    </div>
+  </div>
+</div>
+`;

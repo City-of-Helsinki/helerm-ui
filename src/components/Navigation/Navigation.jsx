@@ -6,8 +6,6 @@
 /* eslint-disable no-return-assign */
 import React from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import filter from 'lodash/filter';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
 import isArray from 'lodash/isArray';
@@ -15,8 +13,7 @@ import isEmpty from 'lodash/isEmpty';
 import update from 'immutability-helper';
 
 import InfinityMenu from '../InfinityMenu/InfinityMenu';
-import SearchFilter from './SearchFilter';
-import { statusFilters, navigationStateFilters } from '../../constants';
+import { navigationStateFilters } from '../../constants';
 
 import './Navigation.scss';
 
@@ -52,16 +49,16 @@ class Navigation extends React.Component {
     const mappedValues = filterValues.map(({ value }) => value);
 
     return this.setState(
-      {
+      (prevState) => ({
         filters: {
-          ...this.state.filters,
+          ...prevState.filters,
           [filterName]: {
-            ...this.state.filters[filterName],
+            ...prevState.filters[filterName],
             values: mappedValues,
           },
         },
-      },
-      () => this.setState({ tree: this.getFilteredTree() }),
+      }),
+      () => this.setState(() => ({ tree: this.getFilteredTree() })),
     );
   };
 
@@ -86,40 +83,6 @@ class Navigation extends React.Component {
     if (!this.state.isSearchChanged && Date.now() - this.state.searchTimestamp >= SEARCH_TIMEOUT) {
       this.setState({ isSearchChanged: true });
     }
-  };
-
-  getFilters = () => {
-    const { attributeTypes, isUser } = this.props;
-    const isDetailSearch = this.isDetailSearch();
-    const statusFilterOptions = isUser ? statusFilters : filter(statusFilters, { default: true });
-    const statusFilterPlaceholder = this.props.isUser ? 'Suodata viimeisen tilan mukaan...' : 'Suodata tilan mukaan...';
-    const retentionPeriods = attributeTypes?.RetentionPeriod ? attributeTypes?.RetentionPeriod.values : [];
-    const retentionPeriodOptions = retentionPeriods.map((option) => ({
-      value: option.value,
-      label: option.value,
-    }));
-
-    return (
-      <div className={classnames({ 'filters row': isDetailSearch })}>
-        <SearchFilter
-          className={classnames({
-            '': !isDetailSearch,
-            'col-sm-6': isDetailSearch,
-          })}
-          placeholder={statusFilterPlaceholder}
-          value={this.state.filters.statusFilters.values}
-          options={statusFilterOptions}
-          handleChange={(values) => this.handleFilterChange(values, 'statusFilters')}
-        />
-        <SearchFilter
-          placeholder='Suodata säilytysajan mukaan'
-          value={this.state.filters.retentionPeriodFilters.values}
-          options={retentionPeriodOptions}
-          handleChange={(values) => this.handleFilterChange(values, 'retentionPeriodFilters')}
-          isVisible={isDetailSearch}
-        />
-      </div>
-    );
   };
 
   getFilteredTree = () => {
@@ -316,8 +279,10 @@ class Navigation extends React.Component {
           title={this.createNavigationTitle()}
           toggleNavigationVisibility={this.toggleNavigationVisibility}
           tree={this.state.tree}
-          filters={this.getFilters()}
           isDetailSearch={this.isDetailSearch()}
+          isUser={this.props.isUser}
+          filters={this.state.filters}
+          handleFilterChange={this.handleFilterChange}
         />
       </div>
     );
