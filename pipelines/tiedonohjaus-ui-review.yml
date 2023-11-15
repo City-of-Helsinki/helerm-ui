@@ -38,13 +38,14 @@ resources:
     # Azure DevOps repository
     - repository: tiedonohjaus-pipelines
       type: git
+      ref: refs/heads/ansible_automation_update
       # Azure DevOps project/repository
       name: tiedonohjaus/tiedonohjaus-pipelines
 
 extends:
   # Filename in Azure DevOps Repository
   template: azure-pipelines-tiedonohjaus-ui-review.yml@tiedonohjaus-pipelines
-  parameters:
+  # parameters:
     # Application build arguments and config map values as key value pairs.
     # Does not contain all buildArguments or configMap values, the rest located in tiedonohjaus-pipelines
     # Default value to nodeVersion is set on template.
