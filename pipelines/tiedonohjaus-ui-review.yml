@@ -26,8 +26,8 @@ pr:
     - '*release-please*'
     - '**/*.md'
     - '.github/'
-    - 'azure-pipelines-release.yml'
-    - 'azure-pipelines-test.yml'
+    - 'pipelines/tiedonohjaus-ui-release.yml'
+    - 'pipelines/tiedonohjaus-ui-test.yml'
     - 'docker-compose*'
 
 # By default, use self-hosted agents

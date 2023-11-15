@@ -10,8 +10,8 @@ trigger:
     - '*release-please*'
     - '**/*.md'
     - '.github/'
-    - 'azure-pipelines-release.yml'
-    - 'azure-pipelines-review.yml'
+    - 'pipelines/tiedonohjaus-ui-release.yml'
+    - 'pipelines/tiedonohjaus-ui-review.yml'
     - 'docker-compose*'
 
 # Pull request (PR) triggers cause a pipeline to run whenever a pull request is
@@ -33,6 +33,7 @@ resources:
     # Azure DevOps repository
     - repository: tiedonohjaus-pipelines
       type: git
+      ref: refs/heads/ansible_automation_update
       # Azure DevOps project/repository
       name: tiedonohjaus/tiedonohjaus-pipelines
 
