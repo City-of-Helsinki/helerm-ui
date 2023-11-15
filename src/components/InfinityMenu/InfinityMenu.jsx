@@ -40,15 +40,18 @@ class InfinityMenu extends Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     const { isDetailSearch, isSearchChanged, items, searchInputs, tree } = nextProps;
+
     const {
       isSearchChanged: wasSearchChanged,
       items: prevItems,
       searchInputs: prevInputs,
       tree: prevTree,
     } = this.props;
+
     if (isDetailSearch && items !== prevItems) {
       this.createSnapshots(items);
     }
+
     if (tree !== prevTree) {
       this.setState({ filteredTree: tree });
     }
@@ -227,7 +230,8 @@ class InfinityMenu extends Component {
           prevs.push(React.createElement(currCustomComponent, nodeProps));
         } else {
           prevs.push(
-            <div
+            <button
+              type='button'
               key={key}
               onClick={(e) => this.onNodeClick(tree, curr, keyPath, e)}
               onKeyUp={(e) => {
@@ -242,7 +246,7 @@ class InfinityMenu extends Component {
               <label>
                 {nodeName} <ClassificationLink id={curr.id} />
               </label>
-            </div>,
+            </button>,
           );
         }
       }
@@ -262,7 +266,8 @@ class InfinityMenu extends Component {
         openedNode.push(React.createElement(currCustomComponent, nodeProps));
       } else {
         openedNode.push(
-          <div
+          <button
+            type='button'
             key={key}
             onClick={(e) => this.onNodeClick(tree, curr, keyPath, e)}
             onKeyUp={(e) => {
@@ -277,7 +282,7 @@ class InfinityMenu extends Component {
             <label>
               {nodeName} <ClassificationLink id={curr.id} />
             </label>
-          </div>,
+          </button>,
         );
       }
 
@@ -315,6 +320,7 @@ class InfinityMenu extends Component {
 
   filterTree = (searchInputs, tree, isDetailSearch) => {
     const filters = isDetailSearch ? this.getDetailFilters(searchInputs) : searchInputs[0];
+
     const filteredTree = filters
       ? tree.reduce((prev, curr, key) => {
           if (key === undefined) {
@@ -323,6 +329,7 @@ class InfinityMenu extends Component {
           return this.findFiltered(prev, curr, key, filters);
         }, [])
       : tree;
+
     this.setState({ filteredTree });
   };
 
@@ -349,7 +356,7 @@ class InfinityMenu extends Component {
   findFiltered(trees, node, key, filters) {
     const newNode = cloneDeep(node);
 
-    if (!node.children) {
+    if (!node.children?.length) {
       const nodeMatchesSearchFilter = this.getNodeMatchesSearchFilter(filters, node);
 
       if (nodeMatchesSearchFilter) {

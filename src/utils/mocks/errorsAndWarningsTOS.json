@@ -6,8 +6,7 @@
     "RetentionPeriodStart": "Asiakirjan päivämäärä",
     "InformationSystem": ["Ahjo", "Tietojärjestelmä"],
     "PersonalData": "Sisältää henkilötietoja",
-    "RetentionReason":
-      "Ei sp:Taloushallinto 2 - kunnallisten asiakirjojen säilytysaikasuositus",
+    "RetentionReason": "Ei sp:Taloushallinto 2 - kunnallisten asiakirjojen säilytysaikasuositus",
     "PublicityClass": "Not_allowed_outside_value_list",
     "AdditionalInformation": "aasdfjasdfffffasdf fff"
   },
@@ -39,17 +38,12 @@
                 "SocialSecurityNumber": "Ei sisällä henkilötunnusta",
                 "TypeSpecifier": "Testaus",
                 "RetentionPeriodStart": "Asiakirjan päivämäärä",
-                "InformationSystem": [
-                  "Lupapiste",
-                  "Ahjo",
-                  "Muu tietojärjestelmä"
-                ],
+                "InformationSystem": ["Lupapiste", "Ahjo", "Muu tietojärjestelmä"],
                 "RecordType": "arviointi",
                 "PersonalData": "Sisältää henkilötietoja",
                 "RetentionPeriod": "0",
                 "PublicityClass": "Ei-julkinen",
-                "RetentionReason":
-                  "Ei sp:Taloushallinto 2 - kunnallisten asiakirjojen säilytysaikasuositus"
+                "RetentionReason": "Ei sp:Taloushallinto 2 - kunnallisten asiakirjojen säilytysaikasuositus"
               },
               "name": "Testaus",
               "action": "2bbf1f3169224214bd8bb739bca3d39c",

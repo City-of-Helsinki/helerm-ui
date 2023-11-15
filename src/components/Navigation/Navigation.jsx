@@ -234,14 +234,6 @@ class Navigation extends React.Component {
 
   isDetailSearch = () => this.props.match.path === '/filter';
 
-  createNavigationTitle = () => {
-    if (!this.props.is_open && this.props.tosPath.length) {
-      return this.props.tosPath.map((section) => <div key={section}>{section}</div>);
-    }
-
-    return 'Navigaatio';
-  };
-
   stopSearching() {
     this.setState({
       isSearchChanged: false,
@@ -279,7 +271,6 @@ class Navigation extends React.Component {
           removeSearchInput={this.removeSearchInput}
           searchInputs={searchInputs}
           setSearchInput={this.setSearchInput}
-          title={this.createNavigationTitle()}
           toggleNavigationVisibility={this.toggleNavigationVisibility}
           tree={this.state.tree}
           isDetailSearch={this.isDetailSearch()}

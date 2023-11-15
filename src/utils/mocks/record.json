@@ -21,10 +21,8 @@
     "RetentionPeriodTotal": "2",
     "DisposePreviousVersions": "Poistetaan kun päätetty",
     "Subject.Scheme": "Finto asiasanasto",
-    "RetentionReason":
-      "Ei sp:Taloushallinto 2 - kunnallisten asiakirjojen säilytysaikasuositus",
-    "ProtectionClass":
-      "1 toiminnan jatkumisen kannalta välttämättömät asiakirjat"
+    "RetentionReason": "Ei sp:Taloushallinto 2 - kunnallisten asiakirjojen säilytysaikasuositus",
+    "ProtectionClass": "1 toiminnan jatkumisen kannalta välttämättömät asiakirjat"
   },
   "name": "Testaus aiemmin - seuraavat Record issue testejä",
   "action": "f36c624f7b084cbca7f2081003a3d7bd",

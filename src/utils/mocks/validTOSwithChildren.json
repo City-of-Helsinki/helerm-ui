@@ -1,0 +1,85 @@
+{
+  "name": "00 Hallintoasiat",
+  "sort_id": "00",
+  "path": [],
+  "parent_id": null,
+  "id": "6816a3af1e9c4de383e157d19dcf6017",
+  "created_at": "2023-10-19T13:51:23.105996+03:00",
+  "modified_at": "2023-11-09T10:21:34.192262+02:00",
+  "modified_by": null,
+  "version": 1,
+  "state": "draft",
+  "valid_from": null,
+  "valid_to": null,
+  "code": "00",
+  "title": "Hallintoasiat",
+  "parent": null,
+  "description": "",
+  "description_internal": "",
+  "related_classification": "",
+  "additional_information": "",
+  "function_allowed": false,
+  "version_history": [
+    {
+      "state": "draft",
+      "version": 1,
+      "modified_at": "2023-11-09T08:21:34.192262Z",
+      "valid_from": null,
+      "valid_to": null,
+      "modified_by": null
+    }
+  ],
+  "function": "925ec1539420412aa3afa0e28bbb1735",
+  "function_state": "draft",
+  "function_attributes": {},
+  "function_version": 1,
+  "function_valid_from": null,
+  "function_valid_to": null,
+  "children": [
+    {
+      "name": "00 00 Hallintoasioiden ohjaus",
+      "sort_id": "00",
+      "path": ["00 Hallintoasiat"],
+      "parent_id": "6816a3af1e9c4de383e157d19dcf6017",
+      "id": "baab4146fe45414abb9f77c26a7e314b",
+      "created_at": "2023-10-19T13:51:23.419422+03:00",
+      "modified_at": "2023-11-09T10:21:34.421473+02:00",
+      "modified_by": null,
+      "version": 1,
+      "state": "draft",
+      "valid_from": null,
+      "valid_to": null,
+      "code": "00 00",
+      "title": "Hallintoasioiden ohjaus",
+      "parent": {
+        "id": "6816a3af1e9c4de383e157d19dcf6017",
+        "version": 1
+      },
+      "description": "",
+      "description_internal": "",
+      "related_classification": "",
+      "additional_information": "",
+      "function_allowed": false,
+      "version_history": [
+        {
+          "state": "draft",
+          "version": 1,
+          "modified_at": "2023-11-09T08:21:34.421473Z",
+          "valid_from": null,
+          "valid_to": null,
+          "modified_by": null
+        }
+      ],
+      "function": "39f607d237174797a4733c20bf87439d",
+      "function_state": "draft",
+      "function_attributes": {},
+      "function_version": 1,
+      "function_valid_from": null,
+      "function_valid_to": null,
+      "keyPath": "0.children.0"
+    }
+  ],
+  "keyPath": "0",
+  "isOpen": true,
+  "maxLeaves": null
+}

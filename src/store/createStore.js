@@ -13,7 +13,7 @@ const storeCreator = (history, initialState = {}) => {
   const store = configureStore({
     middleware: [thunk, routerMiddleware(history)],
     reducer: makeRootReducer(history),
-    initialState
+    preloadedState: initialState
   });
 
   store.asyncReducers = {};

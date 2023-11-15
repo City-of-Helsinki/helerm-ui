@@ -133,11 +133,11 @@ class ValidationBar extends Component {
     const phaseActionIds = phases.filter((phase) => phase.actions);
 
     const invalidRecords = phaseActionIds
-      .map((actionId) => selectedTOS.actions[actionId].records)
+      .map((actionId) => selectedTOS.actions?.[actionId].records)
       .map((recordId) =>
         this.getInvalidSection(
           'record',
-          selectedTOS.records[recordId],
+          selectedTOS.records?.[recordId],
           showInvalidAttributes ? validateRecord : null,
           showWarnAttributes ? validateRecordWarnings : null,
         ),
@@ -146,7 +146,7 @@ class ValidationBar extends Component {
     const invalidActions = phaseActionIds.map((actionId) =>
       this.getInvalidSection(
         'action',
-        selectedTOS.actions[actionId],
+        selectedTOS.actions?.[actionId],
         showInvalidAttributes ? validateAction : null,
         showWarnAttributes ? validateActionWarnings : null,
         invalidRecords,

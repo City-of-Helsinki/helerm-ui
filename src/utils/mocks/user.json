@@ -1,0 +1,17 @@
+{
+  "uuid": "123456789",
+  "username": "Tester",
+  "first_name": "Tester",
+  "last_name": "Tester",
+  "permissions": [
+    "can_edit",
+    "can_review",
+    "can_approve",
+    "can_view_modified_by",
+    "add_bulkupdate",
+    "approve_bulkupdate",
+    "change_bulkupdate",
+    "delete_bulkupdate",
+    "view_bulkupdate"
+  ]
+}

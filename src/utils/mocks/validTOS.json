@@ -3,8 +3,7 @@
   "attributes": {
     "RetentionPeriod": "1",
     "RetentionPeriodStart": "Asian lopullinen ratkaisu",
-    "RetentionReason":
-      "Ei sp:Taloushallinto 2 - kunnallisten asiakirjojen säilytysaikasuositus",
+    "RetentionReason": "Ei sp:Taloushallinto 2 - kunnallisten asiakirjojen säilytysaikasuositus",
     "PersonalData": "Sisältää arkaluonteisia henkilötietoja",
     "PublicityClass": "Julkinen",
     "SocialSecurityNumber": "Ei sisällä henkilötunnusta"
@@ -23,13 +22,13 @@
       "version": 2,
       "state": "draft",
       "modified_at": "2017-06-07T05:47:59.625505Z",
-      "modified_by": "Joni Rämö"
+      "modified_by": "Testaaja"
     },
     {
       "version": 3,
       "state": "approved",
       "modified_at": "2017-12-27T10:39:28.775708Z",
-      "modified_by": "Joni Rämö"
+      "modified_by": "Testaaja"
     }
   ],
   "created_at": "2017-06-07T05:48:15.195700Z",
@@ -37,5 +36,5 @@
   "error_count": 0,
   "valid_from": null,
   "valid_to": null,
-  "modified_by": "Joni Rämö"
+  "modified_by": "Testaaja"
 }

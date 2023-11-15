@@ -9,8 +9,8 @@ import { statusFilters } from '../../../constants';
 
 const SearchFilters = ({ attributeTypes, isDetailSearch, isUser, filters, handleFilterChange }) => {
   const statusFilterOptions = isUser ? statusFilters : filter(statusFilters, { default: true });
-
   const retentionPeriods = attributeTypes?.RetentionPeriod ? attributeTypes?.RetentionPeriod.values : [];
+
   const retentionPeriodOptions = retentionPeriods.map((option) => ({
     value: option.value,
     label: option.value,

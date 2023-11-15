@@ -1,10 +1,10 @@
 /* eslint-disable jest/valid-title */
 import { validateTOS, validateTOSWarnings } from '../validators';
-import attributeRules from './testdata/attributeRules.json';
-import validTOS from './testdata/validTOS.json';
-import TOSmissingSSN from './testdata/TOSmissingSSN.json';
-import unallowedPublicityClassTOS from './testdata/unallowedPublicityClassTOS.json';
-import errorsAndWarningsTOS from './testdata/errorsAndWarningsTOS.json';
+import attributeRules from '../mocks/attributeRules.json';
+import validTOS from '../mocks/validTOS.json';
+import TOSmissingSSN from '../mocks/TOSmissingSSN.json';
+import unallowedPublicityClassTOS from '../mocks/unallowedPublicityClassTOS.json';
+import errorsAndWarningsTOS from '../mocks/errorsAndWarningsTOS.json';
 
 const SHOULD_RETURN_ARRAY_STRING = 'Should return an array';
 const SHOULD_HAVE_ONE_ERROR_STRING = 'Should have one error';

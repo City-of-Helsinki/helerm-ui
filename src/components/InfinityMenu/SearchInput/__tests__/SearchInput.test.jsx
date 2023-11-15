@@ -1,23 +1,20 @@
 import { createBrowserHistory } from 'history';
 import React from 'react';
-import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import storeCreator from '../../../../store/createStore';
 import SearchInput from '../SearchInput';
+import renderWithProviders from '../../../../utils/renderWithProviders';
 
 const renderComponent = (mockFunction = jest.fn()) => {
   const history = createBrowserHistory();
-  const store = storeCreator(history, {});
 
-  return render(
-    <Provider store={store}>
-      <Router history={history}>
-        <SearchInput placeholder='' searchInput='' setSearchInput={mockFunction} />
-      </Router>
-    </Provider>,
+  return renderWithProviders(
+    <Router history={history}>
+      <SearchInput placeholder='' searchInput='' setSearchInput={mockFunction} />
+    </Router>,
+    { history },
   );
 };
 

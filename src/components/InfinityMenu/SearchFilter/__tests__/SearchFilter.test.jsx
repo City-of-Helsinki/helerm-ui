@@ -1,11 +1,13 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import SearchFilter from '../SearchFilter';
 import { DRAFT, statusFilters } from '../../../../constants';
 
 const baseMocks = {
   value: [],
+  options: statusFilters,
 };
 
 const renderComponent = (mocks = baseMocks) =>
@@ -14,7 +16,7 @@ const renderComponent = (mocks = baseMocks) =>
       className=''
       placeholder=''
       value={mocks.value}
-      options={statusFilters}
+      options={mocks.options}
       handleChange={jest.fn()}
       multi
       isVisible
@@ -28,7 +30,7 @@ describe('<SearchFilter />', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('should change value', async () => {
+  it('should show current filter', async () => {
     const { rerender } = renderComponent();
 
     expect(screen.queryByText(statusFilters[0].label)).not.toBeInTheDocument();
@@ -46,5 +48,17 @@ describe('<SearchFilter />', () => {
     );
 
     expect(screen.getByText(statusFilters[0].label)).toBeInTheDocument();
+  });
+
+  it('should show message if no options', async () => {
+    const mocks = { ...baseMocks, options: [] };
+
+    renderComponent(mocks);
+
+    const user = userEvent.setup();
+
+    await user.click(screen.getByRole('textbox'));
+
+    expect(await screen.findByText('Ei valintoja')).toBeInTheDocument();
   });
 });
