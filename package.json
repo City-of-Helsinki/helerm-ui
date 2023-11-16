@@ -50,7 +50,7 @@
     "normalizr": "^3.6.2",
     "prettier": "^2.8.4",
     "prop-types": "^15.8.1",
-    "raw.macro": "^0.4.2",
+    "raw.macro": "^0.7.0",
     "react": "^17.0.1",
     "react-app-polyfill": "^2.0.0",
     "react-datepicker": "^3.3.0",
