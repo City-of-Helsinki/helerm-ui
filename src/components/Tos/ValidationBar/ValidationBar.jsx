@@ -124,14 +124,20 @@ class ValidationBar extends Component {
     const showInvalidAttributes = this.getFilterByStatus(VALIDATION_FILTER_ERROR);
     const showWarnAttributes = this.getFilterByStatus(VALIDATION_FILTER_WARN);
 
-    const phaseActionIds = selectedTOS.phases.filter((phase) => phase.actions);
+    const { phases } = selectedTOS;
+
+    if (!phases.length) {
+      return null;
+    }
+
+    const phaseActionIds = phases.filter((phase) => phase.actions);
 
     const invalidRecords = phaseActionIds
-      .map((actionId) => selectedTOS.actions[actionId].records)
+      .map((actionId) => selectedTOS.actions?.[actionId].records)
       .map((recordId) =>
         this.getInvalidSection(
           'record',
-          selectedTOS.records[recordId],
+          selectedTOS.records?.[recordId],
           showInvalidAttributes ? validateRecord : null,
           showWarnAttributes ? validateRecordWarnings : null,
         ),
@@ -140,14 +146,14 @@ class ValidationBar extends Component {
     const invalidActions = phaseActionIds.map((actionId) =>
       this.getInvalidSection(
         'action',
-        selectedTOS.actions[actionId],
+        selectedTOS.actions?.[actionId],
         showInvalidAttributes ? validateAction : null,
         showWarnAttributes ? validateActionWarnings : null,
         invalidRecords,
       ),
     );
 
-    return selectedTOS.phases
+    return phases
       .map((phase) => ({
         id: phase.id,
         invalidSection: this.getInvalidSection(
@@ -166,7 +172,7 @@ class ValidationBar extends Component {
     const invalidTOSAttributes = this.generateInvalidTosAttributes(validateTOS, validateTOSWarnings, selectedTOS);
     const invalidAttributes = this.generateInvalidAttributes();
 
-    if (invalidTOSAttributes || invalidAttributes.length > 0) {
+    if (invalidTOSAttributes || invalidAttributes?.length > 0) {
       return (
         <div className='sidebar-invalid-content'>
           {invalidTOSAttributes && (

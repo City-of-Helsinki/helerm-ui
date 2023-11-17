@@ -3,12 +3,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 
-import { resolveReturnValues, resolveSelectValues } from '../../utils/helpers';
+import { resolveReturnValues, resolveSelectValues } from '../../../utils/helpers';
 
 const SearchFilter = ({ placeholder, value, options, handleChange, multi, className, isVisible }) => {
   if (!isVisible) {
     return null;
   }
+
   return (
     <div className={className}>
       <Select

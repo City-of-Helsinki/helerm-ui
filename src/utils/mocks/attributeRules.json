@@ -953,136 +953,119 @@
         "id": "6b9e9bb5edcf4189bd417ef80ad48b06",
         "created_at": "2017-03-01T12:32:37.850939Z",
         "modified_at": "2017-03-01T12:32:37.850949Z",
-        "value":
-          "Ei sp: Yleishallinto 1 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "value": "Ei sp: Yleishallinto 1 - kunnallisten asiakirjojen säilytysaikasuositus",
         "index": 1
       },
       {
         "id": "73c4d5f3ad514c3ead8da35f8e2df3aa",
         "created_at": "2017-03-01T12:32:37.852240Z",
         "modified_at": "2017-03-01T12:32:37.852250Z",
-        "value":
-          "Ei sp:Taloushallinto 2 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "value": "Ei sp:Taloushallinto 2 - kunnallisten asiakirjojen säilytysaikasuositus",
         "index": 2
       },
       {
         "id": "ccd23a9a1fad461fb7f5baedb4f15e8a",
         "created_at": "2017-03-01T12:32:37.853560Z",
         "modified_at": "2017-03-01T12:32:37.853570Z",
-        "value":
-          "Ei sp: Henkilöstö ja luottamushenkilöt  3 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "value": "Ei sp: Henkilöstö ja luottamushenkilöt  3 - kunnallisten asiakirjojen säilytysaikasuositus",
         "index": 3
       },
       {
         "id": "83566ba3b2af4e75bf01d5a5e5ecc6ee",
         "created_at": "2017-03-01T12:32:37.854837Z",
         "modified_at": "2017-03-01T12:32:37.854847Z",
-        "value":
-          "Ei sp: Materiaalitoimi/logistiikka, ruokahuolto ja tekstiili- ja vaatehuolto 4 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "value": "Ei sp: Materiaalitoimi/logistiikka, ruokahuolto ja tekstiili- ja vaatehuolto 4 - kunnallisten asiakirjojen säilytysaikasuositus",
         "index": 4
       },
       {
         "id": "f3d7eb04bc61486e8e782f977d9e8b1f",
         "created_at": "2017-03-01T12:32:37.856147Z",
         "modified_at": "2017-03-01T12:32:37.856157Z",
-        "value":
-          "Ei sp: Kiinteistötoimi ja rakentaminen 5- kunnallisten asiakirjojen säilytysaikasuositus",
+        "value": "Ei sp: Kiinteistötoimi ja rakentaminen 5- kunnallisten asiakirjojen säilytysaikasuositus",
         "index": 5
       },
       {
         "id": "4c7f52a084f54ee1bb4f603b3d166b35",
         "created_at": "2017-03-01T12:32:37.857421Z",
         "modified_at": "2017-03-01T12:32:37.857431Z",
-        "value":
-          "Ei sp: Aluekehitys, maakuntakaavoitus ja maakunnallinen edunvalvonta 6 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "value": "Ei sp: Aluekehitys, maakuntakaavoitus ja maakunnallinen edunvalvonta 6 - kunnallisten asiakirjojen säilytysaikasuositus",
         "index": 6
       },
       {
         "id": "54212ff8689c4071bb52b3872cd57a7e",
         "created_at": "2017-03-01T12:32:37.858692Z",
         "modified_at": "2017-03-01T12:32:37.858702Z",
-        "value":
-          "Ei sp: Asuntotoimi 7 -  kunnallisten asiakirjojen säilytysaikasuositus",
+        "value": "Ei sp: Asuntotoimi 7 -  kunnallisten asiakirjojen säilytysaikasuositus",
         "index": 7
       },
       {
         "id": "f4431a70126a425bb7e098672b8542fb",
         "created_at": "2017-03-01T12:32:37.859971Z",
         "modified_at": "2017-03-01T12:32:37.859982Z",
-        "value":
-          "Ei sp:: Elinkeinotoimi 8 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "value": "Ei sp:: Elinkeinotoimi 8 - kunnallisten asiakirjojen säilytysaikasuositus",
         "index": 8
       },
       {
         "id": "729c3b4edc764c0b86e2aba19edd364f",
         "created_at": "2017-03-01T12:32:37.861321Z",
         "modified_at": "2017-03-01T12:32:37.861331Z",
-        "value":
-          "Ei sp:: Kuluttajaneuvonta 9 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "value": "Ei sp:: Kuluttajaneuvonta 9 - kunnallisten asiakirjojen säilytysaikasuositus",
         "index": 9
       },
       {
         "id": "23076fcdc6ba4036b0bc586f8eb79ce4",
         "created_at": "2017-03-01T12:32:37.862597Z",
         "modified_at": "2017-03-01T12:32:37.862607Z",
-        "value":
-          "Ei sp: Lomituspalvelut 10 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "value": "Ei sp: Lomituspalvelut 10 - kunnallisten asiakirjojen säilytysaikasuositus",
         "index": 10
       },
       {
         "id": "75635d32aa76403a9c7d26983f6385e5",
         "created_at": "2017-03-01T12:32:37.863889Z",
         "modified_at": "2017-03-01T12:32:37.863899Z",
-        "value":
-          "Ei sp: Maaseutuelinkeinopalvelut 11 kunnallisten asiakirjojen säilytysaikasuositus",
+        "value": "Ei sp: Maaseutuelinkeinopalvelut 11 kunnallisten asiakirjojen säilytysaikasuositus",
         "index": 11
       },
       {
         "id": "da9c6d6a5b8f4ad9add35912337b0af1",
         "created_at": "2017-03-01T12:32:37.865211Z",
         "modified_at": "2017-03-01T12:32:37.865221Z",
-        "value":
-          "Ei sp: Opetustoimi 12 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "value": "Ei sp: Opetustoimi 12 - kunnallisten asiakirjojen säilytysaikasuositus",
         "index": 12
       },
       {
         "id": "4303a470e00b44cf88638444d43cb539",
         "created_at": "2017-03-01T12:32:37.866471Z",
         "modified_at": "2017-03-01T12:32:37.866481Z",
-        "value":
-          "Ei sp: Sivistystoimi 13 kunnallisten asiakirjojen säilytysaikasuositus",
+        "value": "Ei sp: Sivistystoimi 13 kunnallisten asiakirjojen säilytysaikasuositus",
         "index": 13
       },
       {
         "id": "39bcbbc7e9e74ab09c652d0ed9fb9c15",
         "created_at": "2017-03-01T12:32:37.867809Z",
         "modified_at": "2017-03-01T12:32:37.867819Z",
-        "value":
-          "Ei sp: Tekniset palvelut 14A - kunnallisten asiakirjojen säilytysaikasuositus",
+        "value": "Ei sp: Tekniset palvelut 14A - kunnallisten asiakirjojen säilytysaikasuositus",
         "index": 14
       },
       {
         "id": "fc5aac07775044578efd7f95d78ba19a",
         "created_at": "2017-03-01T12:32:37.869104Z",
         "modified_at": "2017-03-01T12:32:37.869115Z",
-        "value":
-          "Ei sp: Tekniset palvelut 14B - kunnallisten asiakirjojen säilytysaikasuositus",
+        "value": "Ei sp: Tekniset palvelut 14B - kunnallisten asiakirjojen säilytysaikasuositus",
         "index": 15
       },
       {
         "id": "38648da13d724bbcbd88d29e46672a51",
         "created_at": "2017-03-01T12:32:37.870463Z",
         "modified_at": "2017-03-01T12:32:37.870473Z",
-        "value":
-          "Ei sp: Ympäristönsuojelu 15 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "value": "Ei sp: Ympäristönsuojelu 15 - kunnallisten asiakirjojen säilytysaikasuositus",
         "index": 16
       },
       {
         "id": "8f22727827a54481bbb922fc38c14d29",
         "created_at": "2017-03-01T12:32:37.871900Z",
         "modified_at": "2017-03-01T12:32:37.871910Z",
-        "value":
-          "Ei sp: Ympäristöterveydenhuolto 16 -kunnallisten asiakirjojen säilytysaikasuositus",
+        "value": "Ei sp: Ympäristöterveydenhuolto 16 -kunnallisten asiakirjojen säilytysaikasuositus",
         "index": 17
       },
       {
@@ -1103,8 +1086,7 @@
         "id": "ccab4d9140df42209a09cf98fe7165f6",
         "created_at": "2017-03-01T12:32:37.875842Z",
         "modified_at": "2017-03-01T12:32:37.875852Z",
-        "value":
-          "Ei sp: Laki tilaajan selvitysvelvollisuudesta ja vastuusta ulkopuolista työvoimaa käytettäessä 1233/2006 5§",
+        "value": "Ei sp: Laki tilaajan selvitysvelvollisuudesta ja vastuusta ulkopuolista työvoimaa käytettäessä 1233/2006 5§",
         "index": 20
       },
       {
@@ -1132,8 +1114,7 @@
         "id": "921bfbef981a40d1968bc62a85bc77ee",
         "created_at": "2017-03-01T12:32:37.881106Z",
         "modified_at": "2017-03-01T12:32:37.881116Z",
-        "value":
-          "Ei sp: Liikenteen turvallisuusviraston määräys kaupunkiraideliikenteestä 2015, kohta 6",
+        "value": "Ei sp: Liikenteen turvallisuusviraston määräys kaupunkiraideliikenteestä 2015, kohta 6",
         "index": 24
       },
       {
@@ -1161,8 +1142,7 @@
         "id": "63ed288460ac4c2b829a6d501be5cb89",
         "created_at": "2017-03-01T12:32:37.886261Z",
         "modified_at": "2017-03-01T12:32:37.886271Z",
-        "value":
-          "Ei sp: Valtiokonttorin määräys kirjanpitoaineistojen säilytysajoista 2005",
+        "value": "Ei sp: Valtiokonttorin määräys kirjanpitoaineistojen säilytysajoista 2005",
         "index": 28
       },
       {
@@ -1176,40 +1156,35 @@
         "id": "2d23c8b1908749898123ee95c724632e",
         "created_at": "2017-03-01T12:32:37.888788Z",
         "modified_at": "2017-03-31T11:24:06.495827Z",
-        "value":
-          "Sekä ei-sp että sp-asiakirjoille:Sosiaali- ja terveysministeriön asetus potilasasiakirjoista.",
+        "value": "Sekä ei-sp että sp-asiakirjoille:Sosiaali- ja terveysministeriön asetus potilasasiakirjoista.",
         "index": 30
       },
       {
         "id": "842baedf26df47889c2a16b0a4e10fb4",
         "created_at": "2017-03-01T12:32:37.890046Z",
         "modified_at": "2017-03-01T12:32:37.890057Z",
-        "value":
-          "Sekä ei-sp että sp-asiakirjoille: Valtionarkiston päätös kunnallisten asiakirjojen hävittämisestä 1989. Osa 5. Sosiaalihuollon ja holhoustoimen asiakirjat.",
+        "value": "Sekä ei-sp että sp-asiakirjoille: Valtionarkiston päätös kunnallisten asiakirjojen hävittämisestä 1989. Osa 5. Sosiaalihuollon ja holhoustoimen asiakirjat.",
         "index": 31
       },
       {
         "id": "64db331871a34383b4f2a30d26f44d09",
         "created_at": "2017-03-01T12:32:37.891313Z",
         "modified_at": "2017-03-01T12:32:37.891323Z",
-        "value":
-          "Sp-asiakirjoille: Helsingin kaupungin asiakirjatietojen pysyvä säilytys 9.5.2016",
+        "value": "Sp-asiakirjoille: Helsingin kaupungin asiakirjatietojen pysyvä säilytys 9.5.2016",
         "index": 32
       },
       {
         "id": "df42d45b248c4acbbae2ff4f14610619",
         "created_at": "2017-03-01T12:32:37.892638Z",
         "modified_at": "2017-03-01T12:32:37.892648Z",
-        "value":
-          "Sp-asiakirjoille: Kunnallisten lomituspalvelujen pysyvästi säilytettävät asiakirjat 2002",
+        "value": "Sp-asiakirjoille: Kunnallisten lomituspalvelujen pysyvästi säilytettävät asiakirjat 2002",
         "index": 33
       },
       {
         "id": "0ed3e6c7927a4d57979d519710fd89a6",
         "created_at": "2017-03-01T12:32:37.893940Z",
         "modified_at": "2017-03-01T12:32:37.893950Z",
-        "value":
-          "Sp-asiakirjoille: Kunnallisten maaseutuelinkeinopalvelujen pysyvästi säilytettävät asiakirjat 2002",
+        "value": "Sp-asiakirjoille: Kunnallisten maaseutuelinkeinopalvelujen pysyvästi säilytettävät asiakirjat 2002",
         "index": 34
       },
       {
@@ -1223,96 +1198,84 @@
         "id": "ba5c088e0e4049258df1877ecdc471b8",
         "created_at": "2017-03-01T12:32:37.896556Z",
         "modified_at": "2017-03-01T12:32:37.896566Z",
-        "value":
-          "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset asuntotoimen asiakirjat 2001",
+        "value": "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset asuntotoimen asiakirjat 2001",
         "index": 36
       },
       {
         "id": "95733a3f198d4d44b663bd0b17499076",
         "created_at": "2017-03-01T12:32:37.897900Z",
         "modified_at": "2017-03-01T12:32:37.897911Z",
-        "value":
-          "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset elinkeinotoimen, kuluttajaneuvonnan, talous- ja velkaneuvonnan ja kotitalous- ja käsityöneuvonnan asiakirjat 17.10.2005",
+        "value": "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset elinkeinotoimen, kuluttajaneuvonnan, talous- ja velkaneuvonnan ja kotitalous- ja käsityöneuvonnan asiakirjat 17.10.2005",
         "index": 37
       },
       {
         "id": "97ba98e4b8534828bc5b7f48cba557b4",
         "created_at": "2017-03-01T12:32:37.899260Z",
         "modified_at": "2017-03-01T12:32:37.899270Z",
-        "value":
-          "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset kiinteistönmuodostuksen, mittaus- ja karttapalvelujen ja asiamiespalvelujen asiakirjat 4.9.2008",
+        "value": "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset kiinteistönmuodostuksen, mittaus- ja karttapalvelujen ja asiamiespalvelujen asiakirjat 4.9.2008",
         "index": 38
       },
       {
         "id": "8ed34d44cc014b829524eaa2bed77d0f",
         "created_at": "2017-03-01T12:32:37.900696Z",
         "modified_at": "2017-03-01T12:32:37.900707Z",
-        "value":
-          "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset maankäytön, kaavoituksen ja maapolitiikan asiakirjat 4.9.2008",
+        "value": "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset maankäytön, kaavoituksen ja maapolitiikan asiakirjat 4.9.2008",
         "index": 39
       },
       {
         "id": "ce8fae631adc4390a657045d19fc8ecf",
         "created_at": "2017-03-01T12:32:37.902022Z",
         "modified_at": "2017-03-01T12:32:37.902032Z",
-        "value":
-          "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset opetustoimen asiakirjat 2003",
+        "value": "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset opetustoimen asiakirjat 2003",
         "index": 40
       },
       {
         "id": "8a87dfa674474795b2f30b4b7b6aea81",
         "created_at": "2017-03-01T12:32:37.903351Z",
         "modified_at": "2017-03-01T12:32:37.903367Z",
-        "value":
-          "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset tuki- ja ylläpitotehtävien asiakirjat 2001",
+        "value": "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset tuki- ja ylläpitotehtävien asiakirjat 2001",
         "index": 41
       },
       {
         "id": "1c91075693394415ba69542727286413",
         "created_at": "2017-03-01T12:32:37.904706Z",
         "modified_at": "2017-03-01T12:32:37.904717Z",
-        "value":
-          "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset ympäristöterveydenhuollon asiakirjat 2003",
+        "value": "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset ympäristöterveydenhuollon asiakirjat 2003",
         "index": 42
       },
       {
         "id": "c61549fda02d4500bcd7d9034bfbe4f0",
         "created_at": "2017-03-01T12:32:37.906037Z",
         "modified_at": "2017-03-01T12:32:37.906047Z",
-        "value":
-          "Sp-asiakirjoille: Pysyvästi säilytettävät ympäristönsuojelun asiakirjat 2002",
+        "value": "Sp-asiakirjoille: Pysyvästi säilytettävät ympäristönsuojelun asiakirjat 2002",
         "index": 43
       },
       {
         "id": "92cadd99749a41f589b86feccc7b20e8",
         "created_at": "2017-03-01T12:32:37.907365Z",
         "modified_at": "2017-03-01T12:32:37.907375Z",
-        "value":
-          "Sp-asiakirjoille: Säilytettävät kunnalliset rakennusvalvonnan asiakirjat 2008",
+        "value": "Sp-asiakirjoille: Säilytettävät kunnalliset rakennusvalvonnan asiakirjat 2008",
         "index": 44
       },
       {
         "id": "eaacb9594498490db02a7501c1806a96",
         "created_at": "2017-03-01T12:32:37.908701Z",
         "modified_at": "2017-03-01T12:32:37.908712Z",
-        "value":
-          "Sp-asiakirjoille: Säilytettävät kunnalliset sivistystoimen asiakirjat 2004",
+        "value": "Sp-asiakirjoille: Säilytettävät kunnalliset sivistystoimen asiakirjat 2004",
         "index": 45
       },
       {
         "id": "36489bf206e64731aa0ad0aef419d911",
         "created_at": "2017-03-01T12:32:37.910004Z",
         "modified_at": "2017-03-01T12:32:37.910014Z",
-        "value":
-          "Sp-asiakirjoille: Valtion virastojen ja laitosten kirjanpitoaineistojen pysyvä säilytys 2004",
+        "value": "Sp-asiakirjoille: Valtion virastojen ja laitosten kirjanpitoaineistojen pysyvä säilytys 2004",
         "index": 46
       },
       {
         "id": "dad48a37d39f407a8b09b0ef392b741d",
         "created_at": "2017-03-01T12:32:37.911320Z",
         "modified_at": "2017-03-01T12:32:37.911330Z",
-        "value":
-          "Sp-asiakirjoille: Pysyvästi säilytettävät kunnallista yhdyskuntatekniikkaa ja yhdyskuntarakentamista koskevien palvelujen sekä kunnallisen liiketoiminnan ja pelastustoimen asiakirjat 2013.",
+        "value": "Sp-asiakirjoille: Pysyvästi säilytettävät kunnallista yhdyskuntatekniikkaa ja yhdyskuntarakentamista koskevien palvelujen sekä kunnallisen liiketoiminnan ja pelastustoimen asiakirjat 2013.",
         "index": 47
       },
       {
@@ -1326,40 +1289,35 @@
         "id": "6bcc9cb3f4834b3cb13d5b44af2d7bbf",
         "created_at": "2017-03-01T12:33:41.743752Z",
         "modified_at": "2017-03-01T12:33:41.743764Z",
-        "value":
-          "Sp-asiakirjoille: Valtionarkiston päätös kunnallisten asiakirjojen hävittämisestä 1989. Osa 5. Sosiaalihuollon ja holhoustoimen asiakirjat.",
+        "value": "Sp-asiakirjoille: Valtionarkiston päätös kunnallisten asiakirjojen hävittämisestä 1989. Osa 5. Sosiaalihuollon ja holhoustoimen asiakirjat.",
         "index": 49
       },
       {
         "id": "31118001b3c8440995d7e92cd6168b91",
         "created_at": "2017-03-01T12:33:41.745168Z",
         "modified_at": "2017-03-01T12:33:41.745178Z",
-        "value":
-          "Sp-asiakirjoille: Sp-asiakirjoille: Valtion virastojen ja laitosten kirjanpitoaineistojen pysyvä säilytys 2004",
+        "value": "Sp-asiakirjoille: Sp-asiakirjoille: Valtion virastojen ja laitosten kirjanpitoaineistojen pysyvä säilytys 2004",
         "index": 50
       },
       {
         "id": "64910924f32443918e2c6dc2662c9def",
         "created_at": "2017-03-01T12:34:25.003522Z",
         "modified_at": "2017-03-01T12:34:25.003536Z",
-        "value":
-          "Sp-asiakirjoille: Helsingin kaupungin asiakirjatietojen pysyvä säilytys 9.5.2016.",
+        "value": "Sp-asiakirjoille: Helsingin kaupungin asiakirjatietojen pysyvä säilytys 9.5.2016.",
         "index": 51
       },
       {
         "id": "171be5d6ee0c47559600bac633c4d07d",
         "created_at": "2017-06-05T09:23:42.425854Z",
         "modified_at": "2017-06-05T09:23:42.425895Z",
-        "value":
-          "Ei sp: Henkilöstö ja luottamushenkilöt 3 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "value": "Ei sp: Henkilöstö ja luottamushenkilöt 3 - kunnallisten asiakirjojen säilytysaikasuositus",
         "index": 52
       },
       {
         "id": "1bc12d315e614ee7bbd2517f6c0075f9",
         "created_at": "2017-06-05T09:23:42.433397Z",
         "modified_at": "2017-06-05T09:23:42.433433Z",
-        "value":
-          "Ei sp: Asuntotoimi 7 - kunnallisten asiakirjojen säilytysaikasuositus",
+        "value": "Ei sp: Asuntotoimi 7 - kunnallisten asiakirjojen säilytysaikasuositus",
         "index": 53
       }
     ],
@@ -2092,8 +2050,7 @@
         "id": "3939842cc20b452ca52571f46e0732c0",
         "created_at": "2017-03-01T12:32:37.958970Z",
         "modified_at": "2017-03-01T12:32:37.958980Z",
-        "value":
-          "2 tutkimukselllisista, juridisista tai taloudellisista syistä suojeltavat asiakirjat",
+        "value": "2 tutkimukselllisista, juridisista tai taloudellisista syistä suojeltavat asiakirjat",
         "index": 3
       },
       {
@@ -2137,8 +2094,7 @@
         "id": "78eef4ce8cda4b4696348034356e9af7",
         "created_at": "2017-03-01T12:32:37.915757Z",
         "modified_at": "2017-03-01T12:32:37.915768Z",
-        "value":
-          "Ei säilytetä paperisena arkistossa, paperisäilytys työpisteessä",
+        "value": "Ei säilytetä paperisena arkistossa, paperisäilytys työpisteessä",
         "index": 2
       },
       {

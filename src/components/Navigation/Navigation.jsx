@@ -6,8 +6,6 @@
 /* eslint-disable no-return-assign */
 import React from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import filter from 'lodash/filter';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
 import isArray from 'lodash/isArray';
@@ -15,8 +13,7 @@ import isEmpty from 'lodash/isEmpty';
 import update from 'immutability-helper';
 
 import InfinityMenu from '../InfinityMenu/InfinityMenu';
-import SearchFilter from './SearchFilter';
-import { statusFilters, navigationStateFilters } from '../../constants';
+import { navigationStateFilters } from '../../constants';
 
 import './Navigation.scss';
 
@@ -52,16 +49,16 @@ class Navigation extends React.Component {
     const mappedValues = filterValues.map(({ value }) => value);
 
     return this.setState(
-      {
+      (prevState) => ({
         filters: {
-          ...this.state.filters,
+          ...prevState.filters,
           [filterName]: {
-            ...this.state.filters[filterName],
+            ...prevState.filters[filterName],
             values: mappedValues,
           },
         },
-      },
-      () => this.setState({ tree: this.getFilteredTree() }),
+      }),
+      () => this.setState(() => ({ tree: this.getFilteredTree() })),
     );
   };
 
@@ -88,40 +85,6 @@ class Navigation extends React.Component {
     }
   };
 
-  getFilters = () => {
-    const { attributeTypes, isUser } = this.props;
-    const isDetailSearch = this.isDetailSearch();
-    const statusFilterOptions = isUser ? statusFilters : filter(statusFilters, { default: true });
-    const statusFilterPlaceholder = this.props.isUser ? 'Suodata viimeisen tilan mukaan...' : 'Suodata tilan mukaan...';
-    const retentionPeriods = attributeTypes?.RetentionPeriod ? attributeTypes?.RetentionPeriod.values : [];
-    const retentionPeriodOptions = retentionPeriods.map((option) => ({
-      value: option.value,
-      label: option.value,
-    }));
-
-    return (
-      <div className={classnames({ 'filters row': isDetailSearch })}>
-        <SearchFilter
-          className={classnames({
-            '': !isDetailSearch,
-            'col-sm-6': isDetailSearch,
-          })}
-          placeholder={statusFilterPlaceholder}
-          value={this.state.filters.statusFilters.values}
-          options={statusFilterOptions}
-          handleChange={(values) => this.handleFilterChange(values, 'statusFilters')}
-        />
-        <SearchFilter
-          placeholder='Suodata säilytysajan mukaan'
-          value={this.state.filters.retentionPeriodFilters.values}
-          options={retentionPeriodOptions}
-          handleChange={(values) => this.handleFilterChange(values, 'retentionPeriodFilters')}
-          isVisible={isDetailSearch}
-        />
-      </div>
-    );
-  };
-
   getFilteredTree = () => {
     const { items } = this.props;
     const { filters } = this.state;
@@ -131,55 +94,57 @@ class Navigation extends React.Component {
     }
 
     // Deepcopy original item to disable mutation
-    const deepCopy = (item) => JSON.parse(JSON.stringify(item));
+    const itemsCopy = (item) => JSON.parse(JSON.stringify(item));
 
     const getItemFilters = (item, currentPath, nextPath) => {
-      const itemFilters = [];
       const itemValue = get(item, currentPath.concat([nextPath]).join('.'));
+
       if (isArray(itemValue)) {
-        Object.keys(itemValue).forEach((index) => itemFilters.push(currentPath.concat([nextPath, index])));
-      } else if (!isEmpty(itemValue)) {
-        itemFilters.push(currentPath.concat([nextPath]));
+        return Object.keys(itemValue).map((index) => currentPath.concat([nextPath, index]));
       }
-      return itemFilters;
+
+      if (!isEmpty(itemValue)) {
+        return [currentPath.concat([nextPath])];
+      }
+
+      return [];
     };
 
+    // returns item filter paths e.g.
+    // [
+    //   ['phases', 0, 'actions', 0, 'records', 0, 'attributes', 'RetentionPeriod'],
+    //   ['phases', 1, 'actions', 0, 'records', 0, 'attributes', 'RetentionPeriod']
+    // ]
     const getItemFilterPaths = (path, item) =>
-      // returns item filter paths e.g.
-      // [
-      //   ['phases', 0, 'actions', 0, 'records', 0, 'attributes', 'RetentionPeriod'],
-      //   ['phases', 1, 'actions', 0, 'records', 0, 'attributes', 'RetentionPeriod']
-      // ]
       path.split('.').reduce((currentFilters, currentPath) => {
-        const next = [];
         if (currentFilters.length) {
-          currentFilters.forEach((a) => {
-            const itemFilters = getItemFilters(item, a, currentPath);
-            itemFilters.forEach((itemFilter) => next.push(itemFilter));
-          });
-        } else {
-          const itemFilters = getItemFilters(item, [], currentPath);
-          itemFilters.forEach((itemFilter) => next.push(itemFilter));
+          return currentFilters.map((a) => getItemFilters(item, a, currentPath)).map((itemFilter) => itemFilter);
         }
-        return next;
+
+        return getItemFilters(item, [], currentPath).map((itemFilter) => itemFilter);
       }, []);
+
     // The actual filtering
     const filterFunction = (item) => {
       const matchesFilters = Object.keys(filters)
         .map((key) => {
-          const currentFilter = filters[key].values;
-          const paths = filters[key].path;
+          const { values: currentFilter, path: paths } = filters[key];
+
           if (currentFilter.length) {
-            return paths.some((path) => {
-              const filterPaths = getItemFilterPaths(path, item);
-              return filterPaths.some((filterPath) => includes(currentFilter, get(item, filterPath.join('.'))));
-            });
+            return paths.some((path) =>
+              getItemFilterPaths(path, item).some((filterPath) =>
+                includes(currentFilter, get(item, filterPath.join('.'))),
+              ),
+            );
           }
+
           return true;
         })
         .every((finalItem) => !!finalItem);
 
-      return matchesFilters || item.children?.filter(filterFunction).length;
+      item.children = item.children?.filter(filterFunction);
+
+      return matchesFilters || item.children?.length;
     };
 
     // Modify filtered items to be open
@@ -189,10 +154,11 @@ class Navigation extends React.Component {
       }
 
       item.isOpen = true;
+
       return item;
     };
 
-    return items.map(deepCopy).filter(filterFunction).map(setAllOpen);
+    return items.map(itemsCopy).filter(filterFunction).map(setAllOpen);
   };
 
   setSearchInput = (index, value) => {
@@ -268,14 +234,6 @@ class Navigation extends React.Component {
 
   isDetailSearch = () => this.props.match.path === '/filter';
 
-  createNavigationTitle = () => {
-    if (!this.props.is_open && this.props.tosPath.length) {
-      return this.props.tosPath.map((section) => <div key={section}>{section}</div>);
-    }
-
-    return 'Navigaatio';
-  };
-
   stopSearching() {
     this.setState({
       isSearchChanged: false,
@@ -313,11 +271,12 @@ class Navigation extends React.Component {
           removeSearchInput={this.removeSearchInput}
           searchInputs={searchInputs}
           setSearchInput={this.setSearchInput}
-          title={this.createNavigationTitle()}
           toggleNavigationVisibility={this.toggleNavigationVisibility}
           tree={this.state.tree}
-          filters={this.getFilters()}
           isDetailSearch={this.isDetailSearch()}
+          isUser={this.props.isUser}
+          filters={this.state.filters}
+          handleFilterChange={this.handleFilterChange}
         />
       </div>
     );

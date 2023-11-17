@@ -5,7 +5,7 @@ import {
   mockNavigationDataShort,
   mockNavigationDataFullObjects,
   mockNavigationDataOrphan
-} from "./testdata/navigationMocks";
+} from "../mocks/navigationMocks";
 
 const ADMINISTRATIVE_MATTERS = '00 Hallintoasiat';
 

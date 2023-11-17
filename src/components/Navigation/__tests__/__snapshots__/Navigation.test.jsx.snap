@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Navigation /> should render correctly 1`] = `
+<div>
+  <div
+    class="helerm-navigation"
+  >
+    <div
+      class="navigation-menu"
+      id="navigation-menu"
+    >
+      <div
+        style="min-height: 0px;"
+      >
+        <div
+          class=" "
+          style="transform: translateZ(0);"
+        >
+          <div
+            class="navigation-header clearfix"
+          >
+            <button
+              class="pull-left nav-button"
+              type="button"
+            >
+              <span
+                aria-hidden="true"
+                class="fa-solid fa-list"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

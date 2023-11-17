@@ -1,11 +1,8 @@
-/* eslint-disable camelcase */
+/* eslint-disable react/forbid-prop-types */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable class-methods-use-this */
 /* eslint-disable no-param-reassign */
 /* eslint-disable react/prop-types */
-/* eslint-disable react/forbid-prop-types */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _get from 'lodash/get';
@@ -13,20 +10,16 @@ import cloneDeep from 'lodash/cloneDeep';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
 import NestedObjects from 'nested-objects';
-import Select from 'react-select';
 import Defiant from 'defiant.js';
 import Sticky from 'react-sticky-el';
 
-import SearchInput from './SearchInput';
 import ClassificationLink from './ClassificationLink';
 import EmptyTree from './EmptyTree';
 import Exporter from '../Exporter';
+import SearchInputs from './SearchInput/SearchInputs';
+import SearchFilters from './SearchFilter/SearchFilters';
 
 const DEFAULT_FILTER_CONDITION = 'and';
-const FILTER_CONDITION_OPTIONS = [
-  { value: 'and', label: 'JA' },
-  { value: 'or', label: 'TAI' },
-];
 
 /**
  * Extracted from https://github.com/socialtables/react-infinity-menu
@@ -47,15 +40,18 @@ class InfinityMenu extends Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     const { isDetailSearch, isSearchChanged, items, searchInputs, tree } = nextProps;
+
     const {
       isSearchChanged: wasSearchChanged,
       items: prevItems,
       searchInputs: prevInputs,
       tree: prevTree,
     } = this.props;
+
     if (isDetailSearch && items !== prevItems) {
       this.createSnapshots(items);
     }
+
     if (tree !== prevTree) {
       this.setState({ filteredTree: tree });
     }
@@ -103,8 +99,9 @@ class InfinityMenu extends Component {
   }
 
   onFilterConditionChange(option) {
-    this.setState({ filterCondition: option.value }, () =>
-      this.filterTree(this.props.searchInputs, this.props.tree, this.props.isDetailSearch),
+    this.setState(
+      (prevState) => ({ ...prevState, filterCondition: option.value }),
+      () => this.filterTree(this.props.searchInputs, this.props.tree, this.props.isDetailSearch),
     );
   }
 
@@ -233,7 +230,8 @@ class InfinityMenu extends Component {
           prevs.push(React.createElement(currCustomComponent, nodeProps));
         } else {
           prevs.push(
-            <div
+            <button
+              type='button'
               key={key}
               onClick={(e) => this.onNodeClick(tree, curr, keyPath, e)}
               onKeyUp={(e) => {
@@ -248,7 +246,7 @@ class InfinityMenu extends Component {
               <label>
                 {nodeName} <ClassificationLink id={curr.id} />
               </label>
-            </div>,
+            </button>,
           );
         }
       }
@@ -268,7 +266,8 @@ class InfinityMenu extends Component {
         openedNode.push(React.createElement(currCustomComponent, nodeProps));
       } else {
         openedNode.push(
-          <div
+          <button
+            type='button'
             key={key}
             onClick={(e) => this.onNodeClick(tree, curr, keyPath, e)}
             onKeyUp={(e) => {
@@ -283,7 +282,7 @@ class InfinityMenu extends Component {
             <label>
               {nodeName} <ClassificationLink id={curr.id} />
             </label>
-          </div>,
+          </button>,
         );
       }
 
@@ -321,6 +320,7 @@ class InfinityMenu extends Component {
 
   filterTree = (searchInputs, tree, isDetailSearch) => {
     const filters = isDetailSearch ? this.getDetailFilters(searchInputs) : searchInputs[0];
+
     const filteredTree = filters
       ? tree.reduce((prev, curr, key) => {
           if (key === undefined) {
@@ -329,6 +329,7 @@ class InfinityMenu extends Component {
           return this.findFiltered(prev, curr, key, filters);
         }, [])
       : tree;
+
     this.setState({ filteredTree });
   };
 
@@ -355,7 +356,7 @@ class InfinityMenu extends Component {
   findFiltered(trees, node, key, filters) {
     const newNode = cloneDeep(node);
 
-    if (!node.children) {
+    if (!node.children?.length) {
       const nodeMatchesSearchFilter = this.getNodeMatchesSearchFilter(filters, node);
 
       if (nodeMatchesSearchFilter) {
@@ -382,6 +383,7 @@ class InfinityMenu extends Component {
     return trees;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   formatDetailFilter(field, value) {
     // returns xpath query e.g.
     // InformationSystem=*ahjo returns: contains(InformationSystem, "ahjo")
@@ -401,64 +403,6 @@ class InfinityMenu extends Component {
     return `${field}="${fieldValue}"`;
   }
 
-  renderSearchInputs() {
-    const { isDetailSearch, searchInputs } = this.props;
-    const searchInputProps = {
-      ...this.props.headerProps,
-      placeholder: 'Etsi...',
-    };
-    return searchInputs.map((input, index) => (
-      <div
-        // eslint-disable-next-line react/no-array-index-key
-        key={index}
-        className={classnames({
-          'col-xs-12 filters filters-detail-search-input': isDetailSearch,
-          'col-sm-6': !isDetailSearch,
-        })}
-      >
-        <SearchInput
-          {...searchInputProps}
-          searchInput={input}
-          setSearchInput={(event) => this.props.setSearchInput(index, event.target.value)}
-        />
-        {isDetailSearch && (
-          <div className='filters-detail-search-input-buttons'>
-            {index + 1 < searchInputs.length && (
-              <Select
-                className='Select'
-                autoBlur
-                isDisabled={index > 0}
-                placeholder='Ehto'
-                value={FILTER_CONDITION_OPTIONS.find(({ value }) => value === this.state.filterCondition)}
-                isClearable={false}
-                options={FILTER_CONDITION_OPTIONS}
-                onChange={this.onFilterConditionChange}
-              />
-            )}
-            <button
-              type='button'
-              className='btn btn-info btn-sm'
-              onClick={() => this.props.removeSearchInput(index)}
-              title='Poista hakuehto'
-            >
-              <span className='fa-solid fa-minus' aria-hidden='true' />
-            </button>
-            {index + 1 === searchInputs.length && (
-              <button
-                type='button'
-                className='btn btn-info btn-sm'
-                onClick={this.props.addSearchInput}
-                title='Lisää hakuehto'
-              >
-                <span className='fa-solid fa-plus' aria-hidden='true' />
-              </button>
-            )}
-          </div>
-        )}
-      </div>
-    ));
-  }
-
   renderBody(displayTree) {
     const { emptyTreeComponent, emptyTreeComponentProps, isFetching } = this.props;
 
@@ -472,8 +416,19 @@ class InfinityMenu extends Component {
   }
 
   render() {
-    const { isDetailSearch } = this.props;
-    const { filteredTree } = this.state;
+    const {
+      attributeTypes,
+      isDetailSearch,
+      headerProps,
+      searchInputs,
+      addSearchInput,
+      setSearchInput,
+      removeSearchInput,
+      isUser,
+      filters,
+      handleFilterChange,
+    } = this.props;
+    const { filteredTree, filterCondition } = this.state;
 
     // recursive go through the tree
     const displayTree = filteredTree.reduce((prev, curr, key) => {
@@ -484,7 +439,6 @@ class InfinityMenu extends Component {
     }, []);
 
     // header component
-    const searchInputContent = this.renderSearchInputs();
     const bodyContent = this.renderBody(displayTree);
 
     return (
@@ -540,7 +494,7 @@ class InfinityMenu extends Component {
                         </div>
                         <div className='col-xs-6'>
                           <Exporter
-                            attributeTypes={this.props.attributeTypes}
+                            attributeTypes={attributeTypes}
                             data={filteredTree}
                             isVisible={filteredTree.length > 0}
                           />
@@ -548,14 +502,29 @@ class InfinityMenu extends Component {
                       </div>
                     )}
                     <div className='row'>
-                      {searchInputContent}
+                      <SearchInputs
+                        headerProps={headerProps}
+                        isDetailSearch={isDetailSearch}
+                        searchInputs={searchInputs}
+                        filterCondition={filterCondition}
+                        addSearchInput={addSearchInput}
+                        setSearchInput={setSearchInput}
+                        removeSearchInput={removeSearchInput}
+                        onFilterConditionChange={this.onFilterConditionChange}
+                      />
                       <div
                         className={classnames({
                           'col-xs-12': isDetailSearch,
                           'col-sm-6': !isDetailSearch,
                         })}
                       >
-                        {this.props.filters}
+                        <SearchFilters
+                          attributeTypes={attributeTypes}
+                          isDetailSearch={isDetailSearch}
+                          isUser={isUser}
+                          filters={filters}
+                          handleFilterChange={handleFilterChange}
+                        />
                       </div>
                     </div>
                   </div>
@@ -586,13 +555,13 @@ InfinityMenu.propTypes = {
   emptyTreeComponent: PropTypes.any,
   emptyTreeComponentProps: PropTypes.object,
   filter: PropTypes.func,
-  filters: PropTypes.object,
   headerProps: PropTypes.object,
   isDetailSearch: PropTypes.bool,
   isFetching: PropTypes.bool,
   isOpen: PropTypes.bool,
   isSearchChanged: PropTypes.bool,
   isSearching: PropTypes.bool,
+  isUser: PropTypes.bool.isRequired,
   items: PropTypes.array,
   maxLeaves: PropTypes.number,
   onLeafMouseClick: PropTypes.func,
@@ -605,6 +574,8 @@ InfinityMenu.propTypes = {
   setSearchInput: PropTypes.func.isRequired,
   toggleNavigationVisibility: PropTypes.func,
   tree: PropTypes.array,
+  filters: PropTypes.object.isRequired,
+  handleFilterChange: PropTypes.func.isRequired,
 };
 
 InfinityMenu.defaultProps = {

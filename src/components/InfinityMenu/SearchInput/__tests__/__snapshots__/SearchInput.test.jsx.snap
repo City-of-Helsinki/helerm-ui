@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<SearchInput /> renders correctly 1`] = `
+<div>
+  <input
+    class="react-infinity-menu-default-search-input"
+    placeholder=""
+    type="search"
+    value=""
+  />
+</div>
+`;

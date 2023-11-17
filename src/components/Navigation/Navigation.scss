@@ -186,6 +186,9 @@
     overflow-x: hidden;
   }
   .infinity-menu-node-container {
+    text-align: left;
+    background-color: transparent;
+    border: none;
     font-size: 1.5rem;
     letter-spacing: 0.03rem;
     color: $link-color;
