@@ -51,8 +51,8 @@ extends:
     # Default value to nodeVersion is set on template.
     # The values here will override the values defined in the tiedonohjaus-pipelines repository
     buildArgs:
+      # api url connected to
       REACT_APP_API_URL: https://tiedonohjaus-api.test.hel.ninja
-    #   DEBUG: 1
     # configMap: # pod environment variables
     #   DEBUG: 1
     ## Used tool version
