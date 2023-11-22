@@ -56,6 +56,13 @@ $ docker compose up -d
 ```
 Navigate to [http://localhost:3000](http://localhost:3000)
 
+## Commit message format
+
+New commit messages must adhere to the [Conventional Commits](https://www.conventionalcommits.org/)
+specification, and line length is limited to 72 characters.
+
+[commitlint](https://github.com/conventional-changelog/commitlint) checks every new commit for the correct format.
+
 ## Using local Tunnistamo instance for development with docker
 
 ### Set tunnistamo hostname
