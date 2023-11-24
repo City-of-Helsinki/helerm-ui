@@ -73,7 +73,7 @@
     "test": "react-scripts test --watchAll=false --verbose",
     "eject": "react-scripts eject",
     "lint": "yarn eslint \"src/**/*.{js,jsx}\"",
-    "postinstall": "husky install"
+    "postinstall": "if test \"$NODE_ENV\" != \"production\" ; then husky install ; fi"
   },
   "jest": {
     "testMatch": [
