@@ -8,6 +8,8 @@ services:
     build:
       context: .
       target: ${DOCKER_TARGET:-development}
+    env_file:
+      - .env
     volumes:
       - '.:/app'
       - '/app/node_modules'
