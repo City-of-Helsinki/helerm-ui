@@ -20,8 +20,10 @@
     "@testing-library/user-event": "^14.5.1",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.8.0",
     "bootstrap-sass": "^3.4.1",
+    "buffer": "^6.0.3",
     "classnames": "^2.3.2",
     "connected-react-router": "^6.9.3",
+    "crypto-browserify": "^3.12.0",
     "date-fns": "^2.29.3",
     "deep-freeze": "^0.0.1",
     "defiant.js": "1.4.5",
@@ -36,6 +38,8 @@
     "eslint-plugin-sonarjs": "^0.18.0",
     "fast-text-encoding": "^1.0.6",
     "gzipper": "^7.2.0",
+    "hds-core": "^3.2.0",
+    "hds-react": "^3.2.0",
     "history": "^4.10.1",
     "immutability-helper": "^3.1.1",
     "isomorphic-fetch": "^3.0.0",
@@ -64,6 +68,7 @@
     "redux-thunk": "^2.3.0",
     "remark-gfm": "^1.0.0",
     "sass": "^1.58.2",
+    "stream-browserify": "^3.0.0",
     "xlsx": "0.18.5"
   },
   "scripts": {

@@ -5,11 +5,12 @@ import PropTypes from 'prop-types';
 import { Provider, connect } from 'react-redux';
 import { Router } from 'react-router-dom';
 import ReduxToastr from 'react-redux-toastr';
+import { LoginProvider } from 'hds-react';
 
 import Loader from '../components/Loader';
 import { retrieveUserFromSession } from '../components/Login/reducer';
 import { fetchAttributeTypes, fetchTemplates } from '../store/uiReducer';
-import ClientProvider from './ClientProvider';
+import providerProperties from '../utils/oidc/config';
 
 class AppContainer extends Component {
   UNSAFE_componentWillMount() {
@@ -23,7 +24,7 @@ class AppContainer extends Component {
   render() {
     const { user, routes, store, history } = this.props;
     return (
-      <ClientProvider>
+      <LoginProvider {...providerProperties}>
         <Provider store={store}>
           <div style={{ height: '100%' }}>
             {user ? <Router history={history}>{routes}</Router> : <Loader show />}
@@ -38,7 +39,7 @@ class AppContainer extends Component {
             />
           </div>
         </Provider>
-      </ClientProvider>
+      </LoginProvider>
     );
   }
 }
