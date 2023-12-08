@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[` 1`] = `
+exports[`<EditorForm /> > should render correctly 1`] = `
 <div>
   <div
     class="add-box col-xs-12"

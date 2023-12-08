@@ -13,16 +13,16 @@ import renderWithProviders from '../../../utils/renderWithProviders';
 
 const baseMocks = {
   isDetailSearch: false,
-  onNodeMouseClick: jest.fn(),
+  onNodeMouseClick: vi.fn(),
   filters: navigationStateFilters,
-  filter: jest.fn(),
+  filter: vi.fn(),
 };
 
 const renderComponent = (history, mocks = baseMocks) =>
   renderWithProviders(
     <Router history={history}>
       <InfinityMenu
-        addSearchInput={jest.fn()}
+        addSearchInput={vi.fn()}
         attributeTypes={attributeRules}
         customComponentMappings={{}}
         emptyTreeComponent={EmptyTree}
@@ -37,18 +37,18 @@ const renderComponent = (history, mocks = baseMocks) =>
         isUser
         items={[]}
         maxLeaves={Infinity}
-        onLeafMouseClick={jest.fn()}
-        onLeafMouseDown={jest.fn()}
-        onLeafMouseUp={jest.fn()}
+        onLeafMouseClick={vi.fn()}
+        onLeafMouseDown={vi.fn()}
+        onLeafMouseUp={vi.fn()}
         onNodeMouseClick={mocks.onNodeMouseClick}
         path={[]}
-        removeSearchInput={jest.fn()}
+        removeSearchInput={vi.fn()}
         searchInputs={['']}
-        setSearchInput={jest.fn()}
-        toggleNavigationVisibility={jest.fn()}
+        setSearchInput={vi.fn()}
+        toggleNavigationVisibility={vi.fn()}
         tree={[]}
         filters={baseMocks.filters}
-        handleFilterChange={jest.fn()}
+        handleFilterChange={vi.fn()}
       />
     </Router>,
     { history, preloadedState: { navigation: { items: [validTOSwithChildren] } } },
@@ -64,8 +64,8 @@ describe('<InfinityMenu />', () => {
   });
 
   it('should filter tree by searchInputs', async () => {
-    const mockOnNodeMouseClick = jest.fn();
-    const mockFilter = jest.fn();
+    const mockOnNodeMouseClick = vi.fn();
+    const mockFilter = vi.fn();
 
     const mocks = { ...baseMocks, onNodeMouseClick: mockOnNodeMouseClick, filter: mockFilter };
 
@@ -76,7 +76,7 @@ describe('<InfinityMenu />', () => {
     rerender(
       <Router history={history}>
         <InfinityMenu
-          addSearchInput={jest.fn()}
+          addSearchInput={vi.fn()}
           attributeTypes={attributeRules}
           customComponentMappings={{}}
           emptyTreeComponent={EmptyTree}
@@ -91,18 +91,18 @@ describe('<InfinityMenu />', () => {
           isUser
           items={[validTOSwithChildren]}
           maxLeaves={Infinity}
-          onLeafMouseClick={jest.fn()}
-          onLeafMouseDown={jest.fn()}
-          onLeafMouseUp={jest.fn()}
+          onLeafMouseClick={vi.fn()}
+          onLeafMouseDown={vi.fn()}
+          onLeafMouseUp={vi.fn()}
           onNodeMouseClick={mocks.onNodeMouseClick}
           path={[]}
-          removeSearchInput={jest.fn()}
+          removeSearchInput={vi.fn()}
           searchInputs={['Terveys']}
-          setSearchInput={jest.fn()}
-          toggleNavigationVisibility={jest.fn()}
+          setSearchInput={vi.fn()}
+          toggleNavigationVisibility={vi.fn()}
           tree={[validTOSwithChildren]}
           filters={mocks.filters}
-          handleFilterChange={jest.fn()}
+          handleFilterChange={vi.fn()}
         />
         ,
       </Router>,
@@ -112,7 +112,7 @@ describe('<InfinityMenu />', () => {
   });
 
   it('should filter tree by searchFilters', async () => {
-    const mockOnNodeMouseClick = jest.fn();
+    const mockOnNodeMouseClick = vi.fn();
 
     const mocks = {
       ...baseMocks,
@@ -130,12 +130,12 @@ describe('<InfinityMenu />', () => {
     rerender(
       <Router history={history}>
         <InfinityMenu
-          addSearchInput={jest.fn()}
+          addSearchInput={vi.fn()}
           attributeTypes={attributeRules}
           customComponentMappings={{}}
           emptyTreeComponent={EmptyTree}
           emptyTreeComponentProps={{}}
-          filter={jest.fn()}
+          filter={vi.fn()}
           headerProps={{}}
           isDetailSearch={mocks.isDetailSearch}
           isFetching={false}
@@ -145,18 +145,18 @@ describe('<InfinityMenu />', () => {
           isUser
           items={[validTOSwithChildren]}
           maxLeaves={Infinity}
-          onLeafMouseClick={jest.fn()}
-          onLeafMouseDown={jest.fn()}
-          onLeafMouseUp={jest.fn()}
+          onLeafMouseClick={vi.fn()}
+          onLeafMouseDown={vi.fn()}
+          onLeafMouseUp={vi.fn()}
           onNodeMouseClick={mocks.onNodeMouseClick}
           path={[]}
-          removeSearchInput={jest.fn()}
+          removeSearchInput={vi.fn()}
           searchInputs={['']}
-          setSearchInput={jest.fn()}
-          toggleNavigationVisibility={jest.fn()}
+          setSearchInput={vi.fn()}
+          toggleNavigationVisibility={vi.fn()}
           tree={[validTOSwithChildren]}
           filters={mocks.filters}
-          handleFilterChange={jest.fn()}
+          handleFilterChange={vi.fn()}
         />
         ,
       </Router>,

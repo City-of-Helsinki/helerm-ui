@@ -1,4 +1,3 @@
-/* eslint-disable jest/valid-title */
 import { validateTOS, validateTOSWarnings } from '../validators';
 import attributeRules from '../mocks/attributeRules.json';
 import validTOS from '../mocks/validTOS.json';

@@ -27,7 +27,7 @@ $ yarn              # Install project dependencies
 ```
 
 #### 3. Add needed environmental variables
-Add these by copying the `.env.example` to `.env` and adding the values to the file, or directly through process.env.
+Add these by copying the `.env.example` to `.env` and adding the values to the file, or directly through import.meta.env.
 
 You will need to have the CLIENT_* and JWT_TOKEN parameters for the Helsinki Tunnistamo, or **run your own https://github.com/City-of-Helsinki/tunnistamo instance**.
 

@@ -1,16 +1,16 @@
 {
   "env": {
     "browser": true,
-    "jest": true
+    "vitest-globals/env": true
   },
   "extends": [
     "react-app",
-    "react-app/jest",
     "plugin:react/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
     "airbnb",
     "prettier",
+    "plugin:vitest-globals/recommended",
     "plugin:sonarjs/recommended"
   ],
   "overrides": [],

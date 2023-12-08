@@ -461,6 +461,7 @@ class Phase extends React.Component {
             type='button'
             className='btn btn-info btn-sm pull-right'
             title={this.props.phase.is_open ? 'Pienennä' : 'Laajenna'}
+            aria-label={this.props.phase.is_open ? 'Pienennä' : 'Laajenna'}
             onClick={() => this.props.setPhaseVisibility(this.props.phaseIndex, !this.props.phase.is_open)}
           >
             <span className={`fa-solid ${this.props.phase.is_open ? 'fa-minus' : 'fa-plus'}`} aria-hidden='true' />
@@ -472,6 +473,7 @@ class Phase extends React.Component {
           </span>
         )}
         {attributeButton(this.props.phase.attributes, this.props.attributeTypes) && (
+          // eslint-disable-next-line jsx-a11y/control-has-associated-label
           <button
             type='button'
             className='btn btn-info btn-xs record-button pull-right'

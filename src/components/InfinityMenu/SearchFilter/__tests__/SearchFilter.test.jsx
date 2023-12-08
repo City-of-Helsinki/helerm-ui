@@ -17,7 +17,7 @@ const renderComponent = (mocks = baseMocks) =>
       placeholder=''
       value={mocks.value}
       options={mocks.options}
-      handleChange={jest.fn()}
+      handleChange={vi.fn()}
       multi
       isVisible
     />,
@@ -41,7 +41,7 @@ describe('<SearchFilter />', () => {
         placeholder=''
         value={[DRAFT]}
         options={statusFilters}
-        handleChange={jest.fn()}
+        handleChange={vi.fn()}
         multi
         isVisible
       />,

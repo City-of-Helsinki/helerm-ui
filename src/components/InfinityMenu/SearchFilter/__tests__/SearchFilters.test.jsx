@@ -23,7 +23,7 @@ const renderComponent = (mocks = baseMocks) => {
         isDetailSearch={mocks.isDetailSearch}
         isUser
         filters={navigationStateFilters}
-        handleFilterChange={jest.fn()}
+        handleFilterChange={vi.fn()}
       />
     </Router>,
     { history },

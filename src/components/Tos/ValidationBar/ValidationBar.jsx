@@ -218,6 +218,7 @@ class ValidationBar extends Component {
               type='button'
               className='sidebar-close-button pull-right'
               onClick={() => setValidationVisibility(false)}
+              aria-label='Esitarkastus'
             >
               <i className='fa-solid fa-xmark' />
             </button>

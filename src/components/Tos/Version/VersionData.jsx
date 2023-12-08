@@ -72,6 +72,7 @@ class VersionData extends React.Component {
           type='button'
           className='btn btn-info btn-sm'
           title={isVersionOpen ? 'Pienennä' : 'Laajenna'}
+          aria-label={isVersionOpen ? 'Pienennä' : 'Laajenna'}
           onClick={() => setVersionVisibility(!isVersionOpen)}
         >
           <span className={`fa-solid ${isVersionOpen ? 'fa-minus' : 'fa-plus'}`} aria-hidden='true' />

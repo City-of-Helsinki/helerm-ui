@@ -8,7 +8,7 @@ const baseMocks = {
   attributeTypes: attributeRules,
   editorConfig: { type: 'function', action: 'edit' },
   targetId: 'c38e1b3dacd145ef905baf2fbd79918c',
-  elementConfig: { editWithForm: jest.fn(), elementTypes: {}, createRecord: jest.fn() },
+  elementConfig: { editWithForm: vi.fn(), elementTypes: {}, createRecord: vi.fn() },
 };
 
 const renderComponent = () =>
@@ -17,21 +17,22 @@ const renderComponent = () =>
       additionalFields={[]}
       attributeTypes={baseMocks.attributeTypes}
       attributes={{}}
-      closeEditorForm={jest.fn()}
-      complementRecordAdd={jest.fn()}
-      displayMessage={jest.fn()}
-      editMetaDataWithForm={jest.fn()}
+      closeEditorForm={vi.fn()}
+      complementRecordAdd={vi.fn()}
+      displayMessage={vi.fn()}
+      editMetaDataWithForm={vi.fn()}
       editorConfig={baseMocks.editorConfig}
       elementConfig={baseMocks.elementConfig}
-      onShowMore={jest.fn()}
-      onShowMoreForm={jest.fn()}
+      onShowMore={vi.fn()}
+      onShowMoreForm={vi.fn()}
       targetId={baseMocks.targetId}
     />,
   );
 
 describe('<EditorForm />', () => {
-  it('should render correctly', () => {});
-  const { container } = renderComponent();
+  it('should render correctly', () => {
+    const { container } = renderComponent();
 
-  expect(container).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
+  });
 });

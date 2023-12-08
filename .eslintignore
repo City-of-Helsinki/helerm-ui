@@ -3,4 +3,4 @@ coverage/**
 node_modules/**
 dist/**
 build/**
-src/index.html
+index.html
