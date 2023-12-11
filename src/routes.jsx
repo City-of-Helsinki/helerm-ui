@@ -4,8 +4,7 @@ import { Switch, Route } from 'react-router-dom';
 
 import CoreLayout from './layouts/CoreLayout/CoreLayout';
 import InfoLayout from './layouts/InfoLayout/InfoLayout';
-import LoginCallbackContainer from './components/LoginCallback/LoginCallbackContainer';
-import RenewCallbackContainer from './components/RenewCallback/RenewCallbackContainer';
+import LoginCallback from './components/LoginCallback/LoginCallback';
 import NotFound from './components/NotFound/NotFound';
 
 const ViewInfo = React.lazy(() => import('./components/Info/ViewInfo'));
@@ -31,11 +30,8 @@ const Routes = () => (
     </Route>
     <Route exact path='/callback'>
       <InfoLayout>
-        <LoginCallbackContainer />
+        <LoginCallback />
       </InfoLayout>
-    </Route>
-    <Route exact path='/renew'>
-      <RenewCallbackContainer />
     </Route>
     <Route exact path='/bulk'>
       <InfoLayout />

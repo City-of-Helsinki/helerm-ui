@@ -2,11 +2,11 @@
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
 import { get } from 'lodash';
+import { getApiTokenFromStorage } from 'hds-react'
 
-import api from '../../utils/api';
-import { getClient } from '../../utils/oidcClient'
-import { getStorageItem } from '../../utils/storage';
+import api, { Unauthorized } from '../../utils/api';
 import { USER_LOGIN_STATUS } from '../../constants'
+import config from '../../config';
 
 const initialState = {
   data: null,
@@ -15,33 +15,18 @@ const initialState = {
 };
 
 export const RECEIVE_USERDATA = 'receiveUserDataAction';
-export const CLEAR_USERDATA = 'clearUserDataAction';
 export const RETRIEVE_USERDATA = 'retrieveUserFromSessionAction';
 export const ERROR_USERDATA = 'errorUserDataAction';
-export const LOGIN = 'login';
-export const LOGOUT = 'logout';
 export const LOGIN_STATUS = 'loginStatusAction';
 
 export function receiveUserData(user) {
   return createAction(RECEIVE_USERDATA)(user);
 }
 
-export function clearUserData() {
-  return createAction(CLEAR_USERDATA)();
-}
-
-export function logout() {
+export function retrieveUserFromSession(id) {
   return (dispatch) => {
-    dispatch(createAction(LOGOUT));
-    getClient().logout();
-    dispatch(clearUserData());
-  };
-}
+    const token = getApiTokenFromStorage(config.API_TOKEN_AUTH_AUDIENCE);
 
-export function retrieveUserFromSession() {
-  return (dispatch) => {
-    const id = getStorageItem('user')
-    const token = getStorageItem('oidctoken')
     if (!id || !token) {
       dispatch(createAction(ERROR_USERDATA)());
       dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.NONE));
@@ -54,7 +39,7 @@ export function retrieveUserFromSession() {
       .get(url)
       .then((helermUserData) => {
         if (helermUserData.status === 401) {
-          return logout()(dispatch);
+          throw new Unauthorized(url)
         }
         return helermUserData.json();
       })
@@ -74,40 +59,6 @@ export function retrieveUserFromSession() {
   };
 }
 
-export function handleLoginCallback() {
-  return (dispatch) => {
-    dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.INITIALIZING));
-    return getClient().handleCallback()
-      .then(() => {
-        dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.AUTHORIZED));
-        dispatch(retrieveUserFromSession())
-      })
-      .catch(() => {
-        dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.UNAUTHORIZED));
-      });
-  };
-}
-
-export function handleRenewCallback() {
-  return (dispatch) => {
-    dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.INITIALIZING));
-    return getClient().handleRenewCallback()
-      .then(() => {
-        dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.AUTHORIZED));
-      })
-      .catch(() => {
-        dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.UNAUTHORIZED));
-      });
-  };
-}
-
-export function login() {
-  return (dispatch) => {
-    getClient().login();
-    dispatch(createAction(LOGIN));
-  };
-}
-
 const retrieveUserFromSessionAction = (state) =>
   update(state, {
     isFetching: { $set: true }
@@ -118,26 +69,10 @@ const receiveUserDataAction = (state, { payload }) => update(state, {
   isFetching: { $set: false }
 });
 
-const clearUserDataAction = (state) => update(state, {
-  $set: initialState
-});
-
-const errorUserDataAction = (state) => update(state, {
-  data: { $set: {} },
-  isFetching: { $set: false }
-});
-
-const loginStatusAction = (state, { payload }) => update(state, {
-  status: { $set: payload },
-})
-
 export default handleActions(
   {
-    receiveUserDataAction,
-    clearUserDataAction,
     retrieveUserFromSessionAction,
-    errorUserDataAction,
-    loginStatusAction,
+    receiveUserDataAction
   },
   initialState
 );

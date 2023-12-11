@@ -1,66 +1,107 @@
 /* eslint-disable camelcase */
 /* eslint-disable react/forbid-prop-types */
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Provider, connect } from 'react-redux';
 import { Router } from 'react-router-dom';
 import ReduxToastr from 'react-redux-toastr';
+import { LoginProvider, SessionEndedHandler, useOidcClient } from 'hds-react';
 
-import Loader from '../components/Loader';
 import { retrieveUserFromSession } from '../components/Login/reducer';
 import { fetchAttributeTypes, fetchTemplates } from '../store/uiReducer';
-import ClientProvider from './ClientProvider';
+import { providerProperties } from '../utils/oidc/constants';
 
-class AppContainer extends Component {
-  UNSAFE_componentWillMount() {
-    if (!window.location.href.includes('/renew')) {
-      this.props.fetchAttributeTypes();
-      this.props.fetchTemplates();
+const App = ({
+  history,
+  routes,
+  dispatchRetrieveUserFromSession,
+  dispatchFetchAttributeTypes,
+  dispatchFetchTemplates,
+}) => {
+  const { getUser, isAuthenticated } = useOidcClient();
+
+  const isAuth = isAuthenticated();
+  const user = getUser();
+
+  useEffect(() => {
+    dispatchFetchAttributeTypes();
+    dispatchFetchTemplates();
+
+    if (isAuth) {
+      const { profile } = user;
+      const { sub: userId } = profile;
+
+      dispatchRetrieveUserFromSession(userId);
     }
-    this.props.retrieveUserFromSession();
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuth, user]);
 
-  render() {
-    const { user, routes, store, history } = this.props;
-    return (
-      <ClientProvider>
-        <Provider store={store}>
-          <div style={{ height: '100%' }}>
-            {user ? <Router history={history}>{routes}</Router> : <Loader show />}
-            <ReduxToastr
-              timeOut={4000}
-              newestOnTop
-              preventDuplicates
-              position='top-right'
-              transitionIn='fadeIn'
-              transitionOut='bounceOutUp'
-              progressBar
-            />
-          </div>
-        </Provider>
-      </ClientProvider>
-    );
-  }
-}
+  return (
+    <div style={{ height: '100%' }}>
+      <SessionEndedHandler
+        content={{
+          title: 'Istunto on vanhentunut!',
+          text: 'Istuntosi palvelimella on vanhentunut. Sinut kirjataan ulos palvelusta.',
+          buttonText: 'Kirjaudu ulos',
+          closeButtonLabelText: 'Kirjaudu ulos',
+        }}
+      />
+      <Router history={history}>{routes}</Router>
+      <ReduxToastr
+        timeOut={4000}
+        newestOnTop
+        preventDuplicates
+        position='top-right'
+        transitionIn='fadeIn'
+        transitionOut='bounceOutUp'
+        progressBar
+      />
+    </div>
+  );
+};
+
+const AppContainer = ({
+  routes,
+  store,
+  history,
+  dispatchRetrieveUserFromSession,
+  dispatchFetchAttributeTypes,
+  dispatchFetchTemplates,
+}) => (
+  <LoginProvider {...providerProperties}>
+    <Provider store={store}>
+      <App
+        history={history}
+        routes={routes}
+        dispatchRetrieveUserFromSession={dispatchRetrieveUserFromSession}
+        dispatchFetchAttributeTypes={dispatchFetchAttributeTypes}
+        dispatchFetchTemplates={dispatchFetchTemplates}
+      />
+    </Provider>
+  </LoginProvider>
+);
+
+App.propTypes = {
+  history: PropTypes.object.isRequired,
+  routes: PropTypes.node.isRequired,
+  dispatchFetchAttributeTypes: PropTypes.func.isRequired,
+  dispatchFetchTemplates: PropTypes.func.isRequired,
+  dispatchRetrieveUserFromSession: PropTypes.func.isRequired,
+};
 
 AppContainer.propTypes = {
-  fetchAttributeTypes: PropTypes.func.isRequired,
-  fetchTemplates: PropTypes.func.isRequired,
+  dispatchFetchAttributeTypes: PropTypes.func.isRequired,
+  dispatchFetchTemplates: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
-  retrieveUserFromSession: PropTypes.func.isRequired,
+  dispatchRetrieveUserFromSession: PropTypes.func.isRequired,
   routes: PropTypes.node.isRequired,
   store: PropTypes.object.isRequired,
-  user: PropTypes.object,
 };
-
-const mapStateToProps = ({ user }) => ({
-  user: user.data,
-});
 
 const mapDispatchToProps = {
-  fetchAttributeTypes,
-  fetchTemplates,
-  retrieveUserFromSession,
+  dispatchRetrieveUserFromSession: retrieveUserFromSession,
+  dispatchFetchAttributeTypes: fetchAttributeTypes,
+  dispatchFetchTemplates: fetchTemplates,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AppContainer);
+export default connect(null, mapDispatchToProps)(AppContainer);

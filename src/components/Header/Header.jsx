@@ -9,7 +9,7 @@ import config from '../../config';
 import { fetchNavigation } from '../Navigation/reducer';
 import IsAllowed from '../IsAllowed/IsAllowed';
 import Loader from '../Loader';
-import LoginContainer from '../Login/LoginContainer';
+import Login from '../Login/Login';
 import Logo from './Logo';
 
 import './Header.scss';
@@ -35,7 +35,7 @@ const Header = (props) => {
             {siteTitle} {gitVersion}
           </small>
         </p>
-        <LoginContainer />
+        <Login />
         <IsAllowed to={EDIT}>
           <p className='navbar-text pull-right'>
             <Link to='/bulk' className='navbar-link'>

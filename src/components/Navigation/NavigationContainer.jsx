@@ -1,3 +1,7 @@
+/* eslint-disable camelcase */
+/* eslint-disable react/forbid-prop-types */
+import React from 'react';
+import PropTypes from 'prop-types';
 import { bindActionCreators } from '@reduxjs/toolkit';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -8,10 +12,40 @@ import { fetchNavigation, setNavigationVisibility } from './reducer';
 import { itemById } from '../../utils/helpers';
 import Navigation from './Navigation';
 
+const NavigationContainer = ({
+  attributeTypes,
+  fetchNavigationFn,
+  isFetching,
+  isUser,
+  is_open,
+  items,
+  itemsTimestamp,
+  onLeafMouseClick,
+  pushFn,
+  setNavigationVisibilityFn,
+  tosPath,
+  match,
+}) => (
+  <Navigation
+    attributeTypes={attributeTypes}
+    fetchNavigation={fetchNavigationFn}
+    isFetching={isFetching}
+    isUser={isUser}
+    is_open={is_open}
+    items={items}
+    itemsTimestamp={itemsTimestamp}
+    onLeafMouseClick={onLeafMouseClick}
+    push={pushFn}
+    setNavigationVisibility={setNavigationVisibilityFn}
+    tosPath={tosPath}
+    match={match}
+  />
+);
+
 const mapDispatchToProps = (dispatch) => ({
-  fetchNavigation: bindActionCreators(fetchNavigation, dispatch),
-  push: (path) => dispatch(push(path)),
-  setNavigationVisibility: bindActionCreators(setNavigationVisibility, dispatch),
+  fetchNavigationFn: bindActionCreators(fetchNavigation, dispatch),
+  pushFn: (path) => dispatch(push(path)),
+  setNavigationVisibilityFn: bindActionCreators(setNavigationVisibility, dispatch),
 });
 
 const getTOS = (selectedTOS, items, classification) => {
@@ -58,4 +92,21 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Navigation));
+NavigationContainer.propTypes = {
+  attributeTypes: PropTypes.object,
+  fetchNavigationFn: PropTypes.func.isRequired,
+  isFetching: PropTypes.bool,
+  isUser: PropTypes.bool,
+  is_open: PropTypes.bool.isRequired,
+  // One does not simply mutate props unless one is Navigation and the prop is `items`.
+  // Sorry, didn't find out where the devil is doing the mutations :'(
+  items: PropTypes.array.isRequired,
+  itemsTimestamp: PropTypes.string,
+  onLeafMouseClick: PropTypes.func,
+  pushFn: PropTypes.func.isRequired,
+  setNavigationVisibilityFn: PropTypes.func.isRequired,
+  tosPath: PropTypes.array.isRequired,
+  match: PropTypes.object.isRequired,
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NavigationContainer));
