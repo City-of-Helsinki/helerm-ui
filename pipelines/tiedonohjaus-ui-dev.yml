@@ -38,7 +38,7 @@ resources:
 
 extends:
   # Filename in Azure DevOps Repository
-  template: azure-pipelines-tiedonohjaus-ui-test.yml@tiedonohjaus-pipelines
+  template: azure-pipelines-tiedonohjaus-ui-dev.yml@tiedonohjaus-pipelines
   # parameters:
     # Application build arguments and config map values as key value pairs.
     # Does not contain all buildArguments or configMap values, the rest located in tiedonohjaus-pipelines
