@@ -73,7 +73,10 @@
     "test": "react-scripts test --watchAll=false --verbose",
     "eject": "react-scripts eject",
     "lint": "yarn eslint \"src/**/*.{js,jsx}\"",
-    "postinstall": "if test \"$NODE_ENV\" != \"production\" ; then husky install ; fi"
+    "postinstall": "if test \"$NODE_ENV\" != \"production\" ; then husky install ; fi",
+    "test:e2e:install": "yarn playwright install",
+    "test:e2e:start": "npx playwright test",
+    "test:e2e:record": "npx playwright codegen https://tiedonohjaus-ui.dev.hel.ninja/"
   },
   "jest": {
     "testMatch": [
@@ -101,6 +104,8 @@
   "devDependencies": {
     "@commitlint/cli": "^18.4.3",
     "@commitlint/config-conventional": "^18.4.3",
-    "husky": "^8.0.3"
+    "husky": "^8.0.3",
+    "@playwright/test": "^1.40.1",
+    "@types/node": "^18.19.3"
   }
 }
