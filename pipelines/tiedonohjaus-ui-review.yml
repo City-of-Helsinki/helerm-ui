@@ -52,7 +52,7 @@ extends:
     # The values here will override the values defined in the tiedonohjaus-pipelines repository
     buildArgs:
       # api url connected to
-      REACT_APP_API_URL: https://tiedonohjaus-api.dev.hel.ninja
+      REACT_APP_API_URL: https://tiedonohjaus.api.dev.hel.ninja
     # configMap: # pod environment variables
     #   DEBUG: 1
     ## Used tool version
