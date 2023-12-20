@@ -1,6 +1,5 @@
 import { defineConfig } from '@playwright/test';
 
-
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -14,25 +13,25 @@ export default defineConfig({
   workers: 1,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    ['junit', { outputFile: 'test-results/e2e-junit-results.xml' }],
-    ['html']
+    ['junit', { outputFile: 'report/TEST-junit-results.xml' }],
+    ['html', { open: 'never', outputFolder: 'report/html' }]
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     actionTimeout: 30 * 1000,
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: process.env.TEST_BASEURL ?? "https://tiedonohjaus-ui.dev.hel.ninja/",
+    baseURL: process.env.E2E_TESTS_ENV_URL ?? "https://tiedonohjaus-ui.dev.hel.ninja/",
     ignoreHTTPSErrors: true,
     screenshot: {
       fullPage: true,
       mode: "only-on-failure"
     },
-    /* 'on-first-retry' Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
+    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
 
-    // 'on-first-retry' https://playwright.dev/docs/videos
+    // https://playwright.dev/docs/videos
     video: 'on-first-retry', 
-    contextOptions: {recordVideo: { dir: "./test-results/videos/"}}
+    contextOptions: {recordVideo: { dir: "./report/videos/"}}
   },
 
   projects: [

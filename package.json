@@ -75,6 +75,7 @@
     "lint": "yarn eslint \"src/**/*.{js,jsx}\"",
     "postinstall": "if test \"$NODE_ENV\" != \"production\" ; then husky install ; fi",
     "test:e2e:install": "yarn playwright install",
+    "test:e2e:ci": "npx playwright test",
     "test:e2e:start": "npx playwright test",
     "test:e2e:record": "npx playwright codegen https://tiedonohjaus-ui.dev.hel.ninja/"
   },
