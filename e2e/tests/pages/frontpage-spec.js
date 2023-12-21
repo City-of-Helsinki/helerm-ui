@@ -2,7 +2,7 @@ import { Page, expect, test } from '@playwright/test';
 
 
 test.describe("Frontpage", () => {
-    let page: Page;
+    let page;
 
     test.beforeAll(async ({ browser }) => {
         page = await browser.newPage();

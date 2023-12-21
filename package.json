@@ -107,7 +107,6 @@
     "@commitlint/config-conventional": "^18.4.3",
     "husky": "^8.0.3",
     "@playwright/test": "^1.40.1",
-    "@types/node": "^18.19.3",
-    "typescript": "5.3.3"
+    "@types/node": "^18.19.3"
   }
 }
