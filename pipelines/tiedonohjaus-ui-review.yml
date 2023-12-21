@@ -39,7 +39,6 @@ resources:
     # Azure DevOps repository
     - repository: tiedonohjaus-pipelines
       type: git
-      ref: refs/heads/e2e_tests
       # Azure DevOps project/repository
       name: tiedonohjaus/tiedonohjaus-pipelines
 
