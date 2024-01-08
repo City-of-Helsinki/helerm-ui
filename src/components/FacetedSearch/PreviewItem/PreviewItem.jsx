@@ -25,7 +25,7 @@ const PreviewItem = ({ item, metadata, onClose }) => {
     <div className='faceted-search-preview-item'>
       <div className='faceted-search-preview-item-title'>
         Esikatselu{' '}
-        <button type='button' className='btn btn-sm btn-link pull-right' onClick={onClose}>
+        <button type='button' className='btn btn-sm btn-link pull-right' onClick={onClose} aria-label='Esikatselu'>
           <i className='fa-solid fa-xmark' />
         </button>
       </div>

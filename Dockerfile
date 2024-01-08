@@ -29,7 +29,7 @@ USER default
 RUN yarn cache clean --force
 RUN yarn
 
-COPY .eslintrc.json .eslintignore .prettierrc /app/
+COPY index.html vite.config.mjs .eslintrc.json .eslintignore .prettierrc .env* /app/
 COPY ./src /app/src
 COPY ./public /app/public
 
@@ -45,7 +45,7 @@ ENV NODE_ENV $NODE_ENV
 
 ENV PORT 8080
 
-CMD [ "yarn", "start"]
+CMD yarn start --port ${PORT}
 
 EXPOSE 8080
 

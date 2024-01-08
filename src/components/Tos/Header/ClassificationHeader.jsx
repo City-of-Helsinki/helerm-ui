@@ -14,6 +14,7 @@ const ClassificationHeader = ({ classification, isOpen, setVisibility }) => (
           className='btn btn-info btn-sm pull-right'
           title={isOpen ? 'Pienennä' : 'Laajenna'}
           onClick={() => setVisibility(!isOpen)}
+          aria-label={isOpen ? 'Pienennä' : 'Laajenna'}
         >
           <span className={`fa-solid ${isOpen ? 'fa-minus' : 'fa-plus'}`} aria-hidden='true' />
         </button>

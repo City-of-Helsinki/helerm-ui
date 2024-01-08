@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`<Navigation /> should render correctly 1`] = `
+exports[`<Navigation /> > should render correctly 1`] = `
 <div>
   <div
     class="validation-bar"
@@ -13,6 +13,7 @@ exports[`<Navigation /> should render correctly 1`] = `
         Esitarkastus
          
         <button
+          aria-label="Esitarkastus"
           class="sidebar-close-button pull-right"
           type="button"
         >

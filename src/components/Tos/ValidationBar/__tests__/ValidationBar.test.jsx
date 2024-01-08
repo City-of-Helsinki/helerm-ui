@@ -11,7 +11,7 @@ import validTOS from '../../../../utils/mocks/validTOS.json';
 import ValidationBar from '../ValidationBar';
 
 const baseMocks = {
-  setValidationVisibility: jest.fn(),
+  setValidationVisibility: vi.fn(),
   selectedTOS: errorsAndWarningsTOS,
 };
 
@@ -21,8 +21,8 @@ const renderComponent = (history, mocks = baseMocks) =>
       <ValidationBar
         selectedTOS={mocks.selectedTOS}
         attributeTypes={attributeRules}
-        scrollToMetadata={jest.fn()}
-        scrollToType={jest.fn()}
+        scrollToMetadata={vi.fn()}
+        scrollToType={vi.fn()}
         top={0}
         setValidationVisibility={mocks.setValidationVisibility}
       />
@@ -82,7 +82,7 @@ describe('<Navigation />', () => {
   it('should close validation bar', async () => {
     const history = createBrowserHistory();
 
-    const mockSetValidationVisibility = jest.fn();
+    const mockSetValidationVisibility = vi.fn();
     const mocks = { ...baseMocks, setValidationVisibility: mockSetValidationVisibility };
 
     renderComponent(history, mocks);

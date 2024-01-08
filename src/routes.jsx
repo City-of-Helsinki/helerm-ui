@@ -4,18 +4,23 @@ import { Switch, Route } from 'react-router-dom';
 
 import CoreLayout from './layouts/CoreLayout/CoreLayout';
 import InfoLayout from './layouts/InfoLayout/InfoLayout';
-import BulkListViewContainer from './components/Bulk/BulkListViewContainer';
-import BulkCreateViewContainer from './components/Bulk/BulkCreateView/BulkCreateViewContainer';
-import BulkViewContainer from './components/Bulk/BulkView/BulkViewContainer';
-import FacetedSearchContainer from './components/FacetedSearch/FacetedSearchContainer';
-import ViewTOSContainer from './components/Tos/ViewTos/ViewTosContainer';
-import ViewClassificationContainer from './components/Classification/ViewClassification/ViewClassificationContainer';
-import ClassificationTreeContainer from './components/ClassificationTree/ClassificationTreeContainer';
-import ViewInfo from './components/Info/ViewInfo';
-import PrintTOS from './components/Tos/Print/PrintView';
-import NotFound from './components/NotFound/NotFound';
 import LoginCallbackContainer from './components/LoginCallback/LoginCallbackContainer';
 import RenewCallbackContainer from './components/RenewCallback/RenewCallbackContainer';
+import NotFound from './components/NotFound/NotFound';
+
+const ViewInfo = React.lazy(() => import('./components/Info/ViewInfo'));
+const BulkListViewContainer = React.lazy(() => import('./components/Bulk/BulkListViewContainer'));
+const BulkViewContainer = React.lazy(() => import('./components/Bulk/BulkView/BulkViewContainer'));
+const BulkCreateViewContainer = React.lazy(() => import('./components/Bulk/BulkCreateView/BulkCreateViewContainer'));
+const FacetedSearchContainer = React.lazy(() => import('./components/FacetedSearch/FacetedSearchContainer'));
+const ViewTOSContainer = React.lazy(() => import('./components/Tos/ViewTos/ViewTosContainer'));
+const PrintTOS = React.lazy(() => import('./components/Tos/Print/PrintView'));
+const ViewClassificationContainer = React.lazy(() =>
+  import('./components/Classification/ViewClassification/ViewClassificationContainer'),
+);
+const ClassificationTreeContainer = React.lazy(() =>
+  import('./components/ClassificationTree/ClassificationTreeContainer'),
+);
 
 const Routes = () => (
   <Switch>
@@ -37,12 +42,14 @@ const Routes = () => (
       <BulkListViewContainer />
     </Route>
     <Route exact path='/bulk/view/:id'>
-      <InfoLayout />
-      <BulkViewContainer />
+      <InfoLayout>
+        <BulkViewContainer />
+      </InfoLayout>
     </Route>
     <Route exact path='/bulk/create'>
-      <InfoLayout />
-      <BulkCreateViewContainer />
+      <InfoLayout>
+        <BulkCreateViewContainer />
+      </InfoLayout>
     </Route>
     <Route exact path={['/', '/filter']}>
       <CoreLayout>
@@ -50,24 +57,29 @@ const Routes = () => (
       </CoreLayout>
     </Route>
     <Route exact path='/search'>
-      <CoreLayout />
-      <FacetedSearchContainer />
+      <CoreLayout>
+        <FacetedSearchContainer />
+      </CoreLayout>
     </Route>
     <Route exact path={['/view-tos/:id/', '/view-tos/:id/version/:version']}>
-      <CoreLayout />
-      <ViewTOSContainer />
+      <CoreLayout>
+        <ViewTOSContainer />
+      </CoreLayout>
     </Route>
     <Route exact path={['/view-tos/:id/print', '/view-tos/:id/version/:version/print']}>
-      <CoreLayout />
-      <PrintTOS />
+      <CoreLayout>
+        <PrintTOS />
+      </CoreLayout>
     </Route>
     <Route exact path={['/view-classification/:id', '/view-classification/:id/version/:version']}>
-      <CoreLayout />
-      <ViewClassificationContainer />
+      <CoreLayout>
+        <ViewClassificationContainer />
+      </CoreLayout>
     </Route>
     <Route exact path='/classification-tree'>
-      <CoreLayout />
-      <ClassificationTreeContainer />
+      <CoreLayout>
+        <ClassificationTreeContainer />
+      </CoreLayout>
     </Route>
     <Route path='*' component={NotFound} />
   </Switch>

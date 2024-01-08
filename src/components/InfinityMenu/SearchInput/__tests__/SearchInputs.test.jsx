@@ -8,11 +8,11 @@ import SearchInputs, { FILTER_CONDITION_OPTIONS } from '../SearchInputs';
 import renderWithProviders from '../../../../utils/renderWithProviders';
 
 const baseMocks = {
-  onFilterConditionChange: jest.fn(),
-  setSearchInput: jest.fn(),
+  onFilterConditionChange: vi.fn(),
+  setSearchInput: vi.fn(),
   searchInputs: [''],
   isDetailSearch: false,
-  removeSearchInput: jest.fn(),
+  removeSearchInput: vi.fn(),
 };
 
 const renderComponent = (mocks = baseMocks) => {
@@ -25,7 +25,7 @@ const renderComponent = (mocks = baseMocks) => {
         isDetailSearch={mocks.isDetailSearch}
         searchInputs={mocks.searchInputs}
         filterCondition={FILTER_CONDITION_OPTIONS[0].value}
-        addSearchInput={jest.fn()}
+        addSearchInput={vi.fn()}
         setSearchInput={mocks.setSearchInput}
         removeSearchInput={mocks.removeSearchInput}
         onFilterConditionChange={mocks.onFilterConditionChange}
@@ -43,7 +43,7 @@ describe('<SearchInputs />', () => {
   });
 
   it('should search', async () => {
-    const mockSetSeachInput = jest.fn();
+    const mockSetSeachInput = vi.fn();
     const mocks = { ...baseMocks, setSearchInput: mockSetSeachInput };
 
     renderComponent(mocks);
@@ -59,7 +59,7 @@ describe('<SearchInputs />', () => {
 
   it('should render multiple inputs', async () => {
     const mockSearchinputs = ['1', '2'];
-    const mockRemoveSearchInput = jest.fn();
+    const mockRemoveSearchInput = vi.fn();
     const mocks = {
       ...baseMocks,
       isDetailSearch: true,

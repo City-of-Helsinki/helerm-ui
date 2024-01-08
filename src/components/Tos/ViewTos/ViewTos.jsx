@@ -488,6 +488,7 @@ class ViewTOS extends React.Component {
           type='button'
           className='btn btn-info btn-sm'
           title={isOpen ? 'Pienennä' : 'Laajenna'}
+          aria-label={isOpen ? 'Pienennä' : 'Laajenna'}
           onClick={() => this.props.setMetadataVisibility(!isOpen)}
         >
           <span className={`fa-solid ${isOpen ? 'fa-minus' : 'fa-plus'}`} aria-hidden='true' />

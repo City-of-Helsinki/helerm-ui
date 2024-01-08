@@ -55,11 +55,18 @@ const SearchInputs = ({
             className='btn btn-info btn-sm'
             onClick={() => removeSearchInput(index)}
             title='Poista hakuehto'
+            aria-label='Poista hakuehto'
           >
             <span className='fa-solid fa-minus' aria-hidden='true' />
           </button>
           {index + 1 === searchInputs.length && (
-            <button type='button' className='btn btn-info btn-sm' onClick={addSearchInput} title='Lisää hakuehto'>
+            <button
+              type='button'
+              className='btn btn-info btn-sm'
+              onClick={addSearchInput}
+              title='Lisää hakuehto'
+              aria-label='Lisää hakuehto'
+            >
               <span className='fa-solid fa-plus' aria-hidden='true' />
             </button>
           )}

@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 import SearchInput from '../SearchInput';
 import renderWithProviders from '../../../../utils/renderWithProviders';
 
-const renderComponent = (mockFunction = jest.fn()) => {
+const renderComponent = (mockFunction = vi.fn()) => {
   const history = createBrowserHistory();
 
   return renderWithProviders(
@@ -26,7 +26,7 @@ describe('<SearchInput />', () => {
   });
 
   it('triggers setSearchInput', async () => {
-    const mockSetSearchInput = jest.fn();
+    const mockSetSearchInput = vi.fn();
 
     renderComponent(mockSetSearchInput);
 

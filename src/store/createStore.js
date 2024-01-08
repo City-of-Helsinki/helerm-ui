@@ -18,8 +18,8 @@ const storeCreator = (history, initialState = {}) => {
 
   store.asyncReducers = {};
 
-  if (module.hot) {
-    module.hot.accept('./rootReducers', () => {
+  if (import.meta.hot) {
+    import.meta.hot.accept('./rootReducers', () => {
       store.replaceReducer(makeRootReducer(store.asyncReducers));
     });
   }
