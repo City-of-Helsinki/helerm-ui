@@ -49,6 +49,9 @@ exports[`<AppContainer /> > should render correctly 1`] = `
           <p
             class="navbar-text pull-right login-link"
           >
+            <small>
+              Test Tester
+            </small>
             <button
               class="btn btn-link login-button"
               type="button"

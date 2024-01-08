@@ -5,11 +5,12 @@ import PropTypes from 'prop-types';
 import { Provider, connect } from 'react-redux';
 import { Router } from 'react-router-dom';
 import ReduxToastr from 'react-redux-toastr';
-import { LoginProvider, SessionEndedHandler, useOidcClient } from 'hds-react';
+import { LoginProvider, SessionEndedHandler } from 'hds-react';
 
 import { retrieveUserFromSession } from '../components/Login/reducer';
 import { fetchAttributeTypes, fetchTemplates } from '../store/uiReducer';
 import { providerProperties } from '../utils/oidc/constants';
+import useAuth from '../hooks/useAuth';
 
 const App = ({
   history,
@@ -18,23 +19,20 @@ const App = ({
   dispatchFetchAttributeTypes,
   dispatchFetchTemplates,
 }) => {
-  const { getUser, isAuthenticated } = useOidcClient();
-
-  const isAuth = isAuthenticated();
-  const user = getUser();
+  const { authenticated, user } = useAuth();
 
   useEffect(() => {
     dispatchFetchAttributeTypes();
     dispatchFetchTemplates();
 
-    if (isAuth) {
+    if (authenticated) {
       const { profile } = user;
       const { sub: userId } = profile;
 
       dispatchRetrieveUserFromSession(userId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuth, user]);
+  }, [authenticated, user]);
 
   return (
     <div style={{ height: '100%' }}>

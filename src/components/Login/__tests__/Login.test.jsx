@@ -1,21 +1,21 @@
 import React from 'react';
 import { Router } from 'react-router-dom';
-import * as mockLogin from 'hds-react';
 import { screen } from '@testing-library/react';
 import { createBrowserHistory } from 'history';
 import userEvent from '@testing-library/user-event';
 
+import * as useAuth from '../../../hooks/useAuth';
 import Login from '../Login';
 import renderWithProviders from '../../../utils/renderWithProviders';
 
-const getUserMock = vitest.fn().mockImplementation(() => ({ profile: { name: 'Test Tester' } }));
-const isAuthenticatedMock = vitest.fn().mockImplementation(() => true);
 const loginMock = vitest.fn();
 const logoutMock = vitest.fn();
 
-vitest.spyOn(mockLogin, 'useOidcClient').mockImplementation(() => ({
-  getUser: getUserMock,
-  isAuthenticated: isAuthenticatedMock,
+const mockName = 'Test Tester';
+
+vitest.spyOn(useAuth, 'default').mockImplementation(() => ({
+  user: { profile: { sub: 'user123', name: mockName } },
+  authenticated: true,
   login: loginMock,
   logout: logoutMock,
 }));
@@ -45,11 +45,9 @@ describe('<Login />', () => {
   });
 
   it('should display given name with family name', async () => {
-    vitest.spyOn(mockLogin, 'useOidcClient').mockImplementationOnce(() => ({
-      getUser: vitest
-        .fn()
-        .mockImplementation(() => ({ profile: { given_name: 'Test', family_name: 'Tester', name: undefined } })),
-      isAuthenticated: isAuthenticatedMock,
+    vitest.spyOn(useAuth, 'default').mockImplementationOnce(() => ({
+      user: { profile: { given_name: 'Test', family_name: 'Tester', name: undefined } },
+      authenticated: true,
     }));
 
     const history = createBrowserHistory();
@@ -59,11 +57,9 @@ describe('<Login />', () => {
   });
 
   it('should display just given name', async () => {
-    vitest.spyOn(mockLogin, 'useOidcClient').mockImplementationOnce(() => ({
-      getUser: vitest
-        .fn()
-        .mockImplementation(() => ({ profile: { given_name: 'Test', family_name: undefined, name: undefined } })),
-      isAuthenticated: isAuthenticatedMock,
+    vitest.spyOn(useAuth, 'default').mockImplementationOnce(() => ({
+      user: { profile: { given_name: 'Test', family_name: undefined, name: undefined } },
+      authenticated: true,
     }));
 
     const history = createBrowserHistory();
@@ -73,9 +69,9 @@ describe('<Login />', () => {
   });
 
   it('should not display user if not authenticated', async () => {
-    vitest.spyOn(mockLogin, 'useOidcClient').mockImplementationOnce(() => ({
-      getUser: vitest.fn().mockImplementation(() => ({ profile: { name: 'Test Tester' } })),
-      isAuthenticated: vitest.fn().mockImplementation(() => false),
+    vitest.spyOn(useAuth, 'default').mockImplementationOnce(() => ({
+      user: { profile: { name: mockName } },
+      authenticated: false,
     }));
 
     const history = createBrowserHistory();
@@ -86,10 +82,10 @@ describe('<Login />', () => {
   });
 
   it('should login', async () => {
-    vitest.spyOn(mockLogin, 'useOidcClient').mockImplementationOnce(() => ({
-      getUser: getUserMock,
+    vitest.spyOn(useAuth, 'default').mockImplementationOnce(() => ({
+      user: { profile: { sub: 'user123', name: mockName } },
       login: loginMock,
-      isAuthenticated: vitest.fn().mockImplementation(() => false),
+      authenticated: false,
     }));
 
     const history = createBrowserHistory();
@@ -104,10 +100,10 @@ describe('<Login />', () => {
   });
 
   it('should login', async () => {
-    vitest.spyOn(mockLogin, 'useOidcClient').mockImplementationOnce(() => ({
-      getUser: getUserMock,
+    vitest.spyOn(useAuth, 'default').mockImplementationOnce(() => ({
+      user: { profile: { sub: 'user123', name: mockName } },
       logout: logoutMock,
-      isAuthenticated: isAuthenticatedMock,
+      authenticated: true,
     }));
 
     const history = createBrowserHistory();

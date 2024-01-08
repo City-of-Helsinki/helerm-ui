@@ -1,15 +1,13 @@
 /* eslint-disable camelcase */
 import React, { useEffect, useState } from 'react';
+
 import './Login.scss';
-import { useOidcClient } from 'hds-react';
+import useAuth from '../../hooks/useAuth';
 
 const Login = () => {
   const [displayName, setDisplayName] = useState(null);
 
-  const { isAuthenticated, login, logout, getUser } = useOidcClient();
-
-  const user = getUser();
-  const isAuth = isAuthenticated();
+  const { authenticated, user, login, logout } = useAuth();
 
   const getDisplayName = (profile) => {
     const { name, family_name, given_name } = profile;
@@ -30,19 +28,19 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (isAuth) {
+    if (authenticated) {
       const { profile } = user;
 
       const userName = getDisplayName(profile);
 
       setDisplayName(userName);
     }
-  }, [user, isAuth]);
+  }, [user, authenticated]);
 
   const handleUserLinkClick = (event) => {
     event.preventDefault();
 
-    if (isAuth) {
+    if (authenticated) {
       logout();
     } else {
       login();
@@ -54,7 +52,7 @@ const Login = () => {
       {!!displayName && <small>{displayName}</small>}
 
       <button className='btn btn-link login-button' type='button' onClick={handleUserLinkClick}>
-        {isAuth ? 'Kirjaudu ulos' : 'Kirjaudu sisään'}
+        {authenticated ? 'Kirjaudu ulos' : 'Kirjaudu sisään'}
       </button>
     </p>
   );
