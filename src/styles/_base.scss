@@ -12,9 +12,9 @@ For example:
 */
 
 @import './vendor/hel-components/variables';
-@import '~bootstrap-sass/assets/stylesheets/bootstrap';
-@import '~@fortawesome/fontawesome-free/scss/fontawesome.scss';
-@import '~@fortawesome/fontawesome-free/scss/solid.scss';
-@import '~react-datepicker/dist/react-datepicker.css';
+@import 'bootstrap-sass/assets/stylesheets/bootstrap';
+@import '@fortawesome/fontawesome-free/scss/fontawesome.scss';
+@import '@fortawesome/fontawesome-free/scss/solid.scss';
+@import 'react-datepicker/dist/react-datepicker.css';
 @import './vendor/hel-components/bootswatch-flatly';
-@import '~react-redux-toastr/src/styles/index';
+@import 'react-redux-toastr/src/styles/index';
