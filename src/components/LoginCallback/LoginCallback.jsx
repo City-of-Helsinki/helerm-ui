@@ -1,32 +1,34 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
+import { LoginCallbackHandler } from 'hds-react';
+import { useHistory } from 'react-router-dom';
 
+import { displayMessage } from '../../utils/helpers';
 import Loader from '../Loader';
+import useUpdateApiTokens from './hooks/useUpdateApiTokens';
 
-class LoginCallback extends React.Component {
-  componentDidMount() {
-    this.props.handleCallback();
-  }
+const LoginCallback = () => {
+  const history = useHistory();
 
-  render() {
-    const { isInitialized } = this.props;
+  const { updateApiTokens } = useUpdateApiTokens();
 
-    if (!isInitialized) {
-      return (
-        <div>
-          <h3>Hetkinen, tarkistetaan kirjautumistietoja...</h3>
-          <Loader show />
-        </div>
-      );
-    }
-    return <Redirect to='/' />;
-  }
-}
+  const onSuccess = async () => {
+    await updateApiTokens();
 
-LoginCallback.propTypes = {
-  handleCallback: PropTypes.func.isRequired,
-  isInitialized: PropTypes.bool.isRequired,
+    history.push('/');
+  };
+
+  const onError = () => {
+    displayMessage({ title: 'Virhe', body: 'Kirjautuminen epäonnistui!' }, { type: 'error' });
+
+    history.push('/');
+  };
+
+  return (
+    <LoginCallbackHandler onSuccess={onSuccess} onError={onError}>
+      <h3>Hetkinen, tarkistetaan kirjautumistietoja...</h3>
+      <Loader show />
+    </LoginCallbackHandler>
+  );
 };
 
 export default LoginCallback;

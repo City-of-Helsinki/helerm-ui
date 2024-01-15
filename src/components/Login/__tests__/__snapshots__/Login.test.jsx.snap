@@ -1,0 +1,19 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`<Login /> > should render correctly 1`] = `
+<div>
+  <p
+    class="navbar-text pull-right login-link"
+  >
+    <small>
+      Test Tester
+    </small>
+    <button
+      class="btn btn-link login-button"
+      type="button"
+    >
+      Kirjaudu ulos
+    </button>
+  </p>
+</div>
+`;

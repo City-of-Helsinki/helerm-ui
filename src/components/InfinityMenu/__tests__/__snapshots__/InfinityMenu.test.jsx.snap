@@ -104,7 +104,7 @@ exports[`<InfinityMenu /> > should render correctly 1`] = `
                                   value=""
                                 />
                                 <div
-                                  style="position: absolute; top: 0px; left: 0px; visibility: hidden; height: 0px; overflow: scroll; white-space: pre; font-family: -webkit-small-control; letter-spacing: normal; text-transform: none;"
+                                  style="position: absolute; top: 0px; left: 0px; visibility: hidden; height: 0px; overflow: scroll; white-space: pre; font-size: 100%; font-family: inherit; letter-spacing: normal; text-transform: none;"
                                 />
                               </div>
                             </div>

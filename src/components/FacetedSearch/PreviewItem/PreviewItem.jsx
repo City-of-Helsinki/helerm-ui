@@ -36,7 +36,7 @@ const PreviewItem = ({ item, metadata, onClose }) => {
       </div>
       <div className='faceted-search-preview-item-type'>{TYPE_LABELS[item.type]}</div>
       <div className='faceted-search-preview-item-name'>
-        <Link to={link} target='_blank'>
+        <Link to={link}>
           {item.name}
         </Link>
       </div>

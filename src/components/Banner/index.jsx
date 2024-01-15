@@ -19,7 +19,7 @@ const BannerWrapper = () => {
         </a>
       </Banner.Element>
       <Banner.Element background='#ddd'>
-        <Link to='/info' target='_blank' rel='noopener norefer'>
+        <Link to='/info' rel='noopener norefer'>
           Tietoa palvelusta
         </Link>
       </Banner.Element>

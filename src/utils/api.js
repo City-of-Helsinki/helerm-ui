@@ -1,10 +1,9 @@
 /* eslint-disable no-param-reassign */
 import fetch from 'isomorphic-fetch';
 import { forEach, merge } from 'lodash';
+import { getApiTokenFromStorage } from 'hds-react';
 
 import config from '../config';
-import { getClient } from './oidcClient';
-import { getStorageItem } from './storage';
 
 /**
  * Which actions are allowed without authentication
@@ -18,12 +17,13 @@ const CONTENT_TYPE_JSON = 'application/json';
  * Custom error to throw when 401 is received
  * @extends Error
  */
-class Unauthorized extends Error {
+export class Unauthorized extends Error {
   constructor(message) {
     super(message);
     this.name = 'Unauthorized';
   }
 }
+
 
 /**
  *
@@ -59,7 +59,8 @@ export function getApiUrl(url, query = {}) {
  * @returns {*}
  */
 export function callApi(endpoint, params, options = {}) {
-  const token = getStorageItem('oidctoken');
+  const token = getApiTokenFromStorage(config.API_TOKEN_AUTH_AUDIENCE);
+
   const defaultHeaders = new Headers();
   const url = getApiUrl(endpoint, params);
   const finalOptions = merge(
@@ -95,9 +96,10 @@ export function callApi(endpoint, params, options = {}) {
   }
 
   finalOptions.headers = defaultHeaders;
+
   return fetch(url, finalOptions).then((res) => {
     if (res.status === 401) {
-      getClient().handleAPITokenExpired();
+
       throw new Unauthorized(url);
     }
     return res;

@@ -1,67 +1,61 @@
-/* eslint-disable react/forbid-prop-types */
-/* eslint-disable no-nested-ternary */
-/* eslint-disable jsx-a11y/interactive-supports-focus */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-import React from 'react';
-import PropTypes from 'prop-types';
+/* eslint-disable camelcase */
+import React, { useEffect, useState } from 'react';
 
 import './Login.scss';
+import useAuth from '../../hooks/useAuth';
 
-class Login extends React.Component {
-  constructor() {
-    super();
+const Login = () => {
+  const [displayName, setDisplayName] = useState(null);
 
-    this.handleUserLinkClick = this.handleUserLinkClick.bind(this);
-  }
+  const { authenticated, user, login, logout } = useAuth();
 
-  handleUserLinkClick(e) {
-    e.preventDefault();
-    const { user } = this.props;
-    const linkMethod = user.id ? this.props.logout : this.props.login;
-    linkMethod();
-  }
+  const getDisplayName = (profile) => {
+    const { name, family_name, given_name } = profile;
 
-  getUserLink() {
-    const { user } = this.props;
-    const linkText = user?.id ? 'Kirjaudu ulos' : 'Kirjaudu sisään';
+    if (name) {
+      return name;
+    }
 
-    return (
-      <button className='btn btn-link login-button' type='button' onClick={this.handleUserLinkClick}>
-        {linkText}
-      </button>
-    );
-  }
-
-  getDisplayName() {
-    const { user } = this.props;
-
-    if (user?.id) {
-      if (user.displayName) {
-        return user.displayName;
+    if (given_name) {
+      if (family_name) {
+        return `${given_name} ${family_name}`;
       }
 
-      return user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName;
+      return given_name;
     }
 
     return null;
-  }
+  };
 
-  render() {
-    const displayName = this.getDisplayName();
+  useEffect(() => {
+    if (authenticated) {
+      const { profile } = user;
 
-    return (
-      <p className='navbar-text pull-right login-link'>
-        {!!displayName && <small>{displayName}</small>}
-        {this.getUserLink()}
-      </p>
-    );
-  }
-}
+      const userName = getDisplayName(profile);
 
-Login.propTypes = {
-  login: PropTypes.func.isRequired,
-  logout: PropTypes.func.isRequired,
-  user: PropTypes.object,
+      setDisplayName(userName);
+    }
+  }, [user, authenticated]);
+
+  const handleUserLinkClick = (event) => {
+    event.preventDefault();
+
+    if (authenticated) {
+      logout();
+    } else {
+      login();
+    }
+  };
+
+  return (
+    <p className='navbar-text pull-right login-link'>
+      {!!displayName && <small>{displayName}</small>}
+
+      <button className='btn btn-link login-button' type='button' onClick={handleUserLinkClick}>
+        {authenticated ? 'Kirjaudu ulos' : 'Kirjaudu sisään'}
+      </button>
+    </p>
+  );
 };
 
 export default Login;

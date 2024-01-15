@@ -1,38 +1,39 @@
-/* eslint-disable no-underscore-dangle */
-import { createBrowserHistory as mockHistory } from 'history';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme, { mount } from 'enzyme';
+import { createBrowserHistory } from 'history';
 import React from 'react';
-import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
+import { screen } from '@testing-library/react';
 
+import renderWithProviders from '../../../utils/renderWithProviders';
 import Header from '../Header';
-import storeCreator from '../../../store/createStore';
 
-// a quick fix before the official enzyme adapter for React 17 is out
-// https://github.com/enzymejs/enzyme/issues/2429
-Enzyme.configure({ adapter: new Adapter() });
+const renderComponent = (history) =>
+  renderWithProviders(
+    <Router history={history}>
+      <Header />
+    </Router>,
+    {
+      history,
+    },
+  );
 
-describe('(Component) Header', () => {
-  let _wrapper;
+describe('<Header />', () => {
+  it('should render correctly', () => {
+    const history = createBrowserHistory();
 
-  const history = mockHistory();
-  const store = storeCreator(history, {});
+    const { container } = renderComponent(history);
 
-  beforeEach(() => {
-    _wrapper = mount(<Provider store={store}>
-      <Router history={history}>
-        <Header isFetching={false} />
-      </Router>
-    </Provider>);
+    expect(container).toMatchSnapshot();
   });
 
-  it('Renders a nav bar with correct title', () => {
-    const nav = _wrapper.find('nav');
-    const title = nav.find('Link');
-    expect(nav).toBeDefined();
-    expect(title).toBeDefined();
+  it('should render a nav bar with correct title', async () => {
+    const history = createBrowserHistory();
 
-    expect(title.children().at(1).text()).toMatch(/Tiedonohjaus/);
+    renderComponent(history);
+
+    const nav = await screen.findByRole('navigation');
+    const title = await screen.findByText(/Tiedonohjaus/);
+
+    expect(nav).toBeInTheDocument();
+    expect(title).toBeInTheDocument();
   });
 });

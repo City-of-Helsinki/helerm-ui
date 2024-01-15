@@ -11,10 +11,10 @@ import './CoreLayout.scss';
 const CoreLayout = ({ children }) => (
   <div className='core-layout__viewport'>
     <Header />
+    <div className='core-layout__navigation'>
+      <NavigationContainer />
+    </div>
     <Suspense fallback={<Loader show />}>
-      <div className='core-layout__navigation'>
-        <NavigationContainer />
-      </div>
       <div className='container-fluid helerm-content'>{children}</div>
     </Suspense>
   </div>
