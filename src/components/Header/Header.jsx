@@ -9,10 +9,9 @@ import config from '../../config';
 import { fetchNavigation } from '../Navigation/reducer';
 import IsAllowed from '../IsAllowed/IsAllowed';
 import Loader from '../Loader';
-import Login from '../Login/Login';
 import Logo from './Logo';
-
 import './Header.scss';
+import LoginContainer from '../Login/LoginContainer';
 
 const Header = (props) => {
   const { isFetching } = props;
@@ -35,7 +34,7 @@ const Header = (props) => {
             {siteTitle} {gitVersion}
           </small>
         </p>
-        <Login />
+        <LoginContainer />
         <IsAllowed to={EDIT}>
           <p className='navbar-text pull-right'>
             <Link to='/bulk' className='navbar-link'>

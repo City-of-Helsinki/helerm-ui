@@ -1,10 +1,11 @@
 /* eslint-disable camelcase */
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 
 import './Login.scss';
 import useAuth from '../../hooks/useAuth';
 
-const Login = () => {
+const Login = ({ loginDispatch, logoutDispatch }) => {
   const [displayName, setDisplayName] = useState(null);
 
   const { authenticated, user, login, logout } = useAuth();
@@ -41,8 +42,12 @@ const Login = () => {
     event.preventDefault();
 
     if (authenticated) {
+      logoutDispatch();
+
       logout();
     } else {
+      loginDispatch();
+
       login();
     }
   };
@@ -56,6 +61,11 @@ const Login = () => {
       </button>
     </p>
   );
+};
+
+Login.propTypes = {
+  loginDispatch: PropTypes.func.isRequired,
+  logoutDispatch: PropTypes.func.isRequired,
 };
 
 export default Login;
