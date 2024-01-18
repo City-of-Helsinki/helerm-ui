@@ -5,7 +5,7 @@ import { createBrowserHistory } from 'history';
 import userEvent from '@testing-library/user-event';
 
 import * as useAuth from '../../../hooks/useAuth';
-import Login from '../Login';
+import LoginContainer from '../LoginContainer';
 import renderWithProviders from '../../../utils/renderWithProviders';
 
 const loginMock = vitest.fn();
@@ -23,7 +23,7 @@ vitest.spyOn(useAuth, 'default').mockImplementation(() => ({
 const renderComponent = (history) =>
   renderWithProviders(
     <Router history={history}>
-      <Login />
+      <LoginContainer />
     </Router>,
     { history },
   );

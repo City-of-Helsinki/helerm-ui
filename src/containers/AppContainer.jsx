@@ -22,15 +22,19 @@ const App = ({
   const { authenticated, user } = useAuth();
 
   useEffect(() => {
-    dispatchFetchAttributeTypes();
-    dispatchFetchTemplates();
+    async function fetchData() {
+      dispatchFetchAttributeTypes();
+      dispatchFetchTemplates();
 
-    if (authenticated) {
-      const { profile } = user;
-      const { sub: userId } = profile;
+      if (authenticated) {
+        const { profile } = user;
+        const { sub: userId } = profile;
 
-      dispatchRetrieveUserFromSession(userId);
+        await dispatchRetrieveUserFromSession(userId);
+      }
     }
+
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authenticated, user]);
 
