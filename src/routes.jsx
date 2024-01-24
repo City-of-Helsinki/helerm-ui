@@ -1,25 +1,22 @@
-/* eslint-disable import/no-cycle */
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import CoreLayout from './layouts/CoreLayout/CoreLayout';
 import InfoLayout from './layouts/InfoLayout/InfoLayout';
-import LoginCallbackContainer from './components/LoginCallback/LoginCallbackContainer';
+import LoginCallbackContainer from './views/LoginCallback/LoginCallbackContainer';
 import NotFound from './components/NotFound/NotFound';
 
-const ViewInfo = React.lazy(() => import('./components/Info/ViewInfo'));
-const BulkListViewContainer = React.lazy(() => import('./components/Bulk/BulkListViewContainer'));
-const BulkViewContainer = React.lazy(() => import('./components/Bulk/BulkView/BulkViewContainer'));
-const BulkCreateViewContainer = React.lazy(() => import('./components/Bulk/BulkCreateView/BulkCreateViewContainer'));
-const FacetedSearchContainer = React.lazy(() => import('./components/FacetedSearch/FacetedSearchContainer'));
-const ViewTOSContainer = React.lazy(() => import('./components/Tos/ViewTos/ViewTosContainer'));
-const PrintTOS = React.lazy(() => import('./components/Tos/Print/PrintView'));
-const ViewClassificationContainer = React.lazy(() =>
-  import('./components/Classification/ViewClassification/ViewClassificationContainer'),
-);
-const ClassificationTreeContainer = React.lazy(() =>
-  import('./components/ClassificationTree/ClassificationTreeContainer'),
-);
+const ViewInfo = React.lazy(() => import('./views/ViewInfo/ViewInfo'));
+const BulkListViewContainer = React.lazy(() => import('./views/Bulk/BulkListViewContainer'));
+const BulkViewContainer = React.lazy(() => import('./views/Bulk/BulkView/BulkViewContainer'));
+const BulkCreateViewContainer = React.lazy(() => import('./views/Bulk/BulkCreateView/BulkCreateViewContainer'));
+const FacetedSearchContainer = React.lazy(() => import('./views/FacetedSearch/FacetedSearchContainer'));
+const ViewTOSContainer = React.lazy(() => import('./views/Tos/ViewTos/ViewTosContainer'));
+const PrintTOS = React.lazy(() => import('./views/Tos/Print/PrintView'));
+const ViewClassificationContainer = React.lazy(() => import('./views/ViewClassification/ViewClassificationContainer'));
+const ClassificationTreeContainer = React.lazy(() => import('./views/ClassificationTree/ClassificationTreeContainer'));
+
+const CookieManagement = React.lazy(() => import('./views/CookieManagement/CookieManagement'));
 
 const Routes = () => (
   <Switch>
@@ -34,8 +31,9 @@ const Routes = () => (
       </InfoLayout>
     </Route>
     <Route exact path='/bulk'>
-      <InfoLayout />
-      <BulkListViewContainer />
+      <InfoLayout>
+        <BulkListViewContainer />
+      </InfoLayout>
     </Route>
     <Route exact path='/bulk/view/:id'>
       <InfoLayout>
@@ -76,6 +74,11 @@ const Routes = () => (
       <CoreLayout>
         <ClassificationTreeContainer />
       </CoreLayout>
+    </Route>
+    <Route exact path='/cookies'>
+      <InfoLayout>
+        <CookieManagement />
+      </InfoLayout>
     </Route>
     <Route path='*' component={NotFound} />
   </Switch>

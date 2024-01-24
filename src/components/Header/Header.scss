@@ -1,14 +1,19 @@
 .header {
-
   .brand-title {
     float: left;
   }
 
+  .navbar {
+    display: flex;
+  }
+
   .navbar-brand {
+    display: flex;
     color: #fff !important;
     padding: 10px 5px !important;
     line-height: 40px !important;
     font-size: 18px !important;
+
     &.logo {
       margin-right: 15px;
     }
@@ -17,6 +22,19 @@
       fill: #fff;
       vertical-align: middle;
     }
+  }
+
+  .menu {
+    display: flex;
+    flex-grow: 1;
+    justify-content: flex-end;
+  }
+
+  .link-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
 
   .login-link {

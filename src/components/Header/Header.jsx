@@ -21,7 +21,7 @@ const Header = (props) => {
   const themeColor = config.SITE_THEME;
 
   return (
-    <div className='header'>
+    <header className='header'>
       <nav className='navbar navbar-inverse container-fluid' style={{ backgroundColor: themeColor }}>
         <Link to='/' className='brand-title navbar-brand logo' onClick={() => props.fetchNavigation(false)}>
           <Logo />
@@ -29,32 +29,41 @@ const Header = (props) => {
         <Link to='/' className='brand-title navbar-brand' onClick={() => props.fetchNavigation(false)}>
           Tiedonohjaus
         </Link>
-        <p className='navbar-text'>
+        <span className='navbar-text'>
           <small>
             {siteTitle} {gitVersion}
           </small>
-        </p>
-        <LoginContainer />
-        <IsAllowed to={EDIT}>
-          <p className='navbar-text pull-right'>
-            <Link to='/bulk' className='navbar-link'>
-              Massamuutos
-            </Link>
-          </p>
-        </IsAllowed>
-        <p className='navbar-text pull-right'>
-          <Link to='/search' className='navbar-link'>
-            Haku
-          </Link>
-        </p>
-        <p className='navbar-text pull-right'>
-          <a href={feedbackUrl} target='_blank' rel='noreferrer' className='navbar-link'>
-            Anna palautetta
-          </a>
-        </p>
+        </span>
+        <div className='menu'>
+          <ul className='link-list'>
+            <IsAllowed to={EDIT}>
+              <li className='navbar-text'>
+                <Link to='/bulk' className='navbar-link'>
+                  Massamuutos
+                </Link>
+              </li>
+            </IsAllowed>
+            <li className='navbar-text'>
+              <Link to='/search' className='navbar-link'>
+                Haku
+              </Link>
+            </li>
+            <li className='navbar-text'>
+              <Link to='/cookies' className='navbar-link'>
+                Evästeasetukset
+              </Link>
+            </li>
+            <li className='navbar-text'>
+              <a href={feedbackUrl} target='_blank' rel='noreferrer' className='navbar-link'>
+                Anna palautetta
+              </a>
+            </li>
+          </ul>
+          <LoginContainer />
+        </div>
       </nav>
       <Loader show={isFetching} />
-    </div>
+    </header>
   );
 };
 

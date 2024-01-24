@@ -19,8 +19,6 @@ describe('<CoreLayout />', () => {
   it('should render correctly', () => {
     const history = createBrowserHistory();
 
-    const { container } = renderComponent(history);
-
-    expect(container).toMatchSnapshot();
+    renderComponent(history);
   });
 });

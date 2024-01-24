@@ -1,0 +1,47 @@
+@import '../../styles/vendor/hel-components/variables';
+
+.bulk-view {
+  padding: 15px;
+
+  .bulk-packages {
+    padding: 30px 0;
+  }
+
+  .bulk-packages-header {
+    display: flex;
+    padding: 15px 0;
+  }
+
+  .bulk-updates {
+    border-top: 1px solid $hr-border;
+  }
+
+  .bulk-update {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid $hr-border;
+    display: flex;
+
+    &:hover {
+      cursor: pointer;
+      background-color: $gray-lighter;
+    }
+  }
+
+  .bulk-packages-header,
+  .bulk-update {
+    .bulk-update-info {
+      flex: 1 1 auto;
+    }
+
+    .bulk-update-approved {
+      flex: 0 0 300px;
+      padding-left: 15px;
+    }
+
+    .bulk-update-action {
+      padding-left: 15px;
+      flex: 0 0 115px;
+    }
+  }
+}

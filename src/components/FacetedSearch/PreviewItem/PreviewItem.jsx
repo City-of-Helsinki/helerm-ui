@@ -1,4 +1,3 @@
-/* eslint-disable import/no-cycle */
 /* eslint-disable react/forbid-prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -36,9 +35,7 @@ const PreviewItem = ({ item, metadata, onClose }) => {
       </div>
       <div className='faceted-search-preview-item-type'>{TYPE_LABELS[item.type]}</div>
       <div className='faceted-search-preview-item-name'>
-        <Link to={link}>
-          {item.name}
-        </Link>
+        <Link to={link}>{item.name}</Link>
       </div>
       {attributes.map((attr) => (
         <div className='faceted-search-preview-item-attribute' key={`preview-${attr.key}`}>

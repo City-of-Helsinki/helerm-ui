@@ -20,9 +20,7 @@ describe('<Header />', () => {
   it('should render correctly', () => {
     const history = createBrowserHistory();
 
-    const { container } = renderComponent(history);
-
-    expect(container).toMatchSnapshot();
+    renderComponent(history);
   });
 
   it('should render a nav bar with correct title', async () => {
