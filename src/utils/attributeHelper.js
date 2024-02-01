@@ -62,13 +62,13 @@ export const getDisplayLabelForAttribute = ({
   return attributeValue;
 };
 
-export const generateDefaultAttributes = (attributeTypes, type) => {
+export const generateDefaultAttributes = (attributeTypes, type, showMore) => {
   const attributes = {};
   Object.keys(attributeTypes).forEach((key) => {
     if (
       Object.hasOwn(attributeTypes, key) &&
-      ((this.state.showMore && attributeTypes[key].allowedIn.indexOf(type) >= 0 && key !== 'PhaseType') ||
-        (!this.state.showMore && attributeTypes[key].defaultIn.indexOf(type) >= 0)) &&
+      ((showMore && attributeTypes[key].allowedIn.indexOf(type) >= 0 && key !== 'PhaseType') ||
+        (!showMore && attributeTypes[key].defaultIn.indexOf(type) >= 0)) &&
       key !== 'TypeSpecifier'
     ) {
       if (attributeTypes[key].requiredIf.length) {
