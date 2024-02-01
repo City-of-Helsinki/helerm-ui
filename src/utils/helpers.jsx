@@ -397,5 +397,5 @@ export const randomActionId = () => {
   const array = new Uint32Array(1);
   const random = crypto.getRandomValues(array);
 
-  return random.toString(36).replace(/[^a-z]+/g, '');
+  return random.toString(36).replace(/[^a-zA-Z0-9]+/g, '');
 };
