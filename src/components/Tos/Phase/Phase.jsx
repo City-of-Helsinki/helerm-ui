@@ -609,7 +609,7 @@ class Phase extends React.Component {
                   type='action'
                   submit={this.addAction}
                   typeOptions={this.generateTypeOptions(this.props.actionTypes)}
-                  defaultAttributes={generateDefaultAttributes(this.props.attributeTypes, 'action')}
+                  defaultAttributes={generateDefaultAttributes(this.props.attributeTypes, 'action', this.state.showMore)}
                   newDefaultAttributes={this.state.actionDefaultAttributes}
                   newTypeSpecifier={this.state.actionTypeSpecifier}
                   newType={this.state.actionType}

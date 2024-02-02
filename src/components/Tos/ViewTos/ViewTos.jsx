@@ -747,7 +747,7 @@ class ViewTOS extends React.Component {
                           type='phase'
                           submit={this.createNewPhase}
                           typeOptions={this.generateTypeOptions(this.props.phaseTypes)}
-                          defaultAttributes={generateDefaultAttributes(attributeTypes, 'phase')}
+                          defaultAttributes={generateDefaultAttributes(attributeTypes, 'phase', this.state.showMore)}
                           newDefaultAttributes={this.state.phaseDefaultAttributes}
                           newTypeSpecifier={this.state.phaseTypeSpecifier}
                           newType={this.state.phaseType}
