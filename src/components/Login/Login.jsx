@@ -53,13 +53,13 @@ const Login = ({ loginDispatch, logoutDispatch }) => {
   };
 
   return (
-    <p className='navbar-text pull-right login-link'>
+    <span className='navbar-text login-link'>
       {!!displayName && <small>{displayName}</small>}
 
       <button className='btn btn-link login-button' type='button' onClick={handleUserLinkClick}>
         {authenticated ? 'Kirjaudu ulos' : 'Kirjaudu sisään'}
       </button>
-    </p>
+    </span>
   );
 };
 

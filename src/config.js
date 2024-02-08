@@ -46,8 +46,6 @@ export default {
   SEARCH_PAGE_SIZE:
     parseInt(import.meta.env.REACT_APP_SEARCH_PAGE_SIZE, 10) ||
     consts.DEFAULT_SEARCH_PAGE_SIZE,
-  PIWIK_URL: import.meta.env.REACT_APP_PIWIK_URL,
-  PIWIK_ID: import.meta.env.REACT_APP_PIWIK_ID,
   GIT_VERSION: import.meta.env.REACT_APP_GIT_VERSION,
   SITE_TITLE: import.meta.env.REACT_APP_SITE_TITLE || '',
   FEEDBACK_URL: import.meta.env.REACT_APP_FEEDBACK_URL,
@@ -63,4 +61,10 @@ export default {
   OIDC_RESPONSE_TYPE: import.meta.env.REACT_APP_OIDC_RESPONSE_TYPE,
   OIDC_SCOPE: import.meta.env.REACT_APP_OIDC_SCOPE,
   OIDC_TOKEN_URL: import.meta.env.REACT_APP_OIDC_TOKEN_URL,
+  MATOMO_DOMAINS: import.meta.env.REACT_APP_MATOMO_DOMAINS,
+  MATOMO_COOKIE_DOMAIN: import.meta.env.REACT_APP_MATOMO_COOKIE_DOMAIN,
+  MATOMO_SRC_URL: import.meta.env.REACT_APP_MATOMO_SRC_URL,
+  MATOMO_URL_BASE: import.meta.env.REACT_APP_MATOMO_URL_BASE,
+  MATOMO_SITE_ID: import.meta.env.REACT_APP_MATOMO_SITE_ID,
+  MATOMO_ENABLED: envValueToBoolean(import.meta.env.REACT_APP_MATOMO_ENABLED, false),
 };

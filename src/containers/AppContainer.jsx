@@ -1,6 +1,5 @@
-/* eslint-disable camelcase */
 /* eslint-disable react/forbid-prop-types */
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Provider, connect } from 'react-redux';
 import { Router } from 'react-router-dom';
@@ -11,6 +10,12 @@ import { retrieveUserFromSession } from '../components/Login/reducer';
 import { fetchAttributeTypes, fetchTemplates } from '../store/uiReducer';
 import { providerProperties } from '../utils/oidc/constants';
 import useAuth from '../hooks/useAuth';
+import CookieConsent from '../components/CookieConsent/CookieConsent';
+import MatomoContext from '../components/Matomo/matomo-context';
+import MatomoTracker from '../components/Matomo/MatomoTracker';
+import config from '../config';
+
+import '../styles/core.scss';
 
 const App = ({
   history,
@@ -40,6 +45,7 @@ const App = ({
 
   return (
     <div style={{ height: '100%' }}>
+      <CookieConsent />
       <SessionEndedHandler
         content={{
           title: 'Istunto on vanhentunut!',
@@ -69,19 +75,39 @@ const AppContainer = ({
   dispatchRetrieveUserFromSession,
   dispatchFetchAttributeTypes,
   dispatchFetchTemplates,
-}) => (
-  <LoginProvider {...providerProperties}>
-    <Provider store={store}>
-      <App
-        history={history}
-        routes={routes}
-        dispatchRetrieveUserFromSession={dispatchRetrieveUserFromSession}
-        dispatchFetchAttributeTypes={dispatchFetchAttributeTypes}
-        dispatchFetchTemplates={dispatchFetchTemplates}
-      />
-    </Provider>
-  </LoginProvider>
-);
+}) => {
+  const matomoTracker = useMemo(
+    () =>
+      new MatomoTracker({
+        urlBase: config.MATOMO_URL_BASE,
+        siteId: config.MATOMO_SITE_ID,
+        srcUrl: config.MATOMO_SRC_URL,
+        enabled: config.MATOMO_ENABLED,
+        configurations: {
+          ...(config.MATOMO_COOKIE_DOMAIN && { setCookieDomain: config.MATOMO_COOKIE_DOMAIN }),
+          ...(config.MATOMO_DOMAINS && { setDomains: config.MATOMO_DOMAINS.split(',') }),
+          setDoNotTrack: true,
+        },
+      }),
+    [],
+  );
+
+  return (
+    <LoginProvider {...providerProperties}>
+      <Provider store={store}>
+        <MatomoContext.Provider value={matomoTracker}>
+          <App
+            history={history}
+            routes={routes}
+            dispatchRetrieveUserFromSession={dispatchRetrieveUserFromSession}
+            dispatchFetchAttributeTypes={dispatchFetchAttributeTypes}
+            dispatchFetchTemplates={dispatchFetchTemplates}
+          />
+        </MatomoContext.Provider>
+      </Provider>
+    </LoginProvider>
+  );
+};
 
 App.propTypes = {
   history: PropTypes.object.isRequired,

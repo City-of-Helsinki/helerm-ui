@@ -1,4 +1,3 @@
-/* eslint-disable import/no-cycle */
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable no-underscore-dangle */
 /** @jsxRuntime classic */
@@ -15,7 +14,7 @@ import fi from 'date-fns/locale/fi';
 import AppContainer from './containers/AppContainer';
 import config from './config';
 import routes from './routes';
-import { store, browserHistory } from './init'
+import { store, browserHistory } from './init';
 
 // Register a locale for all datepickers in the application
 registerLocale('fi', fi);
@@ -27,7 +26,6 @@ Sentry.init({
   integrations: [new BrowserTracing()],
   tracesSampler: 1.0,
 });
-
 
 // // ========================================================
 // // Go!

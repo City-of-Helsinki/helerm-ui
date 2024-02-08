@@ -10,7 +10,7 @@ For example:
 @import './variables/components';
 @import './themes/default';
 */
-
+@import 'hds-core/lib/base.min.css';
 @import './vendor/hel-components/variables';
 @import 'bootstrap-sass/assets/stylesheets/bootstrap';
 @import '@fortawesome/fontawesome-free/scss/fontawesome.scss';

@@ -7,9 +7,9 @@ import ui from './uiReducer';
 import selectedTOS from '../components/Tos/reducer';
 import navigation from '../components/Navigation/reducer';
 import validation from '../components/Tos/ValidationBar/reducer';
-import classification from '../components/Classification/reducer';
-import bulk from '../components/Bulk/reducer';
-import search from '../components/FacetedSearch/reducer';
+import classification from '../views/ViewClassification/reducer';
+import bulk from '../views/Bulk/reducer';
+import search from '../views/FacetedSearch/reducer';
 
 const makeRootReducer = (history) => combineReducers({
   navigation,
