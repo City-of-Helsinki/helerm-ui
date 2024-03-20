@@ -1,0 +1,11 @@
+{
+  "bootstrap-sha": "cb4c2d792951306f34352cab7953e70408fb2b47",
+  "sequential-calls": true,
+  "packages": {
+    ".": {
+      "release-type": "node",
+      "package-name": "helerm-ui"
+    }
+  },
+  "plugins": ["sentence-case"]
+}
