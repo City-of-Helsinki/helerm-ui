@@ -237,7 +237,7 @@ class Attribute extends React.Component {
   render() {
     const { attribute, attributeIndex, showAttributes, attributeKey, attributeTypes, editable, type } = this.props;
 
-    if (attribute === null || (attribute !== null && type !== 'basic')) {
+    if (attribute === null || (attribute !== null && !(type === 'basic' || type === 'attribute'))) {
       return null;
     }
 
