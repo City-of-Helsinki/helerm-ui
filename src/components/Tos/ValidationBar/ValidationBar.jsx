@@ -46,7 +46,9 @@ class ValidationBar extends Component {
   }
 
   getInvalidSection(type, section, validateRequired, validateWarn, children) {
-    if (!section) {
+    const hasChildren = children !== undefined && children.filter((x) => x !== null).length > 0;
+
+    if (!section || (type !== 'record' && !hasChildren)) {
       return null;
     }
 
@@ -118,53 +120,46 @@ class ValidationBar extends Component {
     return null;
   }
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   generateInvalidAttributes() {
     const { selectedTOS } = this.props;
 
     const showInvalidAttributes = this.getFilterByStatus(VALIDATION_FILTER_ERROR);
     const showWarnAttributes = this.getFilterByStatus(VALIDATION_FILTER_WARN);
 
-    const { phases } = selectedTOS;
-
-    if (!phases.length) {
-      return null;
-    }
-
-    const phaseActionIds = phases.filter((phase) => phase.actions);
-
-    const invalidRecords = phaseActionIds
-      .map((actionId) => selectedTOS.actions?.[actionId].records)
-      .map((recordId) =>
-        this.getInvalidSection(
-          'record',
-          selectedTOS.records?.[recordId],
-          showInvalidAttributes ? validateRecord : null,
-          showWarnAttributes ? validateRecordWarnings : null,
-        ),
-      );
-
-    const invalidActions = phaseActionIds.map((actionId) =>
-      this.getInvalidSection(
-        'action',
-        selectedTOS.actions?.[actionId],
-        showInvalidAttributes ? validateAction : null,
-        showWarnAttributes ? validateActionWarnings : null,
-        invalidRecords,
-      ),
-    );
-
-    return phases
-      .map((phase) => ({
-        id: phase.id,
-        invalidSection: this.getInvalidSection(
-          'phase',
-          phase,
-          showInvalidAttributes ? validatePhase : null,
-          showWarnAttributes ? validatePhaseWarnings : null,
-          invalidActions,
-        ),
+    // get invalid sections of phase-action-record -tree as div elements
+    const invalidPhases = Object.values(selectedTOS.phases).map((phase) => ({
+      id: phase.id,
+      invalidSection: this.getInvalidSection(
+        'phase',
+        phase,
+        showInvalidAttributes ? validatePhase : null,
+        showWarnAttributes ? validatePhaseWarnings : null,
+        phase.actions
+          .map((actionId) => selectedTOS.actions?.[actionId])
+          .map((action) =>
+            this.getInvalidSection(
+              'action',
+              action,
+              showInvalidAttributes ? validateAction : null,
+              showWarnAttributes ? validateActionWarnings : null,
+              action?.records
+                .map((recordId) => selectedTOS.records?.[recordId])
+                .map((record) =>
+                  this.getInvalidSection(
+                    'record',
+                    record,
+                    showInvalidAttributes ? validateRecord : null,
+                    showWarnAttributes ? validateRecordWarnings : null,
+                  ),
+                ),
+            )
+          )
+        )
       }))
       .map(({ id, invalidSection }) => <div key={id}>{invalidSection}</div>);
+
+    return invalidPhases.length > 0 ? invalidPhases : null;
   }
 
   renderInvalidContent() {

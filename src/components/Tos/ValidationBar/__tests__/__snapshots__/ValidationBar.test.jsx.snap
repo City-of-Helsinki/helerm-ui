@@ -91,44 +91,8 @@ exports[`<Navigation /> > should render correctly 1`] = `
             Rekisteröinti/ Tietojärjestelmä
           </div>
         </div>
-        <div>
-          <div
-            class="sidebar-content-phase"
-          >
-            <div
-              class="parent-name"
-            >
-              Vireillepano/-tulo
-            </div>
-            <div
-              class="missing-attributes"
-            >
-              <div
-                class="warn-attribute"
-              >
-                <i
-                  class="fa-solid fa-circle-exclamation"
-                />
-                 
-                Rekisteröinti/ Tietojärjestelmä
-              </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div
-            class="sidebar-content-phase"
-          >
-            <div
-              class="parent-name"
-            >
-              Vireillepano/-tulo
-            </div>
-            <div
-              class="missing-attributes"
-            />
-          </div>
-        </div>
+        <div />
+        <div />
       </div>
     </div>
   </div>
