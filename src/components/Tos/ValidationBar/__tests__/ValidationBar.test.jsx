@@ -100,8 +100,12 @@ describe('<Navigation />', () => {
     const history = createBrowserHistory();
 
     renderComponent(history);
-
+    // find error group
     expect(screen.getByRole('heading', { name: 'Käsittelyprosessi' })).toBeInTheDocument();
+    // find correct errors
+    expect(screen.getByText('Julkisuusluokka')).toBeInTheDocument();
+    expect(screen.getByText('Säilytysajan laskentaperuste')).toBeInTheDocument();
+    expect(screen.getByText('Rekisteröinti/ Tietojärjestelmä')).toBeInTheDocument();
   });
 
   it('should not render errors for valid TOS', () => {
