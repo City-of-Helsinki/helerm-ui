@@ -51,7 +51,7 @@ export function executeOrderChange(newOrder, itemType, itemParent, currentState)
 
       const key = item.id;
       newResult[key] = item;
-      return result;
+      return newResult;
     }, {})
     : itemList;
 
