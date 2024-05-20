@@ -1,5 +1,5 @@
 # ==========================================
-FROM registry.access.redhat.com/ubi8/nodejs-18 AS appbase
+FROM registry.access.redhat.com/ubi9/nodejs-18 AS appbase
 # ==========================================
 
 WORKDIR /app
@@ -85,7 +85,7 @@ RUN yarn build
 RUN yarn compress
 
 # =============================
-FROM registry.access.redhat.com/ubi8/nginx-120 AS production
+FROM registry.access.redhat.com/ubi9/nginx-120 AS production
 # =============================
 
 USER root
