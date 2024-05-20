@@ -38,6 +38,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-sonarjs": "^0.18.0",
     "eslint-plugin-vitest-globals": "^1.4.0",
+    "exceljs": "^4.4.0",
     "fast-text-encoding": "^1.0.6",
     "gzipper": "^7.2.0",
     "hds-core": "^3.2.0",
@@ -72,8 +73,7 @@
     "vite-plugin-babel-macros": "^1.0.6",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-node-polyfills": "^0.17.0",
-    "vitest": "^1.0.2",
-    "xlsx": "0.18.5"
+    "vitest": "^1.0.2"
   },
   "scripts": {
     "start": "vite",
@@ -113,8 +113,8 @@
     "@playwright/test": "^1.40.1",
     "@types/node": "^18.19.3",
     "@vitest/coverage-istanbul": "^1.0.2",
-    "husky": "^8.0.3",
     "eslint": "^8.55.0",
+    "husky": "^8.0.3",
     "jsdom": "^23.0.1"
   }
 }

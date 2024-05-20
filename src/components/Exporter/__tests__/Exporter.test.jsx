@@ -1,35 +1,31 @@
-/* eslint-disable no-underscore-dangle */
-import { createBrowserHistory as mockHistory } from 'history';
 import React from 'react';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme, { mount } from 'enzyme';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
-import storeCreator from '../../../store/createStore';
-import Exporter from '../Exporter';
+import Exporter, { EXPORT_OPTIONS } from '../Exporter';
+import attributeRules from '../../../utils/mocks/attributeRules.json';
+import validTOSwithChildren from '../../../utils/mocks/validTOSwithChildren.json';
 
-Enzyme.configure({ adapter: new Adapter() });
+describe('Exporter', () => {
+  const attributeTypes = attributeRules;
 
-describe('(Component) Exporter', () => {
+  const data = [validTOSwithChildren];
 
-    let _wrapper;
+  it('renders without crashing', () => {
+    render(<Exporter attributeTypes={attributeTypes} data={data} />);
+  });
 
-    const history = mockHistory();
-    const store = storeCreator(history, {});
+  it('displays the export options', async () => {
+    const { getByRole, getByText } = render(<Exporter attributeTypes={attributeTypes} data={data} />);
 
-    beforeEach(() => {
-    _wrapper = mount(<Provider store={store}>
-        <Router history={history}>
-            <Exporter
-                data={[]}
-            />
-        </Router>
-    </Provider>);
+    const select = getByRole('textbox');
+
+    const user = userEvent.setup();
+
+    await user.click(select);
+
+    EXPORT_OPTIONS.forEach((option) => {
+      expect(getByText(option.label)).toBeInTheDocument();
     });
-
-    it('renders without crashing', () => {
-        const element = _wrapper.find('Exporter');
-        expect(element).toBeDefined();
-    })
+  });
 });
