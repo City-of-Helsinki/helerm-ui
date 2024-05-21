@@ -1,34 +1,28 @@
-/* eslint-disable no-underscore-dangle */
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme, { mount } from 'enzyme';
 import React from 'react';
+import { render } from '@testing-library/react';
 
 import ImportView from '../ImportView';
 
-Enzyme.configure({ adapter: new Adapter() });
+const renderComponent = () =>
+  render(
+    <ImportView
+      level='phase'
+      title=''
+      targetText=''
+      itemsToImportText=''
+      phases={{}}
+      phasesOrder={[]}
+      actions={{}}
+      records={{}}
+      importItems={() => null}
+      toggleImportView={() => null}
+    />,
+  );
 
-describe('(Component) ImportView', () => {
-  let _wrapper;
+describe('<ImportView />', () => {
+  it('renders without crashing', () => {
+    const { getByText } = renderComponent();
 
-  beforeEach(() => {
-    _wrapper = mount(
-      <ImportView
-        level='phase'
-        title=""
-        targetText=""
-        itemsToImportText=""
-        phases={{}}
-        phasesOrder={[]}
-        actions={{}}
-        records={{}}
-        importItems={() => null}
-        toggleImportView={() => null}
-      />
-    );
-  });
-
-  it('Passes level prop correctly', () => {
-    expect(_wrapper.props().level).toBeDefined();
-    expect(_wrapper.prop('level')).toEqual('phase');
+    expect(getByText('Valitse listalta tuotavat')).toBeInTheDocument();
   });
 });

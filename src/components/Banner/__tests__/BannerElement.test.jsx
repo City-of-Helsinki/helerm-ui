@@ -1,40 +1,34 @@
-/* eslint-disable no-underscore-dangle */
 import { createBrowserHistory as mockHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme, { mount } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 
 import storeCreator from '../../../store/createStore';
 import BannerElement from '../BannerElement';
 
-Enzyme.configure({ adapter: new Adapter() });
+const renderComponent = () => {
+  const history = mockHistory();
+  const store = storeCreator(history, {});
 
-describe('(Component) BannerElement', () => {
+  return render(
+    <Provider store={store}>
+      <Router history={history}>
+        <BannerElement color='black'>
+          <p className='test'>Test string</p>
+        </BannerElement>
+      </Router>
+    </Provider>,
+  );
+};
 
-    let _wrapper;
+describe('<BannerElement />', () => {
+  it('renders without crashing', () => {
+    renderComponent();
 
-    const history = mockHistory();
-    const store = storeCreator(history, {});
+    const bannerElement = screen.getByRole('banner');
+    expect(bannerElement).toBeInTheDocument();
 
-    beforeEach(() => {
-    _wrapper = mount(<Provider store={store}>
-        <Router history={history}>
-            <BannerElement color="black">
-                <p className="test">Test string</p>
-            </BannerElement>
-        </Router>
-    </Provider>);
-    });
-
-    it('renders without crashing', () => {
-        const bannerElement = _wrapper.find('BannerElement');
-        expect(bannerElement).toBeDefined();
-    })
-    it('has the default props overwritten properly', () => {
-        const bannerElement = _wrapper.find('BannerElement');
-        expect(bannerElement.props().color).toBeDefined();
-        expect(bannerElement.props().color).toEqual("black");
-    })
+    expect(bannerElement).toHaveStyle({ color: 'rgb(0, 0, 0)' });
+  });
 });
