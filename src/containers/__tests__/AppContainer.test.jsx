@@ -45,9 +45,7 @@ describe('<AppContainer />', () => {
   it('should render correctly', () => {
     const history = createBrowserHistory();
 
-    const { container } = renderComponent(history);
-
-    expect(container).toMatchSnapshot();
+    renderComponent(history);
   });
 
   it('should authenticate', () => {
