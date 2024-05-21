@@ -36,6 +36,32 @@ export const EXPORT_OPTIONS = [
 const FILE_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 
 /**
+ * Recursively retrieves children from an item and adds them to an array.
+ *
+ * @param {Array} array - The array to store the exported items.
+ * @param {Object} item - The item to process and extract children from.
+ * @returns {Array} - The updated array with the exported items.
+ */
+const getChildren = (array, item) => {
+  if (isArray(item.children)) {
+    return item.children.reduce(getChildren, array);
+  }
+  const exportItem = {
+    additionalInformation: item.additional_information,
+    code: item.code,
+    description: item.description,
+    descriptionInternal: item.description_internal,
+    name: item.title,
+    relatedClassification: item.related_classification,
+    attributes: item.function_attributes,
+    phases: item.phases,
+  };
+
+  array.push(exportItem);
+  return array;
+};
+
+/**
  * Get all attributes (phases, actions, records) for specific function
  * @param {object} item
  */
@@ -81,25 +107,33 @@ const setRowData = (item, headers, name = 'käsittelyprosessi') => {
  */
 const downloadFile = async (workBook, filename) => {
   const buffer = await workBook.xlsx.writeBuffer();
+  const blobUrl = window.URL.createObjectURL(new Blob([buffer], { type: FILE_TYPE }));
 
-  const downloadLink = document.createElement('a');
-  downloadLink.download = filename;
-  downloadLink.href = window.URL.createObjectURL(new Blob([buffer], { type: FILE_TYPE }));
-  downloadLink.style.display = 'none';
+  const link = document.createElement('a');
 
-  document.body.appendChild(downloadLink);
+  link.href = blobUrl;
+  link.download = filename;
+  link.click();
 
-  downloadLink.click();
-  downloadLink.remove();
+  window.URL.revokeObjectURL(blobUrl);
+  link.remove();
 };
 
-const createWorkBook = async (getAttributeTypes, filename, items) => {
+/**
+ * Creates a workbook using the provided attribute types, filename, and items.
+ *
+ * @param {Function} attributeTypes - A function that returns the attribute types.
+ * @param {string} filename - The name of the file to be downloaded.
+ * @param {Array} items - An array of items.
+ * @returns {Promise<void>} - A promise that resolves when the file is downloaded.
+ */
+const createWorkBook = async (attributeTypes, filename, items) => {
   const workBook = new ExcelJs.Workbook();
 
   items.forEach((item) => {
     const headers = getAllAttributes(item);
     const names = headers.map((header) =>
-      getAttributeTypes && Object.hasOwn(getAttributeTypes, header) ? getAttributeTypes[header].name || null : null,
+      attributeTypes && Object.hasOwn(attributeTypes, header) ? attributeTypes[header].name || null : null,
     );
     const rows = [];
 
@@ -130,22 +164,22 @@ const createWorkBook = async (getAttributeTypes, filename, items) => {
 /**
  * Retrieves attributes based on the given attribute types and type.
  *
- * @param {Object} getAttributeTypes - The attribute types object.
+ * @param {Object} attributeTypes - The attribute types object.
  * @param {string} type - The type of attribute.
  * @returns {Array} - An array of attributes.
  */
-const getAttributes = (getAttributeTypes, type) =>
-  Object.keys(getAttributeTypes || {})
+const getAttributes = (attributeTypes, type) =>
+  Object.keys(attributeTypes || {})
     .reduce((acc, attribute) => {
       if (
-        Object.hasOwn(getAttributeTypes, attribute) &&
-        getAttributeTypes[attribute].allowedIn &&
-        includes(getAttributeTypes[attribute].allowedIn, type)
+        Object.hasOwn(attributeTypes, attribute) &&
+        attributeTypes[attribute].allowedIn &&
+        includes(attributeTypes[attribute].allowedIn, type)
       ) {
         acc.push({
           attribute,
-          index: getAttributeTypes[attribute].index || 100,
-          name: getAttributeTypes[attribute].name,
+          index: attributeTypes[attribute].index || 100,
+          name: attributeTypes[attribute].name,
           type,
         });
       }
@@ -171,20 +205,33 @@ const getItemAttributes = (attributes, item) => {
 };
 
 /**
+ * Adds rows of data to a worksheet.
+ *
+ * @param {Array<Array<any>>} data - The data to be added as rows.
+ * @param {Worksheet} workSheet - The worksheet to add the rows to.
+ * @returns {Worksheet} The updated worksheet with the added rows.
+ */
+const worksheetAddRows = (data, workSheet) => {
+  data.forEach((row) => workSheet.addRow(row));
+
+  return workSheet;
+};
+
+/**
  * Creates a single sheet workbook using the provided attribute types, filename, and items.
  *
- * @param {Function} getAttributeTypes - A function that returns the attribute types.
+ * @param {Function} attributeTypes - A function that returns the attribute types.
  * @param {string} filename - The name of the file to be downloaded.
  * @param {Array} items - An array of items.
  * @returns {Promise<void>} - A promise that resolves when the file is downloaded.
  */
-const createSingleSheetWorkBook = async (getAttributeTypes, filename, items) => {
+const createSingleSheetWorkBook = async (attributeTypes, filename, items) => {
   const workBook = new ExcelJs.Workbook();
 
-  const functionAttributes = getAttributes(getAttributeTypes, 'function');
-  const phaseAttributes = getAttributes(getAttributeTypes, 'phase');
-  const actionAttributes = getAttributes(getAttributeTypes, 'action');
-  const recordAttributes = getAttributes(getAttributeTypes, 'record');
+  const functionAttributes = getAttributes(attributeTypes, 'function');
+  const phaseAttributes = getAttributes(attributeTypes, 'phase');
+  const actionAttributes = getAttributes(attributeTypes, 'action');
+  const recordAttributes = getAttributes(attributeTypes, 'record');
   const attributes = [];
   const titles = [];
 
@@ -199,7 +246,7 @@ const createSingleSheetWorkBook = async (getAttributeTypes, filename, items) => 
     titles.push(attr.name);
   });
 
-  const workSheet = workBook.addWorksheet('Tiedonohjaus');
+  let workSheet = workBook.addWorksheet('Tiedonohjaus');
   const rows = [attributes, titles];
 
   rows.forEach((row) => workSheet.addRow(row));
@@ -221,29 +268,29 @@ const createSingleSheetWorkBook = async (getAttributeTypes, filename, items) => 
 
         action.records.forEach((record) => {
           const recordCols = getItemAttributes(recordAttributes, record);
-          const recordData = [[...cols, ...phaseCols, ...actionCols, ...recordCols]];
+          const data = [[...cols, ...phaseCols, ...actionCols, ...recordCols]];
 
-          recordData.forEach((row) => workSheet.addRow(row));
+          workSheet = worksheetAddRows(data, workSheet);
         });
 
         if (isEmpty(action.records)) {
-          const recordData = [[...cols, ...phaseCols, ...actionCols]];
+          const data = [[...cols, ...phaseCols, ...actionCols]];
 
-          recordData.forEach((row) => workSheet.addRow(row));
+          workSheet = worksheetAddRows(data, workSheet);
         }
       });
 
       if (isEmpty(phase.actions)) {
-        const recordData = [[...cols, ...phaseCols]];
+        const data = [[...cols, ...phaseCols]];
 
-        recordData.forEach((row) => workSheet.addRow(row));
+        workSheet = worksheetAddRows(data, workSheet);
       }
     });
 
     if (isEmpty(item.phases)) {
-      const recordData = [[...cols]];
+      const data = [[...cols]];
 
-      recordData.forEach((row) => workSheet.addRow(row));
+      workSheet = worksheetAddRows(data, workSheet);
     }
   });
 
@@ -260,25 +307,6 @@ const createSingleSheetWorkBook = async (getAttributeTypes, filename, items) => 
  * @returns {JSX.Element|null} - The Exporter component.
  */
 const Exporter = ({ attributeTypes, data, className, isVisible }) => {
-  const getChildren = (array, item) => {
-    if (isArray(item.children)) {
-      return item.children.reduce(getChildren, array);
-    }
-    const exportItem = {
-      additionalInformation: item.additional_information,
-      code: item.code,
-      description: item.description,
-      descriptionInternal: item.description_internal,
-      name: item.title,
-      relatedClassification: item.related_classification,
-      attributes: item.function_attributes,
-      phases: item.phases,
-    };
-
-    array.push(exportItem);
-    return array;
-  };
-
   if (!isVisible) {
     return null;
   }
