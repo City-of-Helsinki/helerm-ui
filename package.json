@@ -79,7 +79,7 @@
     "build": "vite build",
     "serve": "vite preview",
     "test": "vitest",
-    "test:coverage": "vitest run --coverage --watch=false",
+    "ci": "yarn test run --coverage --watch=false",
     "lint": "yarn eslint \"src/**/*.{js,jsx}\"",
     "postinstall": "if test \"$NODE_ENV\" != \"production\" ; then husky install ; fi",
     "test:e2e:install": "yarn playwright install",
