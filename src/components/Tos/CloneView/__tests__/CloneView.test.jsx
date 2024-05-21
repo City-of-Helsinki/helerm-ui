@@ -1,25 +1,24 @@
-/* eslint-disable no-underscore-dangle */
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme, { shallow } from 'enzyme';
 import React from 'react';
+import { render, screen } from '@testing-library/react';
 
 import CloneView from '../CloneView';
 
-Enzyme.configure({ adapter: new Adapter() });
+const renderComponent = () =>
+  render(
+    <CloneView
+      {...{
+        templates: [],
+        setNavigationVisibility: vi.fn(),
+      }}
+    />,
+  );
 
-describe('(Component) CloneView', () => {
-  let _wrapper;
-
-  beforeEach(() => {
-    const props = {
-      templates: [],
-      setNavigationVisibility: () => { }
-    };
-    _wrapper = shallow(<CloneView {...props} />);
-  });
-
+describe('<CloneView />', () => {
   it('Renders an unordered list', () => {
-    const ul = _wrapper.find('ul');
-    expect(ul).toBeDefined();
+    renderComponent();
+
+    const ul = screen.getByRole('list');
+
+    expect(ul).toBeInTheDocument();
   });
 });

@@ -1,38 +1,31 @@
-/* eslint-disable no-underscore-dangle */
-import { createBrowserHistory as mockHistory } from 'history';
+import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme, { mount } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 
 import storeCreator from '../../../store/createStore';
 import ClassificationHeader from '../ClassificationHeader';
 
-Enzyme.configure({ adapter: new Adapter() });
+const renderComponent = () => {
+  const history = createMemoryHistory();
+  const store = storeCreator(history, {});
+  const dummyFunction = vi.fn();
 
-describe('(Component) ClassificationHeader', () => {
+  return render(
+    <Provider store={store}>
+      <Router history={history}>
+        <ClassificationHeader code='test' title='test' createTos={dummyFunction} />
+      </Router>
+    </Provider>,
+  );
+};
 
-    let _wrapper;
+describe('<ClassificationHeader />', () => {
+  it('renders without crashing', () => {
+    renderComponent();
 
-    const history = mockHistory();
-    const store = storeCreator(history, {});
-    const dummyFunction = () => 'testFunction'
-
-    beforeEach(() => {
-    _wrapper = mount(<Provider store={store}>
-        <Router history={history}>
-            <ClassificationHeader
-                code='test'
-                title='test'
-                createTos={dummyFunction}
-            />
-        </Router>
-    </Provider>);
-    });
-
-    it('renders without crashing', () => {
-        const element = _wrapper.find('ClassificationHeader');
-        expect(element).toBeDefined();
-    })
+    const element = screen.getByRole('heading', { name: /test/i });
+    expect(element).toBeInTheDocument();
+  });
 });
