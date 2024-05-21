@@ -76,7 +76,60 @@
       "function_version": 1,
       "function_valid_from": null,
       "function_valid_to": null,
-      "keyPath": "0.children.0"
+      "keyPath": "0.children.0",
+      "phases": [
+        {
+          "id": "2cbd0bcc4b934c0297d6ecac25dea836",
+          "attributes": {
+            "TypeSpecifier": "asdfsadfsdf",
+            "InformationSystem": ["Lupapiste", "Muu järjestelmä"],
+            "AdditionalInformation": "asdf foobar asdf ",
+            "PhaseType": "Vireillepano/-tulo"
+          },
+          "name": "asdfsadfsdf",
+          "function": "6f134634c4dd448a9a4c3c2574f5200c",
+          "actions": [
+            {
+              "id": "2bbf1f3169224214bd8bb739bca3d39c",
+              "attributes": {
+                "TypeSpecifier": "Testaus",
+                "InformationSystem": ["Muu järjestelmä", "Ahjo"],
+                "ActionType": "Oletusarvo"
+              },
+              "name": "Testaus",
+              "phase": "2cbd0bcc4b934c0297d6ecac25dea836",
+              "records": [
+                {
+                  "id": "d6917dea422742bea19c48f30d005246",
+                  "attributes": {
+                    "SocialSecurityNumber": "Ei sisällä henkilötunnusta",
+                    "TypeSpecifier": "Testaus",
+                    "RetentionPeriodStart": "Asiakirjan päivämäärä",
+                    "InformationSystem": ["Lupapiste", "Ahjo", "Muu tietojärjestelmä"],
+                    "RecordType": "arviointi",
+                    "PersonalData": "Sisältää henkilötietoja",
+                    "RetentionPeriod": "0",
+                    "PublicityClass": "Ei-julkinen",
+                    "RetentionReason": "Ei sp:Taloushallinto 2 - kunnallisten asiakirjojen säilytysaikasuositus"
+                  },
+                  "name": "Testaus",
+                  "action": "2bbf1f3169224214bd8bb739bca3d39c",
+                  "parent": null,
+                  "created_at": "2017-12-28T14:46:05.253211Z",
+                  "modified_at": "2017-12-28T14:46:05.253227Z",
+                  "index": 1
+                }
+              ],
+              "created_at": "2017-12-28T14:46:05.249616Z",
+              "modified_at": "2017-12-28T14:46:05.249633Z",
+              "index": 1
+            }
+          ],
+          "created_at": "2017-12-28T14:46:05.246281Z",
+          "modified_at": "2017-12-28T14:46:05.246302Z",
+          "index": 1
+        }
+      ]
     }
   ],
   "keyPath": "0",
