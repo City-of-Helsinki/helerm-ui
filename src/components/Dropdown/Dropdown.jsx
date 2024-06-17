@@ -1,72 +1,68 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import './Dropdown.scss';
 
 import DropdownMenuWrapper from './DropdownMenuWrapper';
 
-class Dropdown extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false,
-    };
-  }
+const Dropdown = (props) => {
+  const { items, small, extraSmall } = props;
 
-  handleClick = (index) => {
-    this.setState({ open: false });
-    this.props.items[index].action();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const buttonRef = useRef(null);
+
+  const handleClick = (index) => {
+    setIsOpen(false);
+
+    items[index].action();
   };
 
-  handleClickOutsideMenu = (event) => {
-    const shouldCloseMenu = this.button && !this.button.contains(event.target);
+  const handleClickOutsideMenu = (event) => {
+    const shouldCloseMenu = buttonRef.current && !buttonRef.current.contains(event.target);
+
     if (shouldCloseMenu) {
-      this.setState({ open: false });
+      setIsOpen(false);
     }
   };
 
-  generateRows(dropdownItems) {
-    return dropdownItems.map((item, index) => (
+  const generateRows = (dropdownItems) =>
+    dropdownItems.map((item, index) => (
       <button
         type='button'
         key={item.text}
         className={classnames('btn btn-sm dropdown-row', item.style)}
-        onClick={() => this.handleClick(index)}
+        onClick={() => handleClick(index)}
       >
         <span className={classnames('fa-solid dropdown-icon', item.icon)} />
         {item.text}
       </button>
     ));
-  }
 
-  render() {
-    const { items, small, extraSmall } = this.props;
-    const dropdownRows = this.generateRows(items);
-    return (
-      <span className='dropdown-wrapper'>
-        <button
-          type='button'
-          ref={(button) => {
-            this.button = button;
-          }}
-          className={classnames('btn btn-primary', { 'btn-sm': small }, { 'btn-xs': extraSmall })}
-          onClick={() => this.setState((state) => ({ open: !state.open }))}
+  const dropdownRows = generateRows(items);
+
+  return (
+    <span className='dropdown-wrapper'>
+      <button
+        type='button'
+        aria-label='Näytä toiminnallisuudet'
+        ref={buttonRef}
+        className={classnames('btn btn-primary', { 'btn-sm': small }, { 'btn-xs': extraSmall })}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className='fa-solid fa-bars' />
+      </button>
+      {isOpen && (
+        <DropdownMenuWrapper
+          onClickOutside={handleClickOutsideMenu}
+          className={classnames('dropdown-items', { 'items-xs': extraSmall })}
         >
-          <span className='fa-solid fa-bars' />
-        </button>
-        {this.state.open && (
-          <DropdownMenuWrapper
-            onClickOutside={this.handleClickOutsideMenu}
-            className={classnames('dropdown-items', { 'items-xs': extraSmall })}
-          >
-            {dropdownRows}
-          </DropdownMenuWrapper>
-        )}
-      </span>
-    );
-  }
-}
+          {dropdownRows}
+        </DropdownMenuWrapper>
+      )}
+    </span>
+  );
+};
 
 Dropdown.propTypes = {
   extraSmall: PropTypes.bool,
