@@ -1,43 +1,40 @@
-import React from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
-class DropdownMenuWrapper extends React.Component {
-  static componentDidMount() {
-    const { listenEvents } = this.props;
+const DropdownMenuWrapper = (props) => {
+  const { children, listenEvents, onClickOutside, ...divProps } = props;
+
+  const wrapperRef = useRef(null);
+
+  const handleClickOutside = useCallback(
+    (event) => {
+      const happenedOutside = wrapperRef.current && !wrapperRef.current.contains(event.target);
+
+      if (happenedOutside) {
+        onClickOutside(event);
+      }
+    },
+    [onClickOutside],
+  );
+
+  useEffect(() => {
     listenEvents.forEach((name) => {
-      document.addEventListener(name, this.handleClickOutside);
+      document.addEventListener(name, handleClickOutside);
     });
-  }
 
-  componentWillUnmount() {
-    const { listenEvents } = this.props;
-    listenEvents.forEach((name) => {
-      document.removeEventListener(name, this.handleClickOutside);
-    });
-  }
+    return () => {
+      listenEvents.forEach((name) => {
+        document.removeEventListener(name, handleClickOutside);
+      });
+    };
+  }, [handleClickOutside, listenEvents]);
 
-  handleClickOutside = (event) => {
-    const happenedOutside = this.wrapper && !this.wrapper.contains(event.target);
-
-    if (happenedOutside) {
-      this.props.onClickOutside(event);
-    }
-  };
-
-  render() {
-    const { children, onClickOutside, listenEvents, ...divProps } = this.props;
-    return (
-      <div
-        ref={(wrapper) => {
-          this.wrapper = wrapper;
-        }}
-        {...divProps}
-      >
-        {children}
-      </div>
-    );
-  }
-}
+  return (
+    <div ref={wrapperRef} {...divProps}>
+      {children}
+    </div>
+  );
+};
 
 DropdownMenuWrapper.propTypes = {
   children: PropTypes.node,
@@ -48,7 +45,5 @@ DropdownMenuWrapper.propTypes = {
 DropdownMenuWrapper.defaultProps = {
   listenEvents: ['mouseup', 'touchend'],
 };
-
-DropdownMenuWrapper.wrapper = null;
 
 export default DropdownMenuWrapper;
