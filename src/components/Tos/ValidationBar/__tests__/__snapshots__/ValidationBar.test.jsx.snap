@@ -57,11 +57,12 @@ exports[`<ValidationBar /> > should render correctly 1`] = `
       <div
         class="sidebar-invalid-content"
       >
-        <h5
-          role="presentation"
+        <button
+          class="scroll-to-button"
+          type="button"
         >
           Käsittelyprosessi
-        </h5>
+        </button>
         <div
           class="missing-attributes"
         >
