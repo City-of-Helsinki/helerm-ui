@@ -1,7 +1,4 @@
 /* eslint-disable react/forbid-prop-types */
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
@@ -63,6 +60,8 @@ class ValidationBar extends Component {
         <div className={`sidebar-content-${type}`} key={section.id}>
           <div
             className='parent-name'
+            role='button'
+            tabIndex={0}
             onClick={() => this.props.scrollToType(type, section.id)}
             onKeyUp={(e) => {
               if (e.key === 'Enter') {
@@ -128,35 +127,37 @@ class ValidationBar extends Component {
     const showWarnAttributes = this.getFilterByStatus(VALIDATION_FILTER_WARN);
 
     // get invalid sections of phase-action-record -tree as div elements
-    const invalidPhases = Object.values(selectedTOS.phases).map((phase) => ({
-      id: phase.id,
-      invalidSection: this.getInvalidSection(
-        'phase',
-        phase,
-        showInvalidAttributes ? validatePhase : null,
-        showWarnAttributes ? validatePhaseWarnings : null,
-        phase.actions
-          .map((actionId) => selectedTOS.actions?.[actionId])
-          .map((action) =>
-            this.getInvalidSection(
-              'action',
-              action,
-              showInvalidAttributes ? validateAction : null,
-              showWarnAttributes ? validateActionWarnings : null,
-              action?.records
-                .map((recordId) => selectedTOS.records?.[recordId])
-                .map((record) =>
-                  this.getInvalidSection(
-                    'record',
-                    record,
-                    showInvalidAttributes ? validateRecord : null,
-                    showWarnAttributes ? validateRecordWarnings : null,
+    const invalidPhases = Object.values(selectedTOS.phases)
+      .map((phase) => ({
+        id: phase.id,
+        invalidSection: this.getInvalidSection(
+          'phase',
+          phase,
+          showInvalidAttributes ? validatePhase : null,
+          showWarnAttributes ? validatePhaseWarnings : null,
+          phase.actions
+            .map((actionId) => selectedTOS.actions?.[actionId])
+            .map((action) =>
+              this.getInvalidSection(
+                'action',
+                action,
+                showInvalidAttributes ? validateAction : null,
+                showWarnAttributes ? validateActionWarnings : null,
+                action?.records
+                  .map((recordId) => selectedTOS.records?.[recordId])
+                  .map((record) =>
+                    this.getInvalidSection(
+                      'record',
+                      record,
+                      showInvalidAttributes ? validateRecord : null,
+                      showWarnAttributes ? validateRecordWarnings : null,
+                    ),
                   ),
-                ),
-            )
-          )
-        )
+              ),
+            ),
+        ),
       }))
+      .filter(({ invalidSection }) => Boolean(invalidSection))
       .map(({ id, invalidSection }) => <div key={id}>{invalidSection}</div>);
 
     return invalidPhases.length > 0 ? invalidPhases : null;
@@ -172,6 +173,7 @@ class ValidationBar extends Component {
         <div className='sidebar-invalid-content'>
           {invalidTOSAttributes && (
             <h5
+              role='presentation'
               onClick={this.props.scrollToMetadata}
               onKeyUp={(e) => {
                 if (e.key === 'Enter') {
@@ -187,6 +189,7 @@ class ValidationBar extends Component {
         </div>
       );
     }
+
     return (
       <div className='no-missing-attributes'>
         <div className='fa-solid fa-circle-check' />

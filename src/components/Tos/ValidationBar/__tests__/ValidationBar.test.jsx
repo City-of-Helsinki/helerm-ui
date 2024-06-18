@@ -32,7 +32,7 @@ const renderComponent = (history, mocks = baseMocks) =>
     },
   );
 
-describe('<Navigation />', () => {
+describe('<ValidationBar />', () => {
   it('should render correctly', () => {
     const history = createBrowserHistory();
 
@@ -101,7 +101,7 @@ describe('<Navigation />', () => {
 
     renderComponent(history);
     // find error group
-    expect(screen.getByRole('heading', { name: 'Käsittelyprosessi' })).toBeInTheDocument();
+    expect(screen.getByText('Käsittelyprosessi')).toBeInTheDocument();
     // find correct errors
     expect(screen.getByText('Julkisuusluokka')).toBeInTheDocument();
     expect(screen.getByText('Säilytysajan laskentaperuste')).toBeInTheDocument();
@@ -115,6 +115,6 @@ describe('<Navigation />', () => {
 
     renderComponent(history, mocks);
 
-    expect(screen.queryByRole('heading', { name: 'Käsittelyprosessi' })).not.toBeInTheDocument();
+    expect(screen.queryByText('Käsittelyprosessi')).not.toBeInTheDocument();
   });
 });
