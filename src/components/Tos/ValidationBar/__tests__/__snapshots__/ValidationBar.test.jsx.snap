@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`<Navigation /> > should render correctly 1`] = `
+exports[`<ValidationBar /> > should render correctly 1`] = `
 <div>
   <div
     class="validation-bar"
@@ -57,7 +57,9 @@ exports[`<Navigation /> > should render correctly 1`] = `
       <div
         class="sidebar-invalid-content"
       >
-        <h5>
+        <h5
+          role="presentation"
+        >
           Käsittelyprosessi
         </h5>
         <div
@@ -91,8 +93,6 @@ exports[`<Navigation /> > should render correctly 1`] = `
             Rekisteröinti/ Tietojärjestelmä
           </div>
         </div>
-        <div />
-        <div />
       </div>
     </div>
   </div>
