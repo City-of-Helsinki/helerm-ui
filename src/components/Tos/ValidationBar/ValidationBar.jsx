@@ -58,10 +58,9 @@ class ValidationBar extends Component {
     if (invalidAttributes.length || warnAttributes.length || children?.length) {
       return (
         <div className={`sidebar-content-${type}`} key={section.id}>
-          <div
+          <button
+            type='button'
             className='parent-name'
-            role='button'
-            tabIndex={0}
             onClick={() => this.props.scrollToType(type, section.id)}
             onKeyUp={(e) => {
               if (e.key === 'Enter') {
@@ -70,7 +69,7 @@ class ValidationBar extends Component {
             }}
           >
             {nameAttribute ? section.attributes[nameAttribute] : ''}
-          </div>
+          </button>
           <div className='missing-attributes'>
             {map(invalidAttributes, (item, key) => (
               <div key={key} className='missing-attribute'>
@@ -172,8 +171,9 @@ class ValidationBar extends Component {
       return (
         <div className='sidebar-invalid-content'>
           {invalidTOSAttributes && (
-            <h5
-              role='presentation'
+            <button
+              className='scroll-to-button'
+              type='button'
               onClick={this.props.scrollToMetadata}
               onKeyUp={(e) => {
                 if (e.key === 'Enter') {
@@ -182,7 +182,7 @@ class ValidationBar extends Component {
               }}
             >
               Käsittelyprosessi
-            </h5>
+            </button>
           )}
           {invalidTOSAttributes}
           {invalidAttributes}

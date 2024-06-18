@@ -74,13 +74,12 @@
       margin-bottom: 20px;
     }
 
-    h5 {
+    .scroll-to-button {
       margin: 0 0 10px;
       color: $link-color;
-
-      &:hover {
-        cursor: pointer;
-      }
+      background: none;
+      outline: none;
+      border: none;
     }
 
     .sidebar-invalid-content {
@@ -96,10 +95,9 @@
 
     .parent-name {
       color: $link-color;
-
-      &:hover {
-        cursor: pointer;
-      }
+      outline: none;
+      border: none;
+      background: none;
     }
 
     .element-name {
