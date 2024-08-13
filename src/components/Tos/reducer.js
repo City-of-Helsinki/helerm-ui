@@ -123,12 +123,13 @@ export function fetchTOS(tosId, params = {}) {
       .get(`function/${tosId}`, params)
       .then((res) => {
         if (!res.ok) {
-          dispatch(createAction(TOS_ERROR)());
           throw new URIError(res.statusText);
         }
+
         return res.json();
       })
-      .then((json) => dispatch(receiveTOS(json)));
+      .then((json) => dispatch(receiveTOS(json)))
+      .catch(() => dispatch(createAction(TOS_ERROR)()));
   };
 }
 
@@ -149,7 +150,7 @@ export function saveDraft() {
             const message = !isEmpty(json)
               ? values(json).join(',')
               : res.statusText;
-            dispatch(createAction(TOS_ERROR)());
+
             throw Error(message);
           });
         }
@@ -184,13 +185,13 @@ export function changeStatus(status) {
       .patch(`function/${tos.id}`, { state: status })
       .then((res) => {
         if (!res.ok) {
-          dispatch(createAction(TOS_ERROR)());
           throw Error(res.statusText);
         }
         return res.json();
       })
       .then((json) => dispatch(receiveTOS(json)))
-      .then(dispatch(fetchNavigation(includeRelated)));
+      .then(dispatch(fetchNavigation(includeRelated)))
+      .catch(() => dispatch(createAction(TOS_ERROR)()));
   };
 }
 

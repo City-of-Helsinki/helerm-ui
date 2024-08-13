@@ -47,12 +47,12 @@ export function fetchClassification(classificationId, params = {}) {
       .get(`classification/${classificationId}`, params)
       .then(res => {
         if (!res.ok) {
-          dispatch(createAction(CLASSIFICATION_ERROR)());
           throw new URIError(res.statusText);
         }
         return res.json();
       })
-      .then(json => dispatch(receiveClassification(json)));
+      .then(json => dispatch(receiveClassification(json)))
+      .catch(() => dispatch(createAction(CLASSIFICATION_ERROR)()));
   };
 }
 
@@ -79,7 +79,6 @@ export function createTos() {
       .post('function', newTos)
       .then(res => {
         if (!res.ok) {
-          dispatch(createAction(TOS_ERROR)());
           throw Error(res.statusText);
         }
         return res.json();
@@ -88,7 +87,8 @@ export function createTos() {
         const { includeRelated } = getState().navigation;
         dispatch(fetchNavigation(includeRelated));
         return dispatch(receiveNewTOS(json));
-      });
+      })
+      .catch(() => dispatch(createAction(TOS_ERROR)()));
   };
 }
 
