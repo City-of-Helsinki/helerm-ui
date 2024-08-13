@@ -16,12 +16,12 @@ export function cloneFromTemplate(endpoint, id) {
     return api.get(`${endpoint}/${id}`)
       .then(res => {
         if (!res.ok) {
-          dispatch(createAction(TOS_ERROR)());
           throw new URIError(res.statusText);
         }
         return res.json();
       })
-      .then(template => dispatch(createAction(RECEIVE_TEMPLATE)(template)));
+      .then(template => dispatch(createAction(RECEIVE_TEMPLATE)(template)))
+      .catch(() => dispatch(createAction(TOS_ERROR)()));
   };
 }
 

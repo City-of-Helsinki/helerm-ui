@@ -70,12 +70,12 @@ export function approveBulkUpdate(id) {
     return api.post(`bulk-update/${id}/approve`)
       .then(res => {
         if (!res.ok) {
-          dispatch(createAction(APPROVE_BULK_UPDATE_ERROR)());
           throw Error(res.statusText);
         }
         return true;
       })
-      .then(success => dispatch(createAction(APPROVE_BULK_UPDATE_RECEIVE)(success)));
+      .then(success => dispatch(createAction(APPROVE_BULK_UPDATE_RECEIVE)(success)))
+      .catch(() => dispatch(createAction(APPROVE_BULK_UPDATE_ERROR)()));
   };
 }
 
@@ -85,14 +85,14 @@ export function deleteBulkUpdate(id) {
     return api.del(`bulk-update/${id}`)
       .then(res => {
         if (!res.ok) {
-          dispatch(createAction(DELETE_BULK_UPDATE_ERROR)());
           throw Error(res.statusText);
         }
         return true;
       })
       .then(success =>
         dispatch(createAction(DELETE_BULK_UPDATE_RECEIVE)(success))
-      );
+      )
+      .catch(() => dispatch(createAction(DELETE_BULK_UPDATE_ERROR)()));
   };
 }
 

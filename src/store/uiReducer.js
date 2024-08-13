@@ -8,7 +8,6 @@ import find from 'lodash/find';
 
 import api from '../utils/api';
 
-
 export const initialState = {
   isFetching: false,
   phaseTypes: {},
