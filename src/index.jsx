@@ -7,7 +7,6 @@ import 'fast-text-encoding';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as Sentry from '@sentry/react';
-import { BrowserTracing } from '@sentry/browser';
 import { registerLocale, setDefaultLocale } from 'react-datepicker';
 import fi from 'date-fns/locale/fi';
 
@@ -23,7 +22,7 @@ setDefaultLocale('fi');
 // Sentry config
 Sentry.init({
   dsn: config.SENTRY_DSN,
-  integrations: [new BrowserTracing()],
+  integrations: [Sentry.browserTracingIntegration()],
   tracesSampler: 1.0,
 });
 
