@@ -68,7 +68,7 @@
       margin-bottom: 10px;
 
       &-header {
-        padding: 1rem 0;
+        padding: 0.625rem 0;
       }
 
       .navigation-filters-container {
@@ -81,8 +81,8 @@
       }
 
       .filters {
-        margin-top: 1rem;
-        margin-bottom: 1rem;
+        margin-top: 0.625rem;
+        margin-bottom: 0.625rem;
       }
 
       .exporter {
@@ -189,13 +189,13 @@
     text-align: left;
     background-color: transparent;
     border: none;
-    font-size: 1.5rem;
-    letter-spacing: 0.03rem;
+    font-size: 0.94rem;
+    letter-spacing: 0.02rem;
     color: $link-color;
     width: 99%;
     left: 1px;
     padding-left: 35px;
-    line-height: 3.4rem;
+    line-height: 2.125rem;
     display: block;
     position: relative;
     z-index: 1;
@@ -219,7 +219,7 @@
   }
 
   .infinity-menu-display-tree-container {
-    padding-top: 0.25rem;
+    padding-top: 0.156rem;
     z-index: 0;
     position: relative;
   }
@@ -292,13 +292,13 @@
   }
 
   .infinity-menu-leaf-container {
-    font-size: 1.5rem;
-    letter-spacing: 0.03rem;
+    font-size: 0.94rem;
+    letter-spacing: 0.02rem;
     padding: 2px 0px 0px 35px;
     font-weight: 400;
     color: $link-color;
     background: white;
-    line-height: 3.4rem;
+    line-height: 2.125rem;
     display: block;
     position: relative;
     cursor: pointer;
@@ -332,10 +332,10 @@
 
   .nav-title {
     font-size: 1.8rem;
-    letter-spacing: 0.03rem;
+    letter-spacing: 0.02rem;
     text-decoration: underline;
     margin: 0 0 0.5rem 35px;
-    line-height: 3.4rem;
+    line-height: 2.125rem;
     display: block;
     position: relative;
   }
@@ -348,7 +348,7 @@
     left: 0px;
     border-radius: 50%;
     background: $black90;
-    margin-top: 1.2rem;
+    margin-top: 0.75rem;
   }
 
   .nav-title:before {
@@ -388,8 +388,8 @@
   }
 
   .nav-section {
-    margin: -1.7rem 0 -1.7rem 24px;
-    padding: 1.7rem 0;
+    margin: -1.06rem 0 -1.06rem 24px;
+    padding: 1.06rem 0;
     position: relative;
   }
 
