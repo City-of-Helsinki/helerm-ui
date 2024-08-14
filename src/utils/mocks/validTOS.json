@@ -9,6 +9,8 @@
     "SocialSecurityNumber": "Ei sisällä henkilötunnusta"
   },
   "phases": [],
+  "actions": [],
+  "records": [],
   "version": 3,
   "state": "approved",
   "classification_code": "06 01 00",

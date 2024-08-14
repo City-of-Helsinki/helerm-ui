@@ -45,5 +45,6 @@
   },
   "function_version": 14,
   "function_valid_from": "2017-11-13",
-  "function_valid_to": "2018-11-27"
+  "function_valid_to": "2018-11-27",
+  "isFetching": false
 }

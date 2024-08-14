@@ -39,8 +39,8 @@
     "fast-text-encoding": "^1.0.6",
     "gzipper": "^7.2.0",
     "hds-core": "^3.8.0",
-    "hds-react": "^3.8.0",
     "hds-design-tokens": "^3.8.0",
+    "hds-react": "^3.8.0",
     "history": "^4.10.1",
     "immutability-helper": "^3.1.1",
     "isomorphic-fetch": "^3.0.0",
@@ -115,6 +115,7 @@
     "@vitest/coverage-istanbul": "^1.0.2",
     "eslint": "^8.55.0",
     "husky": "^8.0.3",
-    "jsdom": "^24.1.0"
+    "jsdom": "^24.1.0",
+    "redux-mock-store": "^1.5.4"
   }
 }

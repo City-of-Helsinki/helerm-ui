@@ -10,6 +10,13 @@ export const RECEIVE_TEMPLATE = 'receiveTemplateAction';
 export const REQUEST_TOS = 'requestTosAction';
 export const TOS_ERROR = 'tosErrorAction';
 
+/**
+ * Clones a template from the specified endpoint using the provided ID.
+ *
+ * @param {string} endpoint - The endpoint to clone the template from.
+ * @param {string} id - The ID of the template to clone.
+ * @returns {Function} - A function that dispatches actions to request the template, receive the template, or handle errors.
+ */
 export function cloneFromTemplate(endpoint, id) {
   return (dispatch) => {
     dispatch(createAction(REQUEST_TOS)());
@@ -25,6 +32,13 @@ export function cloneFromTemplate(endpoint, id) {
   };
 }
 
+/**
+ * Receive template action and update the state accordingly.
+ *
+ * @param {Object} state - The current state.
+ * @param {Object} payload - The payload containing the template data.
+ * @returns {Object} - The updated state.
+ */
 export const receiveTemplateAction = (state, { payload }) => {
   const { entities: { tos, phases, actions, records }, result } = normalizeTosFromApi(payload);
 

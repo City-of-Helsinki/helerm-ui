@@ -35,11 +35,22 @@ export const UPDATE_BULK_UPDATE_RECEIVE = 'updateBulkUpdateReceiveAction';
 export const UPDATE_BULK_UPDATE_ERROR = 'updateBulkUpdateErrorAction';
 export const CLEAR_SELECTED_BULK_UPDATE = 'clearSelectedBulkUpdateAction';
 
+/**
+ * Receives the response from the fetch bulk updates API call and returns an action with the received results.
+ * @param {Object} resp - The response object from the API call.
+ * @returns {Object} - The action object with the received results.
+ */
 export function receiveFetchBulkUpdates(resp) {
   const results = resp.results || [];
   return createAction(FETCH_BULK_UPDATES_RECEIVE)(results);
 }
 
+/**
+ * Fetches bulk updates.
+ *
+ * @param {boolean} includeApproved - Whether to include approved updates.
+ * @returns {Function} - A function that dispatches actions.
+ */
 export function fetchBulkUpdates(includeApproved = false) {
   return (dispatch) => {
     dispatch(createAction(FETCH_BULK_UPDATES_REQUEST));
@@ -52,6 +63,12 @@ export function fetchBulkUpdates(includeApproved = false) {
   };
 }
 
+/**
+ * Fetches bulk update data from the server.
+ *
+ * @param {string} id - The ID of the bulk update.
+ * @returns {Function} A function that dispatches actions.
+ */
 export function fetchBulkUpdate(id) {
   return (dispatch) => {
     dispatch(createAction(FETCH_BULK_UPDATE_REQUEST));
@@ -64,6 +81,12 @@ export function fetchBulkUpdate(id) {
   };
 }
 
+/**
+ * Approves a bulk update.
+ *
+ * @param {string} id - The ID of the bulk update.
+ * @returns {Function} A function that dispatches actions for approving the bulk update.
+ */
 export function approveBulkUpdate(id) {
   return (dispatch) => {
     dispatch(createAction(APPROVE_BULK_UPDATE_REQUEST));
@@ -79,6 +102,12 @@ export function approveBulkUpdate(id) {
   };
 }
 
+/**
+ * Deletes a bulk update by its ID.
+ *
+ * @param {number} id - The ID of the bulk update to delete.
+ * @returns {Promise<boolean>} A promise that resolves to true if the bulk update was deleted successfully.
+ */
 export function deleteBulkUpdate(id) {
   return (dispatch) => {
     dispatch(createAction(DELETE_BULK_UPDATE_REQUEST));
@@ -96,6 +125,12 @@ export function deleteBulkUpdate(id) {
   };
 }
 
+/**
+ * Saves a bulk update.
+ *
+ * @param {Object} bulkUpdate - The bulk update data.
+ * @returns {Function} A function that dispatches actions for saving the bulk update.
+ */
 export function saveBulkUpdate(bulkUpdate) {
   return (dispatch) => {
     dispatch(createAction(SAVE_BULK_UPDATE_REQUEST)());
@@ -108,6 +143,13 @@ export function saveBulkUpdate(bulkUpdate) {
   };
 }
 
+/**
+ * Updates a bulk update with the given ID.
+ *
+ * @param {string} id - The ID of the bulk update to be updated.
+ * @param {object} bulkUpdate - The updated bulk update object.
+ * @returns {function} - A function that dispatches actions to update the bulk update.
+ */
 export function updateBulkUpdate(id, bulkUpdate) {
   return (dispatch) => {
     dispatch(createAction(UPDATE_BULK_UPDATE_REQUEST)());
