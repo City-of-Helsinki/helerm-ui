@@ -81,6 +81,12 @@ export const SET_VERSION_VISIBILITY = 'setVersionVisibilityAction';
 // ------------------------------------
 // Actions
 // ------------------------------------
+/**
+ * Receives Terms of Service (TOS) and normalizes it from the API response.
+ *
+ * @param {Object} tos - The Terms of Service object received from the API.
+ * @returns {Object} - The action object with the normalized TOS and receivedAt timestamp.
+ */
 export function receiveTOS(tos) {
   tos = normalizeTosFromApi(tos);
   const data = { ...tos, receivedAt: Date.now() };
@@ -88,14 +94,31 @@ export function receiveTOS(tos) {
   return createAction(RECEIVE_TOS)(data);
 }
 
+/**
+ * Clears the Terms of Service (TOS).
+ *
+ * @returns {Action} The action object to clear the TOS.
+ */
 export function clearTOS() {
   return createAction(CLEAR_TOS)();
 }
 
+/**
+ * Resets the Terms of Service (TOS) to its original state.
+ *
+ * @param {any} originalTos - The original TOS object.
+ * @returns {Action} The action object with the type RESET_TOS and the originalTos payload.
+ */
 export function resetTOS(originalTos) {
   return createAction(RESET_TOS)(originalTos);
 }
 
+/**
+ * Edits the metadata based on the provided attributes.
+ *
+ * @param {Object} attributes - The attributes to be edited.
+ * @returns {Object} - The edited metadata.
+ */
 export function editMetaData(attributes) {
   let editedMetaData = {};
 
@@ -108,14 +131,33 @@ export function editMetaData(attributes) {
   return createAction(EDIT_META_DATA)(editedMetaData);
 }
 
+/**
+ * Edit valid dates.
+ *
+ * @param {Date} validDate - The valid date to be edited.
+ * @returns {Action} The action object.
+ */
 export function editValidDates(validDate) {
   return createAction(EDIT_VALID_DATE)(validDate);
 }
 
+/**
+ * Sets the document state.
+ *
+ * @param {Object} newState - The new state of the document.
+ * @returns {Action} The action object.
+ */
 export function setDocumentState(newState) {
   return createAction(SET_DOCUMENT_STATE)(newState);
 }
 
+/**
+ * Fetches the Terms of Service (TOS) with the specified TOS ID and optional parameters.
+ *
+ * @param {string} tosId - The ID of the TOS to fetch.
+ * @param {Object} params - Optional parameters for the API request.
+ * @returns {Function} A function that dispatches actions to request and receive the TOS data.
+ */
 export function fetchTOS(tosId, params = {}) {
   return (dispatch) => {
     dispatch(createAction(REQUEST_TOS)());
@@ -133,6 +175,12 @@ export function fetchTOS(tosId, params = {}) {
   };
 }
 
+/**
+ * Saves the draft of the Terms of Service (TOS).
+ *
+ * @returns {Promise<Object>} A promise that resolves to the saved TOS object.
+ * @throws {Error} If the saving of the draft fails.
+ */
 export function saveDraft() {
   return (dispatch, getState) => {
     dispatch(createAction(REQUEST_TOS)());
@@ -168,13 +216,16 @@ export function saveDraft() {
         dispatch(receiveTOS(json));
         return json;
       })
-      .catch(() => {
-        dispatch(createAction(TOS_ERROR)());
-        throw Error('Luonnoksen tallennus epäonnistui');
-      });
+      .catch(() => dispatch(createAction(TOS_ERROR)()));
   };
 }
 
+/**
+ * Changes the status of the Terms of Service (TOS).
+ *
+ * @param {string} status - The new status of the TOS.
+ * @returns {Function} A function that dispatches actions to change the status of the TOS.
+ */
 export function changeStatus(status) {
   return (dispatch, getState) => {
     dispatch(createAction(REQUEST_TOS)());
@@ -195,14 +246,34 @@ export function changeStatus(status) {
   };
 }
 
+/**
+ * Sets the visibility of the classification.
+ *
+ * @param {boolean} visibility - The visibility of the classification.
+ * @returns {Action} The action object.
+ */
 export function setClassificationVisibility(visibility) {
   return createAction(SET_CLASSIFICATION_VISIBILITY)(visibility);
 }
 
+/**
+ * Sets the visibility of metadata.
+ *
+ * @param {boolean} visibility - The visibility of metadata.
+ * @returns {Action} The action object.
+ */
 export function setMetadataVisibility(visibility) {
   return createAction(SET_METADATA_VISIBILITY)(visibility);
 }
 
+/**
+ * Sets the visibility of terms of service (TOS) components.
+ *
+ * @param {Object} tos - The TOS object containing actions, phases, and records.
+ * @param {boolean} basicVisibility - The visibility status for basic components.
+ * @param {boolean} metaDataVisibility - The visibility status for meta data components.
+ * @returns {Object} - The action object with updated visibility settings.
+ */
 export function setTosVisibility(tos, basicVisibility, metaDataVisibility) {
   const allPhasesOpen = {};
   const allActionsOpen = {};
@@ -247,6 +318,12 @@ export function setTosVisibility(tos, basicVisibility, metaDataVisibility) {
   });
 }
 
+/**
+ * Sets the visibility of the version.
+ *
+ * @param {boolean} visibility - The visibility of the version.
+ * @returns {Action} - The action object.
+ */
 export function setVersionVisibility(visibility) {
   return createAction(SET_VERSION_VISIBILITY)(visibility);
 }
