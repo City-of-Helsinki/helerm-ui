@@ -1,0 +1,14 @@
+.container {
+  width: 100%;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: var(--spacing-layout-l);
+}
+
+.link,
+.link:hover,
+.link:focus {
+  color: var(--color-bus);
+  text-decoration: underline;
+}

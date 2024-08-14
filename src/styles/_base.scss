@@ -11,6 +11,9 @@ For example:
 @import './themes/default';
 */
 @import 'hds-core/lib/base.min.css';
+/* Imports hds design tokens as CSS variables */
+@import 'hds-design-tokens/lib/all.min.css';
+
 @import './vendor/hel-components/variables';
 @import 'bootstrap-sass/assets/stylesheets/bootstrap';
 @import '@fortawesome/fontawesome-free/scss/fontawesome.scss';
