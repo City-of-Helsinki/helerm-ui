@@ -3,6 +3,7 @@ import { defineConfig } from '@playwright/test';
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
+
 export default defineConfig({
   testDir: './e2e/tests',
   timeout: 180 * 1000,
@@ -30,8 +31,8 @@ export default defineConfig({
     trace: 'on-first-retry',
 
     // https://playwright.dev/docs/videos
-    video: 'on-first-retry', 
-    contextOptions: {recordVideo: { dir: "./report/videos/"}}
+    video: 'on-first-retry',
+    contextOptions: { recordVideo: { dir: "./report/videos/" } }
   },
 
   projects: [

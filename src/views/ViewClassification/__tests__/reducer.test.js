@@ -68,8 +68,8 @@ describe('ViewClassification reducer', () => {
     ];
     const store = mockStore({ classification, navigation: { includeRelated: true } });
 
-    const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => newTos }));
-    vi.spyOn(api, 'post').mockImplementationOnce(mockApiGet);
+    const mockApiPost = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => newTos }));
+    vi.spyOn(api, 'post').mockImplementationOnce(mockApiPost);
 
     return store.dispatch(createTos()).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
@@ -83,8 +83,8 @@ describe('ViewClassification reducer', () => {
     ];
     const store = mockStore({ classification, navigation: { includeRelated: true } });
 
-    const mockApiGet = vi.fn().mockImplementation(() => Promise.reject(new Error('ERROR')));
-    vi.spyOn(api, 'post').mockImplementationOnce(mockApiGet);
+    const mockApiPost = vi.fn().mockImplementation(() => Promise.reject(new Error('ERROR')));
+    vi.spyOn(api, 'post').mockImplementationOnce(mockApiPost);
 
     return store.dispatch(createTos()).then(() => {
       expect(store.getActions()).toEqual(expectedActions);

@@ -80,8 +80,8 @@ describe('Bulk reducer', () => {
     ];
     const store = mockStore({});
 
-    const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => ({}) }));
-    vi.spyOn(api, 'post').mockImplementationOnce(mockApiGet);
+    const mockApiPost = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => ({}) }));
+    vi.spyOn(api, 'post').mockImplementationOnce(mockApiPost);
 
     return store.dispatch(approveBulkUpdate(bulkUpdateId)).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
@@ -95,8 +95,8 @@ describe('Bulk reducer', () => {
     ];
     const store = mockStore({});
 
-    const mockApiGet = vi.fn().mockImplementation(() => Promise.reject(new Error('ERROR')));
-    vi.spyOn(api, 'post').mockImplementationOnce(mockApiGet);
+    const mockApiPost = vi.fn().mockImplementation(() => Promise.reject(new Error('ERROR')));
+    vi.spyOn(api, 'post').mockImplementationOnce(mockApiPost);
 
     return store.dispatch(approveBulkUpdate(bulkUpdateId)).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
@@ -110,8 +110,8 @@ describe('Bulk reducer', () => {
     ];
     const store = mockStore({});
 
-    const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => ({}) }));
-    vi.spyOn(api, 'del').mockImplementationOnce(mockApiGet);
+    const mockApiDel = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => ({}) }));
+    vi.spyOn(api, 'del').mockImplementationOnce(mockApiDel);
 
     return store.dispatch(deleteBulkUpdate(bulkUpdateId)).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
@@ -125,8 +125,8 @@ describe('Bulk reducer', () => {
     ];
     const store = mockStore({});
 
-    const mockApiGet = vi.fn().mockImplementation(() => Promise.reject(new Error('ERROR')));
-    vi.spyOn(api, 'del').mockImplementationOnce(mockApiGet);
+    const mockApiDel = vi.fn().mockImplementation(() => Promise.reject(new Error('ERROR')));
+    vi.spyOn(api, 'del').mockImplementationOnce(mockApiDel);
 
     return store.dispatch(deleteBulkUpdate(bulkUpdateId)).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
@@ -141,8 +141,8 @@ describe('Bulk reducer', () => {
     ];
     const store = mockStore({});
 
-    const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => ({}) }));
-    vi.spyOn(api, 'post').mockImplementationOnce(mockApiGet);
+    const mockApiPost = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => ({}) }));
+    vi.spyOn(api, 'post').mockImplementationOnce(mockApiPost);
 
     return store.dispatch(saveBulkUpdate(bulkUpdate)).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
@@ -157,8 +157,8 @@ describe('Bulk reducer', () => {
     ];
     const store = mockStore({});
 
-    const mockApiGet = vi.fn().mockImplementation(() => Promise.reject(new Error('ERROR')));
-    vi.spyOn(api, 'post').mockImplementationOnce(mockApiGet);
+    const mockApiPost = vi.fn().mockImplementation(() => Promise.reject(new Error('ERROR')));
+    vi.spyOn(api, 'post').mockImplementationOnce(mockApiPost);
 
     return store.dispatch(saveBulkUpdate(bulkUpdate)).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
@@ -174,8 +174,8 @@ describe('Bulk reducer', () => {
     ];
     const store = mockStore({});
 
-    const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => ({}) }));
-    vi.spyOn(api, 'patch').mockImplementationOnce(mockApiGet);
+    const mockApiPatch = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => ({}) }));
+    vi.spyOn(api, 'patch').mockImplementationOnce(mockApiPatch);
 
     return store.dispatch(updateBulkUpdate(bulkUpdateId, bulkUpdate)).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
@@ -191,8 +191,8 @@ describe('Bulk reducer', () => {
     ];
     const store = mockStore({});
 
-    const mockApiGet = vi.fn().mockImplementation(() => Promise.reject(new Error('ERROR')));
-    vi.spyOn(api, 'patch').mockImplementationOnce(mockApiGet);
+    const mockApiPatch = vi.fn().mockImplementation(() => Promise.reject(new Error('ERROR')));
+    vi.spyOn(api, 'patch').mockImplementationOnce(mockApiPatch);
 
     return store.dispatch(updateBulkUpdate(bulkUpdateId, bulkUpdate)).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
