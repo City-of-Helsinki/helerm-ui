@@ -191,6 +191,9 @@ describe('TOS Reducer', () => {
       {
         type: 'tosErrorAction',
       },
+      {
+        type: "navigationErrorAction",
+      },
     ];
 
     const mockApiPatch = vi.fn().mockImplementation(() => Promise.reject(new Error('ERROR')));
