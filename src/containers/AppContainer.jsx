@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Provider, connect } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom';
 import ReduxToastr from 'react-redux-toastr';
 import { LoginProvider, SessionEndedHandler } from 'hds-react';
 
@@ -17,13 +17,7 @@ import config from '../config';
 
 import '../styles/core.scss';
 
-const App = ({
-  history,
-  routes,
-  dispatchRetrieveUserFromSession,
-  dispatchFetchAttributeTypes,
-  dispatchFetchTemplates,
-}) => {
+const App = ({ router, dispatchRetrieveUserFromSession, dispatchFetchAttributeTypes, dispatchFetchTemplates }) => {
   const { authenticated, user } = useAuth();
 
   useEffect(() => {
@@ -54,7 +48,7 @@ const App = ({
           closeButtonLabelText: 'Kirjaudu ulos',
         }}
       />
-      <Router history={history}>{routes}</Router>
+      <RouterProvider router={router} />
       <ReduxToastr
         timeOut={4000}
         newestOnTop
@@ -71,7 +65,6 @@ const App = ({
 const AppContainer = ({
   routes,
   store,
-  history,
   dispatchRetrieveUserFromSession,
   dispatchFetchAttributeTypes,
   dispatchFetchTemplates,
@@ -92,13 +85,14 @@ const AppContainer = ({
     [],
   );
 
+  const router = createBrowserRouter(createRoutesFromElements(routes), { basename: '/' });
+
   return (
     <LoginProvider {...providerProperties}>
       <Provider store={store}>
         <MatomoContext.Provider value={matomoTracker}>
           <App
-            history={history}
-            routes={routes}
+            router={router}
             dispatchRetrieveUserFromSession={dispatchRetrieveUserFromSession}
             dispatchFetchAttributeTypes={dispatchFetchAttributeTypes}
             dispatchFetchTemplates={dispatchFetchTemplates}
@@ -110,8 +104,7 @@ const AppContainer = ({
 };
 
 App.propTypes = {
-  history: PropTypes.object.isRequired,
-  routes: PropTypes.node.isRequired,
+  router: PropTypes.any.isRequired,
   dispatchFetchAttributeTypes: PropTypes.func.isRequired,
   dispatchFetchTemplates: PropTypes.func.isRequired,
   dispatchRetrieveUserFromSession: PropTypes.func.isRequired,
@@ -120,7 +113,6 @@ App.propTypes = {
 AppContainer.propTypes = {
   dispatchFetchAttributeTypes: PropTypes.func.isRequired,
   dispatchFetchTemplates: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired,
   dispatchRetrieveUserFromSession: PropTypes.func.isRequired,
   routes: PropTypes.node.isRequired,
   store: PropTypes.object.isRequired,

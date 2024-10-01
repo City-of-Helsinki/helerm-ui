@@ -3,10 +3,11 @@
 /* eslint-disable react/forbid-prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import ClassificationHeader from '../../components/ClassificationHeader/ClassificationHeader';
 import VersionSelector from '../../components/VersionSelector/VersionSelector';
+import withRouter from '../../components/hoc/withRouter';
 
 import './ViewClassification.scss';
 
@@ -19,22 +20,22 @@ class ViewClassification extends React.Component {
   }
 
   componentDidMount() {
-    const { id, version } = this.props.match.params;
-    const params = version ? { version } : {};
-    this.fetchClassification(id, params);
+    const { id, version } = this.props.params;
+    const requestParams = version ? { version } : {};
+    this.fetchClassification(id, requestParams);
     this.addBodyClass();
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const { match } = nextProps;
+    const { params, location } = nextProps;
 
-    if (match.params.id !== this.props.match.params.id || match.params.version !== this.props.match.params.version) {
-      const { id, version } = match.params;
-      const params = version ? { version } : {};
-      this.fetchClassification(id, params);
+    if (params.id !== this.props.params.id || params.version !== this.props.params.version) {
+      const { id, version } = params;
+      const requestParams = version ? { version } : {};
+      this.fetchClassification(id, requestParams);
     }
 
-    if (match && match.path === 'view-classification/:id') {
+    if (location && location.pathname === 'view-classification/:id') {
       this.props.setNavigationVisibility(false);
     }
   }
@@ -45,7 +46,7 @@ class ViewClassification extends React.Component {
   }
 
   onVersionSelectorChange(item) {
-    this.props.history.push(`/view-classification/${this.props.classification.id}/version/${item.value}`);
+    this.props.navigate(`/view-classification/${this.props.classification.id}/version/${item.value}`);
   }
 
   addBodyClass() {
@@ -60,15 +61,15 @@ class ViewClassification extends React.Component {
     }
   }
 
-  fetchClassification(id, params = {}) {
+  fetchClassification(id, requestParams = {}) {
     if (id) {
       this.props
-        .fetchClassification(id, params)
+        .fetchClassification(id, requestParams)
         .then(() => this.props.setNavigationVisibility(false))
         .catch((err) => {
           if (err instanceof URIError) {
             // We have a 404 from API
-            this.props.push(`/404?classification-id=${id}`);
+            this.props.navigate(`/404?classification-id=${id}`);
           }
         });
     }
@@ -78,7 +79,7 @@ class ViewClassification extends React.Component {
     return this.props
       .createTos()
       .then((action) => {
-        this.props.push(`/view-tos/${action.payload.id}`);
+        this.props.navigate(`/view-tos/${action.payload.id}`);
         return this.props.displayMessage({
           title: 'Luonnos',
           body: 'Luonnos tallennettu!',
@@ -167,10 +168,10 @@ ViewClassification.propTypes = {
   createTos: PropTypes.func.isRequired,
   displayMessage: PropTypes.func.isRequired,
   fetchClassification: PropTypes.func.isRequired,
-  match: PropTypes.object.isRequired,
-  push: PropTypes.func.isRequired,
+  params: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  navigate: PropTypes.func.isRequired,
   setNavigationVisibility: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired,
 };
 
 ViewClassification.BODY_CLASS = 'helerm-classification-view';

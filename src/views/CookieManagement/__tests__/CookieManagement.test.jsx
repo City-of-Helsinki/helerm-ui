@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBrowserHistory } from 'history';
-import { Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 
 import CookieManagement from '../CookieManagement';
 import renderWithProviders from '../../../utils/renderWithProviders';
@@ -18,9 +18,9 @@ const renderComponent = () => {
 
   return renderWithProviders(
     <MatomoContext.Provider value={mockMatomoTracker}>
-      <Router history={history}>
+      <BrowserRouter>
         <CookieManagement />
-      </Router>
+      </BrowserRouter>
     </MatomoContext.Provider>,
     { history },
   );

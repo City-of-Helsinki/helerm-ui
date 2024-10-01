@@ -1,35 +1,33 @@
 import { createMemoryHistory } from 'history';
 import React from 'react';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { render } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 
 import storeCreator from '../../../../store/createStore';
 import SearchTerm from '../SearchTerm';
+import renderWithProviders from '../../../../utils/renderWithProviders';
 
 const renderComponent = () => {
   const history = createMemoryHistory();
   const store = storeCreator(history, {});
   const dummyFunction = vi.fn();
 
-  return render(
-    <Provider store={store}>
-      <Router history={history}>
-        <SearchTerm
-          attributeValues={{}}
-          onAddSearchTerm={dummyFunction}
-          onChangeSearchTerm={dummyFunction}
-          onRemoveSearchTerm={dummyFunction}
-          searchTerm={{
-            attribute: 'test',
-            equals: false,
-            target: 'test',
-            value: 'test',
-          }}
-          showAdd={false}
-        />
-      </Router>
-    </Provider>,
+  return renderWithProviders(
+    <BrowserRouter>
+      <SearchTerm
+        attributeValues={{}}
+        onAddSearchTerm={dummyFunction}
+        onChangeSearchTerm={dummyFunction}
+        onRemoveSearchTerm={dummyFunction}
+        searchTerm={{
+          attribute: 'test',
+          equals: false,
+          target: 'test',
+          value: 'test',
+        }}
+        showAdd={false}
+      />
+    </BrowserRouter>,
+    { history, store },
   );
 };
 

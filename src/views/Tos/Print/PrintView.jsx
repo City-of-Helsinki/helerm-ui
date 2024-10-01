@@ -6,8 +6,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from '@reduxjs/toolkit';
-import { withRouter, Link } from 'react-router-dom';
-import { push } from 'connected-react-router';
+import { Link } from 'react-router-dom';
 import get from 'lodash/get';
 
 import { fetchTOS as fetchTosReducer } from '../../../components/Tos/reducer';
@@ -16,26 +15,27 @@ import { getStatusLabel, formatDateTime, getNewPath, itemById } from '../../../u
 import MetaDataTable from '../../../components/Tos/Print/MetaDataTable';
 import PrintClassification from '../../../components/Tos/Print/PrintClassification';
 import PrintPhase from '../../../components/Tos/Print/PrintPhase';
+import withRouter from '../../../components/hoc/withRouter';
 
 import './PrintView.scss';
 
 class PrintView extends Component {
   componentDidMount() {
-    const { fetchTOS, TOS, match } = this.props;
+    const { fetchTOS, TOS, location, params } = this.props;
     this.addBodyClass();
-    if (match && match.path === '/view-tos/:id/print') {
+    if (location && location.pathname.path === '/view-tos/:id/print') {
       this.props.setNavigationVisibility(false);
     }
-    const tosAvailable = TOS.id === match.params.id && (!match.params.version || TOS.version === match.params.version);
+    const tosAvailable = TOS.id === params.id && (!params.version || TOS.version === params.version);
     if (!tosAvailable) {
-      const params = {};
+      const requestParams = {};
       if (typeof version !== 'undefined') {
-        params.version = match.params.version;
+        requestParams.version = params.version;
       }
-      fetchTOS(match.params.id, params).catch((err) => {
+      fetchTOS(params.id, requestParams).catch((err) => {
         if (err instanceof URIError) {
           // We have a 404 from API
-          this.props.push(`/404?tos-id=${match.params.id}`);
+          this.props.navigate(`/404?tos-id=${params.id}`);
         }
       });
     }
@@ -122,10 +122,9 @@ PrintView.propTypes = {
   classification: PropTypes.object,
   fetchTOS: PropTypes.func.isRequired,
   getAttributeName: PropTypes.func.isRequired,
+  params: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
-  params: PropTypes.object,
-  match: PropTypes.object.isRequired,
-  push: PropTypes.func.isRequired,
+  navigate: PropTypes.func.isRequired,
   sortAttributeKeys: PropTypes.func.isRequired,
   setNavigationVisibility: PropTypes.func.isRequired,
 };
@@ -168,7 +167,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   fetchTOS: bindActionCreators(fetchTosReducer, dispatch),
-  push: (path) => dispatch(push(path)),
   setNavigationVisibility: bindActionCreators(setNavigationVisibility, dispatch),
 });
 
