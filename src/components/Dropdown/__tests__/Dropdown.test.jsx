@@ -1,13 +1,13 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { createMemoryHistory } from 'history';
 import React from 'react';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
+import { fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import storeCreator from '../../../store/createStore';
 import Dropdown from '../Dropdown';
+import renderWithProviders from '../../../utils/renderWithProviders';
 
 const renderComponent = (itemsOverride) => {
   const history = createMemoryHistory();
@@ -18,12 +18,11 @@ const renderComponent = (itemsOverride) => {
     { action: dummyFunction, text: 'Dropdown Item 2' },
   ];
 
-  return render(
-    <Provider store={store}>
-      <Router history={history}>
-        <Dropdown items={itemsOverride ?? dummyItems} />
-      </Router>
-    </Provider>,
+  return renderWithProviders(
+    <BrowserRouter history={history}>
+      <Dropdown items={itemsOverride ?? dummyItems} />
+    </BrowserRouter>,
+    { history, store },
   );
 };
 

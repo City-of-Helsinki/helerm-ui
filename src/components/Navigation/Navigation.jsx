@@ -14,6 +14,7 @@ import update from 'immutability-helper';
 
 import InfinityMenu from '../InfinityMenu/InfinityMenu';
 import { navigationStateFilters } from '../../constants';
+import withRouter from '../hoc/withRouter';
 
 import './Navigation.scss';
 
@@ -70,10 +71,10 @@ class Navigation extends React.Component {
 
   onLeafMouseClick = (event, leaf) => {
     if (leaf.function) {
-      return this.props.push(`/view-tos/${leaf.function}`);
+      return this.props.navigate(`/view-tos/${leaf.function}`);
     }
     if (leaf.parent) {
-      return this.props.push(`/view-classification/${leaf.id}`);
+      return this.props.navigate(`/view-classification/${leaf.id}`);
     }
 
     return this.toggleNavigationVisibility();
@@ -232,7 +233,7 @@ class Navigation extends React.Component {
       .reduce((a, b) => a + b, 0);
   };
 
-  isDetailSearch = () => this.props.match.path === '/filter';
+  isDetailSearch = () => this.props.location.pathname === '/filter';
 
   stopSearching() {
     this.setState({
@@ -294,10 +295,10 @@ Navigation.propTypes = {
   items: PropTypes.array.isRequired,
   itemsTimestamp: PropTypes.string,
   onLeafMouseClick: PropTypes.func,
-  push: PropTypes.func.isRequired,
+  navigate: PropTypes.func.isRequired,
   setNavigationVisibility: PropTypes.func.isRequired,
   tosPath: PropTypes.array.isRequired,
-  match: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
 };
 
-export default Navigation;
+export default withRouter(Navigation);

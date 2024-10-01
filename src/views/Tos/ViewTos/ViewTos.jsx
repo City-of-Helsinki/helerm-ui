@@ -1,10 +1,10 @@
+/* eslint-disable react/no-unused-state */
 /* eslint-disable camelcase */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable react/prop-types */
 /* eslint-disable class-methods-use-this */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter, Prompt } from 'react-router-dom';
 import Sticky from 'react-sticky-el';
 import classnames from 'classnames';
 import { min } from 'lodash';
@@ -26,6 +26,8 @@ import Popup from '../../../components/Popup';
 import { getStatusLabel } from '../../../utils/helpers';
 import { generateDefaultAttributes } from '../../../utils/attributeHelper';
 import { validateTOS, validatePhase, validateAction, validateRecord } from '../../../utils/validators';
+import RouterPrompt from '../../../components/RouterPrompt/RouterPrompt';
+import withRouter from '../../../components/hoc/withRouter';
 
 import './ViewTos.scss';
 
@@ -83,7 +85,7 @@ class ViewTOS extends React.Component {
   }
 
   componentDidMount() {
-    const { id, version } = this.props.match.params;
+    const { id, version } = this.props.params;
     const params = {};
     if (typeof version !== 'undefined') {
       params.version = version;
@@ -95,7 +97,7 @@ class ViewTOS extends React.Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const { match } = nextProps;
+    const { params, location } = nextProps;
     // If we have selectedTOS & selectedTOS hasn't change during receiveProps
     // => cache it to state to be able to discard changes
     if (
@@ -106,16 +108,16 @@ class ViewTOS extends React.Component {
       this.setState({ originalTos: nextProps.selectedTOS });
     }
 
-    if (match.params.id !== this.props.match.params.id || match.params.version !== this.props.match.params.version) {
-      const { id, version } = match.params;
-      const params = {};
+    if (params.id !== this.props.params.id || params.version !== this.props.params.version) {
+      const { id, version } = params;
+      const requestParams = {};
       if (typeof version !== 'undefined') {
-        params.version = version;
+        requestParams.version = version;
       }
-      this.fetchTOS(id, params);
+      this.fetchTOS(id, requestParams);
     }
 
-    if (match && match.path === '/view-tos/:id') {
+    if (location && location.pathname === '/view-tos/:id') {
       this.props.setNavigationVisibility(false);
     }
 
@@ -177,7 +179,7 @@ class ViewTOS extends React.Component {
   }
 
   onVersionSelectorChange(item) {
-    this.props.history.push(`/view-tos/${this.props.selectedTOS.id}/version/${item.value}`);
+    this.props.navigate(`/view-tos/${this.props.selectedTOS.id}/version/${item.value}`);
   }
 
   setTosVisibility(basicDataVisibility, metaDataVisibility) {
@@ -231,7 +233,7 @@ class ViewTOS extends React.Component {
       .catch((err) => {
         if (err instanceof URIError) {
           // We have a 404 from API
-          this.props.push(`/404?tos-id=${id}`);
+          this.props.navigate(`/404?tos-id=${id}`);
         }
       });
   }
@@ -320,7 +322,7 @@ class ViewTOS extends React.Component {
       .then((res) => {
         if (res?.version && res?.id) {
           // fetch tos so that history will be intact and url shows up-to-date version
-          this.props.history.push(`/view-tos/${res.id}/version/${res.version}`);
+          this.props.navigate(`/view-tos/${res.id}/version/${res.version}`);
         }
         return this.props.displayMessage({
           title: 'Luonnos',
@@ -591,10 +593,9 @@ class ViewTOS extends React.Component {
       showValidationBar,
       setClassificationVisibility,
       setVersionVisibility,
-    } = this.props;
-    const {
       params: { id, version },
-    } = this.props.match;
+    } = this.props;
+
     if (!isFetching && selectedTOS.id) {
       const phasesOrder = Object.keys(selectedTOS.phases);
       const phaseElements = this.generatePhases(selectedTOS.phases, phasesOrder);
@@ -604,7 +605,7 @@ class ViewTOS extends React.Component {
       const headerHeight = this.header ? this.header.clientHeight : 0;
       return (
         <div key={`${id}.${version}`}>
-          <Prompt when={this.state.isDirty} message='Muutoksia ei ole tallennettu, haluatko silti jatkaa?' />
+          <RouterPrompt when={this.state.isDirty} onOK={() => true} onCancel={() => false} />
           <div className='col-xs-12 single-tos-container'>
             <div
               id='single-tos-header-container'
@@ -880,9 +881,10 @@ ViewTOS.propTypes = {
   fetchTOS: PropTypes.func.isRequired,
   importItems: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
-  match: PropTypes.object.isRequired,
   phaseTypes: PropTypes.object.isRequired,
-  push: PropTypes.func.isRequired,
+  params: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  navigate: PropTypes.func.isRequired,
   recordTypes: PropTypes.object.isRequired,
   removeAction: PropTypes.func.isRequired,
   removePhase: PropTypes.func.isRequired,
@@ -903,7 +905,6 @@ ViewTOS.propTypes = {
   setVersionVisibility: PropTypes.func.isRequired,
   showValidationBar: PropTypes.bool.isRequired,
   templates: PropTypes.array.isRequired,
-  history: PropTypes.object.isRequired,
 };
 
 export default withRouter(ViewTOS);
