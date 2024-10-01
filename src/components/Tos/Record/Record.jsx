@@ -25,6 +25,7 @@ class Record extends Component {
     this.updateTypeSpecifier = this.updateTypeSpecifier.bind(this);
     this.updateRecordType = this.updateRecordType.bind(this);
     this.updateRecordAttribute = this.updateRecordAttribute.bind(this);
+    this.mergeChildAttributesToStateAttributes = this.mergeChildAttributesToStateAttributes.bind(this);
 
     this.state = {
       attributes: this.props.record.attributes,
@@ -51,7 +52,7 @@ class Record extends Component {
     });
   }
 
-  mergeChildAttributesToStateAttributes = (stateAttrs, childattrs) => {
+  mergeChildAttributesToStateAttributes(stateAttrs, childattrs) {
     const newAttrs = {};
     // Gather attributes from child & assign them to current state record
     Object.keys(stateAttrs).forEach((key) => {
@@ -59,7 +60,7 @@ class Record extends Component {
     });
 
     return newAttrs;
-  };
+  }
 
   disableEditMode() {
     this.setState({

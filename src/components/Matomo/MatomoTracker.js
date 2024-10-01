@@ -11,10 +11,10 @@ class MatomoTracker {
       throw new Error('Matomo siteId is required.');
     }
 
-    this.#initialize(userOptions);
+    this.initialize(userOptions);
   }
 
-  #initialize({
+  initialize({
     urlBase,
     siteId,
     srcUrl,

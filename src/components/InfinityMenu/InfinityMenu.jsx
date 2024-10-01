@@ -37,6 +37,8 @@ class InfinityMenu extends Component {
     this.onNodeClick = this.onNodeClick.bind(this);
     this.onLoadMoreClick = this.onLoadMoreClick.bind(this);
     this.onFilterConditionChange = this.onFilterConditionChange.bind(this);
+    this.filterTree = this.filterTree.bind(this);
+    this.createSnapshots = this.createSnapshots.bind(this);
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -319,7 +321,7 @@ class InfinityMenu extends Component {
     return true;
   }
 
-  filterTree = (searchInputs, tree, isDetailSearch) => {
+  filterTree(searchInputs, tree, isDetailSearch) {
     const filters = isDetailSearch ? this.getDetailFilters(searchInputs) : searchInputs[0];
 
     const filteredTree = filters
@@ -332,9 +334,9 @@ class InfinityMenu extends Component {
       : tree;
 
     this.setState({ filteredTree });
-  };
+  }
 
-  createSnapshots = (tree) => {
+  createSnapshots(tree) {
     const snapshots = tree.reduce((prev, curr, key) => {
       if (key === undefined) {
         return prev;
@@ -342,7 +344,7 @@ class InfinityMenu extends Component {
       return this.findSnapshot(prev, curr);
     }, {});
     this.setState({ snapshots });
-  };
+  }
 
   findSnapshot(snapshots, node) {
     if (!node.children) {
