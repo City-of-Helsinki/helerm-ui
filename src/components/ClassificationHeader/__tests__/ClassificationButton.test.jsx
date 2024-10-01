@@ -1,23 +1,22 @@
 import { createMemoryHistory } from 'history';
 import React from 'react';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
+import { screen } from '@testing-library/react';
 
 import storeCreator from '../../../store/createStore';
 import ClassificationButton from '../ClassificationButton';
+import renderWithProviders from '../../../utils/renderWithProviders';
 
 const renderComponent = () => {
   const history = createMemoryHistory();
   const store = storeCreator(history, {});
   const dummyFunction = vi.fn();
 
-  return render(
-    <Provider store={store}>
-      <Router history={history}>
-        <ClassificationButton label='test' action={dummyFunction} />
-      </Router>
-    </Provider>,
+  return renderWithProviders(
+    <BrowserRouter history={history}>
+      <ClassificationButton label='test' action={dummyFunction} />
+    </BrowserRouter>,
+    { history, store },
   );
 };
 

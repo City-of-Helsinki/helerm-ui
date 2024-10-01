@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBrowserHistory } from 'history';
-import { Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 
 import Preview from '../Preview';
 import renderWithProviders from '../../../../utils/renderWithProviders';
@@ -9,9 +9,9 @@ const renderComponent = () => {
   const history = createBrowserHistory();
 
   return renderWithProviders(
-    <Router history={history}>
+    <BrowserRouter history={history}>
       <Preview conversions={[]} />
-    </Router>,
+    </BrowserRouter>,
     { history },
   );
 };

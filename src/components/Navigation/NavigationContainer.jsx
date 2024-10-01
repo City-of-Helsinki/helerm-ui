@@ -4,13 +4,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from '@reduxjs/toolkit';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import { push } from 'connected-react-router';
 import { isEmpty } from 'lodash';
 
 import { fetchNavigation, setNavigationVisibility } from './reducer';
 import { itemById } from '../../utils/helpers';
 import Navigation from './Navigation';
+import withRouter from '../hoc/withRouter';
 
 const NavigationContainer = ({
   attributeTypes,
@@ -24,7 +24,7 @@ const NavigationContainer = ({
   pushFn,
   setNavigationVisibilityFn,
   tosPath,
-  match,
+  location,
 }) => (
   <Navigation
     attributeTypes={attributeTypes}
@@ -38,7 +38,7 @@ const NavigationContainer = ({
     push={pushFn}
     setNavigationVisibility={setNavigationVisibilityFn}
     tosPath={tosPath}
-    match={match}
+    location={location}
   />
 );
 
@@ -106,7 +106,7 @@ NavigationContainer.propTypes = {
   pushFn: PropTypes.func.isRequired,
   setNavigationVisibilityFn: PropTypes.func.isRequired,
   tosPath: PropTypes.array.isRequired,
-  match: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NavigationContainer));

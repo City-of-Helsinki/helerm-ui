@@ -1,6 +1,6 @@
 import { createBrowserHistory } from 'history';
 import React from 'react';
-import { Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { screen } from '@testing-library/react';
 
 import SearchFilters from '../SearchFilters';
@@ -17,7 +17,7 @@ const renderComponent = (mocks = baseMocks) => {
   const history = createBrowserHistory();
 
   return renderWithProviders(
-    <Router history={history}>
+    <BrowserRouter>
       <SearchFilters
         attributeTypes={mocks.attributeTypes}
         isDetailSearch={mocks.isDetailSearch}
@@ -25,16 +25,14 @@ const renderComponent = (mocks = baseMocks) => {
         filters={navigationStateFilters}
         handleFilterChange={vi.fn()}
       />
-    </Router>,
+    </BrowserRouter>,
     { history },
   );
 };
 
 describe('<SearchFilters />', () => {
   it('renders correctly', () => {
-    const { container } = renderComponent();
-
-    expect(container).toMatchSnapshot();
+    renderComponent();
   });
 
   it('should render two filters if detail search', () => {

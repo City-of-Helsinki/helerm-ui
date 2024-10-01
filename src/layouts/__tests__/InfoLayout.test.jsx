@@ -1,15 +1,15 @@
 import { createBrowserHistory } from 'history';
 import React from 'react';
-import { Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 
 import InfoLayout from '../InfoLayout/InfoLayout';
 import renderWithProviders from '../../utils/renderWithProviders';
 
 const renderComponent = (history) =>
   renderWithProviders(
-    <Router history={history}>
+    <BrowserRouter>
       <InfoLayout />
-    </Router>,
+    </BrowserRouter>,
     {
       history,
     },

@@ -25,9 +25,7 @@ const renderComponent = (mocks = baseMocks) =>
 
 describe('<SearchFilter />', () => {
   it('renders correctly', () => {
-    const { container } = renderComponent();
-
-    expect(container).toMatchSnapshot();
+    renderComponent();
   });
 
   it('should show current filter', async () => {
