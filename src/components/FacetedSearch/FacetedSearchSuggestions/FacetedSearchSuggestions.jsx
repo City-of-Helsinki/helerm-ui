@@ -17,6 +17,7 @@ class FacetedSearchSuggestions extends React.Component {
     super(props);
 
     this.onToggleHelp = this.onToggleHelp.bind(this);
+    this.handleClickOutside = this.handleClickOutside.bind(this);
 
     this.state = {
       show: true,
@@ -37,12 +38,12 @@ class FacetedSearchSuggestions extends React.Component {
     this.removeListeners();
   }
 
-  handleClickOutside = (event) => {
+  handleClickOutside(event) {
     const happenedOutside = this.wrapper && !this.wrapper.contains(event.target);
     if (happenedOutside) {
       this.onToggleHelp();
     }
-  };
+  }
 
   onToggleHelp() {
     this.setState({ show: !this.state.show }, () => {
