@@ -30,6 +30,14 @@ export default defineConfig({
   define: {
     global: 'globalThis'
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler',
+        quietDeps: true
+      },
+    }
+  },
   test: {
     globals: true,
     environment: 'jsdom',

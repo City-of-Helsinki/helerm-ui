@@ -1,3 +1,4 @@
+@use "sass:color";
 @import '../../styles/vendor/hel-components/variables';
 .helerm-navigation {
   background-color: $gray-lighter;
@@ -205,7 +206,7 @@
       cursor: pointer;
     }
     & a:hover {
-      color: lighten($link-color, 10);
+      color: color.adjust($link-color, $lightness: 10%);
     }
   }
 
@@ -309,7 +310,7 @@
       color: $link-hover-color;
     }
     & a:hover {
-      color: lighten($link-color, 10);
+      color: color.adjust($link-color, $lightness: 10%);
     }
   }
 
