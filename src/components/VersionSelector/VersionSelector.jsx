@@ -2,7 +2,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
-import { withRouter } from 'react-router-dom';
 
 import { getStatusLabel, formatDateTime } from '../../utils/helpers';
 
@@ -67,4 +66,4 @@ VersionSelector.propTypes = {
   versions: PropTypes.arrayOf(versionShape),
 };
 
-export default withRouter(VersionSelector);
+export default VersionSelector;

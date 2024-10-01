@@ -4,13 +4,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from '@reduxjs/toolkit';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 import raw from 'raw.macro';
 
 import { setNavigationVisibility } from '../../components/Navigation/reducer';
 import './ViewInfo.scss';
+import withRouter from '../../components/hoc/withRouter';
 
 // CRA does not support importing text files
 // this is offered as a solution here
@@ -33,7 +33,7 @@ class InfoView extends Component {
   }
 
   render() {
-    const classname = this.props.match.path === '/info' ? 'info-view-center' : 'info-view';
+    const classname = this.props.location.pathname === '/info' ? 'info-view-center' : 'info-view';
     return (
       <div className={classname}>
         <ReactMarkdown plugins={[gfm]}>{markdown}</ReactMarkdown>
@@ -44,7 +44,7 @@ class InfoView extends Component {
 
 InfoView.propTypes = {
   setNavigationVisibility: PropTypes.func,
-  match: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
 };
 
 InfoView.BODY_CLASS = 'helerm-info-view';

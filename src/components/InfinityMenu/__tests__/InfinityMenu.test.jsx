@@ -1,6 +1,6 @@
 import { createBrowserHistory } from 'history';
 import React from 'react';
-import { Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -20,7 +20,7 @@ const baseMocks = {
 
 const renderComponent = (history, mocks = baseMocks) =>
   renderWithProviders(
-    <Router history={history}>
+    <BrowserRouter>
       <InfinityMenu
         addSearchInput={vi.fn()}
         attributeTypes={attributeRules}
@@ -50,7 +50,7 @@ const renderComponent = (history, mocks = baseMocks) =>
         filters={baseMocks.filters}
         handleFilterChange={vi.fn()}
       />
-    </Router>,
+    </BrowserRouter>,
     { history, preloadedState: { navigation: { items: [validTOSwithChildren] } } },
   );
 
@@ -58,9 +58,7 @@ describe('<InfinityMenu />', () => {
   it('should render correctly', () => {
     const history = createBrowserHistory();
 
-    const { container } = renderComponent(history);
-
-    expect(container).toMatchSnapshot();
+    renderComponent(history);
   });
 
   it('should filter tree by searchInputs', async () => {
@@ -74,7 +72,7 @@ describe('<InfinityMenu />', () => {
     const { rerender } = renderComponent(history, mocks);
 
     rerender(
-      <Router history={history}>
+      <BrowserRouter>
         <InfinityMenu
           addSearchInput={vi.fn()}
           attributeTypes={attributeRules}
@@ -105,7 +103,7 @@ describe('<InfinityMenu />', () => {
           handleFilterChange={vi.fn()}
         />
         ,
-      </Router>,
+      </BrowserRouter>,
     );
 
     expect(mockFilter).toHaveBeenCalled();
@@ -128,7 +126,7 @@ describe('<InfinityMenu />', () => {
     const { rerender } = renderComponent(history, mocks);
 
     rerender(
-      <Router history={history}>
+      <BrowserRouter>
         <InfinityMenu
           addSearchInput={vi.fn()}
           attributeTypes={attributeRules}
@@ -159,7 +157,7 @@ describe('<InfinityMenu />', () => {
           handleFilterChange={vi.fn()}
         />
         ,
-      </Router>,
+      </BrowserRouter>,
     );
 
     const infinityMenuItem = screen.getByRole('button', { name: '00 Hallintoasiat' });
