@@ -1,10 +1,11 @@
+/* eslint-disable react/no-unused-state */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable camelcase */
 /* eslint-disable no-param-reassign */
 /* eslint-disable class-methods-use-this */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link, withRouter, Prompt } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   cloneDeep,
   endsWith,
@@ -44,6 +45,8 @@ import Preview from '../../../components/Bulk/Preview/Preview';
 import SearchResults from '../../../components/Bulk/SearchResults/SearchResults';
 import SearchTerms from '../../../components/Bulk/SearchTerms/SearchTerms';
 import './BulkCreateView.scss';
+import withRouter from '../../../components/hoc/withRouter';
+import RouterPrompt from '../../../components/RouterPrompt/RouterPrompt';
 
 const PATH_EMPTY_NAME_REPLACEMENT = '---';
 
@@ -340,7 +343,7 @@ class BulkCreateView extends React.Component {
             searchResults: [],
             searchTerms: [{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }],
           });
-          this.props.history.push('/bulk');
+          this.props.navigate('/bulk');
           this.props.fetchNavigation(true);
           return this.props.displayMessage({
             title: 'Massamuutos',
@@ -835,7 +838,7 @@ class BulkCreateView extends React.Component {
     }
     return (
       <div className='bulk-update-create'>
-        <Prompt when={this.state.isDirty} message='Muutoksia ei ole tallennettu, haluatko silti jatkaa?' />
+        <RouterPrompt when={this.state.isDirty} onOK={() => true} onCancel={() => false} />
         <div className='col-xs-12'>
           <Link className='btn btn-link' to='/bulk'>
             <i className='fa-solid fa-angle-left' /> Takaisin
@@ -955,7 +958,7 @@ BulkCreateView.propTypes = {
   isFetching: PropTypes.bool,
   items: PropTypes.array.isRequired,
   saveBulkUpdate: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired,
+  navigate: PropTypes.func.isRequired,
 };
 
 export default withRouter(BulkCreateView);

@@ -1,6 +1,5 @@
 import { bindActionCreators } from '@reduxjs/toolkit';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import { push } from 'connected-react-router';
 
 import { setNavigationVisibility } from '../../components/Navigation/reducer';
@@ -37,4 +36,4 @@ const mapStateToProps = (state) => ({
   terms: state.search.terms,
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(FacetedSearch));
+export default connect(mapStateToProps, mapDispatchToProps)(FacetedSearch);

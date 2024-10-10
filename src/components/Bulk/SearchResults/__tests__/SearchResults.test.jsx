@@ -1,11 +1,11 @@
 import { createMemoryHistory } from 'history';
 import React from 'react';
-import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
+import { screen } from '@testing-library/react';
 
 import storeCreator from '../../../../store/createStore';
 import SearchResults from '../SearchResults';
+import renderWithProviders from '../../../../utils/renderWithProviders';
 
 const renderComponent = () => {
   const history = createMemoryHistory();
@@ -13,17 +13,16 @@ const renderComponent = () => {
   const dummyFunction = vi.fn();
   const dummyArray = [];
 
-  return render(
-    <Provider store={store}>
-      <Router history={history}>
-        <SearchResults
-          onSelect={dummyFunction}
-          onSelectAll={dummyFunction}
-          searchResults={dummyArray}
-          hits={{ phases: 0, actions: 0, records: 0 }}
-        />
-      </Router>
-    </Provider>,
+  return renderWithProviders(
+    <BrowserRouter>
+      <SearchResults
+        onSelect={dummyFunction}
+        onSelectAll={dummyFunction}
+        searchResults={dummyArray}
+        hits={{ phases: 0, actions: 0, records: 0 }}
+      />
+    </BrowserRouter>,
+    { history, store },
   );
 };
 

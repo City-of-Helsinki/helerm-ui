@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { LoginCallbackHandler } from 'hds-react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { displayMessage } from '../../utils/helpers';
 import Loader from '../../components/Loader';
 import useUpdateApiTokens from './hooks/useUpdateApiTokens';
 
 const LoginCallback = ({ handleCallbackInitialize, retrieveUserFromSession, handleCallbackError }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { updateApiTokens } = useUpdateApiTokens();
 
@@ -21,7 +21,7 @@ const LoginCallback = ({ handleCallbackInitialize, retrieveUserFromSession, hand
     await updateApiTokens();
     await retrieveUserFromSession(userId);
 
-    history.push('/');
+    navigate('/');
   };
 
   const onError = () => {
@@ -29,7 +29,7 @@ const LoginCallback = ({ handleCallbackInitialize, retrieveUserFromSession, hand
 
     displayMessage({ title: 'Virhe', body: 'Kirjautuminen epäonnistui!' }, { type: 'error' });
 
-    history.push('/');
+    navigate('/');
   };
 
   return (

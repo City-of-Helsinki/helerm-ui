@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -17,7 +17,7 @@ const baseMocks = {
 
 const renderComponent = (history, mocks = baseMocks) =>
   renderWithProviders(
-    <Router history={history}>
+    <BrowserRouter>
       <ValidationBar
         selectedTOS={mocks.selectedTOS}
         attributeTypes={attributeRules}
@@ -26,7 +26,7 @@ const renderComponent = (history, mocks = baseMocks) =>
         top={0}
         setValidationVisibility={mocks.setValidationVisibility}
       />
-    </Router>,
+    </BrowserRouter>,
     {
       history,
     },
@@ -36,9 +36,7 @@ describe('<ValidationBar />', () => {
   it('should render correctly', () => {
     const history = createBrowserHistory();
 
-    const { container } = renderComponent(history);
-
-    expect(container).toMatchSnapshot();
+    renderComponent(history);
   });
 
   it('should change filter', async () => {

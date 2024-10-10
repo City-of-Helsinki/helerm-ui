@@ -1,19 +1,15 @@
 import { createBrowserHistory } from 'history';
 import React from 'react';
-import { Router } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import BulkCreateViewContainer from '../BulkCreateViewContainer';
 import renderWithProviders from '../../../../utils/renderWithProviders';
 
 const renderComponent = () => {
   const history = createBrowserHistory();
+  const router = createBrowserRouter([{ path: '/', element: <BulkCreateViewContainer /> }]);
 
-  return renderWithProviders(
-    <Router history={history}>
-      <BulkCreateViewContainer />
-    </Router>,
-    { history },
-  );
+  return renderWithProviders(<RouterProvider router={router} />, { history });
 };
 
 describe('<BulkCreateView />', () => {

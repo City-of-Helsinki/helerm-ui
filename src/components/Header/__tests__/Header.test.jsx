@@ -1,6 +1,6 @@
 import { createBrowserHistory } from 'history';
 import React from 'react';
-import { Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { screen } from '@testing-library/react';
 
 import renderWithProviders from '../../../utils/renderWithProviders';
@@ -8,9 +8,9 @@ import Header from '../Header';
 
 const renderComponent = (history) =>
   renderWithProviders(
-    <Router history={history}>
+    <BrowserRouter>
       <Header />
-    </Router>,
+    </BrowserRouter>,
     {
       history,
     },

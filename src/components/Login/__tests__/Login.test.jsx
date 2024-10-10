@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { screen } from '@testing-library/react';
 import { createBrowserHistory } from 'history';
 import userEvent from '@testing-library/user-event';
@@ -22,9 +22,9 @@ vitest.spyOn(useAuth, 'default').mockImplementation(() => ({
 
 const renderComponent = (history) =>
   renderWithProviders(
-    <Router history={history}>
+    <BrowserRouter>
       <LoginContainer />
-    </Router>,
+    </BrowserRouter>,
     { history },
   );
 
