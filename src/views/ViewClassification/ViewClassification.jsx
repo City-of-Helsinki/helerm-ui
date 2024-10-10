@@ -61,10 +61,10 @@ class ViewClassification extends React.Component {
     }
   }
 
-  fetchClassification(id, params = {}) {
+  fetchClassification(id, requestParams = {}) {
     if (id) {
       this.props
-        .fetchClassification(id, params)
+        .fetchClassification(id, requestParams)
         .then(() => this.props.setNavigationVisibility(false))
         .catch((err) => {
           if (err instanceof URIError) {
