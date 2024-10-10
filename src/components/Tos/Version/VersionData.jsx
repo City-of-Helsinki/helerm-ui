@@ -18,6 +18,7 @@ class VersionData extends React.Component {
     this.generateEditorFormValidDateFields = this.generateEditorFormValidDateFields.bind(this);
     this.generateEditorFormValidDateField = this.generateEditorFormValidDateField.bind(this);
     this.onValidDateChange = this.onValidDateChange.bind(this);
+    this.activateValidDateEditMode = this.activateValidDateEditMode.bind(this);
 
     this.state = {
       editing: false,
@@ -46,11 +47,11 @@ class VersionData extends React.Component {
     this.props.editValidDates({ [key]: value });
   }
 
-  activateValidDateEditMode = (key) => {
+  activateValidDateEditMode(key) {
     if (this.props.selectedTOS.documentState === 'edit') {
       this.setState({ [`${key}Editing`]: true });
     }
-  };
+  }
 
   generateVersionDataButtons() {
     const { selectedTOS, setVersionVisibility } = this.props;

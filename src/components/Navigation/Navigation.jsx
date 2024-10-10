@@ -29,6 +29,19 @@ class Navigation extends React.Component {
       searchTimestamp: 0,
       isSearchChanged: false,
     };
+
+    this.handleFilterChange = this.handleFilterChange.bind(this);
+    this.onNodeMouseClick = this.onNodeMouseClick.bind(this);
+    this.onLeafMouseClick = this.onLeafMouseClick.bind(this);
+    this.onSearchTimeout = this.onSearchTimeout.bind(this);
+    this.getFilteredTree = this.getFilteredTree.bind(this);
+    this.setSearchInput = this.setSearchInput.bind(this);
+    this.receiveItemsAndResetNavigation = this.receiveItemsAndResetNavigation.bind(this);
+    this.addSearchInput = this.addSearchInput.bind(this);
+    this.removeSearchInput = this.removeSearchInput.bind(this);
+    this.toggleNavigationVisibility = this.toggleNavigationVisibility.bind(this);
+    this.hasFilters = this.hasFilters.bind(this);
+    this.isDetailSearch = this.isDetailSearch.bind(this);
   }
 
   componentDidMount() {
@@ -45,7 +58,7 @@ class Navigation extends React.Component {
     }
   }
 
-  handleFilterChange = (filterValues, filterName) => {
+  handleFilterChange(filterValues, filterName) {
     const mappedValues = filterValues.map(({ value }) => value);
 
     return this.setState(
@@ -60,15 +73,15 @@ class Navigation extends React.Component {
       }),
       () => this.setState(() => ({ tree: this.getFilteredTree() })),
     );
-  };
+  }
 
-  onNodeMouseClick = (event, tree) => {
+  onNodeMouseClick(event, tree) {
     this.setState({
       tree,
     });
-  };
+  }
 
-  onLeafMouseClick = (event, leaf) => {
+  onLeafMouseClick(event, leaf) {
     if (leaf.function) {
       return this.props.push(`/view-tos/${leaf.function}`);
     }
@@ -77,15 +90,15 @@ class Navigation extends React.Component {
     }
 
     return this.toggleNavigationVisibility();
-  };
+  }
 
-  onSearchTimeout = () => {
+  onSearchTimeout() {
     if (!this.state.isSearchChanged && Date.now() - this.state.searchTimestamp >= SEARCH_TIMEOUT) {
       this.setState({ isSearchChanged: true });
     }
-  };
+  }
 
-  getFilteredTree = () => {
+  getFilteredTree() {
     const { items } = this.props;
     const { filters } = this.state;
 
@@ -159,9 +172,9 @@ class Navigation extends React.Component {
     };
 
     return items.map(itemsCopy).filter(filterFunction).map(setAllOpen);
-  };
+  }
 
-  setSearchInput = (index, value) => {
+  setSearchInput(index, value) {
     const isDetailSearch = this.isDetailSearch();
     this.setState((prev) =>
       update(prev, {
@@ -181,18 +194,18 @@ class Navigation extends React.Component {
     if (isDetailSearch) {
       setTimeout(this.onSearchTimeout, SEARCH_TIMEOUT);
     }
-  };
+  }
 
-  receiveItemsAndResetNavigation = (items) => {
+  receiveItemsAndResetNavigation(items) {
     this.setState({
       tree: items,
       filters: navigationStateFilters,
     });
 
     this.stopSearching();
-  };
+  }
 
-  addSearchInput = () => {
+  addSearchInput() {
     this.setState(
       update(this.state, {
         searchInputs: {
@@ -200,9 +213,9 @@ class Navigation extends React.Component {
         },
       }),
     );
-  };
+  }
 
-  removeSearchInput = (index) => {
+  removeSearchInput(index) {
     const searchInputs = this.state.searchInputs.length === 1 ? { $set: [''] } : { $splice: [[index, 1]] };
     this.setState(
       update(this.state, {
@@ -218,21 +231,23 @@ class Navigation extends React.Component {
     if (this.state.searchInputs[index].length > 0) {
       setTimeout(this.onSearchTimeout, SEARCH_TIMEOUT);
     }
-  };
+  }
 
-  toggleNavigationVisibility = () => {
+  toggleNavigationVisibility() {
     const currentVisibility = this.props.is_open;
     this.props.setNavigationVisibility(!currentVisibility);
-  };
+  }
 
-  hasFilters = () => {
+  hasFilters() {
     const { filters } = this.state;
     return !!Object.keys(filters)
       .map((key) => filters[key].values.length)
       .reduce((a, b) => a + b, 0);
-  };
+  }
 
-  isDetailSearch = () => this.props.match.path === '/filter';
+  isDetailSearch() {
+    return this.props.match.path === '/filter';
+  }
 
   stopSearching() {
     this.setState({

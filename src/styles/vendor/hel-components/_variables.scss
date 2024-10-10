@@ -1,3 +1,4 @@
+@use "sass:color";
 // Hel.fi bootstrap theme
 // Variables
 // --------------------------------------------------
@@ -40,7 +41,7 @@ $black:      900;
 $gray:                   #343434 !default; // #555
 $gray-darker:            $black90 !default; // #222
 $gray-dark:              $black50 !default;   // #333
-$gray-light:             darken($black05,10%) !default;   // #999
+$gray-light:             color.adjust($black05, $lightness: -10%) !default;   // #999
 $gray-lighter:           $black05 !default; // #eee
 
 $brand-primary:         #0072c6 !default;
@@ -411,7 +412,7 @@ $navbar-default-link-hover-color:          $brand-primary !default;
 $link-hover-decoration: underline !default;
 $navbar-default-link-hover-bg:             transparent !default;
 $navbar-default-link-active-color:         #fff !default;
-$navbar-default-link-active-bg:            darken($navbar-default-bg, 10%) !default;
+$navbar-default-link-active-bg:            color.adjust($navbar-default-bg, $lightness: -10%) !default;
 $navbar-default-link-disabled-color:       #ccc !default;
 $navbar-default-link-disabled-bg:          transparent !default;
 
@@ -421,9 +422,9 @@ $navbar-default-brand-hover-color:         $navbar-default-link-hover-color !def
 $navbar-default-brand-hover-bg:            transparent !default;
 
 // Navbar toggle
-$navbar-default-toggle-hover-bg:           darken($navbar-default-bg, 10%) !default;
+$navbar-default-toggle-hover-bg:           color.adjust($navbar-default-bg, $lightness: -10%) !default;
 $navbar-default-toggle-icon-bar-bg:        #fff !default;
-$navbar-default-toggle-border-color:       darken($navbar-default-bg, 10%) !default;
+$navbar-default-toggle-border-color:       color.adjust($navbar-default-bg, $lightness: -10%) !default;
 
 
 // Inverted navbar
@@ -437,7 +438,7 @@ $navbar-inverse-link-color:                 #fff !default;
 $navbar-inverse-link-hover-color:           #fff !default;
 $navbar-inverse-link-hover-bg:              transparent !default;
 $navbar-inverse-link-active-color:          #fff !default;
-$navbar-inverse-link-active-bg:             darken($navbar-inverse-bg, 5%) !default;
+$navbar-inverse-link-active-bg:             color.adjust($navbar-inverse-bg, $lightness: -5%) !default;
 $navbar-inverse-link-disabled-color:        #ccc !default;
 $navbar-inverse-link-disabled-bg:           transparent !default;
 
@@ -447,9 +448,9 @@ $navbar-inverse-brand-hover-color:          $navbar-inverse-link-hover-color !de
 $navbar-inverse-brand-hover-bg:             transparent !default;
 
 // Inverted navbar toggle
-$navbar-inverse-toggle-hover-bg:            darken($navbar-inverse-bg, 10%) !default;
+$navbar-inverse-toggle-hover-bg:            color.adjust($navbar-inverse-bg, $lightness: -10%) !default;
 $navbar-inverse-toggle-icon-bar-bg:         #fff !default;
-$navbar-inverse-toggle-border-color:        darken($navbar-inverse-bg, 10%) !default;
+$navbar-inverse-toggle-border-color:        color.adjust($navbar-inverse-bg, $lightness: -10%) !default;
 
 
 //== Navs
@@ -492,15 +493,15 @@ $pagination-bg:                        $brand-success !default;
 $pagination-border:                    transparent !default;
 
 $pagination-hover-color:               #fff !default;
-$pagination-hover-bg:                  darken($brand-success, 15%) !default;
+$pagination-hover-bg:                  color.adjust($brand-success, $lightness: -5%) !default;
 $pagination-hover-border:              transparent !default;
 
 $pagination-active-color:              #fff !default;
-$pagination-active-bg:                 darken($brand-success, 15%) !default;
+$pagination-active-bg:                 color.adjust($brand-success, $lightness: -5%) !default;
 $pagination-active-border:             transparent !default;
 
 $pagination-disabled-color:            $gray-lighter !default;
-$pagination-disabled-bg:               lighten($brand-success, 15%) !default;
+$pagination-disabled-bg:               color.adjust($brand-success, $lightness: 15%) !default;
 $pagination-disabled-border:           transparent !default;
 
 
@@ -585,7 +586,7 @@ $popover-border-color:                rgba(0,0,0,.2) !default;
 $popover-fallback-border-color:       #ccc !default;
 
 //** Popover title background color
-$popover-title-bg:                    darken($popover-bg, 3%) !default;
+$popover-title-bg:                    color.adjust($popover-bg, $lightness: -3%) !default;
 
 //** Popover arrow width
 $popover-arrow-width:                 10px !default;
@@ -597,7 +598,7 @@ $popover-arrow-outer-width:           ($popover-arrow-width + 1) !default;
 //** Popover outer arrow color
 $popover-arrow-outer-color:           fadein($popover-border-color, 5%) !default;
 //** Popover outer arrow fallback color
-$popover-arrow-outer-fallback-color:  darken($popover-fallback-border-color, 20%) !default;
+$popover-arrow-outer-fallback-color:  color.adjust($popover-fallback-border-color, $lightness: -20%) !default;
 
 
 //== Labels
@@ -725,7 +726,7 @@ $list-group-active-bg:          $component-active-bg !default;
 //** Border color of active list elements
 $list-group-active-border:      $list-group-active-bg !default;
 //** Text color for content within active list items
-$list-group-active-text-color:  lighten($list-group-active-bg, 40%) !default;
+$list-group-active-text-color:  color.adjust($list-group-active-bg, $lightness: 40%) !default;
 
 //** Text color of disabled list items
 $list-group-disabled-color:      $gray-light !default;

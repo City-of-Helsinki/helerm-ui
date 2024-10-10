@@ -4,7 +4,6 @@
     "vitest-globals/env": true
   },
   "extends": [
-    "react-app",
     "plugin:react/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
@@ -15,7 +14,7 @@
   ],
   "overrides": [],
   "parserOptions": {
-    "ecmaVersion": 2018,
+    "ecmaVersion": 2020,
     "ecmaFeatures": {
       "jsx": true
     }
@@ -27,6 +26,7 @@
   ],
   "plugins": [
     "react",
+    "react-hooks",
     "prettier",
     "import",
     "sonarjs"
@@ -83,7 +83,9 @@
         ],
         "newlines-between": "always"
       }
-    ]
+    ],
+    "import/no-named-as-default": 0,
+    "import/no-named-as-default-member": 0
   },
   "globals": {
     "JSX": true
