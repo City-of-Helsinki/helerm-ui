@@ -10,6 +10,7 @@ import raw from 'raw.macro';
 import classnames from 'classnames';
 
 import './FacetedSearchHelp.scss';
+import useOutsideClick from '../../../hooks/useOutsideClick';
 
 export const FACETED_SEARCH_HELP_TYPE_FACET = 'facet';
 export const FACETED_SEARCH_HELP_TYPE_TERM = 'searchterm';
@@ -19,79 +20,30 @@ export const FACETED_SEARCH_HELP_TYPE_TERM = 'searchterm';
 // (https://github.com/facebook/create-react-app/issues/3722)
 const searchterm = raw('./searchterm_fi.md');
 const facet = raw('./facet_fi.md');
-const EVENTS = ['mouseup', 'touchend'];
 
-class FacetedSearchHelp extends React.Component {
-  constructor(props) {
-    super(props);
+const FacetedSearchHelp = ({ type }) => {
+  const { show, setShow, ref } = useOutsideClick();
 
-    this.onToggleHelp = this.onToggleHelp.bind(this);
-    this.handleClickOutside = this.handleClickOutside.bind(this);
-
-    this.state = {
-      show: false,
-    };
-  }
-
-  componentWillUnmount() {
-    this.removeListeners();
-  }
-
-  handleClickOutside(event) {
-    const happenedOutside = this.wrapper && !this.wrapper.contains(event.target);
-
-    if (happenedOutside) {
-      this.onToggleHelp();
-    }
-  }
-
-  onToggleHelp() {
-    this.setState({ show: !this.state.show }, () => {
-      if (this.state.show) {
-        this.addListeners();
-      } else {
-        this.removeListeners();
-      }
-    });
-  }
-
-  addListeners() {
-    EVENTS.forEach((name) => {
-      document.addEventListener(name, this.handleClickOutside);
-    });
-  }
-
-  removeListeners() {
-    EVENTS.forEach((name) => {
-      document.removeEventListener(name, this.handleClickOutside);
-    });
-  }
-
-  render() {
-    const { type } = this.props;
-    return (
-      <div className='faceted-search-help'>
-        <button type='button' className='btn btn-link' onClick={this.onToggleHelp}>
-          <i className='fa-solid fa-question' />
-        </button>
-        <div
-          className={classnames('popover', { show: this.state.show })}
-          onClick={this.onToggleHelp}
-          onKeyUp={(event) => {
-            if (event.key === 'Enter') {
-              this.onToggleHelp();
-            }
-          }}
-          ref={(wrapper) => {
-            this.wrapper = wrapper;
-          }}
-        >
-          <ReactMarkdown plugins={[gfm]} source={type === FACETED_SEARCH_HELP_TYPE_TERM ? searchterm : facet} />
-        </div>
+  return (
+    <div className='faceted-search-help'>
+      <button type='button' className='btn btn-link' onClick={() => setShow(!show)}>
+        <i className='fa-solid fa-question' />
+      </button>
+      <div
+        className={classnames('popover', { show })}
+        onClick={() => setShow(!show)}
+        onKeyUp={(event) => {
+          if (event.key === 'Enter') {
+            setShow(!show);
+          }
+        }}
+        ref={ref}
+      >
+        <ReactMarkdown plugins={[gfm]} source={type === FACETED_SEARCH_HELP_TYPE_TERM ? searchterm : facet} />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 FacetedSearchHelp.propTypes = {
   type: PropTypes.string.isRequired,
