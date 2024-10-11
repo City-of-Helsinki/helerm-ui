@@ -5,7 +5,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-param-reassign */
 import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { cloneDeep, every, find, isEmpty, keys, omit, split } from 'lodash';
@@ -20,6 +20,7 @@ import IsAllowed from '../../../components/IsAllowed/IsAllowed';
 import Popup from '../../../components/Popup';
 import './BulkView.scss';
 import { getDisplayLabelForAttribute } from '../../../utils/attributeHelper';
+import withRouter from '../../../components/hoc/withRouter';
 
 class BulkView extends React.Component {
   constructor(props) {
@@ -46,12 +47,7 @@ class BulkView extends React.Component {
   }
 
   componentDidMount() {
-    const {
-      items,
-      itemsIncludeRelated,
-      match: { params },
-      selectedBulk,
-    } = this.props;
+    const { items, itemsIncludeRelated, params, selectedBulk } = this.props;
     if (params.id) {
       this.props.fetchBulkUpdate(params.id);
     }
@@ -95,7 +91,7 @@ class BulkView extends React.Component {
     this.props
       .approveBulkUpdate(selectedBulk.id)
       .then(() => {
-        this.props.push('/bulk');
+        this.props.navigate('/bulk');
         return this.props.displayMessage({
           title: 'Massamuutos',
           body: 'Massamuutos hyväksytty!',
@@ -137,7 +133,7 @@ class BulkView extends React.Component {
         this.setState({
           itemList: [],
         });
-        this.props.push('/bulk');
+        this.props.navigate('/bulk');
         return this.props.displayMessage({
           title: 'Massamuutos',
           body: 'Massamuutos poistettu!',
@@ -612,8 +608,8 @@ BulkView.propTypes = {
   isUpdating: PropTypes.bool,
   items: PropTypes.array.isRequired,
   itemsIncludeRelated: PropTypes.bool,
-  match: PropTypes.object.isRequired,
-  push: PropTypes.func.isRequired,
+  params: PropTypes.object.isRequired,
+  navigate: PropTypes.func.isRequired,
   selectedBulk: PropTypes.object,
   updateBulkUpdate: PropTypes.func.isRequired,
 };

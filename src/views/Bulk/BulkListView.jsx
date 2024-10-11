@@ -3,13 +3,14 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Select from 'react-select';
 import { filter, includes, isEmpty, keys } from 'lodash';
 
 import { CHANGE_BULKUPDATE, BULK_UPDATE_PACKAGE_APPROVE_OPTIONS } from '../../constants';
 import { formatDateTime, getStatusLabel, resolveReturnValues, resolveSelectValues } from '../../utils/helpers';
 import IsAllowed from '../../components/IsAllowed/IsAllowed';
+import withRouter from '../../components/hoc/withRouter';
 
 import './BulkListView.scss';
 
@@ -34,7 +35,7 @@ class BulkListView extends React.Component {
   }
 
   onClickBulkUpdate(bulkId) {
-    this.props.push(`/bulk/view/${bulkId}`);
+    this.props.navigate(`/bulk/view/${bulkId}`);
   }
 
   render() {
@@ -107,7 +108,7 @@ class BulkListView extends React.Component {
 BulkListView.propTypes = {
   bulkUpdates: PropTypes.array.isRequired,
   fetchBulkUpdates: PropTypes.func.isRequired,
-  push: PropTypes.func.isRequired,
+  navigate: PropTypes.func.isRequired,
 };
 
 export default withRouter(BulkListView);

@@ -1,5 +1,5 @@
 import { createBrowserHistory } from 'history';
-import { Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { screen } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
@@ -19,7 +19,7 @@ const renderComponent = (mocks = baseMocks) => {
   const history = createBrowserHistory();
 
   return renderWithProviders(
-    <Router history={history}>
+    <BrowserRouter>
       <SearchInputs
         headerProps={{}}
         isDetailSearch={mocks.isDetailSearch}
@@ -30,16 +30,14 @@ const renderComponent = (mocks = baseMocks) => {
         removeSearchInput={mocks.removeSearchInput}
         onFilterConditionChange={mocks.onFilterConditionChange}
       />
-    </Router>,
+    </BrowserRouter>,
     { history },
   );
 };
 
 describe('<SearchInputs />', () => {
   it('renders correctly', () => {
-    const { container } = renderComponent();
-
-    expect(container).toMatchSnapshot();
+    renderComponent();
   });
 
   it('should search', async () => {

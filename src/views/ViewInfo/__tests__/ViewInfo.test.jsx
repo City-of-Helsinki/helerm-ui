@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBrowserHistory } from 'history';
-import { Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { waitFor } from '@testing-library/react';
 
 import ViewInfo from '../ViewInfo';
@@ -10,9 +10,9 @@ const renderComponent = () => {
   const history = createBrowserHistory();
 
   return renderWithProviders(
-    <Router history={history}>
+    <BrowserRouter>
       <ViewInfo />
-    </Router>,
+    </BrowserRouter>,
     { history },
   );
 };
