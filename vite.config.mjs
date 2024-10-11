@@ -1,10 +1,8 @@
 /* eslint-disable import/no-unresolved */
-
 import react from '@vitejs/plugin-react-swc';
 import eslint from 'vite-plugin-eslint';
 import macros from "vite-plugin-babel-macros"
 import { defineConfig, coverageConfigDefaults } from "vitest/config";
-import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 export default defineConfig({
   base: '/',
@@ -15,7 +13,6 @@ export default defineConfig({
         plugins: ['babel-plugin-macros']
       }
     }),
-    nodePolyfills(),
     eslint(),
     macros()
   ],
