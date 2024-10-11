@@ -1,5 +1,4 @@
 /* eslint-disable import/no-unresolved */
-
 import react from '@vitejs/plugin-react-swc';
 import eslint from 'vite-plugin-eslint';
 import macros from "vite-plugin-babel-macros"
