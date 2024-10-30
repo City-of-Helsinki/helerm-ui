@@ -246,7 +246,9 @@ class Navigation extends React.Component {
       .reduce((a, b) => a + b, 0);
   }
 
-  isDetailSearch = () => this.props.location.pathname === '/filter';
+  isDetailSearch() {
+    return this.props.location.pathname === '/filter';
+  }
 
   stopSearching() {
     this.setState({
