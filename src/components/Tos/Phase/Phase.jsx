@@ -156,7 +156,7 @@ class Phase extends React.Component {
   }
 
   getTargetName() {
-    const hasType = this.state?.type.length;
+    const hasType = this.state?.type?.length;
     const hasTypeSpecifier = this.state?.typeSpecifier?.length;
     const slash = hasType && hasTypeSpecifier ? ' / ' : '';
 
