@@ -55,10 +55,11 @@ const collectTarget = (connect) => ({
 class ReorderItem extends React.Component {
   getLabels(labels) {
     const elements = [];
+
     labels.forEach((label) => {
       elements.push(
-        <span key={label} className='reorder-label'>
-          {label}
+        <span key={`${label.value}-${label.index}`} className='reorder-label'>
+          {label.value}
         </span>,
       );
     });
