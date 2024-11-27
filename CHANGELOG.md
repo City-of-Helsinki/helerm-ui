@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.2.0...helerm-ui-v1.2.1) (2024-11-27)
+
+
+### Bug Fixes
+
+* Add null check to getTargetName hasType ([ac1949d](https://github.com/City-of-Helsinki/helerm-ui/commit/ac1949dc74ef029ffe1adfd834e267d9615ab462))
+
 ## [1.2.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.1.0...helerm-ui-v1.2.0) (2024-10-30)
 
 
