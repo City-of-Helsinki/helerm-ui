@@ -7,8 +7,6 @@ import PropTypes from 'prop-types';
 import './ReorderView.scss';
 import capitalize from 'lodash/capitalize';
 import update from 'immutability-helper';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { DndProvider } from 'react-dnd';
 
 import ReorderItem from './ReorderItem';
 import { getBaseValues } from '../../../utils/helpers';
@@ -19,39 +17,41 @@ class ReorderView extends React.Component {
     this.moveItem = this.moveItem.bind(this);
     this.state = {
       target: this.props.target,
-      keys: this.props.keys,
+      items: this.props.items,
     };
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.keys) {
-      this.setState({ keys: nextProps.keys });
+    if (nextProps.items) {
+      this.setState({ items: nextProps.items });
     }
   }
 
   getValues(attributes, target) {
     const values = [];
     const baseValues = getBaseValues(this.props.attributeTypes, target);
-    baseValues.forEach((value) => {
+    baseValues.forEach((value, index) => {
       if ((value === 'TypeSpecifier' || value === `${capitalize(target)}Type`) && attributes[value] !== undefined) {
-        values.push(attributes[value]);
+        values.push({ value: attributes[value], index });
       }
     });
     return values;
   }
 
-  changeOrder(keys) {
-    this.props.changeOrder(keys, this.props.target, this.props.parent);
+  changeOrder(items) {
+    const itemsMap = items.map((item) => item.id);
+
+    this.props.changeOrder(itemsMap, this.props.target, this.props.parent);
     this.props.toggleReorderView();
   }
 
   moveItem(dragIndex, hoverIndex) {
-    const { keys } = this.state;
-    const dragItem = keys[dragIndex];
+    const { items } = this.state;
+    const dragItem = items[dragIndex];
 
     this.setState((prev) =>
       update(prev, {
-        keys: {
+        items: {
           $splice: [
             [dragIndex, 1],
             [hoverIndex, 0, dragItem],
@@ -62,8 +62,9 @@ class ReorderView extends React.Component {
   }
 
   render() {
-    const { keys } = this.state;
+    const { items } = this.state;
     const { target, values, toggleReorderView, parentName } = this.props;
+
     return (
       <div className='row'>
         <h3 className='col-xs-12'>Järjestä</h3>
@@ -79,23 +80,20 @@ class ReorderView extends React.Component {
           </span>
         )}
         <div className='col-xs-12 reorder-list'>
-          <DndProvider backend={HTML5Backend}>
-            {keys.map((key, index) => (
-              <ReorderItem
-                key={values[key].index}
-                index={index.toString()}
-                id={values[key].index}
-                labels={this.getValues(values[key].attributes, target)}
-                moveItem={this.moveItem}
-                target={target}
-              />
-            ))}
-          </DndProvider>
+          {items.map((item, index) => (
+            <ReorderItem
+              key={item.key}
+              index={index.toString()}
+              labels={this.getValues(values[item.id].attributes, target)}
+              moveItem={this.moveItem}
+              target={target}
+            />
+          ))}
         </div>
         <div className='col-xs-12 button-row'>
           <button
             type='button'
-            onClick={() => this.changeOrder(this.state.keys)}
+            onClick={() => this.changeOrder(this.state.items)}
             className='btn btn-primary pull-right'
           >
             Tallenna
@@ -112,7 +110,7 @@ class ReorderView extends React.Component {
 ReorderView.propTypes = {
   attributeTypes: PropTypes.object,
   changeOrder: PropTypes.func.isRequired,
-  keys: PropTypes.array.isRequired,
+  items: PropTypes.array.isRequired,
   parent: PropTypes.string,
   parentName: PropTypes.string,
   target: PropTypes.string.isRequired,

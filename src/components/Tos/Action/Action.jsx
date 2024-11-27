@@ -12,6 +12,7 @@ import classnames from 'classnames';
 import update from 'immutability-helper';
 import Sticky from 'react-sticky-el';
 import './Action.scss';
+import { uniqueId } from 'lodash';
 
 import Record from '../Record/Record';
 import Attributes from '../Attribute/Attributes';
@@ -419,6 +420,10 @@ class Action extends Component {
     // TODO: Handle errors where we don't have an valid action (i.e 400 error from API)
     const { action } = this.props;
     const recordElements = action?.records ? this.generateRecords(action?.records) : [];
+    const reorderRecords = this.props.action.records.map((recordId) => ({
+      id: recordId,
+      key: uniqueId(recordId),
+    }));
 
     return (
       <div
@@ -551,7 +556,7 @@ class Action extends Component {
               <ReorderView
                 target='record'
                 toggleReorderView={() => this.toggleReorderView()}
-                keys={this.props.action.records}
+                items={reorderRecords}
                 values={this.props.records}
                 changeOrder={this.props.changeOrder}
                 parent={this.props.action.id}

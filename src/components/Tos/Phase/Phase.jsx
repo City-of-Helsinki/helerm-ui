@@ -11,8 +11,9 @@ import classnames from 'classnames';
 import forEach from 'lodash/forEach';
 import update from 'immutability-helper';
 import { RenderPropSticky } from 'react-sticky-el';
-
 import './Phase.scss';
+import { uniqueId } from 'lodash';
+
 import Action from '../Action/Action';
 import Attributes from '../Attribute/Attributes';
 import AddElementInput from '../AddElementInput/AddElementInput';
@@ -549,6 +550,11 @@ class Phase extends React.Component {
     const { phase, phaseIndex } = this.props;
     const actionElements = this.generateActions(phase.actions);
 
+    const reorderActions = this.props.phase.actions.map((actionId) => ({
+      id: actionId,
+      key: uniqueId(actionId),
+    }));
+
     return (
       <div className='phase'>
         <div className='box'>
@@ -608,7 +614,11 @@ class Phase extends React.Component {
                   type='action'
                   submit={this.addAction}
                   typeOptions={this.generateTypeOptions(this.props.actionTypes)}
-                  defaultAttributes={generateDefaultAttributes(this.props.attributeTypes, 'action', this.state.showMore)}
+                  defaultAttributes={generateDefaultAttributes(
+                    this.props.attributeTypes,
+                    'action',
+                    this.state.showMore,
+                  )}
                   newDefaultAttributes={this.state.actionDefaultAttributes}
                   newTypeSpecifier={this.state.actionTypeSpecifier}
                   newType={this.state.actionType}
@@ -643,7 +653,7 @@ class Phase extends React.Component {
                 <ReorderView
                   target='action'
                   toggleReorderView={() => this.toggleReorderView()}
-                  keys={this.props.phase.actions}
+                  items={reorderActions}
                   values={this.props.actions}
                   changeOrder={this.props.changeOrder}
                   parent={phaseIndex}
