@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.2.1...helerm-ui-v1.2.2) (2024-11-28)
+
+
+### Bug Fixes
+
+* Reorder items bug fix TIED-170 ([6f8d124](https://github.com/City-of-Helsinki/helerm-ui/commit/6f8d1245eac8d8382ca988953d78782a867f1434))
+
 ## [1.2.1](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.2.0...helerm-ui-v1.2.1) (2024-11-27)
 
 
