@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.3](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.2.2...helerm-ui-v1.2.3) (2025-02-18)
+
+
+### Dependencies
+
+* Bump vite from 5.4.8 to 5.4.12 ([3fc06fd](https://github.com/City-of-Helsinki/helerm-ui/commit/3fc06fd2781cfb7f1f43172d2102b0b82c3c79dd))
+* Bump vitest and coverage-istanbul to 2.1.9 ([277d6b9](https://github.com/City-of-Helsinki/helerm-ui/commit/277d6b90f1486cce24003bdcf5853f1b280c571f))
+
 ## [1.2.2](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.2.1...helerm-ui-v1.2.2) (2024-11-28)
 
 
