@@ -1,8 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-/* eslint-disable no-underscore-dangle */
-/** @jsxRuntime classic */
-import 'react-app-polyfill/ie11';
-import 'react-app-polyfill/stable';
 import 'fast-text-encoding';
 import React from 'react';
 import ReactDOM from 'react-dom';
