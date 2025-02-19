@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.4](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.2.3...helerm-ui-v1.2.4) (2025-02-19)
+
+
+### Dependencies
+
+* Bump eslint-plugin-react from 7.37.0 to 7.37.2 ([cd6d3a5](https://github.com/City-of-Helsinki/helerm-ui/commit/cd6d3a5a00290163117ea55b97fbf5701e174fbc))
+* Bump react-app-polyfill from 2.0.0 to 3.0.0 ([eb16398](https://github.com/City-of-Helsinki/helerm-ui/commit/eb16398e01bce86e27430a0c451304f703dc6f56))
+* Remove react-app-polyfill ([1368c00](https://github.com/City-of-Helsinki/helerm-ui/commit/1368c008a73a07df79e1ab24eb83f2f4020d591b))
+
 ## [1.2.3](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.2.2...helerm-ui-v1.2.3) (2025-02-18)
 
 
