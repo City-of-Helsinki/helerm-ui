@@ -8,12 +8,12 @@ import * as useAuth from '../../../hooks/useAuth';
 import LoginContainer from '../LoginContainer';
 import renderWithProviders from '../../../utils/renderWithProviders';
 
-const loginMock = vitest.fn();
-const logoutMock = vitest.fn();
+const loginMock = vi.fn();
+const logoutMock = vi.fn();
 
 const mockName = 'Test Tester';
 
-vitest.spyOn(useAuth, 'default').mockImplementation(() => ({
+vi.spyOn(useAuth, 'default').mockImplementation(() => ({
   user: { profile: { sub: 'user123', name: mockName } },
   authenticated: true,
   login: loginMock,
@@ -44,7 +44,7 @@ describe('<Login />', () => {
   });
 
   it('should display given name with family name', async () => {
-    vitest.spyOn(useAuth, 'default').mockImplementationOnce(() => ({
+    vi.spyOn(useAuth, 'default').mockImplementationOnce(() => ({
       user: { profile: { given_name: 'Test', family_name: 'Tester', name: undefined } },
       authenticated: true,
     }));
@@ -56,7 +56,7 @@ describe('<Login />', () => {
   });
 
   it('should display just given name', async () => {
-    vitest.spyOn(useAuth, 'default').mockImplementationOnce(() => ({
+    vi.spyOn(useAuth, 'default').mockImplementationOnce(() => ({
       user: { profile: { given_name: 'Test', family_name: undefined, name: undefined } },
       authenticated: true,
     }));
@@ -68,7 +68,7 @@ describe('<Login />', () => {
   });
 
   it('should not display user if not authenticated', async () => {
-    vitest.spyOn(useAuth, 'default').mockImplementationOnce(() => ({
+    vi.spyOn(useAuth, 'default').mockImplementationOnce(() => ({
       user: { profile: { name: mockName } },
       authenticated: false,
     }));
@@ -81,7 +81,7 @@ describe('<Login />', () => {
   });
 
   it('should login', async () => {
-    vitest.spyOn(useAuth, 'default').mockImplementationOnce(() => ({
+    vi.spyOn(useAuth, 'default').mockImplementationOnce(() => ({
       user: { profile: { sub: 'user123', name: mockName } },
       login: loginMock,
       authenticated: false,
@@ -98,8 +98,8 @@ describe('<Login />', () => {
     expect(loginMock).toHaveBeenCalled();
   });
 
-  it('should login', async () => {
-    vitest.spyOn(useAuth, 'default').mockImplementationOnce(() => ({
+  it('should logout', async () => {
+    vi.spyOn(useAuth, 'default').mockImplementationOnce(() => ({
       user: { profile: { sub: 'user123', name: mockName } },
       logout: logoutMock,
       authenticated: true,

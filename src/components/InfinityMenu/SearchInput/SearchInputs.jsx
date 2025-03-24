@@ -1,4 +1,3 @@
-/* eslint-disable react/forbid-prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -23,7 +22,6 @@ const SearchInputs = ({
 }) =>
   searchInputs.map((input, index) => (
     <div
-      // eslint-disable-next-line react/no-array-index-key
       key={index}
       className={classNames({
         'col-xs-12 filters filters-detail-search-input': isDetailSearch,

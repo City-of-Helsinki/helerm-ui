@@ -1,7 +1,4 @@
-/* eslint-disable react/forbid-prop-types */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable react/no-access-state-in-setstate */
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
@@ -18,6 +15,7 @@ const FacetedSearchSuggestions = ({ onSelect, suggestions, term }) => {
     if (term && !show) {
       setShow(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [term, show]);
 
   return (

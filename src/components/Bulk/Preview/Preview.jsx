@@ -1,7 +1,4 @@
-/* eslint-disable sonarjs/cognitive-complexity */
-/* eslint-disable react/forbid-prop-types */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
@@ -72,6 +69,7 @@ class Preview extends React.Component {
               keys(changed.phases[phase].actions[action].records).forEach((record) => {
                 const currentRecord = find(currentAction.records, { id: record });
                 if (!isEmpty(changed.phases[phase].actions[action].records[record].attributes)) {
+                  // eslint-disable-next-line sonarjs/no-nested-functions
                   keys(changed.phases[phase].actions[action].records[record].attributes).forEach((attribute) => {
                     const currentValue = currentRecord?.attributes?.[attribute] || ' ';
                     changes.push(
@@ -136,6 +134,7 @@ class Preview extends React.Component {
                   <p className='preview-error-record' key={`error_record_${recordId}`}>
                     <strong>{record.name || ''}: </strong>
                     {!!recordError.attributes &&
+                      // eslint-disable-next-line sonarjs/no-nested-functions
                       recordError.attributes.map((attribute) => getAttributeName(attribute)).join(', ')}
                   </p>,
                 );

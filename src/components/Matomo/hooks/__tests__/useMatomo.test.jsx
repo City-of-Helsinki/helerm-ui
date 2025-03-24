@@ -10,7 +10,7 @@ const MOCK_URL = 'https://www.hel.fi';
 
 describe('useMatomo', () => {
   it('should return trackPageView function', () => {
-    const trackPageView = vitest.fn();
+    const trackPageView = vi.fn();
     const instance = { trackPageView };
 
     const wrapper = ({ children }) => <MatomoContext.Provider value={instance}>{children}</MatomoContext.Provider>;
@@ -31,13 +31,12 @@ describe('useMatomo', () => {
   };
 
   it('should trackPageView', () => {
-    const trackPageViewMock = vitest.fn();
+    const trackPageViewMock = vi.fn();
 
-    vitest.spyOn(MatomoTracker, 'default').mockImplementation(() => ({
+    vi.spyOn(MatomoTracker, 'default').mockImplementation(() => ({
       trackPageView: trackPageViewMock,
     }));
 
-    // eslint-disable-next-line new-cap
     const instance = new MatomoTracker.default({
       urlBase: MOCK_URL,
       siteId: 'test123',

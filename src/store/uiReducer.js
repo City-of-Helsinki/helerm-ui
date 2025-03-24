@@ -1,7 +1,4 @@
-/* eslint-disable sonarjs/cognitive-complexity */
-/* eslint-disable no-unused-expressions */
-/* eslint-disable no-param-reassign */
-/* eslint-disable import/no-named-as-default-member */
+/* eslint-disable sonarjs/todo-tag */
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
 import find from 'lodash/find';
@@ -75,6 +72,7 @@ export function receiveAttributeTypes(attributes, validationRules) {
         .map((oneOf) => oneOf.properties)
         .map((properties) => Object.keys(properties).map((propertyKey) => {
           const property = properties[propertyKey];
+          // eslint-disable-next-line sonarjs/no-nested-functions
           const values = Object.keys(property).map((valueKey) => property[valueKey]).flatMap((value) => value)
 
           return { key: propertyKey, values }

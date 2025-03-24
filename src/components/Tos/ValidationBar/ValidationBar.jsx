@@ -1,4 +1,3 @@
-/* eslint-disable react/forbid-prop-types */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
@@ -101,7 +100,6 @@ const ValidationBar = (props) => {
     return null;
   };
 
-  // eslint-disable-next-line sonarjs/cognitive-complexity
   const generateInvalidAttributes = () => {
     const showInvalidAttributes = getFilterByStatus(VALIDATION_FILTER_ERROR);
     const showWarnAttributes = getFilterByStatus(VALIDATION_FILTER_WARN);
@@ -124,7 +122,9 @@ const ValidationBar = (props) => {
                 showInvalidAttributes ? validateAction : null,
                 showWarnAttributes ? validateActionWarnings : null,
                 action?.records
+                  // eslint-disable-next-line sonarjs/no-nested-functions
                   .map((recordId) => selectedTOS.records?.[recordId])
+                  // eslint-disable-next-line sonarjs/no-nested-functions
                   .map((record) =>
                     getInvalidSection(
                       'record',

@@ -1,7 +1,5 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-/* eslint-disable react/forbid-prop-types */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Popup.scss';

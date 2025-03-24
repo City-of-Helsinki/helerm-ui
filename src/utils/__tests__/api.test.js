@@ -26,12 +26,12 @@ describe('api.js', () => {
     const mockUrl = 'https://api.test.com/v1/users/?page=1&limit=10';
 
     beforeEach(() => {
-      vitest.spyOn(mockFetch, 'default').mockResolvedValue({
+      vi.spyOn(mockFetch, 'default').mockResolvedValue({
         status: 200,
-        json: vitest.fn().mockResolvedValue({}),
+        json: vi.fn().mockResolvedValue({}),
       });
 
-      vitest.spyOn(mockLogin, 'getApiTokenFromStorage').mockReturnValue(mockToken);
+      vi.spyOn(mockLogin, 'getApiTokenFromStorage').mockReturnValue(mockToken);
     });
 
     afterEach(() => {
@@ -51,7 +51,7 @@ describe('api.js', () => {
     });
 
     it('should throw Unauthorized error if response status is 401', async () => {
-      vitest.spyOn(mockFetch, 'default').mockResolvedValueOnce({
+      vi.spyOn(mockFetch, 'default').mockResolvedValueOnce({
         status: 401,
       });
 
@@ -61,9 +61,9 @@ describe('api.js', () => {
     it('should return the response if status 200', async () => {
       const mockResponse = { data: 'mockData' };
 
-      vitest.spyOn(mockFetch, 'default').mockResolvedValueOnce({
+      vi.spyOn(mockFetch, 'default').mockResolvedValueOnce({
         status: 200,
-        json: vitest.fn().mockResolvedValue(mockResponse),
+        json: vi.fn().mockResolvedValue(mockResponse),
       });
 
       const response = await callApi(mockEndpoint, mockParams, mockOptions);

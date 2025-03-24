@@ -1,6 +1,6 @@
+/* eslint-disable sonarjs/todo-tag */
 /* eslint-disable consistent-return */
 /* eslint-disable no-alert */
-/* eslint-disable import/no-named-as-default-member */
 /* eslint-disable no-param-reassign */
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';

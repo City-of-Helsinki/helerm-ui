@@ -1,7 +1,4 @@
 /* eslint-disable operator-assignment */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable react/prop-types */
-/* eslint-disable react/forbid-prop-types */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';

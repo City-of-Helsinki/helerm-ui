@@ -1,6 +1,4 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable react/forbid-prop-types */
 import React, { createElement } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';

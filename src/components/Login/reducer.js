@@ -1,4 +1,3 @@
-/* eslint-disable import/no-named-as-default-member */
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
 import { get } from 'lodash';
@@ -75,6 +74,7 @@ export function retrieveUserFromSession(id) {
       dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.AUTHORIZED));
 
       return dispatch(receiveUserData(userWithPermissions));
+      // eslint-disable-next-line sonarjs/no-ignored-exceptions, no-unused-vars
     } catch (error) {
       dispatch(createAction(LOGIN_STATUS)(USER_LOGIN_STATUS.UNAUTHORIZED));
 

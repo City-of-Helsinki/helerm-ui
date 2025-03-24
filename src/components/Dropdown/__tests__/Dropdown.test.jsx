@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';

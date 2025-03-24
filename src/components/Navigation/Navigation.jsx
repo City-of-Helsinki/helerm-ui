@@ -1,9 +1,4 @@
-/* eslint-disable react/forbid-prop-types */
-/* eslint-disable camelcase */
-/* eslint-disable react/prop-types */
 /* eslint-disable react/no-access-state-in-setstate */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-return-assign */
 import React from 'react';
 import PropTypes from 'prop-types';
 import get from 'lodash/get';
@@ -146,6 +141,7 @@ class Navigation extends React.Component {
 
           if (currentFilter.length) {
             return paths.some((path) =>
+              // eslint-disable-next-line sonarjs/no-nested-functions
               getItemFilterPaths(path, item).some((filterPath) =>
                 includes(currentFilter, get(item, filterPath.join('.'))),
               ),
