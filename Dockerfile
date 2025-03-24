@@ -29,7 +29,7 @@ USER default
 RUN yarn cache clean --force
 RUN yarn
 
-COPY index.html vite.config.mjs eslint.config.mjs .eslintignore .prettierrc .env* /app/
+COPY index.html vite.config.mjs eslint.config.mjs .prettierrc .env* /app/
 COPY ./src /app/src
 COPY ./public /app/public
 
