@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 import React from 'react';
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';

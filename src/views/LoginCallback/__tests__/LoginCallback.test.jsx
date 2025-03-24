@@ -4,7 +4,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { waitFor } from '@testing-library/react';
-import { vi } from 'vitest';
 
 import renderWithProviders from '../../../utils/renderWithProviders';
 import LoginCallback from '../LoginCallback';

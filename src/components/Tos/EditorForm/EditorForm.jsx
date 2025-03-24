@@ -1,7 +1,4 @@
-/* eslint-disable react/forbid-prop-types */
-/* eslint-disable no-restricted-syntax */
 /* eslint-disable consistent-return */
-/* eslint-disable class-methods-use-this */
 import React from 'react';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
@@ -319,7 +316,6 @@ class EditorForm extends React.Component {
     this.props.elementConfig.editWithForm(this.filterAttributes(newAttributes), targetId, stopEditing);
   }
 
-  // eslint-disable-next-line sonarjs/cognitive-complexity
   resolveLabel() {
     const { type, action } = this.props.editorConfig;
 

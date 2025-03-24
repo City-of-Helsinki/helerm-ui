@@ -1,8 +1,3 @@
-/* eslint-disable sonarjs/no-duplicate-string */
-/* eslint-disable sonarjs/cognitive-complexity */
-/* eslint-disable react/forbid-prop-types */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable camelcase */
 /* eslint-disable no-param-reassign */
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -254,6 +249,7 @@ class BulkView extends React.Component {
                     return false;
                   }
                   if (action && !isEmpty(actionChange.records)) {
+                    // eslint-disable-next-line sonarjs/no-nested-functions
                     return every(keys(actionChange.records), (recordId) => {
                       const record = action.records ? find(action.records, { id: recordId }) : null;
 
@@ -395,6 +391,7 @@ class BulkView extends React.Component {
                   );
                 }
                 if (currentRecord && !isEmpty(changes.phases[phase].actions[action].records[record].attributes)) {
+                  // eslint-disable-next-line sonarjs/no-nested-functions
                   keys(changes.phases[phase].actions[action].records[record].attributes).forEach((attribute) => {
                     const currentValue = currentRecord?.attributes?.[attribute] || ' ';
                     changesEl.push(

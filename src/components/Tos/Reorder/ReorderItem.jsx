@@ -1,6 +1,4 @@
-/* eslint-disable react/forbid-prop-types */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable no-param-reassign */
+/* eslint-disable sonarjs/todo-tag */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { DragSource, DropTarget } from 'react-dnd';

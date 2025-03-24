@@ -1,4 +1,3 @@
-/* eslint-disable import/no-import-module-exports */
 import thunk from 'redux-thunk';
 import { routerMiddleware } from 'connected-react-router';
 import { configureStore } from '@reduxjs/toolkit';

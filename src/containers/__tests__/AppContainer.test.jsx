@@ -11,14 +11,14 @@ import mockUser from '../../utils/mocks/user.json';
 import api from '../../utils/api';
 
 const mockToken = 'mockToken';
-const mockApiGet = vitest.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => mockUser }));
+const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => mockUser }));
 
-vitest.spyOn(useAuth, 'default').mockImplementation(() => ({
+vi.spyOn(useAuth, 'default').mockImplementation(() => ({
   user: { profile: { sub: 'user123', name: 'Test Tester' } },
   authenticated: true,
 }));
-vitest.spyOn(mockLogin, 'getApiTokenFromStorage').mockImplementation(() => mockToken);
-vitest.spyOn(api, 'get').mockImplementation(mockApiGet);
+vi.spyOn(mockLogin, 'getApiTokenFromStorage').mockImplementation(() => mockToken);
+vi.spyOn(api, 'get').mockImplementation(mockApiGet);
 
 const renderComponent = (history) => {
   const mockState = {};
@@ -30,9 +30,9 @@ const renderComponent = (history) => {
       history={history}
       routes={mockRoutes}
       store={mockStore}
-      dispatchFetchAttributeTypes={vitest.fn()}
-      dispatchFetchTemplates={vitest.fn()}
-      dispatchRetrieveUserFromSession={vitest.fn()}
+      dispatchFetchAttributeTypes={vi.fn()}
+      dispatchFetchTemplates={vi.fn()}
+      dispatchRetrieveUserFromSession={vi.fn()}
     />,
     {
       history,
@@ -57,9 +57,9 @@ describe('<AppContainer />', () => {
   });
 
   it('should not fetch user if not authenticated', () => {
-    const storageSpy = vitest.spyOn(mockLogin, 'getApiTokenFromStorage').mockImplementationOnce(() => undefined);
+    const storageSpy = vi.spyOn(mockLogin, 'getApiTokenFromStorage').mockImplementationOnce(() => undefined);
 
-    vitest.spyOn(useAuth, 'default').mockImplementationOnce(() => ({
+    vi.spyOn(useAuth, 'default').mockImplementationOnce(() => ({
       user: undefined,
       authenticated: false,
     }));

@@ -1,8 +1,4 @@
-/* eslint-disable react/no-unused-state */
-/* eslint-disable react/forbid-prop-types */
-/* eslint-disable camelcase */
 /* eslint-disable no-param-reassign */
-/* eslint-disable class-methods-use-this */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -127,7 +123,6 @@ class BulkCreateView extends React.Component {
     const items = {};
     let isValid = true;
 
-    // eslint-disable-next-line sonarjs/cognitive-complexity
     filter(searchResults, (result) => result.selected).forEach((result) => {
       const changed = {};
       let isChanged = false;
@@ -166,6 +161,7 @@ class BulkCreateView extends React.Component {
                 isChanged = true;
               } else if (!isEmpty(result.hit.phases[phase].actions[action].records)) {
                 changed.phases[phase].actions[action].records = {};
+                // eslint-disable-next-line sonarjs/no-nested-functions
                 keys(result.hit.phases[phase].actions[action].records).forEach((record) => {
                   changed.phases[phase].actions[action].records[record] = {
                     attributes: {
@@ -201,6 +197,7 @@ class BulkCreateView extends React.Component {
                   isChanged = true;
                 } else if (!isEmpty(action.records)) {
                   changed.phases[phase.id].actions[action.id] = { records: {} };
+                  // eslint-disable-next-line sonarjs/no-nested-functions
                   action.records.forEach((record) => {
                     changed.phases[phase.id].actions[action.id].records[record.id] = {
                       attributes: {
@@ -413,7 +410,6 @@ class BulkCreateView extends React.Component {
       },
     );
 
-    // eslint-disable-next-line sonarjs/cognitive-complexity
     const searchResults = itemList.reduce((acc, item) => {
       const paths = [];
       let hit = {
@@ -487,6 +483,7 @@ class BulkCreateView extends React.Component {
                 const recordPaths = [];
                 let recordHit = {};
                 let recordCounter = 0;
+                // eslint-disable-next-line sonarjs/no-nested-functions
                 action.records.forEach((record) => {
                   const comparedRecord = this.compareNew(record, combinedSearchTerms.record);
                   if (!isEmpty(comparedRecord) && comparedRecord.paths.length) {
@@ -503,6 +500,7 @@ class BulkCreateView extends React.Component {
                   (!isEmpty(recordHit) && combinedSearchTerms.record.all && action.records.length === recordCounter) ||
                   (!combinedSearchTerms.record.all && recordCounter)
                 ) {
+                  // eslint-disable-next-line sonarjs/no-nested-functions
                   recordPaths.forEach((path) => {
                     actionPaths.push(`${phaseName} > ${actionName} > ${path}`);
                   });
@@ -515,6 +513,7 @@ class BulkCreateView extends React.Component {
               if (recordSuccess) {
                 if (!isEmpty(comparedAction) && comparedAction.paths.length) {
                   actionPaths.unshift(...comparedAction.paths);
+                  // eslint-disable-next-line sonarjs/no-nested-functions
                   comparedAction.hits.forEach((comparedHit) => {
                     actionHit = merge(actionHit, {
                       [comparedHit.id]: { attributes: comparedHit.attributes },
@@ -652,6 +651,7 @@ class BulkCreateView extends React.Component {
           addAttributeValues(acc, phase.attributes, 'phase');
           phase.actions.forEach((action) => {
             addAttributeValues(acc, action.attributes, 'action');
+            // eslint-disable-next-line sonarjs/no-nested-functions
             action.records.forEach((record) => {
               addAttributeValues(acc, record.attributes, 'record');
             });

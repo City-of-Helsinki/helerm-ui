@@ -1,3 +1,5 @@
+/* eslint-disable sonarjs/no-clear-text-protocols */
+/* eslint-disable sonarjs/constructor-for-side-effects */
 /* eslint-disable no-underscore-dangle */
 import MatomoTracker from '../MatomoTracker';
 import { TRACK_TYPES } from '../constants';
@@ -11,7 +13,6 @@ describe('MatomoTracker', () => {
   });
 
   it('should initialise window._paq', () => {
-    // eslint-disable-next-line no-new
     new MatomoTracker({
       urlBase: MOCK_URL_BASE,
       siteId: 'test123',

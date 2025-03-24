@@ -1,5 +1,3 @@
-/* eslint-disable import/no-named-as-default-member */
-/* eslint-disable no-param-reassign */
 import update from 'immutability-helper';
 import { createAction, handleActions } from 'redux-actions';
 import {
@@ -423,7 +421,6 @@ const requestClassificationsAction = (state) => update(state, {
   isFetching: { $set: true }
 });
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
 const receiveClassificationsAction = (state, { payload }) => {
   const { items, page } = payload;
   const isAdd = page > 1;
@@ -497,6 +494,7 @@ const receiveClassificationsAction = (state, { payload }) => {
                 type: TYPE_ACTION
               });
               if (action.records) {
+                // eslint-disable-next-line sonarjs/no-nested-functions
                 action.records.forEach((record) => {
                   acc.records.push({
                     attributes: record.attributes,
@@ -594,7 +592,6 @@ const searchSuggestionsAction = (state, { payload }) => update(state, {
   suggestions: { $set: payload }
 });
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
 const searchItemsAction = (state, { payload }) => {
   const { classifications, functions, phases, actions, records } = state;
   const { filteredAttributes } = payload;
@@ -661,6 +658,7 @@ const searchItemsAction = (state, { payload }) => {
             if (isHit) {
               const value = terms.reduce((valAcc, term) => valAcc.replace(
                 new RegExp(term, 'gi'),
+                // eslint-disable-next-line sonarjs/no-nested-functions
                 (match) => `<mark>${match}</mark>`
               ), attrValue);
               acc.push({ key, value });

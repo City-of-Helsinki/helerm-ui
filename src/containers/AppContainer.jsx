@@ -1,4 +1,3 @@
-/* eslint-disable react/forbid-prop-types */
 import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Provider, connect } from 'react-redux';

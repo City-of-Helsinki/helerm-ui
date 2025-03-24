@@ -1,5 +1,4 @@
-/* eslint-disable camelcase */
-/* eslint-disable import/no-named-as-default-member */
+
 import update from 'immutability-helper';
 import { createAction } from 'redux-actions';
 

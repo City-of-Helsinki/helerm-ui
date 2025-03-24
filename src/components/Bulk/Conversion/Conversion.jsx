@@ -1,6 +1,3 @@
-/* eslint-disable react/forbid-prop-types */
-/* eslint-disable jsx-a11y/no-autofocus */
-/* eslint-disable class-methods-use-this */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { find, includes, isArray, isEmpty, keys, map, sortBy } from 'lodash';

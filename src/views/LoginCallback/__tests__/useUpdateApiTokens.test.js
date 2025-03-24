@@ -3,7 +3,7 @@ import * as mockLogin from 'hds-react';
 
 import useUpdateApiTokens from '../hooks/useUpdateApiTokens';
 
-vitest.spyOn(mockLogin, 'useApiTokensClientTracking').mockImplementation(() => [{ payload: {} }]);
+vi.spyOn(mockLogin, 'useApiTokensClientTracking').mockImplementation(() => [{ payload: {} }]);
 
 describe('useUpdateApiTokens', () => {
   it('should update api tokens', async () => {
@@ -11,7 +11,7 @@ describe('useUpdateApiTokens', () => {
 
     expect(result.current.apiTokensUpdated).toBe(false);
 
-    vitest.spyOn(mockLogin, 'useApiTokensClientTracking').mockImplementationOnce(() => [{ payload: { data: { key: "value" } } }]);
+    vi.spyOn(mockLogin, 'useApiTokensClientTracking').mockImplementationOnce(() => [{ payload: { data: { key: "value" } } }]);
 
     act(() => {
       result.current.updateApiTokens();

@@ -1,8 +1,5 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-/* eslint-disable react/forbid-prop-types */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable no-param-reassign */
 /* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
@@ -386,7 +383,6 @@ class InfinityMenu extends Component {
     return trees;
   }
 
-  // eslint-disable-next-line class-methods-use-this
   formatDetailFilter(field, value) {
     // returns xpath query e.g.
     // InformationSystem=*ahjo returns: contains(InformationSystem, "ahjo")
@@ -472,7 +468,6 @@ class InfinityMenu extends Component {
                       className={classnames({
                         active: index === this.props.path.length,
                       })}
-                      // eslint-disable-next-line react/no-array-index-key
                       key={index}
                     >
                       {item}

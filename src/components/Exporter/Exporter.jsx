@@ -1,4 +1,3 @@
-/* eslint-disable react/forbid-prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
@@ -144,6 +143,7 @@ const createWorkBook = async (attributeTypes, filename, items) => {
       rows.push(setRowData(phase, headers, 'käsittelyvaihe'));
       phase.actions.forEach((action) => {
         rows.push(setRowData(action, headers, 'toimenpide'));
+        // eslint-disable-next-line sonarjs/no-nested-functions
         action.records.forEach((record) => {
           rows.push(setRowData(record, headers, 'asiakirja'));
         });
@@ -266,6 +266,7 @@ const createSingleSheetWorkBook = async (attributeTypes, filename, items) => {
       phase.actions.forEach((action) => {
         const actionCols = getItemAttributes(actionAttributes, action);
 
+        // eslint-disable-next-line sonarjs/no-nested-functions
         action.records.forEach((record) => {
           const recordCols = getItemAttributes(recordAttributes, record);
           const data = [[...cols, ...phaseCols, ...actionCols, ...recordCols]];

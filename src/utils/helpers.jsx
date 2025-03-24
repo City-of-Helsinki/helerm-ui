@@ -1,19 +1,11 @@
-/* eslint-disable sonarjs/cognitive-complexity */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable no-return-assign */
+/* eslint-disable sonarjs/todo-tag */
 import React from 'react';
 import { normalize, schema } from 'normalizr';
 import { toastr } from 'react-redux-toastr';
 import moment from 'moment';
 import { filter, find, flatten, includes, isEmpty, map, orderBy } from 'lodash';
 
-import {
-  DRAFT,
-  SENT_FOR_REVIEW,
-  WAITING_FOR_APPROVAL,
-  APPROVED
-} from '../constants';
+import { DRAFT, SENT_FOR_REVIEW, WAITING_FOR_APPROVAL, APPROVED } from '../constants';
 
 export function convertToTree(itemList) {
   // ------------------------------------
@@ -25,7 +17,7 @@ export function convertToTree(itemList) {
     sort_id: item.code.substring(item.code.length - 2, item.code.length),
     path: [],
     parent_id: item.parent ? item.parent.id : null,
-    ...item
+    ...item,
   }));
 
   const dict = {};
@@ -96,13 +88,13 @@ export function normalizeTosFromApi(tos) {
   const record = new schema.Entity('records');
 
   tosSchema.define({
-    phases: [phase]
+    phases: [phase],
   });
   phase.define({
-    actions: [action]
+    actions: [action],
   });
   action.define({
-    records: [record]
+    records: [record],
   });
   return normalize(tos, tosSchema);
 }
@@ -118,8 +110,7 @@ export function trimAttributes(tosCopy) {
       Object.keys(tosCopy.phases[phase].attributes).forEach((attribute) => {
         if (
           Object.hasOwn(tosCopy.phases[phase].attributes, attribute) &&
-          (tosCopy.phases[phase].attributes[attribute] === '' ||
-            tosCopy.phases[phase].attributes[attribute] === null)
+          (tosCopy.phases[phase].attributes[attribute] === '' || tosCopy.phases[phase].attributes[attribute] === null)
         ) {
           delete tosCopy.phases[phase].attributes[attribute];
         }
@@ -173,14 +164,13 @@ export function normalizeTosForApi(tos) {
     return phase.actions.map((action, actionIndex) => {
       const actionId = typeof action === 'string' ? action : action.id;
       Object.assign(finalPhases[phaseIndex].actions, {
-        [actionIndex]: finalTos.actions[actionId]
+        [actionIndex]: finalTos.actions[actionId],
       });
       return finalTos.actions[actionId].records.map((record, recordsIndex) => {
         const recordId = typeof record === 'string' ? record : record.id;
-        return Object.assign(
-          finalPhases[phaseIndex].actions[actionIndex].records,
-          { [recordsIndex]: finalTos.records[recordId] }
-        );
+        return Object.assign(finalPhases[phaseIndex].actions[actionIndex].records, {
+          [recordsIndex]: finalTos.records[recordId],
+        });
       });
     });
   });
@@ -232,7 +222,7 @@ export function centeredPopUp(url, title, w, h) {
     resizable=no,
     copyhistory=no,
     width=${w}, height=${h}, top=${top}, left=${left}
-  `
+  `,
   );
 }
 
@@ -276,20 +266,19 @@ export function displayMessage(message, opts = { type: 'success' }) {
   return toastr[opts.type](title, body, opts);
 }
 
-export function confirmMessage(message, options = { onOk: () => { }, onCancel: () => { } }) {
+export function confirmMessage(message, options = { onOk: () => {}, onCancel: () => {} }) {
   toastr.removeByType('confirm');
-  toastr.confirm(
-    null,
-    {
-      ...options,
-      component: () => (
-        <div className="confirm-toastr-component">
-          <div><i className='fa-solid fa-triangle-exclamation' /></div>
-          <div>{message}</div>
+  toastr.confirm(null, {
+    ...options,
+    component: () => (
+      <div className='confirm-toastr-component'>
+        <div>
+          <i className='fa-solid fa-triangle-exclamation' />
         </div>
-      )
-    }
-  );
+        <div>{message}</div>
+      </div>
+    ),
+  });
 }
 
 /**
@@ -313,7 +302,7 @@ export function getBaseValues(attributeTypes) {
     { index: attributeTypes.PhaseType.index, type: 'PhaseType' },
     { index: attributeTypes.RecordType.index, type: 'RecordType' },
     { index: attributeTypes.ActionType.index, type: 'ActionType' },
-    { index: attributeTypes.TypeSpecifier.index, type: 'TypeSpecifier' }
+    { index: attributeTypes.TypeSpecifier.index, type: 'TypeSpecifier' },
   ];
   const orderedBaseValues = orderBy(baseValues, ['index']);
   return orderedBaseValues.map((baseValue) => baseValue.type);
@@ -337,23 +326,21 @@ export function getNewPath(absolutePath, relativePath) {
     return relativePath;
   }
 
-  return (
-    `/${relativeParts
-      .reduce((absoluteParts, part) => {
-        switch (part) {
-          case '..': {
-            return absoluteParts.slice(0, absoluteParts.length - 1);
-          }
-          case '.': {
-            return absoluteParts;
-          }
-          default: {
-            return [...absoluteParts, part];
-          }
+  return `/${relativeParts
+    .reduce((absoluteParts, part) => {
+      switch (part) {
+        case '..': {
+          return absoluteParts.slice(0, absoluteParts.length - 1);
         }
-      }, pathParts)
-      .join('/')}`
-  );
+        case '.': {
+          return absoluteParts;
+        }
+        default: {
+          return [...absoluteParts, part];
+        }
+      }
+    }, pathParts)
+    .join('/')}`;
 }
 
 /**
