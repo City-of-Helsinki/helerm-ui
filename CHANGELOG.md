@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.5](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.2.4...helerm-ui-v1.2.5) (2025-04-02)
+
+
+### Dependencies
+
+* Set cross-spawn 7.0.6 resolution TIED-164 ([4426240](https://github.com/City-of-Helsinki/helerm-ui/commit/44262408f8a86244ee307d2caa8be50e52935653))
+* Upgrade eslint to v9 TIED-164 ([aa80702](https://github.com/City-of-Helsinki/helerm-ui/commit/aa80702462b31b9601404b04088e042281cacc1a))
+* Upgrade vitest and coverage TIED-164 ([d87fce7](https://github.com/City-of-Helsinki/helerm-ui/commit/d87fce77347d410ccb316c89e2c338c9a6111c1c))
+
 ## [1.2.4](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.2.3...helerm-ui-v1.2.4) (2025-02-19)
 
 

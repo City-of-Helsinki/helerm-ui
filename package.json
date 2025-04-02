@@ -1,6 +1,6 @@
 {
   "name": "helerm-ui",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "UI for Helsinki Electronic Records Management Classification System",
   "main": "index.js",
   "repository": {
