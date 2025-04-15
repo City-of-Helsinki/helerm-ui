@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.3.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.2.5...helerm-ui-v1.3.0) (2025-04-15)
+
+
+### Features
+
+* Upgrade node to 22.14.0 TIED-172 ([bc02567](https://github.com/City-of-Helsinki/helerm-ui/commit/bc025675269435f93c6ef0e3998725c3f53f377e))
+
+
+### Dependencies
+
+* Bump @babel/helpers from 7.25.6 to 7.27.0 ([#571](https://github.com/City-of-Helsinki/helerm-ui/issues/571)) ([21d1774](https://github.com/City-of-Helsinki/helerm-ui/commit/21d1774625783e33d2db7ed364bbb54b430c9ef0))
+* Bump vite from 5.4.12 to 5.4.16 ([#570](https://github.com/City-of-Helsinki/helerm-ui/issues/570)) ([358f9a7](https://github.com/City-of-Helsinki/helerm-ui/commit/358f9a793b4b5356d8f5043e3917682f9ad1b70a))
+* Bump vite from 5.4.16 to 5.4.17 ([#573](https://github.com/City-of-Helsinki/helerm-ui/issues/573)) ([b3c9594](https://github.com/City-of-Helsinki/helerm-ui/commit/b3c9594549ee0fe3063ef2ba1d948949f3d7658f))
+
 ## [1.2.5](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.2.4...helerm-ui-v1.2.5) (2025-04-02)
 
 
