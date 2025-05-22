@@ -57,16 +57,16 @@ describe('<AppContainer />', () => {
   });
 
   it('should not fetch user if not authenticated', () => {
+    const history = createBrowserHistory();
+
+    renderComponent(history);
+
     const storageSpy = vi.spyOn(mockLogin, 'getApiTokenFromStorage').mockImplementationOnce(() => undefined);
 
     vi.spyOn(useAuth, 'default').mockImplementationOnce(() => ({
       user: undefined,
       authenticated: false,
     }));
-
-    const history = createBrowserHistory();
-
-    renderComponent(history);
 
     expect(storageSpy).not.toHaveBeenCalled();
   });

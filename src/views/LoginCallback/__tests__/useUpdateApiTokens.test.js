@@ -1,24 +1,32 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import * as mockLogin from 'hds-react';
 
 import useUpdateApiTokens from '../hooks/useUpdateApiTokens';
 
-vi.spyOn(mockLogin, 'useApiTokensClientTracking').mockImplementation(() => [{ payload: {} }]);
+const mockUseApiTokensClientTracking = vi.spyOn(mockLogin, 'useApiTokensClientTracking');
 
 describe('useUpdateApiTokens', () => {
+  beforeEach(() => {
+    mockUseApiTokensClientTracking.mockReset();
+  });
+
   it('should update api tokens', async () => {
-    const { result, waitForNextUpdate } = renderHook(() => useUpdateApiTokens());
+    mockUseApiTokensClientTracking.mockImplementation(() => [{ payload: {} }]);
+
+    const { result, rerender } = renderHook(() => useUpdateApiTokens());
 
     expect(result.current.apiTokensUpdated).toBe(false);
 
-    vi.spyOn(mockLogin, 'useApiTokensClientTracking').mockImplementationOnce(() => [{ payload: { data: { key: "value" } } }]);
+    mockUseApiTokensClientTracking.mockImplementation(() => [{ payload: { data: { key: "value" } } }]);
+
+    rerender();
 
     act(() => {
       result.current.updateApiTokens();
     });
 
-    await waitForNextUpdate();
-
-    expect(result.current.apiTokensUpdated).toBe(true);
+    await waitFor(() => {
+      expect(result.current.apiTokensUpdated).toBe(true);
+    });
   });
 });
