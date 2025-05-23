@@ -1,5 +1,4 @@
-/* eslint-disable react/no-access-state-in-setstate */
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
@@ -15,149 +14,159 @@ import './Navigation.scss';
 
 const SEARCH_TIMEOUT = 500;
 
-class Navigation extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      filters: navigationStateFilters,
-      tree: props.items,
-      searchInputs: [''],
-      searchTimestamp: 0,
-      isSearchChanged: false,
-    };
+const Navigation = ({
+  attributeTypes,
+  fetchNavigation,
+  isFetching,
+  isUser,
+  is_open,
+  items,
+  itemsTimestamp,
+  onLeafMouseClick: propOnLeafMouseClick,
+  navigate,
+  setNavigationVisibility,
+  tosPath,
+  location,
+}) => {
+  const [filters, setFilters] = useState(navigationStateFilters);
+  const [tree, setTree] = useState(items);
+  const [searchInputs, setSearchInputs] = useState(['']);
+  const [searchTimestamp, setSearchTimestamp] = useState(0);
+  const [isSearchChanged, setIsSearchChanged] = useState(false);
 
-    this.handleFilterChange = this.handleFilterChange.bind(this);
-    this.onNodeMouseClick = this.onNodeMouseClick.bind(this);
-    this.onLeafMouseClick = this.onLeafMouseClick.bind(this);
-    this.onSearchTimeout = this.onSearchTimeout.bind(this);
-    this.getFilteredTree = this.getFilteredTree.bind(this);
-    this.setSearchInput = this.setSearchInput.bind(this);
-    this.receiveItemsAndResetNavigation = this.receiveItemsAndResetNavigation.bind(this);
-    this.addSearchInput = this.addSearchInput.bind(this);
-    this.removeSearchInput = this.removeSearchInput.bind(this);
-    this.toggleNavigationVisibility = this.toggleNavigationVisibility.bind(this);
-    this.hasFilters = this.hasFilters.bind(this);
-    this.isDetailSearch = this.isDetailSearch.bind(this);
-  }
+  const isDetailSearchFn = useRef(() => location.pathname === '/filter').current;
 
-  componentDidMount() {
-    this.props.fetchNavigation(this.isDetailSearch());
-  }
+  const stopSearchingFn = useRef(() => {
+    setIsSearchChanged(false);
+    setSearchInputs(['']);
+    setSearchTimestamp(0);
+  }).current;
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const { itemsTimestamp: nextTimestamp, items } = nextProps;
-    const { itemsTimestamp: currentTimestamp } = this.props;
-    const isReceivingNewlyFetchedItems = nextTimestamp !== currentTimestamp;
+  const receiveItemsAndResetNavigationFn = useRef((newItems) => {
+    setTree(newItems);
+    setFilters(navigationStateFilters);
+    stopSearchingFn();
+  }).current;
+
+  useEffect(() => {
+    fetchNavigation(isDetailSearchFn());
+  }, [fetchNavigation, isDetailSearchFn]);
+
+  const prevItemsTimestamp = useRef();
+
+  useEffect(() => {
+    prevItemsTimestamp.current = itemsTimestamp;
+  }, [itemsTimestamp]);
+
+  useEffect(() => {
+    const isReceivingNewlyFetchedItems = itemsTimestamp !== prevItemsTimestamp.current;
 
     if (isReceivingNewlyFetchedItems) {
-      this.receiveItemsAndResetNavigation(items);
+      receiveItemsAndResetNavigationFn(items);
     }
-  }
+  }, [itemsTimestamp, items, receiveItemsAndResetNavigationFn]);
 
-  handleFilterChange(filterValues, filterName) {
+  const handleFilterChange = (filterValues, filterName) => {
     const mappedValues = filterValues.map(({ value }) => value);
 
-    return this.setState(
-      (prevState) => ({
-        filters: {
-          ...prevState.filters,
-          [filterName]: {
-            ...prevState.filters[filterName],
-            values: mappedValues,
-          },
-        },
-      }),
-      () => this.setState(() => ({ tree: this.getFilteredTree() })),
-    );
-  }
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [filterName]: {
+        ...prevFilters[filterName],
+        values: mappedValues,
+      },
+    }));
 
-  onNodeMouseClick(event, tree) {
-    this.setState({
-      tree,
-    });
-  }
+    setTree(getFilteredTree());
+  };
 
-  onLeafMouseClick(event, leaf) {
+  const onNodeMouseClick = (event, newTree) => {
+    setTree(newTree);
+  };
+
+  const onLeafMouseClick = (event, leaf) => {
     if (leaf.function) {
-      return this.props.navigate(`/view-tos/${leaf.function}`);
+      return navigate(`/view-tos/${leaf.function}`);
     }
     if (leaf.parent) {
-      return this.props.navigate(`/view-classification/${leaf.id}`);
+      return navigate(`/view-classification/${leaf.id}`);
     }
 
-    return this.toggleNavigationVisibility();
-  }
+    return toggleNavigationVisibility();
+  };
 
-  onSearchTimeout() {
-    if (!this.state.isSearchChanged && Date.now() - this.state.searchTimestamp >= SEARCH_TIMEOUT) {
-      this.setState({ isSearchChanged: true });
+  const onSearchTimeout = () => {
+    if (!isSearchChanged && Date.now() - searchTimestamp >= SEARCH_TIMEOUT) {
+      setIsSearchChanged(true);
     }
-  }
+  };
 
-  getFilteredTree() {
-    const { items } = this.props;
-    const { filters } = this.state;
+  const checkIncludesFilter = (item, filterPath, currentFilter) => {
+    return includes(currentFilter, get(item, filterPath.join('.')));
+  };
 
-    if (!this.hasFilters()) {
+  const getItemFilters = (item, currentPath, nextPath) => {
+    const itemValue = get(item, currentPath.concat([nextPath]).join('.'));
+
+    if (isArray(itemValue)) {
+      return Object.keys(itemValue).map((index) => currentPath.concat([nextPath, index]));
+    }
+
+    if (!isEmpty(itemValue)) {
+      return [currentPath.concat([nextPath])];
+    }
+
+    return [];
+  };
+
+  const processFilters = (currentFilters, item, currentPath) => {
+    if (!currentFilters.length) {
+      return getItemFilters(item, [], currentPath);
+    }
+
+    return currentFilters.flatMap((filter) => getItemFilters(item, filter, currentPath));
+  };
+
+  const filterSinglePath = (path, item, currentFilter) => {
+    const filterPaths = getItemFilterPaths(path, item);
+
+    return filterPaths.some((filterPath) => checkIncludesFilter(item, filterPath, currentFilter));
+  };
+
+  const filterByPath = (paths, item, currentFilter) => {
+    return paths.some((path) => filterSinglePath(path, item, currentFilter));
+  };
+
+  const getItemFilterPaths = (path, item) => {
+    const processSinglePath = (currentFilters, currentPath) => {
+      return processFilters(currentFilters, item, currentPath);
+    };
+
+    return path.split('.').reduce(processSinglePath, []);
+  };
+
+  const filterFunction = (item) => {
+    const matchesFilters = Object.keys(filters)
+      .map((key) => {
+        const { values: currentFilter, path: paths } = filters[key];
+        return currentFilter.length ? filterByPath(paths, item, currentFilter) : true;
+      })
+      .every(Boolean);
+
+    if (item.children) {
+      item.children = item.children.filter(filterFunction);
+    }
+
+    return matchesFilters || (item.children && item.children.length > 0);
+  };
+
+  const getFilteredTree = () => {
+    if (!hasFilters()) {
       return items;
     }
 
-    // Deepcopy original item to disable mutation
     const itemsCopy = (item) => JSON.parse(JSON.stringify(item));
 
-    const getItemFilters = (item, currentPath, nextPath) => {
-      const itemValue = get(item, currentPath.concat([nextPath]).join('.'));
-
-      if (isArray(itemValue)) {
-        return Object.keys(itemValue).map((index) => currentPath.concat([nextPath, index]));
-      }
-
-      if (!isEmpty(itemValue)) {
-        return [currentPath.concat([nextPath])];
-      }
-
-      return [];
-    };
-
-    // returns item filter paths e.g.
-    // [
-    //   ['phases', 0, 'actions', 0, 'records', 0, 'attributes', 'RetentionPeriod'],
-    //   ['phases', 1, 'actions', 0, 'records', 0, 'attributes', 'RetentionPeriod']
-    // ]
-    const getItemFilterPaths = (path, item) =>
-      path.split('.').reduce((currentFilters, currentPath) => {
-        if (currentFilters.length) {
-          return currentFilters.map((a) => getItemFilters(item, a, currentPath)).map((itemFilter) => itemFilter);
-        }
-
-        return getItemFilters(item, [], currentPath).map((itemFilter) => itemFilter);
-      }, []);
-
-    // The actual filtering
-    const filterFunction = (item) => {
-      const matchesFilters = Object.keys(filters)
-        .map((key) => {
-          const { values: currentFilter, path: paths } = filters[key];
-
-          if (currentFilter.length) {
-            return paths.some((path) =>
-              // eslint-disable-next-line sonarjs/no-nested-functions
-              getItemFilterPaths(path, item).some((filterPath) =>
-                includes(currentFilter, get(item, filterPath.join('.'))),
-              ),
-            );
-          }
-
-          return true;
-        })
-        .every((finalItem) => !!finalItem);
-
-      item.children = item.children?.filter(filterFunction);
-
-      return matchesFilters || item.children?.length;
-    };
-
-    // Modify filtered items to be open
     const setAllOpen = (item) => {
       if (item.children) {
         item.children.map(setAllOpen);
@@ -169,14 +178,20 @@ class Navigation extends React.Component {
     };
 
     return items.map(itemsCopy).filter(filterFunction).map(setAllOpen);
-  }
+  };
 
-  setSearchInput(index, value) {
-    const isDetailSearch = this.isDetailSearch();
-    this.setState((prev) =>
-      update(prev, {
+  const setSearchInput = (index, value) => {
+    const detailSearch = isDetailSearchFn();
+
+    const newState = update(
+      {
+        isSearchChanged: isSearchChanged,
+        searchInputs: searchInputs,
+        searchTimestamp: searchTimestamp,
+      },
+      {
         isSearchChanged: {
-          $set: !isDetailSearch,
+          $set: !detailSearch,
         },
         searchInputs: {
           [index]: {
@@ -186,114 +201,88 @@ class Navigation extends React.Component {
         searchTimestamp: {
           $set: Date.now(),
         },
-      }),
+      },
     );
-    if (isDetailSearch) {
-      setTimeout(this.onSearchTimeout, SEARCH_TIMEOUT);
+
+    setIsSearchChanged(newState.isSearchChanged);
+    setSearchInputs(newState.searchInputs);
+    setSearchTimestamp(newState.searchTimestamp);
+
+    if (detailSearch) {
+      setTimeout(onSearchTimeout, SEARCH_TIMEOUT);
     }
-  }
+  };
 
-  receiveItemsAndResetNavigation(items) {
-    this.setState({
-      tree: items,
-      filters: navigationStateFilters,
-    });
+  const addSearchInput = () => {
+    setSearchInputs([...searchInputs, '']);
+  };
 
-    this.stopSearching();
-  }
+  const removeSearchInput = (index) => {
+    let newSearchInputs;
 
-  addSearchInput() {
-    this.setState(
-      update(this.state, {
-        searchInputs: {
-          $push: [''],
-        },
-      }),
-    );
-  }
-
-  removeSearchInput(index) {
-    const searchInputs = this.state.searchInputs.length === 1 ? { $set: [''] } : { $splice: [[index, 1]] };
-    this.setState(
-      update(this.state, {
-        searchInputs,
-        searchTimestamp: {
-          $set: Date.now(),
-        },
-        isSearchChanged: {
-          $set: false,
-        },
-      }),
-    );
-    if (this.state.searchInputs[index].length > 0) {
-      setTimeout(this.onSearchTimeout, SEARCH_TIMEOUT);
+    if (searchInputs.length === 1) {
+      newSearchInputs = [''];
+    } else {
+      newSearchInputs = [...searchInputs.slice(0, index), ...searchInputs.slice(index + 1)];
     }
-  }
 
-  toggleNavigationVisibility() {
-    const currentVisibility = this.props.is_open;
-    this.props.setNavigationVisibility(!currentVisibility);
-  }
+    setSearchInputs(newSearchInputs);
+    setSearchTimestamp(Date.now());
+    setIsSearchChanged(false);
 
-  hasFilters() {
-    const { filters } = this.state;
+    if (searchInputs[index].length > 0) {
+      setTimeout(onSearchTimeout, SEARCH_TIMEOUT);
+    }
+  };
+
+  const toggleNavigationVisibility = () => {
+    const currentVisibility = is_open;
+
+    setNavigationVisibility(!currentVisibility);
+  };
+
+  const hasFilters = () => {
     return !!Object.keys(filters)
       .map((key) => filters[key].values.length)
       .reduce((a, b) => a + b, 0);
-  }
+  };
 
-  isDetailSearch() {
-    return this.props.location.pathname === '/filter';
-  }
-
-  stopSearching() {
-    this.setState({
-      isSearchChanged: false,
-      searchInputs: [''],
-      searchTimestamp: 0,
-    });
-  }
-
-  render() {
-    const { onLeafMouseClick, isFetching, attributeTypes, items, itemsTimestamp } = this.props;
-    const { isSearchChanged, searchInputs } = this.state;
-
-    if (!isFetching && isEmpty(items) && !isEmpty(itemsTimestamp)) {
-      return (
-        <div className='container-fluid helerm-navigation'>
-          <div className='navigation-error'>
-            <div className='alert alert-danger'>Järjestelmä ei ole käytettävissä. Yritä hetken päästä uudestaan.</div>
-          </div>
-        </div>
-      );
-    }
+  if (!isFetching && isEmpty(items) && !isEmpty(itemsTimestamp)) {
     return (
-      <div className='helerm-navigation'>
-        <InfinityMenu
-          addSearchInput={this.addSearchInput}
-          attributeTypes={attributeTypes}
-          isOpen={this.props.is_open}
-          isSearchChanged={isSearchChanged}
-          isSearching={searchInputs.filter((input) => input.length > 0).length > 0}
-          isFetching={isFetching}
-          items={items}
-          onLeafMouseClick={onLeafMouseClick ? (event, leaf) => onLeafMouseClick(event, leaf) : this.onLeafMouseClick}
-          onNodeMouseClick={this.onNodeMouseClick}
-          path={this.props.tosPath}
-          removeSearchInput={this.removeSearchInput}
-          searchInputs={searchInputs}
-          setSearchInput={this.setSearchInput}
-          toggleNavigationVisibility={this.toggleNavigationVisibility}
-          tree={this.state.tree}
-          isDetailSearch={this.isDetailSearch()}
-          isUser={this.props.isUser}
-          filters={this.state.filters}
-          handleFilterChange={this.handleFilterChange}
-        />
+      <div className='container-fluid helerm-navigation'>
+        <div className='navigation-error'>
+          <div className='alert alert-danger'>Järjestelmä ei ole käytettävissä. Yritä hetken päästä uudestaan.</div>
+        </div>
       </div>
     );
   }
-}
+
+  return (
+    <div className='helerm-navigation'>
+      <InfinityMenu
+        addSearchInput={addSearchInput}
+        attributeTypes={attributeTypes}
+        isOpen={is_open}
+        isSearchChanged={isSearchChanged}
+        isSearching={searchInputs.filter((input) => input.length > 0).length > 0}
+        isFetching={isFetching}
+        items={items}
+        onLeafMouseClick={propOnLeafMouseClick ? (event, leaf) => propOnLeafMouseClick(event, leaf) : onLeafMouseClick}
+        onNodeMouseClick={onNodeMouseClick}
+        path={tosPath}
+        removeSearchInput={removeSearchInput}
+        searchInputs={searchInputs}
+        setSearchInput={setSearchInput}
+        toggleNavigationVisibility={toggleNavigationVisibility}
+        tree={tree}
+        isDetailSearch={isDetailSearchFn()}
+        isUser={isUser}
+        filters={filters}
+        handleFilterChange={handleFilterChange}
+      />
+    </div>
+  );
+};
 
 Navigation.propTypes = {
   attributeTypes: PropTypes.object,

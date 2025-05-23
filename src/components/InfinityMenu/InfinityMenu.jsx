@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable react/prop-types */
-import React, { Component } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import _get from 'lodash/get';
 import cloneDeep from 'lodash/cloneDeep';
@@ -22,257 +21,299 @@ const DEFAULT_FILTER_CONDITION = 'and';
 /**
  * Extracted from https://github.com/socialtables/react-infinity-menu
  */
-class InfinityMenu extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      filteredTree: [],
-      snapshots: {},
-      filterCondition: DEFAULT_FILTER_CONDITION,
-    };
+const InfinityMenu = (props) => {
+  const [filteredTree, setFilteredTree] = useState([]);
+  const [snapshots, setSnapshots] = useState({});
+  const [filterCondition, setFilterCondition] = useState(DEFAULT_FILTER_CONDITION);
 
-    this.onNodeClick = this.onNodeClick.bind(this);
-    this.onLoadMoreClick = this.onLoadMoreClick.bind(this);
-    this.onFilterConditionChange = this.onFilterConditionChange.bind(this);
-    this.filterTree = this.filterTree.bind(this);
-    this.createSnapshots = this.createSnapshots.bind(this);
-  }
+  const prevProps = React.useRef(null);
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const { isDetailSearch, isSearchChanged, items, searchInputs, tree } = nextProps;
+  const getNodeMatchesSearchFilter = useCallback(
+    (filters, node) => {
+      if (filters.length) {
+        if (props.isDetailSearch) {
+          const snapshot = snapshots[node.id] ? snapshots[node.id] : null;
+          const result = snapshot ? JSON.search(snapshot, filters) : [];
 
-    const {
-      isSearchChanged: wasSearchChanged,
-      items: prevItems,
-      searchInputs: prevInputs,
-      tree: prevTree,
-    } = this.props;
+          return result.length > 0;
+        }
 
-    if (isDetailSearch && items !== prevItems) {
-      this.createSnapshots(items);
+        return props.filter(node, filters);
+      }
+
+      return true;
+    },
+    [props, snapshots],
+  );
+
+  const findFiltered = useCallback(
+    (trees, node, key, filters) => {
+      const newNode = cloneDeep(node);
+
+      if (!node.children?.length) {
+        const nodeMatchesSearchFilter = getNodeMatchesSearchFilter(filters, node);
+
+        if (nodeMatchesSearchFilter) {
+          newNode.isSearchDisplay = true;
+          trees.push(newNode);
+        }
+        return trees;
+      }
+
+      const filteredSubFolder = node.children.length
+        ? node.children.reduce((p, c, k) => findFiltered(p, c, k, filters), [])
+        : [];
+
+      const shouldDisplay = filteredSubFolder.some((child) => child.isSearchDisplay) || props.filter(node, filters);
+
+      if (shouldDisplay) {
+        newNode.isSearchOpen = true;
+        newNode.children = filteredSubFolder;
+        newNode.isSearchDisplay = true;
+        newNode.maxLeaves = newNode.maxLeaves ? newNode.maxLeaves : props.maxLeaves;
+        trees.push(newNode);
+      }
+
+      return trees;
+    },
+    [getNodeMatchesSearchFilter, props],
+  );
+
+  const getDetailFilters = useCallback(
+    (searchInputs) => {
+      const filters = [];
+
+      searchInputs.forEach((input) => {
+        const splitted = input.split('=').map((m) => m.trim());
+        let filter;
+        if (splitted.length === 2 && splitted[0] && splitted[1]) {
+          filter = formatDetailFilter(splitted[0], splitted[1]);
+        } else if (splitted[0]) {
+          filter = formatDetailFilter('.', splitted[0]);
+        }
+        if (filter) {
+          filters.push(filter);
+        }
+      });
+
+      const filterConditionString = ` ${filterCondition} `;
+
+      return filters.length ? `//*[${filters.join(filterConditionString)}]` : '';
+    },
+    [filterCondition],
+  );
+
+  const filterTree = useCallback(
+    (searchInputs, tree, isDetailSearch) => {
+      const filters = isDetailSearch ? getDetailFilters(searchInputs) : searchInputs[0];
+
+      const filteredTreeResult = filters
+        ? tree.reduce((prev, curr, key) => {
+            if (key === undefined) {
+              return prev;
+            }
+            return findFiltered(prev, curr, key, filters);
+          }, [])
+        : tree;
+
+      setFilteredTree(filteredTreeResult);
+    },
+    [findFiltered, getDetailFilters],
+  );
+
+  const findSnapshot = useCallback((currentSnapshots, node) => {
+    if (!node.children) {
+      currentSnapshots[node.id] = Defiant.getSnapshot(node);
+      return currentSnapshots;
+    }
+    return node.children.length
+      ? node.children.reduce((prev, curr) => findSnapshot(prev, curr), currentSnapshots)
+      : currentSnapshots;
+  }, []);
+
+  const createSnapshots = useCallback(
+    (tree) => {
+      const snapshotsResult = tree.reduce((prev, curr, key) => {
+        if (key === undefined) {
+          return prev;
+        }
+        return findSnapshot(prev, curr);
+      }, {});
+      setSnapshots(snapshotsResult);
+    },
+    [findSnapshot],
+  );
+
+  useEffect(() => {
+    const { isDetailSearch, isSearchChanged, items, searchInputs, tree } = props;
+
+    if (isDetailSearch && items !== prevProps.current?.items) {
+      createSnapshots(items);
     }
 
-    if (tree !== prevTree) {
-      this.setState({ filteredTree: tree });
+    if (tree !== prevProps.current?.tree) {
+      setFilteredTree(tree);
     }
+
     if (
-      (tree !== prevTree && isSearchChanged && searchInputs) ||
-      (isDetailSearch && isSearchChanged && !wasSearchChanged) ||
-      (!isDetailSearch && searchInputs !== prevInputs)
+      (tree !== prevProps.current?.tree && isSearchChanged && searchInputs) ||
+      (isDetailSearch && isSearchChanged && !prevProps.current?.isSearchChanged) ||
+      (!isDetailSearch && searchInputs !== prevProps.current?.searchInputs)
     ) {
-      this.filterTree(searchInputs, tree, isDetailSearch);
+      filterTree(searchInputs, tree, isDetailSearch);
     }
-  }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.shouldComponentUpdate) {
-      return nextProps.shouldComponentUpdate(this.props, this.state, nextProps, nextState);
-    }
-    return true;
-  }
+    prevProps.current = props;
+  }, [props, createSnapshots, filterTree]);
 
-  onNodeClick(tree, node, keyPath, event) {
+  const onNodeClick = (tree, node, keyPath, event) => {
     event.preventDefault();
-    if (!this.props.isSearching) {
+
+    if (!props.isSearching) {
       node.isOpen = !node.isOpen;
-      node.maxLeaves = this.props.maxLeaves;
+      node.maxLeaves = props.maxLeaves;
       NestedObjects.set(tree, keyPath, node);
-      if (this.props.onNodeMouseClick) {
+
+      if (props.onNodeMouseClick) {
         const currLevel = Math.floor(keyPath.split('.').length / 2);
-        this.props.onNodeMouseClick(event, tree, node, currLevel, keyPath);
+        props.onNodeMouseClick(event, tree, node, currLevel, keyPath);
       }
     }
-  }
+  };
 
-  onLoadMoreClick(tree, node, keyPath, event) {
+  const onLoadMoreClick = (tree, node, keyPath, event) => {
     event.preventDefault();
     // get parent node so we can increment it's unique max leaves property
     const keyPathArray = keyPath.split('.');
     const parentPath = Object.assign([], keyPathArray).splice(0, keyPathArray.length - 2);
-    const parentNode = _get(this.props.tree, parentPath);
+    const parentNode = _get(props.tree, parentPath);
     // set new max leaves - if none exist use component default property
-    parentNode.maxLeaves = !parentNode.maxLeaves ? this.props.maxLeaves : parentNode.maxLeaves + this.props.maxLeaves;
-    if (this.props.onNodeMouseClick) {
+    parentNode.maxLeaves = !parentNode.maxLeaves ? props.maxLeaves : parentNode.maxLeaves + props.maxLeaves;
+
+    if (props.onNodeMouseClick) {
       const currLevel = Math.floor(keyPath.split('.').length / 2);
-      this.props.onNodeMouseClick(event, tree, node, currLevel, keyPath);
+
+      props.onNodeMouseClick(event, tree, node, currLevel, keyPath);
     }
-  }
+  };
 
-  onFilterConditionChange(option) {
-    this.setState(
-      (prevState) => ({ ...prevState, filterCondition: option.value }),
-      () => this.filterTree(this.props.searchInputs, this.props.tree, this.props.isDetailSearch),
-    );
-  }
+  const onFilterConditionChange = (option) => {
+    setFilterCondition(option.value);
+    // Filter tree after state update
+    setTimeout(() => filterTree(props.searchInputs, props.tree, props.isDetailSearch), 0);
+  };
 
-  getDetailFilters(searchInputs) {
-    const filters = [];
-    const { filterCondition } = this.state;
-    searchInputs.forEach((input) => {
-      const splitted = input.split('=').map((m) => m.trim());
-      let filter;
-      if (splitted.length === 2 && splitted[0] && splitted[1]) {
-        filter = this.formatDetailFilter(splitted[0], splitted[1]);
-      } else if (splitted[0]) {
-        filter = this.formatDetailFilter('.', splitted[0]);
-      }
-      if (filter) {
-        filters.push(filter);
-      }
-    });
-
-    const filterConditionString = ` ${filterCondition} `;
-
-    return filters.length ? `//*[${filters.join(filterConditionString)}]` : '';
-  }
-
-  // eslint-disable-next-line sonarjs/cognitive-complexity
-  setDisplayTree(tree, prevs, curr, keyPath) {
-    const currLevel = Math.floor(keyPath.length / 2);
-    const currCustomComponent =
-      typeof curr.customComponent === 'string'
-        ? this.props.customComponentMappings[curr.customComponent]
-        : curr.customComponent;
-    const { isSearching } = this.props;
+  // Extract nested sub-function to reduce complexity
+  const createLeafElement = (curr, itemKey, parentNode, filteredChildren, tree, keyPath) => {
+    const { isSearching } = props;
     const shouldDisplay = (isSearching && curr.isSearchDisplay) || !isSearching;
-    curr.keyPath = keyPath;
 
-    // the leaves
-    if (!curr.children) {
-      const keyPathArray = keyPath.split('.');
-      const parentPath = Object.assign([], keyPathArray).splice(0, keyPathArray.length - 2);
-      const parentNode = _get(tree, parentPath);
-      const filteredChildren = parentNode.children.some((child) => child.isSearchDisplay === true)
-        ? parentNode.children.filter((child) => child.isSearchDisplay === true)
-        : parentNode.children;
-      const itemKey = `infinity-menu-leaf-${curr.id}`;
-      const visIds = filteredChildren.map((e) => e.id);
+    const visIds = filteredChildren.map((e) => e.id);
 
-      let relativeIndex = visIds.indexOf(curr.id);
-      relativeIndex = relativeIndex === -1 ? Infinity : relativeIndex;
+    let relativeIndex = visIds.indexOf(curr.id);
+    relativeIndex = relativeIndex === -1 ? Infinity : relativeIndex;
 
-      const parentMaxLeaves = parentNode.maxLeaves || this.props.maxLeaves;
-      if (shouldDisplay && parentMaxLeaves > relativeIndex) {
-        if (curr.customComponent) {
-          const componentProps = {
-            key: itemKey,
-            onMouseDown: (e) => {
-              if (this.props.onLeafMouseDown) {
-                this.props.onLeafMouseDown(e, curr);
-              }
-            },
-            onMouseUp: (e) => {
-              if (this.props.onLeafMouseUp) {
-                this.props.onLeafMouseUp(e, curr);
-              }
-            },
-            onClick: (e) => {
-              if (this.props.onLeafMouseClick) {
-                this.props.onLeafMouseClick(e, curr);
-              }
-            },
-            name: curr.name,
-            icon: curr.icon,
-            data: curr,
-          };
-          prevs.push(React.createElement(currCustomComponent, componentProps));
-        } else {
-          prevs.push(
-            <li
-              key={itemKey}
-              className={`infinity-menu-leaf-container${!curr.function ? ' new-leaf' : ''}`}
-              onMouseDown={(e) => (this.props.onLeafMouseDown ? this.props.onLeafMouseDown(e, curr) : null)}
-              onMouseUp={(e) => (this.props.onLeafMouseUp ? this.props.onLeafMouseUp(e, curr) : null)}
-              onClick={(e) => (this.props.onLeafMouseClick ? this.props.onLeafMouseClick(e, curr) : null)}
-              onKeyUp={(e) => {
-                if (this.props.onLeafMouseClick && e.key === 'Enter') {
-                  this.props.onLeafMouseClick(e, curr);
-                }
-              }}
-            >
-              <span>
-                {curr.name} <ClassificationLink id={curr.id} />
-              </span>
-            </li>,
-          );
-        }
-      } else if (shouldDisplay && relativeIndex === filteredChildren.length - 1) {
-        prevs.push(
+    const parentMaxLeaves = parentNode?.maxLeaves || props.maxLeaves;
+
+    if (shouldDisplay && parentMaxLeaves > relativeIndex) {
+      if (curr.customComponent) {
+        const currCustomComponent =
+          typeof curr.customComponent === 'string'
+            ? props.customComponentMappings[curr.customComponent]
+            : curr.customComponent;
+
+        const componentProps = {
+          key: itemKey,
+          onMouseDown: (e) => {
+            if (props.onLeafMouseDown) {
+              props.onLeafMouseDown(e, curr);
+            }
+          },
+          onMouseUp: (e) => {
+            if (props.onLeafMouseUp) {
+              props.onLeafMouseUp(e, curr);
+            }
+          },
+          onClick: (e) => {
+            if (props.onLeafMouseClick) {
+              props.onLeafMouseClick(e, curr);
+            }
+          },
+          name: curr.name,
+          icon: curr.icon,
+          data: curr,
+        };
+        return React.createElement(currCustomComponent, componentProps);
+      } else {
+        return (
           <li
             key={itemKey}
-            className='infinity-menu-load-more-container'
-            onClick={(e) => this.onLoadMoreClick(tree, curr, keyPath, e)}
+            className={`infinity-menu-leaf-container${!curr.function ? ' new-leaf' : ''}`}
+            onMouseDown={(e) => (props.onLeafMouseDown ? props.onLeafMouseDown(e, curr) : null)}
+            onMouseUp={(e) => (props.onLeafMouseUp ? props.onLeafMouseUp(e, curr) : null)}
+            onClick={(e) => (props.onLeafMouseClick ? props.onLeafMouseClick(e, curr) : null)}
             onKeyUp={(e) => {
-              if (e.key === 'Enter') {
-                this.onLoadMoreClick(tree, curr, keyPath, e);
+              if (props.onLeafMouseClick && e.key === 'Enter') {
+                props.onLeafMouseClick(e, curr);
               }
             }}
           >
-            <span>Näytä lisää</span>
-          </li>,
+            <span>
+              {curr.name} <ClassificationLink id={curr.id} />
+            </span>
+          </li>
         );
       }
-      return prevs;
+    } else if (shouldDisplay && relativeIndex === filteredChildren.length - 1) {
+      return (
+        <li
+          key={itemKey}
+          className='infinity-menu-load-more-container'
+          onClick={(e) => onLoadMoreClick(tree, curr, keyPath, e)}
+          onKeyUp={(e) => {
+            if (e.key === 'Enter') {
+              onLoadMoreClick(tree, curr, keyPath, e);
+            }
+          }}
+        >
+          <span>Näytä lisää</span>
+        </li>
+      );
     }
-    const key = `infinity-menu-node-${currLevel}-${curr.id}`;
-    const nodeName = curr.name;
-    if ((!curr.isOpen && !isSearching) || (!curr.isSearchOpen && isSearching)) {
-      if (shouldDisplay) {
-        if (curr.customComponent) {
-          const nodeProps = {
-            onClick: (e) => this.onNodeClick(tree, curr, keyPath, e),
-            name: nodeName,
-            isOpen: curr.isOpen,
-            isSearching: false,
-            data: curr,
-            key,
-          };
-          prevs.push(React.createElement(currCustomComponent, nodeProps));
-        } else {
-          prevs.push(
-            <button
-              type='button'
-              key={key}
-              onClick={(e) => this.onNodeClick(tree, curr, keyPath, e)}
-              onKeyUp={(e) => {
-                if (e.key === 'Enter') {
-                  this.onNodeClick(tree, curr, keyPath, e);
-                }
-              }}
-              className={classnames('infinity-menu-node-container', {
-                opened: !!curr.isOpen,
-              })}
-            >
-              <label>
-                {nodeName} <ClassificationLink id={curr.id} />
-              </label>
-            </button>,
-          );
-        }
-      }
-      return prevs;
-    }
-    const openedNode = [];
+
+    return null;
+  };
+
+  // Extract node creation to reduce complexity
+  const createNodeElement = (curr, key, nodeName, tree, keyPath) => {
+    const { isSearching } = props;
+    const shouldDisplay = (isSearching && curr.isSearchDisplay) || !isSearching;
+
     if (shouldDisplay) {
       if (curr.customComponent) {
+        const currCustomComponent =
+          typeof curr.customComponent === 'string'
+            ? props.customComponentMappings[curr.customComponent]
+            : curr.customComponent;
+
         const nodeProps = {
-          onClick: (e) => this.onNodeClick(tree, curr, keyPath, e),
+          onClick: (e) => onNodeClick(tree, curr, keyPath, e),
           name: nodeName,
           isOpen: curr.isOpen,
+          isSearching: isSearching,
           data: curr,
           key,
-          isSearching,
         };
-        openedNode.push(React.createElement(currCustomComponent, nodeProps));
+        return React.createElement(currCustomComponent, nodeProps);
       } else {
-        openedNode.push(
+        return (
           <button
             type='button'
             key={key}
-            onClick={(e) => this.onNodeClick(tree, curr, keyPath, e)}
+            onClick={(e) => onNodeClick(tree, curr, keyPath, e)}
             onKeyUp={(e) => {
               if (e.key === 'Enter') {
-                this.onNodeClick(tree, curr, keyPath, e);
+                onNodeClick(tree, curr, keyPath, e);
               }
             }}
             className={classnames('infinity-menu-node-container', {
@@ -282,108 +323,89 @@ class InfinityMenu extends Component {
             <label>
               {nodeName} <ClassificationLink id={curr.id} />
             </label>
-          </button>,
+          </button>
         );
       }
+    }
 
-      const childrenList = curr.children.length
-        ? curr.children.reduce((p, c, k) => {
-            if (c === undefined || k === undefined) {
-              return p;
-            }
-            return this.setDisplayTree(tree, p, c, `${keyPath}.children.${k}`);
-          }, [])
-        : [];
+    return null;
+  };
 
-      if (childrenList.length > 0) {
-        openedNode.push(<ul key={`infinity-menu-children-list${currLevel}`}>{childrenList}</ul>);
+  // Helper functions to process different node types
+  const processLeafNode = (tree, prevs, curr, keyPath) => {
+    const keyPathArray = keyPath.split('.');
+    const parentPath = keyPathArray.slice(0, -2);
+    const parentNode = _get(tree, parentPath);
+
+    let filteredChildren = [];
+
+    if (parentNode?.children) {
+      if (parentNode.children.some((child) => child.isSearchDisplay)) {
+        filteredChildren = parentNode.children.filter((child) => child.isSearchDisplay);
+      } else {
+        filteredChildren = parentNode.children;
       }
-      prevs.push(openedNode);
+    }
+    const itemKey = `infinity-menu-leaf-${curr.id}`;
+
+    const leafElement = createLeafElement(curr, itemKey, parentNode, filteredChildren, tree, keyPath);
+    if (leafElement) {
+      prevs.push(leafElement);
     }
     return prevs;
-  }
+  };
 
-  getNodeMatchesSearchFilter(filters, node) {
-    if (filters.length) {
-      if (this.props.isDetailSearch) {
-        const snapshot = this.state.snapshots[node.id] ? this.state.snapshots[node.id] : null;
-        const result = snapshot ? JSON.search(snapshot, filters) : [];
+  const processChildrenList = (curr, tree, keyPath) => {
+    if (!curr.children.length) return [];
+    return curr.children.reduce((p, c, k) => {
+      if (!c || !k) return p;
+      return setDisplayTree(tree, p, c, `${keyPath}.children.${k}`);
+    }, []);
+  };
 
-        return result.length > 0;
-      }
+  const processOpenNode = (tree, currLevel, curr, key, nodeName, keyPath, prevs, shouldDisplay) => {
+    if (!shouldDisplay) return prevs;
 
-      return this.props.filter(node, filters);
+    const openedNode = [];
+    const nodeElement = createNodeElement(curr, key, nodeName, tree, keyPath);
+    if (nodeElement) openedNode.push(nodeElement);
+
+    const childrenList = processChildrenList(curr, tree, keyPath);
+    if (childrenList.length) {
+      openedNode.push(<ul key={`infinity-menu-children-list${currLevel}`}>{childrenList}</ul>);
     }
 
-    return true;
-  }
+    prevs.push(openedNode);
+    return prevs;
+  };
 
-  filterTree(searchInputs, tree, isDetailSearch) {
-    const filters = isDetailSearch ? this.getDetailFilters(searchInputs) : searchInputs[0];
+  const setDisplayTree = (tree, prevs, curr, keyPath) => {
+    const currLevel = Math.floor(keyPath.length / 2);
+    curr.keyPath = keyPath;
 
-    const filteredTree = filters
-      ? tree.reduce((prev, curr, key) => {
-          if (key === undefined) {
-            return prev;
-          }
-          return this.findFiltered(prev, curr, key, filters);
-        }, [])
-      : tree;
-
-    this.setState({ filteredTree });
-  }
-
-  createSnapshots(tree) {
-    const snapshots = tree.reduce((prev, curr, key) => {
-      if (key === undefined) {
-        return prev;
-      }
-      return this.findSnapshot(prev, curr);
-    }, {});
-    this.setState({ snapshots });
-  }
-
-  findSnapshot(snapshots, node) {
-    if (!node.children) {
-      snapshots[node.id] = Defiant.getSnapshot(node);
-      return snapshots;
-    }
-    return node.children.length
-      ? node.children.reduce((prev, curr) => this.findSnapshot(prev, curr), snapshots)
-      : snapshots;
-  }
-
-  findFiltered(trees, node, key, filters) {
-    const newNode = cloneDeep(node);
-
-    if (!node.children?.length) {
-      const nodeMatchesSearchFilter = this.getNodeMatchesSearchFilter(filters, node);
-
-      if (nodeMatchesSearchFilter) {
-        newNode.isSearchDisplay = true;
-        trees.push(newNode);
-      }
-      return trees;
+    // Leaf node
+    if (!curr.children) {
+      return processLeafNode(tree, prevs, curr, keyPath);
     }
 
-    const filteredSubFolder = node.children.length
-      ? node.children.reduce((p, c, k) => this.findFiltered(p, c, k, filters), [])
-      : [];
+    // Non-leaf node
+    const key = `infinity-menu-node-${currLevel}-${curr.id}`;
+    const nodeName = curr.name;
+    const { isSearching } = props;
+    const shouldDisplay = (isSearching && curr.isSearchDisplay) || !isSearching;
 
-    const shouldDisplay = filteredSubFolder.some((child) => child.isSearchDisplay) || this.props.filter(node, filters);
-
-    if (shouldDisplay) {
-      newNode.isSearchOpen = true;
-      newNode.children = filteredSubFolder;
-      newNode.isSearchDisplay = true;
-      newNode.maxLeaves = newNode.maxLeaves ? newNode.maxLeaves : this.props.maxLeaves;
-      trees.push(newNode);
+    // Closed node
+    if ((!curr.isOpen && !isSearching) || (!curr.isSearchOpen && isSearching)) {
+      const nodeElement = createNodeElement(curr, key, nodeName, tree, keyPath);
+      if (nodeElement) prevs.push(nodeElement);
+      return prevs;
     }
 
-    return trees;
-  }
+    // Open node
+    return processOpenNode(tree, currLevel, curr, key, nodeName, keyPath, prevs, shouldDisplay);
+  };
 
-  formatDetailFilter(field, value) {
+  const formatDetailFilter = (field, value) => {
     // returns xpath query e.g.
     // InformationSystem=*ahjo returns: contains(InformationSystem, "ahjo")
     // InformationSystem=ahjo* returns: starts-with(InformationSystem, "ahjo")
@@ -400,10 +422,10 @@ class InfinityMenu extends Component {
       return `starts-with(${field}, "${fieldValue}")`;
     }
     return `${field}="${fieldValue}"`;
-  }
+  };
 
-  renderBody(displayTree) {
-    const { emptyTreeComponent, emptyTreeComponentProps, isFetching } = this.props;
+  const renderBody = (displayTree) => {
+    const { emptyTreeComponent, emptyTreeComponentProps, isFetching } = props;
 
     if (displayTree.length) {
       return displayTree;
@@ -412,139 +434,136 @@ class InfinityMenu extends Component {
       return React.createElement(emptyTreeComponent, emptyTreeComponentProps);
     }
     return null;
-  }
+  };
 
-  render() {
-    const {
-      attributeTypes,
-      isDetailSearch,
-      headerProps,
-      searchInputs,
-      addSearchInput,
-      setSearchInput,
-      removeSearchInput,
-      isUser,
-      filters,
-      handleFilterChange,
-    } = this.props;
-    const { filteredTree, filterCondition } = this.state;
+  const {
+    attributeTypes,
+    isDetailSearch,
+    headerProps,
+    searchInputs,
+    addSearchInput,
+    setSearchInput,
+    removeSearchInput,
+    isUser,
+    filters,
+    handleFilterChange,
+  } = props;
 
-    // recursive go through the tree
-    const displayTree = filteredTree.reduce((prev, curr, key) => {
-      if (key === undefined) {
-        return prev;
-      }
-      return this.setDisplayTree(filteredTree, prev, curr, key.toString());
-    }, []);
+  // recursive go through the tree
+  const displayTree = filteredTree.reduce((prev, curr, key) => {
+    if (key === undefined) {
+      return prev;
+    }
+    return setDisplayTree(filteredTree, prev, curr, key.toString());
+  }, []);
 
-    // header component
-    const bodyContent = this.renderBody(displayTree);
+  // header component
+  const bodyContent = renderBody(displayTree);
 
-    return (
-      <div
-        id='navigation-menu'
-        className={classnames('navigation-menu', {
-          'navigation-open': this.props.isOpen,
-        })}
-      >
-        <Sticky stickyClassName='navigation-sticky'>
-          <>
-            <div className='navigation-header clearfix'>
-              <button type='button' className='pull-left nav-button' onClick={this.props.toggleNavigationVisibility}>
-                <span className='fa-solid fa-list' aria-hidden='true' />
-              </button>
-              {!!this.props.path.length && (
-                <ol
-                  className='breadcrumb'
-                  onClick={this.props.toggleNavigationVisibility}
-                  onKeyUp={(e) => {
-                    if (e.key === 'Enter') {
-                      this.props.toggleNavigationVisibility();
-                    }
-                  }}
-                >
-                  {this.props.path.map((item, index) => (
-                    <li
-                      className={classnames({
-                        active: index === this.props.path.length,
-                      })}
-                      key={index}
-                    >
-                      {item}
-                    </li>
-                  ))}
-                </ol>
-              )}
-            </div>
-            {this.props.isOpen && (
-              <div className='navigation-container'>
-                <div className='navigation-toggle'>
-                  <button type='button' className='nav-button' onClick={this.props.toggleNavigationVisibility}>
-                    <span className='fa-solid fa-xmark' aria-hidden='true' />
-                  </button>
-                </div>
-                <div className='navigation-filters clearfix'>
-                  <div className='navigation-filters-container'>
-                    {isDetailSearch && (
-                      <div className='row navigation-filters-header'>
-                        <div className='col-xs-6'>
-                          <h2>Sisältöhaku</h2>
-                        </div>
-                        <div className='col-xs-6'>
-                          <Exporter
-                            attributeTypes={attributeTypes}
-                            data={filteredTree}
-                            isVisible={filteredTree.length > 0}
-                          />
-                        </div>
+  return (
+    <div
+      id='navigation-menu'
+      className={classnames('navigation-menu', {
+        'navigation-open': props.isOpen,
+      })}
+    >
+      <Sticky stickyClassName='navigation-sticky'>
+        <>
+          <div className='navigation-header clearfix'>
+            <button type='button' className='pull-left nav-button' onClick={props.toggleNavigationVisibility}>
+              <span className='fa-solid fa-list' aria-hidden='true' />
+            </button>
+            {!!props.path.length && (
+              <ol
+                className='breadcrumb'
+                onClick={props.toggleNavigationVisibility}
+                onKeyUp={(e) => {
+                  if (e.key === 'Enter') {
+                    props.toggleNavigationVisibility();
+                  }
+                }}
+              >
+                {props.path.map((item, index) => (
+                  <li
+                    className={classnames({
+                      active: index === props.path.length,
+                    })}
+                    key={index}
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ol>
+            )}
+          </div>
+          {props.isOpen && (
+            <div className='navigation-container'>
+              <div className='navigation-toggle'>
+                <button type='button' className='nav-button' onClick={props.toggleNavigationVisibility}>
+                  <span className='fa-solid fa-xmark' aria-hidden='true' />
+                </button>
+              </div>
+              <div className='navigation-filters clearfix'>
+                <div className='navigation-filters-container'>
+                  {isDetailSearch && (
+                    <div className='row navigation-filters-header'>
+                      <div className='col-xs-6'>
+                        <h2>Sisältöhaku</h2>
                       </div>
-                    )}
-                    <div className='row'>
-                      <SearchInputs
-                        headerProps={headerProps}
-                        isDetailSearch={isDetailSearch}
-                        searchInputs={searchInputs}
-                        filterCondition={filterCondition}
-                        addSearchInput={addSearchInput}
-                        setSearchInput={setSearchInput}
-                        removeSearchInput={removeSearchInput}
-                        onFilterConditionChange={this.onFilterConditionChange}
-                      />
-                      <div
-                        className={classnames({
-                          'col-xs-12': isDetailSearch,
-                          'col-sm-6': !isDetailSearch,
-                        })}
-                      >
-                        <SearchFilters
+                      <div className='col-xs-6'>
+                        <Exporter
                           attributeTypes={attributeTypes}
-                          isDetailSearch={isDetailSearch}
-                          isUser={isUser}
-                          filters={filters}
-                          handleFilterChange={handleFilterChange}
+                          data={filteredTree}
+                          isVisible={filteredTree.length > 0}
                         />
                       </div>
                     </div>
-                  </div>
-                  {!isDetailSearch && (
-                    <div className='classification-link'>
-                      <Link className='btn btn-primary btn-sm' to='/classification-tree'>
-                        <span className='fa-solid fa-info' aria-hidden='true' />
-                      </Link>
-                    </div>
                   )}
+                  <div className='row'>
+                    <SearchInputs
+                      headerProps={headerProps}
+                      isDetailSearch={isDetailSearch}
+                      searchInputs={searchInputs}
+                      filterCondition={filterCondition}
+                      addSearchInput={addSearchInput}
+                      setSearchInput={setSearchInput}
+                      removeSearchInput={removeSearchInput}
+                      onFilterConditionChange={onFilterConditionChange}
+                    />
+                    <div
+                      className={classnames({
+                        'col-xs-12': isDetailSearch,
+                        'col-sm-6': !isDetailSearch,
+                      })}
+                    >
+                      <SearchFilters
+                        attributeTypes={attributeTypes}
+                        isDetailSearch={isDetailSearch}
+                        isUser={isUser}
+                        filters={filters}
+                        handleFilterChange={handleFilterChange}
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div className='infinity-menu-container'>
-                  <div className='infinity-menu-display-tree-container'>{bodyContent}</div>
-                </div>
+                {!isDetailSearch && (
+                  <div className='classification-link'>
+                    <Link className='btn btn-primary btn-sm' to='/classification-tree'>
+                      <span className='fa-solid fa-info' aria-hidden='true' />
+                    </Link>
+                  </div>
+                )}
               </div>
-            )}
-          </>
-        </Sticky>
-      </div>
-    );
-  }
-}
+              <div className='infinity-menu-container'>
+                <div className='infinity-menu-display-tree-container'>{bodyContent}</div>
+              </div>
+            </div>
+          )}
+        </>
+      </Sticky>
+    </div>
+  );
+};
 
 InfinityMenu.propTypes = {
   addSearchInput: PropTypes.func.isRequired,
