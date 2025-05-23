@@ -87,20 +87,20 @@ const AppContainer = ({
   const router = createBrowserRouter(createRoutesFromElements(routes), { basename: '/' });
 
   return (
-    <React.StrictMode>
-      <LoginProvider {...providerProperties}>
-        <Provider store={store}>
-          <MatomoContext.Provider value={matomoTracker}>
+    <LoginProvider {...providerProperties}>
+      <Provider store={store}>
+        <MatomoContext.Provider value={matomoTracker}>
+          <React.StrictMode>
             <App
               router={router}
               dispatchRetrieveUserFromSession={dispatchRetrieveUserFromSession}
               dispatchFetchAttributeTypes={dispatchFetchAttributeTypes}
               dispatchFetchTemplates={dispatchFetchTemplates}
             />
-          </MatomoContext.Provider>
-        </Provider>
-      </LoginProvider>
-    </React.StrictMode>
+          </React.StrictMode>
+        </MatomoContext.Provider>
+      </Provider>
+    </LoginProvider>
   );
 };
 

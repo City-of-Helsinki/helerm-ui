@@ -1,104 +1,94 @@
 /* eslint-disable sonarjs/todo-tag */
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
-import { DragSource, DropTarget } from 'react-dnd';
+import { useDrag, useDrop } from 'react-dnd';
 
-const style = {
-  border: '2px dashed #658fcd',
-  padding: '0.2rem 1rem',
-  marginBottom: '.5rem',
-  backgroundColor: 'white',
-  cursor: 'move',
-};
+const ReorderItem = ({ id, index, moveItem, labels, target }) => {
+  const ref = useRef(null);
 
-const itemSource = {
-  beginDrag(props) {
-    return {
-      id: props.id,
-      index: props.index,
-    };
-  },
-};
+  const [{ handlerId }, drop] = useDrop({
+    accept: 'item',
+    collect(monitor) {
+      return {
+        handlerId: monitor.getHandlerId(),
+      };
+    },
+    // eslint-disable-next-line no-unused-vars
+    hover(item, monitor) {
+      if (!ref.current) {
+        return;
+      }
 
-const itemTarget = {
-  hover(props, monitor) {
-    const dragIndex = monitor.getItem().index;
-    const hoverIndex = props.index;
+      const dragIndex = item.index;
+      const hoverIndex = index;
 
-    // Don't replace items with themselves
-    if (dragIndex === hoverIndex || !monitor.canDrop()) {
-      return;
-    }
+      if (dragIndex === hoverIndex) {
+        return;
+      }
 
-    // Time to actually perform the action
-    props.moveItem(dragIndex, hoverIndex);
+      moveItem(dragIndex, hoverIndex);
 
-    // Note: we're mutating the monitor item here!
-    // Generally it's better to avoid mutations,
-    // but it's good here for the sake of performance
-    // to avoid expensive index searches.
-    monitor.getItem().index = hoverIndex;
-  },
-};
+      item.index = hoverIndex;
+    },
+  });
 
-const collectSource = (connect, monitor) => ({
-  connectDragSource: connect.dragSource(),
-  isDragging: monitor.isDragging(),
-});
+  const [{ isDragging }, drag] = useDrag({
+    type: 'item',
+    item: () => ({ id, index }),
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
 
-const collectTarget = (connect) => ({
-  connectDropTarget: connect.dropTarget(),
-});
+  drag(drop(ref));
 
-class ReorderItem extends React.Component {
-  getLabels(labels) {
-    const elements = [];
+  const getLabels = (labelItems) =>
+    labelItems.map((label) => (
+      <span key={`${label.value}-${label.index}`} className='reorder-label'>
+        {label.value}
+      </span>
+    ));
 
-    labels.forEach((label) => {
-      elements.push(
-        <span key={`${label.value}-${label.index}`} className='reorder-label'>
-          {label.value}
-        </span>,
-      );
-    });
-    return elements;
-  }
-
-  render() {
-    const { isDragging, connectDragSource, connectDropTarget, labels, target } = this.props;
-    const opacity = isDragging ? 0 : 1;
-    let border;
+  const getBorderStyle = (target) => {
     switch (target) {
       case 'action':
-        border = '2px dashed #658fcd';
-        break;
+        return '2px dashed #658fcd';
       case 'phase':
-        border = '2px dashed salmon';
-        break;
+        return '2px dashed salmon';
       default:
-        border = '2px dashed gray';
+        return '2px dashed gray';
     }
-    return connectDragSource(
-      connectDropTarget(
-        <div style={{ ...style, opacity, border }}>
-          <i className='fa-solid fa-arrows' aria-hidden='true' /> {this.getLabels(labels)}
-        </div>,
-      ),
-    );
-  }
-}
+  };
+
+  const opacity = isDragging ? 0 : 1;
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        ...{
+          border: '2px dashed #658fcd',
+          padding: '0.2rem 1rem',
+          marginBottom: '.5rem',
+          backgroundColor: 'white',
+          cursor: 'move',
+        },
+        opacity,
+        border: getBorderStyle(target),
+      }}
+      data-handler-id={handlerId}
+    >
+      <i className='fa-solid fa-arrows' aria-hidden='true' /> {getLabels(labels)}
+    </div>
+  );
+};
 
 ReorderItem.propTypes = {
-  connectDragSource: PropTypes.func,
-  connectDropTarget: PropTypes.func,
-  isDragging: PropTypes.bool,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  index: PropTypes.number.isRequired,
+  moveItem: PropTypes.func.isRequired,
   labels: PropTypes.array,
   target: PropTypes.string.isRequired,
 };
 
-// TODO: refactor to use new hook-API to get rid of this monstrosity
-export default DropTarget(
-  'item',
-  itemTarget,
-  collectTarget,
-)(DragSource('item', itemSource, collectSource)(ReorderItem));
+export default ReorderItem;
