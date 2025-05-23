@@ -1,6 +1,6 @@
 import 'fast-text-encoding';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import * as Sentry from '@sentry/react';
 import { registerLocale, setDefaultLocale } from 'react-datepicker';
 import fi from 'date-fns/locale/fi';
@@ -24,4 +24,6 @@ Sentry.init({
 // // ========================================================
 // // Go!
 // // ========================================================
-ReactDOM.render(<AppContainer store={store} routes={routes(store)} />, document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+root.render(<AppContainer store={store} routes={routes(store)} />);
