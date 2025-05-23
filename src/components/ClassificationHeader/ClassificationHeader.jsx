@@ -5,7 +5,7 @@ import { EDIT } from '../../constants';
 import IsAllowed from '../IsAllowed/IsAllowed';
 import ClassificationButton from './ClassificationButton';
 
-const ClassificationHeader = ({ code, title, createTos, functionAllowed }) => {
+const ClassificationHeader = ({ code, title, createTos, functionAllowed = false }) => {
   const classificationName = `${code} ${title}`;
   const creatable = functionAllowed ? (
     <IsAllowed to={EDIT}>
@@ -30,10 +30,6 @@ ClassificationHeader.propTypes = {
   createTos: PropTypes.func.isRequired,
   functionAllowed: PropTypes.bool,
   title: PropTypes.string.isRequired,
-};
-
-ClassificationHeader.defaultProps = {
-  functionAllowed: false,
 };
 
 export default ClassificationHeader;

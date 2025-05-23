@@ -307,7 +307,7 @@ const createSingleSheetWorkBook = async (attributeTypes, filename, items) => {
  * @param {boolean} isVisible - Indicates whether the component is visible or not.
  * @returns {JSX.Element|null} - The Exporter component.
  */
-const Exporter = ({ attributeTypes, data, className, isVisible }) => {
+const Exporter = ({ attributeTypes, data, className, isVisible = true }) => {
   if (!isVisible) {
     return null;
   }
@@ -347,10 +347,6 @@ Exporter.propTypes = {
   className: PropTypes.string,
   data: PropTypes.array.isRequired,
   isVisible: PropTypes.bool,
-};
-
-Exporter.defaultProps = {
-  isVisible: true,
 };
 
 export default Exporter;

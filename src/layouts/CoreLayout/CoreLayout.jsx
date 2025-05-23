@@ -5,7 +5,7 @@ import { useCookies } from 'hds-react';
 
 import Header from '../../components/Header';
 import Loader from '../../components/Loader';
-import NavigationContainer from '../../components/Navigation/NavigationContainer';
+import Navigation from '../../components/Navigation/Navigation';
 import useMatomo from '../../components/Matomo/hooks/useMatomo';
 
 import './CoreLayout.scss';
@@ -29,7 +29,7 @@ const CoreLayout = ({ children }) => {
       <Header />
       <main id='main'>
         <div className='core-layout__navigation'>
-          <NavigationContainer />
+          <Navigation />
         </div>
         <Suspense fallback={<Loader show />}>
           <div className='container-fluid helerm-content'>{children}</div>

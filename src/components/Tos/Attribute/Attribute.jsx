@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import CreatableSelect from 'react-select/creatable';
 import classnames from 'classnames';
@@ -9,101 +9,78 @@ import { resolveSelectValues, resolveReturnValues } from '../../../utils/helpers
 import { getDisplayLabelForAttribute } from '../../../utils/attributeHelper';
 import './Attribute.scss';
 
-class Attribute extends React.Component {
-  constructor(props) {
-    super(props);
-    this.onChange = this.onChange.bind(this);
-    this.submit = this.submit.bind(this);
-    this.state = {
-      attribute: this.props.attribute,
-      mode: 'view',
-    };
-  }
+const Attribute = ({
+  attribute: initialAttribute,
+  attributeIndex,
+  attributeKey,
+  attributeTypes,
+  documentState,
+  editable,
+  elementId,
+  parentType,
+  showAttributes,
+  tosAttribute,
+  type,
+  typeOptions,
+  updateAttribute,
+  updateFunctionAttribute,
+  updateType,
+  updateTypeSpecifier,
+}) => {
+  const [attribute, setAttribute] = useState(initialAttribute);
+  const [mode, setMode] = useState('view');
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (this.state.attribute !== nextProps.attribute) {
-      this.setState({ attribute: nextProps.attribute });
+  useEffect(() => {
+    if (attribute !== initialAttribute) {
+      setAttribute(initialAttribute);
     }
-  }
+  }, [initialAttribute, attribute]);
 
-  onPromptCreate(label) {
+  const onPromptCreate = (label) => {
     return `Lisää "${label}"`;
-  }
+  };
 
-  onChange(option) {
+  const onChange = (option) => {
     if (option instanceof Array) {
       const values = option.length ? map(option, 'value') : null;
-      this.setState({
-        attribute: values && values.length === 1 ? values[0] : values,
-      });
+
+      setAttribute(values && values.length === 1 ? values[0] : values);
     } else {
-      this.setState({
-        attribute: option?.value ? option?.value : option,
-      });
+      setAttribute(option?.value ? option?.value : option);
     }
-  }
+  };
 
-  getAttributeValue(attribute, attributeIndex, attributeTypes, type) {
-    if (this.state.mode === 'view') {
-      const resolveDisplayName = (attr) => {
-        if (!attr) return '';
-        return getDisplayLabelForAttribute({
-          attributeValue: attr,
-          identifier: attributeIndex,
-        });
-      };
+  const changeState = (newState) => {
+    if (documentState === 'edit') {
+      setMode(newState);
+    }
+  };
 
-      return (
-        <div className='table-value'>
-          {this.state.attribute instanceof Array
-            ? this.state.attribute.map((attr) => resolveDisplayName(attr)).join(', ')
-            : resolveDisplayName(this.state.attribute)}
-        </div>
-      );
+  const activateEditMode = () => {
+    if (mode !== 'edit') {
+      changeState('edit');
+    }
+  };
+
+  const submit = (event) => {
+    if (event) {
+      event.preventDefault();
     }
 
-    if (this.state.mode === 'edit') {
-      if (type === 'attribute') {
-        return this.generateAttributeInput(attributeTypes[attributeIndex], this.state.attribute);
-      }
-      if (type === 'basic') {
-        return this.generateBasicAttributeInput(attributeIndex, attribute);
-      }
-    }
-
-    return null;
-  }
-
-  changeState(newState) {
-    if (this.props.documentState === 'edit') {
-      this.setState({ mode: newState });
-    }
-  }
-
-  activateEditMode() {
-    if (this.state.mode !== 'edit') {
-      this.changeState('edit');
-    }
-  }
-
-  submit(event) {
-    event.preventDefault();
-    if (this.props.attributeIndex === '') {
-      this.props.updateTypeSpecifier(this.state.attribute, this.props.elementId);
-    } else if (this.props.attributeIndex === this.props.attribute) {
-      this.props.updateType(this.state.attribute, this.props.elementId);
-    } else if (this.props.tosAttribute) {
-      this.props.updateFunctionAttribute(this.state.attribute, this.props.attributeIndex);
+    if (attributeIndex === '') {
+      updateTypeSpecifier(attribute, elementId);
+    } else if (attributeIndex === initialAttribute) {
+      updateType(attribute, elementId);
+    } else if (tosAttribute) {
+      updateFunctionAttribute(attribute, attributeIndex);
     } else {
-      this.props.updateAttribute(this.state.attribute, this.props.attributeIndex, this.props.elementId);
+      updateAttribute(attribute, attributeIndex, elementId);
     }
 
-    setTimeout(() => this.changeState('view'), 150);
-  }
+    setTimeout(() => changeState('view'), 150);
+  };
 
-  resolveBaseAttributePlaceholder() {
-    const { parentType } = this.props;
-
+  const resolveBaseAttributePlaceholder = () => {
     switch (parentType) {
       case 'phase':
         return 'Valitse käsittelyvaihe...';
@@ -112,23 +89,25 @@ class Attribute extends React.Component {
       default:
         return null;
     }
-  }
+  };
 
-  resolvePlaceHolder(fieldName) {
+  const resolvePlaceHolder = (fieldName) => {
     return `Valitse ${fieldName.toLowerCase()}...`;
-  }
+  };
 
-  generateAttributeInput(attribute, currentAttribute) {
-    if (attribute?.values.length) {
-      const options = attribute?.values.map((option) => ({
+  const generateAttributeInput = (attributeConfig, currentAttribute) => {
+    if (attributeConfig?.values.length) {
+      const options = attributeConfig?.values.map((option) => ({
         value: option.value,
         label: getDisplayLabelForAttribute({
           attributeValue: option.value,
           id: option.id,
         }),
       }));
+
       if (currentAttribute) {
         const valueArray = currentAttribute instanceof Array ? currentAttribute : [currentAttribute];
+
         forEach(valueArray, (value) => {
           if (!find(options, (option) => option.value === value)) {
             options.push({
@@ -138,135 +117,171 @@ class Attribute extends React.Component {
           }
         });
       }
-      const multi = includes(attribute.multiIn, this.props.parentType);
+
+      const multi = includes(attributeConfig.multiIn, parentType);
+
       return (
         <CreatableSelect
           openMenuOnFocus
           className='form-control edit-attribute__input'
           isClearable
-          value={resolveSelectValues(options, this.state.attribute, multi)}
-          onChange={(emittedValue) => this.onChange(resolveReturnValues(emittedValue, multi))}
-          onBlur={this.submit}
+          value={resolveSelectValues(options, attribute, multi)}
+          onChange={(emittedValue) => onChange(resolveReturnValues(emittedValue, multi))}
+          onBlur={submit}
           autoFocus
           options={options}
           isMulti={multi}
-          placeholder={this.resolvePlaceHolder(attribute.name)}
-          formatCreateLabel={this.onPromptCreate}
+          placeholder={resolvePlaceHolder(attributeConfig.name)}
+          formatCreateLabel={onPromptCreate}
           delimiter=';'
         />
       );
     }
-    if (attribute.values.length === 0 || attribute.type) {
+
+    if (attributeConfig.values.length === 0 || attributeConfig.type) {
       return (
-        <form onSubmit={this.submit}>
+        <form onSubmit={submit}>
           <input
             className='col-xs-6 form-control edit-attribute__input'
-            value={this.state.attribute}
-            onChange={({ target: { value } }) => this.onChange(value)}
-            onBlur={this.submit}
+            value={attribute}
+            onChange={({ target: { value } }) => onChange(value)}
+            onBlur={submit}
             autoFocus
           />
         </form>
       );
     }
+
     return null;
-  }
+  };
 
-  generateBasicAttributeInput(type) {
-    if (type === '') {
+  const generateBasicAttributeInput = (typeValue) => {
+    if (typeValue === '') {
       return (
-        <form onSubmit={this.submit}>
+        <form onSubmit={submit}>
           <input
             className='col-xs-6 form-control edit-attribute__input'
-            value={this.state.attribute || ''}
-            onChange={({ target: { value } }) => this.onChange(value)}
-            onBlur={this.submit}
+            value={attribute || ''}
+            onChange={({ target: { value } }) => onChange(value)}
+            onBlur={submit}
             autoFocus
           />
         </form>
       );
     }
-    return this.generateBasicAttributeDropdown(this.props.typeOptions, type);
-  }
+    return generateBasicAttributeDropdown(typeOptions);
+  };
 
-  generateBasicAttributeDropdown(typeOptions) {
-    const options = [];
-    Object.keys(typeOptions).forEach((key) => {
-      if (Object.hasOwn(typeOptions, key)) {
-        options.push({
-          label: typeOptions[key].value,
-          value: typeOptions[key].value,
+  const generateBasicAttributeDropdown = (options) => {
+    const selectOptions = [];
+
+    Object.keys(options).forEach((key) => {
+      if (Object.hasOwn(options, key)) {
+        selectOptions.push({
+          label: options[key].value,
+          value: options[key].value,
         });
       }
     });
-    if (this.state.attribute) {
-      const valueArray = this.state.attribute instanceof Array ? this.state.attribute : [this.state.attribute];
+
+    if (attribute) {
+      const valueArray = attribute instanceof Array ? attribute : [attribute];
+
       forEach(valueArray, (value) => {
-        if (!find(options, (option) => option.value === value)) {
-          options.push({
+        if (!find(selectOptions, (option) => option.value === value)) {
+          selectOptions.push({
             label: value,
             value,
           });
         }
       });
     }
+
     return (
-      <form onSubmit={this.submit}>
+      <form onSubmit={submit}>
         <CreatableSelect
           openMenuOnFocus
           isClearable
           autoFocus
           className='col-xs-6 form-control edit-attribute__input'
-          value={resolveSelectValues(options, this.state.attribute)}
-          onChange={(option) => this.onChange(option ? option.value : null)}
-          onBlur={this.submit}
-          options={options}
-          placeholder={this.resolveBaseAttributePlaceholder() || 'Valitse...'}
-          formatCreateLabel={this.onPromptCreate}
+          value={resolveSelectValues(selectOptions, attribute)}
+          onChange={(option) => onChange(option ? option.value : null)}
+          onBlur={submit}
+          options={selectOptions}
+          placeholder={resolveBaseAttributePlaceholder() || 'Valitse...'}
+          formatCreateLabel={onPromptCreate}
           delimiter=';'
         />
       </form>
     );
-  }
+  };
 
-  render() {
-    const { attribute, attributeIndex, showAttributes, attributeKey, attributeTypes, editable, type } = this.props;
+  const getAttributeValue = (attributeValue, attrIndex, attrTypes, typeValue) => {
+    if (mode === 'view') {
+      const resolveDisplayName = (attr) => {
+        if (!attr) return '';
 
-    if (attribute === null || (attribute !== null && !(type === 'basic' || type === 'attribute'))) {
-      return null;
-    }
+        return getDisplayLabelForAttribute({
+          attributeValue: attr,
+          identifier: attrIndex,
+        });
+      };
 
-    if (editable === false && attribute !== null) {
       return (
-        <span className='list-group-item col-xs-6 attribute-basic'>
-          <strong>{attributeIndex}:</strong>
-          <div>{attribute || '\u00A0'}</div>
-        </span>
+        <div className='table-value'>
+          {attribute instanceof Array
+            ? attribute.map((attr) => resolveDisplayName(attr)).join(', ')
+            : resolveDisplayName(attribute)}
+        </div>
       );
     }
 
-    const attributeValue = this.getAttributeValue(attribute, attributeIndex, attributeTypes, type);
+    if (mode === 'edit') {
+      if (typeValue === 'attribute') {
+        return generateAttributeInput(attrTypes[attrIndex], attribute);
+      }
+      if (typeValue === 'basic') {
+        return generateBasicAttributeInput(attrIndex);
+      }
+    }
 
+    return null;
+  };
+
+  if (initialAttribute === null || (initialAttribute !== null && !(type === 'basic' || type === 'attribute'))) {
+    return null;
+  }
+
+  if (editable === false && initialAttribute !== null) {
     return (
-      <span
-        onClick={() => this.activateEditMode()}
-        onKeyUp={(e) => {
-          if (e.key === 'Enter') {
-            this.activateEditMode();
-          }
-        }}
-        className={classnames([
-          'list-group-item col-xs-6 attribute',
-          showAttributes ? 'visible' : 'hidden',
-          type === 'basic' ? 'attribute-basic' : '',
-        ])}
-      >
-        <span className='table-key'>{attributeKey}</span>
-        {attributeValue}
+      <span className='list-group-item col-xs-6 attribute-basic'>
+        <strong>{attributeIndex}:</strong>
+        <div>{initialAttribute || '\u00A0'}</div>
       </span>
     );
   }
-}
+
+  const attributeValue = getAttributeValue(initialAttribute, attributeIndex, attributeTypes, type);
+
+  return (
+    <span
+      onClick={() => activateEditMode()}
+      onKeyUp={(e) => {
+        if (e.key === 'Enter') {
+          activateEditMode();
+        }
+      }}
+      className={classnames([
+        'list-group-item col-xs-6 attribute',
+        showAttributes ? 'visible' : 'hidden',
+        type === 'basic' ? 'attribute-basic' : '',
+      ])}
+    >
+      <span className='table-key'>{attributeKey}</span>
+      {attributeValue}
+    </span>
+  );
+};
 
 Attribute.propTypes = {
   attribute: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),

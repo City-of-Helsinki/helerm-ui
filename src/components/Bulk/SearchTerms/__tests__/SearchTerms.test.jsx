@@ -1,4 +1,3 @@
-import { createMemoryHistory } from 'history';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { screen } from '@testing-library/react';
@@ -8,15 +7,14 @@ import SearchTerms from '../SearchTerms';
 import renderWithProviders from '../../../../utils/renderWithProviders';
 
 const renderComponent = () => {
-  const history = createMemoryHistory();
-  const store = storeCreator(history, {});
+  const store = storeCreator({});
   const dummyFunction = vi.fn();
 
   return renderWithProviders(
     <BrowserRouter>
       <SearchTerms attributeValues={{}} onSearch={dummyFunction} resetSearchResults={dummyFunction} searchTerms={[]} />
     </BrowserRouter>,
-    { history, store },
+    { store },
   );
 };
 

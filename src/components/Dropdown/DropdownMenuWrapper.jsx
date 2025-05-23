@@ -1,9 +1,7 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
-const DropdownMenuWrapper = (props) => {
-  const { children, listenEvents, onClickOutside, ...divProps } = props;
-
+const DropdownMenuWrapper = ({ children, listenEvents = ['mouseup', 'touchend'], onClickOutside, ...divProps }) => {
   const wrapperRef = useRef(null);
 
   const handleClickOutside = useCallback(
@@ -40,10 +38,6 @@ DropdownMenuWrapper.propTypes = {
   children: PropTypes.node,
   listenEvents: PropTypes.arrayOf(PropTypes.string),
   onClickOutside: PropTypes.func.isRequired,
-};
-
-DropdownMenuWrapper.defaultProps = {
-  listenEvents: ['mouseup', 'touchend'],
 };
 
 export default DropdownMenuWrapper;

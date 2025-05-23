@@ -1,18 +1,21 @@
-import thunk from 'redux-thunk';
-import { routerMiddleware } from 'connected-react-router';
+
 import { configureStore } from '@reduxjs/toolkit';
 
 import makeRootReducer from './rootReducers';
 
-
-const storeCreator = (history, initialState = {}) => {
+const storeCreator = (initialState = {}) => {
   // ======================================================
   // Store Instantiation and HMR Setup
   // ======================================================
   const store = configureStore({
-    middleware: [thunk, routerMiddleware(history)],
-    reducer: makeRootReducer(history),
-    preloadedState: initialState
+    reducer: makeRootReducer(),
+    preloadedState: initialState,
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ['router/LOCATION_CHANGE'],
+        ignoredPaths: ['router.location'],
+      },
+    }),
   });
 
   store.asyncReducers = {};
