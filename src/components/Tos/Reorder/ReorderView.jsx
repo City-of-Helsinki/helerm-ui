@@ -79,9 +79,10 @@ class ReorderView extends React.Component {
           {items.map((item, index) => (
             <ReorderItem
               key={item.key}
+              id={item.id}
               index={index.toString()}
-              labels={this.getValues(values[item.id].attributes, target)}
               moveItem={this.moveItem}
+              labels={this.getValues(values[item.id].attributes, target)}
               target={target}
             />
           ))}
