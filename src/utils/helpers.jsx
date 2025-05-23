@@ -69,6 +69,8 @@ export function convertToTree(itemList) {
  * @returns {{entities: any, result: any}}
  */
 export function normalizeTosFromApi(tos) {
+  const classificationInfo = tos.classification;
+
   tos.phases.forEach((p, phaseIndex) => {
     p.index = p.index || phaseIndex;
     p.is_attributes_open = false;
@@ -82,7 +84,16 @@ export function normalizeTosFromApi(tos) {
       });
     });
   });
-  const tosSchema = new schema.Entity('tos');
+
+  const tosSchema = new schema.Entity(
+    'tos',
+    {},
+    {
+      processStrategy: (entity) => {
+        return { ...entity, classification: classificationInfo };
+      },
+    },
+  );
   const phase = new schema.Entity('phases');
   const action = new schema.Entity('actions');
   const record = new schema.Entity('records');

@@ -1,12 +1,25 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { screen } from '@testing-library/react';
-import { createBrowserHistory } from 'history';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
 import * as useAuth from '../../../hooks/useAuth';
-import LoginContainer from '../LoginContainer';
+import Login from '../Login';
 import renderWithProviders from '../../../utils/renderWithProviders';
+
+const middlewares = [thunk];
+const mockStore = configureStore(middlewares);
+
+vi.mock('../../../store/reducers/user', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    login: vi.fn().mockReturnValue({ type: 'user/login' }),
+    logout: vi.fn().mockReturnValue({ type: 'user/logout' }),
+  };
+});
 
 const loginMock = vi.fn();
 const logoutMock = vi.fn();
@@ -20,39 +33,27 @@ vi.spyOn(useAuth, 'default').mockImplementation(() => ({
   logout: logoutMock,
 }));
 
-const renderComponent = (history) =>
-  renderWithProviders(
+const renderComponent = (storeOverride) => {
+  const store = storeOverride ?? mockStore({});
+
+  return renderWithProviders(
     <BrowserRouter>
-      <LoginContainer />
+      <Login />
     </BrowserRouter>,
-    { history },
+    { store },
   );
+};
 
 describe('<Login />', () => {
   it('should render correctly', () => {
-    const history = createBrowserHistory();
-
-    renderComponent(history);
+    renderComponent();
   });
 
   it('should display user name with link', async () => {
-    const history = createBrowserHistory();
-    renderComponent(history);
+    renderComponent();
 
     expect(await screen.findByText(/Test Tester/)).toBeInTheDocument();
     expect(await screen.findByText(/Kirjaudu ulos/)).toBeInTheDocument();
-  });
-
-  it('should display given name with family name', async () => {
-    vi.spyOn(useAuth, 'default').mockImplementationOnce(() => ({
-      user: { profile: { given_name: 'Test', family_name: 'Tester', name: undefined } },
-      authenticated: true,
-    }));
-
-    const history = createBrowserHistory();
-    renderComponent(history);
-
-    expect(await screen.findByText(/Test Tester/)).toBeInTheDocument();
   });
 
   it('should display just given name', async () => {
@@ -61,8 +62,7 @@ describe('<Login />', () => {
       authenticated: true,
     }));
 
-    const history = createBrowserHistory();
-    renderComponent(history);
+    renderComponent();
 
     expect(await screen.findByText(/Test/)).toBeInTheDocument();
   });
@@ -73,8 +73,7 @@ describe('<Login />', () => {
       authenticated: false,
     }));
 
-    const history = createBrowserHistory();
-    renderComponent(history);
+    renderComponent();
 
     expect(screen.queryByText(/Test Tester/)).not.toBeInTheDocument();
     expect(await screen.findByRole('button', { name: /Kirjaudu sisään/ })).toBeInTheDocument();
@@ -87,15 +86,20 @@ describe('<Login />', () => {
       authenticated: false,
     }));
 
-    const history = createBrowserHistory();
-    renderComponent(history);
+    const store = mockStore({});
+
+    renderComponent(store);
 
     const loginLink = await screen.findByRole('button', { name: /Kirjaudu sisään/ });
     const user = userEvent.setup();
 
     await user.click(loginLink);
 
-    expect(loginMock).toHaveBeenCalled();
+    waitFor(() => {
+      expect(loginMock).toHaveBeenCalled();
+
+      expect(store.getActions()).toEqual([]);
+    });
   });
 
   it('should logout', async () => {
@@ -105,14 +109,33 @@ describe('<Login />', () => {
       authenticated: true,
     }));
 
-    const history = createBrowserHistory();
-    renderComponent(history);
+    const store = mockStore({});
+
+    renderComponent(store);
 
     const logoutLink = await screen.findByRole('button', { name: /Kirjaudu ulos/ });
     const user = userEvent.setup();
 
     await user.click(logoutLink);
 
-    expect(logoutMock).toHaveBeenCalled();
+    const expectedActions = [
+      {
+        type: 'user/logout/pending',
+        payload: undefined,
+        meta: expect.anything(),
+      },
+      { type: 'user/setLoginStatus', payload: 'NONE' },
+      {
+        type: 'user/logout/fulfilled',
+        payload: null,
+        meta: expect.anything(),
+      },
+    ];
+
+    waitFor(() => {
+      expect(logoutMock).toHaveBeenCalled();
+
+      expect(store.getActions()).toEqual(expectedActions);
+    });
   });
 });

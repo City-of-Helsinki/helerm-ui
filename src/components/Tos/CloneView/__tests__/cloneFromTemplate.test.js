@@ -1,14 +1,14 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { cloneFromTemplate, REQUEST_TOS, RECEIVE_TEMPLATE, TOS_ERROR } from '../reducer';
 import api from '../../../../utils/api'
+import { cloneFromTemplateThunk } from '../../../../store/reducers/tos-toolkit/cloneView';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-describe('cloneFromTemplate', () => {
-  it('should dispatch REQUEST_TOS and RECEIVE_TEMPLATE actions on successful API response', () => {
+describe('cloneFromTemplateThunk', () => {
+  it('should dispatch pending and fulfilled actions on successful API response', async () => {
     const template = {
       count: 1,
       next: null,
@@ -23,43 +23,45 @@ describe('cloneFromTemplate', () => {
           name: "Test"
         }
       ]
-    }
-      ;
+    };
+
     const endpoint = '/api/templates';
     const id = 123;
 
     const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => template }));
-
     vi.spyOn(api, 'get').mockImplementationOnce(mockApiGet);
 
-    const expectedActions = [
-      { type: REQUEST_TOS },
-      { type: RECEIVE_TEMPLATE, payload: template },
-    ];
     const store = mockStore({});
+    await store.dispatch(cloneFromTemplateThunk({ endpoint, id }));
 
+    const actions = store.getActions();
 
-    return store.dispatch(cloneFromTemplate(endpoint, id)).then(() => {
-      expect(store.getActions()).toEqual(expectedActions);
-    });
+    expect(actions[0].type).toBe('selectedTOS/cloneFromTemplate/pending');
+
+    const lastAction = actions[actions.length - 1];
+    expect(lastAction.type).toBe('selectedTOS/cloneFromTemplate/fulfilled');
+    expect(lastAction.payload).toEqual(template);
   });
 
-  it('should dispatch REQUEST_TOS and TOS_ERROR actions on failed API response', () => {
+  it('should dispatch pending and rejected actions on failed API response', async () => {
     const endpoint = '/api/templates';
     const id = 123;
 
-    const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ status: 404 }));
-
+    const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({
+      ok: false,
+      statusText: 'Not Found'
+    }));
     vi.spyOn(api, 'get').mockImplementationOnce(mockApiGet);
 
-    const expectedActions = [
-      { type: REQUEST_TOS },
-      { type: TOS_ERROR },
-    ];
     const store = mockStore({});
+    await store.dispatch(cloneFromTemplateThunk({ endpoint, id }));
 
-    return store.dispatch(cloneFromTemplate(endpoint, id)).then(() => {
-      expect(store.getActions()).toEqual(expectedActions);
-    });
+    const actions = store.getActions();
+
+    expect(actions[0].type).toBe('selectedTOS/cloneFromTemplate/pending');
+
+    const lastAction = actions[actions.length - 1];
+    expect(lastAction.type).toBe('selectedTOS/cloneFromTemplate/rejected');
+    expect(lastAction.payload).toBe('Not Found');
   });
 });

@@ -8,51 +8,55 @@ import { TYPE_LABELS } from '../../../constants';
 
 import './FacetedSearchResults.scss';
 
-const FacetedSearchResults = ({ items, highlightedId, metadata, onSelectItem }) => (
-  <div className='faceted-search-results'>
-    <div className='faceted-search-results-size'>Hakutulokset ({items.length})</div>
-    {items.map((item) => (
-      <div
-        className={classnames('faceted-search-results-item', {
-          'faceted-search-results-item-selected': item.id === highlightedId,
-        })}
-        key={item.id}
-        onClick={() => onSelectItem(item)}
-        onKeyUp={(event) => {
-          if (event.key === 'Enter') {
-            onSelectItem(item);
-          }
-        }}
-      >
-        <div className='faceted-search-results-item-info'>
-          <div className='faceted-search-results-item-type'>{TYPE_LABELS[item.type]}</div>
-          <div
-            className='faceted-search-results-item-title'
-            dangerouslySetInnerHTML={{ __html: item.matchedName || item.name }}
-          />
-          <div className='faceted-search-results-item-path'>{item.path ? item.path.join(' > ') : ''}</div>
-          {(item.matchedAttributes || []).map((attr) => (
+const FacetedSearchResults = ({ items, highlightedId, metadata, onSelectItem }) => {
+  const validItems = items.filter((item) => item?.id);
+
+  return (
+    <div className='faceted-search-results'>
+      <div className='faceted-search-results-size'>Hakutulokset ({validItems.length})</div>
+      {validItems.map((item, index) => (
+        <div
+          className={classnames('faceted-search-results-item', {
+            'faceted-search-results-item-selected': item.id === highlightedId,
+          })}
+          key={`${item.type}-${item.id}-${index}`}
+          onClick={() => onSelectItem(item)}
+          onKeyUp={(event) => {
+            if (event.key === 'Enter') {
+              onSelectItem(item);
+            }
+          }}
+        >
+          <div className='faceted-search-results-item-info'>
+            <div className='faceted-search-results-item-type'>{TYPE_LABELS[item.type]}</div>
             <div
-              className='faceted-search-results-item-attribute'
-              key={`${item.id}-${attr.key}`}
-              dangerouslySetInnerHTML={{
-                __html: `${metadata[attr.key] ? metadata[attr.key].name : attr.key}: ${attr.value}`,
-              }}
+              className='faceted-search-results-item-title'
+              dangerouslySetInnerHTML={{ __html: item.matchedName || item.name }}
             />
-          ))}
+            <div className='faceted-search-results-item-path'>{item.path ? item.path.join(' > ') : ''}</div>
+            {(item.matchedAttributes || []).map((attr) => (
+              <div
+                className='faceted-search-results-item-attribute'
+                key={`${item.id}-${attr.key}`}
+                dangerouslySetInnerHTML={{
+                  __html: `${metadata[attr.key] ? metadata[attr.key].name : attr.key}: ${attr.value}`,
+                }}
+              />
+            ))}
+          </div>
+          <div className='faceted-search-results-item-link'>
+            <i
+              className={classnames('fa', {
+                'fa-angle-right': item.id !== highlightedId,
+                'fa-angle-left': item.id === highlightedId,
+              })}
+            />
+          </div>
         </div>
-        <div className='faceted-search-results-item-link'>
-          <i
-            className={classnames('fa', {
-              'fa-angle-right': item.id !== highlightedId,
-              'fa-angle-left': item.id === highlightedId,
-            })}
-          />
-        </div>
-      </div>
-    ))}
-  </div>
-);
+      ))}
+    </div>
+  );
+};
 
 FacetedSearchResults.propTypes = {
   highlightedId: PropTypes.string,

@@ -21,6 +21,7 @@ const Attributes = ({
 }) => {
   const unwantedAttributes = ['TypeSpecifier', 'RecordType', 'ActionType', 'PhaseType'];
   const defaultAttributes = [];
+
   Object.keys(attributeTypes).forEach((key) => {
     if (
       Object.hasOwn(attributeTypes, key) &&

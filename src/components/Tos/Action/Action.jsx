@@ -1,521 +1,499 @@
 /* eslint-disable sonarjs/todo-tag */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable react/no-access-state-in-setstate */
-import React, { Component } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import update from 'immutability-helper';
 import Sticky from 'react-sticky-el';
 import './Action.scss';
 import { uniqueId } from 'lodash';
 
 import Record from '../Record/Record';
 import Attributes from '../Attribute/Attributes';
-import EditorForm from '../EditorForm/EditorForm';
-import Popup from '../../Popup';
-import Dropdown from '../../Dropdown';
 import DeleteView from '../DeleteView/DeleteView';
+import Popup from '../../Popup';
 import ReorderView from '../Reorder/ReorderView';
 import ImportView from '../ImportView/ImportView';
+import EditorForm from '../EditorForm/EditorForm';
+import Dropdown from '../../Dropdown';
 import { DROPDOWN_ITEMS } from '../../../constants';
 import { attributeButton } from '../../../utils/attributeHelper';
 
-class Action extends Component {
-  constructor(props) {
-    super(props);
-    this.onTypeChange = this.onTypeChange.bind(this);
-    this.onTypeInputChange = this.onTypeInputChange.bind(this);
-    this.onTypeSpecifierChange = this.onTypeSpecifierChange.bind(this);
-    this.createRecord = this.createRecord.bind(this);
-    this.cancelRecordCreation = this.cancelRecordCreation.bind(this);
-    this.editActionForm = this.editActionForm.bind(this);
-    this.editActionWithForm = this.editActionWithForm.bind(this);
-    this.cancelRecordComplement = this.cancelRecordComplement.bind(this);
-    this.updateTypeSpecifier = this.updateTypeSpecifier.bind(this);
-    this.updateActionType = this.updateActionType.bind(this);
-    this.updateActionAttribute = this.updateActionAttribute.bind(this);
-    this.renderActionButtons = this.renderActionButtons.bind(this);
-    this.renderBasicAttributes = this.renderBasicAttributes.bind(this);
-    this.disableEditMode = this.disableEditMode.bind(this);
-    this.onEditFormShowMoreAction = this.onEditFormShowMoreAction.bind(this);
-    this.onEditFormShowMore = this.onEditFormShowMore.bind(this);
-    this.complementRecordAdd = this.complementRecordAdd.bind(this);
-    this.scrollToAction = this.scrollToAction.bind(this);
-    this.scrollToRecord = this.scrollToRecord.bind(this);
-    this.updateTopOffsetForSticky = this.updateTopOffsetForSticky.bind(this);
+const Action = React.forwardRef(
+  (
+    {
+      action,
+      actionTypes,
+      actions,
+      addRecord,
+      attributeTypes,
+      changeOrder,
+      displayMessage,
+      documentState,
+      editAction,
+      editActionAttribute,
+      editRecord,
+      editRecordAttribute,
+      importItems,
+      phases,
+      phasesOrder,
+      recordTypes,
+      records,
+      removeAction,
+      removeRecord,
+      setActionVisibility,
+      setRecordVisibility,
+    },
+    ref,
+  ) => {
+    const [typeSpecifier, setTypeSpecifier] = useState(action.attributes.TypeSpecifier || null);
+    const [type, setType] = useState(action.attributes.ActionType || null);
+    const [deleting, setDeleting] = useState(false);
+    const [showReorderView, setShowReorderView] = useState(false);
+    const [showImportView, setShowImportView] = useState(false);
+    const [mode, setMode] = useState('view');
+    const [editingTypeSpecifier, setEditingTypeSpecifier] = useState(false);
+    const [editingAction, setEditingAction] = useState(false);
+    const [complementingAction, setComplementingAction] = useState(false);
+    const [creatingRecord, setCreatingRecord] = useState(false);
+    const [complementingRecordAdd, setComplementingRecordAdd] = useState(false);
+    const [record, setRecord] = useState(null);
+    const [topOffset, setTopOffset] = useState(0);
 
-    this.state = {
-      attributes: this.props.action.attributes,
-      complementingAction: false,
-      complementingRecordAdd: false,
-      creatingRecord: false,
-      deleting: false,
-      editingAction: false,
-      editingType: false,
-      editingTypeSpecifier: false,
-      mode: 'view',
-      record: null,
-      showImportView: false,
-      showReorderView: false,
-      type: this.props.action.attributes.ActionType || null,
-      typeSpecifier: this.props.action.attributes.TypeSpecifier || null,
-      complementRecordAdd: false,
-      topOffset: 0,
-    };
+    const element = ref;
+    const records_ref = useRef({});
 
-    this.records = {};
-  }
+    const updateTopOffsetForSticky = useCallback(() => {
+      const headerEl = document.getElementById('single-tos-header-container');
+      const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 0;
+      const menuEl = document.getElementById('navigation-menu');
+      const menuHeight = menuEl ? menuEl.getBoundingClientRect().height : 0;
+      const phaseTitles = document.getElementsByClassName('phase-title-sticky');
+      let phaseTitleHeight = 35; // magic number for a title that fits on one row
+      if (phaseTitles.length) {
+        phaseTitleHeight = phaseTitles[phaseTitles.length - 1].getBoundingClientRect().height;
+      }
+      setTopOffset(headerHeight + menuHeight + phaseTitleHeight);
+    }, []);
 
-  componentDidMount() {
-    this.updateTopOffsetForSticky();
-    window.addEventListener('resize', this.updateTopOffsetForSticky);
-  }
+    const disableEditMode = useCallback(() => {
+      setEditingTypeSpecifier(false);
+      setEditingAction(false);
+      setComplementingAction(false);
+      setMode('view');
+    }, []);
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps?.action.attributes.TypeSpecifier) {
-      this.setState({
-        typeSpecifier: nextProps?.action.attributes.TypeSpecifier,
+    useEffect(() => {
+      updateTopOffsetForSticky();
+      window.addEventListener('resize', updateTopOffsetForSticky);
+
+      return () => {
+        window.removeEventListener('resize', updateTopOffsetForSticky);
+      };
+    }, [updateTopOffsetForSticky]);
+
+    useEffect(() => {
+      if (action.attributes.TypeSpecifier) {
+        setTypeSpecifier(action.attributes.TypeSpecifier);
+      }
+      if (action.attributes.ActionType) {
+        setType(action.attributes.ActionType);
+      }
+      if (documentState === 'view') {
+        disableEditMode();
+      }
+    }, [action.attributes, documentState, disableEditMode]);
+
+    const onTypeSpecifierChange = useCallback((event) => {
+      setTypeSpecifier(event.target.value);
+    }, []);
+
+    const toggleReorderView = useCallback(() => {
+      setShowReorderView((prev) => !prev);
+    }, []);
+
+    const toggleImportView = useCallback(() => {
+      setShowImportView((prev) => !prev);
+    }, []);
+
+    const editTypeSpecifier = useCallback(() => {
+      if (documentState === 'edit') {
+        setEditingTypeSpecifier(true);
+        setMode('edit');
+      }
+    }, [documentState]);
+
+    const editActionForm = useCallback(() => {
+      if (documentState === 'edit') {
+        setEditingAction(true);
+        setMode('edit');
+      }
+    }, [documentState]);
+
+    const complementRecordAdd = useCallback(() => {
+      if (documentState !== 'edit') {
+        setComplementingRecordAdd(true);
+      }
+    }, [documentState]);
+
+    const onEditFormShowMoreAction = useCallback((e) => {
+      e.preventDefault();
+      setComplementingAction((prev) => !prev);
+      setEditingAction((prev) => !prev);
+    }, []);
+
+    const updateActionTypeSpecifier = useCallback(
+      (event) => {
+        event?.preventDefault();
+        const updatedTypeSpecifier = {
+          typeSpecifier,
+          actionId: action.id,
+        };
+        editActionAttribute(updatedTypeSpecifier);
+        disableEditMode();
+      },
+      [action.id, typeSpecifier, editActionAttribute, disableEditMode],
+    );
+
+    const updateActionType = useCallback(
+      (event) => {
+        event?.preventDefault();
+        const updatedActionType = {
+          type,
+          actionId: action.id,
+        };
+        editActionAttribute(updatedActionType);
+        disableEditMode();
+      },
+      [action.id, type, editActionAttribute, disableEditMode],
+    );
+
+    const updateActionAttribute = useCallback(
+      (attribute, attributeIndex) => {
+        const updatedActionAttribute = { attribute, attributeIndex, actionId: action.id };
+        editActionAttribute(updatedActionAttribute);
+      },
+      [action.id, editActionAttribute],
+    );
+
+    const editActionWithForm = useCallback(
+      (attributes, actionId, disableEditModeFlag = true) => {
+        setTypeSpecifier(attributes.TypeSpecifier);
+        setType(attributes.ActionType);
+        editAction(attributes, actionId);
+        if (disableEditModeFlag) {
+          disableEditMode();
+        }
+      },
+      [editAction, disableEditMode],
+    );
+
+    const createNewRecord = useCallback(() => {
+      setCreatingRecord(true);
+      setRecord({ attributes: {} });
+    }, []);
+
+    const cancelRecordCreation = useCallback(() => {
+      setCreatingRecord(false);
+    }, []);
+
+    const cancelRecordComplement = useCallback(() => {
+      setComplementingRecordAdd(false);
+
+      setRecord(null);
+    }, []);
+
+    const onEditFormShowMore = useCallback((e, recordAttributes) => {
+      e.preventDefault();
+      const newAttrs = {};
+      Object.keys(recordAttributes).forEach((key) => {
+        if (recordAttributes?.[key].value) {
+          Object.assign(newAttrs, { [key]: recordAttributes?.[key].value });
+        }
       });
-    }
-    if (nextProps?.action.attributes.ActionType) {
-      this.setState({ type: nextProps?.action.attributes.ActionType });
-    }
-    if (nextProps.documentState === 'view') {
-      this.disableEditMode();
-    }
-  }
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.updateTopOffsetForSticky);
-  }
+      setRecord((prev) => ({
+        ...prev,
+        attributes: newAttrs,
+      }));
 
-  onEditFormShowMore(e, recordAttributes) {
-    // TODO: handle merge the attributes of createNewRecordForm here
-    e.preventDefault();
-    const newAttrs = {};
-    Object.keys(recordAttributes).forEach((key) => {
-      if (recordAttributes?.[key].value) {
-        Object.assign(newAttrs, { [key]: recordAttributes?.[key].value });
-      }
-    });
-    this.setState(
-      {
-        record: {
-          ...this.state.record,
-          attributes: newAttrs,
-        },
+      setComplementingRecordAdd((prev) => !prev);
+      setCreatingRecord((prev) => !prev);
+    }, []);
+
+    const createRecord = useCallback(
+      (attributes, actionId) => {
+        setCreatingRecord(false);
+        setComplementingRecordAdd(false);
+        addRecord(attributes, actionId);
       },
-      () => {
-        this.setState({
-          complementingRecordAdd: !this.state.complementingRecordAdd,
-          creatingRecord: !this.state.creatingRecord,
-        });
-      },
+      [addRecord],
     );
-  }
 
-  onEditFormShowMoreAction(e) {
-    e.preventDefault();
-    this.setState((prevState) => ({
-      complementingAction: !prevState.complementingAction,
-      editingAction: !prevState.editingAction,
-    }));
-  }
+    const cancelDeletion = useCallback(() => {
+      setDeleting(false);
+    }, []);
 
-  onTypeSpecifierChange(event) {
-    this.setState({ typeSpecifier: event.target.value });
-  }
+    const deleteAction = useCallback(() => {
+      removeAction(action.id, action.phase);
+      setDeleting(false);
+    }, [action.id, action.phase, removeAction]);
+    const getTargetName = useCallback(() => {
+      return typeSpecifier || type || '';
+    }, [typeSpecifier, type]);
 
-  onTypeChange(value) {
-    this.setState(
-      update(this.state, {
-        type: {
-          $set: value,
-        },
-      }),
-    );
-  }
+    const generateDropdownItems = useCallback(() => {
+      return [
+        { ...DROPDOWN_ITEMS[0], text: 'Uusi asiakirja', action: () => createNewRecord() },
+        { ...DROPDOWN_ITEMS[1], text: 'Muokkaa toimenpidettä', action: () => editActionForm() },
+        { ...DROPDOWN_ITEMS[2], text: 'Järjestä asiakirjoja', action: () => toggleReorderView() },
+        { ...DROPDOWN_ITEMS[3], text: 'Tuo asiakirjoja', action: () => toggleImportView() },
+        { ...DROPDOWN_ITEMS[4], text: 'Poista toimenpide', action: () => setDeleting(true) },
+      ];
+    }, [createNewRecord, editActionForm, toggleReorderView, toggleImportView]);
 
-  onTypeInputChange(event) {
-    this.setState({ type: event.target.value });
-  }
+    const generateRecords = useCallback(
+      (actionRecords) => {
+        const elements = [];
+        if (!actionRecords) return elements;
 
-  getTargetText(value) {
-    if (value === undefined) {
-      return '';
-    }
-    return value;
-  }
-
-  toggleImportView() {
-    const current = this.state.showImportView;
-    this.setState({ showImportView: !current });
-  }
-
-  editTypeSpecifier() {
-    if (this.props.documentState === 'edit') {
-      this.setState({ editingTypeSpecifier: true, mode: 'edit' });
-    }
-  }
-
-  editActionForm() {
-    if (this.props.documentState === 'edit') {
-      this.setState({ editingAction: true, mode: 'edit' });
-    }
-  }
-
-  complementRecordAdd() {
-    if (this.props.documentState !== 'edit') {
-      this.setState({ complementRecordAdd: true });
-    }
-  }
-
-  disableEditMode() {
-    this.setState({
-      editingTypeSpecifier: false,
-      editingType: false,
-      editingAction: false,
-      complementingAction: false,
-      mode: 'view',
-    });
-  }
-
-  toggleReorderView() {
-    const current = this.state.showReorderView;
-    this.setState({ showReorderView: !current });
-  }
-
-  updateTopOffsetForSticky() {
-    // calculates heights for elements that are already sticking
-    // (navigation menu, tos header and phase title)
-    const headerEl = document.getElementById('single-tos-header-container');
-    const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 0;
-    const menuEl = document.getElementById('navigation-menu');
-    const menuHeight = menuEl ? menuEl.getBoundingClientRect().height : 0;
-    const phaseTitles = document.getElementsByClassName('phase-title-sticky');
-    let phaseTitleHeight = 35; // magic number for a title that fits on one row
-    if (phaseTitles.length) {
-      phaseTitleHeight = phaseTitles[phaseTitles.length - 1].getBoundingClientRect().height;
-    }
-    this.setState({ topOffset: headerHeight + menuHeight + phaseTitleHeight });
-  }
-
-  updateTypeSpecifier(event) {
-    event.preventDefault();
-    const updatedTypeSpecifier = {
-      typeSpecifier: this.state.typeSpecifier,
-      actionId: this.props.action.id,
-    };
-    this.props.editActionAttribute(updatedTypeSpecifier);
-    this.disableEditMode();
-  }
-
-  updateActionType(event) {
-    event.preventDefault();
-    const updatedActionType = {
-      type: this.state.type,
-      actionId: this.props.action.id,
-    };
-    this.props.editActionAttribute(updatedActionType);
-    this.disableEditMode();
-  }
-
-  updateActionAttribute(attribute, attributeIndex, actionId) {
-    this.setState({
-      attributes: {
-        [attributeIndex]: attribute,
-      },
-    });
-    const updatedActionAttribute = { attribute, attributeIndex, actionId };
-    this.props.editActionAttribute(updatedActionAttribute);
-  }
-
-  editActionWithForm(attributes, actionId, disableEditMode = true) {
-    this.setState({
-      attributes,
-      typeSpecifier: attributes.TypeSpecifier,
-      type: attributes.ActionType,
-    });
-    this.props.editAction(attributes, actionId);
-    if (disableEditMode) {
-      this.disableEditMode();
-    }
-  }
-
-  createNewRecord() {
-    this.setState({ creatingRecord: true, record: { attributes: {} } });
-  }
-
-  cancelRecordCreation() {
-    this.setState({ creatingRecord: false });
-  }
-
-  cancelRecordComplement() {
-    this.setState({
-      complementingRecordAdd: false,
-      recordId: undefined,
-    });
-  }
-
-  delete() {
-    this.setState({ deleting: false });
-    this.props.removeAction(this.props.action.id, this.props.action.phase);
-  }
-
-  cancelDeletion() {
-    this.setState({ deleting: false });
-  }
-
-  createRecord(attributes, actionId) {
-    this.setState({
-      creatingRecord: false,
-      complementingRecordAdd: false,
-    });
-    this.props.addRecord(attributes, actionId);
-  }
-
-  generateRecords(records) {
-    const elements = [];
-    Object.keys(records).forEach((key) => {
-      if (Object.hasOwn(this.props.records, records[key])) {
-        elements.push(
-          <Record
-            key={key}
-            record={this.props.records[records[key]]}
-            editRecord={this.props.editRecord}
-            editRecordAttribute={this.props.editRecordAttribute}
-            removeRecord={this.props.removeRecord}
-            recordTypes={this.props.recordTypes}
-            documentState={this.props.documentState}
-            attributeTypes={this.props.attributeTypes}
-            displayMessage={this.props.displayMessage}
-            setRecordVisibility={this.props.setRecordVisibility}
-            ref={(element) => {
-              this.records[records[key]] = element;
-            }}
-          />,
-        );
-      }
-    });
-    return elements;
-  }
-
-  generateDropdownItems() {
-    return [
-      { ...DROPDOWN_ITEMS[0], text: 'Uusi asiakirja', action: () => this.createNewRecord() },
-      { ...DROPDOWN_ITEMS[1], text: 'Muokkaa toimenpidettä', action: () => this.editActionForm() },
-      { ...DROPDOWN_ITEMS[2], text: 'Järjestä asiakirjoja', action: () => this.toggleReorderView() },
-      { ...DROPDOWN_ITEMS[3], text: 'Tuo asiakirjoja', action: () => this.toggleImportView() },
-      { ...DROPDOWN_ITEMS[4], text: 'Poista toimenpide', action: () => this.setState({ deleting: true }) },
-    ];
-  }
-
-  scrollToAction() {
-    if (this.element) {
-      const parentOffset = this.element.offsetParent ? this.element.offsetParent.offsetTop : 0;
-      window.scrollTo(0, parentOffset + this.element.offsetTop);
-    }
-  }
-
-  scrollToRecord(recordId) {
-    const record = this.records[recordId] || null;
-    if (this.element && record) {
-      const parentOffset = this.element.offsetParent ? this.element.offsetParent.offsetTop : 0;
-      record.scrollToRecord(parentOffset + this.element.offsetTop);
-    }
-  }
-
-  renderActionButtons() {
-    const actionDropdownItems = this.generateDropdownItems();
-
-    return (
-      <div className='action-buttons'>
-        {this.props.documentState === 'edit' && (
-          <span className='action-dropdown-button'>
-            <Dropdown items={actionDropdownItems} extraSmall />
-          </span>
-        )}
-        {attributeButton(this.props.action.attributes, this.props.attributeTypes) && (
-          <button
-            type='button'
-            className='btn btn-info btn-xs record-button pull-right'
-            onClick={() => this.props.setActionVisibility(this.props.action.id, !this.props.action.is_open)}
-          >
-            <span className={`fa-solid ${this.props.action.is_open ? 'fa-minus' : 'fa-plus'}`} aria-hidden='true' />
-          </button>
-        )}
-      </div>
-    );
-  }
-
-  renderBasicAttributes() {
-    const classNames = classnames([
-      'col-xs-12',
-      'basic-attribute',
-      this.props.documentState === 'edit' ? 'editable' : null,
-    ]);
-    let typeSpecifier = (
-      <span
-        className={classNames}
-        onClick={() => this.editTypeSpecifier()}
-        onKeyUp={(e) => {
-          if (e.key === 'Enter') {
-            this.editTypeSpecifier();
+        Object.keys(actionRecords).forEach((key) => {
+          const recordId = actionRecords[key];
+          if (records && Object.hasOwn(records, recordId)) {
+            elements.push(
+              <Record
+                key={key}
+                record={records[recordId]}
+                documentState={documentState}
+                recordTypes={recordTypes}
+                attributeTypes={attributeTypes}
+                editRecord={editRecord}
+                editRecordAttribute={editRecordAttribute}
+                removeRecord={removeRecord}
+                setRecordVisibility={setRecordVisibility}
+                displayMessage={displayMessage}
+                ref={(element) => {
+                  records_ref.current[recordId] = element;
+                }}
+              />,
+            );
           }
-        }}
-      >
-        {this.state.typeSpecifier}
-      </span>
+        });
+        return elements;
+      },
+      [
+        records,
+        documentState,
+        recordTypes,
+        attributeTypes,
+        editRecord,
+        editRecordAttribute,
+        removeRecord,
+        setRecordVisibility,
+        displayMessage,
+      ],
     );
 
-    if (this.state.mode === 'edit' && this.state.editingTypeSpecifier) {
-      typeSpecifier = (
-        <div className='col-xs-11 action-title-input row'>
-          <form onSubmit={this.updateTypeSpecifier}>
-            <input
-              className='input-title form-control col-xs-11'
-              value={this.state.typeSpecifier || ''}
-              onChange={this.onTypeSpecifierChange}
-              onBlur={this.updateTypeSpecifier}
-              autoFocus
-            />
-          </form>
+    const renderActionButtons = useCallback(() => {
+      const actionDropdownItems = generateDropdownItems();
+
+      return (
+        <div className='action-buttons'>
+          {documentState === 'edit' && (
+            <span className='action-dropdown-button'>
+              <Dropdown items={actionDropdownItems} extraSmall />
+            </span>
+          )}
+          {attributeButton(action.attributes, attributeTypes) && (
+            <button
+              type='button'
+              className='btn btn-info btn-xs record-button pull-right'
+              onClick={() => setActionVisibility(action.id, !action.is_open)}
+            >
+              <span className={`fa-solid ${action.is_open ? 'fa-minus' : 'fa-plus'}`} aria-hidden='true' />
+            </button>
+          )}
         </div>
       );
-    }
+    }, [
+      documentState,
+      action.attributes,
+      action.id,
+      action.is_open,
+      generateDropdownItems,
+      attributeTypes,
+      setActionVisibility,
+    ]);
 
-    if (this.props.action.is_open && this.props.action.records.length) {
-      return (
-        <Sticky
-          topOffset={-1 * this.state.topOffset}
-          bottomOffset={this.state.topOffset}
-          boundaryElement='.actions '
-          hideOnBoundaryHit
-          stickyStyle={{
-            position: 'fixed',
-            top: this.state.topOffset,
-            left: 0,
+    const renderBasicAttributes = useCallback(() => {
+      const classNames = classnames(['col-xs-12', 'basic-attribute', documentState === 'edit' ? 'editable' : null]);
+
+      let typeSpecifierElement = (
+        <span
+          className={classNames}
+          onClick={() => editTypeSpecifier()}
+          onKeyUp={(e) => {
+            if (e.key === 'Enter') {
+              editTypeSpecifier();
+            }
           }}
-          stickyClassName='action-title-sticky'
-          className='action-title action-open'
         >
-          <div className='basic-attributes'>{typeSpecifier}</div>
-        </Sticky>
+          {typeSpecifier}
+        </span>
       );
-    }
+
+      if (mode === 'edit' && editingTypeSpecifier) {
+        typeSpecifierElement = (
+          <div className='col-xs-11 action-title-input row'>
+            <form onSubmit={updateActionTypeSpecifier}>
+              <input
+                className='input-title form-control col-xs-11'
+                value={typeSpecifier || ''}
+                onChange={onTypeSpecifierChange}
+                onBlur={updateActionTypeSpecifier}
+                autoFocus
+              />
+            </form>
+          </div>
+        );
+      }
+
+      if (action.is_open && action.records && action.records.length) {
+        return (
+          <Sticky
+            topOffset={-1 * topOffset}
+            bottomOffset={topOffset}
+            boundaryElement='.actions'
+            hideOnBoundaryHit
+            stickyStyle={{
+              position: 'fixed',
+              top: topOffset,
+              left: 0,
+            }}
+            stickyClassName='action-title-sticky'
+            className='action-title action-open'
+          >
+            <div className='basic-attributes'>{typeSpecifierElement}</div>
+          </Sticky>
+        );
+      }
+
+      return (
+        <div className='action-title action-closed'>
+          <div className='basic-attributes'>{typeSpecifierElement}</div>
+        </div>
+      );
+    }, [
+      mode,
+      documentState,
+      action.is_open,
+      action.records,
+      typeSpecifier,
+      topOffset,
+      editTypeSpecifier,
+      updateActionTypeSpecifier,
+      onTypeSpecifierChange,
+      editingTypeSpecifier,
+    ]);
+
+    const recordElements = action.records ? generateRecords(action.records) : [];
+    const reorderRecords = action.records
+      ? action.records.map((recordId) => ({
+          id: recordId,
+          key: uniqueId(recordId),
+        }))
+      : [];
 
     return (
-      <div className='action-title action-closed'>
-        <div className='basic-attributes'>{typeSpecifier}</div>
-      </div>
-    );
-  }
-
-  render() {
-    // TODO: Handle errors where we don't have an valid action (i.e 400 error from API)
-    const { action } = this.props;
-    const recordElements = action?.records ? this.generateRecords(action?.records) : [];
-    const reorderRecords = this.props.action.records.map((recordId) => ({
-      id: recordId,
-      key: uniqueId(recordId),
-    }));
-
-    return (
-      <div
-        className='action row'
-        ref={(element) => {
-          this.element = element;
-        }}
-      >
-        {this.state.mode === 'edit' && this.state.editingAction && (
+      <div className='action row' ref={element}>
+        {mode === 'edit' && editingAction && (
           <EditorForm
-            onShowMore={this.onEditFormShowMoreAction}
-            targetId={this.props.action.id}
-            attributes={this.props.action.attributes}
-            attributeTypes={this.props.attributeTypes}
+            onShowMore={onEditFormShowMoreAction}
+            targetId={action.id}
+            attributes={action.attributes}
+            attributeTypes={attributeTypes}
             elementConfig={{
-              elementTypes: this.props.actionTypes,
-              editWithForm: this.editActionWithForm,
+              elementTypes: actionTypes,
+              editWithForm: editActionWithForm,
             }}
             editorConfig={{
               type: 'action',
               action: 'edit',
             }}
-            closeEditorForm={this.disableEditMode}
-            displayMessage={this.props.displayMessage}
+            closeEditorForm={disableEditMode}
+            displayMessage={displayMessage}
           />
         )}
-        {this.state.mode === 'edit' && this.state.complementingAction && (
+        {mode === 'edit' && complementingAction && (
           <EditorForm
-            onShowMore={this.onEditFormShowMoreAction}
-            targetId={this.props.action.id}
-            attributes={this.props.action.attributes}
-            attributeTypes={this.props.attributeTypes}
+            onShowMore={onEditFormShowMoreAction}
+            targetId={action.id}
+            attributes={action.attributes}
+            attributeTypes={attributeTypes}
             elementConfig={{
-              elementTypes: this.props.actionTypes,
-              editWithForm: this.editActionWithForm,
+              elementTypes: actionTypes,
+              editWithForm: editActionWithForm,
             }}
             editorConfig={{
               type: 'action',
               action: 'complement',
             }}
-            closeEditorForm={this.disableEditMode}
-            displayMessage={this.props.displayMessage}
+            closeEditorForm={disableEditMode}
+            displayMessage={displayMessage}
           />
         )}
-        {!this.state.editingAction && !this.state.complementingAction && (
+        {!editingAction && !complementingAction && (
           <div>
             <div className='box'>
               <Attributes
                 element={action}
-                documentState={this.props.documentState}
+                documentState={documentState}
                 type='action'
-                attributeTypes={this.props.attributeTypes}
-                typeOptions={this.props.actionTypes}
-                renderBasicAttributes={this.renderBasicAttributes}
-                renderButtons={this.renderActionButtons}
-                updateTypeSpecifier={this.updateTypeSpecifier}
-                updateType={this.updateActionType}
-                updateAttribute={this.updateActionAttribute}
+                attributeTypes={attributeTypes}
+                typeOptions={actionTypes}
+                renderBasicAttributes={renderBasicAttributes}
+                renderButtons={renderActionButtons}
+                updateTypeSpecifier={updateActionTypeSpecifier}
+                updateType={updateActionType}
+                updateAttribute={updateActionAttribute}
                 showAttributes={action.is_open}
               />
-              {this.state.creatingRecord && (
+              {creatingRecord && (
                 <EditorForm
-                  onShowMoreForm={this.onEditFormShowMore}
-                  targetId={this.props.action.id}
-                  attributes={this.state.record.attributes}
-                  attributeTypes={this.props.attributeTypes}
+                  onShowMoreForm={onEditFormShowMore}
+                  targetId={action.id}
+                  attributes={record?.attributes || {}}
+                  attributeTypes={attributeTypes}
                   elementConfig={{
-                    elementTypes: this.props.recordTypes,
-                    createRecord: this.createRecord,
+                    elementTypes: recordTypes,
+                    createRecord: createRecord,
                   }}
                   editorConfig={{
                     type: 'record',
                     action: 'add',
                   }}
-                  closeEditorForm={this.cancelRecordCreation}
-                  displayMessage={this.props.displayMessage}
+                  closeEditorForm={cancelRecordCreation}
+                  displayMessage={displayMessage}
                 />
               )}
-              {this.state.complementingRecordAdd && (
+              {complementingRecordAdd && (
                 <EditorForm
-                  onShowMoreForm={this.onEditFormShowMore}
-                  targetId={this.props.action.id}
-                  attributes={this.state.record.attributes}
-                  attributeTypes={this.props.attributeTypes}
+                  onShowMoreForm={onEditFormShowMore}
+                  targetId={action.id}
+                  attributes={record?.attributes || {}}
+                  attributeTypes={attributeTypes}
                   elementConfig={{
-                    elementTypes: this.props.recordTypes,
-                    createRecord: this.createRecord,
+                    elementTypes: recordTypes,
+                    createRecord: createRecord,
                   }}
                   editorConfig={{
                     type: 'record',
                     action: 'complement',
                     from: 'newRecord',
                   }}
-                  complementRecordAdd={this.complementRecordAdd}
-                  closeEditorForm={this.cancelRecordComplement}
-                  displayMessage={this.props.displayMessage}
+                  complementRecordAdd={complementRecordAdd}
+                  closeEditorForm={cancelRecordComplement}
+                  displayMessage={displayMessage}
                 />
               )}
             </div>
@@ -523,7 +501,7 @@ class Action extends Component {
               <div className='attribute-labels-container'>
                 <div
                   className={classnames('col-xs-12 records box', {
-                    'records-editing': this.props.documentState === 'edit',
+                    'records-editing': documentState === 'edit',
                   })}
                 >
                   <h4>Asiakirjat</h4>
@@ -533,61 +511,59 @@ class Action extends Component {
             )}
           </div>
         )}
-        {this.state.deleting && (
+
+        {deleting && (
           <Popup
+            closePopup={cancelDeletion}
             content={
-              <DeleteView
-                type='action'
-                target={this.state.typeSpecifier || this.state.type || '---'}
-                action={() => this.delete()}
-                cancel={() => this.cancelDeletion()}
-              />
+              <DeleteView type='action' target={getTargetName()} action={deleteAction} cancel={cancelDeletion} />
             }
-            closePopup={() => this.cancelDeletion()}
           />
         )}
-        {this.state.showReorderView && (
+
+        {showReorderView && (
           <Popup
+            closePopup={toggleReorderView}
             content={
               <ReorderView
                 target='record'
-                toggleReorderView={() => this.toggleReorderView()}
+                toggleReorderView={toggleReorderView}
                 items={reorderRecords}
-                values={this.props.records}
-                changeOrder={this.props.changeOrder}
-                parent={this.props.action.id}
-                attributeTypes={this.props.attributeTypes}
-                parentName={this.state.typeSpecifier || this.state.type}
+                values={records}
+                changeOrder={changeOrder}
+                parent={action.id}
+                attributeTypes={attributeTypes}
+                parentName={getTargetName()}
               />
             }
-            closePopup={() => this.toggleReorderView()}
           />
         )}
-        {this.state.showImportView && (
+
+        {showImportView && (
           <Popup
+            closePopup={toggleImportView}
             content={
               <ImportView
                 level='record'
-                toggleImportView={() => this.toggleImportView()}
+                toggleImportView={toggleImportView}
                 title='asiakirjoja'
-                targetText={`toimenpiteeseen "${this.getTargetText(action.attributes.TypeSpecifier)}"`}
+                targetText={`toimenpiteeseen "${getTargetName()}"`}
                 itemsToImportText='asiakirjat'
-                phasesOrder={this.props.phasesOrder}
-                phases={this.props.phases}
-                actions={this.props.actions}
-                records={this.props.records}
-                importItems={this.props.importItems}
+                phasesOrder={phasesOrder}
+                phases={phases}
+                actions={actions}
+                records={records}
+                importItems={importItems}
                 parent={action.id}
                 parentName={action.name}
               />
             }
-            closePopup={() => this.toggleImportView()}
           />
         )}
       </div>
     );
-  }
-}
+  },
+);
 
 Action.propTypes = {
   action: PropTypes.object.isRequired,

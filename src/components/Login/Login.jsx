@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 
 import './Login.scss';
 import useAuth from '../../hooks/useAuth';
+import { logoutUserThunk } from '../../store/reducers/user';
 
-const Login = ({ loginDispatch, logoutDispatch }) => {
+const Login = () => {
   const [displayName, setDisplayName] = useState(null);
+  const dispatch = useDispatch();
 
-  const { authenticated, user, login, logout } = useAuth();
+  const { authenticated, user, login: authLogin, logout: authLogout } = useAuth();
 
   const getDisplayName = (profile) => {
     const { name, family_name, given_name } = profile;
@@ -41,13 +43,10 @@ const Login = ({ loginDispatch, logoutDispatch }) => {
     event.preventDefault();
 
     if (authenticated) {
-      logoutDispatch();
-
-      logout();
+      dispatch(logoutUserThunk());
+      authLogout();
     } else {
-      loginDispatch();
-
-      login();
+      authLogin();
     }
   };
 
@@ -60,11 +59,6 @@ const Login = ({ loginDispatch, logoutDispatch }) => {
       </button>
     </span>
   );
-};
-
-Login.propTypes = {
-  loginDispatch: PropTypes.func.isRequired,
-  logoutDispatch: PropTypes.func.isRequired,
 };
 
 export default Login;

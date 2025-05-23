@@ -1,4 +1,3 @@
-import { createMemoryHistory } from 'history';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { screen } from '@testing-library/react';
@@ -8,15 +7,14 @@ import ClassificationButton from '../ClassificationButton';
 import renderWithProviders from '../../../utils/renderWithProviders';
 
 const renderComponent = () => {
-  const history = createMemoryHistory();
-  const store = storeCreator(history, {});
+  const store = storeCreator({});
   const dummyFunction = vi.fn();
 
   return renderWithProviders(
-    <BrowserRouter history={history}>
+    <BrowserRouter>
       <ClassificationButton label='test' action={dummyFunction} />
     </BrowserRouter>,
-    { history, store },
+    { store },
   );
 };
 

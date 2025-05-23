@@ -1,4 +1,3 @@
-import { createMemoryHistory } from 'history';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { screen } from '@testing-library/react';
@@ -8,8 +7,7 @@ import SearchResults from '../SearchResults';
 import renderWithProviders from '../../../../utils/renderWithProviders';
 
 const renderComponent = () => {
-  const history = createMemoryHistory();
-  const store = storeCreator(history, {});
+  const store = storeCreator({});
   const dummyFunction = vi.fn();
   const dummyArray = [];
 
@@ -22,7 +20,7 @@ const renderComponent = () => {
         hits={{ phases: 0, actions: 0, records: 0 }}
       />
     </BrowserRouter>,
-    { history, store },
+    { store },
   );
 };
 

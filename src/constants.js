@@ -37,7 +37,7 @@ export const statusFilters = [
   { value: DRAFT, label: 'Luonnos' },
   { value: SENT_FOR_REVIEW, label: 'Lähetetty tarkastettavaksi' },
   { value: WAITING_FOR_APPROVAL, label: 'Odottaa hyväksymistä' },
-  { value: APPROVED, label: 'Hyväksytty', default: true }
+  { value: APPROVED, label: 'Hyväksytty' }
 ];
 
 // export for easier administration

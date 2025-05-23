@@ -3,34 +3,34 @@ import { BrowserRouter } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
 import renderWithProviders from '../../../../utils/renderWithProviders';
 import attributeRules from '../../../../utils/mocks/attributeRules.json';
 import errorsAndWarningsTOS from '../../../../utils/mocks/errorsAndWarningsTOS.json';
 import validTOS from '../../../../utils/mocks/validTOS.json';
 import ValidationBar from '../ValidationBar';
+import storeCreator from '../../../../store/createStore';
 
 const baseMocks = {
   setValidationVisibility: vi.fn(),
   selectedTOS: errorsAndWarningsTOS,
 };
 
-const renderComponent = (history, mocks = baseMocks) =>
-  renderWithProviders(
+const renderComponent = (history, mocks = baseMocks, mockStore) => {
+  const store = mockStore ?? storeCreator({ selectedTOS: mocks.selectedTOS, ui: { attributeTypes: attributeRules } });
+
+  return renderWithProviders(
     <BrowserRouter>
-      <ValidationBar
-        selectedTOS={mocks.selectedTOS}
-        attributeTypes={attributeRules}
-        scrollToMetadata={vi.fn()}
-        scrollToType={vi.fn()}
-        top={0}
-        setValidationVisibility={mocks.setValidationVisibility}
-      />
+      <ValidationBar scrollToMetadata={vi.fn()} scrollToType={vi.fn()} top={0} />
     </BrowserRouter>,
     {
       history,
+      store,
     },
   );
+};
 
 describe('<ValidationBar />', () => {
   it('should render correctly', () => {
@@ -80,10 +80,14 @@ describe('<ValidationBar />', () => {
   it('should close validation bar', async () => {
     const history = createBrowserHistory();
 
-    const mockSetValidationVisibility = vi.fn();
-    const mocks = { ...baseMocks, setValidationVisibility: mockSetValidationVisibility };
+    const mocks = { ...baseMocks };
 
-    renderComponent(history, mocks);
+    const middlewares = [thunk];
+    const mockStore = configureMockStore(middlewares);
+
+    const store = mockStore({ selectedTOS: mocks.selectedTOS, ui: { attributeTypes: attributeRules } });
+
+    renderComponent(history, undefined, store);
 
     const closeButton = screen.getAllByRole('button')[0];
 
@@ -91,7 +95,9 @@ describe('<ValidationBar />', () => {
 
     await user.click(closeButton);
 
-    expect(mockSetValidationVisibility).toHaveBeenCalled();
+    const expected = [{ type: 'validation/setValidationVisibility', payload: false }];
+
+    expect(store.getActions()).toEqual(expected);
   });
 
   it('should render errors for invalid TOS', () => {
