@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Provider, connect } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
 import { createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom';
 import ReduxToastr from 'react-redux-toastr';
 import { LoginProvider, SessionEndedHandler } from 'hds-react';
 
-import { retrieveUserFromSession } from '../components/Login/reducer';
-import { fetchAttributeTypes, fetchTemplates } from '../store/uiReducer';
+import { retrieveUserFromSession } from '../store/reducers/user';
+import { fetchAttributeTypesThunk, fetchTemplatesThunk } from '../store/reducers/ui';
 import { providerProperties } from '../utils/oidc/constants';
 import useAuth from '../hooks/useAuth';
 import CookieConsent from '../components/CookieConsent/CookieConsent';
@@ -16,25 +16,25 @@ import config from '../config';
 
 import '../styles/core.scss';
 
-const App = ({ router, dispatchRetrieveUserFromSession, dispatchFetchAttributeTypes, dispatchFetchTemplates }) => {
+const App = ({ router }) => {
   const { authenticated, user } = useAuth();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function fetchData() {
-      dispatchFetchAttributeTypes();
-      dispatchFetchTemplates();
+      dispatch(fetchAttributeTypesThunk());
+      dispatch(fetchTemplatesThunk());
 
       if (authenticated) {
         const { profile } = user;
         const { sub: userId } = profile;
 
-        await dispatchRetrieveUserFromSession(userId);
+        dispatch(retrieveUserFromSession(userId));
       }
     }
 
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authenticated, user]);
+  }, [authenticated, user, dispatch]);
 
   return (
     <div style={{ height: '100%' }}>
@@ -61,13 +61,7 @@ const App = ({ router, dispatchRetrieveUserFromSession, dispatchFetchAttributeTy
   );
 };
 
-const AppContainer = ({
-  routes,
-  store,
-  dispatchRetrieveUserFromSession,
-  dispatchFetchAttributeTypes,
-  dispatchFetchTemplates,
-}) => {
+const AppContainer = ({ routes, store }) => {
   const matomoTracker = useMemo(
     () =>
       new MatomoTracker({
@@ -91,12 +85,7 @@ const AppContainer = ({
       <Provider store={store}>
         <MatomoContext.Provider value={matomoTracker}>
           <React.StrictMode>
-            <App
-              router={router}
-              dispatchRetrieveUserFromSession={dispatchRetrieveUserFromSession}
-              dispatchFetchAttributeTypes={dispatchFetchAttributeTypes}
-              dispatchFetchTemplates={dispatchFetchTemplates}
-            />
+            <App router={router} />
           </React.StrictMode>
         </MatomoContext.Provider>
       </Provider>
@@ -106,23 +95,11 @@ const AppContainer = ({
 
 App.propTypes = {
   router: PropTypes.any.isRequired,
-  dispatchFetchAttributeTypes: PropTypes.func.isRequired,
-  dispatchFetchTemplates: PropTypes.func.isRequired,
-  dispatchRetrieveUserFromSession: PropTypes.func.isRequired,
 };
 
 AppContainer.propTypes = {
-  dispatchFetchAttributeTypes: PropTypes.func.isRequired,
-  dispatchFetchTemplates: PropTypes.func.isRequired,
-  dispatchRetrieveUserFromSession: PropTypes.func.isRequired,
   routes: PropTypes.node.isRequired,
   store: PropTypes.object.isRequired,
 };
 
-const mapDispatchToProps = {
-  dispatchRetrieveUserFromSession: retrieveUserFromSession,
-  dispatchFetchAttributeTypes: fetchAttributeTypes,
-  dispatchFetchTemplates: fetchTemplates,
-};
-
-export default connect(null, mapDispatchToProps)(AppContainer);
+export default AppContainer;

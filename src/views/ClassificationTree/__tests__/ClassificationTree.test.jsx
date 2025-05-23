@@ -2,7 +2,7 @@ import React from 'react';
 import { createBrowserHistory } from 'history';
 import { BrowserRouter } from 'react-router-dom';
 
-import ClassificationTreeContainer from '../ClassificationTreeContainer';
+import ClassificationTree from '../ClassificationTree';
 import renderWithProviders from '../../../utils/renderWithProviders';
 
 const renderComponent = () => {
@@ -10,7 +10,7 @@ const renderComponent = () => {
 
   return renderWithProviders(
     <BrowserRouter>
-      <ClassificationTreeContainer />
+      <ClassificationTree />
     </BrowserRouter>,
     { history },
   );

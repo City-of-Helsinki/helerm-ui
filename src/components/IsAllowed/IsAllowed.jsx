@@ -1,26 +1,20 @@
-import React, { Children } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { checkPermissions } from '../../utils/helpers';
+import { userDataSelector } from '../../store/reducers/user';
 
-class IsAllowed extends React.Component {
-  render() {
-    const { children, user, to } = this.props;
-    const isAllowed = checkPermissions(user, to);
+const IsAllowed = ({ children, to }) => {
+  const user = useSelector(userDataSelector);
 
-    return !!isAllowed && Children.only(children);
-  }
-}
+  const isAllowed = checkPermissions(user, to);
+
+  return isAllowed ? children : null;
+};
 
 IsAllowed.propTypes = {
   children: PropTypes.node,
   to: PropTypes.string,
-  user: PropTypes.object,
 };
 
-const mapStateToProps = (state) => ({
-  user: state.user.data,
-});
-
-export default connect(mapStateToProps)(IsAllowed);
+export default IsAllowed;

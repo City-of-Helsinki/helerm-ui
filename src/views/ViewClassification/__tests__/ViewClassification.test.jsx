@@ -1,15 +1,20 @@
 import React from 'react';
-import { createBrowserHistory } from 'history';
 import { BrowserRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { waitFor } from '@testing-library/react';
 
 import renderWithProviders from '../../../utils/renderWithProviders';
 import classification from '../../../utils/mocks/classification.json';
+import api from '../../../utils/api';
 import ViewClassification from '../ViewClassification';
+import { initialState } from '../../../store/reducers/classification';
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
+
+const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => classification }));
+vi.spyOn(api, 'get').mockImplementation(mockApiGet);
 
 vi.mock('react-router-dom', async () => {
   const mod = await vi.importActual('react-router-dom');
@@ -18,33 +23,19 @@ vi.mock('react-router-dom', async () => {
     ...mod,
     useParams: () => ({
       id: 'test',
+      version: 1,
     }),
   };
 });
 
-const renderComponent = (propOverrides) => {
-  const history = createBrowserHistory();
-
-  const props = {
-    classification,
-    fetchClassification: vi.fn().mockResolvedValue({ data: 'ok' }),
-    setNavigationVisibility: vi.fn(),
-    clearClassification: vi.fn(),
-    createTos: vi.fn(),
-    displayMessage: vi.fn(),
-    navigate: vi.fn(),
-    ...propOverrides,
-  };
-
-  const store = mockStore({
-    classification,
-  });
+const renderComponent = (storeOverride) => {
+  const store = storeOverride ?? mockStore({ classification: { ...initialState } });
 
   return renderWithProviders(
     <BrowserRouter>
-      <ViewClassification {...props} />
+      <ViewClassification />
     </BrowserRouter>,
-    { history, store },
+    { store },
   );
 };
 
@@ -54,18 +45,58 @@ describe('<ViewClassification />', () => {
   });
 
   it('fetches classification on mount', async () => {
-    const fetchClassificationMock = vi.fn().mockResolvedValue({ data: 'ok' });
+    const store = mockStore({ classification: { ...initialState } });
 
-    renderComponent({ fetchClassification: fetchClassificationMock });
+    renderComponent(store);
 
-    expect(fetchClassificationMock).toHaveBeenCalled();
+    const expectedActions = [
+      {
+        type: 'classification/fetchClassification/pending',
+        meta: expect.anything(),
+        payload: undefined,
+      },
+      {
+        type: 'classification/fetchClassification/fulfilled',
+        meta: expect.anything(),
+        payload: { ...classification, error: null },
+      },
+      {
+        payload: false,
+        type: 'navigation/setNavigationVisibility',
+      },
+    ];
+
+    await waitFor(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+    });
   });
 
-  it('should handle fetch classificitaion error', async () => {
-    const fetchClassificationMock = vi.fn().mockRejectedValue(new URIError('ERROR'));
+  it('should handle fetch classification error', async () => {
+    const mockApiGet = vi.fn().mockImplementationOnce(() => Promise.reject(new Error('FETCH ERROR')));
+    vi.spyOn(api, 'get').mockImplementationOnce(mockApiGet);
 
-    renderComponent({ fetchClassification: fetchClassificationMock });
+    const store = mockStore({ classification: { ...initialState } });
 
-    expect(fetchClassificationMock).toHaveBeenCalled();
+    renderComponent(store);
+
+    const expectedActions = [
+      {
+        type: 'classification/fetchClassification/pending',
+        meta: expect.anything(),
+        payload: undefined,
+      },
+      {
+        type: 'classification/fetchClassification/rejected',
+        meta: expect.anything(),
+        payload: 'FETCH ERROR',
+        error: {
+          message: 'Rejected',
+        },
+      },
+    ];
+
+    await waitFor(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+    });
   });
 });

@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { map, find } from 'lodash';
-
-import './ValidationBar.scss';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
   validateTOS,
@@ -16,11 +15,22 @@ import {
   validateRecordWarnings,
 } from '../../../utils/validators';
 import { VALIDATION_FILTER_ERROR, VALIDATION_FILTER_WARN } from '../../../constants';
+import { setValidationVisibility } from '../../../store/reducers/validation';
+import { uiSelector } from '../../../store/reducers/ui';
+import { selectedTOSSelector } from '../../../store/reducers/tos-toolkit/main';
+
+import './ValidationBar.scss';
 
 const ATTRIBUTE_NAME_FIELDS = ['PhaseType', 'ActionType', 'TypeSpecifier'];
 
 const ValidationBar = (props) => {
-  const { selectedTOS, setValidationVisibility, top, attributeTypes, scrollToMetadata, scrollToType } = props;
+  const { top, scrollToMetadata, scrollToType } = props;
+
+  const dispatch = useDispatch();
+  const ui = useSelector(uiSelector);
+  const selectedTOS = useSelector(selectedTOSSelector);
+
+  const { attributeTypes } = ui;
 
   const [filter, setFilter] = useState('');
 
@@ -185,7 +195,7 @@ const ValidationBar = (props) => {
           <button
             type='button'
             className='sidebar-close-button pull-right'
-            onClick={() => setValidationVisibility(false)}
+            onClick={() => dispatch(setValidationVisibility(false))}
             aria-label='Esitarkastus'
           >
             <i className='fa-solid fa-xmark' />
@@ -225,11 +235,8 @@ const ValidationBar = (props) => {
 };
 
 ValidationBar.propTypes = {
-  attributeTypes: PropTypes.object.isRequired,
   scrollToMetadata: PropTypes.func.isRequired,
   scrollToType: PropTypes.func.isRequired,
-  selectedTOS: PropTypes.object.isRequired,
-  setValidationVisibility: PropTypes.func.isRequired,
   top: PropTypes.number.isRequired,
 };
 
