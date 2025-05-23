@@ -1,0 +1,21 @@
+.helerm-navigation-search {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+  margin-bottom: 0.5rem;
+
+  &-input {
+    --dropdown-border-color-default: var(--color-black-30) !important;
+  }
+
+  &-select {
+    --dropdown-border-color-default: var(--color-black-30) !important;
+    min-width: 17rem;
+  }
+
+  &-link {
+    --link-color: var(--color-coat-of-arms) !important;
+    --icon-size: var(--fontsize-heading-xl-mobile) !important;
+  }
+}

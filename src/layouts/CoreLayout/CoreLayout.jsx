@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLocation } from 'react-router-dom';
 import { useCookies } from 'hds-react';
@@ -6,6 +6,7 @@ import { useCookies } from 'hds-react';
 import Header from '../../components/Header';
 import Loader from '../../components/Loader';
 import NavigationContainer from '../../components/Navigation/NavigationContainer';
+import NavigationHeader from '../../components/Navigation/NavigationHeader';
 import useMatomo from '../../components/Matomo/hooks/useMatomo';
 
 import './CoreLayout.scss';
@@ -14,6 +15,8 @@ const CoreLayout = ({ children }) => {
   const location = useLocation();
   const { getAllConsents } = useCookies();
   const { trackPageView } = useMatomo();
+
+  const [showNavigation, setShowNavigation] = useState(true);
 
   useEffect(() => {
     if (getAllConsents().matomo) {
@@ -24,12 +27,15 @@ const CoreLayout = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getAllConsents, location.pathname, location.search]);
 
+  const toggleNavigation = () => setShowNavigation(!showNavigation);
+
   return (
     <div className='core-layout__viewport'>
       <Header />
-      <main id='main'>
+      <NavigationHeader showNavigation={showNavigation} toggleNavigation={toggleNavigation} />
+      <main id='main' className='core-layout__wrapper'>
         <div className='core-layout__navigation'>
-          <NavigationContainer />
+          <NavigationContainer showNavigation={showNavigation} />
         </div>
         <Suspense fallback={<Loader show />}>
           <div className='container-fluid helerm-content'>{children}</div>
