@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.3.0...helerm-ui-v1.3.1) (2025-05-30)
+
+
+### Dependencies
+
+* Bump vite from 5.4.17 to 5.4.19 ([#575](https://github.com/City-of-Helsinki/helerm-ui/issues/575)) ([30d93d8](https://github.com/City-of-Helsinki/helerm-ui/commit/30d93d8891cbdd773eb6cda9526b9ddc4f9acc00))
+
 ## [1.3.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.2.5...helerm-ui-v1.3.0) (2025-04-15)
 
 
