@@ -1,10 +1,16 @@
-.core-layout__viewport {
+.core-layout {
+  &__wrapper {
+    display: flex;
+    border-top: 1px solid var(--color-black-30);
+  }
 
-    .core-layout__navigation {
-        z-index: 10;
-    }
+  &__navigation {
+    z-index: 10;
+    min-width: 60vw;
+    border-right: 1px solid var(--color-black-30);
+  }
 }
 
 .helerm-content {
-    padding: 0;
+  padding: 0;
 }

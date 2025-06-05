@@ -1,315 +1,237 @@
-/* eslint-disable react/no-access-state-in-setstate */
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import get from 'lodash/get';
-import includes from 'lodash/includes';
-import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
-import update from 'immutability-helper';
+import { Button, IconInfoCircleFill, IconMinus, IconPlus } from 'hds-react';
 
-import InfinityMenu from '../InfinityMenu/InfinityMenu';
-import { navigationStateFilters } from '../../constants';
+import NavigationSearch from './NavigationSearch';
 import withRouter from '../hoc/withRouter';
+import { APPROVED } from '../../constants';
 
 import './Navigation.scss';
 
-const SEARCH_TIMEOUT = 500;
+const NavigationItem = ({ item, onItemClick }) => {
+  const { children, name, id } = item;
+  const itemLabel = name;
+  const hasChildren = children && children.length > 0;
 
-class Navigation extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      filters: navigationStateFilters,
-      tree: props.items,
-      searchInputs: [''],
-      searchTimestamp: 0,
-      isSearchChanged: false,
-    };
+  const [expanded, setExpanded] = useState(item.expanded || false);
 
-    this.handleFilterChange = this.handleFilterChange.bind(this);
-    this.onNodeMouseClick = this.onNodeMouseClick.bind(this);
-    this.onLeafMouseClick = this.onLeafMouseClick.bind(this);
-    this.onSearchTimeout = this.onSearchTimeout.bind(this);
-    this.getFilteredTree = this.getFilteredTree.bind(this);
-    this.setSearchInput = this.setSearchInput.bind(this);
-    this.receiveItemsAndResetNavigation = this.receiveItemsAndResetNavigation.bind(this);
-    this.addSearchInput = this.addSearchInput.bind(this);
-    this.removeSearchInput = this.removeSearchInput.bind(this);
-    this.toggleNavigationVisibility = this.toggleNavigationVisibility.bind(this);
-    this.hasFilters = this.hasFilters.bind(this);
-    this.isDetailSearch = this.isDetailSearch.bind(this);
-  }
-
-  componentDidMount() {
-    this.props.fetchNavigation(this.isDetailSearch());
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const { itemsTimestamp: nextTimestamp, items } = nextProps;
-    const { itemsTimestamp: currentTimestamp } = this.props;
-    const isReceivingNewlyFetchedItems = nextTimestamp !== currentTimestamp;
-
-    if (isReceivingNewlyFetchedItems) {
-      this.receiveItemsAndResetNavigation(items);
+  useEffect(() => {
+    if (item.expanded !== undefined) {
+      setExpanded(item.expanded);
     }
-  }
+  }, [item.expanded]);
 
-  handleFilterChange(filterValues, filterName) {
-    const mappedValues = filterValues.map(({ value }) => value);
+  const toggleExpand = (event) => {
+    if (hasChildren) {
+      event.preventDefault();
 
-    return this.setState(
-      (prevState) => ({
-        filters: {
-          ...prevState.filters,
-          [filterName]: {
-            ...prevState.filters[filterName],
-            values: mappedValues,
-          },
-        },
-      }),
-      () => this.setState(() => ({ tree: this.getFilteredTree() })),
-    );
-  }
-
-  onNodeMouseClick(event, tree) {
-    this.setState({
-      tree,
-    });
-  }
-
-  onLeafMouseClick(event, leaf) {
-    if (leaf.function) {
-      return this.props.navigate(`/view-tos/${leaf.function}`);
+      setExpanded(!expanded);
     }
-    if (leaf.parent) {
-      return this.props.navigate(`/view-classification/${leaf.id}`);
-    }
+  };
 
-    return this.toggleNavigationVisibility();
+  const handleLeafClick = (event) => {
+    if (onItemClick) {
+      event.preventDefault();
+
+      onItemClick(item);
+    }
+  };
+
+  const listItemClass = !hasChildren ? 'helerm-navigation__item--link' : '';
+
+  return (
+    <li className={listItemClass}>
+      {hasChildren ? (
+        <>
+          <Button
+            className='helerm-navigation__item'
+            onClick={toggleExpand}
+            aria-expanded={expanded}
+            aria-label={`${expanded ? 'Collapse' : 'Expand'} ${itemLabel}`}
+            iconLeft={expanded ? <IconMinus /> : <IconPlus />}
+            iconRight={<IconInfoCircleFill />}
+            variant='supplementary'
+          >
+            {itemLabel}
+          </Button>
+          {expanded && (
+            <ul className='helerm-navigation__sub'>
+              {children.map((child) => (
+                <NavigationItem key={`${child.code}-${child.id}`} item={child} onItemClick={onItemClick} />
+              ))}
+            </ul>
+          )}
+        </>
+      ) : (
+        <a className='helerm-navigation__link' href={`/view-tos/${id}`} onClick={handleLeafClick}>
+          {itemLabel} <IconInfoCircleFill className='helerm-navigation__link-icon' />
+        </a>
+      )}
+    </li>
+  );
+};
+
+NavigationItem.propTypes = {
+  item: PropTypes.object.isRequired,
+  onItemClick: PropTypes.func,
+};
+
+const matchesSearchTerm = (name, searchTerm) => {
+  return name && name.toLowerCase().includes(searchTerm);
+};
+
+const filterNavigationItems = (items, filterCriteria = {}) => {
+  const { searchText, stateValue } = filterCriteria;
+
+  if (!items || !items.length) {
+    return [];
   }
 
-  onSearchTimeout() {
-    if (!this.state.isSearchChanged && Date.now() - this.state.searchTimestamp >= SEARCH_TIMEOUT) {
-      this.setState({ isSearchChanged: true });
-    }
+  if (!searchText && !stateValue) {
+    return items;
   }
 
-  getFilteredTree() {
-    const { items } = this.props;
-    const { filters } = this.state;
+  const normalizedSearchText = searchText ? searchText.toLowerCase() : '';
 
-    if (!this.hasFilters()) {
-      return items;
-    }
+  return items
+    .map((item) => {
+      const nameMatch = searchText ? matchesSearchTerm(item.name, normalizedSearchText) : false;
+      const stateMatch = stateValue ? item.state === stateValue : false;
 
-    // Deepcopy original item to disable mutation
-    const itemsCopy = (item) => JSON.parse(JSON.stringify(item));
+      const itemMatches = (searchText && nameMatch) || (stateValue && stateMatch);
 
-    const getItemFilters = (item, currentPath, nextPath) => {
-      const itemValue = get(item, currentPath.concat([nextPath]).join('.'));
+      const newItem = { ...item };
 
-      if (isArray(itemValue)) {
-        return Object.keys(itemValue).map((index) => currentPath.concat([nextPath, index]));
-      }
+      if (item.children && item.children.length) {
+        newItem.children = filterNavigationItems(item.children, filterCriteria);
 
-      if (!isEmpty(itemValue)) {
-        return [currentPath.concat([nextPath])];
-      }
+        const hasMatchingChildren = newItem.children.length > 0;
 
-      return [];
-    };
-
-    // returns item filter paths e.g.
-    // [
-    //   ['phases', 0, 'actions', 0, 'records', 0, 'attributes', 'RetentionPeriod'],
-    //   ['phases', 1, 'actions', 0, 'records', 0, 'attributes', 'RetentionPeriod']
-    // ]
-    const getItemFilterPaths = (path, item) =>
-      path.split('.').reduce((currentFilters, currentPath) => {
-        if (currentFilters.length) {
-          return currentFilters.map((a) => getItemFilters(item, a, currentPath)).map((itemFilter) => itemFilter);
+        if (hasMatchingChildren) {
+          newItem.expanded = true;
         }
 
-        return getItemFilters(item, [], currentPath).map((itemFilter) => itemFilter);
-      }, []);
-
-    // The actual filtering
-    const filterFunction = (item) => {
-      const matchesFilters = Object.keys(filters)
-        .map((key) => {
-          const { values: currentFilter, path: paths } = filters[key];
-
-          if (currentFilter.length) {
-            return paths.some((path) =>
-              // eslint-disable-next-line sonarjs/no-nested-functions
-              getItemFilterPaths(path, item).some((filterPath) =>
-                includes(currentFilter, get(item, filterPath.join('.'))),
-              ),
-            );
+        if (itemMatches || hasMatchingChildren) {
+          if (itemMatches) {
+            newItem.isMatch = true;
           }
 
-          return true;
-        })
-        .every((finalItem) => !!finalItem);
+          return newItem;
+        }
+      } else if (itemMatches) {
+        newItem.isMatch = true;
 
-      item.children = item.children?.filter(filterFunction);
-
-      return matchesFilters || item.children?.length;
-    };
-
-    // Modify filtered items to be open
-    const setAllOpen = (item) => {
-      if (item.children) {
-        item.children.map(setAllOpen);
+        return newItem;
       }
 
-      item.isOpen = true;
+      return null;
+    })
+    .filter(Boolean);
+};
 
-      return item;
-    };
+const Navigation = ({ fetchNavigation, isFetching, items, navigate, location, showNavigation }) => {
+  const isDetailSearch = location.pathname === '/filter';
 
-    return items.map(itemsCopy).filter(filterFunction).map(setAllOpen);
-  }
+  const initialItems = useMemo(() => items, [items]);
 
-  setSearchInput(index, value) {
-    const isDetailSearch = this.isDetailSearch();
-    this.setState((prev) =>
-      update(prev, {
-        isSearchChanged: {
-          $set: !isDetailSearch,
-        },
-        searchInputs: {
-          [index]: {
-            $set: value,
-          },
-        },
-        searchTimestamp: {
-          $set: Date.now(),
-        },
-      }),
-    );
-    if (isDetailSearch) {
-      setTimeout(this.onSearchTimeout, SEARCH_TIMEOUT);
+  const [filteredItems, setFilteredItems] = useState(initialItems);
+  const [currentSearchTerm, setCurrentSearchTerm] = useState('');
+  const [currentStatusFilter, setCurrentStatusFilter] = useState(APPROVED);
+
+  useEffect(() => {
+    if (isEmpty(items) && fetchNavigation) {
+      fetchNavigation(isDetailSearch);
     }
-  }
 
-  receiveItemsAndResetNavigation(items) {
-    this.setState({
-      tree: items,
-      filters: navigationStateFilters,
+    if (!isEmpty(items)) {
+      setFilteredItems(items);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDetailSearch, items]);
+
+  const handleItemClick = (item) => {
+    if (navigate && item) {
+      if (item.function) {
+        navigate(`/view-tos/${item.function}`);
+      } else if (item.id) {
+        navigate(`/view-tos/${item.id}`);
+      }
+    }
+  };
+
+  const handleSearch = (searchText) => {
+    const normalizedSearchText = searchText && searchText.trim() !== '' ? searchText : null;
+
+    setCurrentSearchTerm(normalizedSearchText);
+
+    const filteredResults = filterNavigationItems(initialItems, {
+      searchText: normalizedSearchText,
+      stateValue: currentStatusFilter,
     });
 
-    this.stopSearching();
-  }
+    setFilteredItems(filteredResults);
+  };
 
-  addSearchInput() {
-    this.setState(
-      update(this.state, {
-        searchInputs: {
-          $push: [''],
-        },
-      }),
-    );
-  }
+  const handleStatusChange = (selected) => {
+    const stateValue = selected ? selected.value : APPROVED;
 
-  removeSearchInput(index) {
-    const searchInputs = this.state.searchInputs.length === 1 ? { $set: [''] } : { $splice: [[index, 1]] };
-    this.setState(
-      update(this.state, {
-        searchInputs,
-        searchTimestamp: {
-          $set: Date.now(),
-        },
-        isSearchChanged: {
-          $set: false,
-        },
-      }),
-    );
-    if (this.state.searchInputs[index].length > 0) {
-      setTimeout(this.onSearchTimeout, SEARCH_TIMEOUT);
-    }
-  }
+    setCurrentStatusFilter(stateValue);
 
-  toggleNavigationVisibility() {
-    const currentVisibility = this.props.is_open;
-    this.props.setNavigationVisibility(!currentVisibility);
-  }
-
-  hasFilters() {
-    const { filters } = this.state;
-    return !!Object.keys(filters)
-      .map((key) => filters[key].values.length)
-      .reduce((a, b) => a + b, 0);
-  }
-
-  isDetailSearch() {
-    return this.props.location.pathname === '/filter';
-  }
-
-  stopSearching() {
-    this.setState({
-      isSearchChanged: false,
-      searchInputs: [''],
-      searchTimestamp: 0,
+    const filteredResults = filterNavigationItems(initialItems, {
+      searchText: currentSearchTerm,
+      stateValue,
     });
+
+    setFilteredItems(filteredResults);
+  };
+
+  if (isFetching) {
+    return null;
   }
 
-  render() {
-    const { onLeafMouseClick, isFetching, attributeTypes, items, itemsTimestamp } = this.props;
-    const { isSearchChanged, searchInputs } = this.state;
-
-    if (!isFetching && isEmpty(items) && !isEmpty(itemsTimestamp)) {
-      return (
-        <div className='container-fluid helerm-navigation'>
-          <div className='navigation-error'>
-            <div className='alert alert-danger'>Järjestelmä ei ole käytettävissä. Yritä hetken päästä uudestaan.</div>
-          </div>
-        </div>
-      );
-    }
-    return (
-      <div className='helerm-navigation'>
-        <InfinityMenu
-          addSearchInput={this.addSearchInput}
-          attributeTypes={attributeTypes}
-          isOpen={this.props.is_open}
-          isSearchChanged={isSearchChanged}
-          isSearching={searchInputs.filter((input) => input.length > 0).length > 0}
-          isFetching={isFetching}
-          items={items}
-          onLeafMouseClick={onLeafMouseClick ? (event, leaf) => onLeafMouseClick(event, leaf) : this.onLeafMouseClick}
-          onNodeMouseClick={this.onNodeMouseClick}
-          path={this.props.tosPath}
-          removeSearchInput={this.removeSearchInput}
-          searchInputs={searchInputs}
-          setSearchInput={this.setSearchInput}
-          toggleNavigationVisibility={this.toggleNavigationVisibility}
-          tree={this.state.tree}
-          isDetailSearch={this.isDetailSearch()}
-          isUser={this.props.isUser}
-          filters={this.state.filters}
-          handleFilterChange={this.handleFilterChange}
-        />
+  return (
+    <div className='helerm-navigation__container'>
+      <div>
+        <NavigationSearch handleSearch={handleSearch} handleStatusChange={handleStatusChange} />
       </div>
-    );
-  }
-}
+      {showNavigation && (
+        <nav>
+          <ul className='helerm-navigation'>
+            {filteredItems.map((item) => (
+              <NavigationItem key={`${item.code}-${item.id}`} item={item} onItemClick={handleItemClick} />
+            ))}
+          </ul>
+        </nav>
+      )}
+    </div>
+  );
+};
 
 Navigation.propTypes = {
   attributeTypes: PropTypes.object,
-  fetchNavigation: PropTypes.func.isRequired,
+  fetchNavigation: PropTypes.func,
   isFetching: PropTypes.bool,
-  isUser: PropTypes.bool.isRequired,
-  is_open: PropTypes.bool.isRequired,
-  // One does not simply mutate props unless one is Navigation and the prop is `items`.
-  // Sorry, didn't find out where the devil is doing the mutations :'(
-  items: PropTypes.array.isRequired,
+  isUser: PropTypes.bool,
+  is_open: PropTypes.bool,
+  items: PropTypes.array,
   itemsTimestamp: PropTypes.string,
   onLeafMouseClick: PropTypes.func,
-  navigate: PropTypes.func.isRequired,
-  setNavigationVisibility: PropTypes.func.isRequired,
-  tosPath: PropTypes.array.isRequired,
-  location: PropTypes.object.isRequired,
+  navigate: PropTypes.func,
+  setNavigationVisibility: PropTypes.func,
+  tosPath: PropTypes.array,
+  location: PropTypes.object,
+  showNavigation: PropTypes.bool,
+};
+
+Navigation.defaultProps = {
+  items: [],
+  isFetching: false,
+  isUser: false,
+  is_open: true,
+  tosPath: [],
+  location: { pathname: '/' },
 };
 
 export default withRouter(Navigation);

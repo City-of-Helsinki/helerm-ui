@@ -24,6 +24,7 @@ const NavigationContainer = ({
   setNavigationVisibilityFn,
   tosPath,
   location,
+  showNavigation,
 }) => (
   <Navigation
     attributeTypes={attributeTypes}
@@ -38,6 +39,7 @@ const NavigationContainer = ({
     setNavigationVisibility={setNavigationVisibilityFn}
     tosPath={tosPath}
     location={location}
+    showNavigation={showNavigation}
   />
 );
 
@@ -106,6 +108,7 @@ NavigationContainer.propTypes = {
   setNavigationVisibilityFn: PropTypes.func.isRequired,
   tosPath: PropTypes.array.isRequired,
   location: PropTypes.object.isRequired,
+  showNavigation: PropTypes.bool,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NavigationContainer));

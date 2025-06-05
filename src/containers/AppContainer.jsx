@@ -90,12 +90,14 @@ const AppContainer = ({
     <LoginProvider {...providerProperties}>
       <Provider store={store}>
         <MatomoContext.Provider value={matomoTracker}>
-          <App
-            router={router}
-            dispatchRetrieveUserFromSession={dispatchRetrieveUserFromSession}
-            dispatchFetchAttributeTypes={dispatchFetchAttributeTypes}
-            dispatchFetchTemplates={dispatchFetchTemplates}
-          />
+          <React.StrictMode>
+            <App
+              router={router}
+              dispatchRetrieveUserFromSession={dispatchRetrieveUserFromSession}
+              dispatchFetchAttributeTypes={dispatchFetchAttributeTypes}
+              dispatchFetchTemplates={dispatchFetchTemplates}
+            />
+          </React.StrictMode>
         </MatomoContext.Provider>
       </Provider>
     </LoginProvider>
