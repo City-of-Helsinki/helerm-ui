@@ -1,32 +1,15 @@
-name: helerm-ui-ci
+name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
-
-  # Allows you to run this workflow manually from the Actions tab
+    branches: [main]
   workflow_dispatch:
 
-
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 22
-          cache: 'yarn'
-      - run: yarn install --frozen-lockfile
-      - run: yarn lint
-      - name: Validate current commit (last commit) with commitlint
-        if: github.event_name == 'push'
-        run: yarn commitlint --from HEAD~1 --to HEAD --verbose
-      - name: Validate PR commits with commitlint
-        if: github.event_name == 'pull_request'
-        run: yarn commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
-      - run: yarn build
+  common:
+    uses: City-of-Helsinki/.github/.github/workflows/ci-node.yml@main
+    secrets: inherit
+    with:
+      node-version: 22
