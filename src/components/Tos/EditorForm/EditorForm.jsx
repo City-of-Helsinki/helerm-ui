@@ -107,6 +107,9 @@ const EditorForm = (props) => {
 
   const editElement = useCallback(
     (e, targetId, stopEditing = true) => {
+      if (!elementConfig) {
+        return;
+      }
       elementConfig.editWithForm(filterAttributes(newAttributes), targetId, stopEditing);
     },
     [elementConfig, filterAttributes, newAttributes],
@@ -146,6 +149,10 @@ const EditorForm = (props) => {
       }
       if (e) {
         e.preventDefault();
+      }
+
+      if (!elementConfig) {
+        return;
       }
 
       elementConfig.createRecord(filterAttributes(newAttributes), targetId);
@@ -418,6 +425,10 @@ const EditorForm = (props) => {
 
   const generateDropdown = useCallback(
     (elementTypes) => {
+      if (!elementTypes) {
+        return null;
+      }
+
       const type = `${capitalize(editorConfig.type)}Type`;
       const elementTypesAsOptions = mapOptions(Object.values(elementTypes));
       return (
@@ -521,7 +532,7 @@ const EditorForm = (props) => {
   );
 
   const renderDescriptions = useCallback(() => {
-    const dropdownInput = generateDropdown(elementConfig.elementTypes);
+    const dropdownInput = generateDropdown(elementConfig?.elementTypes);
 
     return (
       <div className='descriptions'>
@@ -534,6 +545,7 @@ const EditorForm = (props) => {
         <div className='col-xs-12 col-lg-6 form-group'>
           <label className='editor-form__label'>{resolveSpecifier()}</label>
           <input
+            data-testid='editor-form-type-specifier'
             className='col-xs-6 form-control edit-record__input'
             placeholder={resolveSpecifier()}
             value={newAttributes.TypeSpecifier?.value || ''}
@@ -545,7 +557,7 @@ const EditorForm = (props) => {
   }, [
     editorConfig.type,
     generateDropdown,
-    elementConfig.elementTypes,
+    elementConfig?.elementTypes,
     resolveTypeDescription,
     resolveSpecifier,
     newAttributes.TypeSpecifier,
@@ -564,18 +576,25 @@ const EditorForm = (props) => {
 
   const attributeElements = generateAttributeElements(attributeTypes);
 
+  const testId = `editor-form-${editorConfig.type}-${editorConfig.action}`;
+
   return (
-    <div className='add-box col-xs-12'>
+    <div data-testid={testId} className='add-box col-xs-12'>
       <h4>{resolveLabel()}</h4>
       <form onSubmit={(e) => resolveOnSubmit(e, targetId)} className='editor-form'>
         {!includes(['function', 'version'], editorConfig.type) ? renderDescriptions() : null}
         {additionalFields || null}
         {attributeElements}
         <div className='col-xs-12'>
-          <button className='btn btn-success pull-right editor-form__submit' type='submit'>
+          <button
+            data-testid='editor-form-submit'
+            className='btn btn-success pull-right editor-form__submit'
+            type='submit'
+          >
             OK
           </button>
           <button
+            data-testid='editor-form-cancel'
             type='button'
             className='btn btn-danger pull-right editor-form__cancel'
             onClick={(e) => closeEditorForm(e)}
@@ -584,6 +603,7 @@ const EditorForm = (props) => {
           </button>
           {editorConfig.type !== 'version' && (
             <button
+              data-testid='editor-form-show-more'
               type='button'
               className={showMoreLabel ? 'btn btn-primary pull-right editor-form__cancel' : 'non-display'}
               onClick={(e) =>
@@ -616,7 +636,7 @@ EditorForm.propTypes = {
   }),
   elementConfig: PropTypes.shape({
     editWithForm: PropTypes.func,
-    elementTypes: PropTypes.object.isRequired,
+    elementTypes: PropTypes.object,
     createRecord: PropTypes.func, // only records created with editorform
   }),
   onShowMore: PropTypes.func,

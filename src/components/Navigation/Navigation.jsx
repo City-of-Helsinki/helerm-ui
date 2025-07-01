@@ -147,7 +147,7 @@ const Navigation = () => {
             return true;
           }
 
-          if (paths && paths.length) {
+          if (paths?.length) {
             // eslint-disable-next-line sonarjs/no-nested-functions
             return paths.some((path) => {
               const itemPaths = getItemFilterPaths(path, item);
@@ -155,7 +155,7 @@ const Navigation = () => {
               return itemPaths.some((itemPath) => {
                 const value = getValueForItemWithAttributePath(item, itemPath.split('.'));
 
-                if (value && value.toString) {
+                if (value?.toString) {
                   return currentFilter.some((filterValue) => value.toString().includes(filterValue));
                 }
 

@@ -1,0 +1,69 @@
+{
+  "id": "test-function-election-001",
+  "attributes": {
+    "PersonalData": "Sisältää henkilötietoja",
+    "PublicityClass": "Julkinen",
+    "RetentionPeriod": "-1",
+    "RetentionReason": "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset opetustoimen asiakirjat 2003",
+    "SocialSecurityNumber": "Sisältää henkilötunnuksen"
+  },
+  "version": 3,
+  "state": "approved",
+  "classification_code": "00 00 00 00",
+  "classification_title": "Kuntavaalit ja kunnalliset kansanäänestykset",
+  "bulk_update": null,
+  "function_id": "00 00 00 00",
+  "name": "Kuntavaalit ja kunnalliset kansanäänestykset",
+  "parent": null,
+  "classification": { "id": "test-classification-health-guidance-001", "version": 2 },
+  "version_history": [
+    {
+      "state": "draft",
+      "version": 1,
+      "modified_at": "2023-01-01T10:00:00.000000Z",
+      "valid_from": null,
+      "valid_to": null
+    },
+    {
+      "state": "sent_for_review",
+      "version": 2,
+      "modified_at": "2023-02-01T10:00:00.000000Z",
+      "valid_from": null,
+      "valid_to": null
+    },
+    {
+      "state": "approved",
+      "version": 3,
+      "modified_at": "2023-03-01T10:00:00.000000Z",
+      "valid_from": null,
+      "valid_to": null
+    }
+  ],
+  "created_at": "2023-01-01T10:00:00.000000Z",
+  "modified_at": "2023-03-01T10:00:00.000000Z",
+  "error_count": 0,
+  "valid_from": null,
+  "valid_to": null,
+  "phases": [
+    {
+      "id": "test-phase-guidance-001",
+      "name": "Neuvonta ja ohjaus",
+      "attributes": {
+        "PhaseType": "Neuvonta/Ohjaus",
+        "TypeSpecifier": "Yleisneuvonta",
+        "InformationSystem": "Test System"
+      },
+      "actions": []
+    },
+    {
+      "id": "test-phase-preparation-002",
+      "name": "Valmisteluvaihe",
+      "attributes": {
+        "PhaseType": "Valmistelu/Käsittely",
+        "TypeSpecifier": "Hakemusten käsittely",
+        "InformationSystem": "Test System"
+      },
+      "actions": []
+    }
+  ]
+}

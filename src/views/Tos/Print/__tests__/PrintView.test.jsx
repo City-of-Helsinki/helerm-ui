@@ -6,9 +6,7 @@ import thunk from 'redux-thunk';
 
 import PrintView from '../PrintView';
 import renderWithProviders from '../../../../utils/renderWithProviders';
-import classification from '../../../../utils/mocks/classification.json';
-import validTOS from '../../../../utils/mocks/validTOS.json';
-import attributeRules from '../../../../utils/mocks/attributeRules.json';
+import { validTOS, attributeTypes, classification } from '../../../../utils/__mocks__/mockHelpers';
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
@@ -30,14 +28,14 @@ const renderComponent = (propOverrides) => {
 
   const store = mockStore({
     ui: {
-      attributeTypes: attributeRules,
+      attributeTypes: attributeTypes,
     },
     navigation: {
       items: [validTOS],
     },
     selectedTOS: {
       ...validTOS,
-      classification,
+      classification: classification[0],
     },
   });
 

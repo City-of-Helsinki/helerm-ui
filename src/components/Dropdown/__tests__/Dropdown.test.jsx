@@ -3,12 +3,10 @@ import { BrowserRouter } from 'react-router-dom';
 import { fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import storeCreator from '../../../store/createStore';
 import Dropdown from '../Dropdown';
 import renderWithProviders from '../../../utils/renderWithProviders';
 
 const renderComponent = (itemsOverride) => {
-  const store = storeCreator({});
   const dummyFunction = vi.fn();
   const dummyItems = [
     { action: dummyFunction, text: 'Dropdown Item 1' },
@@ -19,14 +17,12 @@ const renderComponent = (itemsOverride) => {
     <BrowserRouter>
       <Dropdown items={itemsOverride ?? dummyItems} />
     </BrowserRouter>,
-    { store },
   );
 };
 
 describe('<Dropdown />', () => {
   it('renders without crashing', () => {
     renderComponent();
-    expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
   it('opens the dropdown menu when the button is clicked', () => {

@@ -58,36 +58,36 @@ const ReorderView = ({
   };
 
   return (
-    <div className='row'>
+    <div className='row' data-testid="reorder-view">
       <h3 className='col-xs-12'>Järjestä</h3>
       {target === 'phase' && (
-        <span className='col-xs-12 reorder-subtext'>
+        <span className='col-xs-12 reorder-subtext' data-testid="reorder-subtext-phase">
           Järjestä TOS:n <strong className='reorder-subtext-highlight'>{parentName || ''}</strong> käsittelyvaiheita
         </span>
       )}
       {target === 'action' && (
-        <span className='col-xs-12 reorder-subtext'>
+        <span className='col-xs-12 reorder-subtext' data-testid="reorder-subtext-action">
           Järjestä käsittelyvaiheen <strong className='reorder-subtext-highlight'>{parentName || ''}</strong>{' '}
           toimenpiteet
         </span>
       )}
-      <div className='col-xs-12 reorder-list'>
+      <div className='col-xs-12 reorder-list' data-testid="reorder-list">
         {items.map((item, index) => (
           <ReorderItem
             key={item.key}
             id={item.id}
-            index={index.toString()}
+            index={index}
             moveItem={moveItem}
             labels={getValues(values[item.id].attributes, target)}
             target={target}
           />
         ))}
       </div>
-      <div className='col-xs-12 button-row'>
-        <button type='button' onClick={() => handleChangeOrder(items)} className='btn btn-primary pull-right'>
+      <div className='col-xs-12 button-row' data-testid="reorder-button-row">
+        <button type='button' onClick={() => handleChangeOrder(items)} className='btn btn-primary pull-right' data-testid="reorder-save-button">
           Tallenna
         </button>
-        <button type='button' onClick={toggleReorderView} className='btn btn-danger pull-right'>
+        <button type='button' onClick={toggleReorderView} className='btn btn-danger pull-right' data-testid="reorder-cancel-button">
           Peruuta
         </button>
       </div>

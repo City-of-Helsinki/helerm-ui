@@ -12,10 +12,11 @@ const renderFunctionAttributeChange = (item, attribute, value, currentValue = ' 
   </h4>
 );
 
-const renderPhaseAttributeChange = (phase, attribute, value, getAttributeName, currentValue = ' ') => (
-  <h4 key={`phase_${phase.id}_attr_${attribute}`}>
+const renderPhaseAttributeChange = (phase, phaseId, attribute, value, getAttributeName, currentValue = ' ') => (
+  <h4 key={`phase_${phaseId}_attr_${attribute}`}>
     {phase.name || ''} &gt;
-    {getAttributeName(attribute)}: <span>({currentValue})</span> {value}
+    {getAttributeName(attribute)}: <span>({currentValue})</span>{' '}
+    {value}
   </h4>
 );
 
@@ -23,7 +24,8 @@ const renderActionAttributeChange = (phase, action, attribute, value, getAttribu
   <h4 key={`action_${action.id}_attr_${attribute}`}>
     {phase.name || ''} &gt;
     {action.name || ''} &gt;
-    {getAttributeName(attribute)}: <span>({currentValue})</span> {value}
+    {getAttributeName(attribute)}: <span>({currentValue})</span>{' '}
+    {value}
   </h4>
 );
 
@@ -32,7 +34,8 @@ const renderRecordAttributeChange = (phase, action, record, attribute, value, ge
     {phase.name || ''} &gt;
     {action.name || ''} &gt;
     {record.name || ''} &gt;
-    {getAttributeName(attribute)}: <span>({currentValue})</span> {value}
+    {getAttributeName(attribute)}: <span>({currentValue})</span>{' '}
+    {value}
   </h4>
 );
 
@@ -97,6 +100,7 @@ const renderPhaseChanges = (changed, item, changes, getAttributeName) => {
         changes.push(
           renderPhaseAttributeChange(
             currentPhase,
+            phaseId,
             attribute,
             phase.attributes[attribute],
             getAttributeName,
@@ -119,16 +123,17 @@ const renderRecordErrors = (actionError, action, elem, getAttributeName) => {
       const recordError = actionError.records[recordId];
       const record = find(action.records, { id: recordId });
 
-      if (recordError.attributes) {
-        const attributeLabels = recordError.attributes.map((attribute) => getAttributeName(attribute)).join(', ');
+      // Always push record error paragraph, even if no attributes (to match old behavior)
+      const attributeLabels = recordError.attributes
+        ? recordError.attributes.map((attribute) => getAttributeName(attribute)).join(', ')
+        : '';
 
-        elem.push(
-          <p className='preview-error-record' key={`error_record_${recordId}`}>
-            <strong>{record.name || ''}: </strong>
-            {attributeLabels}
-          </p>,
-        );
-      }
+      elem.push(
+        <p className='preview-error-record' key={`error_record_${recordId}`}>
+          <strong>{record.name || ''}: </strong>
+          {attributeLabels}
+        </p>,
+      );
     });
   }
 };
@@ -139,16 +144,17 @@ const renderActionErrors = (phaseError, phase, elem, getAttributeName) => {
       const actionError = phaseError.actions[actionId];
       const action = find(phase.actions, { id: actionId });
 
-      if (actionError.attributes) {
-        const attributeLabels = actionError.attributes.map((attribute) => getAttributeName(attribute)).join(', ');
+      // Always push action error paragraph, even if no attributes (to match old behavior)
+      const attributeLabels = actionError.attributes
+        ? actionError.attributes.map((attribute) => getAttributeName(attribute)).join(', ')
+        : '';
 
-        elem.push(
-          <p className='preview-error-action' key={`error_action_${actionId}`}>
-            <strong>{action.name || ''}: </strong>
-            {attributeLabels}
-          </p>,
-        );
-      }
+      elem.push(
+        <p className='preview-error-action' key={`error_action_${actionId}`}>
+          <strong>{action.name || ''}: </strong>
+          {attributeLabels}
+        </p>,
+      );
 
       renderRecordErrors(actionError, action, elem, getAttributeName);
     });

@@ -10,36 +10,77 @@ vi.mock('../../../utils/helpers', () => ({
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-const mockTOS = {
-  phases: {
-    phase1: {
-      id: 'phase1',
-      index: 1,
-      name: 'Test Phase',
-      actions: ['action1'],
-      attributes: { TypeSpecifier: 'Test Phase' }
-    }
+// Single-use test helpers - specific to this import test file only
+const createMockPhase = (overrides = {}) => ({
+  id: 'mock-phase',
+  name: 'Mock Phase',
+  actions: [],
+  attributes: {
+    PhaseType: 'Valmistelu/Käsittely',
+    TypeSpecifier: 'Mock Phase'
   },
-  actions: {
+  ...overrides
+});
+
+const createRecord = (overrides = {}) => ({
+  id: 'mock-record',
+  name: 'Mock Record',
+  action: null,
+  attributes: {
+    TypeSpecifier: 'Mock Record',
+    RecordType: 'arviointi'
+  },
+  ...overrides
+});
+
+// Create local test data for import functionality
+const createImportTestMocks = () => {
+  const mockPhases = {
+    phase1: createMockPhase({
+      id: 'phase1',
+      name: 'Import Test Phase',
+      actions: ['action1'],
+      attributes: {
+        PhaseType: 'Valmistelu/Käsittely',
+        TypeSpecifier: 'Import Test Phase'
+      }
+    })
+  };
+
+  const mockActions = {
     action1: {
       id: 'action1',
+      name: 'Import Test Action',
       phase: 'phase1',
-      index: 1,
-      name: 'Test Action',
       records: ['record1'],
-      attributes: { TypeSpecifier: 'Test Action' }
+      attributes: {
+        ActionType: 'Päätös',
+        TypeSpecifier: 'Import Test Action'
+      }
     }
-  },
-  records: {
-    record1: {
+  };
+
+  const mockRecords = {
+    record1: createRecord({
       id: 'record1',
-      action: 'action1',
-      index: 1,
-      name: 'Test Record',
-      attributes: { TypeSpecifier: 'Test Record' }
+      name: 'Import Test Record',
+      action: 'action1'
+    })
+  };
+
+  return {
+    completeTOS: {
+      phases: mockPhases,
+      actions: mockActions,
+      records: mockRecords
     }
-  }
+  };
 };
+
+const importTestMocks = createImportTestMocks();
+
+// Use centralized mock data
+const mockTOS = importTestMocks.completeTOS;
 
 describe('Import View', () => {
   describe('prepareImport', () => {

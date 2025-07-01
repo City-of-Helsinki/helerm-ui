@@ -3,8 +3,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import attributeRules from '../../../utils/mocks/attributeRules.json';
-import validTOSwithChildren from '../../../utils/mocks/validTOSwithChildren.json';
+import { attributeTypes, validTOS } from '../../../utils/__mocks__/mockHelpers';
 import Exporter from '../Exporter';
 
 vi.mock('exceljs', async (importOriginal) => {
@@ -33,8 +32,13 @@ vi.mock('moment', async (importOriginal) => {
 });
 
 describe('<Exporter />', () => {
-  const attributeTypes = attributeRules;
-  const data = [validTOSwithChildren];
+  // Create test data that will have the expected structure after getChildren processing
+  const testItemWithPhases = {
+    ...validTOS, // This has the full structure with phases
+    // Make sure this item has no children so it will be included in exportData
+    children: undefined
+  };
+  const data = [testItemWithPhases];
 
   it('renders without crashing', () => {
     const { container } = render(<Exporter data={data} attributeTypes={attributeTypes} />);

@@ -1,8 +1,8 @@
 {
-  "uuid": "123456789",
-  "username": "Tester",
-  "first_name": "Tester",
-  "last_name": "Tester",
+  "uuid": "test-user-001",
+  "username": "test.user",
+  "first_name": "Test",
+  "last_name": "User",
   "permissions": [
     "can_edit",
     "can_review",
