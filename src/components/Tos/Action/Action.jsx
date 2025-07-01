@@ -358,7 +358,7 @@ const Action = React.forwardRef(
         );
       }
 
-      if (action.is_open && action.records && action.records.length) {
+      if (action.is_open && action.records?.length) {
         return (
           <Sticky
             topOffset={-1 * topOffset}

@@ -26,7 +26,7 @@ import {
 import config from '../../config';
 import api from '../../utils/api';
 
-const initialState = {
+export const initialState = {
   actions: [],
   attributes: [],
   exportItems: [],

@@ -608,14 +608,20 @@ const ViewTOS = () => {
       const { documentState, is_open: isOpen } = selectedTOS;
       const attributeElements = [];
 
+      // Check if attrTypes and attributes are valid objects
+      if (!attrTypes || typeof attrTypes !== 'object') {
+        return null;
+      }
+      const safeAttributes = attributes && typeof attributes === 'object' ? attributes : {};
+
       Object.keys(attrTypes).forEach((key) => {
-        if ((Object.hasOwn(attributes, key) && attributes[key]) || key === 'InformationSystem') {
+        if ((Object.hasOwn(safeAttributes, key) && safeAttributes[key]) || key === 'InformationSystem') {
           attributeElements.push(
             <Attribute
               key={key}
               attributeIndex={key}
               attributeKey={attrTypes[key].name}
-              attribute={attributes[key]}
+              attribute={safeAttributes[key]}
               type='attribute'
               attributeTypes={attrTypes}
               documentState={documentState}
@@ -675,13 +681,13 @@ const ViewTOS = () => {
                 editPhase={(phase) => dispatch(editPhase(phase))}
                 editPhaseAttribute={(data) => dispatch(editPhaseAttribute(data))}
                 editRecord={(record) => dispatch(editRecord(record))}
-                editRecordAttribute={editRecordAttribute}
+                editRecordAttribute={(data) => dispatch(editRecordAttribute(data))}
                 removeAction={(actionId) => dispatch(removeAction(actionId))}
                 removePhase={(phaseId) => dispatch(removePhase(phaseId))}
                 removeRecord={(recordId) => dispatch(removeRecord(recordId))}
                 displayMessage={displayMessage}
-                changeOrder={changeOrderThunk}
-                importItems={importItemsThunk}
+                changeOrder={(data) => dispatch(changeOrderThunk(data))}
+                importItems={(data) => dispatch(importItemsThunk(data))}
                 ref={(element) => {
                   phases.current[key] = element;
                 }}
@@ -836,7 +842,7 @@ const ViewTOS = () => {
                     state={selectedTOS.state}
                     setDocumentState={setTosDocumentState}
                     setTosVisibility={setTosVisibility}
-                    setValidationVisibility={setValidationVisibility}
+                    setValidationVisibility={(isVisible) => dispatch(setValidationVisibility(isVisible))}
                     review={review}
                     saveDraft={saveDraft}
                     tosId={selectedTOS.id}
@@ -955,7 +961,7 @@ const ViewTOS = () => {
                               toggleReorderView={toggleReorderView}
                               items={reorderPhases}
                               values={selectedTOS.phases}
-                              changeOrder={changeOrderThunk}
+                              changeOrder={(data) => dispatch(changeOrderThunk(data))}
                               parent={null}
                               attributeTypes={attributeTypes}
                               parentName={`${selectedTOS.function_id} ${selectedTOS.name}`}
@@ -974,7 +980,7 @@ const ViewTOS = () => {
                               phasesOrder={phasesOrder}
                               actions={selectedTOS.actions}
                               records={selectedTOS.records}
-                              importItems={importItemsThunk}
+                              importItems={(data) => dispatch(importItemsThunk(data))}
                               title='käsittelyvaiheita'
                               targetText={`Tos-kuvaukseen ${selectedTOS.name}`}
                               itemsToImportText='käsittelyvaiheet'
@@ -988,7 +994,7 @@ const ViewTOS = () => {
                           content={
                             <CloneView
                               cloneFromTemplate={(selectedMethod, id) => cloneFromTemplate(selectedMethod, id)}
-                              setNavigationVisibility={setNavigationVisibility}
+                              setNavigationVisibility={(isVisible) => dispatch(setNavigationVisibility(isVisible))}
                               templates={templates}
                               toggleCloneView={toggleCloneView}
                             />

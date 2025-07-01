@@ -119,21 +119,22 @@ const Phase = React.forwardRef(
     }, [typeSpecifier, type]);
 
     const updateTypeSpecifier = useCallback(
-      (event) => {
-        event?.preventDefault();
+      (newTypeSpecifier, phaseId) => {
         const updatedTypeSpecifier = {
-          typeSpecifier,
-          phaseId: phase.id,
+          typeSpecifier: newTypeSpecifier,
+          phaseId: phaseId || phase.id,
         };
         editPhaseAttribute(updatedTypeSpecifier);
         disableEditMode();
       },
-      [typeSpecifier, phase.id, editPhaseAttribute, disableEditMode],
+      [phase.id, editPhaseAttribute, disableEditMode],
     );
 
     const updatePhaseType = useCallback(
       (event) => {
-        event?.preventDefault();
+        if (event && typeof event.preventDefault === 'function') {
+          event.preventDefault();
+        }
         const updatedPhaseType = {
           type,
           phaseId: phase.id,
@@ -502,43 +503,50 @@ const Phase = React.forwardRef(
           )}
 
           {deleting && (
-            <Popup closePopup={cancelDeletion}>
-              <DeleteView type='phase' target={getTargetName()} action={deletePhase} cancel={cancelDeletion} />
-            </Popup>
+            <Popup
+              closePopup={cancelDeletion}
+              content={<DeleteView type='phase' target={getTargetName()} action={deletePhase} cancel={cancelDeletion} />}
+            />
           )}
 
           {showReorderView && (
-            <Popup closePopup={toggleReorderView}>
-              <ReorderView
-                target='action'
-                items={reorderActions}
-                values={actions}
-                changeOrder={changeOrder}
-                toggleReorderView={toggleReorderView}
-                parent={phaseIndex}
-                attributeTypes={attributeTypes}
-                parentName={getTargetName()}
-              />
-            </Popup>
+            <Popup
+              closePopup={toggleReorderView}
+              content={
+                <ReorderView
+                  target='action'
+                  items={reorderActions}
+                  values={actions}
+                  changeOrder={changeOrder}
+                  toggleReorderView={toggleReorderView}
+                  parent={phaseIndex}
+                  attributeTypes={attributeTypes}
+                  parentName={getTargetName()}
+                />
+              }
+            />
           )}
 
           {showImportView && (
-            <Popup closePopup={toggleImportView}>
-              <ImportView
-                level='action'
-                toggleImportView={toggleImportView}
-                title='toimenpiteitä'
-                targetText={`käsittelyvaiheeseen "${getTargetName()}"`}
-                itemsToImportText='toimenpiteet'
-                phases={phases}
-                actions={actions}
-                records={records}
-                importItems={importItems}
-                parent={phaseIndex}
-                phasesOrder={phasesOrder}
-                showItems={() => setPhaseVisibility && setPhaseVisibility(phaseIndex, true)}
-              />
-            </Popup>
+            <Popup
+              closePopup={toggleImportView}
+              content={
+                <ImportView
+                  level='action'
+                  toggleImportView={toggleImportView}
+                  title='toimenpiteitä'
+                  targetText={`käsittelyvaiheeseen "${getTargetName()}"`}
+                  itemsToImportText='toimenpiteet'
+                  phases={phases}
+                  actions={actions}
+                  records={records}
+                  importItems={importItems}
+                  parent={phaseIndex}
+                  phasesOrder={phasesOrder}
+                  showItems={() => setPhaseVisibility && setPhaseVisibility(phaseIndex, true)}
+                />
+              }
+            />
           )}
         </div>
       </div>

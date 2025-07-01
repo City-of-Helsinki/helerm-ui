@@ -6,7 +6,7 @@ import renderWithProviders from '../../utils/renderWithProviders';
 import AppContainer from '../AppContainer';
 import routes from '../../routes';
 import storeCreator from '../../store/createStore';
-import mockUser from '../../utils/mocks/user.json';
+import { user } from '../../utils/__mocks__/mockHelpers';
 import api from '../../utils/api';
 
 vi.mock('../../components/RouterSync/RouterSync', () => ({
@@ -23,7 +23,7 @@ vi.mock('../../components/RouterSyncLayout/RouterSyncLayout', () => ({
 }));
 
 const mockToken = 'mockToken';
-const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => mockUser }));
+const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => user }));
 
 vi.spyOn(useAuth, 'default').mockImplementation(() => ({
   user: { profile: { sub: 'user123', name: 'Test Tester' } },

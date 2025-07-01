@@ -1,0 +1,133 @@
+[
+  {
+    "id": "test-classification-health-guidance-001",
+    "created_at": "2017-06-07T05:48:15.195700Z",
+    "modified_at": "2017-12-27T10:39:28.775708Z",
+    "modified_by": "Test User",
+    "version": 2,
+    "state": "approved",
+    "valid_from": null,
+    "valid_to": null,
+    "code": "00 00 00 00",
+    "title": "Terveysneuvonta",
+    "parent": null,
+    "description": "",
+    "description_internal": "",
+    "related_classification": "",
+    "additional_information": "",
+    "function_allowed": true,
+    "version_history": [
+      {
+        "state": "draft",
+        "version": 1,
+        "modified_at": "2017-12-26T10:39:28.775708Z",
+        "valid_from": null,
+        "valid_to": null,
+        "modified_by": "Test User"
+      },
+      {
+        "version": 2,
+        "state": "approved",
+        "modified_at": "2017-12-27T10:39:28.775708Z",
+        "modified_by": "Test User",
+        "valid_from": null,
+        "valid_to": null
+      }
+    ],
+    "function": "test-function-election-001",
+    "function_state": "approved",
+    "function_attributes": {
+      "PersonalData": "Sisältää henkilötietoja",
+      "PublicityClass": "Julkinen",
+      "RetentionPeriod": "5",
+      "RetentionReason": "Test retention reason for consistent testing",
+      "InformationSystem": "Test Information System",
+      "SocialSecurityNumber": "Ei sisällä henkilötunnusta"
+    },
+    "function_version": 14,
+    "function_valid_from": "2017-11-13",
+    "function_valid_to": "2018-11-27"
+  },
+  {
+    "id": "test-classification-education-001",
+    "created_at": "2017-07-07T05:48:15.195700Z",
+    "modified_at": "2017-12-28T10:39:28.775708Z",
+    "modified_by": "Test User",
+    "version": 1,
+    "state": "approved",
+    "valid_from": null,
+    "valid_to": null,
+    "code": "07 01 00",
+    "title": "Koulutuspalvelut",
+    "parent": null,
+    "description": "",
+    "description_internal": "",
+    "related_classification": "",
+    "additional_information": "",
+    "function_allowed": true,
+    "version_history": [
+      {
+        "state": "draft",
+        "version": 1,
+        "modified_at": "2017-12-26T10:39:28.775708Z",
+        "valid_from": null,
+        "valid_to": null,
+        "modified_by": "Test User"
+      }
+    ],
+    "function": "07 01 00",
+    "function_state": "approved",
+    "function_attributes": {
+      "PersonalData": "Sisältää henkilötietoja",
+      "PublicityClass": "Julkinen",
+      "RetentionPeriod": "10",
+      "RetentionReason": "Test education retention reason",
+      "InformationSystem": "Test Education System",
+      "SocialSecurityNumber": "Ei sisällä henkilötunnusta"
+    },
+    "function_version": 8,
+    "function_valid_from": "2017-12-01",
+    "function_valid_to": "2019-01-15"
+  },
+  {
+    "id": "test-classification-education-child-001",
+    "created_at": "2017-08-07T05:48:15.195700Z",
+    "modified_at": "2017-12-29T10:39:28.775708Z",
+    "modified_by": "Test User",
+    "version": 1,
+    "state": "approved",
+    "valid_from": null,
+    "valid_to": null,
+    "code": "07 01 01",
+    "title": "Koulutuksen järjestäminen",
+    "parent": "test-classification-education-001",
+    "description": "",
+    "description_internal": "",
+    "related_classification": "",
+    "additional_information": "",
+    "function_allowed": true,
+    "version_history": [
+      {
+        "state": "draft",
+        "version": 1,
+        "modified_at": "2017-12-29T10:39:28.775708Z",
+        "valid_from": null,
+        "valid_to": null,
+        "modified_by": "Test User"
+      }
+    ],
+    "function": "07 01 01",
+    "function_state": "approved",
+    "function_attributes": {
+      "PersonalData": "Sisältää erityisiä henkilötietoja",
+      "PublicityClass": "Osittain salassa pidettävä",
+      "RetentionPeriod": "5",
+      "RetentionReason": "Test education organization reason",
+      "InformationSystem": "Test Education Organization System",
+      "SocialSecurityNumber": "Sisältää henkilötunnuksen"
+    },
+    "function_version": 3,
+    "function_valid_from": "2018-01-01",
+    "function_valid_to": "2019-01-31"
+  }
+]

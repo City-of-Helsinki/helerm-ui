@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import { waitFor } from '@testing-library/react';
 
 import renderWithProviders from '../../../utils/renderWithProviders';
-import classification from '../../../utils/mocks/classification.json';
+import { classification } from '../../../utils/__mocks__/mockHelpers';
 import api from '../../../utils/api';
 import ViewClassification from '../ViewClassification';
 import { initialState } from '../../../store/reducers/classification';
@@ -13,7 +13,8 @@ import { initialState } from '../../../store/reducers/classification';
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
-const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => classification }));
+// Mock API to return the first classification item from our array
+const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => classification[0] }));
 vi.spyOn(api, 'get').mockImplementation(mockApiGet);
 
 vi.mock('react-router-dom', async () => {
@@ -58,7 +59,7 @@ describe('<ViewClassification />', () => {
       {
         type: 'classification/fetchClassification/fulfilled',
         meta: expect.anything(),
-        payload: { ...classification, error: null },
+        payload: { ...classification[0], error: null, isFetching: false },
       },
       {
         payload: false,

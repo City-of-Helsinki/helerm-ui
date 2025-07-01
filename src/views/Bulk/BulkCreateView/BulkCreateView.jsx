@@ -95,19 +95,18 @@ const BulkCreateView = () => {
   };
 
   const addAttributeValues = (acc, attributes, type) => {
-    keys(attributes).forEach((key) => {
-      if (!acc[type][key]) {
-        acc[type][key] = {};
-      }
-      const values = attributes[key];
-      if (isArray(values)) {
-        values.forEach((value) => {
-          if (!isEmpty(value)) {
-            acc[type][key][value] = value;
+    keys(attributes || {}).forEach((attribute) => {
+      if (attributes[attribute]) {
+        if (!acc[type][attribute]) {
+          acc[type][attribute] = [attributes[attribute]];
+        } else if (isArray(attributes[attribute])) {
+          const isVal = some(acc[type][attribute], (val) => isEqual(attributes[attribute], val));
+          if (!isVal) {
+            acc[type][attribute].push(attributes[attribute]);
           }
-        });
-      } else if (!isEmpty(values)) {
-        acc[type][key][values] = values;
+        } else if (!includes(acc[type][attribute], attributes[attribute])) {
+          acc[type][attribute].push(attributes[attribute]);
+        }
       }
     });
   };
@@ -144,6 +143,18 @@ const BulkCreateView = () => {
         if (!isEmpty(item.attributes)) {
           addAttributeValues(acc, item.attributes, 'function');
         }
+
+        // Add function-level system attributes
+        addAttributeValues(
+          acc,
+          {
+            code: item.code || '',
+            function_state: item.function_state || null,
+            valid_from: item.valid_from || null,
+            valid_to: item.valid_to || null,
+          },
+          'function',
+        );
 
         if (!isEmpty(item.phases)) {
           processPhases(acc, item.phases);
@@ -221,7 +232,7 @@ const BulkCreateView = () => {
     const errors = {};
 
     if (!isEmpty(functionErrors)) {
-      errors.function = { attributes: functionErrors.attributes };
+      errors.attributes = functionErrors;
     }
 
     const { phases } = changedItem;
@@ -552,7 +563,7 @@ const BulkCreateView = () => {
           hit: { attributes: combinedSearchTerms.function.attributes },
           paths: result.paths,
           hits: result.hits,
-          selected: false,
+          selected: true,
         });
       } else if (!isEmpty(item.phases)) {
         item.phases.forEach((phase) => {
@@ -571,7 +582,7 @@ const BulkCreateView = () => {
                   name: 'attributes',
                 },
               ],
-              selected: false,
+              selected: true,
             });
           } else if (!isEmpty(phase.actions)) {
             phase.actions.forEach((action) => {
@@ -594,7 +605,7 @@ const BulkCreateView = () => {
                       name: 'attributes',
                     },
                   ],
-                  selected: false,
+                  selected: true,
                 });
               } else if (!isEmpty(action.records)) {
                 action.records.forEach((record) => {
@@ -628,7 +639,7 @@ const BulkCreateView = () => {
                           name: 'attributes',
                         },
                       ],
-                      selected: false,
+                      selected: true,
                     });
                   }
                 });

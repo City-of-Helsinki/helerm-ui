@@ -64,16 +64,16 @@ const Preview = ({
         const phaseError = errors.phases[phaseId];
         const phase = find(item.phases, { id: phaseId });
 
-        if (phaseError.attributes) {
-          const attributeLabels = phaseError.attributes.map((attribute) => getAttributeName(attribute)).join(', ');
+        const attributeLabels = phaseError.attributes
+          ? phaseError.attributes.map((attribute) => getAttributeName(attribute)).join(', ')
+          : '';
 
-          elem.push(
-            <p className='preview-error-phase' key={`error_phase_${phaseId}`}>
-              <strong>{phase.name || ''}: </strong>
-              {attributeLabels}
-            </p>,
-          );
-        }
+        elem.push(
+          <p className='preview-error-phase' key={`error_phase_${phaseId}`}>
+            <strong>{phase.name || ''}: </strong>
+            {attributeLabels}
+          </p>,
+        );
 
         helpers.renderActionErrors(phaseError, phase, elem, getAttributeName);
       });

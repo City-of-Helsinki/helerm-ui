@@ -1,11 +1,64 @@
 import deepFreeze from 'deep-freeze';
 
 import { convertToTree } from '../helpers';
-import {
-  mockNavigationDataShort,
-  mockNavigationDataFullObjects,
-  mockNavigationDataOrphan
-} from "../mocks/navigationMocks";
+
+// Single-use test data - specific to this test file only
+const mockNavigationDataShort = [
+  {
+    id: 'cee34db0de3e47fbb937b74dd87ea759',
+    code: '00',
+    title: 'Hallintoasiat',
+    parent: null
+  },
+  {
+    id: '7a5967d6a21d412d9c1fcdfebf2d3e19',
+    code: '00 00',
+    title: 'Hallintoasioiden ohjaus',
+    parent: {
+      id: 'cee34db0de3e47fbb937b74dd87ea759',
+      version: 1
+    }
+  },
+  {
+    id: 'fb61caa7ec9d4332b0737831fd829293',
+    code: '00 00 00',
+    title: 'Y HALO THAR!',
+    parent: {
+      id: '7a5967d6a21d412d9c1fcdfebf2d3e19',
+      version: 1
+    }
+  }
+];
+
+const mockNavigationDataFullObjects = [
+  {
+    id: 'test1',
+    code: '01',
+    title: 'Test Item 1',
+    parent: null
+  },
+  {
+    id: 'test2',
+    code: '01 01',
+    title: 'Test Sub Item',
+    parent: {
+      id: 'test1',
+      version: 1
+    }
+  }
+];
+
+const mockNavigationDataOrphan = [
+  {
+    id: 'orphan1',
+    code: '02',
+    title: 'Orphan Item',
+    parent: {
+      id: 'nonexistent-parent',
+      version: 1
+    }
+  }
+];
 
 const ADMINISTRATIVE_MATTERS = '00 Hallintoasiat';
 

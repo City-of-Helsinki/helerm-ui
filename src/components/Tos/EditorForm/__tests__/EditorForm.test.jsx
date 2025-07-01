@@ -2,10 +2,10 @@ import React from 'react';
 import { render } from '@testing-library/react';
 
 import EditorForm from '../EditorForm';
-import attributeRules from '../../../../utils/mocks/attributeRules.json';
+import { attributeTypes } from '../../../../utils/__mocks__/mockHelpers';
 
 const baseMocks = {
-  attributeTypes: attributeRules,
+  attributeTypes: attributeTypes,
   editorConfig: { type: 'function', action: 'edit' },
   targetId: 'c38e1b3dacd145ef905baf2fbd79918c',
   elementConfig: { editWithForm: vi.fn(), elementTypes: {}, createRecord: vi.fn() },

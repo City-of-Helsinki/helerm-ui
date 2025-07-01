@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { isEmpty, slice } from 'lodash';
 
@@ -7,108 +7,101 @@ import SearchTerm from './SearchTerm';
 
 import './SearchTerms.scss';
 
-class SearchTerms extends React.Component {
-  constructor(props) {
-    super(props);
+const SearchTerms = ({
+  attributeTypes,
+  attributeValues,
+  onSearch,
+  resetSearchResults,
+  searchTerms: initialSearchTerms,
+}) => {
+  const [searchTerms, setSearchTerms] = useState(initialSearchTerms);
 
-    this.onChangeSearchTerm = this.onChangeSearchTerm.bind(this);
-    this.onAddSearchTerm = this.onAddSearchTerm.bind(this);
-    this.onRemoveSearchTerm = this.onRemoveSearchTerm.bind(this);
-    this.onResetSearch = this.onResetSearch.bind(this);
-    this.onSearch = this.onSearch.bind(this);
+  const onAddSearchTerm = useCallback(() => {
+    setSearchTerms((prevSearchTerms) => [
+      ...prevSearchTerms,
+      { ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() },
+    ]);
+    resetSearchResults();
+  }, [resetSearchResults]);
 
-    this.state = {
-      searchTerms: props.searchTerms,
-    };
-  }
-
-  onAddSearchTerm() {
-    const { searchTerms } = this.state;
-    this.setState({
-      searchTerms: [...searchTerms, { ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }],
-    });
-    this.props.resetSearchResults();
-  }
-
-  onChangeSearchTerm(index, searchTerm) {
-    const { searchTerms } = this.state;
-    const start = slice(searchTerms, 0, index);
-    const end = index + 1 < searchTerms.length ? slice(searchTerms, index + 1, searchTerms.length) : [];
-    this.setState({
-      searchTerms: [...start, searchTerm, ...end],
-    });
-    this.props.resetSearchResults();
-  }
-
-  onRemoveSearchTerm(index) {
-    const { searchTerms } = this.state;
-    if (searchTerms.length === 1) {
-      this.onResetSearch();
-    } else {
-      const start = slice(searchTerms, 0, index);
-      const end = index + 1 < searchTerms.length ? slice(searchTerms, index + 1, searchTerms.length) : [];
-      this.setState({
-        searchTerms: [...start, ...end],
+  const onChangeSearchTerm = useCallback(
+    (index, searchTerm) => {
+      setSearchTerms((prevSearchTerms) => {
+        const start = slice(prevSearchTerms, 0, index);
+        const end = index + 1 < prevSearchTerms.length ? slice(prevSearchTerms, index + 1, prevSearchTerms.length) : [];
+        return [...start, searchTerm, ...end];
       });
-    }
-    this.props.resetSearchResults();
-  }
+      resetSearchResults();
+    },
+    [resetSearchResults],
+  );
 
-  onResetSearch() {
-    this.setState({
-      searchTerms: [{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }],
-    });
-    this.props.resetSearchResults();
-  }
+  const onRemoveSearchTerm = useCallback(
+    (index) => {
+      setSearchTerms((prevSearchTerms) => {
+        if (prevSearchTerms.length === 1) {
+          return [{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }];
+        } else {
+          const start = slice(prevSearchTerms, 0, index);
+          const end =
+            index + 1 < prevSearchTerms.length ? slice(prevSearchTerms, index + 1, prevSearchTerms.length) : [];
+          return [...start, ...end];
+        }
+      });
+      resetSearchResults();
+    },
+    [resetSearchResults],
+  );
 
-  onSearch() {
-    const { searchTerms } = this.state;
-    this.props.onSearch(searchTerms);
-  }
+  const onResetSearch = useCallback(() => {
+    setSearchTerms([{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }]);
+    resetSearchResults();
+  }, [resetSearchResults]);
 
-  validateTerms(searchTerms) {
+  const handleSearch = useCallback(() => {
+    onSearch(searchTerms);
+  }, [onSearch, searchTerms]);
+
+  const validateTerms = useCallback((terms) => {
     let isValidTerms = true;
-    searchTerms.forEach((searchTerm) => {
+    terms.forEach((searchTerm) => {
       if (isEmpty(searchTerm.target) || isEmpty(searchTerm.attribute) || isEmpty(searchTerm.value)) {
         isValidTerms = false;
       }
     });
     return isValidTerms;
-  }
+  }, []);
 
-  render() {
-    const { attributeTypes, attributeValues } = this.props;
-    const { searchTerms } = this.state;
-    const isValidTerms = this.validateTerms(searchTerms);
-    return (
-      <div className='search-terms'>
-        <h3>Rajaa muutettavat kohteet</h3>
-        <div className='search-terms-container'>
-          {searchTerms.map((searchTerm, index) => (
-            <SearchTerm
-              attributeTypes={attributeTypes}
-              attributeValues={attributeValues}
-              key={searchTerm.id}
-              onAddSearchTerm={this.onAddSearchTerm}
-              onChangeSearchTerm={(emittedSearchTerm) => this.onChangeSearchTerm(index, emittedSearchTerm)}
-              onRemoveSearchTerm={() => this.onRemoveSearchTerm(index)}
-              searchTerm={searchTerm}
-              showAdd={index === searchTerms.length - 1}
-            />
-          ))}
-        </div>
-        <div className='bulk-update-search-actions'>
-          <button type='button' className='btn btn-default' onClick={this.onResetSearch}>
-            Tyhjennä
-          </button>
-          <button type='button' className='btn btn-primary' disabled={!isValidTerms} onClick={this.onSearch}>
-            Hae
-          </button>
-        </div>
+  const isValidTerms = validateTerms(searchTerms);
+
+  return (
+    <div className='search-terms'>
+      <h3>Rajaa muutettavat kohteet</h3>
+      <div className='search-terms-container'>
+        {searchTerms.map((searchTerm, index) => (
+          <SearchTerm
+            attributeTypes={attributeTypes}
+            attributeValues={attributeValues}
+            key={searchTerm.id}
+            onAddSearchTerm={onAddSearchTerm}
+            onChangeSearchTerm={(emittedSearchTerm) => onChangeSearchTerm(index, emittedSearchTerm)}
+            onRemoveSearchTerm={() => onRemoveSearchTerm(index)}
+            searchTerm={searchTerm}
+            showAdd={index === searchTerms.length - 1}
+          />
+        ))}
       </div>
-    );
-  }
-}
+      <div className='bulk-update-search-actions'>
+        <button type='button' className='btn btn-default' onClick={onResetSearch}>
+          Tyhjennä
+        </button>
+        <button type='button' className='btn btn-primary' disabled={!isValidTerms} onClick={handleSearch}>
+          Hae
+        </button>
+      </div>
+    </div>
+  );
+};
 
 SearchTerms.propTypes = {
   attributeTypes: PropTypes.object,

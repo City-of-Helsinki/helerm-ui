@@ -221,8 +221,10 @@ const Attribute = ({
       const resolveDisplayName = (attr) => {
         if (!attr) return '';
 
+        const safeAttr = getSafeDisplayValue(attr);
+
         return getDisplayLabelForAttribute({
-          attributeValue: attr,
+          attributeValue: safeAttr,
           identifier: attrIndex,
         });
       };
@@ -252,19 +254,44 @@ const Attribute = ({
     return null;
   }
 
+  const getSafeDisplayValue = (attr) => {
+    if (attr === null || attr === undefined) return '';
+
+    if (typeof attr === 'object') {
+      if ('value' in attr) {
+        return attr.value || '';
+      }
+
+      return String(attr) || '';
+    }
+
+    return attr;
+  };
+
   if (editable === false && initialAttribute !== null) {
+    const displayValue = getSafeDisplayValue(initialAttribute);
+
     return (
       <span className='list-group-item col-xs-6 attribute-basic'>
         <strong>{attributeIndex}:</strong>
-        <div>{initialAttribute || '\u00A0'}</div>
+        <div>{displayValue || '\u00A0'}</div>
       </span>
     );
   }
 
-  const attributeValue = getAttributeValue(initialAttribute, attributeIndex, attributeTypes, type);
+  let attributeValue;
+
+  attributeValue = getAttributeValue(initialAttribute, attributeIndex, attributeTypes, type);
+
+  if (attributeValue && typeof attributeValue === 'object' && !React.isValidElement(attributeValue)) {
+    attributeValue = <div className='table-value'>—</div>;
+  }
+
+  const testId = `attribute-${type}-${attributeIndex || 'unnamed'}`;
 
   return (
     <span
+      data-testid={testId}
       onClick={() => activateEditMode()}
       onKeyUp={(e) => {
         if (e.key === 'Enter') {
@@ -277,8 +304,10 @@ const Attribute = ({
         type === 'basic' ? 'attribute-basic' : '',
       ])}
     >
-      <span className='table-key'>{attributeKey}</span>
-      {attributeValue}
+      <span className='table-key' data-testid={`${testId}-key`}>
+        {attributeKey}
+      </span>
+      <span data-testid={`${testId}-value`}>{attributeValue}</span>
     </span>
   );
 };
