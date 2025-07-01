@@ -4,7 +4,7 @@ import { isArray, orderBy } from 'lodash';
 import { DEFAULT_PAGE_SIZE } from '../../constants';
 import api from '../../utils/api';
 
-const initialState = {
+export const initialState = {
   selectedBulk: null,
   bulkUpdates: [],
   isFetching: false,

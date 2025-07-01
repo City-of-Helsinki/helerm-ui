@@ -21,22 +21,22 @@ const TYPE_CONFIG = {
 
 const DeleteView = ({ type, target, cancel, action }) => {
   return (
-    <div className='delete-view row'>
-      <h3>
+    <div className='delete-view row' data-testid='delete-view'>
+      <h3 data-testid='delete-view-title'>
         Olet poistamassa {TYPE_CONFIG[type].name} &quot;
         {target}&quot;
       </h3>
       {TYPE_CONFIG[type].children && (
-        <span className='has-children-text'>
+        <span className='has-children-text' data-testid='delete-view-warning'>
           Huomioi, että kaikki {TYPE_CONFIG[type].childrenText} sisältämät tiedot poistetaan
         </span>
       )}
-      <h4>Vahvista poisto</h4>
-      <div className='popup-buttons'>
-        <button type='button' onClick={cancel} className='btn btn-default'>
+      <h4 data-testid='delete-view-confirmation'>Vahvista poisto</h4>
+      <div className='popup-buttons' data-testid='delete-view-buttons'>
+        <button type='button' onClick={cancel} className='btn btn-default' data-testid='delete-view-cancel-button'>
           Peruuta
         </button>
-        <button type='button' onClick={action} className='btn btn-delete'>
+        <button type='button' onClick={action} className='btn btn-delete' data-testid='delete-view-delete-button'>
           Poista
         </button>
       </div>

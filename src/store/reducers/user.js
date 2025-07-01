@@ -6,7 +6,7 @@ import api, { Unauthorized } from '../../utils/api';
 import { USER_LOGIN_STATUS } from '../../constants'
 import config from '../../config';
 
-const initialState = {
+export const initialState = {
   data: null,
   isFetching: false,
   status: USER_LOGIN_STATUS.NONE,
