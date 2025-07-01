@@ -77,6 +77,7 @@ const ReorderItem = ({ id, index, moveItem, labels, target }) => {
         border: getBorderStyle(target),
       }}
       data-handler-id={handlerId}
+      data-testid={`reorder-item-${id}`}
     >
       <i className='fa-solid fa-arrows' aria-hidden='true' /> {getLabels(labels)}
     </div>

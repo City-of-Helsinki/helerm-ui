@@ -6,7 +6,7 @@ import renderWithProviders from '../../utils/renderWithProviders';
 import AppContainer from '../AppContainer';
 import routes from '../../routes';
 import storeCreator from '../../store/createStore';
-import mockUser from '../../utils/mocks/user.json';
+import mockUser from '../../utils/mocks/api/user.json';
 import api from '../../utils/api';
 
 vi.mock('../../components/RouterSync/RouterSync', () => ({

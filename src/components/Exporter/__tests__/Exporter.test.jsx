@@ -3,7 +3,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import attributeRules from '../../../utils/mocks/attributeRules.json';
+import attributeTypesJson from '../../../utils/mocks/attributeTypes.json';
 import validTOSwithChildren from '../../../utils/mocks/validTOSwithChildren.json';
 import Exporter from '../Exporter';
 
@@ -33,7 +33,7 @@ vi.mock('moment', async (importOriginal) => {
 });
 
 describe('<Exporter />', () => {
-  const attributeTypes = attributeRules;
+  const attributeTypes = attributeTypesJson;
   const data = [validTOSwithChildren];
 
   it('renders without crashing', () => {

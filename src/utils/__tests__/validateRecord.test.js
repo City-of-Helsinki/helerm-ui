@@ -1,6 +1,6 @@
 import { validateRecord, validateRecordWarnings } from '../validators';
 import attributeRules from '../mocks/attributeRules.json';
-import record from '../mocks/record.json';
+import record from '../mocks/api/record.json';
 
 describe('(Record validation) Test some example record', () => {
   const errors = validateRecord(record, attributeRules);
