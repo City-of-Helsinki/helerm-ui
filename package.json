@@ -78,6 +78,7 @@
     "build": "vite build",
     "serve": "vite preview",
     "test": "vitest",
+    "test:coverage": "yarn test run --coverage --watch=false",
     "ci": "yarn test run --coverage --watch=false",
     "lint": "yarn eslint \"src/**/*.{js,jsx}\"",
     "postinstall": "if test \"$NODE_ENV\" != \"production\" ; then husky install ; fi",
