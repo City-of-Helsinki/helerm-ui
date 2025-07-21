@@ -37,6 +37,13 @@ Add these by copying the `.env.example` to `.env` and adding the values to the f
 $ yarn start    # Launch on local environment
 ```
 
+### Running e2e tests:
+
+```bash
+$ yarn test:e2e:start    # Runs e2e tests using playwright (using dev frontend if not set to local)
+```
+
+
 Navigate to [http://localhost:3000](http://localhost:3000)
 
 ### Running the app in Docker
