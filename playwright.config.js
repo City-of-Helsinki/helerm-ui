@@ -21,7 +21,7 @@ export default defineConfig({
   use: {
     actionTimeout: 30 * 1000,
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: process.env.E2E_TESTS_ENV_URL ?? "https://tiedonohjaus-ui.dev.hel.ninja/",
+    baseURL: process.env.E2E_TESTS_ENV_URL ?? 'https://tiedonohjaus.dev.hel.ninja/',
     ignoreHTTPSErrors: true,
     screenshot: {
       fullPage: true,
