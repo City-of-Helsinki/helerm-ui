@@ -1,21 +1,18 @@
-import { Page, expect, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
+import { acceptCookieConcent } from '../utils.js';
 
-test.describe("Frontpage", () => {
+test.describe('Frontpage', () => {
   let page;
 
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
-
-    await page.goto('/');
-
-    await expect(page.locator('#cookie-consent-content')).toBeVisible();
-    await page.getByTestId('cookie-consent-approve-required-button').click();
+    await acceptCookieConcent(page);
   });
 
   test('title', async () => {
     const pageTitle = await page.title();
-    expect(pageTitle).toContain("Tiedonohjaus");
+    expect(pageTitle).toContain('Tiedonohjaus');
   });
 
   test('Open links', async () => {
@@ -37,7 +34,27 @@ test.describe("Frontpage", () => {
     await page.getByRole('button', { name: 'Hallintoasiat  +' }).click();
   });
 
+  test('Filter', async () => {
+    await page.goto('/');
+    await expect(page.getByText('12 02 02 02')).not.toBeVisible();
+    await expect(page.getByRole('button', { name: 'Hallintoasiat  +' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Liikenne  +' })).toBeVisible();
+    await page.getByPlaceholder('Etsi...').click();
+    await page.getByPlaceholder('Etsi...').fill('kirjastoasiakkuuden');
+    await expect(page.getByText('12 02 02 02')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Hallintoasiat  +' })).not.toBeVisible();
+    await expect(page.getByRole('button', { name: 'Liikenne  +' })).not.toBeVisible();
+  });
+
+
+  test('Login', async () => {
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Kirjaudu sisään' }).click();
+    await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible();
+  });
+
+
   test.afterAll(async () => {
     await page.close();
   });
-})
+});
