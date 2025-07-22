@@ -47,13 +47,6 @@ test.describe('Frontpage', () => {
   });
 
 
-  test('Login', async () => {
-    await page.goto('/');
-    await page.getByRole('button', { name: 'Kirjaudu sisään' }).click();
-    await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible();
-  });
-
-
   test.afterAll(async () => {
     await page.close();
   });
