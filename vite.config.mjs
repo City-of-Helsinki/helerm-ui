@@ -13,7 +13,10 @@ export default defineConfig({
         plugins: ['babel-plugin-macros'],
       },
     }),
-    eslint(),
+    {
+      ...eslint(),
+      apply: 'serve',
+    },
     macros(),
   ],
   build: {
