@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { filter } from 'lodash';
 
 import SearchFilter from './SearchFilter';
 import { statusFilters } from '../../../constants';
 
 const SearchFilters = ({ attributeTypes, isDetailSearch, isUser, filters, handleFilterChange }) => {
-  const statusFilterOptions = isUser ? statusFilters : filter(statusFilters, { default: true });
+  const statusFilterOptions = statusFilters;
   const retentionPeriods = attributeTypes?.RetentionPeriod ? attributeTypes?.RetentionPeriod.values : [];
 
   const retentionPeriodOptions = retentionPeriods.map((option) => ({

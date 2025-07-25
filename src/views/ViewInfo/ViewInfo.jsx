@@ -1,60 +1,45 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from '@reduxjs/toolkit';
-import { connect } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 import raw from 'raw.macro';
+import { useLocation } from 'react-router-dom';
 
-import { setNavigationVisibility } from '../../components/Navigation/reducer';
+import { setNavigationVisibility } from '../../store/reducers/navigation';
 import './ViewInfo.scss';
-import withRouter from '../../components/hoc/withRouter';
 
 // CRA does not support importing text files
 // this is offered as a solution here
 // (https://github.com/facebook/create-react-app/issues/3722)
 const markdown = raw('./content_fi.md');
 
-class InfoView extends Component {
-  componentDidMount() {
+const BODY_CLASS = 'helerm-info-view';
+
+const InfoView = () => {
+  const dispatch = useDispatch();
+  const location = useLocation();
+
+  useEffect(() => {
     if (document.body) {
-      document.body.classList.add(InfoView.BODY_CLASS);
+      document.body.classList.add(BODY_CLASS);
     }
 
-    this.props.setNavigationVisibility(true);
-  }
+    dispatch(setNavigationVisibility(true));
 
-  componentWillUnmount() {
-    if (document.body) {
-      document.body.classList.remove(InfoView.BODY_CLASS);
-    }
-  }
+    return () => {
+      if (document.body) {
+        document.body.classList.remove(BODY_CLASS);
+      }
+    };
+  }, [dispatch]);
 
-  render() {
-    const classname = this.props.location.pathname === '/info' ? 'info-view-center' : 'info-view';
-    return (
-      <div className={classname}>
-        <ReactMarkdown plugins={[gfm]}>{markdown}</ReactMarkdown>
-      </div>
-    );
-  }
-}
+  const classname = location.pathname === '/info' ? 'info-view-center' : 'info-view';
 
-InfoView.propTypes = {
-  setNavigationVisibility: PropTypes.func,
-  location: PropTypes.object.isRequired,
+  return (
+    <div className={classname}>
+      <ReactMarkdown remarkPlugins={[gfm]}>{markdown}</ReactMarkdown>
+    </div>
+  );
 };
 
-InfoView.BODY_CLASS = 'helerm-info-view';
-
-const mapStateToProps = null;
-
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(
-    {
-      setNavigationVisibility,
-    },
-    dispatch,
-  );
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(InfoView));
+export default InfoView;

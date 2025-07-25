@@ -126,15 +126,16 @@ class ImportView extends React.Component {
     const links = [];
     let itemsInArray = items;
     if (!items.length) {
-      itemsInArray = Object.keys(items); // Because items mutates into object for unknown reason
+      itemsInArray = Object.keys(items);
     }
     Object.keys(itemsInArray).forEach((key) => {
       if (Object.hasOwn(itemsInArray, key)) {
         links.push(
-          <div key={key} className='import-row-title'>
+          <div key={key} className='import-row-title' data-testid={`import-row-item-${itemsInArray[key]}`}>
             <span
               key={key}
               className='import-row-link'
+              data-testid={`import-row-link-${values[itemsInArray[key]].id}`}
               onClick={(e) => this.selectForImport(e, values[itemsInArray[key]].id)}
               onKeyUp={(e) => {
                 if (e.key === 'Enter') {
@@ -171,15 +172,21 @@ class ImportView extends React.Component {
     const importableElements = this.generateImportableElements(level);
 
     return (
-      <div className='row'>
-        <h3>
+      <div className='row' data-testid='import-view'>
+        <h3 data-testid='import-view-title'>
           Tuo {title} {targetText}
         </h3>
-        <h5 className='col-xs-6'>Valitse listalta tuotavat {itemsToImportText}</h5>
-        <h5 className='col-xs-6'>Tuotavat {itemsToImportText}</h5>
+        <h5 className='col-xs-6' data-testid='import-view-select-items'>
+          Valitse listalta tuotavat {itemsToImportText}
+        </h5>
+        <h5 className='col-xs-6' data-testid='import-view-selected-items'>
+          Tuotavat {itemsToImportText}
+        </h5>
         <div className='col-xs-12'>
-          <div className='col-xs-6 importable-elements '>{importableElements}</div>
-          <div className='col-xs-6 importable-elements '>
+          <div className='col-xs-6 importable-elements' data-testid='import-view-available-elements'>
+            {importableElements}
+          </div>
+          <div className='col-xs-6 importable-elements' data-testid='import-view-selected-elements'>
             {this.state.selectedElements.length > 0 && (
               <div>
                 {this.state.selectedElements.map((element, index) => (
@@ -192,6 +199,7 @@ class ImportView extends React.Component {
                       }
                     }}
                     className='col-xs-12 importable-element-link'
+                    data-testid={`import-view-selected-element-${index}`}
                   >
                     {this.state.values[element].attributes.TypeSpecifier ||
                       this.state.values[element].attributes[`${_.capitalize(this.props.level)}Type`] ||
@@ -202,11 +210,21 @@ class ImportView extends React.Component {
             )}
           </div>
         </div>
-        <div className='col-xs-12 button-row'>
-          <button type='button' onClick={() => this.importItems()} className='btn btn-primary pull-right'>
+        <div className='col-xs-12 button-row' data-testid='import-view-button-row'>
+          <button
+            type='button'
+            onClick={() => this.importItems()}
+            className='btn btn-primary pull-right'
+            data-testid='import-view-import-button'
+          >
             Tuo
           </button>
-          <button type='button' onClick={toggleImportView} className='btn btn-danger pull-right'>
+          <button
+            type='button'
+            onClick={toggleImportView}
+            className='btn btn-danger pull-right'
+            data-testid='import-view-cancel-button'
+          >
             Peruuta
           </button>
         </div>

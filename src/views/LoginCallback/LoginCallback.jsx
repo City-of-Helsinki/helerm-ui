@@ -1,31 +1,39 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { LoginCallbackHandler } from 'hds-react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import { displayMessage } from '../../utils/helpers';
 import Loader from '../../components/Loader';
 import useUpdateApiTokens from './hooks/useUpdateApiTokens';
+import {
+  handleLoginCallbackErrorThunk,
+  initializeLoginCallbackThunk,
+  retrieveUserFromSession,
+} from '../../store/reducers/user';
 
-const LoginCallback = ({ handleCallbackInitialize, retrieveUserFromSession, handleCallbackError }) => {
+const LoginCallback = () => {
   const navigate = useNavigate();
 
   const { updateApiTokens } = useUpdateApiTokens();
 
+  const dispatch = useDispatch();
+
   const onSuccess = async (user) => {
-    handleCallbackInitialize();
+    dispatch(initializeLoginCallbackThunk());
 
     const { profile } = user;
     const { sub: userId } = profile;
 
     await updateApiTokens();
-    await retrieveUserFromSession(userId);
+
+    dispatch(retrieveUserFromSession(userId));
 
     navigate('/');
   };
 
   const onError = () => {
-    handleCallbackError();
+    dispatch(handleLoginCallbackErrorThunk());
 
     displayMessage({ title: 'Virhe', body: 'Kirjautuminen epäonnistui!' }, { type: 'error' });
 
@@ -38,12 +46,6 @@ const LoginCallback = ({ handleCallbackInitialize, retrieveUserFromSession, hand
       <Loader show />
     </LoginCallbackHandler>
   );
-};
-
-LoginCallback.propTypes = {
-  handleCallbackInitialize: PropTypes.func.isRequired,
-  retrieveUserFromSession: PropTypes.func.isRequired,
-  handleCallbackError: PropTypes.func.isRequired,
 };
 
 export default LoginCallback;

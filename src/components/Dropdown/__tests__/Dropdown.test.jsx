@@ -1,4 +1,3 @@
-import { createMemoryHistory } from 'history';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { fireEvent, screen } from '@testing-library/react';
@@ -9,8 +8,7 @@ import Dropdown from '../Dropdown';
 import renderWithProviders from '../../../utils/renderWithProviders';
 
 const renderComponent = (itemsOverride) => {
-  const history = createMemoryHistory();
-  const store = storeCreator(history, {});
+  const store = storeCreator({});
   const dummyFunction = vi.fn();
   const dummyItems = [
     { action: dummyFunction, text: 'Dropdown Item 1' },
@@ -18,10 +16,10 @@ const renderComponent = (itemsOverride) => {
   ];
 
   return renderWithProviders(
-    <BrowserRouter history={history}>
+    <BrowserRouter>
       <Dropdown items={itemsOverride ?? dummyItems} />
     </BrowserRouter>,
-    { history, store },
+    { store },
   );
 };
 

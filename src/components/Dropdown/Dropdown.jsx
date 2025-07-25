@@ -26,29 +26,52 @@ const Dropdown = (props) => {
     }
   };
 
-  const generateRows = (dropdownItems) =>
-    dropdownItems.map((item, index) => (
+  const generateRows = (dropdownItems) => {
+    const isActionDropdown = items.some((item) => item.text === 'Muokkaa toimenpidettä');
+    const isPhaseDropdown = items.some((item) => item.text === 'Muokkaa käsittelyvaihetta');
+
+    let dropdownType = 'record'; // default
+    if (isActionDropdown) {
+      dropdownType = 'action';
+    } else if (isPhaseDropdown) {
+      dropdownType = 'phase';
+    }
+
+    return dropdownItems.map((item, index) => (
       <button
         type='button'
         key={item.text}
         className={classnames('btn btn-sm dropdown-row', item.style)}
         onClick={() => handleClick(index)}
+        data-testid={`${dropdownType}-dropdown-item-${index}`}
       >
         <span className={classnames('fa-solid dropdown-icon', item.icon)} />
         {item.text}
       </button>
     ));
+  };
 
   const dropdownRows = generateRows(items);
 
+  const isActionDropdown = items.some((item) => item.text === 'Muokkaa toimenpidettä');
+  const isPhaseDropdown = items.some((item) => item.text === 'Muokkaa käsittelyvaihetta');
+
+  let dropdownType = 'record'; // default
+  if (isActionDropdown) {
+    dropdownType = 'action';
+  } else if (isPhaseDropdown) {
+    dropdownType = 'phase';
+  }
+
   return (
-    <span className='dropdown-wrapper'>
+    <span className='dropdown-wrapper' data-testid={`${dropdownType}-dropdown`}>
       <button
         type='button'
         aria-label='Näytä toiminnallisuudet'
         ref={buttonRef}
         className={classnames('btn btn-primary', { 'btn-sm': small }, { 'btn-xs': extraSmall })}
         onClick={() => setIsOpen(!isOpen)}
+        data-testid={`${dropdownType}-dropdown-button`}
       >
         <span className='fa-solid fa-bars' />
       </button>
@@ -56,6 +79,7 @@ const Dropdown = (props) => {
         <DropdownMenuWrapper
           onClickOutside={handleClickOutsideMenu}
           className={classnames('dropdown-items', { 'items-xs': extraSmall })}
+          data-testid={`${dropdownType}-dropdown-menu`}
         >
           {dropdownRows}
         </DropdownMenuWrapper>

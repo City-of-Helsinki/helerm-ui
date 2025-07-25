@@ -65,4 +65,11 @@ describe('convertToTree', () => {
       /^Parent with id .* not found$/
     );
   });
+
+  it('Handles empty input list', () => {
+    const res = convertToTree([]);
+    expect(res).toEqual([]);
+  });
+
+  
 });

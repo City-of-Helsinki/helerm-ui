@@ -1,30 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from '@reduxjs/toolkit';
-import { connect } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
-import { setNavigationVisibility } from '../Navigation/reducer';
+import { setNavigationVisibility } from '../../store/reducers/navigation';
 
-class IndexPage extends React.Component {
-  componentDidMount() {
-    this.props.openNavigation();
-  }
+const IndexPage = () => {
+  const dispatch = useDispatch();
 
-  render() {
-    return null;
-  }
-}
+  useEffect(() => {
+    dispatch(setNavigationVisibility(true));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-IndexPage.propTypes = {
-  openNavigation: PropTypes.func.isRequired,
+  return null;
 };
 
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(
-    {
-      openNavigation: () => setNavigationVisibility(true),
-    },
-    dispatch,
-  );
-
-export default connect(null, mapDispatchToProps)(IndexPage);
+export default IndexPage;

@@ -11,6 +11,7 @@ const Popup = ({ content, closePopup }) => {
   return (
     <div
       className='popup-outer-background'
+      data-testid="popup-component"
       onClick={closePopup}
       onKeyUp={(event) => {
         if (event.key === 'Enter') {
@@ -20,6 +21,7 @@ const Popup = ({ content, closePopup }) => {
     >
       <div
         className='popup-inner-background'
+        data-testid="popup-content"
         onClick={(e) => stop(e)}
         onKeyUp={(event) => {
           if (event.key === 'Enter') {
@@ -27,7 +29,7 @@ const Popup = ({ content, closePopup }) => {
           }
         }}
       >
-        <button type='button' className='popup__close' onClick={closePopup}>
+        <button type='button' className='popup__close' onClick={closePopup} data-testid="popup-close-button">
           <i className='fa-solid fa-xmark' />
         </button>
         {content}

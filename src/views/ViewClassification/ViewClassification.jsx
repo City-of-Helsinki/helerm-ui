@@ -1,176 +1,177 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import React, { useCallback, useEffect } from 'react';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 import ClassificationHeader from '../../components/ClassificationHeader/ClassificationHeader';
 import VersionSelector from '../../components/VersionSelector/VersionSelector';
-import withRouter from '../../components/hoc/withRouter';
+import { displayMessage } from '../../utils/helpers';
+import { setNavigationVisibility } from '../../store/reducers/navigation';
+import {
+  createTosThunk,
+  fetchClassificationThunk,
+  clearClassification,
+  classificationSelector,
+  isFetchingSelector,
+  errorSelector,
+} from '../../store/reducers/classification';
 
 import './ViewClassification.scss';
 
-class ViewClassification extends React.Component {
-  constructor(props) {
-    super(props);
-    this.createTos = this.createTos.bind(this);
-    this.fetchClassification = this.fetchClassification.bind(this);
-    this.onVersionSelectorChange = this.onVersionSelectorChange.bind(this);
-  }
+const BODY_CLASS = 'helerm-classification-view';
 
-  componentDidMount() {
-    const { id, version } = this.props.params;
+const ViewClassification = () => {
+  const dispatch = useDispatch();
+  const params = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const classification = useSelector(classificationSelector);
+  const isFetching = useSelector(isFetchingSelector);
+  const error = useSelector(errorSelector);
+
+  const fetchClassification = useCallback(
+    (id, requestParams = {}) => {
+      if (id) {
+        dispatch(fetchClassificationThunk({ classificationId: id, params: requestParams }))
+          .unwrap()
+          .then(() => dispatch(setNavigationVisibility(false)))
+          .catch((err) => {
+            if (err instanceof URIError) {
+              navigate(`/404?classification-id=${id}`);
+            }
+          });
+      }
+    },
+    [dispatch, navigate],
+  );
+
+  useEffect(() => {
+    const { id, version } = params;
     const requestParams = version ? { version } : {};
-    this.fetchClassification(id, requestParams);
-    this.addBodyClass();
-  }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const { params, location } = nextProps;
+    fetchClassification(id, requestParams);
 
-    if (params.id !== this.props.params.id || params.version !== this.props.params.version) {
-      const { id, version } = params;
-      const requestParams = version ? { version } : {};
-      this.fetchClassification(id, requestParams);
-    }
+    addBodyClass();
 
+    return () => {
+      removeBodyClass();
+      dispatch(clearClassification());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params]);
+
+  useEffect(() => {
     if (location && location.pathname === 'view-classification/:id') {
-      this.props.setNavigationVisibility(false);
+      dispatch(setNavigationVisibility(false));
     }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
 
-  componentWillUnmount() {
-    this.removeBodyClass();
-    this.props.clearClassification();
-  }
-
-  onVersionSelectorChange(item) {
-    this.props.navigate(`/view-classification/${this.props.classification.id}/version/${item.value}`);
-  }
-
-  addBodyClass() {
+  const addBodyClass = () => {
     if (document.body) {
-      document.body.className += ViewClassification.BODY_CLASS;
+      document.body.className += BODY_CLASS;
     }
-  }
+  };
 
-  removeBodyClass() {
+  const removeBodyClass = () => {
     if (document.body) {
-      document.body.className = document.body.className.replace(ViewClassification.BODY_CLASS, '');
+      document.body.className = document.body.className.replace(BODY_CLASS, '');
     }
-  }
+  };
 
-  fetchClassification(id, requestParams = {}) {
-    if (id) {
-      this.props
-        .fetchClassification(id, requestParams)
-        .then(() => this.props.setNavigationVisibility(false))
-        .catch((err) => {
-          if (err instanceof URIError) {
-            // We have a 404 from API
-            this.props.navigate(`/404?classification-id=${id}`);
-          }
-        });
-    }
-  }
+  const onVersionSelectorChange = (item) => {
+    navigate(`/view-classification/${classification.id}/version/${item.value}`);
+  };
 
-  createTos() {
-    return this.props
-      .createTos()
-      .then((action) => {
-        this.props.navigate(`/view-tos/${action.payload.id}`);
-        return this.props.displayMessage({
+  const createTos = () => {
+    return dispatch(createTosThunk())
+      .unwrap()
+      .then((result) => {
+        navigate(`/view-tos/${result.id}`);
+        return displayMessage({
           title: 'Luonnos',
           body: 'Luonnos tallennettu!',
         });
       })
       .catch((err) =>
-        this.props.displayMessage(
+        displayMessage(
           {
             title: 'Virhe',
-            body: `"${err.message}"`,
+            body: `"${err}"`,
           },
           { type: 'error' },
         ),
       );
-  }
+  };
 
-  renderClassificationData(label, value) {
+  const renderClassificationData = (label, value) => {
     return (
       <div className='list-group-item col-xs-6'>
         <strong>{label}</strong>
         <div>{value || '\u00A0'}</div>
       </div>
     );
-  }
+  };
 
-  render() {
-    const { classification } = this.props;
-
-    if (classification?.id) {
-      const descriptionInternal = this.renderClassificationData('Sisäinen kuvaus', classification.description_internal);
-      const description = this.renderClassificationData('Kuvaus', classification.description);
-      const relatedClassification = this.renderClassificationData(
-        'Liittyvä tehtäväluokka',
-        classification.related_classification,
-      );
-      const additionalInformation = this.renderClassificationData('Lisätiedot', classification.additional_information);
-      const version = this.renderClassificationData('Versio', classification.version);
-      return (
-        <div className='col-xs-12 single-classification-container'>
-          <ClassificationHeader
-            code={classification.code}
-            title={classification.title}
-            createTos={this.createTos}
-            functionAllowed={!classification.function && classification.function_allowed}
-          />
-          <div className='classification-version-selector'>
-            <VersionSelector
-              versionId={classification.id}
-              currentVersion={classification.version}
-              versions={classification.version_history}
-              onChange={this.onVersionSelectorChange}
-              label='Versio:'
-            />
-          </div>
-          <div className='single-classification-content'>
-            <div className='row'>
-              <div className='general-info space-between'>
-                <div className='classification-details col-xs-12'>
-                  <h5 style={{ marginTop: '0' }}>Tehtäväluokan tiedot</h5>
-                  {description}
-                  {descriptionInternal}
-                  {relatedClassification}
-                  {additionalInformation}
-                  {version}
-                </div>
-              </div>
-              {classification.function ? (
-                <div className='classification-details col-xs-12 no-print'>
-                  <Link to={`/view-tos/${classification.function}/version/${classification.function_version}`}>
-                    Käsittelyprosessi &raquo;
-                  </Link>
-                </div>
-              ) : null}
-            </div>
-          </div>
-        </div>
-      );
-    }
+  if ((isFetching && !classification?.id) || (error && !classification?.id)) {
     return null;
   }
-}
 
-ViewClassification.propTypes = {
-  classification: PropTypes.object,
-  clearClassification: PropTypes.func.isRequired,
-  createTos: PropTypes.func.isRequired,
-  displayMessage: PropTypes.func.isRequired,
-  fetchClassification: PropTypes.func.isRequired,
-  params: PropTypes.object.isRequired,
-  location: PropTypes.object.isRequired,
-  navigate: PropTypes.func.isRequired,
-  setNavigationVisibility: PropTypes.func.isRequired,
+  if (!classification?.id) {
+    return null;
+  }
+
+  const descriptionInternal = renderClassificationData('Sisäinen kuvaus', classification.description_internal);
+  const description = renderClassificationData('Kuvaus', classification.description);
+  const relatedClassification = renderClassificationData(
+    'Liittyvä tehtäväluokka',
+    classification.related_classification,
+  );
+  const additionalInformation = renderClassificationData('Lisätiedot', classification.additional_information);
+  const version = renderClassificationData('Versio', classification.version);
+
+  return (
+    <div className='col-xs-12 single-classification-container'>
+      <ClassificationHeader
+        code={classification.code}
+        title={classification.title}
+        createTos={createTos}
+        functionAllowed={!classification.function && classification.function_allowed}
+      />
+      <div className='classification-version-selector'>
+        <VersionSelector
+          versionId={classification.id}
+          currentVersion={classification.version}
+          versions={classification.version_history}
+          onChange={onVersionSelectorChange}
+          label='Versio:'
+        />
+      </div>
+      <div className='single-classification-content'>
+        <div className='row'>
+          <div className='general-info space-between'>
+            <div className='classification-details col-xs-12'>
+              <h5 style={{ marginTop: '0' }}>Tehtäväluokan tiedot</h5>
+              {description}
+              {descriptionInternal}
+              {relatedClassification}
+              {additionalInformation}
+              {version}
+            </div>
+          </div>
+          {classification.function ? (
+            <div className='classification-details col-xs-12 no-print'>
+              <Link to={`/view-tos/${classification.function}/version/${classification.function_version}`}>
+                Käsittelyprosessi &raquo;
+              </Link>
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
 };
 
-ViewClassification.BODY_CLASS = 'helerm-classification-view';
+ViewClassification.BODY_CLASS = BODY_CLASS;
 
-export default withRouter(ViewClassification);
+export default ViewClassification;

@@ -1,55 +1,57 @@
 /* eslint-disable operator-assignment */
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import { isEmpty } from 'lodash';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
+import { fetchNavigationThunk, itemsSelector } from '../../store/reducers/navigation';
 import { getStatusLabel } from '../../utils/helpers';
 
 import './ClassificationTree.scss';
 
-class ClassificationTree extends React.Component {
-  componentDidMount() {
-    this.addBodyClass();
-  }
+const BODY_CLASS = 'helerm-classification-tree';
 
-  componentWillUnmount() {
-    this.removeBodyClass();
-  }
+const ClassificationTree = () => {
+  const [tree, setTree] = useState([]);
+  const navigate = useNavigate();
 
-  getTreeItems(items, current) {
-    const classificationData = this.renderClassification(current);
-    const currentItems = [...items];
-    const childrenList = current.children
-      ? current.children.reduce((prev, currentChild) => {
-          if (current === undefined) {
-            return prev;
-          }
-          return this.getTreeItems(prev, currentChild);
-        }, [])
-      : null;
+  const dispatch = useDispatch();
 
-    currentItems.push(
-      <div key={current.id}>
-        {classificationData}
-        {childrenList && <div className='classification-children'>{childrenList}</div>}
-      </div>,
-    );
+  const items = useSelector(itemsSelector);
 
-    return currentItems;
-  }
-
-  addBodyClass() {
-    if (document.body) {
-      document.body.className = document.body.className + ClassificationTree.BODY_CLASS;
+  useEffect(() => {
+    if (isEmpty(items)) {
+      dispatch(fetchNavigationThunk());
     }
-  }
 
-  removeBodyClass() {
-    if (document.body) {
-      document.body.className = document.body.className.replace(ClassificationTree.BODY_CLASS, '');
+    if (!isEmpty(items)) {
+      setTree(items);
     }
-  }
 
-  renderClassificationData(label, value) {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items]);
+
+  useEffect(() => {
+    addBodyClass();
+
+    return () => {
+      removeBodyClass();
+    };
+  }, []);
+
+  const addBodyClass = () => {
+    if (document.body) {
+      document.body.className = document.body.className + BODY_CLASS;
+    }
+  };
+
+  const removeBodyClass = () => {
+    if (document.body) {
+      document.body.className = document.body.className.replace(BODY_CLASS, '');
+    }
+  };
+
+  const renderClassificationData = (label, value) => {
     if (value) {
       return (
         <tr>
@@ -59,21 +61,22 @@ class ClassificationTree extends React.Component {
       );
     }
     return null;
-  }
+  };
 
-  renderClassification(item) {
-    const description = this.renderClassificationData('Kuvaus', item.description);
-    const descriptionInternal = this.renderClassificationData('Sisäinen kuvaus', item.description_internal);
-    const related = this.renderClassificationData('Liittyvä tehtäväluokka', item.related_classification);
-    const information = this.renderClassificationData('Lisätiedot', item.additional_information);
-    const functionAllowed = this.renderClassificationData(
+  const renderClassification = (item) => {
+    const description = renderClassificationData('Kuvaus', item.description);
+    const descriptionInternal = renderClassificationData('Sisäinen kuvaus', item.description_internal);
+    const related = renderClassificationData('Liittyvä tehtäväluokka', item.related_classification);
+    const information = renderClassificationData('Lisätiedot', item.additional_information);
+    const functionAllowed = renderClassificationData(
       'Käsittelyprosessi sallittu',
       item.function_allowed ? 'Kyllä' : 'Ei',
     );
     const state =
       item.function_allowed && item.function_state
-        ? this.renderClassificationData('Käsittelyprosessin tila', getStatusLabel(item.function_state))
+        ? renderClassificationData('Käsittelyprosessin tila', getStatusLabel(item.function_state))
         : null;
+
     return (
       <div key={item.id}>
         <table>
@@ -96,38 +99,53 @@ class ClassificationTree extends React.Component {
         </table>
       </div>
     );
-  }
+  };
 
-  render() {
-    const { tree, goBack } = this.props;
-    if (tree) {
-      const treeItems = tree.reduce((prev, curr, key) => {
-        if (key === undefined) {
-          return prev;
-        }
-        return this.getTreeItems(prev, curr);
-      }, []);
+  const getTreeItems = (items, current) => {
+    const classificationData = renderClassification(current);
+    const currentItems = [...items];
+    const childrenList = current.children
+      ? current.children.reduce((prev, currentChild) => {
+          if (current === undefined) {
+            return prev;
+          }
+          return getTreeItems(prev, currentChild);
+        }, [])
+      : null;
 
-      return (
-        <div className='classification-tree'>
-          <div className='no-print'>
-            <button type='button' className='btn btn-primary' onClick={goBack}>
-              Takaisin
-            </button>
-          </div>
-          {treeItems}
-        </div>
-      );
-    }
+    currentItems.push(
+      <div key={current.id}>
+        {classificationData}
+        {childrenList && <div className='classification-children'>{childrenList}</div>}
+      </div>,
+    );
+
+    return currentItems;
+  };
+
+  if (!tree) {
     return null;
   }
-}
 
-ClassificationTree.propTypes = {
-  goBack: PropTypes.func.isRequired,
-  tree: PropTypes.array,
+  const treeItems = tree.reduce((prev, curr, key) => {
+    if (key === undefined) {
+      return prev;
+    }
+    return getTreeItems(prev, curr);
+  }, []);
+
+  return (
+    <div className='classification-tree'>
+      <div className='no-print'>
+        <button type='button' className='btn btn-primary' onClick={navigate(-1)}>
+          Takaisin
+        </button>
+      </div>
+      {treeItems}
+    </div>
+  );
 };
 
-ClassificationTree.BODY_CLASS = 'helerm-classification-tree';
+ClassificationTree.BODY_CLASS = BODY_CLASS;
 
 export default ClassificationTree;
