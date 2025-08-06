@@ -116,7 +116,7 @@
     "@vitest/coverage-istanbul": "^3.0.9",
     "eslint": "^9.23.0",
     "husky": "^8.0.3",
-    "jsdom": "^24.1.0",
+    "jsdom": "^26.1.0",
     "redux-mock-store": "^1.5.4"
   }
 }
