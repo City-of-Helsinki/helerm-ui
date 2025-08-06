@@ -61,7 +61,7 @@
     "react-select": "^5.8.1",
     "react-sticky-el": "^2.1.1",
     "redux-thunk": "^2.3.0",
-    "remark-gfm": "^1.0.0",
+    "remark-gfm": "^4.0.1",
     "sass": "^1.79.4",
     "vite": "^5.4.19",
     "vite-plugin-babel-macros": "^1.0.6",
