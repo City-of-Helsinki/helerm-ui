@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.4.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.3.1...helerm-ui-v1.4.0) (2025-08-08)
+
+
+### Features
+
+* More tests ([dc371e0](https://github.com/City-of-Helsinki/helerm-ui/commit/dc371e0a08cdf881d9ea98342be127c22e50d4b6))
+
+
+### Bug Fixes
+
+* Dev url ([ad5e325](https://github.com/City-of-Helsinki/helerm-ui/commit/ad5e325e918d5d5f6e03056d2fad9ba8666db2cc))
+* Remove test that fails on review env ([30f49eb](https://github.com/City-of-Helsinki/helerm-ui/commit/30f49eb5b62aba971e5febdc5562be69056e3cd8))
+
+
+### Dependencies
+
+* Bump form-data from 4.0.0 to 4.0.4 ([c7aac8d](https://github.com/City-of-Helsinki/helerm-ui/commit/c7aac8d7b271e3c0fb2c9472aaac460ad79732c0))
+* Upgrade jsdom TIED-164 ([969b3ed](https://github.com/City-of-Helsinki/helerm-ui/commit/969b3ed6f26cfbc81f88b3ff9851c93385de1e2b))
+
 ## [1.3.1](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.3.0...helerm-ui-v1.3.1) (2025-05-30)
 
 
