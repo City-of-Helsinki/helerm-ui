@@ -8,9 +8,7 @@ import userEvent from '@testing-library/user-event';
 import FacetedSearch from '../FacetedSearch';
 import renderWithProviders, { storeDefaultState } from '../../../utils/renderWithProviders';
 import api from '../../../utils/api';
-import classification from '../../../utils/mocks/api/classification.json';
-import attributeTypes from '../../../utils/mocks/attributeTypes.json';
-import template from '../../../utils/mocks/api/template.json';
+import { classification, attributeTypes, template } from '../../../utils/__mocks__/mockHelpers';
 import { TYPE_CLASSIFICATION, TYPE_FUNCTION } from '../../../constants';
 
 const mockClassificationResponse = {

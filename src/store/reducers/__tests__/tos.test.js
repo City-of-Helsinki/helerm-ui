@@ -43,8 +43,7 @@ import {
 } from '../tos-toolkit';
 import tosReducer, { initialState } from '../tos-toolkit/main';
 import api from '../../../utils/api';
-import validTOS from '../../../utils/mocks/validTOS.json';
-import classification from '../../../utils/mocks/api/classification.json';
+import { validTOS, classification } from '../../../utils/__mocks__/mockHelpers';
 import { WAITING_FOR_APPROVAL } from '../../../constants';
 
 const middlewares = [thunk];

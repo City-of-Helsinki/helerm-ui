@@ -39,10 +39,10 @@
     "function_attributes": {
       "PersonalData": "Sisältää henkilötietoja",
       "PublicityClass": "Julkinen",
-      "RetentionPeriod": "-1",
-      "RetentionReason": "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset opetustoimen asiakirjat 2003",
+      "RetentionPeriod": "5",
+      "RetentionReason": "Test retention reason for consistent testing",
       "InformationSystem": "Test Information System",
-      "SocialSecurityNumber": "Sisältää henkilötunnuksen"
+      "SocialSecurityNumber": "Ei sisällä henkilötunnusta"
     },
     "function_version": 14,
     "function_valid_from": "2017-11-13",

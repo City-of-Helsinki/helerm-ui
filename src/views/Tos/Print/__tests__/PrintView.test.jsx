@@ -6,9 +6,7 @@ import thunk from 'redux-thunk';
 
 import PrintView from '../PrintView';
 import renderWithProviders from '../../../../utils/renderWithProviders';
-import classification from '../../../../utils/mocks/api/classification.json';
-import validTOS from '../../../../utils/mocks/validTOS.json';
-import attributeTypes from '../../../../utils/mocks/attributeTypes.json';
+import { validTOS, attributeTypes, classification } from '../../../../utils/__mocks__/mockHelpers';
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);

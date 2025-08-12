@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 
 import EditorForm from '../EditorForm';
-import attributeTypes from '../../../../utils/mocks/attributeTypes.json';
+import { attributeTypes } from '../../../../utils/__mocks__/mockHelpers';
 
 const baseMocks = {
   attributeTypes: attributeTypes,

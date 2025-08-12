@@ -7,33 +7,30 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import Action from '../Action';
 import renderWithProviders from '../../../../utils/renderWithProviders';
-import attributeTypes from '../../../../utils/mocks/attributeTypes.json';
+import { createMockComponentProps, createMockObject, attributeTypes } from '../../../../utils/__mocks__/mockHelpers';
 
-const mockAction = {
-  id: 'test-action-001',
-  phase: 'test-phase-001',
-  is_open: true,
-  records: ['test-record-001', 'test-record-002'],
+const mockAction = createMockObject('action', {
   attributes: {
     TypeSpecifier: 'Testikäsittelyvaihe',
     ActionType: 'Käsittelyvaiheen tyyppi',
     PersonalData: 'Sisältää henkilötietoja',
     PublicityClass: 'Julkinen',
   },
-};
+  records: ['test-record-001', 'test-record-002'],
+  is_open: true,
+});
 
 const mockRecords = {
-  'test-record-001': {
+  'test-record-001': createMockObject('record', {
     id: 'test-record-001',
     action: 'test-action-001',
-    is_open: true,
     attributes: {
       TypeSpecifier: 'Testilomake 1',
       RecordType: 'Asiakirja',
       PersonalData: 'Sisältää henkilötietoja',
     },
-  },
-  'test-record-002': {
+  }),
+  'test-record-002': createMockObject('record', {
     id: 'test-record-002',
     action: 'test-action-001',
     is_open: false,
@@ -42,38 +39,34 @@ const mockRecords = {
       RecordType: 'Lomake',
       PersonalData: 'Ei sisällä henkilötietoja',
     },
-  },
+  }),
 };
 
-const mockProps = {
+const mockProps = createMockComponentProps('action', {
   action: mockAction,
-  actionTypes: attributeTypes.ActionType?.values?.reduce((acc, val) => {
-    acc[val.id] = { id: val.id, name: val.value };
-    return acc;
-  }, {}),
   actions: { [mockAction.id]: mockAction },
-  attributeTypes: attributeTypes,
-  documentState: 'view',
-  phases: {},
-  phasesOrder: [],
-  recordTypes: attributeTypes.RecordType?.values?.reduce((acc, val) => {
-    acc[val.id] = { id: val.id, name: val.value };
-    return acc;
-  }, {}),
   records: mockRecords,
-  addRecord: vi.fn(),
-  changeOrder: vi.fn(),
-  displayMessage: vi.fn(),
-  editAction: vi.fn(),
+  attributeTypes: attributeTypes,
+  // Add missing function props
+  setActionVisibility: vi.fn(),
   editActionAttribute: vi.fn(),
+  addRecord: vi.fn(),
+  removeAction: vi.fn(),
+  editAction: vi.fn(),
   editRecord: vi.fn(),
   editRecordAttribute: vi.fn(),
-  importItems: vi.fn(),
-  removeAction: vi.fn(),
   removeRecord: vi.fn(),
-  setActionVisibility: vi.fn(),
   setRecordVisibility: vi.fn(),
-};
+  displayMessage: vi.fn(),
+  changeOrder: vi.fn(),
+  importItems: vi.fn(),
+  // Add missing object props
+  actionTypes: {},
+  recordTypes: {},
+  phases: {},
+  phasesOrder: [],
+  documentState: 'view',
+});
 
 const renderComponent = (props = {}) => {
   return renderWithProviders(

@@ -7,64 +7,65 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import Phase from '../Phase';
 import renderWithProviders from '../../../../utils/renderWithProviders';
-import attributeTypes from '../../../../utils/mocks/attributeTypes.json';
+import { attributeTypes, createMockPhase, createRecord } from '../../../../utils/__mocks__/mockHelpers';
 
-const mockPhase = {
-  id: 'test-phase-001',
-  is_open: true,
-  is_attributes_open: false,
-  actions: ['test-action-001', 'test-action-002'],
-  attributes: {
-    TypeSpecifier: 'Testikäsittelyvaihe',
-    PhaseType: 'Käsittelyvaiheen tyyppi',
-    PersonalData: 'Sisältää henkilötietoja',
-    PublicityClass: 'Julkinen',
-  },
-};
-
-const mockActions = {
-  'test-action-001': {
-    id: 'test-action-001',
-    phase: 'test-phase-001',
+// Create local test data
+const createPhaseTestMocks = () => {
+  const mockPhase = createMockPhase({
+    id: 'phase-test-001',
+    name: 'Testikäsittelyvaihe',
+    actions: ['action-test-001', 'action-test-002'],
     is_open: true,
-    records: ['test-record-001'],
+    is_attributes_open: false,
     attributes: {
-      TypeSpecifier: 'Testikäsittelyvaihe 1',
-      ActionType: 'Toimenpide',
+      PhaseType: 'Valmistelu/Käsittely',
+      TypeSpecifier: 'Testikäsittelyvaihe',
+      InformationSystem: 'Test Information System'
+    }
+  });
+
+  const mockActions = {
+    'action-test-001': {
+      id: 'action-test-001',
+      name: 'Testikäsittelyvaihe 1',
+      attributes: {
+        ActionType: 'Päätös',
+        TypeSpecifier: 'Testikäsittelyvaihe 1'
+      },
+      records: ['record-test-001'],
+      phase: mockPhase.id,
+      is_open: true
     },
-  },
-  'test-action-002': {
-    id: 'test-action-002',
-    phase: 'test-phase-001',
-    is_open: false,
-    records: ['test-record-002'],
-    attributes: {
-      TypeSpecifier: 'Testikäsittelyvaihe 2',
-      ActionType: 'Toimenpide',
-    },
-  },
+    'action-test-002': {
+      id: 'action-test-002',
+      name: 'Testikäsittelyvaihe 2',
+      attributes: {
+        ActionType: 'Toimenpide',
+        TypeSpecifier: 'Testikäsittelyvaihe 2'
+      },
+      records: ['record-test-002'],
+      phase: mockPhase.id,
+      is_open: false
+    }
+  };
+
+  const mockRecords = {
+    'record-test-001': createRecord({
+      id: 'record-test-001',
+      name: 'Test Record 1',
+      action: 'action-test-001'
+    }),
+    'record-test-002': createRecord({
+      id: 'record-test-002',
+      name: 'Test Record 2',
+      action: 'action-test-002'
+    })
+  };
+
+  return { phase: mockPhase, actions: mockActions, records: mockRecords };
 };
 
-const mockRecords = {
-  'test-record-001': {
-    id: 'test-record-001',
-    action: 'test-action-001',
-    is_open: true,
-    attributes: {
-      TypeSpecifier: 'Testilomake 1',
-      RecordType: 'Asiakirja',
-    },
-  },
-  'test-record-002': {
-    id: 'test-record-002',
-    action: 'test-action-002',
-    is_open: false,
-    attributes: {
-      TypeSpecifier: 'Testilomake 2',
-      RecordType: 'Lomake',
-    },
-  },
-};
+const { phase: mockPhase, actions: mockActions, records: mockRecords } = createPhaseTestMocks();
 
 const mockProps = {
   phase: mockPhase,

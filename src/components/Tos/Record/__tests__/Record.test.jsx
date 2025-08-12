@@ -5,9 +5,9 @@ import '@testing-library/jest-dom';
 
 import renderWithProviders from '../../../../utils/renderWithProviders';
 import Record from '../Record';
-import attributeTypes from '../../../../utils/mocks/attributeTypes.json';
+import { createMockComponentProps, createMockObject, attributeTypes } from '../../../../utils/__mocks__/mockHelpers';
 
-const mockRecord = {
+const mockRecord = createMockObject('record', {
   id: 'test-record-001',
   action: 'test-action-001',
   attributes: {
@@ -17,22 +17,19 @@ const mockRecord = {
     PublicityClass: 'Julkinen',
   },
   is_open: true,
-};
+});
 
-const mockProps = {
+const mockProps = createMockComponentProps('record', {
   record: mockRecord,
   documentState: 'view',
   attributeTypes: attributeTypes,
-  recordTypes: attributeTypes.RecordType?.values?.reduce((acc, val) => {
-    acc[val.id] = { id: val.id, name: val.value };
-    return acc;
-  }, {}),
+  recordTypes: {},
   editRecord: vi.fn(),
   editRecordAttribute: vi.fn(),
   removeRecord: vi.fn(),
   setRecordVisibility: vi.fn(),
   displayMessage: vi.fn(),
-};
+});
 
 const renderComponent = (props = {}) => {
   return renderWithProviders(<Record {...mockProps} {...props} ref={React.createRef()} />);

@@ -8,40 +8,50 @@ import userEvent from '@testing-library/user-event';
 import renderWithProviders, { storeDefaultState } from '../../../utils/renderWithProviders';
 import Navigation from '../Navigation';
 import api from '../../../utils/api';
-import classification from '../../../utils/mocks/api/classification.json';
-import attributeTypes from '../../../utils/mocks/attributeTypes.json';
-import template from '../../../utils/mocks/api/template.json';
+import { classification, attributeTypes, template } from '../../../utils/__mocks__/mockHelpers';
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
-const navigationItems = [
-  {
-    id: classification[0].id,
-    name: classification[0].title,
-    code: classification[0].code,
-    function: classification[0].function,
-    children: [],
-    path: ['Terveysneuvonta'],
-    isOpen: true,
-  },
-  {
-    id: classification[1].id,
-    name: classification[1].title,
-    code: classification[1].code,
-    function: classification[1].function,
-    children: [
-      {
-        id: classification[2].id,
-        name: classification[2].title,
-        code: classification[2].code,
-        function: classification[2].function,
-        path: ['Koulutuspalvelut', 'Koulutuksen järjestäminen'],
-      },
-    ],
-    path: ['Koulutuspalvelut'],
-  },
-];
+// Navigation-specific test data (moved from mockHelpers)
+const createNavigationTestItems = (classifications = classification) => {
+  if (classifications.length < 3) {
+    throw new Error('Need at least 3 classification items for navigation testing');
+  }
+
+  return [
+    {
+      id: classifications[0].id,
+      name: classifications[0].title,
+      code: classifications[0].code,
+      function: classifications[0].function,
+      children: [],
+      path: [classifications[0].title],
+      isOpen: true,
+    },
+    {
+      id: classifications[1].id,
+      name: classifications[1].title,
+      code: classifications[1].code,
+      function: classifications[1].function,
+      children: [
+        {
+          id: classifications[2].id,
+          name: classifications[2].title,
+          code: classifications[2].code,
+          function: classifications[2].function,
+          path: [classifications[1].title, classifications[2].title],
+        },
+      ],
+      path: [classifications[1].title],
+    },
+  ];
+};
+
+const navigationTestItems = createNavigationTestItems();
+
+// Use centralized navigation test items instead of inline constants
+const navigationItems = navigationTestItems;
 
 const mockClassificationResponse = {
   count: classification.length,
@@ -65,7 +75,7 @@ vi.spyOn(api, 'get').mockImplementation((url) => {
 const createMockStore = (overrides = {}) => {
   const initialState = {
     ...storeDefaultState,
-    ui: { ...storeDefaultState.ui, attributeTypes, template },
+    ui: { ...storeDefaultState.ui, attributeTypes, templates: template?.results || [] },
   };
 
   if (overrides.navigation) {

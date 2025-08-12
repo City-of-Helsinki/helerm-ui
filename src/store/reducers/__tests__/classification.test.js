@@ -7,7 +7,7 @@ import {
   fetchClassificationThunk,
   createTosThunk
 } from '../classification';
-import classification from '../../../utils/mocks/api/classification.json';
+import { classification } from '../../../utils/__mocks__/mockHelpers';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);

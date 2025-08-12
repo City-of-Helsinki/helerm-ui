@@ -6,6 +6,89 @@ import { screen, fireEvent } from '@testing-library/react';
 import Preview from '../Preview';
 import renderWithProviders from '../../../../utils/renderWithProviders';
 
+// Create local test helpers for bulk functionality
+const createMockProcessItem = (overrides = {}) => ({
+  id: 'test-process-item',
+  name: 'Test Process Item',
+  path: ['Root', 'Category', 'Test Process Item'], // Add path array for join operation
+  function_state: 1,
+  attributes: {
+    attribute1: 'original_value1',
+    attribute2: 'original_value2',
+  },
+  phases: [
+    {
+      id: 'phase1',
+      name: 'Test Phase',
+      actions: [
+        {
+          id: 'action1',
+          name: 'Test Action',
+          phase: 'phase1',
+          records: [
+            {
+              id: 'record1',
+              name: 'Test Record',
+              action: 'action1'
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  ...overrides
+});
+
+const createMockBulkChanges = (overrides = {}) => ({
+  valid_from: '2024-01-01',
+  attributes: {
+    attribute1: 'new_value1',
+    attribute2: 'new_value2',
+  },
+  phases: {
+    'phase1': {
+      attributes: {
+        phase_attr: 'new_phase_value'
+      },
+      actions: {
+        'action1': {
+          attributes: {
+            action_attr: 'new_action_value'
+          },
+          records: {
+            'record1': {
+              attributes: {
+                record_attr: 'new_record_value'
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  ...overrides
+});
+
+const createMockBulkErrors = (overrides = {}) => ({
+  attributes: ['attribute1', 'attribute2'],
+  phases: {
+    'phase1': {
+      attributes: ['phase_attr'],
+      actions: {
+        'action1': {
+          attributes: ['action_attr'],
+          records: {
+            'record1': {
+              attributes: ['record_attr']
+            }
+          }
+        }
+      }
+    }
+  },
+  ...overrides
+});
+
 const mockGetAttributeName = (attribute) => `Attribute_${attribute}`;
 const mockGetTypeName = (type) => `Type_${type}`;
 const mockOnClose = vi.fn();
@@ -35,8 +118,8 @@ const renderComponent = (props = {}) => {
   );
 };
 
-// Mock data for testing
-const mockItem = {
+// Use centralized mock system instead of inline constants
+const mockItem = createMockProcessItem({
   id: 'item-1',
   name: 'Test Process',
   path: ['Root', 'Category', 'Subcategory'],
@@ -44,77 +127,20 @@ const mockItem = {
   attributes: {
     attribute1: 'value1',
     attribute2: 'value2',
-  },
-  phases: [
-    {
-      id: 'phase-1',
-      name: 'Phase 1',
-      attributes: { phase_attr: 'phase_value' },
-      actions: [
-        {
-          id: 'action-1',
-          name: 'Action 1',
-          attributes: { action_attr: 'action_value' },
-          records: [
-            {
-              id: 'record-1',
-              name: 'Record 1',
-              attributes: { record_attr: 'record_value' },
-            },
-          ],
-        },
-      ],
-    },
-  ],
-};
+  }
+});
 
-const mockChanges = {
+const mockChanges = createMockBulkChanges({
   valid_from: '2024-01-01',
   attributes: {
     attribute1: 'new_value1',
     attribute2: 'new_value2',
-  },
-  phases: {
-    'phase-1': {
-      attributes: {
-        phase_attr: 'new_phase_value',
-      },
-      actions: {
-        'action-1': {
-          attributes: {
-            action_attr: 'new_action_value',
-          },
-          records: {
-            'record-1': {
-              attributes: {
-                record_attr: 'new_record_value',
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-};
+  }
+});
 
-const mockErrors = {
-  attributes: ['attribute1', 'attribute2'],
-  phases: {
-    'phase-1': {
-      attributes: ['phase_attr'],
-      actions: {
-        'action-1': {
-          attributes: ['action_attr'],
-          records: {
-            'record-1': {
-              attributes: ['record_attr'],
-            },
-          },
-        },
-      },
-    },
-  },
-};
+const mockErrors = createMockBulkErrors({
+  attributes: ['attribute1', 'attribute2']
+});
 
 describe('<Preview />', () => {
   beforeEach(() => {
@@ -157,7 +183,11 @@ describe('<Preview />', () => {
       },
       'item-2': {
         selected: false,
-        item: { ...mockItem, id: 'item-2', name: 'Unselected Process' },
+        item: createMockProcessItem({
+          id: 'item-2',
+          name: 'Unselected Process',
+          path: ['Root', 'Category', 'Subcategory']  // Match the same path as the first item
+        }),
         changed: {},
         errors: {},
       },
@@ -180,9 +210,7 @@ describe('<Preview />', () => {
       renderComponent({ items: itemsWithSelection });
 
       const checkboxes = screen.getAllByRole('generic');
-      const itemCheckbox = checkboxes.find(el =>
-        el.classList.contains('preview-item-check')
-      );
+      const itemCheckbox = checkboxes.find((el) => el.classList.contains('preview-item-check'));
 
       if (itemCheckbox) {
         fireEvent.click(itemCheckbox);
@@ -194,9 +222,7 @@ describe('<Preview />', () => {
       renderComponent({ items: itemsWithSelection });
 
       const checkboxes = screen.getAllByRole('generic');
-      const itemCheckbox = checkboxes.find(el =>
-        el.classList.contains('preview-item-check')
-      );
+      const itemCheckbox = checkboxes.find((el) => el.classList.contains('preview-item-check'));
 
       if (itemCheckbox) {
         fireEvent.keyUp(itemCheckbox, { key: 'Enter' });
@@ -228,17 +254,17 @@ describe('<Preview />', () => {
 
     it('renders phase changes', () => {
       renderComponent({ items: itemsWithChanges });
-      expect(screen.getByText(/Phase 1.*Attribute_phase_attr.*new_phase_value/)).toBeInTheDocument();
+      expect(screen.getByText(/Test Phase.*Attribute_phase_attr.*new_phase_value/)).toBeInTheDocument();
     });
 
     it('renders action changes', () => {
       renderComponent({ items: itemsWithChanges });
-      expect(screen.getByText(/Action 1.*Attribute_action_attr.*new_action_value/)).toBeInTheDocument();
+      expect(screen.getByText(/Test Action.*Attribute_action_attr.*new_action_value/)).toBeInTheDocument();
     });
 
     it('renders record changes', () => {
       renderComponent({ items: itemsWithChanges });
-      expect(screen.getByText(/Record 1.*Attribute_record_attr.*new_record_value/)).toBeInTheDocument();
+      expect(screen.getByText(/Test Record.*Attribute_record_attr.*new_record_value/)).toBeInTheDocument();
     });
   });
 
@@ -261,30 +287,30 @@ describe('<Preview />', () => {
 
     it('renders phase errors', () => {
       renderComponent({ items: itemsWithErrors });
-      expect(screen.getByText('Phase 1:')).toBeInTheDocument();
+      expect(screen.getByText('Test Phase:')).toBeInTheDocument();
       expect(screen.getByText('Attribute_phase_attr')).toBeInTheDocument();
     });
 
     it('renders action errors', () => {
       renderComponent({ items: itemsWithErrors });
-      expect(screen.getByText('Action 1:')).toBeInTheDocument();
+      expect(screen.getByText('Test Action:')).toBeInTheDocument();
       expect(screen.getByText('Attribute_action_attr')).toBeInTheDocument();
     });
 
     it('renders record errors', () => {
       renderComponent({ items: itemsWithErrors });
-      expect(screen.getByText('Record 1:')).toBeInTheDocument();
+      expect(screen.getByText('Test Record:')).toBeInTheDocument();
       expect(screen.getByText('Attribute_record_attr')).toBeInTheDocument();
     });
 
     it('renders errors without attributes (empty content)', () => {
       const errorsWithoutAttributes = {
         phases: {
-          'phase-1': {
+          'phase1': {
             actions: {
-              'action-1': {
+              'action1': {
                 records: {
-                  'record-1': {},
+                  'record1': {},
                 },
               },
             },
@@ -302,9 +328,9 @@ describe('<Preview />', () => {
       };
 
       renderComponent({ items });
-      expect(screen.getByText(/Phase 1:\s*$/)).toBeInTheDocument();
-      expect(screen.getByText(/Action 1:\s*$/)).toBeInTheDocument();
-      expect(screen.getByText(/Record 1:\s*$/)).toBeInTheDocument();
+      expect(screen.getByText(/Test Phase:\s*$/)).toBeInTheDocument();
+      expect(screen.getByText(/Test Action:\s*$/)).toBeInTheDocument();
+      expect(screen.getByText(/Test Record:\s*$/)).toBeInTheDocument();
     });
   });
 
@@ -333,7 +359,7 @@ describe('<Preview />', () => {
       expect(actionButtons.length).toBeGreaterThan(0);
 
       // The action button should be the one with class btn-default
-      const actionButton = actionButtons.find(btn => btn.classList.contains('btn-default'));
+      const actionButton = actionButtons.find((btn) => btn.classList.contains('btn-default'));
       expect(actionButton).toBeInTheDocument();
     });
 
@@ -378,10 +404,10 @@ describe('<Preview />', () => {
     });
 
     it('handles items without phases', () => {
-      const itemWithoutPhases = {
-        ...mockItem,
+      const itemWithoutPhases = createMockProcessItem({
         phases: [],
-      };
+        name: 'Test Process', // Override the name to match test expectation
+      });
       const items = {
         'item-1': {
           selected: true,
@@ -395,10 +421,10 @@ describe('<Preview />', () => {
     });
 
     it('handles missing attribute values', () => {
-      const itemWithMissingAttrs = {
-        ...mockItem,
+      const itemWithMissingAttrs = createMockProcessItem({
         attributes: {},
-      };
+        name: 'Test Process', // Override the name to match test expectation
+      });
       const items = {
         'item-1': {
           selected: true,

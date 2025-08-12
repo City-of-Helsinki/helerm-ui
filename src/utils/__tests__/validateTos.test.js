@@ -1,9 +1,50 @@
 import { validateTOS, validateTOSWarnings } from '../validators';
-import attributeRules from '../mocks/attributeRules.json';
-import validTOS from '../mocks/validTOS.json';
-import TOSmissingSSN from '../mocks/TOSmissingSSN.json';
-import unallowedPublicityClassTOS from '../mocks/unallowedPublicityClassTOS.json';
-import errorsAndWarningsTOS from '../mocks/errorsAndWarningsTOS.json';
+import {
+  attributeRules,
+  validTOS,
+  errorsAndWarningsTOS,
+  createTOS
+} from '../__mocks__/mockHelpers';
+
+// Single-use test helpers - specific to this test file only
+const createTOSMissingSSN = () => {
+  const tos = createTOS();
+
+  if (tos.attributes) {
+    // Remove SocialSecurityNumber from the attributes
+    const filteredAttributes = Object.keys(tos.attributes)
+      .filter((key) => key !== 'SocialSecurityNumber')
+      .reduce((obj, key) => {
+        obj[key] = tos.attributes[key];
+        return obj;
+      }, {});
+
+    return {
+      ...tos,
+      attributes: filteredAttributes
+    };
+  }
+
+  return tos;
+};
+
+const createTOSWithUnallowedPublicityClass = () => {
+  const tos = createTOS();
+  if (tos.attributes) {
+    return {
+      ...tos,
+      attributes: {
+        ...tos.attributes,
+        PublicityClass: 'unallowed-publicity-class'
+      }
+    };
+  }
+  return tos;
+};
+
+// Test-specific TOS objects
+const TOSmissingSSN = createTOSMissingSSN();
+const unallowedPublicityClassTOS = createTOSWithUnallowedPublicityClass();
 
 const SHOULD_RETURN_ARRAY_STRING = 'Should return an array';
 const SHOULD_HAVE_ONE_ERROR_STRING = 'Should have one error';

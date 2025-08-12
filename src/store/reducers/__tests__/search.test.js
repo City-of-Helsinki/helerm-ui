@@ -18,8 +18,7 @@ import searchReducer, {
 } from '../search';
 import api from '../../../utils/api';
 import { TYPE_CLASSIFICATION, TYPE_FUNCTION, TYPE_ACTION, TYPE_PHASE, TYPE_RECORD } from '../../../constants';
-import classification from '../../../utils/mocks/api/classification.json';
-import mockAttributeTypes from '../../../utils/mocks/attributeTypes.json';
+import { classification, attributeTypes as mockAttributeTypes } from '../../../utils/__mocks__/mockHelpers';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);

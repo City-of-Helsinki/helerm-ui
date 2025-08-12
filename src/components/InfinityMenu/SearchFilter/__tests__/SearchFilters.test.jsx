@@ -5,7 +5,7 @@ import { screen } from '@testing-library/react';
 
 import SearchFilters from '../SearchFilters';
 import { navigationStateFilters } from '../../../../constants';
-import attributeTypes from '../../../../utils/mocks/attributeTypes.json';
+import { attributeTypes } from '../../../../utils/__mocks__/mockHelpers';
 import renderWithProviders from '../../../../utils/renderWithProviders';
 
 const baseMocks = {

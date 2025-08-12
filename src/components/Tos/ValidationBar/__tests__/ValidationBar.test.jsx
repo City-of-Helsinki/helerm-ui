@@ -7,9 +7,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import renderWithProviders from '../../../../utils/renderWithProviders';
-import attributeTypes from '../../../../utils/mocks/attributeTypes.json';
-import errorsAndWarningsTOS from '../../../../utils/mocks/errorsAndWarningsTOS.json';
-// import validTOS from '../../../../utils/mocks/validTOS.json';
+import { attributeTypes, errorsAndWarningsTOS } from '../../../../utils/__mocks__/mockHelpers';
 import ValidationBar from '../ValidationBar';
 import storeCreator from '../../../../store/createStore';
 
@@ -109,14 +107,4 @@ describe('<ValidationBar />', () => {
     // find correct errors
     expect(screen.getByText('Julkisuusluokka')).toBeInTheDocument();
   });
-
-  // it('should not render errors for valid TOS', () => {
-  //   const history = createBrowserHistory();
-
-  //   const mocks = { ...baseMocks, selectedTOS: validTOS };
-
-  //   renderComponent(history, mocks);
-
-  //   expect(screen.queryByText('Käsittelyprosessi')).not.toBeInTheDocument();
-  // });
 });

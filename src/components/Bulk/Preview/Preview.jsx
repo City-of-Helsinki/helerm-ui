@@ -64,8 +64,7 @@ const Preview = ({
         const phaseError = errors.phases[phaseId];
         const phase = find(item.phases, { id: phaseId });
 
-        // Always push phase error paragraph, even if no attributes (to match old behavior)
-        const attributeLabels = phaseError.attributes 
+        const attributeLabels = phaseError.attributes
           ? phaseError.attributes.map((attribute) => getAttributeName(attribute)).join(', ')
           : '';
 

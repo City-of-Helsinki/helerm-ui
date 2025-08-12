@@ -7,8 +7,7 @@ import userEvent from '@testing-library/user-event';
 
 import BulkView from '../BulkView';
 import renderWithProviders from '../../../../utils/renderWithProviders';
-import attributeTypes from '../../../../utils/mocks/attributeTypes.json';
-import user from '../../../../utils/mocks/api/user.json';
+import { attributeTypes, validTOS, user, bulkUpdate } from '../../../../utils/__mocks__/mockHelpers';
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
@@ -22,61 +21,14 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
-// Mock bulk update data
-const createMockBulkUpdate = (overrides = {}) => ({
-  id: 1,
-  created_at: '2023-01-01T10:00:00.000000Z',
-  modified_at: '2023-01-02T11:00:00.000000Z',
-  modified_by: 'Test User',
-  state: 'sent_for_review',
-  description: 'Test bulk update description',
-  is_approved: false,
-  changes: {
-    'test-function-1__1': {
-      version: '1',
-      attributes: {
-        RetentionPeriod: '5',
-      },
-      phases: {
-        'phase-1': {
-          attributes: {
-            PhaseType: 'Käsittely',
-          },
-          actions: {
-            'action-1': {
-              attributes: {
-                ActionType: 'Päätös',
-              },
-              records: {
-                'record-1': {
-                  attributes: {
-                    RecordType: 'Asiakirja',
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  ...overrides,
-});
-
 // Mock navigation item with function
 const createMockNavigationItem = (overrides = {}) => ({
-  id: 'test-classification-1',
-  name: 'Test Classification',
-  code: '00 01',
+  ...validTOS,
+  function: 'test-function-election-001', // This must match the base ID from bulk changes
+  function_attributes: validTOS.attributes, // Function attributes for component logic
+  function_valid_from: validTOS.valid_from,
+  function_valid_to: validTOS.valid_to,
   path: ['Test', 'Classification'],
-  function: 'test-function-1',
-  function_attributes: {
-    RetentionPeriod: '3',
-    PublicityClass: 'Julkinen',
-  },
-  function_state: 'sent_for_review',
-  function_valid_from: '2023-01-01T00:00:00Z',
-  function_valid_to: null,
   phases: [
     {
       id: 'phase-1',
@@ -108,8 +60,15 @@ const createMockNavigationItem = (overrides = {}) => ({
 });
 
 const renderComponent = (storeOverrides = {}) => {
-  const mockBulkUpdate = createMockBulkUpdate();
-  const mockNavigationItem = createMockNavigationItem();
+  const mockBulkUpdate = {
+    ...bulkUpdate,
+    is_approved: false, // Ensure button is not disabled due to already approved
+    ...storeOverrides.bulkOverrides
+  };
+  const mockNavigationItem = createMockNavigationItem({
+    id: 'test-function-election-001', // Match the ID from bulk changes
+    name: 'Kuntavaalit ja kunnalliset kansanäänestykset', // Match expected name
+  });
 
   const defaultStore = {
     ui: {
@@ -209,7 +168,7 @@ describe('<BulkView />', () => {
     });
 
     it('disables approve button when bulk update is already approved', () => {
-      const approvedBulkUpdate = createMockBulkUpdate({ is_approved: true });
+      const approvedBulkUpdate = { ...bulkUpdate, is_approved: true };
       renderComponent({
         bulk: {
           selectedBulk: approvedBulkUpdate,
@@ -226,9 +185,10 @@ describe('<BulkView />', () => {
 
     it('disables approve button when bulk update is invalid', () => {
       // Create an invalid bulk update (references non-existent phase)
-      const invalidBulkUpdate = createMockBulkUpdate({
+      const invalidBulkUpdate = {
+        ...bulkUpdate,
         changes: {
-          'test-function-1__1': {
+          'test-function-election-001__1': {
             version: '1',
             phases: {
               'non-existent-phase': {
@@ -239,7 +199,7 @@ describe('<BulkView />', () => {
             },
           },
         },
-      });
+      };
 
       renderComponent({
         bulk: {
@@ -305,7 +265,7 @@ describe('<BulkView />', () => {
 
       // Should show the item path and name
       expect(screen.getByText('Test > Classification')).toBeInTheDocument();
-      expect(screen.getByText('Test Classification')).toBeInTheDocument();
+      expect(screen.getByText('Kuntavaalit ja kunnalliset kansanäänestykset')).toBeInTheDocument();
     });
 
     it('allows removing items from bulk update', async () => {
@@ -320,9 +280,10 @@ describe('<BulkView />', () => {
 
   describe('Empty and Error States', () => {
     it('shows validation errors for invalid bulk update', () => {
-      const invalidBulkUpdate = createMockBulkUpdate({
+      const invalidBulkUpdate = {
+        ...bulkUpdate,
         changes: {
-          'test-function-1__1': {
+          'test-function-election-001__1': {
             version: '1',
             phases: {
               'non-existent-phase': {
@@ -333,7 +294,7 @@ describe('<BulkView />', () => {
             },
           },
         },
-      });
+      };
 
       renderComponent({
         bulk: {
@@ -372,9 +333,10 @@ describe('<BulkView />', () => {
 
   describe('Data Processing and Validation', () => {
     it('processes complex nested changes correctly', () => {
-      const complexBulkUpdate = createMockBulkUpdate({
+      const complexBulkUpdate = {
+        ...bulkUpdate,
         changes: {
-          'test-function-1__1': {
+          'test-function-election-001__1': {
             version: '1',
             attributes: {
               RetentionPeriod: '10',
@@ -403,7 +365,7 @@ describe('<BulkView />', () => {
             },
           },
         },
-      });
+      };
 
       renderComponent({
         bulk: {
@@ -412,7 +374,7 @@ describe('<BulkView />', () => {
         },
       });
 
-      expect(screen.getByText('Test Classification')).toBeInTheDocument();
+      expect(screen.getByText('Kuntavaalit ja kunnalliset kansanäänestykset')).toBeInTheDocument();
     });
   });
 });

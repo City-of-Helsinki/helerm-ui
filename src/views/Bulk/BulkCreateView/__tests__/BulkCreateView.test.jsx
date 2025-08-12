@@ -7,49 +7,18 @@ import { screen, waitFor } from '@testing-library/react';
 
 import BulkCreateView from '../BulkCreateView';
 import renderWithProviders from '../../../../utils/renderWithProviders';
-import attributeTypes from '../../../../utils/mocks/attributeTypes.json';
-import user from '../../../../utils/mocks/api/user.json';
-import validTOS from '../../../../utils/mocks/validTOS.json';
-import validTOSwithChildren from '../../../../utils/mocks/validTOSwithChildren.json';
+import { attributeTypes, validTOS, validTOSWithChildren, user } from '../../../../utils/__mocks__/mockHelpers';
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
-const createMockTOS = (overrides = {}) => {
-  const baseData = validTOSwithChildren.children?.[0] || validTOSwithChildren;
-
-  return {
-    id: baseData.id || 'test-function-id',
-    function: baseData.function || 'test-function-id',
-    name: baseData.name || 'Test Function',
-    attributes: {
-      ...validTOS.attributes,
-      ...baseData.function_attributes,
-    },
-    phases: baseData.phases || [],
-    function_attributes: {
-      ...validTOS.attributes,
-      ...baseData.function_attributes,
-    },
-    function_state: baseData.function_state || 'draft',
-    function_valid_from: baseData.function_valid_from,
-    function_valid_to: baseData.function_valid_to,
-    code: baseData.code || 'TEST-001',
-    classification_code: baseData.code || '00 00',
-    classification_title: baseData.title || 'Test Classification',
-    state: baseData.state || 'draft',
-    version: baseData.version || 1,
-    created_at: baseData.created_at || '2023-01-01T10:00:00.000000Z',
-    modified_at: baseData.modified_at || '2023-01-01T10:00:00.000000Z',
-    valid_from: baseData.valid_from,
-    valid_to: baseData.valid_to,
-    ...overrides,
-  };
-};
-
 const renderComponent = (storeOverrides = {}, tosOverrides = {}) => {
   const history = createBrowserHistory();
-  const mockTOS = createMockTOS(tosOverrides);
+  // Use standardized mock data with optional overrides
+  const mockTOS = {
+    ...validTOSWithChildren.children?.[0] || validTOS,
+    ...tosOverrides
+  };
 
   const store = mockStore({
     ui: {

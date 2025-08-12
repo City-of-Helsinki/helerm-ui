@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import { waitFor } from '@testing-library/react';
 
 import renderWithProviders from '../../../utils/renderWithProviders';
-import classification from '../../../utils/mocks/api/classification.json';
+import { classification } from '../../../utils/__mocks__/mockHelpers';
 import api from '../../../utils/api';
 import ViewClassification from '../ViewClassification';
 import { initialState } from '../../../store/reducers/classification';

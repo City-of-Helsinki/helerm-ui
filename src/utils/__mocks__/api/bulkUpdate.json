@@ -1,0 +1,38 @@
+{
+  "id": 1,
+  "created_at": "2023-01-01T10:00:00.000000Z",
+  "modified_at": "2023-01-02T11:00:00.000000Z",
+  "modified_by": "Test User",
+  "state": "sent_for_review",
+  "description": "Test bulk update description",
+  "is_approved": false,
+  "changes": {
+    "test-function-election-001__1": {
+      "version": "1",
+      "attributes": {
+        "RetentionPeriod": "5"
+      },
+      "phases": {
+        "phase-1": {
+          "attributes": {
+            "PhaseType": "Käsittely"
+          },
+          "actions": {
+            "action-1": {
+              "attributes": {
+                "ActionType": "Päätös"
+              },
+              "records": {
+                "record-1": {
+                  "attributes": {
+                    "RecordType": "Asiakirja"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

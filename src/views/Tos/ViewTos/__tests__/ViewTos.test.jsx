@@ -6,11 +6,7 @@ import { screen, waitFor } from '@testing-library/react';
 
 import ViewTos from '../ViewTos';
 import renderWithProviders, { storeDefaultState } from '../../../../utils/renderWithProviders';
-import attributeTypes from '../../../../utils/mocks/attributeTypes.json';
-import classification from '../../../../utils/mocks/api/classification.json';
-import validTOS from '../../../../utils/mocks/api/function.json';
-import user from '../../../../utils/mocks/api/user.json';
-import templateData from '../../../../utils/mocks/api/template.json';
+import { attributeTypes, classification, validTOS, user, template as templateData } from '../../../../utils/__mocks__/mockHelpers';
 import api from '../../../../utils/api';
 import { USER_LOGIN_STATUS } from '../../../../constants';
 import * as helpers from '../../../../utils/helpers';

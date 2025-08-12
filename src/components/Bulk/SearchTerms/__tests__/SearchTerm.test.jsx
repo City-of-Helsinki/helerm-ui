@@ -1,12 +1,10 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
-import storeCreator from '../../../../store/createStore';
 import SearchTerm from '../SearchTerm';
 import renderWithProviders from '../../../../utils/renderWithProviders';
 
 const renderComponent = () => {
-  const store = storeCreator({});
   const dummyFunction = vi.fn();
 
   return renderWithProviders(
@@ -25,7 +23,6 @@ const renderComponent = () => {
         showAdd={false}
       />
     </BrowserRouter>,
-    { store },
   );
 };
 
