@@ -243,6 +243,20 @@ export const createMockPhase = (overrides = {}) => {
   };
 };
 
+export const createMockAction = (overrides = {}) => {
+  return {
+    id: generateMockId('action'),
+    name: 'Mock Action',
+    phase: null,
+    records: [],
+    attributes: {
+      ActionType: 'Selvitys',
+      TypeSpecifier: 'Mock Action'
+    },
+    ...overrides
+  };
+};
+
 export const createRecord = (overrides = {}) => {
   return {
     id: generateMockId('record'),
