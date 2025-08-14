@@ -78,83 +78,11 @@ export const errorsAndWarningsTOS = {
   phasesOrder: []
 };
 
-/**
- * Creates a function/TOS structure from API data
- * @param {Object} apiData - API function data
- * @returns {Array} Array of transformed function objects
- */
-export const createFunctionStructureFromApi = (apiData = apiFunctionData) => {
-  // API function data is a direct object, not an array
-  if (apiData && apiData.attributes) {
-    return [transformFunctionToTOS(apiData)];
-  }
-  return [];
-};
 
-/**
- * Gets the first available function/TOS from API data
- * @returns {Object|null} First function object or null if none available
- */
-export const getFirstFunction = () => {
-  if (apiFunctionData && apiFunctionData.attributes) {
-    return transformFunctionToTOS(apiFunctionData);
-  }
-  return null;
-};
 
-/**
- * Gets a function by ID from API data
- * @param {string} id - Function ID to search for
- * @returns {Object|null} Function object or null if not found
- */
-export const getFunctionById = (id) => {
-  // API function data is a single object, check if ID matches
-  if (apiFunctionData && apiFunctionData.id === id) {
-    return transformFunctionToTOS(apiFunctionData);
-  }
-  return null;
-};
 
-/**
- * Creates mock TOS data for testing scenarios requiring multiple TOS objects.
- * Generates arrays of TOS objects with unique IDs for testing list rendering,
- * bulk operations, search functionality, and pagination scenarios.
- * Each generated TOS maintains the base structure while having distinct identifiers
- * to enable proper testing of multi-object operations.
- * @param {number} count - Number of TOS objects to create
- * @returns {Array} Array of TOS objects
- */
-export const createMockTOSArray = (count = 1) => {
-  const functions = createFunctionStructureFromApi();
-  if (functions.length === 0) return [];
 
-  return Array.from({ length: count }, (_, i) => {
-    const index = i % functions.length;
-    return {
-      ...functions[index],
-      id: `${functions[index].id}-${i}`
-    };
-  });
-};
-
-/**
- * Validates if a TOS object has the correct structure for validation
- * @param {Object} tos - TOS object to validate
- * @returns {boolean} True if TOS has proper structure
- */
-export const isValidTOSStructure = (tos) => {
-  return !!(tos && typeof tos === 'object' && tos.attributes);
-};
-
-// Legacy named exports for backward compatibility
-/**
- * Valid TOS object for testing scenarios that should pass validation.
- * This object represents a properly structured TOS/Function with all required
- * attributes correctly formatted. Used in validation tests as the baseline
- * "correct" object that should produce 0 errors and 0 warnings.
- * Contains complete attribute set from API data for testing valid state scenarios,
- * bulk operations, and component rendering with proper TOS structure.
- */
+// Legacy named export for backward compatibility with existing tests
 export const validTOS = createTOS();
 
 // Legacy named export for backward compatibility with existing tests

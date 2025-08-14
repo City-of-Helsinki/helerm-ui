@@ -7,9 +7,14 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import Action from '../Action';
 import renderWithProviders from '../../../../utils/renderWithProviders';
-import { createMockComponentProps, createMockObject, attributeTypes } from '../../../../utils/__mocks__/mockHelpers';
+import {
+  createMockComponentProps,
+  createMockAction,
+  createRecord,
+  attributeTypes,
+} from '../../../../utils/__mocks__/mockHelpers';
 
-const mockAction = createMockObject('action', {
+const mockAction = createMockAction({
   attributes: {
     TypeSpecifier: 'Testikäsittelyvaihe',
     ActionType: 'Käsittelyvaiheen tyyppi',
@@ -21,7 +26,7 @@ const mockAction = createMockObject('action', {
 });
 
 const mockRecords = {
-  'test-record-001': createMockObject('record', {
+  'test-record-001': createRecord({
     id: 'test-record-001',
     action: 'test-action-001',
     attributes: {
@@ -30,7 +35,7 @@ const mockRecords = {
       PersonalData: 'Sisältää henkilötietoja',
     },
   }),
-  'test-record-002': createMockObject('record', {
+  'test-record-002': createRecord({
     id: 'test-record-002',
     action: 'test-action-001',
     is_open: false,

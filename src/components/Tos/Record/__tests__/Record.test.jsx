@@ -5,9 +5,9 @@ import '@testing-library/jest-dom';
 
 import renderWithProviders from '../../../../utils/renderWithProviders';
 import Record from '../Record';
-import { createMockComponentProps, createMockObject, attributeTypes } from '../../../../utils/__mocks__/mockHelpers';
+import { createMockComponentProps, createRecord, attributeTypes } from '../../../../utils/__mocks__/mockHelpers';
 
-const mockRecord = createMockObject('record', {
+const mockRecord = createRecord({
   id: 'test-record-001',
   action: 'test-action-001',
   attributes: {

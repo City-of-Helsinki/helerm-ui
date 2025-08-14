@@ -76,31 +76,7 @@ export const getAttributeValues = (identifier, source = attributeTypes) => {
   return attributeType?.values || [];
 };
 
-/**
- * Creates mock data for a specific attribute type with realistic values.
- * Provides controlled attribute value sets for testing form options, validation
- * scenarios, and UI component behavior with different value counts.
- * Essential for testing dropdown populations, multi-select behaviors, and
- * attribute value constraint validation.
- * @param {string} identifier - The attribute identifier
- * @param {number} count - Number of mock values to create (defaults to all available)
- * @returns {Array} Array of mock attribute values
- */
-export const createMockAttributeValues = (identifier, count = null) => {
-  const values = getAttributeValues(identifier);
-  if (count === null) return values;
-  return values.slice(0, count);
-};
 
-/**
- * Helper to check if an attribute type exists and is properly configured
- * @param {string} identifier - The attribute identifier
- * @returns {boolean} True if the attribute type exists and has values
- */
-export const isAttributeTypeValid = (identifier) => {
-  const attributeType = getAttributeType(identifier);
-  return !!(attributeType && attributeType.values && attributeType.values.length > 0);
-};
 
 /**
  * Get attribute rules directly from API data
@@ -128,59 +104,4 @@ export const createAttributeRules = (
  */
 export const attributeRules = apiAttributeRulesData;
 
-// Create processedAttributeTypes from API source - streamlined approach
-export const processedAttributeTypes = {
-  get actionTypes() {
-    return attributeTypes.ActionType?.values?.reduce((acc, val) => {
-      acc[val.id] = { id: val.id, name: val.value };
-      return acc;
-    }, {}) || {};
-  },
-  get phaseTypes() {
-    return attributeTypes.PhaseType?.values?.reduce((acc, val) => {
-      acc[val.id] = { id: val.id, name: val.value };
-      return acc;
-    }, {}) || {};
-  },
-  get recordTypes() {
-    return attributeTypes.RecordType?.values?.reduce((acc, val) => {
-      acc[val.id] = { id: val.id, name: val.value };
-      return acc;
-    }, {}) || {};
-  },
-  get actionTypesArray() {
-    return attributeTypes.ActionType?.values?.map((val) => ({
-      id: val.id,
-      name: val.value,
-    })) || [];
-  },
-  get phaseTypesArray() {
-    return attributeTypes.PhaseType?.values?.map((val) => ({
-      id: val.id,
-      name: val.value,
-    })) || [];
-  },
-  get recordTypesArray() {
-    return attributeTypes.RecordType?.values?.map((val) => ({
-      id: val.id,
-      name: val.value,
-    })) || [];
-  }
-};
 
-/**
- * Minimal testing utilities for API-first attribute system
- */
-export const attributeTestUtils = {
-  /**
-   * Get the count of attributes from the API data
-   * @returns {number} Number of attributes in the API data
-   */
-  getApiAttributeCount: () => (apiAttributeData.results || []).length,
-
-  /**
-   * Get the count of merged attributes from attributeTypes
-   * @returns {number} Number of attributes in the merged data
-   */
-  getMergedAttributeCount: () => Object.keys(attributeTypes).length
-};
