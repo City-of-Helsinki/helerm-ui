@@ -37,7 +37,9 @@ const FacetedSearchHelp = ({ type }) => {
         }}
         ref={ref}
       >
-        <ReactMarkdown plugins={[gfm]} source={type === FACETED_SEARCH_HELP_TYPE_TERM ? searchterm : facet} />
+        <ReactMarkdown remarkPlugins={[gfm]}>
+          {type === FACETED_SEARCH_HELP_TYPE_TERM ? searchterm : facet}
+        </ReactMarkdown>
       </div>
     </div>
   );
