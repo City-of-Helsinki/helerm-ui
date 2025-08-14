@@ -1,7 +1,7 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import api from '../../../../utils/api'
+import api from '../../../../utils/api';
 import { cloneFromTemplateThunk } from '../../../../store/reducers/tos-toolkit/cloneView';
 
 const middlewares = [thunk];
@@ -15,14 +15,14 @@ describe('cloneFromTemplateThunk', () => {
       previous: null,
       results: [
         {
-          id: "123",
+          id: '123',
           attributes: {},
-          phases: ["123", "456"],
-          created_at: "2018-02-09T13:10:13.843467+02:00",
-          modified_at: "2018-02-09T13:10:13.971611+02:00",
-          name: "Test"
-        }
-      ]
+          phases: ['123', '456'],
+          created_at: '2018-02-09T13:10:13.843467+02:00',
+          modified_at: '2018-02-09T13:10:13.971611+02:00',
+          name: 'Test',
+        },
+      ],
     };
 
     const endpoint = '/api/templates';
@@ -47,10 +47,12 @@ describe('cloneFromTemplateThunk', () => {
     const endpoint = '/api/templates';
     const id = 123;
 
-    const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({
-      ok: false,
-      statusText: 'Not Found'
-    }));
+    const mockApiGet = vi.fn().mockImplementation(() =>
+      Promise.resolve({
+        ok: false,
+        statusText: 'Not Found',
+      }),
+    );
     vi.spyOn(api, 'get').mockImplementationOnce(mockApiGet);
 
     const store = mockStore({});

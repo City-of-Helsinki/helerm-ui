@@ -24,13 +24,18 @@ import {
   selectedBulkSelector,
   updateBulkUpdateThunk,
 } from '../../../store/reducers/bulk';
-import { fetchNavigationThunk, includeRelatedSelector, isFetchingSelector } from '../../../store/reducers/navigation';
+import {
+  fetchNavigationThunk,
+  includeRelatedSelector,
+  isFetchingSelector,
+  navigationItemsSelector,
+} from '../../../store/reducers/navigation';
 import { attributeTypesSelector } from '../../../store/reducers/ui';
 
 const BulkView = () => {
   const dispatch = useDispatch();
   const selectedBulk = useSelector(selectedBulkSelector);
-  const items = useSelector((state) => (state.navigation.includeRelated ? state.navigation.items : []));
+  const items = useSelector(navigationItemsSelector);
   const itemsIncludeRelated = useSelector(includeRelatedSelector);
   const isFetchingNavigation = useSelector(isFetchingSelector);
   const isUpdating = useSelector(isUpdatingSelector);

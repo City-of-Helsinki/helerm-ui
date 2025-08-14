@@ -3,7 +3,6 @@ import { cloneDeep } from 'lodash';
 
 import navigationReducer, { initialState } from '../navigation';
 
-
 describe('(Redux Module) Navigation', () => {
   describe('(Reducer) NavigationReducer', () => {
     let _initialState;
@@ -22,13 +21,13 @@ describe('(Redux Module) Navigation', () => {
       let state = navigationReducer(undefined, {});
       expect(state).toEqual(_initialState);
       state = navigationReducer(state, {
-        type: 'DOESNOTACTUALLYEXISTLOL'
+        type: 'DOESNOTACTUALLYEXISTLOL',
       });
       expect(state).toEqual(_initialState);
       state = navigationReducer(state, { type: 'navigation/fetchNavigation/pending', meta: { arg: {} } });
       expect(state.isFetching).toEqual(true);
       state = navigationReducer(state, {
-        type: 'DOESNOTACTUALLYEXISTLOL'
+        type: 'DOESNOTACTUALLYEXISTLOL',
       });
       expect(state.isFetching).toEqual(true);
     });

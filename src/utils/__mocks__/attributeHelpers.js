@@ -21,7 +21,7 @@ export const transformApiAttributesToLegacyFormat = (apiData) => {
           requiredIf: [],
           requiredIn: [],
           required: false,
-          allowValuesOutsideChoicesIn: []
+          allowValuesOutsideChoicesIn: [],
         };
       }
     });
@@ -76,8 +76,6 @@ export const getAttributeValues = (identifier, source = attributeTypes) => {
   return attributeType?.values || [];
 };
 
-
-
 /**
  * Get attribute rules directly from API data
  * This replaces the need for complex generation by using the complete
@@ -85,9 +83,7 @@ export const getAttributeValues = (identifier, source = attributeTypes) => {
  * @param {Object} attributeRulesData - API attribute rules data (defaults to attributeRules.json)
  * @returns {Object} Attribute rules ready for validation
  */
-export const createAttributeRules = (
-  attributeRulesData = apiAttributeRulesData
-) => {
+export const createAttributeRules = (attributeRulesData = apiAttributeRulesData) => {
   // Return the rules directly since they're already in the correct format
   return attributeRulesData;
 };
@@ -103,5 +99,3 @@ export const createAttributeRules = (
  * Critical for testing validation logic, form behavior, and data integrity checks.
  */
 export const attributeRules = apiAttributeRulesData;
-
-

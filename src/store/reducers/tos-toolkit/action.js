@@ -13,9 +13,9 @@ export const createNewAction = (typeSpecifier, actionType, actionAttributes, pha
     attributes: {
       TypeSpecifier: typeSpecifier,
       ActionType: actionType,
-      ...actionAttributes
+      ...actionAttributes,
     },
-    is_open: false
+    is_open: false,
   };
 };
 
@@ -27,16 +27,16 @@ export const addActionReducer = (state, action) => {
   return update(state, {
     actions: {
       [actionId]: {
-        $set: newAction
-      }
+        $set: newAction,
+      },
     },
     phases: {
       [phaseId]: {
         actions: {
-          $push: [actionId]
-        }
-      }
-    }
+          $push: [actionId],
+        },
+      },
+    },
   });
 };
 
@@ -47,10 +47,10 @@ export const editActionReducer = (state, action) => {
     actions: {
       [actionId]: {
         attributes: {
-          $merge: editedAction.attributes
-        }
-      }
-    }
+          $merge: editedAction.attributes,
+        },
+      },
+    },
   });
 };
 
@@ -62,11 +62,11 @@ export const editActionAttributeReducer = (state, action) => {
       [actionId]: {
         attributes: {
           [attributeName]: {
-            $set: attributeValue
-          }
-        }
-      }
-    }
+            $set: attributeValue,
+          },
+        },
+      },
+    },
   });
 };
 
@@ -82,11 +82,8 @@ export const removeActionReducer = (state, action) => {
       ...updatedState.phases,
       [phaseId]: {
         ...updatedState.phases[phaseId],
-        actions: [
-          ...phaseActions.slice(0, actionIndex),
-          ...phaseActions.slice(actionIndex + 1)
-        ]
-      }
+        actions: [...phaseActions.slice(0, actionIndex), ...phaseActions.slice(actionIndex + 1)],
+      },
     };
   }
 
@@ -96,7 +93,7 @@ export const removeActionReducer = (state, action) => {
   }
 
   const remainingActions = {};
-  Object.keys(updatedState.actions).forEach(key => {
+  Object.keys(updatedState.actions).forEach((key) => {
     if (key !== actionToRemove) {
       remainingActions[key] = updatedState.actions[key];
     }
@@ -104,7 +101,7 @@ export const removeActionReducer = (state, action) => {
   updatedState.actions = remainingActions;
 
   const updatedRecords = { ...updatedState.records };
-  recordsToRemove.forEach(recordId => {
+  recordsToRemove.forEach((recordId) => {
     delete updatedRecords[recordId];
   });
   updatedState.records = updatedRecords;
@@ -119,9 +116,9 @@ export const setActionVisibilityReducer = (state, action) => {
     actions: {
       [actionId]: {
         is_open: {
-          $set: visibility
-        }
-      }
-    }
+          $set: visibility,
+        },
+      },
+    },
   });
 };

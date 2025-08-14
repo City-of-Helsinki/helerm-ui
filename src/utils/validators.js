@@ -12,9 +12,9 @@ export const validateConditionalRules = (key, attributeTypes, attributes) => {
 
   let valid = false;
 
-  Object.keys(attributes).forEach(attribute => {
+  Object.keys(attributes).forEach((attribute) => {
     // for each attribute
-    requiredIf.forEach(item => {
+    requiredIf.forEach((item) => {
       // for each item in requiredIf and if requiredIf has attribute
       if (item.key === attribute && includes(item.values, attributes[attribute].value)) {
         // if requiredIf has same value as attribute
@@ -34,7 +34,7 @@ export const validateConditionalRules = (key, attributeTypes, attributes) => {
  * @return {Validator}]
  */
 const createValidateErrors = (type) => (obj, rules) => {
-  const keys = Object.keys(rules).filter((key) => Object.hasOwn(rules, key))
+  const keys = Object.keys(rules).filter((key) => Object.hasOwn(rules, key));
 
   const errors = keys.filter((key) => {
     const rule = rules[key];
@@ -47,35 +47,33 @@ const createValidateErrors = (type) => (obj, rules) => {
     const isValid =
       includes(
         rule.values.map(({ value }) => value),
-        obj.attributes[key]
+        obj.attributes[key],
       ) || rule.values.length === 0;
-    const allowValuesOutsideChoices = includes(
-      rule.allowValuesOutsideChoicesIn,
-      type
-    );
+    const allowValuesOutsideChoices = includes(rule.allowValuesOutsideChoicesIn, type);
 
-    return (isRequired && isRequiredInType && !objHasRuleAttribute) ||
+    return (
+      (isRequired && isRequiredInType && !objHasRuleAttribute) ||
       (objHasRuleAttribute && !isValid && !allowValuesOutsideChoices) ||
       (!isAttributeAllowedInType && objHasRuleAttribute)
-  })
+    );
+  });
 
   const conditionallyRequired = keys
     .filter((key) => rules[key].requiredIf.length > 0)
     .map((key) => ({ key, items: rules[key].requiredIf }))
-    .filter(({ key, items }) => items.some((item) => {
-      const predicateValue = obj.attributes[item.key];
-      const hasPredicate = typeof predicateValue === 'string';
+    .filter(({ key, items }) =>
+      items.some((item) => {
+        const predicateValue = obj.attributes[item.key];
+        const hasPredicate = typeof predicateValue === 'string';
 
-      const isPredicateRequired =
-        hasPredicate && includes(item.values, predicateValue);
+        const isPredicateRequired = hasPredicate && includes(item.values, predicateValue);
 
-      const objHasRuleAttribute = !!obj.attributes[key];
+        const objHasRuleAttribute = !!obj.attributes[key];
 
-      return (isPredicateRequired && !objHasRuleAttribute) ||
-        (!isPredicateRequired && objHasRuleAttribute)
-    }))
+        return (isPredicateRequired && !objHasRuleAttribute) || (!isPredicateRequired && objHasRuleAttribute);
+      }),
+    )
     .map(({ key }) => key);
-
 
   return [...errors, ...conditionallyRequired];
 };
@@ -96,10 +94,7 @@ const createValidateWarnings = (type) => (obj, rules) => {
     if (Object.hasOwn(rules, key)) {
       const rule = rules[key];
       const attributeValue = obj.attributes[key];
-      const allowOutsideValues = includes(
-        rule.allowValuesOutsideChoicesIn,
-        type
-      );
+      const allowOutsideValues = includes(rule.allowValuesOutsideChoicesIn, type);
 
       if (
         attributeValue &&

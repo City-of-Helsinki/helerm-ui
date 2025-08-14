@@ -12,7 +12,7 @@ import {
   some,
   toLower,
   uniq,
-  words
+  words,
 } from 'lodash';
 
 import {
@@ -21,7 +21,7 @@ import {
   TYPE_CLASSIFICATION,
   TYPE_FUNCTION,
   TYPE_PHASE,
-  TYPE_RECORD
+  TYPE_RECORD,
 } from '../../constants';
 import config from '../../config';
 import api from '../../utils/api';
@@ -41,7 +41,7 @@ export const initialState = {
   phases: [],
   records: [],
   suggestions: [],
-  terms: []
+  terms: [],
 };
 
 const getFilteredHits = (filteredAttributes, type) => {
@@ -89,7 +89,7 @@ const getFacetAttributesForType = (attributes, items, type) => {
         !isEmpty(item.attributes[attribute.key])
       ) {
         const index = findIndex(attribute.options, {
-          value: item.attributes[attribute.key]
+          value: item.attributes[attribute.key],
         });
         if (index >= 0) {
           attribute.options[index].hits.push(item.id);
@@ -98,7 +98,7 @@ const getFacetAttributesForType = (attributes, items, type) => {
             hits: [item.id],
             ref: toLower(item.attributes[attribute.key]),
             value: item.attributes[attribute.key],
-            selected: false
+            selected: false,
           });
         }
       }
@@ -113,14 +113,13 @@ const getSearchTermsFilteredAttributes = (searchTerm, attributes, andTerms, orTe
   }
 
   return attributes.reduce((acc, attr) => {
-    const options = filter(attr.options, (option) => (
-      (isEmpty(andTerms) ||
-        every(andTerms, (st) => includes(option.ref, st))) &&
-      (isEmpty(orTerms) ||
-        some(orTerms, (st) => includes(option.ref, st))) &&
-      (isEmpty(notTerms) ||
-        every(notTerms, (st) => !includes(option.ref, st)))
-    ));
+    const options = filter(
+      attr.options,
+      (option) =>
+        (isEmpty(andTerms) || every(andTerms, (st) => includes(option.ref, st))) &&
+        (isEmpty(orTerms) || some(orTerms, (st) => includes(option.ref, st))) &&
+        (isEmpty(notTerms) || every(notTerms, (st) => !includes(option.ref, st))),
+    );
 
     if (!isEmpty(options)) {
       acc.push({ ...attr, options, open: false, showAll: false });
@@ -179,8 +178,8 @@ const parseTerms = (searchTerm) => {
       notTerms: [],
       orTerms: [],
       terms: [],
-      lastOperator: null
-    }
+      lastOperator: null,
+    },
   );
 };
 
@@ -208,7 +207,7 @@ export const fetchClassificationsThunk = createAsyncThunk(
       const response = await api.get('classification', {
         include_related: true,
         page_size: pageSize,
-        page
+        page,
       });
 
       const json = await response.json();
@@ -234,7 +233,7 @@ export const fetchClassificationsThunk = createAsyncThunk(
       dispatch(classificationsError());
       return { error: error instanceof Error ? error.message : 'Failed to fetch classifications' };
     }
-  }
+  },
 );
 
 export const updateAttributeTypesThunk = createAsyncThunk(
@@ -247,7 +246,7 @@ export const updateAttributeTypesThunk = createAsyncThunk(
           acc.push({
             key,
             name: attr.name,
-            type
+            type,
           });
         });
       }
@@ -257,11 +256,11 @@ export const updateAttributeTypesThunk = createAsyncThunk(
     const metadata = FACETED_SEARCH_DEFAULT_ATTRIBUTES.reduce(
       (acc, attr) => {
         acc[attr.key] = {
-          name: attr.name
+          name: attr.name,
         };
         return acc;
       },
-      { ...attributeTypes }
+      { ...attributeTypes },
     );
 
     const allAttributes = [...FACETED_SEARCH_DEFAULT_ATTRIBUTES, ...attributes];
@@ -271,16 +270,18 @@ export const updateAttributeTypesThunk = createAsyncThunk(
       attr.options = [];
     });
 
-    dispatch(setAttributeTypes({
-      attributes: allAttributes,
-      metadata
-    }));
+    dispatch(
+      setAttributeTypes({
+        attributes: allAttributes,
+        metadata,
+      }),
+    );
 
     return {
       attributes: allAttributes,
-      metadata
+      metadata,
     };
-  }
+  },
 );
 
 export const searchItemsThunk = createAsyncThunk(
@@ -290,18 +291,9 @@ export const searchItemsThunk = createAsyncThunk(
     const parsed = parseTerms(searchTerm);
     const { andTerms, notTerms, orTerms } = parsed;
 
-    const filteredAttributes = getSearchTermsFilteredAttributes(
-      searchTerm,
-      attributes,
-      andTerms,
-      orTerms,
-      notTerms
-    );
+    const filteredAttributes = getSearchTermsFilteredAttributes(searchTerm, attributes, andTerms, orTerms, notTerms);
 
-    const classifications = getFilteredHits(
-      filteredAttributes,
-      TYPE_CLASSIFICATION
-    );
+    const classifications = getFilteredHits(filteredAttributes, TYPE_CLASSIFICATION);
 
     const functions = getFilteredHits(filteredAttributes, TYPE_FUNCTION);
     const phases = getFilteredHits(filteredAttributes, TYPE_PHASE);
@@ -311,24 +303,24 @@ export const searchItemsThunk = createAsyncThunk(
     const suggestions = [
       {
         type: TYPE_CLASSIFICATION,
-        hits: classifications
+        hits: classifications,
       },
       {
         type: TYPE_FUNCTION,
-        hits: functions
+        hits: functions,
       },
       {
         type: TYPE_PHASE,
-        hits: phases
+        hits: phases,
       },
       {
         type: TYPE_ACTION,
-        hits: actions
+        hits: actions,
       },
       {
         type: TYPE_RECORD,
-        hits: records
-      }
+        hits: records,
+      },
     ];
 
     if (isSuggestionsOnly) {
@@ -338,38 +330,22 @@ export const searchItemsThunk = createAsyncThunk(
 
     dispatch(
       searchItemsAction({
-        classifications:
-          !type || type === TYPE_CLASSIFICATION ? classifications : [],
+        classifications: !type || type === TYPE_CLASSIFICATION ? classifications : [],
         filteredAttributes,
-        functions:
-          type === TYPE_FUNCTION || (!type && isEmpty(classifications))
-            ? functions
-            : [],
-        phases:
-          type === TYPE_PHASE ||
-            (!type && isEmpty(classifications) && isEmpty(functions))
-            ? phases
-            : [],
+        functions: type === TYPE_FUNCTION || (!type && isEmpty(classifications)) ? functions : [],
+        phases: type === TYPE_PHASE || (!type && isEmpty(classifications) && isEmpty(functions)) ? phases : [],
         actions:
-          type === TYPE_ACTION ||
-            (!type &&
-              isEmpty(classifications) &&
-              isEmpty(functions) &&
-              isEmpty(phases))
+          type === TYPE_ACTION || (!type && isEmpty(classifications) && isEmpty(functions) && isEmpty(phases))
             ? actions
             : [],
         records:
           type === TYPE_RECORD ||
-            (!type &&
-              isEmpty(classifications) &&
-              isEmpty(functions) &&
-              isEmpty(phases) &&
-              isEmpty(actions))
+          (!type && isEmpty(classifications) && isEmpty(functions) && isEmpty(phases) && isEmpty(actions))
             ? records
             : [],
         suggestions: [],
-        terms: [...andTerms, ...orTerms]
-      })
+        terms: [...andTerms, ...orTerms],
+      }),
     );
 
     return {
@@ -378,9 +354,9 @@ export const searchItemsThunk = createAsyncThunk(
       phases,
       actions,
       records,
-      filteredAttributes
+      filteredAttributes,
     };
-  }
+  },
 );
 
 export const filterItemsThunk = createAsyncThunk(
@@ -405,32 +381,29 @@ export const filterItemsThunk = createAsyncThunk(
           functions,
           phases,
           actions,
-          records
-        })
+          records,
+        }),
       );
       return {
-        classifications, functions, phases, actions, records
+        classifications,
+        functions,
+        phases,
+        actions,
+        records,
       };
     }
 
     const { filteredAttributes } = getState().search;
     const classifications = getFilteredHits(filteredAttributes, TYPE_CLASSIFICATION);
-    const functions = isEmpty(classifications)
-      ? getFilteredHits(filteredAttributes, TYPE_FUNCTION)
-      : [];
+    const functions = isEmpty(classifications) ? getFilteredHits(filteredAttributes, TYPE_FUNCTION) : [];
     const phases =
-      isEmpty(classifications) && isEmpty(functions)
-        ? getFilteredHits(filteredAttributes, TYPE_PHASE)
-        : [];
+      isEmpty(classifications) && isEmpty(functions) ? getFilteredHits(filteredAttributes, TYPE_PHASE) : [];
     const actions =
       isEmpty(classifications) && isEmpty(functions) && isEmpty(phases)
         ? getFilteredHits(filteredAttributes, TYPE_ACTION)
         : [];
     const records =
-      isEmpty(classifications) &&
-        isEmpty(functions) &&
-        isEmpty(phases) &&
-        isEmpty(actions)
+      isEmpty(classifications) && isEmpty(functions) && isEmpty(phases) && isEmpty(actions)
         ? getFilteredHits(filteredAttributes, TYPE_RECORD)
         : [];
 
@@ -440,22 +413,23 @@ export const filterItemsThunk = createAsyncThunk(
         functions,
         phases,
         actions,
-        records
-      })
+        records,
+      }),
     );
 
     return {
-      classifications, functions, phases, actions, records
+      classifications,
+      functions,
+      phases,
+      actions,
+      records,
     };
-  }
+  },
 );
 
-export const resetSuggestionsThunk = createAsyncThunk(
-  'search/resetSuggestions',
-  async (_, { dispatch }) => {
-    dispatch(searchSuggestionsAction([]));
-  }
-);
+export const resetSuggestionsThunk = createAsyncThunk('search/resetSuggestions', async (_, { dispatch }) => {
+  dispatch(searchSuggestionsAction([]));
+});
 
 const searchSlice = createSlice({
   name: 'search',
@@ -475,139 +449,110 @@ const searchSlice = createSlice({
       const { items, page } = action.payload;
       const isAdd = page > 1;
 
-      const data = items.reduce((acc, item) => {
-        const name = `${item.code} ${item.title}`;
-        const parent = item.parent
-          ? acc.headers[item.parent.id] || state.headers[item.parent.id]
-          : null;
-        const path = parent ? [...parent.path, name] : [name];
-        const parents = parent ? [...parent.parents, item.parent.id] : [];
-        acc.headers[item.id] = { name, parents, path };
-        acc.classifications.push({
-          ...item,
-          attributes: {
-            additional_information: item.additional_information,
-            name,
-            description: item.description,
-            related_classification: item.related_classification,
-            description_internal: item.description_internal
-          },
-          classification: item.id,
-          function: item.function || null,
-          name,
-          parents,
-          path: parent ? parent.path : [],
-          type: TYPE_CLASSIFICATION
-        });
-        if (item.function) {
-          parents.push(item.id);
-          acc.functions.push({
+      const data = items.reduce(
+        (acc, item) => {
+          const name = `${item.code} ${item.title}`;
+          const parent = item.parent ? acc.headers[item.parent.id] || state.headers[item.parent.id] : null;
+          const path = parent ? [...parent.path, name] : [name];
+          const parents = parent ? [...parent.parents, item.parent.id] : [];
+          acc.headers[item.id] = { name, parents, path };
+          acc.classifications.push({
+            ...item,
             attributes: {
-              ...item.function_attributes,
-              function_state: item.function_state,
-              function_valid_from: item.function_valid_from,
-              function_valid_to: item.function_valid_to
+              additional_information: item.additional_information,
+              name,
+              description: item.description,
+              related_classification: item.related_classification,
+              description_internal: item.description_internal,
             },
-            children: null,
             classification: item.id,
-            function: item.function,
-            id: item.function,
+            function: item.function || null,
             name,
             parents,
-            path,
-            type: TYPE_FUNCTION
+            path: parent ? parent.path : [],
+            type: TYPE_CLASSIFICATION,
           });
-        }
-        if (item.phases) {
-          item.phases.forEach((phase) => {
-            acc.phases.push({
-              attributes: phase.attributes,
+          if (item.function) {
+            parents.push(item.id);
+            acc.functions.push({
+              attributes: {
+                ...item.function_attributes,
+                function_state: item.function_state,
+                function_valid_from: item.function_valid_from,
+                function_valid_to: item.function_valid_to,
+              },
+              children: null,
               classification: item.id,
               function: item.function,
-              id: phase.id,
-              name: phase.name || '',
-              parents: [...parents, phase.function],
+              id: item.function,
+              name,
+              parents,
               path,
-              type: TYPE_PHASE
+              type: TYPE_FUNCTION,
             });
-            if (phase.actions) {
-              phase.actions.forEach((action) => {
-                acc.actions.push({
-                  attributes: action.attributes,
-                  classification: item.id,
-                  function: item.function,
-                  id: action.id,
-                  name: action.name || '',
-                  parents: [...parents, phase.function, phase.id],
-                  path,
-                  type: TYPE_ACTION
-                });
-                if (action.records) {
-                  action.records.forEach((record) => {
-                    acc.records.push({
-                      attributes: record.attributes,
-                      classification: item.id,
-                      function: item.function,
-                      id: record.id,
-                      name: record.name || '',
-                      parents: [...parents, phase.function, phase.id, action.id],
-                      path,
-                      type: TYPE_RECORD
-                    });
-                  });
-                }
+          }
+          if (item.phases) {
+            item.phases.forEach((phase) => {
+              acc.phases.push({
+                attributes: phase.attributes,
+                classification: item.id,
+                function: item.function,
+                id: phase.id,
+                name: phase.name || '',
+                parents: [...parents, phase.function],
+                path,
+                type: TYPE_PHASE,
               });
-            }
-          });
-        }
-        return acc;
-      },
+              if (phase.actions) {
+                phase.actions.forEach((action) => {
+                  acc.actions.push({
+                    attributes: action.attributes,
+                    classification: item.id,
+                    function: item.function,
+                    id: action.id,
+                    name: action.name || '',
+                    parents: [...parents, phase.function, phase.id],
+                    path,
+                    type: TYPE_ACTION,
+                  });
+                  if (action.records) {
+                    action.records.forEach((record) => {
+                      acc.records.push({
+                        attributes: record.attributes,
+                        classification: item.id,
+                        function: item.function,
+                        id: record.id,
+                        name: record.name || '',
+                        parents: [...parents, phase.function, phase.id, action.id],
+                        path,
+                        type: TYPE_RECORD,
+                      });
+                    });
+                  }
+                });
+              }
+            });
+          }
+          return acc;
+        },
         {
           actions: [],
           classifications: [],
           functions: [],
           headers: {},
           phases: [],
-          records: []
-        });
-
-      const {
-        actions,
-        classifications,
-        functions,
-        headers,
-        phases,
-        records
-      } = data;
-
-      const classificationAttr = getFacetAttributesForType(
-        state.attributes,
-        classifications,
-        TYPE_CLASSIFICATION
+          records: [],
+        },
       );
-      const functionAttr = getFacetAttributesForType(
-        state.attributes,
-        functions,
-        TYPE_FUNCTION
-      );
+
+      const { actions, classifications, functions, headers, phases, records } = data;
+
+      const classificationAttr = getFacetAttributesForType(state.attributes, classifications, TYPE_CLASSIFICATION);
+      const functionAttr = getFacetAttributesForType(state.attributes, functions, TYPE_FUNCTION);
       const phaseAttr = getFacetAttributesForType(state.attributes, phases, TYPE_PHASE);
-      const actionAttr = getFacetAttributesForType(
-        state.attributes,
-        actions,
-        TYPE_ACTION
-      );
-      const recordAttr = getFacetAttributesForType(
-        state.attributes,
-        records,
-        TYPE_RECORD
-      );
-      const filteredAttributes = [
-        ...classificationAttr,
-        ...functionAttr,
-        ...phaseAttr,
-        ...actionAttr,
-        ...recordAttr
-      ];
+      const actionAttr = getFacetAttributesForType(state.attributes, actions, TYPE_ACTION);
+      const recordAttr = getFacetAttributesForType(state.attributes, records, TYPE_RECORD);
+      const filteredAttributes = [...classificationAttr, ...functionAttr, ...phaseAttr, ...actionAttr, ...recordAttr];
 
       if (isAdd) {
         state.actions.push(...actions);
@@ -660,82 +605,74 @@ const searchSlice = createSlice({
       const filteredItems = [
         {
           facet: action.payload.classifications,
-          items: classifications
+          items: classifications,
         },
         {
           facet: action.payload.functions,
-          items: functions
+          items: functions,
         },
         {
           facet: action.payload.phases,
-          items: phases
+          items: phases,
         },
         {
           facet: action.payload.actions,
-          items: actions
+          items: actions,
         },
         {
           facet: action.payload.records,
-          items: records
-        }
+          items: records,
+        },
       ].reduce((acc, current) => {
         if (!isEmpty(current.facet)) {
-          return filter(current.items, (item) => (
-            includes(current.facet, item.id) &&
-            (isEmpty(acc) ||
-              (!isEmpty(acc) && some(acc, (a) => includes(item.parents, a.id))))
-          ));
+          return filter(
+            current.items,
+            (item) =>
+              includes(current.facet, item.id) &&
+              (isEmpty(acc) || (!isEmpty(acc) && some(acc, (a) => includes(item.parents, a.id)))),
+          );
         }
         return acc;
       }, []);
 
       const items = filteredItems.map((item) => {
         if (!isEmpty(terms)) {
-          const matchedAttributes = Object.keys(item.attributes || {}).reduce(
-            (acc, key) => {
-              if (Object.hasOwn(item.attributes, key) && key !== 'name') {
-                const attrValue = isArray(item.attributes[key])
-                  ? item.attributes[key].join(', ')
-                  : item.attributes[key];
-                const isHit = some(terms, (term) =>
-                  new RegExp(term, 'gi').test(attrValue)
+          const matchedAttributes = Object.keys(item.attributes || {}).reduce((acc, key) => {
+            if (Object.hasOwn(item.attributes, key) && key !== 'name') {
+              const attrValue = isArray(item.attributes[key]) ? item.attributes[key].join(', ') : item.attributes[key];
+              const isHit = some(terms, (term) => new RegExp(term, 'gi').test(attrValue));
+              if (isHit) {
+                const value = terms.reduce(
+                  (valAcc, term) => valAcc.replace(new RegExp(term, 'gi'), (match) => `<mark>${match}</mark>`),
+                  attrValue,
                 );
-                if (isHit) {
-                  const value = terms.reduce((valAcc, term) => valAcc.replace(
-                    new RegExp(term, 'gi'),
-                    (match) => `<mark>${match}</mark>`
-                  ), attrValue);
-                  acc.push({ key, value });
-                }
+                acc.push({ key, value });
               }
-              return acc;
-            },
-            []
-          );
+            }
+            return acc;
+          }, []);
           return {
             ...item,
             matchedAttributes,
             matchedName: isEmpty(terms)
               ? item.name
-              : terms.reduce((acc, term) => acc.replace(
-                new RegExp(term, 'gi'),
-                (match) => `<mark>${match}</mark>`
-              ), item.name || '')
+              : terms.reduce(
+                  (acc, term) => acc.replace(new RegExp(term, 'gi'), (match) => `<mark>${match}</mark>`),
+                  item.name || '',
+                ),
           };
         }
         return item;
       });
 
       const exportItems = items.reduce((acc, item) => {
-        const accClass = item.classification
-          ? find(acc, { classification: item.classification })
-          : null;
+        const accClass = item.classification ? find(acc, { classification: item.classification }) : null;
         if (!accClass) {
           if (item.type === TYPE_CLASSIFICATION) {
             acc.push(item);
           } else {
             const classification = find(classifications, {
-              id: item.classification
+              id: item.classification,
             });
             if (classification) {
               acc.push(classification);
@@ -775,36 +712,14 @@ const searchSlice = createSlice({
         const classificationItems = getSelectedItemsForType(
           state.filteredAttributes,
           TYPE_CLASSIFICATION,
-          state.classifications
+          state.classifications,
         );
-        const functionItems = getSelectedItemsForType(
-          state.filteredAttributes,
-          TYPE_FUNCTION,
-          state.functions
-        );
-        const phaseItems = getSelectedItemsForType(
-          state.filteredAttributes,
-          TYPE_PHASE,
-          state.phases
-        );
-        const actionItems = getSelectedItemsForType(
-          state.filteredAttributes,
-          TYPE_ACTION,
-          state.actions
-        );
-        const recordItems = getSelectedItemsForType(
-          state.filteredAttributes,
-          TYPE_RECORD,
-          state.records
-        );
+        const functionItems = getSelectedItemsForType(state.filteredAttributes, TYPE_FUNCTION, state.functions);
+        const phaseItems = getSelectedItemsForType(state.filteredAttributes, TYPE_PHASE, state.phases);
+        const actionItems = getSelectedItemsForType(state.filteredAttributes, TYPE_ACTION, state.actions);
+        const recordItems = getSelectedItemsForType(state.filteredAttributes, TYPE_RECORD, state.records);
 
-        state.items = [
-          ...classificationItems,
-          ...functionItems,
-          ...phaseItems,
-          ...actionItems,
-          ...recordItems
-        ];
+        state.items = [...classificationItems, ...functionItems, ...phaseItems, ...actionItems, ...recordItems];
       }
     },
     toggleShowAllAttributeOptions: (state, action) => {
@@ -814,8 +729,8 @@ const searchSlice = createSlice({
       if (index >= 0) {
         state.filteredAttributes[index].showAll = !showAll;
       }
-    }
-  }
+    },
+  },
 });
 
 export const {
@@ -828,7 +743,7 @@ export const {
   searchSuggestionsAction,
   toggleAttribute,
   toggleAttributeOption,
-  toggleShowAllAttributeOptions
+  toggleShowAllAttributeOptions,
 } = searchSlice.actions;
 
 export const attributesSelector = (state) => state.search.attributes;

@@ -4,7 +4,15 @@ import Select from 'react-select';
 
 import { resolveReturnValues, resolveSelectValues } from '../../../utils/helpers';
 
-const SearchFilter = ({ placeholder, value, options, handleChange, multi, className, isVisible }) => {
+const SearchFilter = ({
+  placeholder,
+  value,
+  options,
+  handleChange,
+  multi = true,
+  className = 'col-sm-6',
+  isVisible = true,
+}) => {
   if (!isVisible) {
     return null;
   }
@@ -34,12 +42,6 @@ SearchFilter.propTypes = {
   options: PropTypes.array,
   placeholder: PropTypes.string,
   value: PropTypes.array,
-};
-
-SearchFilter.defaultProps = {
-  className: 'col-sm-6',
-  isVisible: true,
-  multi: true,
 };
 
 export default SearchFilter;

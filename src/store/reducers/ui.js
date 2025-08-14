@@ -10,59 +10,53 @@ export const initialState = {
   recordTypes: {},
   attributeTypes: {},
   templates: [],
-  error: null
+  error: null,
 };
 
-export const fetchAttributeTypesThunk = createAsyncThunk(
-  'ui/fetchAttributeTypes',
-  async (_, { rejectWithValue }) => {
-    try {
-      const validationRulesResponse = await api.get('attribute/schemas');
-      const validationRules = await validationRulesResponse.json();
+export const fetchAttributeTypesThunk = createAsyncThunk('ui/fetchAttributeTypes', async (_, { rejectWithValue }) => {
+  try {
+    const validationRulesResponse = await api.get('attribute/schemas');
+    const validationRules = await validationRulesResponse.json();
 
-      const attributesResponse = await api.get('attribute', { page_size: 999 });
-      const attributes = await attributesResponse.json();
+    const attributesResponse = await api.get('attribute', { page_size: 999 });
+    const attributes = await attributesResponse.json();
 
-      const processedData = {
-        attributes,
-        validationRules,
-        processedAttributes: processAttributeTypes(attributes, validationRules)
-      };
+    const processedData = {
+      attributes,
+      validationRules,
+      processedAttributes: processAttributeTypes(attributes, validationRules),
+    };
 
-      return processedData;
-    } catch (error) {
-      return rejectWithValue({
-        message: error instanceof Error ? error.message : 'Failed to fetch attribute types',
-        error
-      });
-    }
+    return processedData;
+  } catch (error) {
+    return rejectWithValue({
+      message: error instanceof Error ? error.message : 'Failed to fetch attribute types',
+      error,
+    });
   }
-);
+});
 
-export const fetchTemplatesThunk = createAsyncThunk(
-  'ui/fetchTemplates',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await api.get('template');
-      const templates = await response.json();
+export const fetchTemplatesThunk = createAsyncThunk('ui/fetchTemplates', async (_, { rejectWithValue }) => {
+  try {
+    const response = await api.get('template');
+    const templates = await response.json();
 
-      const processedTemplates = templates.results.map((item) => ({
-        id: item.id,
-        name: item.name
-      }));
+    const processedTemplates = templates.results.map((item) => ({
+      id: item.id,
+      name: item.name,
+    }));
 
-      return {
-        raw: templates,
-        processed: processedTemplates
-      };
-    } catch (error) {
-      return rejectWithValue({
-        message: error instanceof Error ? error.message : 'Failed to fetch templates',
-        error
-      });
-    }
+    return {
+      raw: templates,
+      processed: processedTemplates,
+    };
+  } catch (error) {
+    return rejectWithValue({
+      message: error instanceof Error ? error.message : 'Failed to fetch templates',
+      error,
+    });
   }
-);
+});
 
 const processTypeList = (types, list) => {
   if (!types?.values) {
@@ -73,7 +67,7 @@ const processTypeList = (types, list) => {
     const trimmedResult = result.id.replace(/-/g, '');
     list[trimmedResult] = {
       id: result.id,
-      value: result.value
+      value: result.value,
     };
   });
 };
@@ -88,10 +82,7 @@ const processAttributeTypes = (attributes, validationRules) => {
       let required = false;
 
       Object.keys(validationRules).forEach((rule) => {
-        if (
-          Object.hasOwn(validationRules, rule) &&
-          validationRules[rule].properties[result.identifier]
-        ) {
+        if (Object.hasOwn(validationRules, rule) && validationRules[rule].properties[result.identifier]) {
           allowedIn.push(rule);
         }
       });
@@ -104,7 +95,9 @@ const processAttributeTypes = (attributes, validationRules) => {
 
       const multiIn = Object.keys(validationRules)
         .filter((key) => validationRules[key].properties[result.identifier]?.anyOf)
-        .filter((key) => find(validationRules[key].properties[result.identifier]?.anyOf, (item) => item.type === 'array'));
+        .filter((key) =>
+          find(validationRules[key].properties[result.identifier]?.anyOf, (item) => item.type === 'array'),
+        );
 
       const requiredIn = Object.keys(validationRules)
         .filter((key) => validationRules[key]?.required)
@@ -118,27 +111,37 @@ const processAttributeTypes = (attributes, validationRules) => {
 
       const requiredMap = Object.keys(validationRules)
         .filter((key) => validationRules[key]?.allOf)
-        .map((key) => (validationRules[key]?.allOf))
+        .map((key) => validationRules[key]?.allOf)
         .flatMap((allOfs) => allOfs.flatMap((allOf) => allOf.oneOf))
         .filter((oneOf) => oneOf.required.length > 0)
         .filter((oneOf) => oneOf.required.some((requiredKey) => result.identifier === requiredKey))
         .map((oneOf) => oneOf.properties)
-        .map((properties) => Object.keys(properties).map((propertyKey) => {
-          const property = properties[propertyKey];
-          // eslint-disable-next-line sonarjs/no-nested-functions
-          const values = Object.keys(property).map((valueKey) => property[valueKey]).flatMap((value) => value)
+        .map((properties) =>
+          Object.keys(properties).map((propertyKey) => {
+            const property = properties[propertyKey];
+            const values = Object.keys(property)
+              // eslint-disable-next-line sonarjs/no-nested-functions
+              .map((valueKey) => property[valueKey])
+              // eslint-disable-next-line sonarjs/no-nested-functions
+              .flatMap((value) => value);
 
-          return { key: propertyKey, values }
-        }))
+            return { key: propertyKey, values };
+          }),
+        )
         .flatMap((items) => items);
 
-      const requiredIf = requiredMap
-        .filter((value, index, self) => index === self.findIndex((item) => item.key === value.key));
+      const requiredIf = requiredMap.filter(
+        (value, index, self) => index === self.findIndex((item) => item.key === value.key),
+      );
 
       const allowValuesOutsideChoicesIn = Object.keys(validationRules)
         .filter((key) => validationRules[key].extra_validations)
         .filter((key) => validationRules[key].extra_validations?.allow_values_outside_choices)
-        .filter((key) => validationRules[key].extra_validations?.allow_values_outside_choices?.some((field) => field === result.identifier));
+        .filter((key) =>
+          validationRules[key].extra_validations?.allow_values_outside_choices?.some(
+            (field) => field === result.identifier,
+          ),
+        );
 
       attributeTypeList[result.identifier] = {
         index: result.index,
@@ -150,7 +153,7 @@ const processAttributeTypes = (attributes, validationRules) => {
         requiredIf,
         requiredIn,
         required,
-        allowValuesOutsideChoicesIn
+        allowValuesOutsideChoicesIn,
       };
     }
   });
@@ -215,11 +218,9 @@ const uiSlice = createSlice({
     templatesSelector: (state) => state.templates,
     isFetchingSelector: (state) => state.isFetching,
     errorSelector: (state) => state.error,
-    templateByIdSelector: (state, templateId) =>
-      state.templates.find(template => template.id === templateId),
-    attributeTypeByIdentifierSelector: (state, identifier) =>
-      state.attributeTypes[identifier]
-  }
+    templateByIdSelector: (state, templateId) => state.templates.find((template) => template.id === templateId),
+    attributeTypeByIdentifierSelector: (state, identifier) => state.attributeTypes[identifier],
+  },
 });
 
 export const {
@@ -232,7 +233,7 @@ export const {
   isFetchingSelector,
   errorSelector,
   templateByIdSelector,
-  attributeTypeByIdentifierSelector
+  attributeTypeByIdentifierSelector,
 } = uiSlice.selectors;
 
 export default uiSlice.reducer;

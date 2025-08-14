@@ -1,4 +1,3 @@
-import { createBrowserHistory } from 'history';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { screen } from '@testing-library/react';
@@ -6,27 +5,20 @@ import { screen } from '@testing-library/react';
 import renderWithProviders from '../../../utils/renderWithProviders';
 import Header from '../Header';
 
-const renderComponent = (history) =>
+const renderComponent = () =>
   renderWithProviders(
     <BrowserRouter>
       <Header />
     </BrowserRouter>,
-    {
-      history,
-    },
   );
 
 describe('<Header />', () => {
   it('should render correctly', () => {
-    const history = createBrowserHistory();
-
-    renderComponent(history);
+    renderComponent();
   });
 
   it('should render a nav bar with correct title', async () => {
-    const history = createBrowserHistory();
-
-    renderComponent(history);
+    renderComponent();
 
     const nav = await screen.findByRole('navigation');
     const title = await screen.findByText(/Tiedonohjaus/);

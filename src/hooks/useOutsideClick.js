@@ -16,7 +16,6 @@ const useOutsideClick = (showInitially = false) => {
     document.addEventListener('mouseup', handleClickOutside);
     document.addEventListener('touchend', handleClickOutside);
 
-
     return () => {
       document.removeEventListener('mouseup', handleClickOutside);
       document.removeEventListener('touchend', handleClickOutside);

@@ -22,7 +22,7 @@ export const initialState = {
   version_history: [],
   function_allowed: false,
   function_version: null,
-  error: null
+  error: null,
 };
 
 export const fetchClassificationThunk = createAsyncThunk(
@@ -41,7 +41,7 @@ export const fetchClassificationThunk = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch classification');
     }
-  }
+  },
 );
 
 export const createTosThunk = createAsyncThunk(
@@ -50,7 +50,7 @@ export const createTosThunk = createAsyncThunk(
     try {
       const classification = { ...getState().classification };
       const newTos = {
-        classification: { id: classification.id, version: classification.version }
+        classification: { id: classification.id, version: classification.version },
       };
 
       const response = await api.post('function', newTos);
@@ -69,7 +69,7 @@ export const createTosThunk = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to create TOS');
     }
-  }
+  },
 );
 
 const classificationSlice = createSlice({
@@ -128,12 +128,10 @@ const classificationSlice = createSlice({
     createdAtSelector: (state) => state.created_at,
     modifiedAtSelector: (state) => state.modified_at,
     functionVersionSelector: (state) => state.function_version,
-  }
+  },
 });
 
-export const {
-  clearClassification
-} = classificationSlice.actions;
+export const { clearClassification } = classificationSlice.actions;
 
 export const {
   classificationSelector,

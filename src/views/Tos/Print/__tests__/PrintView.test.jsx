@@ -1,5 +1,4 @@
 import React from 'react';
-import { createBrowserHistory } from 'history';
 import { BrowserRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -24,8 +23,6 @@ vi.mock('react-router-dom', async () => {
 });
 
 const renderComponent = (propOverrides) => {
-  const history = createBrowserHistory();
-
   const store = mockStore({
     ui: {
       attributeTypes: attributeTypes,
@@ -49,7 +46,7 @@ const renderComponent = (propOverrides) => {
     <BrowserRouter>
       <PrintView {...props} />
     </BrowserRouter>,
-    { history, store },
+    { store },
   );
 };
 

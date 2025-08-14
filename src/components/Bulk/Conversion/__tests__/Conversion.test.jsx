@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { screen } from '@testing-library/react';
+import { screen, act } from '@testing-library/react';
 
 import Conversion from '../Conversion';
 import renderWithProviders from '../../../../utils/renderWithProviders';
@@ -126,45 +126,31 @@ describe('<Conversion />', () => {
     });
   });
 
-  it('renders correct field types based on attribute configuration', () => {
-    // Test with different attribute types
-    const testCases = [
-      {
-        conversion: { attribute: 'Keywords', type: 'function', value: 'test keyword' },
-        expectedFieldClass: 'form-control',
-        expectedValue: 'test keyword',
-        description: 'text input for attributes without predefined values',
-      },
-      {
-        conversion: { attribute: 'valid_from', type: 'function', value: '2024-01-01' },
-        expectedPlaceholder: 'PP.KK.VVVV',
-        description: 'date picker for date attributes',
-      },
-      {
-        conversion: { attribute: 'PublicityClass', type: 'function', value: 'public' },
-        expectedValue: 'public',
-        description: 'select dropdown for attributes with predefined values',
-      },
-    ];
+  describe('renders correct field types based on attribute configuration', () => {
+    it('renders text input for Keywords attribute', () => {
+      const conversion = { attribute: 'Keywords', type: 'function', value: 'test keyword' };
+      renderComponent({ ...defaultProps, conversion });
 
-    testCases.forEach(({ conversion, expectedFieldClass, expectedPlaceholder, expectedValue }) => {
-      const { unmount } = renderComponent({ ...defaultProps, conversion });
+      const field = document.querySelector('.form-control');
+      expect(field).toBeInTheDocument();
+      expect(field).toHaveValue('test keyword');
+    });
 
-      if (expectedFieldClass) {
-        const field = document.querySelector(`.${expectedFieldClass}`);
-        expect(field).toBeInTheDocument();
-        if (expectedValue) {
-          expect(field).toHaveValue(expectedValue);
-        }
-      }
-      if (expectedPlaceholder) {
-        expect(screen.getByPlaceholderText(expectedPlaceholder)).toBeInTheDocument();
-      }
-      if (expectedValue && !expectedFieldClass) {
-        expect(screen.getByText(expectedValue)).toBeInTheDocument();
-      }
+    it('renders date picker for date attributes', async () => {
+      const conversion = { attribute: 'valid_from', type: 'function', value: '2024-01-01' };
 
-      unmount();
+      await act(async () => {
+        renderComponent({ ...defaultProps, conversion });
+      });
+
+      expect(screen.getByPlaceholderText('PP.KK.VVVV')).toBeInTheDocument();
+    });
+
+    it('renders select dropdown for PublicityClass attribute', () => {
+      const conversion = { attribute: 'PublicityClass', type: 'function', value: 'public' };
+      renderComponent({ ...defaultProps, conversion });
+
+      expect(screen.getByText('public')).toBeInTheDocument();
     });
   });
 

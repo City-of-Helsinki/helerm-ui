@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
 
 import config from '../../config';
 import { convertToTree, itemById } from '../../utils/helpers';
@@ -33,16 +33,14 @@ export const initialState = {
   is_open: true,
   list: [],
   page: 1,
-  timestamp: ''
+  timestamp: '',
 };
 
 export const fetchNavigationThunk = createAsyncThunk(
   'navigation/fetchNavigation',
   async ({ includeRelated = false, page = 1 }, { dispatch, getState, rejectWithValue }) => {
     try {
-      const pageSize = includeRelated
-        ? config.SEARCH_PAGE_SIZE
-        : config.RESULTS_PER_PAGE;
+      const pageSize = includeRelated ? config.SEARCH_PAGE_SIZE : config.RESULTS_PER_PAGE;
 
       const state = getState().navigation;
 
@@ -60,16 +58,18 @@ export const fetchNavigationThunk = createAsyncThunk(
       const response = await api.get('classification', {
         include_related: includeRelated,
         page_size: pageSize,
-        page
+        page,
       });
 
       const json = await response.json();
 
-      dispatch(receiveNavigationSliceAction({
-        items: json.results,
-        includeRelated,
-        page
-      }));
+      dispatch(
+        receiveNavigationSliceAction({
+          items: json.results,
+          includeRelated,
+          page,
+        }),
+      );
 
       if (json.next) {
         await dispatch(fetchNavigationThunk({ includeRelated, page: page + 1 }));
@@ -84,7 +84,7 @@ export const fetchNavigationThunk = createAsyncThunk(
       dispatch(navigationErrorSliceAction());
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch navigation');
     }
-  }
+  },
 );
 
 const navigationSlice = createSlice({
@@ -115,7 +115,7 @@ const navigationSlice = createSlice({
       }
 
       state.page = action.payload.page;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -144,15 +144,20 @@ const navigationSlice = createSlice({
     includeRelatedSelector: (state) => state.includeRelated,
     isOpenSelector: (state) => state.is_open,
     navigationListSelector: (state) => state.list,
-    timestampSelector: (state) => state.timestamp
-  }
+    timestampSelector: (state) => state.timestamp,
+    // Memoized selector to get items based on includeRelated flag
+    navigationItemsSelector: createSelector(
+      [(state) => state.includeRelated, (state) => state.items],
+      (includeRelated, items) => (includeRelated ? items : []),
+    ),
+  },
 });
 
 export const {
   parseNavigation: parseNavigationSliceAction,
   setNavigationVisibility,
   navigationError: navigationErrorSliceAction,
-  receiveNavigation: receiveNavigationSliceAction
+  receiveNavigation: receiveNavigationSliceAction,
 } = navigationSlice.actions;
 
 export const {
@@ -161,9 +166,8 @@ export const {
   includeRelatedSelector,
   isOpenSelector,
   navigationListSelector,
-  timestampSelector
-} = navigationSlice.selectors
-
-
+  timestampSelector,
+  navigationItemsSelector,
+} = navigationSlice.selectors;
 
 export default navigationSlice.reducer;
