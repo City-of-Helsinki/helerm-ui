@@ -1,4 +1,3 @@
-
 import { configureStore } from '@reduxjs/toolkit';
 
 import makeRootReducer from './rootReducers';
@@ -10,12 +9,13 @@ const storeCreator = (initialState = {}) => {
   const store = configureStore({
     reducer: makeRootReducer(),
     preloadedState: initialState,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: ['router/LOCATION_CHANGE'],
-        ignoredPaths: ['router.location'],
-      },
-    }),
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: ['router/LOCATION_CHANGE'],
+          ignoredPaths: ['router.location'],
+        },
+      }),
   });
 
   store.asyncReducers = {};

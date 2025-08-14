@@ -1,62 +1,71 @@
 import { Button, Dialog } from 'hds-react';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { useBlocker, useLocation } from 'react-router-dom';
+import { useBlocker } from 'react-router-dom';
 
 const RouterPrompt = ({ when, onOK, onCancel }) => {
-  const [shouldBlock, setShouldBlock] = useState(when);
   const [showPrompt, setShowPrompt] = useState(false);
+  const blockerRef = useRef(null);
 
-  const { pathname } = useLocation();
+  const blocker = useBlocker(({ currentLocation, nextLocation }) => {
+    if (when && currentLocation.pathname !== nextLocation.pathname) {
+      blockerRef.current = { currentLocation, nextLocation };
 
-  const { location, proceed, reset } = useBlocker(
-    ({ currentLocation, nextLocation }) => shouldBlock && currentLocation.pathname !== nextLocation.pathname,
-  );
-
-  useEffect(() => {
-    if (shouldBlock && location?.pathname && pathname !== location?.pathname) {
       setShowPrompt(true);
+      return true;
     }
-  }, [pathname, location, shouldBlock]);
+
+    return false;
+  });
 
   useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      if (when) {
+        event.preventDefault();
+        event.returnValue = 'Muutoksia ei ole tallennettu, haluatko silti jatkaa?';
+        return event.returnValue;
+      }
+      return undefined;
+    };
+
     if (when) {
-      setShouldBlock(true);
-    } else {
-      setShouldBlock(false);
+      window.addEventListener('beforeunload', handleBeforeUnload);
     }
 
     return () => {
-      setShouldBlock(false);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [location, when]);
+  }, [when]);
 
   const handleOK = useCallback(async () => {
+    setShowPrompt(false);
     if (onOK) {
       const canRoute = await Promise.resolve(onOK());
-
-      if (canRoute) {
-        setShouldBlock(false);
-
-        proceed();
+      if (canRoute && blocker.state === 'blocked') {
+        blocker.proceed();
       }
+    } else if (blocker.state === 'blocked') {
+      blocker.proceed();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onOK]);
+  }, [onOK, blocker]);
 
   const handleCancel = useCallback(async () => {
+    setShowPrompt(false);
     if (onCancel) {
       const canRoute = await Promise.resolve(onCancel());
-
-      if (canRoute) {
-        setShouldBlock(false);
-
-        reset();
+      if (canRoute && blocker.state === 'blocked') {
+        blocker.proceed();
+      } else if (blocker.state === 'blocked') {
+        blocker.reset();
       }
+    } else if (blocker.state === 'blocked') {
+      blocker.reset();
     }
-    setShowPrompt(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onCancel]);
+  }, [onCancel, blocker]);
+
+  const handleDialogClose = useCallback(() => {
+    handleCancel();
+  }, [handleCancel]);
 
   if (!showPrompt) {
     return null;
@@ -67,7 +76,7 @@ const RouterPrompt = ({ when, onOK, onCancel }) => {
 
   return (
     <Dialog
-      close={handleCancel}
+      close={handleDialogClose}
       isOpen={showPrompt}
       aria-labelledby={titleId}
       aria-describedby={descriptionId}

@@ -11,17 +11,18 @@ import bulk from './reducers/bulk';
 import search from './reducers/search';
 import router from './reducers/router';
 
-const makeRootReducer = () => combineReducers({
-  navigation,
-  validation,
-  router,
-  selectedTOS,
-  classification,
-  toastr,
-  user,
-  ui,
-  bulk,
-  search
-});
+const makeRootReducer = () =>
+  combineReducers({
+    navigation,
+    validation,
+    router,
+    selectedTOS,
+    classification,
+    toastr,
+    user,
+    ui,
+    bulk,
+    search,
+  });
 
 export default makeRootReducer;

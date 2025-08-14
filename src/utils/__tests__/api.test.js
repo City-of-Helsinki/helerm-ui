@@ -7,7 +7,6 @@ vi.mock('../api.js', async (originalImport) => originalImport());
 vi.mock('isomorphic-fetch');
 
 describe('api.js', () => {
-
   describe('getApiUrl', () => {
     it('should get api url', () => {
       const expectedUrl = 'https://api.test.com/v1/users/?page=1&limit=10';
@@ -16,7 +15,7 @@ describe('api.js', () => {
 
       expect(apiUrl).toBe(expectedUrl);
     });
-  })
+  });
 
   describe('callApi', () => {
     const mockToken = 'mockToken';
@@ -46,7 +45,7 @@ describe('api.js', () => {
         method: 'GET',
         credentials: 'include',
         headers: expect.any(Headers),
-        mode: 'cors'
+        mode: 'cors',
       });
     });
 
@@ -72,5 +71,5 @@ describe('api.js', () => {
 
       expect(responseData).toEqual(mockResponse);
     });
-  })
+  });
 });

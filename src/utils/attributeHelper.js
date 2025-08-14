@@ -15,21 +15,13 @@ import { validateConditionalRules } from './validators';
  * @param {string?} identifier
  * @param {string?} name
  */
-export const getDisplayLabelForAttribute = ({
-  attributeValue,
-  id = null,
-  identifier = null,
-  name = null
-}) => {
-
+export const getDisplayLabelForAttribute = ({ attributeValue, id = null, identifier = null, name = null }) => {
   const { attributeTypes } = store.getState().ui;
 
   if (identifier) {
     const identifierContent = attributeTypes[identifier];
     if (identifierContent?.values) {
-      const foundItem = identifierContent?.values.find(
-        (item) => item.value === attributeValue
-      );
+      const foundItem = identifierContent?.values.find((item) => item.value === attributeValue);
       if (foundItem?.name) {
         return `${foundItem.value} ${foundItem?.name}`;
       }
@@ -38,7 +30,7 @@ export const getDisplayLabelForAttribute = ({
     for (const identifierKey in attributeTypes) {
       if (attributeTypes[identifierKey].values) {
         const foundItem = attributeTypes[identifierKey].values.find(
-          (item) => item.id === id && item.value === attributeValue
+          (item) => item.id === id && item.value === attributeValue,
         );
         if (foundItem?.name) {
           return `${foundItem.value} ${foundItem?.name}`;
@@ -48,9 +40,7 @@ export const getDisplayLabelForAttribute = ({
   } else if (name) {
     for (const identifierKey in attributeTypes) {
       if (attributeTypes[identifierKey].name === name) {
-        const foundItem = attributeTypes[identifierKey].values.find(
-          (item) => item.value === attributeValue
-        );
+        const foundItem = attributeTypes[identifierKey].values.find((item) => item.value === attributeValue);
         if (foundItem?.name) {
           return `${foundItem.value} ${foundItem?.name}`;
         }
@@ -79,7 +69,7 @@ export const generateDefaultAttributes = (attributeTypes, type, showMore) => {
     }
   });
   return attributes;
-}
+};
 
 export const attributeButton = (attributes, attributeTypes) => {
   const actualAttributes = [];
@@ -89,13 +79,10 @@ export const attributeButton = (attributes, attributeTypes) => {
     }
   });
   Object.keys(attributeTypes).forEach((key) => {
-    if (
-      Object.hasOwn(attributeTypes, key) &&
-      attributeTypes[key].defaultIn.indexOf('action') >= 0
-    ) {
+    if (Object.hasOwn(attributeTypes, key) && attributeTypes[key].defaultIn.indexOf('action') >= 0) {
       actualAttributes.push(key);
     }
   });
 
   return !!actualAttributes.length;
-}
+};

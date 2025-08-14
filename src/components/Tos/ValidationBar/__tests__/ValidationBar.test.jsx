@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureMockStore from 'redux-mock-store';
@@ -16,7 +15,7 @@ const baseMocks = {
   selectedTOS: errorsAndWarningsTOS,
 };
 
-const renderComponent = (history, mocks = baseMocks, mockStore) => {
+const renderComponent = (mocks = baseMocks, mockStore) => {
   const store = mockStore ?? storeCreator({ selectedTOS: mocks.selectedTOS, ui: { attributeTypes } });
 
   return renderWithProviders(
@@ -24,7 +23,6 @@ const renderComponent = (history, mocks = baseMocks, mockStore) => {
       <ValidationBar scrollToMetadata={vi.fn()} scrollToType={vi.fn()} top={0} />
     </BrowserRouter>,
     {
-      history,
       store,
     },
   );
@@ -32,15 +30,11 @@ const renderComponent = (history, mocks = baseMocks, mockStore) => {
 
 describe('<ValidationBar />', () => {
   it('should render correctly', () => {
-    const history = createBrowserHistory();
-
-    renderComponent(history);
+    renderComponent();
   });
 
   it('should change filter', async () => {
-    const history = createBrowserHistory();
-
-    renderComponent(history);
+    renderComponent();
 
     const allFilter = screen.getByRole('button', { name: 'Kaikki' });
     const warningsFilter = screen.getByRole('button', { name: 'Huomautukset' });
@@ -76,8 +70,6 @@ describe('<ValidationBar />', () => {
   });
 
   it('should close validation bar', async () => {
-    const history = createBrowserHistory();
-
     const mocks = { ...baseMocks };
 
     const middlewares = [thunk];
@@ -85,7 +77,7 @@ describe('<ValidationBar />', () => {
 
     const store = mockStore({ selectedTOS: mocks.selectedTOS, ui: { attributeTypes } });
 
-    renderComponent(history, undefined, store);
+    renderComponent(undefined, store);
 
     const closeButton = screen.getAllByRole('button')[0];
 
@@ -99,9 +91,7 @@ describe('<ValidationBar />', () => {
   });
 
   it('should render errors for invalid TOS', () => {
-    const history = createBrowserHistory();
-
-    renderComponent(history);
+    renderComponent();
     // find error group
     expect(screen.getByText('Käsittelyprosessi')).toBeInTheDocument();
     // find correct errors

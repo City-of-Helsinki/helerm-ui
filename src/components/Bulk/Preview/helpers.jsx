@@ -15,8 +15,7 @@ const renderFunctionAttributeChange = (item, attribute, value, currentValue = ' 
 const renderPhaseAttributeChange = (phase, phaseId, attribute, value, getAttributeName, currentValue = ' ') => (
   <h4 key={`phase_${phaseId}_attr_${attribute}`}>
     {phase.name || ''} &gt;
-    {getAttributeName(attribute)}: <span>({currentValue})</span>{' '}
-    {value}
+    {getAttributeName(attribute)}: <span>({currentValue})</span> {value}
   </h4>
 );
 
@@ -24,8 +23,7 @@ const renderActionAttributeChange = (phase, action, attribute, value, getAttribu
   <h4 key={`action_${action.id}_attr_${attribute}`}>
     {phase.name || ''} &gt;
     {action.name || ''} &gt;
-    {getAttributeName(attribute)}: <span>({currentValue})</span>{' '}
-    {value}
+    {getAttributeName(attribute)}: <span>({currentValue})</span> {value}
   </h4>
 );
 
@@ -34,8 +32,7 @@ const renderRecordAttributeChange = (phase, action, record, attribute, value, ge
     {phase.name || ''} &gt;
     {action.name || ''} &gt;
     {record.name || ''} &gt;
-    {getAttributeName(attribute)}: <span>({currentValue})</span>{' '}
-    {value}
+    {getAttributeName(attribute)}: <span>({currentValue})</span> {value}
   </h4>
 );
 

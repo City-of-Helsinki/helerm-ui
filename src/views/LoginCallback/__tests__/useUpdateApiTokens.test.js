@@ -17,7 +17,7 @@ describe('useUpdateApiTokens', () => {
 
     expect(result.current.apiTokensUpdated).toBe(false);
 
-    mockUseApiTokensClientTracking.mockImplementation(() => [{ payload: { data: { key: "value" } } }]);
+    mockUseApiTokensClientTracking.mockImplementation(() => [{ payload: { data: { key: 'value' } } }]);
 
     rerender();
 

@@ -36,7 +36,7 @@ describe('<Exporter />', () => {
   const testItemWithPhases = {
     ...validTOS, // This has the full structure with phases
     // Make sure this item has no children so it will be included in exportData
-    children: undefined
+    children: undefined,
   };
   const data = [testItemWithPhases];
 

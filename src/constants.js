@@ -23,7 +23,7 @@ export const TYPE_LABELS = {
   classification: 'Tehtäväluokka',
   function: HANDLING_PROCESS,
   phase: 'Käsittelyvaihe',
-  record: 'Asiakirja'
+  record: 'Asiakirja',
 };
 
 // Statuses
@@ -37,29 +37,26 @@ export const statusFilters = [
   { value: DRAFT, label: 'Luonnos' },
   { value: SENT_FOR_REVIEW, label: 'Lähetetty tarkastettavaksi' },
   { value: WAITING_FOR_APPROVAL, label: 'Odottaa hyväksymistä' },
-  { value: APPROVED, label: 'Hyväksytty' }
+  { value: APPROVED, label: 'Hyväksytty' },
 ];
 
 // export for easier administration
 export const navigationStateFilters = {
   statusFilters: {
     path: ['function_state'],
-    values: []
+    values: [],
   },
   retentionPeriodFilters: {
-    path: [
-      'function_attributes.RetentionPeriod',
-      'phases.actions.records.attributes.RetentionPeriod'
-    ],
-    values: []
-  }
+    path: ['function_attributes.RetentionPeriod', 'phases.actions.records.attributes.RetentionPeriod'],
+    values: [],
+  },
 };
 
 export const USER_LOGIN_STATUS = {
   NONE: 'NONE',
   INITIALIZING: 'INITIALIZING',
   AUTHORIZED: 'AUTHORIZED',
-  UNAUTHORIZED: 'UNAUTHORIZED'
+  UNAUTHORIZED: 'UNAUTHORIZED',
 };
 
 // header height
@@ -70,130 +67,154 @@ export const VALIDATION_FILTER_ERROR = 'error';
 export const VALIDATION_FILTER_WARN = 'warning';
 
 // mass update
-export const BULK_UPDATE_CONVERSION_TYPES = [{
-  label: HANDLING_PROCESS,
-  value: 'function'
-}, {
-  label: 'Vaihe',
-  value: 'phase'
-}, {
-  label: 'Toimenpide',
-  value: 'action'
-}, {
-  label: 'Asiakirja',
-  value: 'record'
-}];
-export const BULK_UPDATE_SEARCH_TARGET = [{
-  label: HANDLING_PROCESS,
-  value: 'function'
-}, {
-  label: 'Vaihe',
-  value: 'phase'
-}, {
-  label: 'Kaikki vaiheet',
-  value: 'phases'
-}, {
-  label: 'Toimenpide',
-  value: 'action'
-}, {
-  label: 'Kaikki toimenpiteet',
-  value: 'actions'
-}, {
-  label: 'Asiakirja',
-  value: 'record'
-}, {
-  label: 'Kaikki asiakirjat',
-  value: 'records'
-}];
+export const BULK_UPDATE_CONVERSION_TYPES = [
+  {
+    label: HANDLING_PROCESS,
+    value: 'function',
+  },
+  {
+    label: 'Vaihe',
+    value: 'phase',
+  },
+  {
+    label: 'Toimenpide',
+    value: 'action',
+  },
+  {
+    label: 'Asiakirja',
+    value: 'record',
+  },
+];
+export const BULK_UPDATE_SEARCH_TARGET = [
+  {
+    label: HANDLING_PROCESS,
+    value: 'function',
+  },
+  {
+    label: 'Vaihe',
+    value: 'phase',
+  },
+  {
+    label: 'Kaikki vaiheet',
+    value: 'phases',
+  },
+  {
+    label: 'Toimenpide',
+    value: 'action',
+  },
+  {
+    label: 'Kaikki toimenpiteet',
+    value: 'actions',
+  },
+  {
+    label: 'Asiakirja',
+    value: 'record',
+  },
+  {
+    label: 'Kaikki asiakirjat',
+    value: 'records',
+  },
+];
 export const BULK_UPDATE_SEARCH_UNEDITABLE_FUNCTION_ATTRIBUTES = [
   { label: 'Koodi', value: 'code' },
-  { label: 'Tila', value: 'function_state' }
+  { label: 'Tila', value: 'function_state' },
 ];
 export const BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES = [
   { label: 'Voimassaolo alkaa', value: 'valid_from' },
-  { label: 'Voimassaolo päättyy', value: 'valid_to' }
+  { label: 'Voimassaolo päättyy', value: 'valid_to' },
 ];
 export const BULK_UPDATE_SEARCH_COMPARISON = [
   { label: 'sama kuin', value: true },
-  { label: 'eri kuin', value: false }
+  { label: 'eri kuin', value: false },
 ];
 export const BULK_UPDATE_SEARCH_TERM_DEFAULT = {
   attribute: '',
   equals: true,
   target: 'function',
-  value: ''
+  value: '',
 };
 
 export const BULK_UPDATE_PACKAGE_APPROVE_OPTIONS = [
   { label: 'Odottaa', value: false },
-  { label: 'Hyväksytty', value: true }
+  { label: 'Hyväksytty', value: true },
 ];
 
 export const FACET_ATTRIBUTE_SIZE = 3;
 
-export const FACETED_SEARCH_DEFAULT_ATTRIBUTES = [{
-  key: 'name',
-  name: 'Nimi',
-  type: TYPE_CLASSIFICATION
-}, {
-  key: 'description',
-  name: 'Kuvaus',
-  type: TYPE_CLASSIFICATION
-}, {
-  key: 'description_internal',
-  name: 'Sisäinen kuvaus',
-  type: TYPE_CLASSIFICATION
-}, {
-  key: 'related_classification',
-  name: 'Liittyvä tehtäväluokka',
-  type: TYPE_CLASSIFICATION
-}, {
-  key: 'additional_information',
-  name: 'Lisätiedot',
-  type: TYPE_CLASSIFICATION
-}, {
-  key: 'function_state',
-  name: 'Tila',
-  type: TYPE_FUNCTION
-}, {
-  key: 'function_valid_from',
-  name: 'Voimassaolo alkaa',
-  type: TYPE_FUNCTION
-}, {
-  key: 'function_valid_to',
-  name: 'Voimassaolo päättyy',
-  type: TYPE_FUNCTION
-}];
+export const FACETED_SEARCH_DEFAULT_ATTRIBUTES = [
+  {
+    key: 'name',
+    name: 'Nimi',
+    type: TYPE_CLASSIFICATION,
+  },
+  {
+    key: 'description',
+    name: 'Kuvaus',
+    type: TYPE_CLASSIFICATION,
+  },
+  {
+    key: 'description_internal',
+    name: 'Sisäinen kuvaus',
+    type: TYPE_CLASSIFICATION,
+  },
+  {
+    key: 'related_classification',
+    name: 'Liittyvä tehtäväluokka',
+    type: TYPE_CLASSIFICATION,
+  },
+  {
+    key: 'additional_information',
+    name: 'Lisätiedot',
+    type: TYPE_CLASSIFICATION,
+  },
+  {
+    key: 'function_state',
+    name: 'Tila',
+    type: TYPE_FUNCTION,
+  },
+  {
+    key: 'function_valid_from',
+    name: 'Voimassaolo alkaa',
+    type: TYPE_FUNCTION,
+  },
+  {
+    key: 'function_valid_to',
+    name: 'Voimassaolo päättyy',
+    type: TYPE_FUNCTION,
+  },
+];
 
 const BUTTON_PRIMARY = 'btn-primary';
 
-export const DROPDOWN_ITEMS = [{
-  text: undefined,
-  icon: 'fa-file-lines',
-  style: BUTTON_PRIMARY,
-  action: undefined,
-},
-{
-  text: undefined,
-  icon: 'fa-pencil',
-  style: BUTTON_PRIMARY,
-  action: undefined,
-},
-{
-  text: undefined,
-  icon: 'fa-table-list',
-  style: BUTTON_PRIMARY,
-  action: undefined,
-},
-{
-  text: 'Tuo asiakirjoja',
-  icon: 'fa-download',
-  style: BUTTON_PRIMARY,
-  action: undefined,
-},
-{
-  text: 'Poista toimenpide',
-  icon: 'fa-trash',
-  style: 'btn-delete',
-  action: undefined,
-},]
+export const DROPDOWN_ITEMS = [
+  {
+    text: undefined,
+    icon: 'fa-file-lines',
+    style: BUTTON_PRIMARY,
+    action: undefined,
+  },
+  {
+    text: undefined,
+    icon: 'fa-pencil',
+    style: BUTTON_PRIMARY,
+    action: undefined,
+  },
+  {
+    text: undefined,
+    icon: 'fa-table-list',
+    style: BUTTON_PRIMARY,
+    action: undefined,
+  },
+  {
+    text: 'Tuo asiakirjoja',
+    icon: 'fa-download',
+    style: BUTTON_PRIMARY,
+    action: undefined,
+  },
+  {
+    text: 'Poista toimenpide',
+    icon: 'fa-trash',
+    style: 'btn-delete',
+    action: undefined,
+  },
+];

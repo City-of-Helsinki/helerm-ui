@@ -1,10 +1,5 @@
 import { validateTOS, validateTOSWarnings } from '../validators';
-import {
-  attributeRules,
-  validTOS,
-  errorsAndWarningsTOS,
-  createTOS
-} from '../__mocks__/mockHelpers';
+import { attributeRules, validTOS, errorsAndWarningsTOS, createTOS } from '../__mocks__/mockHelpers';
 
 // Single-use test helpers - specific to this test file only
 const createTOSMissingSSN = () => {
@@ -21,7 +16,7 @@ const createTOSMissingSSN = () => {
 
     return {
       ...tos,
-      attributes: filteredAttributes
+      attributes: filteredAttributes,
     };
   }
 
@@ -35,8 +30,8 @@ const createTOSWithUnallowedPublicityClass = () => {
       ...tos,
       attributes: {
         ...tos.attributes,
-        PublicityClass: 'unallowed-publicity-class'
-      }
+        PublicityClass: 'unallowed-publicity-class',
+      },
     };
   }
   return tos;
@@ -50,9 +45,10 @@ const SHOULD_RETURN_ARRAY_STRING = 'Should return an array';
 const SHOULD_HAVE_ONE_ERROR_STRING = 'Should have one error';
 
 describe('(TOS validation)', () => {
-  const shouldReturnArray = (items) => it(SHOULD_RETURN_ARRAY_STRING, () => {
-    expect(Array.isArray(items)).toEqual(true);
-  })
+  const shouldReturnArray = (items) =>
+    it(SHOULD_RETURN_ARRAY_STRING, () => {
+      expect(Array.isArray(items)).toEqual(true);
+    });
 
   describe('(TOS validation errors) Error validation', () => {
     describe('Valid TOS', () => {
@@ -95,10 +91,10 @@ describe('(TOS validation)', () => {
           ...validTOS,
           attributes: {
             ...validTOS.attributes,
-            InformationSystem: ['Ahjo', 'Arvojoukon ulkopuolinen järjestelmä']
-          }
+            InformationSystem: ['Ahjo', 'Arvojoukon ulkopuolinen järjestelmä'],
+          },
         },
-        attributeRules
+        attributeRules,
       );
 
       shouldReturnArray(errors);
@@ -115,10 +111,10 @@ describe('(TOS validation)', () => {
           attributes: {
             ...validTOS.attributes,
             RetentionPeriod: '-1',
-            RetentionPeriodStart: 'Asian lopullinen ratkaisu'
-          }
+            RetentionPeriodStart: 'Asian lopullinen ratkaisu',
+          },
         },
-        attributeRules
+        attributeRules,
       );
 
       shouldReturnArray(errors);
@@ -137,10 +133,10 @@ describe('(TOS validation)', () => {
           ...validTOS,
           attributes: {
             ...validTOS.attributes,
-            InformationSystem: 'Muu järjestelmä'
-          }
+            InformationSystem: 'Muu järjestelmä',
+          },
         },
-        attributeRules
+        attributeRules,
       );
 
       shouldReturnArray(errors);
@@ -168,10 +164,10 @@ describe('(TOS validation)', () => {
           ...validTOS,
           attributes: {
             ...validTOS.attributes,
-            InformationSystem: 'Muu järjestelmä'
-          }
+            InformationSystem: 'Muu järjestelmä',
+          },
         },
-        attributeRules
+        attributeRules,
       );
 
       shouldReturnArray(warnings);
@@ -186,10 +182,7 @@ describe('(TOS validation)', () => {
     });
 
     describe('PublicityClass has value outside of allowed values', () => {
-      const warnings = validateTOSWarnings(
-        unallowedPublicityClassTOS,
-        attributeRules
-      );
+      const warnings = validateTOSWarnings(unallowedPublicityClassTOS, attributeRules);
 
       shouldReturnArray(warnings);
 
@@ -216,10 +209,7 @@ describe('(TOS validation)', () => {
     });
 
     describe('(Warnings)', () => {
-      const warnings = validateTOSWarnings(
-        errorsAndWarningsTOS,
-        attributeRules
-      );
+      const warnings = validateTOSWarnings(errorsAndWarningsTOS, attributeRules);
       it('Should have 1 warning', () => {
         expect(warnings.length).toEqual(1);
       });

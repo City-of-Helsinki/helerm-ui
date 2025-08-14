@@ -39,7 +39,7 @@ import {
   setRecordVisibility,
   executeImport,
   receiveTemplate,
-  executeOrderChange
+  executeOrderChange,
 } from '../tos-toolkit';
 import tosReducer, { initialState } from '../tos-toolkit/main';
 import api from '../../../utils/api';
@@ -59,10 +59,10 @@ const mockPhase = {
   actions: ['test-action-001'],
   attributes: {
     TypeSpecifier: 'Test Phase',
-    PhaseType: 'Test Type'
+    PhaseType: 'Test Type',
   },
   is_attributes_open: false,
-  is_open: true
+  is_open: true,
 };
 
 const mockAction = {
@@ -71,9 +71,9 @@ const mockAction = {
   records: ['test-record-001'],
   attributes: {
     TypeSpecifier: 'Test Action',
-    ActionType: 'Test Type'
+    ActionType: 'Test Type',
   },
-  is_open: true
+  is_open: true,
 };
 
 const mockRecord = {
@@ -81,9 +81,9 @@ const mockRecord = {
   action: 'test-action-001',
   attributes: {
     TypeSpecifier: 'Test Record',
-    RecordType: 'Test Type'
+    RecordType: 'Test Type',
   },
-  is_open: false
+  is_open: false,
 };
 
 const createMockState = (overrides = {}) => ({
@@ -99,10 +99,10 @@ const createMockState = (overrides = {}) => ({
   is_classification_open: false,
   is_open: false,
   is_version_open: false,
-  ...overrides
+  ...overrides,
 });
 
-const hasActionType = (actions, actionType) => actions.some(action => action.type === actionType);
+const hasActionType = (actions, actionType) => actions.some((action) => action.type === actionType);
 
 const testSelectedTOSSelector = (state) => state;
 const testIsFetchingSelector = (state) => state.isFetching;
@@ -114,13 +114,16 @@ const testEditAttribute = (entityType, entityId, attributeName, attributeValue) 
   const actionCreators = {
     action: editActionAttribute,
     phase: editPhaseAttribute,
-    record: editRecordAttribute
+    record: editRecordAttribute,
   };
-  const result = testReducerAction(actionCreators[entityType]({
-    [`${entityType}Id`]: entityId,
-    attributeName,
-    attributeValue
-  }), state);
+  const result = testReducerAction(
+    actionCreators[entityType]({
+      [`${entityType}Id`]: entityId,
+      attributeName,
+      attributeValue,
+    }),
+    state,
+  );
   return result[`${entityType}s`][entityId].attributes[attributeName];
 };
 
@@ -140,10 +143,12 @@ const testWithCustomState = (action, stateOverrides = {}) => {
 };
 
 const testEntityVisibility = (action, entityType, entityId, visibilityProperty, expectedValue) => {
-  const result = testReducerAction(action({
-    [`${entityType}Id`]: entityId,
-    visibility: expectedValue
-  }));
+  const result = testReducerAction(
+    action({
+      [`${entityType}Id`]: entityId,
+      visibility: expectedValue,
+    }),
+  );
   return result[`${entityType}s`][entityId][visibilityProperty];
 };
 
@@ -169,7 +174,7 @@ const setupApiMockError = (method, error) => {
   return () => vi.spyOn(api, method).mockRejectedValueOnce(error);
 };
 
-const noOpMockSetup = () => { };
+const noOpMockSetup = () => {};
 
 const testAddEntity = (addAction, newEntity, entityType) => {
   const result = testReducerAction(addAction(newEntity));
@@ -179,14 +184,14 @@ const testAddEntity = (addAction, newEntity, entityType) => {
 
 const testEditEntityAttribute = (editAction, entityId, attributeName, attributeValue, entityType) => {
   const actionParams = {
-    [`${entityType}Id`]: entityId
+    [`${entityType}Id`]: entityId,
   };
 
   if (entityType === 'phase') {
     actionParams.editedAttributes = { [attributeName]: attributeValue };
   } else {
     actionParams[`edited${entityType.charAt(0).toUpperCase() + entityType.slice(1)}`] = {
-      attributes: { [attributeName]: attributeValue }
+      attributes: { [attributeName]: attributeValue },
     };
   }
 
@@ -203,10 +208,7 @@ const testRemoveEntity = (removeAction, removeParams, entityType, entityId) => {
 describe('TOS Reducer', () => {
   it('should fetch TOS', async () => {
     const mockResponse = { ok: true, json: createJsonResponse(validTOS) };
-    const actions = await testAsyncThunk(
-      fetchTOSThunk({ tosId: validTOS.id }),
-      setupApiMock('get', mockResponse)
-    );
+    const actions = await testAsyncThunk(fetchTOSThunk({ tosId: validTOS.id }), setupApiMock('get', mockResponse));
 
     expectAsyncActions(actions, 'selectedTOS/fetchTOS');
   });
@@ -214,7 +216,7 @@ describe('TOS Reducer', () => {
   it('should handle fetch TOS error', async () => {
     const actions = await testAsyncThunk(
       fetchTOSThunk({ tosId: validTOS.id }),
-      setupApiMockError('get', new Error('ERROR'))
+      setupApiMockError('get', new Error('ERROR')),
     );
 
     expectAsyncActions(actions, 'selectedTOS/fetchTOS', 'rejected');
@@ -222,21 +224,17 @@ describe('TOS Reducer', () => {
 
   it('should save draft', async () => {
     const mockResponse = { ok: true, json: createJsonResponse(validTOS) };
-    const actions = await testAsyncThunk(
-      saveDraftThunk(),
-      setupApiMock('put', mockResponse),
-      { selectedTOS: validTOS }
-    );
+    const actions = await testAsyncThunk(saveDraftThunk(), setupApiMock('put', mockResponse), {
+      selectedTOS: validTOS,
+    });
 
     expectAsyncActions(actions, 'selectedTOS/saveDraft');
   });
 
   it('should handle save draft error', async () => {
-    const actions = await testAsyncThunk(
-      saveDraftThunk(),
-      setupApiMockError('put', new Error('Error')),
-      { selectedTOS: validTOS }
-    );
+    const actions = await testAsyncThunk(saveDraftThunk(), setupApiMockError('put', new Error('Error')), {
+      selectedTOS: validTOS,
+    });
 
     expectAsyncActions(actions, 'selectedTOS/saveDraft', 'rejected');
   });
@@ -249,11 +247,10 @@ describe('TOS Reducer', () => {
       vi.spyOn(api, 'get').mockResolvedValueOnce(mockGetResponse);
     };
 
-    const actions = await testAsyncThunk(
-      changeStatusThunk(WAITING_FOR_APPROVAL),
-      mockSetup,
-      { selectedTOS: validTOS, navigation: { includeRelated: false } }
-    );
+    const actions = await testAsyncThunk(changeStatusThunk(WAITING_FOR_APPROVAL), mockSetup, {
+      selectedTOS: validTOS,
+      navigation: { includeRelated: false },
+    });
 
     expectAsyncActions(actions, 'selectedTOS/changeStatus');
   });
@@ -262,12 +259,12 @@ describe('TOS Reducer', () => {
     const actions = await testAsyncThunk(
       changeStatusThunk(WAITING_FOR_APPROVAL),
       setupApiMockError('patch', new Error('ERROR')),
-      { selectedTOS: validTOS, navigation: { includeRelated: false } }
+      { selectedTOS: validTOS, navigation: { includeRelated: false } },
     );
 
     expectAsyncActions(actions, 'selectedTOS/changeStatus', 'rejected');
 
-    const rejectedAction = actions.find(action => action.type === 'selectedTOS/changeStatus/rejected');
+    const rejectedAction = actions.find((action) => action.type === 'selectedTOS/changeStatus/rejected');
     expect(rejectedAction.payload).toBe('ERROR');
     expect(rejectedAction.error.message).toBe('Rejected');
   });
@@ -289,9 +286,9 @@ describe('TOS Reducer', () => {
           attributes: {
             TypeSpecifier: typeSpecifier,
             ActionType: actionType,
-            ...actionAttributes
+            ...actionAttributes,
           },
-          is_open: false
+          is_open: false,
         });
       });
     });
@@ -302,7 +299,7 @@ describe('TOS Reducer', () => {
           typeSpecifier: 'Test Phase',
           phaseType: 'Phase Type',
           phaseAttributes: { PersonalData: 'Yes' },
-          parent: 'test-function-001'
+          parent: 'test-function-001',
         };
 
         const newPhase = createNewPhase(phaseData);
@@ -314,10 +311,10 @@ describe('TOS Reducer', () => {
           attributes: {
             TypeSpecifier: phaseData.typeSpecifier,
             PhaseType: phaseData.phaseType,
-            ...phaseData.phaseAttributes
+            ...phaseData.phaseAttributes,
           },
           is_attributes_open: false,
-          is_open: false
+          is_open: false,
         });
       });
     });
@@ -328,9 +325,9 @@ describe('TOS Reducer', () => {
           attributes: {
             TypeSpecifier: { checked: true, value: 'Test Record' },
             RecordType: { checked: true, value: 'Document' },
-            PersonalData: { checked: false, value: 'No' }
+            PersonalData: { checked: false, value: 'No' },
           },
-          actionId: 'test-action-001'
+          actionId: 'test-action-001',
         };
 
         const result = createNewRecord(recordData);
@@ -343,10 +340,10 @@ describe('TOS Reducer', () => {
             action: recordData.actionId,
             attributes: {
               TypeSpecifier: 'Test Record',
-              RecordType: 'Document'
+              RecordType: 'Document',
             },
-            is_open: false
-          }
+            is_open: false,
+          },
         });
       });
     });
@@ -372,14 +369,14 @@ describe('TOS Reducer', () => {
       it('should update metadata attributes', () => {
         const metaData = {
           TypeSpecifier: { checked: true, value: 'Updated TOS' },
-          Description: { checked: true, value: 'Updated description' }
+          Description: { checked: true, value: 'Updated description' },
         };
 
         const result = testReducerAction(editMetaData(metaData));
 
         expect(result.attributes).toEqual({
           TypeSpecifier: 'Updated TOS',
-          Description: 'Updated description'
+          Description: 'Updated description',
         });
       });
     });
@@ -429,7 +426,7 @@ describe('TOS Reducer', () => {
           phases: { 'new-phase': mockPhase },
           records: { 'new-record': mockRecord },
           basicVisibility: true,
-          metaDataVisibility: true
+          metaDataVisibility: true,
         };
 
         const result = testReducerAction(updateTosVisibility(visibilityData));
@@ -461,7 +458,7 @@ describe('TOS Reducer', () => {
           'test-action-001',
           'TypeSpecifier',
           'Updated Action',
-          'action'
+          'action',
         );
         expect(result).toBe('Updated Action');
       });
@@ -480,7 +477,7 @@ describe('TOS Reducer', () => {
           removeAction,
           { actionToRemove: 'test-action-001', phaseId: 'test-phase-001' },
           'action',
-          'test-action-001'
+          'test-action-001',
         );
 
         expect(result.records['test-record-001']).toBeUndefined();
@@ -506,13 +503,7 @@ describe('TOS Reducer', () => {
 
     describe('editPhase', () => {
       it('should edit existing phase', () => {
-        const result = testEditEntityAttribute(
-          editPhase,
-          'test-phase-001',
-          'TypeSpecifier',
-          'Updated Phase',
-          'phase'
-        );
+        const result = testEditEntityAttribute(editPhase, 'test-phase-001', 'TypeSpecifier', 'Updated Phase', 'phase');
         expect(result).toBe('Updated Phase');
       });
     });
@@ -542,7 +533,13 @@ describe('TOS Reducer', () => {
 
     describe('setPhaseAttributesVisibility', () => {
       it('should set phase attributes visibility', () => {
-        const result = testEntityVisibility(setPhaseAttributesVisibility, 'phase', 'test-phase-001', 'is_attributes_open', true);
+        const result = testEntityVisibility(
+          setPhaseAttributesVisibility,
+          'phase',
+          'test-phase-001',
+          'is_attributes_open',
+          true,
+        );
         expect(result).toBe(true);
       });
     });
@@ -559,8 +556,8 @@ describe('TOS Reducer', () => {
         const result = testWithCustomState(setPhasesVisibility(true), {
           phases: {
             'phase-1': { ...mockPhase, id: 'phase-1', is_open: false },
-            'phase-2': { ...mockPhase, id: 'phase-2', is_open: false }
-          }
+            'phase-2': { ...mockPhase, id: 'phase-2', is_open: false },
+          },
         });
 
         expect(result.phases['phase-1'].is_open).toBe(true);
@@ -575,7 +572,7 @@ describe('TOS Reducer', () => {
         const recordData = {
           actionId: 'test-action-001',
           recordId: 'new-record-001',
-          newRecord: { ...mockRecord, id: 'new-record-001' }
+          newRecord: { ...mockRecord, id: 'new-record-001' },
         };
 
         const result = testReducerAction(addRecord(recordData));
@@ -592,7 +589,7 @@ describe('TOS Reducer', () => {
           'test-record-001',
           'TypeSpecifier',
           'Updated Record',
-          'record'
+          'record',
         );
         expect(result).toBe('Updated Record');
       });
@@ -611,7 +608,7 @@ describe('TOS Reducer', () => {
           removeRecord,
           { recordId: 'test-record-001', actionId: 'test-action-001' },
           'record',
-          'test-record-001'
+          'test-record-001',
         );
 
         expect(result.actions['test-action-001'].records).not.toContain('test-record-001');
@@ -632,7 +629,7 @@ describe('TOS Reducer', () => {
         const importData = {
           importPhases: { 'imported-phase': { ...mockPhase, id: 'imported-phase' } },
           importActions: { 'imported-action': { ...mockAction, id: 'imported-action' } },
-          importRecords: { 'imported-record': { ...mockRecord, id: 'imported-record' } }
+          importRecords: { 'imported-record': { ...mockRecord, id: 'imported-record' } },
         };
 
         const result = testReducerAction(executeImport(importData));
@@ -648,18 +645,24 @@ describe('TOS Reducer', () => {
         const template = {
           id: 'template-tos-001',
           attributes: { TypeSpecifier: 'Template TOS' },
-          phases: [{
-            id: 'template-phase-001',
-            attributes: { TypeSpecifier: 'Template Phase' },
-            actions: [{
-              id: 'template-action-001',
-              attributes: { TypeSpecifier: 'Template Action' },
-              records: [{
-                id: 'template-record-001',
-                attributes: { TypeSpecifier: 'Template Record' }
-              }]
-            }]
-          }]
+          phases: [
+            {
+              id: 'template-phase-001',
+              attributes: { TypeSpecifier: 'Template Phase' },
+              actions: [
+                {
+                  id: 'template-action-001',
+                  attributes: { TypeSpecifier: 'Template Action' },
+                  records: [
+                    {
+                      id: 'template-record-001',
+                      attributes: { TypeSpecifier: 'Template Record' },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
         };
 
         const result = testReducerAction(receiveTemplate(template));
@@ -680,7 +683,7 @@ describe('TOS Reducer', () => {
           itemParent: null,
           parentLevel: 'tos',
           itemLevel: 'phases',
-          parentList: []
+          parentList: [],
         };
 
         const result = testReducerAction(executeOrderChange(orderData));
@@ -695,7 +698,7 @@ describe('TOS Reducer', () => {
           itemParent: 'test-phase-001',
           parentLevel: 'phases',
           itemLevel: 'actions',
-          parentList: ['action-1']
+          parentList: ['action-1'],
         };
 
         const result = testReducerAction(executeOrderChange(orderData));
@@ -714,7 +717,7 @@ describe('TOS Reducer', () => {
         const mockResponse = { ok: true, json: createJsonResponse(template) };
         const actions = await testAsyncThunk(
           cloneFromTemplateThunk({ endpoint: 'templates', id: 'template-001' }),
-          setupApiMock('get', mockResponse)
+          setupApiMock('get', mockResponse),
         );
 
         expectAsyncActions(actions, 'selectedTOS/cloneFromTemplate');
@@ -724,7 +727,7 @@ describe('TOS Reducer', () => {
         const mockResponse = { ok: false, statusText: 'Not Found' };
         const actions = await testAsyncThunk(
           cloneFromTemplateThunk({ endpoint: 'templates', id: 'invalid' }),
-          setupApiMock('get', mockResponse)
+          setupApiMock('get', mockResponse),
         );
 
         expectAsyncActions(actions, 'selectedTOS/cloneFromTemplate', 'rejected');
@@ -737,10 +740,10 @@ describe('TOS Reducer', () => {
           importItemsThunk({
             newItem: 'test-phase-001',
             level: 'phase',
-            itemParent: null
+            itemParent: null,
           }),
           noOpMockSetup,
-          { selectedTOS: createMockState() }
+          { selectedTOS: createMockState() },
         );
 
         expectAsyncActions(actions, 'selectedTOS/importItems');
@@ -753,10 +756,10 @@ describe('TOS Reducer', () => {
           changeOrderThunk({
             newOrder: ['test-phase-001'],
             itemType: 'phase',
-            itemParent: null
+            itemParent: null,
           }),
           noOpMockSetup,
-          { selectedTOS: createMockState() }
+          { selectedTOS: createMockState() },
         );
 
         expectAsyncActions(actions, 'selectedTOS/changeOrder');

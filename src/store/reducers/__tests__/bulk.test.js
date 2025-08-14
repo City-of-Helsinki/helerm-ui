@@ -21,12 +21,12 @@ describe('Bulk reducer', () => {
       {
         type: 'bulk/fetchBulkUpdates/pending',
         payload: undefined,
-        meta: expect.anything()
+        meta: expect.anything(),
       },
       {
         type: 'bulk/fetchBulkUpdates/fulfilled',
         payload: [],
-        meta: expect.anything()
+        meta: expect.anything(),
       },
     ];
     const store = mockStore({});
@@ -44,15 +44,15 @@ describe('Bulk reducer', () => {
       {
         type: 'bulk/fetchBulkUpdates/pending',
         payload: undefined,
-        meta: expect.anything()
+        meta: expect.anything(),
       },
       {
         type: 'bulk/fetchBulkUpdates/rejected',
         payload: 'ERROR',
         error: {
-          message: 'Rejected'
+          message: 'Rejected',
         },
-        meta: expect.anything()
+        meta: expect.anything(),
       },
     ];
     const store = mockStore({});
@@ -71,12 +71,12 @@ describe('Bulk reducer', () => {
       {
         type: 'bulk/fetchBulkUpdate/pending',
         payload: undefined,
-        meta: expect.anything()
+        meta: expect.anything(),
       },
       {
         type: 'bulk/fetchBulkUpdate/fulfilled',
         payload: {},
-        meta: expect.anything()
+        meta: expect.anything(),
       },
     ];
     const store = mockStore({});
@@ -95,12 +95,12 @@ describe('Bulk reducer', () => {
       {
         type: 'bulk/approveBulkUpdate/pending',
         payload: undefined,
-        meta: expect.anything()
+        meta: expect.anything(),
       },
       {
         type: 'bulk/approveBulkUpdate/fulfilled',
         payload: true,
-        meta: expect.anything()
+        meta: expect.anything(),
       },
     ];
     const store = mockStore({});
@@ -119,15 +119,15 @@ describe('Bulk reducer', () => {
       {
         type: 'bulk/approveBulkUpdate/pending',
         payload: undefined,
-        meta: expect.anything()
+        meta: expect.anything(),
       },
       {
         type: 'bulk/approveBulkUpdate/rejected',
-        payload: "ERROR",
+        payload: 'ERROR',
         error: {
-          message: 'Rejected'
+          message: 'Rejected',
         },
-        meta: expect.anything()
+        meta: expect.anything(),
       },
     ];
     const store = mockStore({});
@@ -146,12 +146,12 @@ describe('Bulk reducer', () => {
       {
         type: 'bulk/deleteBulkUpdate/pending',
         payload: undefined,
-        meta: expect.anything()
+        meta: expect.anything(),
       },
       {
         type: 'bulk/deleteBulkUpdate/fulfilled',
         payload: true,
-        meta: expect.anything()
+        meta: expect.anything(),
       },
     ];
     const store = mockStore({});
@@ -170,15 +170,15 @@ describe('Bulk reducer', () => {
       {
         type: 'bulk/deleteBulkUpdate/pending',
         payload: undefined,
-        meta: expect.anything()
+        meta: expect.anything(),
       },
       {
         type: 'bulk/deleteBulkUpdate/rejected',
-        payload: "ERROR",
+        payload: 'ERROR',
         error: {
-          message: 'Rejected'
+          message: 'Rejected',
         },
-        meta: expect.anything()
+        meta: expect.anything(),
       },
     ];
     const store = mockStore({});
@@ -197,12 +197,12 @@ describe('Bulk reducer', () => {
       {
         type: 'bulk/saveBulkUpdate/pending',
         payload: undefined,
-        meta: expect.anything()
+        meta: expect.anything(),
       },
       {
         type: 'bulk/saveBulkUpdate/fulfilled',
         payload: {},
-        meta: expect.anything()
+        meta: expect.anything(),
       },
     ];
     const store = mockStore({});
@@ -221,15 +221,15 @@ describe('Bulk reducer', () => {
       {
         type: 'bulk/saveBulkUpdate/pending',
         payload: undefined,
-        meta: expect.anything()
+        meta: expect.anything(),
       },
       {
         type: 'bulk/saveBulkUpdate/rejected',
-        payload: "ERROR",
+        payload: 'ERROR',
         error: {
-          message: 'Rejected'
+          message: 'Rejected',
         },
-        meta: expect.anything()
+        meta: expect.anything(),
       },
     ];
     const store = mockStore({});
@@ -249,12 +249,12 @@ describe('Bulk reducer', () => {
       {
         type: 'bulk/updateBulkUpdate/pending',
         payload: undefined,
-        meta: expect.anything()
+        meta: expect.anything(),
       },
       {
         type: 'bulk/updateBulkUpdate/fulfilled',
         payload: {},
-        meta: expect.anything()
+        meta: expect.anything(),
       },
     ];
     const store = mockStore({});
@@ -274,15 +274,15 @@ describe('Bulk reducer', () => {
       {
         type: 'bulk/updateBulkUpdate/pending',
         payload: undefined,
-        meta: expect.anything()
+        meta: expect.anything(),
       },
       {
         type: 'bulk/updateBulkUpdate/rejected',
-        payload: "ERROR",
+        payload: 'ERROR',
         error: {
-          message: 'Rejected'
+          message: 'Rejected',
         },
-        meta: expect.anything()
+        meta: expect.anything(),
       },
     ];
     const store = mockStore({});
@@ -298,7 +298,7 @@ describe('Bulk reducer', () => {
   it('should create an action to clear selected bulk update', () => {
     expect(clearSelectedBulkUpdate()).toEqual({
       payload: undefined,
-      type: "bulk/clearSelectedBulkUpdate",
+      type: 'bulk/clearSelectedBulkUpdate',
     });
   });
 });

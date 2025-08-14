@@ -43,20 +43,20 @@ const SearchResults = ({ hits, onSelect, onSelectAll, searchResults }) => {
           </div>
           <div>
             <h5>Käsittelyprosessin kuvaus: {searchResults.length}</h5>
-            {hits.phases > 0 && <h5>Käsittelyvaihe: {hits.phases}</h5>}
-            {hits.actions > 0 && <h5>Toimenpide: {hits.actions}</h5>}
-            {hits.records > 0 && <h5>Asiakirja: {hits.records}</h5>}
+            {hits.phases > 0 && <h5 key='phases'>Käsittelyvaihe: {hits.phases}</h5>}
+            {hits.actions > 0 && <h5 key='actions'>Toimenpide: {hits.actions}</h5>}
+            {hits.records > 0 && <h5 key='records'>Asiakirja: {hits.records}</h5>}
           </div>
         </div>
         <div className='col-xs-3'>
-          {drafts > 0 && <h5>Luonnoksia: {drafts}</h5>}
-          {sentForReview > 0 && <h5>Tarkastettavana: {sentForReview}</h5>}
-          {waitingForApproval > 0 && <h5>Hyväksyttävänä: {waitingForApproval}</h5>}
-          {approved > 0 && <h5>Hyväksyttyjä: {approved}</h5>}
+          {drafts > 0 && <h5 key='drafts'>Luonnoksia: {drafts}</h5>}
+          {sentForReview > 0 && <h5 key='sentForReview'>Tarkastettavana: {sentForReview}</h5>}
+          {waitingForApproval > 0 && <h5 key='waitingForApproval'>Hyväksyttävänä: {waitingForApproval}</h5>}
+          {approved > 0 && <h5 key='approved'>Hyväksyttyjä: {approved}</h5>}
         </div>
       </div>
       {searchResults.map((result, index) => (
-        <div className='row search-result-item' key={result.item.function}>
+        <div className='row search-result-item' key={result.item?.function || `fallback-${index}`}>
           <div className='col-xs-1'>
             <div
               className={classnames('search-result-item-check', {
@@ -74,10 +74,10 @@ const SearchResults = ({ hits, onSelect, onSelectAll, searchResults }) => {
               <i className='fa-solid fa-check' />
             </div>
           </div>
-          <div className='col-xs-8'>
-            <span className='search-result-item-path'>{result.item.path ? result.item.path.join(' > ') : ''}</span>
-            <h4 className='search-result-item-name'>{result.item.name}</h4>
-            {result.paths.map((path) => {
+          <div className='col-xs-8 search-result-item-content'>
+            {result.item.path && <h4>{result.item.path.join(' > ')}</h4>}
+            <h3>{result.item.name}</h3>
+            {result.paths.map((path, pathIndex) => {
               // stuff of nightmares, but we need to combine attribute
               // value to possibly existing attribute name for the UI
               const regex = new RegExp(/(.{1,100}):(.{1,100})/);
@@ -96,7 +96,7 @@ const SearchResults = ({ hits, onSelect, onSelectAll, searchResults }) => {
                   .join(', ');
                 pathName = `${captured[1].trim()}: ${mappedValue}`;
               }
-              return <h4 key={`${result.item.function}-${pathName}`}>{pathName}</h4>;
+              return <h4 key={`${index}-${pathIndex}-${pathName}`}>{pathName}</h4>;
             })}
           </div>
           <div className='col-xs-3 search-result-item-state'>

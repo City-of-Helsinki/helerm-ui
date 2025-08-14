@@ -36,9 +36,7 @@ describe('MatomoTracker', () => {
   });
 
   it('should throw error if urlBase missing', () => {
-    expect(
-      () => new MatomoTracker({ siteId: 'test123' })
-    ).toThrowError();
+    expect(() => new MatomoTracker({ siteId: 'test123' })).toThrowError();
   });
 
   it('should throw error if siteId missing', () => {
@@ -46,7 +44,7 @@ describe('MatomoTracker', () => {
       () =>
         new MatomoTracker({
           urlBase: 'http://www.test.fi',
-        })
+        }),
     ).toThrowError();
   });
 
@@ -66,7 +64,7 @@ describe('MatomoTracker', () => {
       ['setSiteId', 'test123'],
       ['enableLinkTracking', true],
       ['setCustomUrl', window.location.href],
-      ['setDocumentTitle', ""],
+      ['setDocumentTitle', ''],
       [TRACK_TYPES.TRACK_VIEW],
     ]);
   });

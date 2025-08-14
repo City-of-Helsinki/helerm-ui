@@ -1,19 +1,15 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
 
 import ErrorPage from '../ErrorPage';
 import renderWithProviders from '../../../utils/renderWithProviders';
 
-const renderComponent = (propOverrides) => {
-  const history = createBrowserHistory();
-
+const renderComponent = (props = {}) => {
   return renderWithProviders(
     <BrowserRouter>
-      <ErrorPage {...propOverrides} />
+      <ErrorPage {...props} />
     </BrowserRouter>,
-    { history },
   );
 };
 

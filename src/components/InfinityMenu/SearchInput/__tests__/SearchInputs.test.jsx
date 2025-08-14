@@ -1,4 +1,3 @@
-import { createBrowserHistory } from 'history';
 import { BrowserRouter } from 'react-router-dom';
 import { screen } from '@testing-library/react';
 import React from 'react';
@@ -16,8 +15,6 @@ const baseMocks = {
 };
 
 const renderComponent = (mocks = baseMocks) => {
-  const history = createBrowserHistory();
-
   return renderWithProviders(
     <BrowserRouter>
       <SearchInputs
@@ -31,7 +28,6 @@ const renderComponent = (mocks = baseMocks) => {
         onFilterConditionChange={mocks.onFilterConditionChange}
       />
     </BrowserRouter>,
-    { history },
   );
 };
 

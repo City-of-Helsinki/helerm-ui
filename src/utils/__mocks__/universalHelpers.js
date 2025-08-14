@@ -19,7 +19,7 @@ export const createMockComponentProps = (type = 'component', overrides = {}) => 
     isLoading: false,
     attributes: {},
     children: [],
-    ...overrides
+    ...overrides,
   };
 
   return baseProps;
@@ -32,9 +32,9 @@ export const createMockPhase = (overrides = {}) => {
     actions: [],
     attributes: {
       PhaseType: 'Valmistelu/Käsittely',
-      TypeSpecifier: 'Mock Phase'
+      TypeSpecifier: 'Mock Phase',
     },
-    ...overrides
+    ...overrides,
   };
 };
 
@@ -46,9 +46,9 @@ export const createMockAction = (overrides = {}) => {
     records: [],
     attributes: {
       ActionType: 'Selvitys',
-      TypeSpecifier: 'Mock Action'
+      TypeSpecifier: 'Mock Action',
     },
-    ...overrides
+    ...overrides,
   };
 };
 
@@ -57,10 +57,11 @@ export const createRecord = (overrides = {}) => {
     id: generateMockId('record'),
     name: 'Mock Record',
     action: null,
+    is_open: true, // Default to open state for testing
     attributes: {
       TypeSpecifier: 'Mock Record',
-      RecordType: 'arviointi'
+      RecordType: 'arviointi',
     },
-    ...overrides
+    ...overrides,
   };
 };

@@ -18,7 +18,7 @@ export const transformFunctionToTOS = (func) => {
     modified_at: func.modified_at,
     modified_by: func.modified_by,
     valid_from: func.valid_from,
-    valid_to: func.valid_to
+    valid_to: func.valid_to,
   };
 };
 
@@ -34,7 +34,7 @@ export const createTOS = () => {
     return {
       ...baseTOS,
       actions: {}, // Empty actions object
-      records: {}  // Empty records object
+      records: {}, // Empty records object
     };
   }
   return {};
@@ -64,23 +64,19 @@ export const errorsAndWarningsTOS = {
     // RetentionPeriodStart is missing - this should cause an error for conditional requirement
 
     // This should trigger the expected warning:
-    InformationSystem: ['Ahjo', 'Tietojärjestelmä'] // Second value should trigger warning
+    InformationSystem: ['Ahjo', 'Tietojärjestelmä'], // Second value should trigger warning
   },
   function_id: 'function-errors',
   name: 'Function with Errors',
   classification: {
-    id: 'classification-errors'
+    id: 'classification-errors',
   },
   parent: null,
   phases: {},
   actions: {},
   records: {},
-  phasesOrder: []
+  phasesOrder: [],
 };
-
-
-
-
 
 // Legacy named export for backward compatibility with existing tests
 export const validTOS = createTOS();
@@ -92,12 +88,12 @@ export const validTOSWithChildren = {
     {
       id: 'child-1',
       name: 'Child TOS 1',
-      attributes: createTOS().attributes
+      attributes: createTOS().attributes,
     },
     {
       id: 'child-2',
       name: 'Child TOS 2',
-      attributes: createTOS().attributes
-    }
-  ]
+      attributes: createTOS().attributes,
+    },
+  ],
 };

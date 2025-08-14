@@ -40,7 +40,6 @@
     "hds-core": "^3.12.0",
     "hds-design-tokens": "^3.12.0",
     "hds-react": "^3.12.0",
-    "history": "^4.10.1",
     "immutability-helper": "^3.1.1",
     "isomorphic-fetch": "^3.0.0",
     "lodash": "^4.17.21",
@@ -60,7 +59,6 @@
     "react-redux-toastr": "^7.6.5",
     "react-router-dom": "^6.26.2",
     "react-select": "^5.8.1",
-    "react-sticky-el": "^2.0.5",
     "redux-thunk": "^2.3.0",
     "remark-gfm": "^1.0.0",
     "sass": "^1.79.4",
@@ -112,6 +110,7 @@
     "@types/node": "^22.14.0",
     "@vitest/coverage-istanbul": "^3.0.9",
     "eslint": "^9.23.0",
+    "history": "^5.3.0",
     "husky": "^8.0.3",
     "jsdom": "^26.1.0",
     "redux-mock-store": "^1.5.4"

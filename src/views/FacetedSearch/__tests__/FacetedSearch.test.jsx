@@ -2,7 +2,7 @@ import React from 'react';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { BrowserRouter } from 'react-router-dom';
-import { screen } from '@testing-library/react';
+import { screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import FacetedSearch from '../FacetedSearch';
@@ -213,6 +213,33 @@ describe('<FacetedSearch />', () => {
     await user.click(resultItem);
 
     expect(document.querySelector('.faceted-search-preview')).toBeInTheDocument();
+
+    // Get the sticky element and mock its position to trigger sticky behavior
+    const stickyElement = document.querySelector('.faceted-search-preview').children[0].children[0];
+
+    // Mock getBoundingClientRect to simulate the element being above the scroll position
+    const mockGetBoundingClientRect = vi.fn();
+    mockGetBoundingClientRect.mockReturnValue({
+      top: 100,
+      left: 50,
+      width: 300,
+      height: 60,
+    });
+
+    if (stickyElement) {
+      stickyElement.getBoundingClientRect = mockGetBoundingClientRect;
+      stickyElement.children[0].getBoundingClientRect = mockGetBoundingClientRect;
+
+      // Simulate scroll to trigger sticky behavior
+      await act(async () => {
+        Object.defineProperty(window, 'scrollY', { value: 200 });
+        window.dispatchEvent(new Event('scroll'));
+
+        // Wait for the sticky state to update
+        await new Promise((resolve) => setTimeout(resolve, 10));
+      });
+    }
+
     expect(document.querySelector('.faceted-search-preview-sticky')).toBeInTheDocument();
   });
 

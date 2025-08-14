@@ -21,12 +21,12 @@ export const changeOrderThunk = createAsyncThunk(
     if (orderChangeData) {
       dispatch({
         type: 'selectedTOS/executeOrderChange',
-        payload: orderChangeData
+        payload: orderChangeData,
       });
     }
 
     return orderChangeData;
-  }
+  },
 );
 
 export const prepareOrderChange = (newOrder, itemType, itemParent, currentState) => {
@@ -52,7 +52,7 @@ export const prepareOrderChange = (newOrder, itemType, itemParent, currentState)
   }
 
   const reorderedList = [];
-  affectedItems.forEach(item => {
+  affectedItems.forEach((item) => {
     reorderedList.push(currentState.selectedTOS[itemLevel][item]);
   });
 
@@ -64,9 +64,9 @@ export const prepareOrderChange = (newOrder, itemType, itemParent, currentState)
   });
 
   let itemList = { ...currentState.selectedTOS[itemLevel] };
-  Object.keys(itemList).forEach(key => {
+  Object.keys(itemList).forEach((key) => {
     if (Object.hasOwn(itemList, key)) {
-      reorderedList.forEach(item => {
+      reorderedList.forEach((item) => {
         if (itemList[key].id === item.id) {
           itemList[key] = item;
         }
@@ -74,14 +74,15 @@ export const prepareOrderChange = (newOrder, itemType, itemParent, currentState)
     }
   });
 
-  itemList = parentLevel === 'tos'
-    ? reorderedList.reduce((result, item) => {
-      const newResult = { ...result };
-      const key = item.id;
-      newResult[key] = item;
-      return newResult;
-    }, {})
-    : itemList;
+  itemList =
+    parentLevel === 'tos'
+      ? reorderedList.reduce((result, item) => {
+          const newResult = { ...result };
+          const key = item.id;
+          newResult[key] = item;
+          return newResult;
+        }, {})
+      : itemList;
 
   return { itemList, itemType, itemParent, parentLevel, itemLevel, parentList };
 };

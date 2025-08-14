@@ -8,7 +8,7 @@ export const createNewPhase = ({ typeSpecifier, phaseType, phaseAttributes, pare
   const attributes = {
     TypeSpecifier: typeSpecifier,
     PhaseType: phaseType,
-    ...phaseAttributes
+    ...phaseAttributes,
   };
 
   return {
@@ -17,7 +17,7 @@ export const createNewPhase = ({ typeSpecifier, phaseType, phaseAttributes, pare
     actions: [],
     attributes,
     is_attributes_open: false,
-    is_open: false
+    is_open: false,
   };
 };
 
@@ -28,9 +28,9 @@ export const addPhaseReducer = (state, action) => {
   return update(state, {
     phases: {
       [phaseId]: {
-        $set: newPhase
-      }
-    }
+        $set: newPhase,
+      },
+    },
   });
 };
 
@@ -41,10 +41,10 @@ export const editPhaseReducer = (state, action) => {
     phases: {
       [phaseId]: {
         attributes: {
-          $merge: editedAttributes
-        }
-      }
-    }
+          $merge: editedAttributes,
+        },
+      },
+    },
   });
 };
 
@@ -56,11 +56,11 @@ export const editPhaseAttributeReducer = (state, action) => {
       [phaseId]: {
         attributes: {
           [attributeName]: {
-            $set: attributeValue
-          }
-        }
-      }
-    }
+            $set: attributeValue,
+          },
+        },
+      },
+    },
   });
 };
 
@@ -76,7 +76,7 @@ export const removePhaseReducer = (state, action) => {
   const actionsToRemove = phase.actions || [];
   const recordsToRemove = [];
 
-  actionsToRemove.forEach(actionId => {
+  actionsToRemove.forEach((actionId) => {
     const action = state.actions[actionId];
     if (action?.records) {
       recordsToRemove.push(...action.records);
@@ -84,7 +84,7 @@ export const removePhaseReducer = (state, action) => {
   });
 
   const remainingPhases = {};
-  Object.keys(updatedState.phases).forEach(key => {
+  Object.keys(updatedState.phases).forEach((key) => {
     if (key !== phaseId) {
       remainingPhases[key] = updatedState.phases[key];
     }
@@ -92,13 +92,13 @@ export const removePhaseReducer = (state, action) => {
   updatedState.phases = remainingPhases;
 
   const updatedActions = { ...updatedState.actions };
-  actionsToRemove.forEach(actionId => {
+  actionsToRemove.forEach((actionId) => {
     delete updatedActions[actionId];
   });
   updatedState.actions = updatedActions;
 
   const updatedRecords = { ...updatedState.records };
-  recordsToRemove.forEach(recordId => {
+  recordsToRemove.forEach((recordId) => {
     delete updatedRecords[recordId];
   });
   updatedState.records = updatedRecords;
@@ -113,10 +113,10 @@ export const setPhaseAttributesVisibilityReducer = (state, action) => {
     phases: {
       [phaseId]: {
         is_attributes_open: {
-          $set: visibility
-        }
-      }
-    }
+          $set: visibility,
+        },
+      },
+    },
   });
 };
 
@@ -127,10 +127,10 @@ export const setPhaseVisibilityReducer = (state, action) => {
     phases: {
       [phaseId]: {
         is_open: {
-          $set: visibility
-        }
-      }
-    }
+          $set: visibility,
+        },
+      },
+    },
   });
 };
 
@@ -138,16 +138,16 @@ export const setPhasesVisibilityReducer = (state, action) => {
   const visibility = action.payload;
   const updatedPhases = {};
 
-  Object.keys(state.phases).forEach(phaseId => {
+  Object.keys(state.phases).forEach((phaseId) => {
     updatedPhases[phaseId] = {
       ...state.phases[phaseId],
-      is_open: visibility
+      is_open: visibility,
     };
   });
 
   return update(state, {
     phases: {
-      $set: updatedPhases
-    }
+      $set: updatedPhases,
+    },
   });
 };

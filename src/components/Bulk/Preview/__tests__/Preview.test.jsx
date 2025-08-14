@@ -1,5 +1,4 @@
 import React from 'react';
-import { createBrowserHistory } from 'history';
 import { BrowserRouter } from 'react-router-dom';
 import { screen, fireEvent } from '@testing-library/react';
 
@@ -29,14 +28,14 @@ const createMockProcessItem = (overrides = {}) => ({
             {
               id: 'record1',
               name: 'Test Record',
-              action: 'action1'
-            }
-          ]
-        }
-      ]
-    }
+              action: 'action1',
+            },
+          ],
+        },
+      ],
+    },
   ],
-  ...overrides
+  ...overrides,
 });
 
 const createMockBulkChanges = (overrides = {}) => ({
@@ -46,47 +45,47 @@ const createMockBulkChanges = (overrides = {}) => ({
     attribute2: 'new_value2',
   },
   phases: {
-    'phase1': {
+    phase1: {
       attributes: {
-        phase_attr: 'new_phase_value'
+        phase_attr: 'new_phase_value',
       },
       actions: {
-        'action1': {
+        action1: {
           attributes: {
-            action_attr: 'new_action_value'
+            action_attr: 'new_action_value',
           },
           records: {
-            'record1': {
+            record1: {
               attributes: {
-                record_attr: 'new_record_value'
-              }
-            }
-          }
-        }
-      }
-    }
+                record_attr: 'new_record_value',
+              },
+            },
+          },
+        },
+      },
+    },
   },
-  ...overrides
+  ...overrides,
 });
 
 const createMockBulkErrors = (overrides = {}) => ({
   attributes: ['attribute1', 'attribute2'],
   phases: {
-    'phase1': {
+    phase1: {
       attributes: ['phase_attr'],
       actions: {
-        'action1': {
+        action1: {
           attributes: ['action_attr'],
           records: {
-            'record1': {
-              attributes: ['record_attr']
-            }
-          }
-        }
-      }
-    }
+            record1: {
+              attributes: ['record_attr'],
+            },
+          },
+        },
+      },
+    },
   },
-  ...overrides
+  ...overrides,
 });
 
 const mockGetAttributeName = (attribute) => `Attribute_${attribute}`;
@@ -107,14 +106,12 @@ const defaultProps = {
 };
 
 const renderComponent = (props = {}) => {
-  const history = createBrowserHistory();
   const combinedProps = { ...defaultProps, ...props };
 
   return renderWithProviders(
-    <BrowserRouter history={history}>
+    <BrowserRouter>
       <Preview {...combinedProps} />
     </BrowserRouter>,
-    { history },
   );
 };
 
@@ -127,7 +124,7 @@ const mockItem = createMockProcessItem({
   attributes: {
     attribute1: 'value1',
     attribute2: 'value2',
-  }
+  },
 });
 
 const mockChanges = createMockBulkChanges({
@@ -135,11 +132,11 @@ const mockChanges = createMockBulkChanges({
   attributes: {
     attribute1: 'new_value1',
     attribute2: 'new_value2',
-  }
+  },
 });
 
 const mockErrors = createMockBulkErrors({
-  attributes: ['attribute1', 'attribute2']
+  attributes: ['attribute1', 'attribute2'],
 });
 
 describe('<Preview />', () => {
@@ -186,7 +183,7 @@ describe('<Preview />', () => {
         item: createMockProcessItem({
           id: 'item-2',
           name: 'Unselected Process',
-          path: ['Root', 'Category', 'Subcategory']  // Match the same path as the first item
+          path: ['Root', 'Category', 'Subcategory'], // Match the same path as the first item
         }),
         changed: {},
         errors: {},
@@ -212,10 +209,9 @@ describe('<Preview />', () => {
       const checkboxes = screen.getAllByRole('generic');
       const itemCheckbox = checkboxes.find((el) => el.classList.contains('preview-item-check'));
 
-      if (itemCheckbox) {
-        fireEvent.click(itemCheckbox);
-        expect(mockOnSelect).toHaveBeenCalled();
-      }
+      expect(itemCheckbox).toBeDefined();
+      fireEvent.click(itemCheckbox);
+      expect(mockOnSelect).toHaveBeenCalled();
     });
 
     it('handles item selection on keyboard Enter', () => {
@@ -224,10 +220,9 @@ describe('<Preview />', () => {
       const checkboxes = screen.getAllByRole('generic');
       const itemCheckbox = checkboxes.find((el) => el.classList.contains('preview-item-check'));
 
-      if (itemCheckbox) {
-        fireEvent.keyUp(itemCheckbox, { key: 'Enter' });
-        expect(mockOnSelect).toHaveBeenCalled();
-      }
+      expect(itemCheckbox).toBeDefined();
+      fireEvent.keyUp(itemCheckbox, { key: 'Enter' });
+      expect(mockOnSelect).toHaveBeenCalled();
     });
   });
 
@@ -306,11 +301,11 @@ describe('<Preview />', () => {
     it('renders errors without attributes (empty content)', () => {
       const errorsWithoutAttributes = {
         phases: {
-          'phase1': {
+          phase1: {
             actions: {
-              'action1': {
+              action1: {
                 records: {
-                  'record1': {},
+                  record1: {},
                 },
               },
             },

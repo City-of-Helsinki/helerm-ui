@@ -4,7 +4,6 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
-import Sticky from 'react-sticky-el';
 import cloneDeep from 'lodash/cloneDeep';
 import _get from 'lodash/get';
 import NestedObjects from 'nested-objects';
@@ -15,6 +14,7 @@ import EmptyTree from './EmptyTree';
 import Exporter from '../Exporter';
 import SearchInputs from './SearchInput/SearchInputs';
 import SearchFilters from './SearchFilter/SearchFilters';
+import Sticky from '../Sticky/Sticky';
 
 const DEFAULT_FILTER_CONDITION = 'and';
 
@@ -58,6 +58,19 @@ const InfinityMenu = ({
 
   const setDisplayTreeRef = useRef();
   const initialRenderRef = useRef(true);
+  const snapshotsRef = useRef({});
+  const filteredTreeLengthRef = useRef(0);
+  const filterTreeRef = useRef();
+
+  // Keep snapshots ref in sync with snapshots state
+  React.useEffect(() => {
+    snapshotsRef.current = snapshots;
+  }, [snapshots]);
+
+  // Keep filtered tree length ref in sync
+  React.useEffect(() => {
+    filteredTreeLengthRef.current = filteredTree.length;
+  }, [filteredTree.length]);
 
   const formatDetailFilter = useCallback((field, value) => {
     // returns xpath query e.g.
@@ -105,7 +118,8 @@ const InfinityMenu = ({
     (filters, node) => {
       if (filters.length) {
         if (isDetailSearch) {
-          const snapshot = snapshots[node.id] ? snapshots[node.id] : null;
+          const currentSnapshots = snapshotsRef.current;
+          const snapshot = currentSnapshots[node.id] ? currentSnapshots[node.id] : null;
           const result = snapshot ? JSON.search(snapshot, filters) : [];
 
           return result.length > 0;
@@ -116,7 +130,7 @@ const InfinityMenu = ({
 
       return true;
     },
-    [isDetailSearch, snapshots, filter],
+    [isDetailSearch, filter],
   );
 
   const findSnapshot = useCallback((snapshots, node) => {
@@ -196,6 +210,11 @@ const InfinityMenu = ({
     [getDetailFilters, findFiltered],
   );
 
+  // Keep filterTree ref updated
+  React.useEffect(() => {
+    filterTreeRef.current = filterTree;
+  }, [filterTree]);
+
   const onNodeClick = useCallback(
     (tree, node, keyPath, event) => {
       event.preventDefault();
@@ -247,10 +266,12 @@ const InfinityMenu = ({
     (option) => {
       setFilterCondition(option.value);
       setTimeout(() => {
-        filterTree(searchInputs, tree, isDetailSearch);
+        if (filterTreeRef.current) {
+          filterTreeRef.current(searchInputs, tree, isDetailSearch);
+        }
       }, 0);
     },
-    [searchInputs, tree, isDetailSearch, filterTree],
+    [searchInputs, tree, isDetailSearch],
   );
 
   const setDisplayTree = useCallback(
@@ -483,12 +504,12 @@ const InfinityMenu = ({
     const shouldFilter =
       (isSearchChanged && searchInputs?.some((input) => input.length > 0)) ||
       (isDetailSearch && isSearchChanged) ||
-      (!isDetailSearch && allInputsEmpty && filteredTree.length !== tree.length);
+      (!isDetailSearch && allInputsEmpty && filteredTreeLengthRef.current !== tree.length);
 
-    if (shouldFilter) {
-      filterTree(searchInputs, tree, isDetailSearch);
+    if (shouldFilter && filterTreeRef.current) {
+      filterTreeRef.current(searchInputs, tree, isDetailSearch);
     }
-  }, [isSearchChanged, isDetailSearch, searchInputs, tree, filterTree, isInitializing, filteredTree.length]);
+  }, [isSearchChanged, isDetailSearch, searchInputs, tree, isInitializing]);
 
   const displayTree = React.useMemo(() => {
     return filteredTree.reduce((prev, curr, key) => {
