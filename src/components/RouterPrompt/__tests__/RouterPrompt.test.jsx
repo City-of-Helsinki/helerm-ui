@@ -61,7 +61,7 @@ describe('<RouterPrompt />', () => {
       { basename: '/' },
     );
 
-    return renderWithProviders(<RouterProvider router={router} />, { store, history });
+    return renderWithProviders(<RouterProvider router={router} />, { store });
   };
 
   beforeEach(() => {

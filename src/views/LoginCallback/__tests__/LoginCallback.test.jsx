@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { createBrowserHistory } from 'history';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -54,11 +53,9 @@ vi.mock('hds-react', async () => {
 });
 
 const renderComponent = (store) => {
-  const history = createBrowserHistory();
-
   const router = createBrowserRouter([{ path: '/', element: <LoginCallback /> }]);
 
-  return renderWithProviders(<RouterProvider router={router} />, { history, store });
+  return renderWithProviders(<RouterProvider router={router} />, { store });
 };
 
 describe('<LoginCallback />', () => {

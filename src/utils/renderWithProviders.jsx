@@ -29,7 +29,7 @@ export const storeDefaultState = {
 
 const renderWithProviders = (
   ui,
-  { preloadedState = storeDefaultState, history, store = storeCreator(history, preloadedState), ...renderOptions } = {},
+  { preloadedState = storeDefaultState, store = storeCreator(preloadedState), ...renderOptions } = {},
 ) => {
   const Wrapper = ({ children }) => (
     <LoginProvider>

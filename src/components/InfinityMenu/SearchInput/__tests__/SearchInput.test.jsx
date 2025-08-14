@@ -1,4 +1,3 @@
-import { createBrowserHistory } from 'history';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { screen } from '@testing-library/react';
@@ -8,13 +7,10 @@ import SearchInput from '../SearchInput';
 import renderWithProviders from '../../../../utils/renderWithProviders';
 
 const renderComponent = (mockFunction = vi.fn()) => {
-  const history = createBrowserHistory();
-
   return renderWithProviders(
     <BrowserRouter>
       <SearchInput placeholder='' searchInput='' setSearchInput={mockFunction} />
     </BrowserRouter>,
-    { history },
   );
 };
 
