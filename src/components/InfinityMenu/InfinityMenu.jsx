@@ -481,7 +481,7 @@ const InfinityMenu = ({
     const allInputsEmpty = searchInputs.every((input) => !input || input.length === 0);
 
     const shouldFilter =
-      (isSearchChanged && searchInputs && searchInputs.some((input) => input.length > 0)) ||
+      (isSearchChanged && searchInputs?.some((input) => input.length > 0)) ||
       (isDetailSearch && isSearchChanged) ||
       (!isDetailSearch && allInputsEmpty && filteredTree.length !== tree.length);
 
