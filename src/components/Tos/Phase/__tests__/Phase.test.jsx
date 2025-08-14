@@ -20,8 +20,8 @@ const createPhaseTestMocks = () => {
     attributes: {
       PhaseType: 'Valmistelu/Käsittely',
       TypeSpecifier: 'Testikäsittelyvaihe',
-      InformationSystem: 'Test Information System'
-    }
+      InformationSystem: 'Test Information System',
+    },
   });
 
   const mockActions = {
@@ -30,36 +30,36 @@ const createPhaseTestMocks = () => {
       name: 'Testikäsittelyvaihe 1',
       attributes: {
         ActionType: 'Päätös',
-        TypeSpecifier: 'Testikäsittelyvaihe 1'
+        TypeSpecifier: 'Testikäsittelyvaihe 1',
       },
       records: ['record-test-001'],
       phase: mockPhase.id,
-      is_open: true
+      is_open: true,
     },
     'action-test-002': {
       id: 'action-test-002',
       name: 'Testikäsittelyvaihe 2',
       attributes: {
         ActionType: 'Toimenpide',
-        TypeSpecifier: 'Testikäsittelyvaihe 2'
+        TypeSpecifier: 'Testikäsittelyvaihe 2',
       },
       records: ['record-test-002'],
       phase: mockPhase.id,
-      is_open: false
-    }
+      is_open: false,
+    },
   };
 
   const mockRecords = {
     'record-test-001': createRecord({
       id: 'record-test-001',
       name: 'Test Record 1',
-      action: 'action-test-001'
+      action: 'action-test-001',
     }),
     'record-test-002': createRecord({
       id: 'record-test-002',
       name: 'Test Record 2',
-      action: 'action-test-002'
-    })
+      action: 'action-test-002',
+    }),
   };
 
   return { phase: mockPhase, actions: mockActions, records: mockRecords };
@@ -112,14 +112,14 @@ const renderComponent = (props = {}) => {
   return renderWithProviders(
     <DndProvider backend={HTML5Backend}>
       <Phase {...mockProps} {...props} ref={React.createRef()} />
-    </DndProvider>
+    </DndProvider>,
   );
 };
 
 const clearAllMocks = () => {
   Object.values(mockProps)
-    .filter(prop => typeof prop === 'function')
-    .forEach(mockFn => mockFn.mockClear());
+    .filter((prop) => typeof prop === 'function')
+    .forEach((mockFn) => mockFn.mockClear());
 };
 
 const setupUserAndRender = (props = {}) => {
@@ -154,7 +154,7 @@ const verifyPopupContent = async (expectedTestIds = []) => {
 
   const popup = screen.getByTestId('popup-component');
 
-  expectedTestIds.forEach(testId => {
+  expectedTestIds.forEach((testId) => {
     expect(screen.getByTestId(testId)).toBeInTheDocument();
   });
 
@@ -198,7 +198,7 @@ const DROPDOWN_ITEMS = [
   'Muokkaa käsittelyvaihetta',
   'Järjestä toimenpiteitä',
   'Tuo toimenpiteitä',
-  'Poista käsittelyvaihe'
+  'Poista käsittelyvaihe',
 ];
 
 const DELETE_VIEW_TEST_IDS = [
@@ -206,7 +206,7 @@ const DELETE_VIEW_TEST_IDS = [
   'delete-view-title',
   'delete-view-confirmation',
   'delete-view-delete-button',
-  'delete-view-cancel-button'
+  'delete-view-cancel-button',
 ];
 
 const IMPORT_VIEW_TEST_IDS = [
@@ -214,7 +214,7 @@ const IMPORT_VIEW_TEST_IDS = [
   'import-view-title',
   'import-view-button-row',
   'import-view-import-button',
-  'import-view-cancel-button'
+  'import-view-cancel-button',
 ];
 
 const verifyReorderView = async () => {
@@ -227,7 +227,7 @@ const verifyReorderView = async () => {
 };
 
 const verifyActionContent = (actionTitles) => {
-  actionTitles.forEach(title => {
+  actionTitles.forEach((title) => {
     expect(screen.getByText(title)).toBeInTheDocument();
   });
 };
@@ -270,7 +270,7 @@ describe('<Phase />', () => {
 
     it('properly marks child actions when phase is closed', () => {
       renderComponent({
-        phase: { ...mockPhase, is_open: false }
+        phase: { ...mockPhase, is_open: false },
       });
 
       expect(screen.queryByText(ACTION_TITLES[0])).toBeInTheDocument();
@@ -364,7 +364,7 @@ describe('<Phase />', () => {
       expect(screen.getByTestId('delete-view-confirmation')).toHaveTextContent('Vahvista poisto');
       verifyButtonsTexts([
         { testId: 'delete-view-delete-button', text: 'Poista' },
-        { testId: 'delete-view-cancel-button', text: 'Peruuta' }
+        { testId: 'delete-view-cancel-button', text: 'Peruuta' },
       ]);
     });
 
@@ -385,7 +385,7 @@ describe('<Phase />', () => {
 
       verifyButtonsTexts([
         { testId: 'import-view-import-button', text: 'Tuo' },
-        { testId: 'import-view-cancel-button', text: 'Peruuta' }
+        { testId: 'import-view-cancel-button', text: 'Peruuta' },
       ]);
     });
   });
@@ -440,7 +440,7 @@ describe('<Phase />', () => {
         mockTypeSpecifier,
         mockActionType,
         mockAttributes,
-        mockProps.phaseIndex
+        mockProps.phaseIndex,
       );
     });
 
@@ -459,7 +459,7 @@ describe('<Phase />', () => {
       await user.click(screen.getByTestId('delete-view-delete-button'));
 
       expect(mockProps.removeAction).toHaveBeenCalledTimes(mockPhase.actions.length);
-      mockPhase.actions.forEach(actionId => {
+      mockPhase.actions.forEach((actionId) => {
         expect(mockProps.removeAction).toHaveBeenCalledWith(actionId, mockPhase.id);
       });
 
@@ -491,7 +491,7 @@ describe('<Phase />', () => {
 
     it('hides actions container when phase is closed', () => {
       const { container } = renderComponent({
-        phase: { ...mockPhase, is_open: false }
+        phase: { ...mockPhase, is_open: false },
       });
 
       const actionsContainer = container.querySelector('.actions');
@@ -510,7 +510,7 @@ describe('<Phase />', () => {
     it('changes metadata button text when attributes are visible', () => {
       renderComponent({
         documentState: 'edit',
-        phase: { ...mockPhase, is_attributes_open: true }
+        phase: { ...mockPhase, is_attributes_open: true },
       });
 
       expect(screen.getByRole('button', { name: 'Piilota metatiedot' })).toBeInTheDocument();
@@ -528,7 +528,7 @@ describe('<Phase />', () => {
     it('handles phase with no actions gracefully', () => {
       renderComponent({
         phase: { ...mockPhase, actions: [] },
-        actions: {}
+        actions: {},
       });
 
       expect(screen.getByText(PHASE_TITLE)).toBeInTheDocument();
@@ -538,7 +538,7 @@ describe('<Phase />', () => {
     it('does not render actions container when phase has no actions', () => {
       const { container } = renderComponent({
         phase: { ...mockPhase, actions: [] },
-        actions: {}
+        actions: {},
       });
 
       const actionsContainer = container.querySelector('.actions');

@@ -22,11 +22,11 @@ describe('(Redux Module) UI', () => {
       let state = uiReducer(undefined, {});
       expect(state).toEqual(_initialState);
       state = uiReducer(state, {
-        type: 'DOESNOTACTUALLYEXISTLOL'
+        type: 'DOESNOTACTUALLYEXISTLOL',
       });
       expect(state).toEqual(_initialState);
       state = uiReducer(state, {
-        type: 'DOESNOTACTUALLYEXISTLOL'
+        type: 'DOESNOTACTUALLYEXISTLOL',
       });
       expect(state).toEqual(_initialState);
     });

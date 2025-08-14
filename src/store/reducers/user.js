@@ -1,16 +1,16 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { get } from 'lodash';
-import { getApiTokenFromStorage } from 'hds-react'
+import { getApiTokenFromStorage } from 'hds-react';
 
 import api, { Unauthorized } from '../../utils/api';
-import { USER_LOGIN_STATUS } from '../../constants'
+import { USER_LOGIN_STATUS } from '../../constants';
 import config from '../../config';
 
 export const initialState = {
   data: null,
   isFetching: false,
   status: USER_LOGIN_STATUS.NONE,
-  error: null
+  error: null,
 };
 
 export const retrieveUserFromSession = createAsyncThunk(
@@ -52,17 +52,14 @@ export const retrieveUserFromSession = createAsyncThunk(
 
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to retrieve user data');
     }
-  }
+  },
 );
 
-export const logoutUserThunk = createAsyncThunk(
-  'user/logout',
-  async (_, { dispatch }) => {
-    dispatch(loginSlice.actions.setLoginStatus(USER_LOGIN_STATUS.NONE));
+export const logoutUserThunk = createAsyncThunk('user/logout', async (_, { dispatch }) => {
+  dispatch(loginSlice.actions.setLoginStatus(USER_LOGIN_STATUS.NONE));
 
-    return null;
-  }
-);
+  return null;
+});
 
 export const initializeLoginCallbackThunk = createAsyncThunk(
   'user/initializeLoginCallback',
@@ -70,7 +67,7 @@ export const initializeLoginCallbackThunk = createAsyncThunk(
     dispatch(loginSlice.actions.setLoginStatus(USER_LOGIN_STATUS.INITIALIZING));
 
     return null;
-  }
+  },
 );
 
 export const handleLoginCallbackErrorThunk = createAsyncThunk(
@@ -79,7 +76,7 @@ export const handleLoginCallbackErrorThunk = createAsyncThunk(
     dispatch(loginSlice.actions.setLoginStatus(USER_LOGIN_STATUS.UNAUTHORIZED));
 
     return rejectWithValue(error instanceof Error ? error.message : String(error));
-  }
+  },
 );
 
 const loginSlice = createSlice({
@@ -89,7 +86,7 @@ const loginSlice = createSlice({
     clearUserData: () => initialState,
     setLoginStatus: (state, action) => {
       state.status = action.payload;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -129,17 +126,12 @@ const loginSlice = createSlice({
     errorSelector: (state) => state.error,
     isAuthorizedSelector: (state) => state.status === USER_LOGIN_STATUS.AUTHORIZED,
     isAuthenticatedSelector: (state) =>
-      state.status === USER_LOGIN_STATUS.AUTHORIZED ||
-      state.status === USER_LOGIN_STATUS.INITIALIZING,
-    hasPermissionSelector: (state, permission) =>
-      (state.data?.permissions || []).includes(permission),
-  }
+      state.status === USER_LOGIN_STATUS.AUTHORIZED || state.status === USER_LOGIN_STATUS.INITIALIZING,
+    hasPermissionSelector: (state, permission) => (state.data?.permissions || []).includes(permission),
+  },
 });
 
-export const {
-  clearUserData,
-  setLoginStatus: loginStatus,
-} = loginSlice.actions;
+export const { clearUserData, setLoginStatus: loginStatus } = loginSlice.actions;
 
 export const {
   userDataSelector,

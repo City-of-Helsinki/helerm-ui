@@ -1,12 +1,8 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import api from '../../../utils/api'
-import {
-  clearClassification,
-  fetchClassificationThunk,
-  createTosThunk
-} from '../classification';
+import api from '../../../utils/api';
+import { clearClassification, fetchClassificationThunk, createTosThunk } from '../classification';
 import { classification } from '../../../utils/__mocks__/mockHelpers';
 
 const middlewares = [thunk];
@@ -19,15 +15,15 @@ describe('ViewClassification reducer', () => {
 
     const expectedActions = [
       {
-        type: "classification/fetchClassification/pending",
+        type: 'classification/fetchClassification/pending',
         meta: expect.anything(),
         payload: undefined,
       },
       {
-        type: "classification/fetchClassification/fulfilled",
+        type: 'classification/fetchClassification/fulfilled',
         meta: expect.anything(),
         payload: expect.anything(),
-      }
+      },
     ];
     const store = mockStore({});
 
@@ -47,18 +43,18 @@ describe('ViewClassification reducer', () => {
 
     const expectedActions = [
       {
-        type: "classification/fetchClassification/pending",
+        type: 'classification/fetchClassification/pending',
         meta: expect.anything(),
         payload: undefined,
       },
       {
-        type: "classification/fetchClassification/rejected",
+        type: 'classification/fetchClassification/rejected',
         error: {
-          message: "Rejected",
+          message: 'Rejected',
         },
         meta: expect.anything(),
-        payload: "ERROR",
-      }
+        payload: 'ERROR',
+      },
     ];
     const store = mockStore({});
 
@@ -82,12 +78,12 @@ describe('ViewClassification reducer', () => {
     const newTos = { id: 1 };
     const expectedActions = [
       {
-        type: "classification/createTos/pending",
+        type: 'classification/createTos/pending',
         meta: expect.anything(),
         payload: undefined,
       },
       {
-        type: "navigation/fetchNavigation/pending",
+        type: 'navigation/fetchNavigation/pending',
         meta: expect.anything(),
         payload: undefined,
       },
@@ -97,16 +93,16 @@ describe('ViewClassification reducer', () => {
           includeRelated: true,
           items: undefined,
           page: 1,
-        }
+        },
       },
       { type: 'navigation/parseNavigation', payload: { items: [] } },
       {
-        type: "classification/createTos/fulfilled",
+        type: 'classification/createTos/fulfilled',
         meta: expect.anything(),
         payload: {
           id: 1,
         },
-      }
+      },
     ];
     const store = mockStore({ classification, navigation: { includeRelated: true } });
 
@@ -119,20 +115,21 @@ describe('ViewClassification reducer', () => {
     return store.dispatch(createTosThunk()).then(() => {
       const actions = store.getActions();
 
-      expect(actions).toEqual(expectedActions)
+      expect(actions).toEqual(expectedActions);
     });
   });
 
   it('should handle create TOS error with thunk', () => {
     const expectedActions = [
-      { type: 'classification/createTos/pending', meta: expect.anything(), payload: undefined, },
+      { type: 'classification/createTos/pending', meta: expect.anything(), payload: undefined },
       {
-        type: "classification/createTos/rejected", error: {
-          message: "Rejected",
+        type: 'classification/createTos/rejected',
+        error: {
+          message: 'Rejected',
         },
         meta: expect.anything(),
-        payload: "ERROR",
-      }
+        payload: 'ERROR',
+      },
     ];
     const store = mockStore({ classification, navigation: { includeRelated: true } });
 

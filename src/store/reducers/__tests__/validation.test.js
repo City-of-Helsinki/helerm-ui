@@ -6,7 +6,7 @@ describe('(Redux Module) Validation', () => {
     let _initialState;
     beforeEach(() => {
       _initialState = {
-        is_open: false
+        is_open: false,
       };
     });
     it('Should be a function.', () => {
@@ -21,13 +21,13 @@ describe('(Redux Module) Validation', () => {
       let state = validationReducer(undefined, {});
       expect(state).toEqual(_initialState);
       state = validationReducer(state, {
-        type: 'DOESNOTACTUALLYEXISTLOL'
+        type: 'DOESNOTACTUALLYEXISTLOL',
       });
       expect(state).toEqual(_initialState);
       state = validationReducer(state, setValidationVisibility(true));
       expect(state.is_open).toBeTruthy();
       state = validationReducer(state, {
-        type: 'DOESNOTACTUALLYEXISTLOL'
+        type: 'DOESNOTACTUALLYEXISTLOL',
       });
       expect(state.is_open).toBeTruthy();
     });

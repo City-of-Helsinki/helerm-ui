@@ -14,7 +14,7 @@ import searchReducer, {
   filterItemsThunk,
   searchSuggestionsAction,
   toggleAttribute,
-  toggleShowAllAttributeOptions
+  toggleShowAllAttributeOptions,
 } from '../search';
 import api from '../../../utils/api';
 import { TYPE_CLASSIFICATION, TYPE_FUNCTION, TYPE_ACTION, TYPE_PHASE, TYPE_RECORD } from '../../../constants';
@@ -26,34 +26,35 @@ const mockStore = configureMockStore(middlewares);
 vi.mock('../../../utils/api', () => ({
   default: {
     get: vi.fn(),
-    post: vi.fn()
-  }
+    post: vi.fn(),
+  },
 }));
 
 vi.mock('../../../config', () => ({
   default: {
-    SEARCH_PAGE_SIZE: 10
-  }
+    SEARCH_PAGE_SIZE: 10,
+  },
 }));
 
 const mockClassifications = classification;
 
-const createMappedClassifications = () => classification.map(item => ({
-  id: item.id,
-  type: TYPE_CLASSIFICATION,
-  title: item.title,
-  code: item.code,
-  attributes: {
-    name: `${item.code} ${item.title}`,
-    ...item.function_attributes
-  }
-}));
+const createMappedClassifications = () =>
+  classification.map((item) => ({
+    id: item.id,
+    type: TYPE_CLASSIFICATION,
+    title: item.title,
+    code: item.code,
+    attributes: {
+      name: `${item.code} ${item.title}`,
+      ...item.function_attributes,
+    },
+  }));
 
 const createAttributeOption = (value, ref, hits, selected = false) => ({
   value,
   ref,
   hits,
-  selected
+  selected,
 });
 
 const createAttribute = (key, name, type, options = []) => ({
@@ -62,16 +63,16 @@ const createAttribute = (key, name, type, options = []) => ({
   type,
   options,
   open: false,
-  showAll: false
+  showAll: false,
 });
 
 const createTestStore = (customState = {}) => {
   const state = {
     search: {
       ...initialState,
-      ...customState
+      ...customState,
     },
-    ui: { attributeTypes: mockAttributeTypes }
+    ui: { attributeTypes: mockAttributeTypes },
   };
   return mockStore(state);
 };
@@ -113,13 +114,13 @@ describe('Search reducer', () => {
     });
 
     it('should handle receiveClassifications', () => {
-      const items = classification.map(item => ({
+      const items = classification.map((item) => ({
         ...item,
         type: TYPE_CLASSIFICATION,
         attributes: {
           name: `${item.code} ${item.title}`,
-          description: item.description
-        }
+          description: item.description,
+        },
       }));
 
       const action = receiveClassifications({ items, page: 1 });
@@ -136,7 +137,7 @@ describe('Search reducer', () => {
     it('should handle searchSuggestionsAction', () => {
       const suggestions = [
         { type: TYPE_CLASSIFICATION, hits: ['class1'] },
-        { type: TYPE_FUNCTION, hits: ['func1'] }
+        { type: TYPE_FUNCTION, hits: ['func1'] },
       ];
 
       const action = searchSuggestionsAction(suggestions);
@@ -147,7 +148,7 @@ describe('Search reducer', () => {
 
     it('should handle toggleAttribute', () => {
       const filteredAttributes = [
-        { key: 'RetentionPeriod', type: TYPE_FUNCTION, open: false, showAll: false, options: [] }
+        { key: 'RetentionPeriod', type: TYPE_FUNCTION, open: false, showAll: false, options: [] },
       ];
 
       const state = { ...initialState, filteredAttributes };
@@ -159,7 +160,7 @@ describe('Search reducer', () => {
 
     it('should handle toggleShowAllAttributeOptions', () => {
       const filteredAttributes = [
-        { key: 'RetentionPeriod', type: TYPE_FUNCTION, open: true, showAll: false, options: [] }
+        { key: 'RetentionPeriod', type: TYPE_FUNCTION, open: true, showAll: false, options: [] },
       ];
 
       const state = { ...initialState, filteredAttributes };
@@ -177,8 +178,8 @@ describe('Search reducer', () => {
           count: classification.length,
           next: null,
           previous: null,
-          results: classification
-        })
+          results: classification,
+        }),
       });
 
       const store = createTestStore();
@@ -187,20 +188,23 @@ describe('Search reducer', () => {
 
       const actions = store.getActions();
 
-      expect(actions.some(action => action.type === 'search/requestClassifications')).toBe(true);
-      expect(actions.some(action => action.type === 'search/receiveClassifications')).toBe(true);
-      expect(actions.some(action => action.type === 'search/classificationsReady')).toBe(true);
+      expect(actions.some((action) => action.type === 'search/requestClassifications')).toBe(true);
+      expect(actions.some((action) => action.type === 'search/receiveClassifications')).toBe(true);
+      expect(actions.some((action) => action.type === 'search/classificationsReady')).toBe(true);
 
-      expect(api.get).toHaveBeenCalledWith('classification', expect.objectContaining({
-        include_related: true,
-        page_size: 10,
-        page: 1
-      }));
+      expect(api.get).toHaveBeenCalledWith(
+        'classification',
+        expect.objectContaining({
+          include_related: true,
+          page_size: 10,
+          page: 1,
+        }),
+      );
 
-      const receiveAction = actions.find(action => action.type === 'search/receiveClassifications');
+      const receiveAction = actions.find((action) => action.type === 'search/receiveClassifications');
       expect(receiveAction.payload.items).toEqual(classification);
 
-      const healthGuideItem = receiveAction.payload.items.find(item => item.id === HEALTH_GUIDANCE_ID);
+      const healthGuideItem = receiveAction.payload.items.find((item) => item.id === HEALTH_GUIDANCE_ID);
       expect(healthGuideItem.function_attributes.PublicityClass).toBe('Julkinen');
       expect(healthGuideItem.function_attributes.PersonalData).toBe('Sisältää henkilötietoja');
     });
@@ -210,22 +214,22 @@ describe('Search reducer', () => {
         count: mockClassifications.length,
         next: 'https://api.example.com/classification?page=2',
         previous: null,
-        results: [mockClassifications[0]]
+        results: [mockClassifications[0]],
       };
 
       const page2Response = {
         count: mockClassifications.length,
         next: null,
         previous: 'https://api.example.com/classification?page=1',
-        results: [mockClassifications[1]]
+        results: [mockClassifications[1]],
       };
 
       api.get
         .mockResolvedValueOnce({
-          json: async () => page1Response
+          json: async () => page1Response,
         })
         .mockResolvedValueOnce({
-          json: async () => page2Response
+          json: async () => page2Response,
         });
 
       const store = createTestStore();
@@ -238,9 +242,9 @@ describe('Search reducer', () => {
       expect(api.get).toHaveBeenNthCalledWith(1, 'classification', expect.objectContaining({ page: 1 }));
       expect(api.get).toHaveBeenNthCalledWith(2, 'classification', expect.objectContaining({ page: 2 }));
 
-      expect(actions.some(action => action.type === 'search/requestClassifications')).toBe(true);
-      expect(actions.filter(action => action.type === 'search/receiveClassifications').length).toBe(2);
-      expect(actions.some(action => action.type === 'search/classificationsReady')).toBe(true);
+      expect(actions.some((action) => action.type === 'search/requestClassifications')).toBe(true);
+      expect(actions.filter((action) => action.type === 'search/receiveClassifications').length).toBe(2);
+      expect(actions.some((action) => action.type === 'search/classificationsReady')).toBe(true);
     });
 
     it('should handle error when fetching classifications', async () => {
@@ -251,8 +255,8 @@ describe('Search reducer', () => {
       const result = await store.dispatch(fetchClassificationsThunk());
 
       const actions = store.getActions();
-      expect(actions.some(action => action.type === 'search/requestClassifications')).toBe(true);
-      expect(actions.some(action => action.type === 'search/classificationsError')).toBe(true);
+      expect(actions.some((action) => action.type === 'search/requestClassifications')).toBe(true);
+      expect(actions.some((action) => action.type === 'search/classificationsError')).toBe(true);
       expect(result.payload.error).toBe('Network error');
     });
   });
@@ -264,7 +268,7 @@ describe('Search reducer', () => {
       await store.dispatch(updateAttributeTypesThunk(mockAttributeTypes));
 
       const actions = store.getActions();
-      const setAttributesAction = actions.find(action => action.type === 'search/setAttributeTypes');
+      const setAttributesAction = actions.find((action) => action.type === 'search/setAttributeTypes');
 
       expect(setAttributesAction).toBeTruthy();
       expect(setAttributesAction.payload.attributes).toBeInstanceOf(Array);
@@ -276,7 +280,7 @@ describe('Search reducer', () => {
       expect(attributeKeys).toContain('PersonalData');
       expect(attributeKeys).toContain('RetentionPeriod');
 
-      setAttributesAction.payload.attributes.forEach(attr => {
+      setAttributesAction.payload.attributes.forEach((attr) => {
         expect(attr).toHaveProperty('key');
         expect(attr).toHaveProperty('name');
         expect(attr).toHaveProperty('options');
@@ -288,17 +292,13 @@ describe('Search reducer', () => {
 
   describe('searchItemsThunk', () => {
     it('should search and filter items by term', async () => {
-      const searchTerm = 'terveys'
+      const searchTerm = 'terveys';
 
-      const healthClass = classification.find(item => item.id === HEALTH_GUIDANCE_ID);
+      const healthClass = classification.find((item) => item.id === HEALTH_GUIDANCE_ID);
       const healthClassValue = `${healthClass.code} ${healthClass.title}`;
       const healthClassRef = healthClassValue.toLowerCase();
 
-      const options = [createAttributeOption(
-        healthClassValue,
-        healthClassRef,
-        [HEALTH_GUIDANCE_ID]
-      )];
+      const options = [createAttributeOption(healthClassValue, healthClassRef, [HEALTH_GUIDANCE_ID])];
 
       const attributes = [createAttribute('name', 'Name', TYPE_CLASSIFICATION, options)];
       const mappedClassifications = createMappedClassifications();
@@ -307,14 +307,14 @@ describe('Search reducer', () => {
         search: {
           ...initialState,
           attributes,
-          classifications: mappedClassifications
-        }
+          classifications: mappedClassifications,
+        },
       });
 
       await store.dispatch(searchItemsThunk({ searchTerm, type: null }));
 
       const actions = store.getActions();
-      const searchItemsAction = actions.find(action => action.type === 'search/searchItemsAction');
+      const searchItemsAction = actions.find((action) => action.type === 'search/searchItemsAction');
 
       expect(searchItemsAction).toBeTruthy();
       expect(searchItemsAction.payload.terms).toContain(searchTerm);
@@ -322,7 +322,7 @@ describe('Search reducer', () => {
     });
 
     it('should generate suggestions when isSuggestionsOnly is true', async () => {
-      const healthClass = classification.find(item => item.id === HEALTH_GUIDANCE_ID);
+      const healthClass = classification.find((item) => item.id === HEALTH_GUIDANCE_ID);
 
       const classValue = `${healthClass.code} ${healthClass.title}`;
       const classRef = `${healthClass.code.toLowerCase()} ${healthClass.title.toLowerCase()}`;
@@ -336,18 +336,20 @@ describe('Search reducer', () => {
         search: {
           ...initialState,
           attributes,
-          classifications: mappedClassifications
-        }
+          classifications: mappedClassifications,
+        },
       });
 
-      await store.dispatch(searchItemsThunk({
-        searchTerm: 'Terveys',
-        type: null,
-        isSuggestionsOnly: true
-      }));
+      await store.dispatch(
+        searchItemsThunk({
+          searchTerm: 'Terveys',
+          type: null,
+          isSuggestionsOnly: true,
+        }),
+      );
 
       const actions = store.getActions();
-      const suggestionAction = actions.find(action => action.type === 'search/searchSuggestionsAction');
+      const suggestionAction = actions.find((action) => action.type === 'search/searchSuggestionsAction');
 
       expect(suggestionAction).toBeTruthy();
       expect(suggestionAction.payload).toBeInstanceOf(Array);
@@ -365,30 +367,30 @@ describe('Search reducer', () => {
       const attributes = [createAttribute('name', 'Name', TYPE_FUNCTION, options)];
 
       const functions = classification
-        .filter(item => item.function)
-        .map(item => ({
+        .filter((item) => item.function)
+        .map((item) => ({
           id: item.function,
           type: TYPE_FUNCTION,
           title: `Toiminto: ${item.title}`,
           code: item.code,
           attributes: {
             name: `${item.code} ${item.title}`,
-            ...item.function_attributes
-          }
+            ...item.function_attributes,
+          },
         }));
 
       const store = mockStore({
         search: {
           ...initialState,
           attributes,
-          functions
-        }
+          functions,
+        },
       });
 
       await store.dispatch(searchItemsThunk({ searchTerm: 'Toiminto', type: TYPE_FUNCTION }));
 
       const actions = store.getActions();
-      const searchItemsAction = actions.find(action => action.type === 'search/searchItemsAction');
+      const searchItemsAction = actions.find((action) => action.type === 'search/searchItemsAction');
 
       expect(searchItemsAction).toBeTruthy();
       expect(searchItemsAction.payload.functions).toBeInstanceOf(Array);
@@ -407,8 +409,8 @@ describe('Search reducer', () => {
         search: {
           ...initialState,
           filteredAttributes,
-          classifications: mappedClassifications
-        }
+          classifications: mappedClassifications,
+        },
       });
 
       const selectedFacets = {
@@ -416,7 +418,7 @@ describe('Search reducer', () => {
         [TYPE_FUNCTION]: [],
         [TYPE_PHASE]: [],
         [TYPE_ACTION]: [],
-        [TYPE_RECORD]: []
+        [TYPE_RECORD]: [],
       };
 
       const result = await store.dispatch(filterItemsThunk(selectedFacets));
@@ -430,11 +432,11 @@ describe('Search reducer', () => {
 
       const options = [
         createAttributeOption('Julkinen', 'julkinen', [HEALTH_GUIDANCE_ID, EDUCATION_ID], false),
-        createAttributeOption('Osittain salassa pidettävä', 'osittain salassa pidettävä', [EDUCATION_CHILD_ID], false)
+        createAttributeOption('Osittain salassa pidettävä', 'osittain salassa pidettävä', [EDUCATION_CHILD_ID], false),
       ];
 
       const filteredAttributes = [
-        createAttribute('PublicityClass', publicityClassAttr.name, TYPE_CLASSIFICATION, options)
+        createAttribute('PublicityClass', publicityClassAttr.name, TYPE_CLASSIFICATION, options),
       ];
 
       const mappedClassifications = createMappedClassifications();
@@ -443,8 +445,8 @@ describe('Search reducer', () => {
         search: {
           ...initialState,
           filteredAttributes,
-          classifications: mappedClassifications
-        }
+          classifications: mappedClassifications,
+        },
       });
 
       const selectedFacets = {
@@ -452,7 +454,7 @@ describe('Search reducer', () => {
         [TYPE_FUNCTION]: [],
         [TYPE_PHASE]: [],
         [TYPE_ACTION]: [],
-        [TYPE_RECORD]: []
+        [TYPE_RECORD]: [],
       };
 
       const result = await store.dispatch(filterItemsThunk(selectedFacets));
@@ -468,14 +470,14 @@ describe('Search reducer', () => {
       const store = mockStore({
         search: {
           ...initialState,
-          suggestions: [{ type: TYPE_CLASSIFICATION, hits: ['class1'] }]
-        }
+          suggestions: [{ type: TYPE_CLASSIFICATION, hits: ['class1'] }],
+        },
       });
 
       await store.dispatch(resetSuggestionsThunk());
 
       const actions = store.getActions();
-      const suggestionAction = actions.find(action => action.type === 'search/searchSuggestionsAction');
+      const suggestionAction = actions.find((action) => action.type === 'search/searchSuggestionsAction');
 
       expect(suggestionAction).toBeTruthy();
       expect(suggestionAction.payload).toEqual([]);

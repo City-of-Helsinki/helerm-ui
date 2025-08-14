@@ -10,7 +10,7 @@ export const initialState = {
   isFetching: false,
   isFetchingSelected: false,
   isSaving: false,
-  isUpdating: false
+  isUpdating: false,
 };
 
 export const fetchBulkUpdatesThunk = createAsyncThunk(
@@ -26,68 +26,56 @@ export const fetchBulkUpdatesThunk = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch bulk updates');
     }
-  }
+  },
 );
 
-export const fetchBulkUpdateThunk = createAsyncThunk(
-  'bulk/fetchBulkUpdate',
-  async (id, { rejectWithValue }) => {
-    try {
-      const response = await api.get(`bulk-update/${id}`, { include_approved: true });
-      const data = await response.json();
+export const fetchBulkUpdateThunk = createAsyncThunk('bulk/fetchBulkUpdate', async (id, { rejectWithValue }) => {
+  try {
+    const response = await api.get(`bulk-update/${id}`, { include_approved: true });
+    const data = await response.json();
 
-      return data;
-    } catch (error) {
-      return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch bulk update');
+    return data;
+  } catch (error) {
+    return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch bulk update');
+  }
+});
+
+export const approveBulkUpdateThunk = createAsyncThunk('bulk/approveBulkUpdate', async (id, { rejectWithValue }) => {
+  try {
+    const response = await api.post(`bulk-update/${id}/approve`);
+    if (!response.ok) {
+      throw Error(response.statusText);
     }
+
+    return true;
+  } catch (error) {
+    return rejectWithValue(error instanceof Error ? error.message : 'Failed to approve bulk update');
   }
-);
+});
 
-export const approveBulkUpdateThunk = createAsyncThunk(
-  'bulk/approveBulkUpdate',
-  async (id, { rejectWithValue }) => {
-    try {
-      const response = await api.post(`bulk-update/${id}/approve`);
-      if (!response.ok) {
-        throw Error(response.statusText);
-      }
-
-      return true;
-    } catch (error) {
-      return rejectWithValue(error instanceof Error ? error.message : 'Failed to approve bulk update');
+export const deleteBulkUpdateThunk = createAsyncThunk('bulk/deleteBulkUpdate', async (id, { rejectWithValue }) => {
+  try {
+    const response = await api.del(`bulk-update/${id}`);
+    if (!response.ok) {
+      throw Error(response.statusText);
     }
+
+    return true;
+  } catch (error) {
+    return rejectWithValue(error instanceof Error ? error.message : 'Failed to delete bulk update');
   }
-);
+});
 
-export const deleteBulkUpdateThunk = createAsyncThunk(
-  'bulk/deleteBulkUpdate',
-  async (id, { rejectWithValue }) => {
-    try {
-      const response = await api.del(`bulk-update/${id}`);
-      if (!response.ok) {
-        throw Error(response.statusText);
-      }
+export const saveBulkUpdateThunk = createAsyncThunk('bulk/saveBulkUpdate', async (bulkUpdate, { rejectWithValue }) => {
+  try {
+    const response = await api.post('bulk-update', bulkUpdate);
+    const data = await response.json();
 
-      return true;
-    } catch (error) {
-      return rejectWithValue(error instanceof Error ? error.message : 'Failed to delete bulk update');
-    }
+    return data;
+  } catch (error) {
+    return rejectWithValue(error instanceof Error ? error.message : 'Failed to save bulk update');
   }
-);
-
-export const saveBulkUpdateThunk = createAsyncThunk(
-  'bulk/saveBulkUpdate',
-  async (bulkUpdate, { rejectWithValue }) => {
-    try {
-      const response = await api.post('bulk-update', bulkUpdate);
-      const data = await response.json();
-
-      return data;
-    } catch (error) {
-      return rejectWithValue(error instanceof Error ? error.message : 'Failed to save bulk update');
-    }
-  }
-);
+});
 
 export const updateBulkUpdateThunk = createAsyncThunk(
   'bulk/updateBulkUpdate',
@@ -100,7 +88,7 @@ export const updateBulkUpdateThunk = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to update bulk update');
     }
-  }
+  },
 );
 
 const bulkSlice = createSlice({
@@ -117,9 +105,7 @@ const bulkSlice = createSlice({
         state.isFetching = true;
       })
       .addCase(fetchBulkUpdatesThunk.fulfilled, (state, action) => {
-        const sortedBulkUpdates = isArray(action.payload)
-          ? orderBy(action.payload, ['created_at'], ['desc'])
-          : [];
+        const sortedBulkUpdates = isArray(action.payload) ? orderBy(action.payload, ['created_at'], ['desc']) : [];
 
         state.bulkUpdates = sortedBulkUpdates;
         state.isFetching = false;
@@ -185,17 +171,13 @@ const bulkSlice = createSlice({
     selectedBulkSelector: (state) => state.selectedBulk,
     bulkUpdatesSelector: (state) => state.bulkUpdates,
     isFetchingSelector: (state) => state.isFetching,
-    isUpdatingSelector: (state) => state.isUpdating
-  }
+    isUpdatingSelector: (state) => state.isUpdating,
+  },
 });
 
 export const { clearSelectedBulkUpdate } = bulkSlice.actions;
 
-export const {
-  selectedBulkSelector,
-  bulkUpdatesSelector,
-  isFetchingSelector,
-  isUpdatingSelector
-} = bulkSlice.selectors;
+export const { selectedBulkSelector, bulkUpdatesSelector, isFetchingSelector, isUpdatingSelector } =
+  bulkSlice.selectors;
 
 export default bulkSlice.reducer;

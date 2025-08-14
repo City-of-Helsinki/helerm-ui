@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 import { importItemsThunk, prepareImport } from '../tos-toolkit/importView';
 
 vi.mock('../../../utils/helpers', () => ({
-  randomActionId: () => 'test-id-123'
+  randomActionId: () => 'test-id-123',
 }));
 
 const middlewares = [thunk];
@@ -17,9 +17,9 @@ const createMockPhase = (overrides = {}) => ({
   actions: [],
   attributes: {
     PhaseType: 'Valmistelu/Käsittely',
-    TypeSpecifier: 'Mock Phase'
+    TypeSpecifier: 'Mock Phase',
   },
-  ...overrides
+  ...overrides,
 });
 
 const createRecord = (overrides = {}) => ({
@@ -28,9 +28,9 @@ const createRecord = (overrides = {}) => ({
   action: null,
   attributes: {
     TypeSpecifier: 'Mock Record',
-    RecordType: 'arviointi'
+    RecordType: 'arviointi',
   },
-  ...overrides
+  ...overrides,
 });
 
 // Create local test data for import functionality
@@ -42,9 +42,9 @@ const createImportTestMocks = () => {
       actions: ['action1'],
       attributes: {
         PhaseType: 'Valmistelu/Käsittely',
-        TypeSpecifier: 'Import Test Phase'
-      }
-    })
+        TypeSpecifier: 'Import Test Phase',
+      },
+    }),
   };
 
   const mockActions = {
@@ -55,25 +55,25 @@ const createImportTestMocks = () => {
       records: ['record1'],
       attributes: {
         ActionType: 'Päätös',
-        TypeSpecifier: 'Import Test Action'
-      }
-    }
+        TypeSpecifier: 'Import Test Action',
+      },
+    },
   };
 
   const mockRecords = {
     record1: createRecord({
       id: 'record1',
       name: 'Import Test Record',
-      action: 'action1'
-    })
+      action: 'action1',
+    }),
   };
 
   return {
     completeTOS: {
       phases: mockPhases,
       actions: mockActions,
-      records: mockRecords
-    }
+      records: mockRecords,
+    },
   };
 };
 
@@ -91,7 +91,7 @@ describe('Import View', () => {
       expect(result.importActions).toBeDefined();
       expect(result.importRecords).toBeDefined();
 
-      const newPhaseKeys = Object.keys(result.importPhases).filter(key => key !== 'phase1');
+      const newPhaseKeys = Object.keys(result.importPhases).filter((key) => key !== 'phase1');
       expect(newPhaseKeys.length).toBe(1);
 
       const newPhaseKey = newPhaseKeys[0];
@@ -106,7 +106,7 @@ describe('Import View', () => {
       expect(result.importActions).toBeDefined();
       expect(result.importRecords).toBeDefined();
 
-      const newActionKeys = Object.keys(result.importActions).filter(key => key !== 'action1');
+      const newActionKeys = Object.keys(result.importActions).filter((key) => key !== 'action1');
       expect(newActionKeys.length).toBe(1);
 
       const newActionKey = newActionKeys[0];
@@ -121,7 +121,7 @@ describe('Import View', () => {
       expect(result.importActions).toBeDefined();
       expect(result.importRecords).toBeDefined();
 
-      const newRecordKeys = Object.keys(result.importRecords).filter(key => key !== 'record1');
+      const newRecordKeys = Object.keys(result.importRecords).filter((key) => key !== 'record1');
       expect(newRecordKeys.length).toBe(1);
 
       const newRecordKey = newRecordKeys[0];
@@ -133,14 +133,16 @@ describe('Import View', () => {
   describe('importItemsThunk', () => {
     it('should dispatch thunk lifecycle actions with prepared data', async () => {
       const store = mockStore({
-        selectedTOS: mockTOS
+        selectedTOS: mockTOS,
       });
 
-      await store.dispatch(importItemsThunk({
-        newItem: 'record1',
-        level: 'record',
-        itemParent: 'action1'
-      }));
+      await store.dispatch(
+        importItemsThunk({
+          newItem: 'record1',
+          level: 'record',
+          itemParent: 'action1',
+        }),
+      );
 
       const actions = store.getActions();
 

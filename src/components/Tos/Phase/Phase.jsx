@@ -505,7 +505,9 @@ const Phase = React.forwardRef(
           {deleting && (
             <Popup
               closePopup={cancelDeletion}
-              content={<DeleteView type='phase' target={getTargetName()} action={deletePhase} cancel={cancelDeletion} />}
+              content={
+                <DeleteView type='phase' target={getTargetName()} action={deletePhase} cancel={cancelDeletion} />
+              }
             />
           )}
 

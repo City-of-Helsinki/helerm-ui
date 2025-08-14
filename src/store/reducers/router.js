@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export const initialState = {
   location: null,
-  action: null
+  action: null,
 };
 
 const routerSlice = createSlice({
@@ -12,8 +12,8 @@ const routerSlice = createSlice({
     locationChange: (state, action) => {
       state.location = action.payload.location;
       state.action = action.payload.action;
-    }
-  }
+    },
+  },
 });
 
 export const { locationChange } = routerSlice.actions;

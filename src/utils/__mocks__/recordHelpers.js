@@ -41,10 +41,10 @@ export const createValidationTestRecord = () => {
       SocialSecurityNumber: 'Ei sisällä henkilötunnusta',
       RetentionReason: 'Ei sp:Taloushallinto 2 - kunnallisten asiakirjojen säilytysaikasuositus',
       // RetentionPeriodStart is missing - this should cause an error for conditional requirement
-      InformationSystem: ['Lupapiste', 'OutsideValueTest'] // Contains a value outside allowed list - should cause warning
+      InformationSystem: ['Lupapiste', 'OutsideValueTest'], // Contains a value outside allowed list - should cause warning
     },
     created_at: apiRecordData.created_at || new Date().toISOString(),
-    modified_at: apiRecordData.modified_at || new Date().toISOString()
+    modified_at: apiRecordData.modified_at || new Date().toISOString(),
   };
 };
 

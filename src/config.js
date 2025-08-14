@@ -17,17 +17,12 @@ const THEMES = {
   summer: '#ffc61e',
   suomenlinna: '#f5a3c7',
   tram: '#009246',
-  white: '#ffffff'
+  white: '#ffffff',
 };
 
 function envValueToBoolean(value, defaultValue) {
   const strValue = String(value).toLowerCase();
-  if (
-    value === false ||
-    strValue === '' ||
-    strValue === 'false' ||
-    strValue === '0'
-  ) {
+  if (value === false || strValue === '' || strValue === 'false' || strValue === '0') {
     return false;
   }
   if (value === true || strValue === 'true' || strValue === '1') {
@@ -40,18 +35,13 @@ export default {
   NODE_ENV: import.meta.env.NODE_ENV,
   API_URL: import.meta.env.REACT_APP_API_URL,
   API_VERSION: import.meta.env.REACT_APP_API_VERSION,
-  RESULTS_PER_PAGE:
-    parseInt(import.meta.env.REACT_APP_RESULTS_PER_PAGE, 10) ||
-    consts.DEFAULT_PAGE_SIZE,
-  SEARCH_PAGE_SIZE:
-    parseInt(import.meta.env.REACT_APP_SEARCH_PAGE_SIZE, 10) ||
-    consts.DEFAULT_SEARCH_PAGE_SIZE,
+  RESULTS_PER_PAGE: parseInt(import.meta.env.REACT_APP_RESULTS_PER_PAGE, 10) || consts.DEFAULT_PAGE_SIZE,
+  SEARCH_PAGE_SIZE: parseInt(import.meta.env.REACT_APP_SEARCH_PAGE_SIZE, 10) || consts.DEFAULT_SEARCH_PAGE_SIZE,
   GIT_VERSION: import.meta.env.REACT_APP_GIT_VERSION,
   SITE_TITLE: import.meta.env.REACT_APP_SITE_TITLE || '',
   FEEDBACK_URL: import.meta.env.REACT_APP_FEEDBACK_URL,
   FACETED_SEARCH_LENGTH:
-    parseInt(import.meta.env.REACT_APP_FACETED_SEARCH_LENGTH, 10) ||
-    consts.DEFAULT_FACETED_SEARCH_LENGTH,
+    parseInt(import.meta.env.REACT_APP_FACETED_SEARCH_LENGTH, 10) || consts.DEFAULT_FACETED_SEARCH_LENGTH,
   SITE_THEME: THEMES[import.meta.env.REACT_APP_SITE_THEME] || THEMES.coat,
   SENTRY_DSN: import.meta.env.REACT_APP_SENTRY_DSN,
   OIDC_DEBUG: envValueToBoolean(import.meta.env.REACT_APP_OIDC_DEBUG, false),

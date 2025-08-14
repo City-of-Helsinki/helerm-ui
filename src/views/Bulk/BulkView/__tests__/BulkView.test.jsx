@@ -63,7 +63,7 @@ const renderComponent = (storeOverrides = {}) => {
   const mockBulkUpdate = {
     ...bulkUpdate,
     is_approved: false, // Ensure button is not disabled due to already approved
-    ...storeOverrides.bulkOverrides
+    ...storeOverrides.bulkOverrides,
   };
   const mockNavigationItem = createMockNavigationItem({
     id: 'test-function-election-001', // Match the ID from bulk changes

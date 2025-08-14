@@ -6,7 +6,13 @@ import { cloneDeep, isEmpty, values } from 'lodash';
 import { fetchNavigationThunk } from '../navigation';
 import api from '../../../utils/api';
 import { normalizeTosFromApi, normalizeTosForApi } from '../../../utils/helpers';
-import { addActionReducer, editActionReducer, editActionAttributeReducer, removeActionReducer, setActionVisibilityReducer } from './action';
+import {
+  addActionReducer,
+  editActionReducer,
+  editActionAttributeReducer,
+  removeActionReducer,
+  setActionVisibilityReducer,
+} from './action';
 import {
   addPhaseReducer,
   editPhaseReducer,
@@ -14,14 +20,14 @@ import {
   removePhaseReducer,
   setPhaseAttributesVisibilityReducer,
   setPhaseVisibilityReducer,
-  setPhasesVisibilityReducer
+  setPhasesVisibilityReducer,
 } from './phase';
 import {
   addRecordReducer,
   editRecordReducer,
   editRecordAttributeReducer,
   removeRecordReducer,
-  setRecordVisibilityReducer
+  setRecordVisibilityReducer,
 } from './record';
 import { executeImportReducer, importItemsThunk } from './importView';
 import { receiveTemplateReducer, cloneFromTemplateThunk } from './cloneView';
@@ -49,7 +55,7 @@ export const initialState = {
   isFetching: false,
   is_classification_open: false,
   is_open: false,
-  is_version_open: false
+  is_version_open: false,
 };
 
 export const fetchTOSThunk = createAsyncThunk(
@@ -68,43 +74,40 @@ export const fetchTOSThunk = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch TOS');
     }
-  }
+  },
 );
 
-export const saveDraftThunk = createAsyncThunk(
-  'selectedTOS/saveDraft',
-  async (_, { getState, rejectWithValue }) => {
-    try {
-      const tos = cloneDeep(getState().selectedTOS);
-      const newTos = cloneDeep(tos);
-      const finalPhases = normalizeTosForApi(newTos);
-      const denormalizedTos = { ...tos, phases: finalPhases };
-      const currentVersion = tos.version;
+export const saveDraftThunk = createAsyncThunk('selectedTOS/saveDraft', async (_, { getState, rejectWithValue }) => {
+  try {
+    const tos = cloneDeep(getState().selectedTOS);
+    const newTos = cloneDeep(tos);
+    const finalPhases = normalizeTosForApi(newTos);
+    const denormalizedTos = { ...tos, phases: finalPhases };
+    const currentVersion = tos.version;
 
-      const response = await api.put(`function/${tos.id}`, denormalizedTos);
+    const response = await api.put(`function/${tos.id}`, denormalizedTos);
 
-      if (!response.ok) {
-        const json = await response.json();
-        const message = !isEmpty(json) ? values(json).join(',') : response.statusText;
-        throw new Error(message);
-      }
-
+    if (!response.ok) {
       const json = await response.json();
-
-      if (json.version !== currentVersion + 1) {
-        alert(
-          `Muokkasit luonnoksen versiota ${currentVersion}, ` +
-          `mutta tallennettaessa versionumero kasvoi enemmän ` +
-          `kuin yhdellä. Tarkistathan, että tallentamasi luonnoksen (versio ${json.version}) tiedot ovat ajantasalla.`
-        );
-      }
-
-      return json;
-    } catch (error) {
-      return rejectWithValue(error instanceof Error ? error.message : 'Failed to save draft');
+      const message = !isEmpty(json) ? values(json).join(',') : response.statusText;
+      throw new Error(message);
     }
+
+    const json = await response.json();
+
+    if (json.version !== currentVersion + 1) {
+      alert(
+        `Muokkasit luonnoksen versiota ${currentVersion}, ` +
+          `mutta tallennettaessa versionumero kasvoi enemmän ` +
+          `kuin yhdellä. Tarkistathan, että tallentamasi luonnoksen (versio ${json.version}) tiedot ovat ajantasalla.`,
+      );
+    }
+
+    return json;
+  } catch (error) {
+    return rejectWithValue(error instanceof Error ? error.message : 'Failed to save draft');
   }
-);
+});
 
 export const changeStatusThunk = createAsyncThunk(
   'selectedTOS/changeStatus',
@@ -125,7 +128,7 @@ export const changeStatusThunk = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to change status');
     }
-  }
+  },
 );
 
 const updateStateWithNormalizedTos = (state, tosData) => {
@@ -213,7 +216,7 @@ const tosSlice = createSlice({
 
     executeImport: executeImportReducer,
     receiveTemplate: receiveTemplateReducer,
-    executeOrderChange: executeOrderChangeReducer
+    executeOrderChange: executeOrderChangeReducer,
   },
   extraReducers: (builder) => {
     builder
@@ -226,40 +229,40 @@ const tosSlice = createSlice({
       })
 
       .addMatcher(
-        (action) => action.type.endsWith('/pending') && [
-          fetchTOSThunk.pending.type,
-          saveDraftThunk.pending.type,
-          changeStatusThunk.pending.type
-        ].includes(action.type),
+        (action) =>
+          action.type.endsWith('/pending') &&
+          [fetchTOSThunk.pending.type, saveDraftThunk.pending.type, changeStatusThunk.pending.type].includes(
+            action.type,
+          ),
         (state) => {
           state.isFetching = true;
-        }
+        },
       )
       .addMatcher(
-        (action) => action.type.endsWith('/fulfilled') && [
-          fetchTOSThunk.fulfilled.type,
-          saveDraftThunk.fulfilled.type,
-          changeStatusThunk.fulfilled.type
-        ].includes(action.type),
+        (action) =>
+          action.type.endsWith('/fulfilled') &&
+          [fetchTOSThunk.fulfilled.type, saveDraftThunk.fulfilled.type, changeStatusThunk.fulfilled.type].includes(
+            action.type,
+          ),
         (state, action) => {
           updateStateWithNormalizedTos(state, action.payload);
-        }
+        },
       )
       .addMatcher(
-        (action) => action.type.endsWith('/rejected') && [
-          fetchTOSThunk.rejected.type,
-          saveDraftThunk.rejected.type,
-          changeStatusThunk.rejected.type
-        ].includes(action.type),
+        (action) =>
+          action.type.endsWith('/rejected') &&
+          [fetchTOSThunk.rejected.type, saveDraftThunk.rejected.type, changeStatusThunk.rejected.type].includes(
+            action.type,
+          ),
         (state) => {
           state.isFetching = false;
-        }
-      )
+        },
+      );
   },
   selectors: {
     selectedTOSSelector: (state) => state,
-    isFetchingSelector: (state) => state.isFetching
-  }
+    isFetchingSelector: (state) => state.isFetching,
+  },
 });
 
 export const { selectedTOSSelector, isFetchingSelector } = tosSlice.selectors;
@@ -301,7 +304,7 @@ export const {
   // Other reducers
   executeImport,
   receiveTemplate,
-  executeOrderChange
+  executeOrderChange,
 } = tosSlice.actions;
 
 export default tosSlice.reducer;

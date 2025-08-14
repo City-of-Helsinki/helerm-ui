@@ -46,7 +46,7 @@ import tosReducer, {
   // Other reducers
   executeImport,
   receiveTemplate,
-  executeOrderChange
+  executeOrderChange,
 } from './main';
 
 import { createNewAction } from './action';
@@ -111,7 +111,7 @@ export {
 
   // Selectors
   selectedTOSSelector,
-  isFetchingSelector
+  isFetchingSelector,
 };
 
 export default tosReducer;

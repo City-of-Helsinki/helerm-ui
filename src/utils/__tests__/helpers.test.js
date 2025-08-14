@@ -8,7 +8,7 @@ const mockNavigationDataShort = [
     id: 'cee34db0de3e47fbb937b74dd87ea759',
     code: '00',
     title: 'Hallintoasiat',
-    parent: null
+    parent: null,
   },
   {
     id: '7a5967d6a21d412d9c1fcdfebf2d3e19',
@@ -16,8 +16,8 @@ const mockNavigationDataShort = [
     title: 'Hallintoasioiden ohjaus',
     parent: {
       id: 'cee34db0de3e47fbb937b74dd87ea759',
-      version: 1
-    }
+      version: 1,
+    },
   },
   {
     id: 'fb61caa7ec9d4332b0737831fd829293',
@@ -25,9 +25,9 @@ const mockNavigationDataShort = [
     title: 'Y HALO THAR!',
     parent: {
       id: '7a5967d6a21d412d9c1fcdfebf2d3e19',
-      version: 1
-    }
-  }
+      version: 1,
+    },
+  },
 ];
 
 const mockNavigationDataFullObjects = [
@@ -35,7 +35,7 @@ const mockNavigationDataFullObjects = [
     id: 'test1',
     code: '01',
     title: 'Test Item 1',
-    parent: null
+    parent: null,
   },
   {
     id: 'test2',
@@ -43,9 +43,9 @@ const mockNavigationDataFullObjects = [
     title: 'Test Sub Item',
     parent: {
       id: 'test1',
-      version: 1
-    }
-  }
+      version: 1,
+    },
+  },
 ];
 
 const mockNavigationDataOrphan = [
@@ -55,9 +55,9 @@ const mockNavigationDataOrphan = [
     title: 'Orphan Item',
     parent: {
       id: 'nonexistent-parent',
-      version: 1
-    }
-  }
+      version: 1,
+    },
+  },
 ];
 
 const ADMINISTRATIVE_MATTERS = '00 Hallintoasiat';
@@ -91,7 +91,7 @@ describe('convertToTree', () => {
             title: 'Hallintoasioiden ohjaus',
             parent: {
               id: 'cee34db0de3e47fbb937b74dd87ea759',
-              version: 1
+              version: 1,
             },
             children: [
               {
@@ -104,18 +104,16 @@ describe('convertToTree', () => {
                 code: '00 00 00',
                 parent: {
                   id: '7a5967d6a21d412d9c1fcdfebf2d3e19',
-                  version: 1
-                }
-              }
-            ]
-          }
-        ]
-      }
+                  version: 1,
+                },
+              },
+            ],
+          },
+        ],
+      },
     ]);
   });
   it('Throws descriptive error when tree is broken', () => {
-    expect(() => convertToTree(mockNavigationDataOrphan)).toThrow(
-      /^Parent with id .* not found$/
-    );
+    expect(() => convertToTree(mockNavigationDataOrphan)).toThrow(/^Parent with id .* not found$/);
   });
 });

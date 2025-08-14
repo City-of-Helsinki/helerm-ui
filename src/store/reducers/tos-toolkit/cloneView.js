@@ -18,17 +18,20 @@ export const cloneFromTemplateThunk = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error instanceof Error ? error.message : 'Failed to clone template');
     }
-  }
+  },
 );
 
 export const receiveTemplateReducer = (state, action) => {
   const template = action.payload;
-  const { entities: { tos, phases, actions, records }, result } = normalizeTosFromApi(template);
+  const {
+    entities: { tos, phases, actions, records },
+    result,
+  } = normalizeTosFromApi(template);
 
-  state.attributes = { ...state.attributes, ...tos[result].attributes || {} };
-  state.actions = { ...state.actions, ...actions || {} };
-  state.phases = { ...state.phases, ...phases || {} };
-  state.records = { ...state.records, ...records || {} };
+  state.attributes = { ...state.attributes, ...(tos[result].attributes || {}) };
+  state.actions = { ...state.actions, ...(actions || {}) };
+  state.phases = { ...state.phases, ...(phases || {}) };
+  state.records = { ...state.records, ...(records || {}) };
   state.lastUpdated = Date.now();
   state.documentState = 'edit';
   state.isFetching = false;

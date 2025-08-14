@@ -6,7 +6,13 @@ import { screen, waitFor } from '@testing-library/react';
 
 import ViewTos from '../ViewTos';
 import renderWithProviders, { storeDefaultState } from '../../../../utils/renderWithProviders';
-import { attributeTypes, classification, validTOS, user, template as templateData } from '../../../../utils/__mocks__/mockHelpers';
+import {
+  attributeTypes,
+  classification,
+  validTOS,
+  user,
+  template as templateData,
+} from '../../../../utils/__mocks__/mockHelpers';
 import api from '../../../../utils/api';
 import { USER_LOGIN_STATUS } from '../../../../constants';
 import * as helpers from '../../../../utils/helpers';
@@ -29,12 +35,10 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
-
 const mockTosApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => validTOS }));
 const mockClassificationApiGet = vi
   .fn()
   .mockImplementation(() => Promise.resolve({ ok: true, json: () => classification }));
-
 
 const mockApiPost = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => ({}) }));
 const mockApiPut = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => ({}) }));
@@ -48,7 +52,6 @@ vi.spyOn(api, 'get').mockImplementation((url) => {
     return mockTosApiGet();
   }
 
-
   return Promise.resolve({ ok: true, json: () => ({}) });
 });
 
@@ -58,12 +61,10 @@ vi.spyOn(api, 'put').mockImplementation(() => mockApiPut());
 const mockDisplayMessage = vi.fn();
 vi.spyOn(helpers, 'displayMessage').mockImplementation(mockDisplayMessage);
 
-
 Object.defineProperty(window, 'scrollTo', {
   value: vi.fn(),
   writable: true,
 });
-
 
 const createTosFromApiData = (overrides = {}) => ({
   ...validTOS,
@@ -1134,26 +1135,27 @@ describe('<ViewTos />', () => {
     });
 
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-  });    it('handles TOS with validation state combinations', async () => {
-      const validationStates = [
-        { isOpen: true, validationErrors: [] },
-        { isOpen: true, validationErrors: ['Error 1', 'Error 2'] },
-        { isOpen: false, validationErrors: [] },
-        { isOpen: false, validationErrors: ['Error 1'] },
-      ];
+  });
+  it('handles TOS with validation state combinations', async () => {
+    const validationStates = [
+      { isOpen: true, validationErrors: [] },
+      { isOpen: true, validationErrors: ['Error 1', 'Error 2'] },
+      { isOpen: false, validationErrors: [] },
+      { isOpen: false, validationErrors: ['Error 1'] },
+    ];
 
-      for (const validationState of validationStates) {
-        const { unmount } = renderComponent({
-          selectedTOS: createTosWithErrors(),
-          validation: validationState,
-        });
+    for (const validationState of validationStates) {
+      const { unmount } = renderComponent({
+        selectedTOS: createTosWithErrors(),
+        validation: validationState,
+      });
 
-        await waitFor(() => {
-          expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-        });
-
+      await waitFor(() => {
         expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-        unmount();
-      }
-    });
+      });
+
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+      unmount();
+    }
+  });
 });

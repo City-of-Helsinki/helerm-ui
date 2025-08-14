@@ -1,22 +1,21 @@
-
 function get() {
-  return Promise.resolve({})
+  return Promise.resolve({});
 }
 
 function post() {
-  return Promise.resolve({})
+  return Promise.resolve({});
 }
 
 function put() {
-  return Promise.resolve({})
+  return Promise.resolve({});
 }
 
 function patch() {
-  return Promise.resolve({})
+  return Promise.resolve({});
 }
 
 function del() {
-  return Promise.resolve({})
+  return Promise.resolve({});
 }
 
 const methods = { get, post, put, patch, del };

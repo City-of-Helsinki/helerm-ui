@@ -82,16 +82,12 @@ class MatomoTracker {
     this.track({ data: [TRACK_TYPES.TRACK_VIEW], ...params });
   }
 
-  track({
-    data = [],
-    documentTitle = document.title,
-    href,
-  }) {
+  track({ data = [], documentTitle = document.title, href }) {
     if (data.length) {
       this.pushInstruction('setCustomUrl', href ?? window.location.href);
       this.pushInstruction('setDocumentTitle', documentTitle);
 
-      this.pushInstruction(...(data));
+      this.pushInstruction(...data);
     }
   }
 }

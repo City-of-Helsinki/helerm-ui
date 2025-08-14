@@ -6,7 +6,7 @@ export const createNewRecord = ({ attributes, actionId }) => {
   const recordId = randomActionId();
 
   const newAttributes = {};
-  Object.keys(attributes).forEach(key => {
+  Object.keys(attributes).forEach((key) => {
     if (Object.hasOwn(attributes, key) && attributes[key].checked) {
       newAttributes[key] = attributes[key].value;
     }
@@ -16,7 +16,7 @@ export const createNewRecord = ({ attributes, actionId }) => {
     id: recordId,
     action: actionId,
     attributes: newAttributes,
-    is_open: false
+    is_open: false,
   };
 
   return { actionId, recordId, newRecord };
@@ -29,15 +29,15 @@ export const addRecordReducer = (state, action) => {
     actions: {
       [actionId]: {
         records: {
-          $push: [recordId]
-        }
-      }
+          $push: [recordId],
+        },
+      },
     },
     records: {
       [recordId]: {
-        $set: newRecord
-      }
-    }
+        $set: newRecord,
+      },
+    },
   });
 };
 
@@ -48,10 +48,10 @@ export const editRecordReducer = (state, action) => {
     records: {
       [recordId]: {
         attributes: {
-          $merge: editedRecord.attributes
-        }
-      }
-    }
+          $merge: editedRecord.attributes,
+        },
+      },
+    },
   });
 };
 
@@ -63,11 +63,11 @@ export const editRecordAttributeReducer = (state, action) => {
       [recordId]: {
         attributes: {
           [attributeName]: {
-            $set: attributeValue
-          }
-        }
-      }
-    }
+            $set: attributeValue,
+          },
+        },
+      },
+    },
   });
 };
 
@@ -84,17 +84,14 @@ export const removeRecordReducer = (state, action) => {
         ...updatedState.actions,
         [actionId]: {
           ...updatedState.actions[actionId],
-          records: [
-            ...actionRecords.slice(0, recordIndex),
-            ...actionRecords.slice(recordIndex + 1)
-          ]
-        }
+          records: [...actionRecords.slice(0, recordIndex), ...actionRecords.slice(recordIndex + 1)],
+        },
       };
     }
   }
 
   const remainingRecords = {};
-  Object.keys(updatedState.records).forEach(key => {
+  Object.keys(updatedState.records).forEach((key) => {
     if (key !== recordId) {
       remainingRecords[key] = updatedState.records[key];
     }
@@ -111,9 +108,9 @@ export const setRecordVisibilityReducer = (state, action) => {
     records: {
       [recordId]: {
         is_open: {
-          $set: visibility
-        }
-      }
-    }
+          $set: visibility,
+        },
+      },
+    },
   });
 };

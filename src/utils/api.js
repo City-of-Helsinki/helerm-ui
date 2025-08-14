@@ -24,7 +24,6 @@ export class Unauthorized extends Error {
   }
 }
 
-
 /**
  *
  * @param query
@@ -67,21 +66,16 @@ export function callApi(endpoint, params, options = {}) {
     {
       method: 'GET',
       credentials: 'include',
-      mode: 'cors'
+      mode: 'cors',
     },
-    options
+    options,
   );
 
   defaultHeaders.append('Accept', CONTENT_TYPE_JSON);
 
-  if (
-    !token &&
-    ALLOWED_METHODS_WITHOUT_AUTHENTICATION.indexOf(finalOptions.method) !== 0
-  ) {
+  if (!token && ALLOWED_METHODS_WITHOUT_AUTHENTICATION.indexOf(finalOptions.method) !== 0) {
     throw Error(
-      `Following methods for API-endpoint require authentication: ${ALLOWED_METHODS_WITHOUT_AUTHENTICATION.join(
-        ', '
-      )}`
+      `Following methods for API-endpoint require authentication: ${ALLOWED_METHODS_WITHOUT_AUTHENTICATION.join(', ')}`,
     );
   }
 
@@ -99,7 +93,6 @@ export function callApi(endpoint, params, options = {}) {
 
   return fetch(url, finalOptions).then((res) => {
     if (res.status === 401) {
-
       throw new Unauthorized(url);
     }
     return res;
@@ -128,16 +121,9 @@ export function get(endpoint, params = {}, options = {}) {
 export function post(endpoint, data, params = {}, options = {}) {
   if (typeof data !== 'string') {
     data = JSON.stringify(data);
-    options.headers = merge(
-      { 'Content-Type': CONTENT_TYPE_JSON },
-      options.headers
-    );
+    options.headers = merge({ 'Content-Type': CONTENT_TYPE_JSON }, options.headers);
   }
-  return callApi(
-    endpoint,
-    params,
-    merge({ body: data, method: 'POST' }, options)
-  );
+  return callApi(endpoint, params, merge({ body: data, method: 'POST' }, options));
 }
 
 /**
@@ -151,31 +137,17 @@ export function post(endpoint, data, params = {}, options = {}) {
 export function put(endpoint, data, params = {}, options = {}) {
   if (typeof data !== 'string') {
     data = JSON.stringify(data);
-    options.headers = merge(
-      { 'Content-Type': CONTENT_TYPE_JSON },
-      options.headers
-    );
+    options.headers = merge({ 'Content-Type': CONTENT_TYPE_JSON }, options.headers);
   }
-  return callApi(
-    endpoint,
-    params,
-    merge({ body: data, method: 'PUT' }, options)
-  );
+  return callApi(endpoint, params, merge({ body: data, method: 'PUT' }, options));
 }
 
 export function patch(endpoint, data, params = {}, options = {}) {
   if (typeof data !== 'string') {
     data = JSON.stringify(data);
-    options.headers = merge(
-      { 'Content-Type': CONTENT_TYPE_JSON },
-      options.headers
-    );
+    options.headers = merge({ 'Content-Type': CONTENT_TYPE_JSON }, options.headers);
   }
-  return callApi(
-    endpoint,
-    params,
-    merge({ body: data, method: 'PATCH' }, options)
-  );
+  return callApi(endpoint, params, merge({ body: data, method: 'PATCH' }, options));
 }
 
 /**

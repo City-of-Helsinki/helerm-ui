@@ -58,20 +58,20 @@ const ReorderView = ({
   };
 
   return (
-    <div className='row' data-testid="reorder-view">
+    <div className='row' data-testid='reorder-view'>
       <h3 className='col-xs-12'>Järjestä</h3>
       {target === 'phase' && (
-        <span className='col-xs-12 reorder-subtext' data-testid="reorder-subtext-phase">
+        <span className='col-xs-12 reorder-subtext' data-testid='reorder-subtext-phase'>
           Järjestä TOS:n <strong className='reorder-subtext-highlight'>{parentName || ''}</strong> käsittelyvaiheita
         </span>
       )}
       {target === 'action' && (
-        <span className='col-xs-12 reorder-subtext' data-testid="reorder-subtext-action">
+        <span className='col-xs-12 reorder-subtext' data-testid='reorder-subtext-action'>
           Järjestä käsittelyvaiheen <strong className='reorder-subtext-highlight'>{parentName || ''}</strong>{' '}
           toimenpiteet
         </span>
       )}
-      <div className='col-xs-12 reorder-list' data-testid="reorder-list">
+      <div className='col-xs-12 reorder-list' data-testid='reorder-list'>
         {items.map((item, index) => (
           <ReorderItem
             key={item.key}
@@ -83,11 +83,21 @@ const ReorderView = ({
           />
         ))}
       </div>
-      <div className='col-xs-12 button-row' data-testid="reorder-button-row">
-        <button type='button' onClick={() => handleChangeOrder(items)} className='btn btn-primary pull-right' data-testid="reorder-save-button">
+      <div className='col-xs-12 button-row' data-testid='reorder-button-row'>
+        <button
+          type='button'
+          onClick={() => handleChangeOrder(items)}
+          className='btn btn-primary pull-right'
+          data-testid='reorder-save-button'
+        >
           Tallenna
         </button>
-        <button type='button' onClick={toggleReorderView} className='btn btn-danger pull-right' data-testid="reorder-cancel-button">
+        <button
+          type='button'
+          onClick={toggleReorderView}
+          className='btn btn-danger pull-right'
+          data-testid='reorder-cancel-button'
+        >
           Peruuta
         </button>
       </div>
