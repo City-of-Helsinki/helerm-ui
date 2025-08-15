@@ -1,55 +1,82 @@
-import { createBrowserHistory } from 'history';
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { waitFor } from '@testing-library/react';
 
 import BulkCreateView from '../BulkCreateView';
-import renderWithProviders from '../../../../utils/renderWithProviders';
-import attributeRules from '../../../../utils/mocks/attributeRules.json';
-import validTOS from '../../../../utils/mocks/validTOS.json';
-import user from '../../../../utils/mocks/user.json';
+import renderWithProviders, { storeDefaultState } from '../../../../utils/renderWithProviders';
+import { classification } from '../../../../utils/__mocks__/mockHelpers';
+import api from '../../../../utils/api';
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
-const renderComponent = () => {
-  const history = createBrowserHistory();
-
-  const props = {
-    displayMessage: vi.fn(),
-    getAttributeName: vi.fn(),
-    fetchNavigation: vi.fn(),
-    saveBulkUpdate: vi.fn(),
-    attributeTypes: attributeRules,
-    isFetching: false,
-    items: [validTOS],
-  };
-
-  const router = createBrowserRouter([{ path: '/', element: <BulkCreateView {...props} /> }]);
-
-  const store = mockStore({
-    ui: {
-      actionTypes: {},
-      attributeTypes: attributeRules,
-      phaseTypes: {},
-      recordTypes: {},
-      templates: [],
-    },
-    navigation: {
-      isFetching: false,
-      items: [validTOS],
-    },
-    user: {
-      data: user,
-    },
-  });
-
-  return renderWithProviders(<RouterProvider router={router} />, { history, store });
+const mockClassificationResponse = {
+  count: classification.length,
+  next: null,
+  previous: null,
+  results: classification,
 };
 
-describe('<BulkCreateView />', () => {
-  it('renders correctly', () => {
+const mockClassificationApiGet = vi
+  .fn()
+  .mockImplementation(() => Promise.resolve({ ok: true, json: () => mockClassificationResponse }));
+
+vi.spyOn(api, 'get').mockImplementation((url) => {
+  if (url.includes('classification')) {
+    return mockClassificationApiGet();
+  }
+
+  return Promise.resolve({ ok: false, status: 404, json: () => ({ error: 'Not found' }) });
+});
+
+const renderComponent = (storeOverride) => {
+  const store = storeOverride ?? mockStore(storeDefaultState);
+  const router = createBrowserRouter([{ path: '/', element: <BulkCreateView /> }]);
+
+  return renderWithProviders(<RouterProvider router={router} />, { store });
+};
+
+describe('<BulkCreateView /> - Simple async thunk test', () => {
+  it('renders correctly', async () => {
     renderComponent();
+  });
+
+  it('fetches navigation on mount', async () => {
+    const store = mockStore(storeDefaultState);
+
+    renderComponent(store);
+
+    await waitFor(() =>
+      expect(store.getActions()).toEqual([
+        {
+          type: 'navigation/fetchNavigation/pending',
+          payload: undefined,
+          meta: expect.anything(),
+        },
+        {
+          type: 'navigation/receiveNavigation',
+          payload: {
+            includeRelated: true,
+            items: classification,
+            page: 1,
+          },
+        },
+        {
+          type: 'navigation/parseNavigation',
+          payload: {
+            items: [],
+          },
+        },
+        {
+          type: 'navigation/fetchNavigation/fulfilled',
+          payload: {
+            ...mockClassificationResponse,
+          },
+          meta: expect.anything(),
+        },
+      ]),
+    );
   });
 });

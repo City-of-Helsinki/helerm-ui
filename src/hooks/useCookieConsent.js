@@ -35,7 +35,7 @@ const useCookieConsent = (isModal = true) => {
     focusTargetSelector: isModal ? `#main` : undefined,
   };
 
-  return { config }
+  return { config };
 };
 
 export default useCookieConsent;

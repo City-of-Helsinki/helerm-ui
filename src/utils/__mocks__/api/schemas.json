@@ -1,0 +1,99 @@
+{
+  "function": {
+    "$schema": "https://json-schema.org/draft-04/schema",
+    "type": "object",
+    "properties": {
+      "InformationSystem": {
+        "anyOf": [{ "type": "string" }, { "type": "array", "items": { "type": "string" } }]
+      },
+      "PublicityClass": {
+        "enum": ["Julkinen", "Ei-julkinen", "Osittain salassa pidettävä", "Salassa pidettävä"]
+      },
+      "RetentionPeriod": {
+        "enum": ["0", "1", "2", "3", "5", "10", "20", "25", "50", "120", "-1"]
+      },
+      "SecurityPeriod": {
+        "enum": ["25", "50", "100"]
+      },
+      "RetentionReason": {
+        "enum": [
+          "Ei sp: Yleishallinto 1 - kunnallisten asiakirjojen säilytysaikasuositus",
+          "Ei sp: Opetustoimi 12 - kunnallisten asiakirjojen säilytysaikasuositus",
+          "Sp-asiakirjoille: Pysyvästi säilytettävät kunnalliset opetustoimen asiakirjat 2003"
+        ]
+      },
+      "SecurityReason": {
+        "enum": ["JulkL 24.1 § 1 kohta", "JulkL 24.1 § 2 kohta", "HenkilötietoL 11 §"]
+      },
+      "RetentionPeriodStart": {
+        "enum": ["Asian lopullinen ratkaisu", "Asiakirjan päivämäärä", "Tilikauden päättyminen"]
+      },
+      "PersonalData": {
+        "enum": ["Ei sisällä henkilötietoja", "Sisältää henkilötietoja", "Sisältää erityisiä henkilötietoja"]
+      },
+      "SocialSecurityNumber": {
+        "enum": ["Ei sisällä henkilötunnusta", "Sisältää henkilötunnuksen"]
+      },
+      "StorageLocation": { "type": "string" },
+      "StorageOrder": {
+        "enum": ["Säilytetään sähköisesti", "Aakkosjärjestys", "Aikajärjestys"]
+      },
+      "Subject": {
+        "anyOf": [{ "type": "string" }, { "type": "array", "items": { "type": "string" } }]
+      }
+    },
+    "required": ["SocialSecurityNumber", "RetentionPeriod", "PublicityClass", "RetentionReason", "PersonalData"]
+  },
+  "phase": {
+    "$schema": "https://json-schema.org/draft-04/schema",
+    "type": "object",
+    "properties": {
+      "PhaseType": {
+        "enum": ["Neuvonta/Ohjaus", "Valmistelu/Käsittely", "Päätöksenteko", "Toimeenpano"]
+      },
+      "TypeSpecifier": { "type": "string" },
+      "InformationSystem": {
+        "anyOf": [{ "type": "string" }, { "type": "array", "items": { "type": "string" } }]
+      },
+      "AdditionalInformation": { "type": "string" }
+    }
+  },
+  "action": {
+    "$schema": "https://json-schema.org/draft-04/schema",
+    "type": "object",
+    "properties": {
+      "ActionType": { "type": "string" },
+      "TypeSpecifier": { "type": "string" },
+      "InformationSystem": {
+        "anyOf": [{ "type": "string" }, { "type": "array", "items": { "type": "string" } }]
+      },
+      "AdditionalInformation": { "type": "string" }
+    }
+  },
+  "record": {
+    "$schema": "https://json-schema.org/draft-04/schema",
+    "type": "object",
+    "properties": {
+      "RecordType": {
+        "enum": ["hakemus", "päätös", "sopimus", "lasku", "raportti", "todistus"]
+      },
+      "TypeSpecifier": { "type": "string" },
+      "InformationSystem": {
+        "anyOf": [{ "type": "string" }, { "type": "array", "items": { "type": "string" } }]
+      },
+      "PublicityClass": {
+        "enum": ["Julkinen", "Ei-julkinen", "Osittain salassa pidettävä", "Salassa pidettävä"]
+      },
+      "RetentionPeriod": {
+        "enum": ["0", "1", "2", "3", "5", "10", "20", "25", "50", "120", "-1"]
+      },
+      "PersonalData": {
+        "enum": ["Ei sisällä henkilötietoja", "Sisältää henkilötietoja", "Sisältää erityisiä henkilötietoja"]
+      },
+      "SocialSecurityNumber": {
+        "enum": ["Ei sisällä henkilötunnusta", "Sisältää henkilötunnuksen"]
+      }
+    },
+    "required": ["SocialSecurityNumber", "RetentionPeriod", "PublicityClass", "RecordType", "PersonalData"]
+  }
+}

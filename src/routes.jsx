@@ -3,23 +3,24 @@ import { Route, Navigate } from 'react-router-dom';
 
 import CoreLayout from './layouts/CoreLayout/CoreLayout';
 import InfoLayout from './layouts/InfoLayout/InfoLayout';
-import LoginCallbackContainer from './views/LoginCallback/LoginCallbackContainer';
+import LoginCallback from './views/LoginCallback/LoginCallback';
 import NotFound from './components/NotFound/NotFound';
 import ErrorPage from './views/ErrorPage/ErrorPage';
+import RouterSyncLayout from './components/RouterSyncLayout/RouterSyncLayout';
 
 const ViewInfo = React.lazy(() => import('./views/ViewInfo/ViewInfo'));
-const BulkListViewContainer = React.lazy(() => import('./views/Bulk/BulkListViewContainer'));
-const BulkViewContainer = React.lazy(() => import('./views/Bulk/BulkView/BulkViewContainer'));
-const BulkCreateViewContainer = React.lazy(() => import('./views/Bulk/BulkCreateView/BulkCreateViewContainer'));
-const FacetedSearchContainer = React.lazy(() => import('./views/FacetedSearch/FacetedSearchContainer'));
-const ViewTOSContainer = React.lazy(() => import('./views/Tos/ViewTos/ViewTosContainer'));
+const BulkListView = React.lazy(() => import('./views/Bulk/BulkListView'));
+const BulkView = React.lazy(() => import('./views/Bulk/BulkView/BulkView'));
+const BulkCreateView = React.lazy(() => import('./views/Bulk/BulkCreateView/BulkCreateView'));
+const FacetedSearch = React.lazy(() => import('./views/FacetedSearch/FacetedSearch'));
+const ViewTOS = React.lazy(() => import('./views/Tos/ViewTos/ViewTos'));
 const PrintTOS = React.lazy(() => import('./views/Tos/Print/PrintView'));
-const ViewClassificationContainer = React.lazy(() => import('./views/ViewClassification/ViewClassificationContainer'));
-const ClassificationTreeContainer = React.lazy(() => import('./views/ClassificationTree/ClassificationTreeContainer'));
+const ViewClassification = React.lazy(() => import('./views/ViewClassification/ViewClassification'));
+const ClassificationTree = React.lazy(() => import('./views/ClassificationTree/ClassificationTree'));
 const CookieManagement = React.lazy(() => import('./views/CookieManagement/CookieManagement'));
 
 const RoutesComponent = () => (
-  <>
+  <Route element={<RouterSyncLayout />}>
     <Route
       exact
       path='/info'
@@ -35,7 +36,7 @@ const RoutesComponent = () => (
       path='/callback'
       element={
         <InfoLayout>
-          <LoginCallbackContainer />
+          <LoginCallback />
         </InfoLayout>
       }
       errorElement={<Navigate to='/error' />}
@@ -45,7 +46,7 @@ const RoutesComponent = () => (
       path='/bulk'
       element={
         <InfoLayout>
-          <BulkListViewContainer />
+          <BulkListView />
         </InfoLayout>
       }
       errorElement={<Navigate to='/error' />}
@@ -55,7 +56,7 @@ const RoutesComponent = () => (
       path='/bulk/view/:id'
       element={
         <InfoLayout>
-          <BulkViewContainer />
+          <BulkView />
         </InfoLayout>
       }
       errorElement={<Navigate to='/error' />}
@@ -65,7 +66,7 @@ const RoutesComponent = () => (
       path='/bulk/create'
       element={
         <InfoLayout>
-          <BulkCreateViewContainer />
+          <BulkCreateView />
         </InfoLayout>
       }
       errorElement={<Navigate to='/error' />}
@@ -95,7 +96,7 @@ const RoutesComponent = () => (
       path='/search'
       element={
         <CoreLayout>
-          <FacetedSearchContainer />
+          <FacetedSearch />
         </CoreLayout>
       }
       errorElement={<Navigate to='/error' />}
@@ -105,7 +106,7 @@ const RoutesComponent = () => (
       path='/view-tos/:id/'
       element={
         <CoreLayout>
-          <ViewTOSContainer />
+          <ViewTOS />
         </CoreLayout>
       }
     />
@@ -114,7 +115,7 @@ const RoutesComponent = () => (
       path='/view-tos/:id/version/:version'
       element={
         <CoreLayout>
-          <ViewTOSContainer />
+          <ViewTOS />
         </CoreLayout>
       }
       errorElement={<Navigate to='/error' />}
@@ -144,7 +145,7 @@ const RoutesComponent = () => (
       path='/view-classification/:id'
       element={
         <CoreLayout>
-          <ViewClassificationContainer />
+          <ViewClassification />
         </CoreLayout>
       }
       errorElement={<Navigate to='/error' />}
@@ -154,7 +155,7 @@ const RoutesComponent = () => (
       path='/view-classification/:id/version/:version'
       element={
         <CoreLayout>
-          <ViewClassificationContainer />
+          <ViewClassification />
         </CoreLayout>
       }
       errorElement={<Navigate to='/error' />}
@@ -164,7 +165,7 @@ const RoutesComponent = () => (
       path='/classification-tree'
       element={
         <CoreLayout>
-          <ClassificationTreeContainer />
+          <ClassificationTree />
         </CoreLayout>
       }
       errorElement={<Navigate to='/error' />}
@@ -181,7 +182,7 @@ const RoutesComponent = () => (
     />
     <Route exact path='/error' element={<ErrorPage />} />
     <Route path='*' element={<NotFound />} />
-  </>
+  </Route>
 );
 
 export default RoutesComponent;

@@ -1,21 +1,18 @@
-import { createBrowserHistory } from 'history';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { screen } from '@testing-library/react';
 
 import SearchFilters from '../SearchFilters';
 import { navigationStateFilters } from '../../../../constants';
-import attributeRules from '../../../../utils/mocks/attributeRules.json';
+import { attributeTypes } from '../../../../utils/__mocks__/mockHelpers';
 import renderWithProviders from '../../../../utils/renderWithProviders';
 
 const baseMocks = {
-  attributeTypes: attributeRules,
+  attributeTypes: attributeTypes,
   isDetailSearch: false,
 };
 
 const renderComponent = (mocks = baseMocks) => {
-  const history = createBrowserHistory();
-
   return renderWithProviders(
     <BrowserRouter>
       <SearchFilters
@@ -26,7 +23,6 @@ const renderComponent = (mocks = baseMocks) => {
         handleFilterChange={vi.fn()}
       />
     </BrowserRouter>,
-    { history },
   );
 };
 

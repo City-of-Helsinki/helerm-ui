@@ -1,32 +1,43 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { bindActionCreators } from '@reduxjs/toolkit';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { EDIT } from '../../constants';
 import config from '../../config';
-import { fetchNavigation } from '../Navigation/reducer';
+import { fetchNavigationThunk } from '../../store/reducers/navigation';
 import IsAllowed from '../IsAllowed/IsAllowed';
 import Loader from '../Loader';
 import Logo from './Logo';
 import './Header.scss';
-import LoginContainer from '../Login/LoginContainer';
+import Login from '../Login/Login';
 
-const Header = (props) => {
-  const { isFetching } = props;
+const Header = () => {
   const gitVersion = config.GIT_VERSION;
   const siteTitle = config.SITE_TITLE;
   const feedbackUrl = config.FEEDBACK_URL;
   const themeColor = config.SITE_THEME;
 
+  const dispatch = useDispatch();
+
+  const isFetching = useSelector(
+    (state) => state.ui.isFetching || state.navigation.isFetching || state.selectedTOS.isFetching,
+  );
+
   return (
     <header className='header'>
       <nav className='navbar navbar-inverse container-fluid' style={{ backgroundColor: themeColor }}>
-        <Link to='/' className='brand-title navbar-brand logo' onClick={() => props.fetchNavigation(false)}>
+        <Link
+          to='/'
+          className='brand-title navbar-brand logo'
+          onClick={() => dispatch(fetchNavigationThunk({ includeRelated: false }))}
+        >
           <Logo />
         </Link>
-        <Link to='/' className='brand-title navbar-brand' onClick={() => props.fetchNavigation(false)}>
+        <Link
+          to='/'
+          className='brand-title navbar-brand'
+          onClick={() => dispatch(fetchNavigationThunk({ includeRelated: false }))}
+        >
           Tiedonohjaus
         </Link>
         <span className='navbar-text'>
@@ -59,7 +70,7 @@ const Header = (props) => {
               </a>
             </li>
           </ul>
-          <LoginContainer />
+          <Login />
         </div>
       </nav>
       <Loader show={isFetching} />
@@ -67,25 +78,4 @@ const Header = (props) => {
   );
 };
 
-Header.propTypes = {
-  fetchNavigation: PropTypes.func,
-  isFetching: PropTypes.bool,
-};
-
-Header.defaultProps = {
-  fetchNavigation: () => {},
-};
-
-const mapStateToProps = (state) => ({
-  isFetching: state.ui.isFetching || state.navigation.isFetching || state.selectedTOS.isFetching,
-});
-
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators(
-    {
-      fetchNavigation,
-    },
-    dispatch,
-  );
-
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default Header;

@@ -12,10 +12,7 @@ const originalError = console.error.bind(console.error);
 console.error = (msg, ...optionalParams) => {
   const msgStr = msg.toString();
 
-  return (
-    !msgStr.includes('Could not parse CSS stylesheet') &&
-    originalError(msg, ...optionalParams)
-  );
+  return !msgStr.includes('Could not parse CSS stylesheet') && originalError(msg, ...optionalParams);
 };
 
 // Mock the ResizeObserver

@@ -1,16 +1,12 @@
-import { createMemoryHistory } from 'history';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import storeCreator from '../../../store/createStore';
 import Dropdown from '../Dropdown';
 import renderWithProviders from '../../../utils/renderWithProviders';
 
 const renderComponent = (itemsOverride) => {
-  const history = createMemoryHistory();
-  const store = storeCreator(history, {});
   const dummyFunction = vi.fn();
   const dummyItems = [
     { action: dummyFunction, text: 'Dropdown Item 1' },
@@ -18,17 +14,15 @@ const renderComponent = (itemsOverride) => {
   ];
 
   return renderWithProviders(
-    <BrowserRouter history={history}>
+    <BrowserRouter>
       <Dropdown items={itemsOverride ?? dummyItems} />
     </BrowserRouter>,
-    { history, store },
   );
 };
 
 describe('<Dropdown />', () => {
   it('renders without crashing', () => {
     renderComponent();
-    expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
   it('opens the dropdown menu when the button is clicked', () => {

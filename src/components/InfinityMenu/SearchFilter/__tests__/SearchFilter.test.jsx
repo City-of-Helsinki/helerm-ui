@@ -55,7 +55,7 @@ describe('<SearchFilter />', () => {
 
     const user = userEvent.setup();
 
-    await user.click(screen.getByRole('textbox'));
+    await user.click(screen.getByRole('combobox'));
 
     expect(await screen.findByText('Ei valintoja')).toBeInTheDocument();
   });

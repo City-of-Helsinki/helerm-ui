@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { createBrowserHistory } from 'history';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { waitFor } from '@testing-library/react';
 
+import api from '../../../utils/api';
 import renderWithProviders from '../../../utils/renderWithProviders';
 import LoginCallback from '../LoginCallback';
 
@@ -14,6 +14,9 @@ const mockStore = configureStore(middlewares);
 const mockNavigate = vi.fn();
 const mockUpdateApiTokens = vi.fn();
 const mockUser = { profile: { sub: '123' } };
+
+const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => mockUser }));
+vi.spyOn(api, 'get').mockImplementation(mockApiGet);
 
 vi.mock('react-router-dom', async () => {
   const mod = await vi.importActual('react-router-dom');
@@ -45,40 +48,42 @@ vi.mock('hds-react', async () => {
 
       return <div>{children}</div>;
     },
+    getApiTokenFromStorage: vi.fn().mockReturnValue('mock-token'),
   };
 });
 
-const renderComponent = (propOverrides) => {
-  const history = createBrowserHistory();
+const renderComponent = (store) => {
+  const router = createBrowserRouter([{ path: '/', element: <LoginCallback /> }]);
 
-  const props = {
-    handleCallbackInitialize: vi.fn(),
-    retrieveUserFromSession: vi.fn(),
-    handleCallbackError: vi.fn(),
-    ...propOverrides,
-  };
-
-  const store = mockStore({});
-
-  const router = createBrowserRouter([{ path: '/', element: <LoginCallback {...props} /> }]);
-
-  return renderWithProviders(<RouterProvider router={router} />, { history, store });
+  return renderWithProviders(<RouterProvider router={router} />, { store });
 };
 
 describe('<LoginCallback />', () => {
   it('calls onSuccess and navigates on successful login', async () => {
-    const handleCallbackInitialize = vi.fn();
-    const retrieveUserFromSession = vi.fn();
+    const store = mockStore({});
 
-    renderComponent({
-      handleCallbackInitialize,
-      retrieveUserFromSession,
-    });
+    renderComponent(store);
 
     await waitFor(() => {
-      expect(handleCallbackInitialize).toHaveBeenCalled();
-      expect(mockUpdateApiTokens).toHaveBeenCalled();
-      expect(retrieveUserFromSession).toHaveBeenCalledWith('123');
+      expect(store.getActions()).toEqual([
+        { type: 'user/initializeLoginCallback/pending', payload: undefined, meta: expect.anything() },
+        { type: 'user/setLoginStatus', payload: 'INITIALIZING' },
+        { type: 'user/retrieveUserFromSession/pending', payload: undefined, meta: expect.anything() },
+        { type: 'user/setLoginStatus', payload: 'INITIALIZING' },
+        { type: 'user/initializeLoginCallback/fulfilled', payload: null, meta: expect.anything() },
+        { type: 'user/setLoginStatus', payload: 'AUTHORIZED' },
+        {
+          type: 'user/retrieveUserFromSession/fulfilled',
+          payload: {
+            firstName: undefined,
+            id: mockUser.profile.sub,
+            lastName: undefined,
+            permissions: [],
+          },
+          meta: expect.anything(),
+        },
+      ]);
+
       expect(mockNavigate).toHaveBeenCalledWith('/');
     });
   });

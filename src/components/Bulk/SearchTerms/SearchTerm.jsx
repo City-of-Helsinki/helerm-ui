@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
@@ -15,56 +15,63 @@ import {
 import './SearchTerms.scss';
 import { getDisplayLabelForAttribute } from '../../../utils/attributeHelper';
 
-class SearchTerm extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.onChangeAttribute = this.onChangeAttribute.bind(this);
-    this.onChangeEquals = this.onChangeEquals.bind(this);
-    this.onChangeTarget = this.onChangeTarget.bind(this);
-    this.onChangeValue = this.onChangeValue.bind(this);
-  }
-
-  onChangeTarget(option) {
-    const { searchTerm } = this.props;
-    this.props.onChangeSearchTerm({
-      ...searchTerm,
-      target: option.value,
-      attribute: BULK_UPDATE_SEARCH_TERM_DEFAULT.attribute,
-      value: BULK_UPDATE_SEARCH_TERM_DEFAULT.value,
-    });
-  }
-
-  onChangeAttribute(option) {
-    const { searchTerm } = this.props;
-    this.props.onChangeSearchTerm({
-      ...searchTerm,
-      attribute: option.value,
-      value: BULK_UPDATE_SEARCH_TERM_DEFAULT.value,
-    });
-  }
-
-  onChangeEquals(option) {
-    const { searchTerm } = this.props;
-    this.props.onChangeSearchTerm({
-      ...searchTerm,
-      equals: option.value,
-    });
-  }
-
-  onChangeValue(option) {
-    const { searchTerm } = this.props;
-    if (option?.value) {
-      const value =
-        startsWith(option?.value, '[') && endsWith(option?.value, ']') ? JSON.parse(option?.value) : option?.value;
-      this.props.onChangeSearchTerm({
+const SearchTerm = ({
+  attributeTypes,
+  attributeValues,
+  searchTerm,
+  showAdd,
+  onAddSearchTerm,
+  onChangeSearchTerm,
+  onRemoveSearchTerm,
+}) => {
+  const onChangeTarget = useCallback(
+    (option) => {
+      onChangeSearchTerm({
         ...searchTerm,
-        value,
+        target: option.value,
+        attribute: BULK_UPDATE_SEARCH_TERM_DEFAULT.attribute,
+        value: BULK_UPDATE_SEARCH_TERM_DEFAULT.value,
       });
-    }
-  }
+    },
+    [searchTerm, onChangeSearchTerm],
+  );
 
-  getAttributeOptions(attributeTypes, target) {
+  const onChangeAttribute = useCallback(
+    (option) => {
+      onChangeSearchTerm({
+        ...searchTerm,
+        attribute: option.value,
+        value: BULK_UPDATE_SEARCH_TERM_DEFAULT.value,
+      });
+    },
+    [searchTerm, onChangeSearchTerm],
+  );
+
+  const onChangeEquals = useCallback(
+    (option) => {
+      onChangeSearchTerm({
+        ...searchTerm,
+        equals: option.value,
+      });
+    },
+    [searchTerm, onChangeSearchTerm],
+  );
+
+  const onChangeValue = useCallback(
+    (option) => {
+      if (option?.value) {
+        const value =
+          startsWith(option?.value, '[') && endsWith(option?.value, ']') ? JSON.parse(option?.value) : option?.value;
+        onChangeSearchTerm({
+          ...searchTerm,
+          value,
+        });
+      }
+    },
+    [searchTerm, onChangeSearchTerm],
+  );
+
+  const getAttributeOptions = useCallback((attributeTypes, target) => {
     const attributeTarget = trimEnd(target, 's');
     const attributes =
       target === 'function'
@@ -83,9 +90,9 @@ class SearchTerm extends React.Component {
       }, attributes),
       ['label'],
     );
-  }
+  }, []);
 
-  getValueOptions(attributeValues, searchTerm) {
+  const getValueOptions = useCallback((attributeValues, searchTerm) => {
     const attributeTarget = trimEnd(searchTerm.target, 's');
     let valueOptions = [];
     if (
@@ -115,93 +122,91 @@ class SearchTerm extends React.Component {
       });
     }
     return valueOptions;
-  }
+  }, []);
 
-  render() {
-    const { attributeTypes, attributeValues, searchTerm, showAdd } = this.props;
-    const attributeOptions = this.getAttributeOptions(attributeTypes, searchTerm.target);
-    const valueOptions = this.getValueOptions(attributeValues, searchTerm);
-    if (!find(valueOptions, { value: searchTerm.value }) && !isEmpty(searchTerm.value)) {
-      const displayLabel = isArray(searchTerm.value)
-        ? searchTerm.value
-            .map((v) =>
-              getDisplayLabelForAttribute({
-                attributeValue: v,
-                identifier: searchTerm.attribute,
-              }),
-            )
-            .join(', ')
-        : getDisplayLabelForAttribute({
-            attributeValue: searchTerm.value,
-            identifier: searchTerm.attribute,
-          });
-      valueOptions.push({
-        label: displayLabel,
-        value: searchTerm.value,
-      });
-    }
-    const attributeValue = attributeOptions.find(({ value }) => value === searchTerm.attribute);
-    return (
-      <div className='search-term'>
-        <div>
-          <strong>Taso</strong>
-          <Select
-            isClearable={false}
-            value={BULK_UPDATE_SEARCH_TARGET.find(({ value }) => value === searchTerm.target)}
-            onChange={this.onChangeTarget}
-            options={BULK_UPDATE_SEARCH_TARGET}
-            placeholder='Valitse...'
-          />
-        </div>
-        <div>
-          <strong>Kenttä</strong>
-          <Select
-            isDisabled={isEmpty(searchTerm.target)}
-            isClearable={false}
-            value={attributeValue || ''}
-            onChange={this.onChangeAttribute}
-            autoFocus
-            options={attributeOptions}
-            placeholder='Valitse...'
-          />
-        </div>
-        <div>
-          <strong>Vertaus</strong>
-          <Select
-            isClearable={false}
-            value={BULK_UPDATE_SEARCH_COMPARISON.find(({ value }) => value === searchTerm.equals)}
-            onChange={this.onChangeEquals}
-            options={BULK_UPDATE_SEARCH_COMPARISON}
-            placeholder='Valitse...'
-          />
-        </div>
-        <div>
-          <strong>Arvo</strong>
-          <CreatableSelect
-            isDisabled={isEmpty(searchTerm.attribute)}
-            isClearable={false}
-            value={valueOptions.find(({ value }) => value === searchTerm.value) || ''}
-            onChange={this.onChangeValue}
-            options={valueOptions}
-            placeholder='Valitse...'
-          />
-        </div>
-        <div className='search-term-action'>
-          <button type='button' className='btn btn-primary' onClick={this.props.onRemoveSearchTerm}>
-            <i className='fa-solid fa-minus' />
-          </button>
-        </div>
-        <div className='search-term-action'>
-          {showAdd && (
-            <button type='button' className='btn btn-primary' onClick={this.props.onAddSearchTerm}>
-              <i className='fa-solid fa-plus' />
-            </button>
-          )}
-        </div>
-      </div>
-    );
+  const attributeOptions = getAttributeOptions(attributeTypes, searchTerm.target);
+  const valueOptions = getValueOptions(attributeValues, searchTerm);
+  if (!find(valueOptions, { value: searchTerm.value }) && !isEmpty(searchTerm.value)) {
+    const displayLabel = isArray(searchTerm.value)
+      ? searchTerm.value
+          .map((v) =>
+            getDisplayLabelForAttribute({
+              attributeValue: v,
+              identifier: searchTerm.attribute,
+            }),
+          )
+          .join(', ')
+      : getDisplayLabelForAttribute({
+          attributeValue: searchTerm.value,
+          identifier: searchTerm.attribute,
+        });
+    valueOptions.push({
+      label: displayLabel,
+      value: searchTerm.value,
+    });
   }
-}
+  const attributeValue = attributeOptions.find(({ value }) => value === searchTerm.attribute);
+
+  return (
+    <div className='search-term' data-testid='search-term'>
+      <div>
+        <strong>Taso</strong>
+        <Select
+          isClearable={false}
+          value={BULK_UPDATE_SEARCH_TARGET.find(({ value }) => value === searchTerm.target)}
+          onChange={onChangeTarget}
+          options={BULK_UPDATE_SEARCH_TARGET}
+          placeholder='Valitse...'
+        />
+      </div>
+      <div>
+        <strong>Kenttä</strong>
+        <Select
+          isDisabled={isEmpty(searchTerm.target)}
+          isClearable={false}
+          value={attributeValue || ''}
+          onChange={onChangeAttribute}
+          autoFocus
+          options={attributeOptions}
+          placeholder='Valitse...'
+        />
+      </div>
+      <div>
+        <strong>Vertaus</strong>
+        <Select
+          isClearable={false}
+          value={BULK_UPDATE_SEARCH_COMPARISON.find(({ value }) => value === searchTerm.equals)}
+          onChange={onChangeEquals}
+          options={BULK_UPDATE_SEARCH_COMPARISON}
+          placeholder='Valitse...'
+        />
+      </div>
+      <div>
+        <strong>Arvo</strong>
+        <CreatableSelect
+          isDisabled={isEmpty(searchTerm.attribute)}
+          isClearable={false}
+          value={valueOptions.find(({ value }) => value === searchTerm.value) || ''}
+          onChange={onChangeValue}
+          options={valueOptions}
+          placeholder='Valitse...'
+        />
+      </div>
+      <div className='search-term-action'>
+        <button type='button' className='btn btn-primary' onClick={onRemoveSearchTerm}>
+          <i className='fa-solid fa-minus' />
+        </button>
+      </div>
+      <div className='search-term-action'>
+        {showAdd && (
+          <button type='button' className='btn btn-primary' onClick={onAddSearchTerm}>
+            <i className='fa-solid fa-plus' />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
 
 SearchTerm.propTypes = {
   attributeTypes: PropTypes.object,

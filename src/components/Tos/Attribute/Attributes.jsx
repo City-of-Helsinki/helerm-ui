@@ -21,6 +21,7 @@ const Attributes = ({
 }) => {
   const unwantedAttributes = ['TypeSpecifier', 'RecordType', 'ActionType', 'PhaseType'];
   const defaultAttributes = [];
+
   Object.keys(attributeTypes).forEach((key) => {
     if (
       Object.hasOwn(attributeTypes, key) &&
@@ -133,12 +134,19 @@ const Attributes = ({
   const defaultViewAttributes = generateDefaultAttributes(element.attributes);
   const attributes = generateAttributes(element.attributes);
 
+  const safeRenderArray = (arr) => {
+    if (!Array.isArray(arr)) return null;
+    return arr.filter(
+      (item) => item !== null && item !== undefined && (typeof item !== 'object' || React.isValidElement(item)),
+    );
+  };
+
   return (
-    <div className={classnames('list-group', `${type}-attributes`)}>
+    <div data-testid={`${type}-attributes`} className={classnames('list-group', `${type}-attributes`)}>
       {basicAttributes}
       {buttons}
-      {defaultViewAttributes}
-      {attributes}
+      <div data-testid='default-attributes'>{safeRenderArray(defaultViewAttributes)}</div>
+      <div data-testid='custom-attributes'>{safeRenderArray(attributes)}</div>
     </div>
   );
 };

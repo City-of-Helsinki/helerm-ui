@@ -11,8 +11,10 @@ Tuotantoympäristö tarjoaa työkalun sisällöntuottamiseen ja kuvausten hyväk
 Tuotantoympäristön osoite on https://tiedonohjaus.hel.fi/
 
 ### Palvelun selainyhteensopivuus
+
 Ohjeistamme, että käytätte ensisijaisesti Chrome selainta ja tuemme Microsoft Edge selainta. Internet Explorer selaimen käytössä varsinkin muokkausnäkymissä voi esiintyä virheitä.
 
 ### Tietoa ohjelmistokehittäjille (en)
+
 sis rajapintalinkki sekä linkit rajapintadokumentaatioon ja ohjelmistokoodiin (frontend, backend)
 https://dev.hel.ninja/projects/tiedonohjausjarjestelma/

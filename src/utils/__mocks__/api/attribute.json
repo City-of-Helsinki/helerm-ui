@@ -1,0 +1,339 @@
+{
+  "count": 10,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "id": "test-attr-phase-type-001",
+      "values": [
+        {
+          "id": "test-val-phase-guidance-001",
+          "created_at": "2018-02-09T12:16:56.309466+02:00",
+          "modified_at": "2018-02-09T12:16:56.309482+02:00",
+          "value": "Neuvonta/Ohjaus",
+          "index": 1,
+          "name": "",
+          "help_text": ""
+        },
+        {
+          "id": "test-val-phase-preparation-002",
+          "created_at": "2018-02-09T12:16:56.312854+02:00",
+          "modified_at": "2018-02-09T12:16:56.312871+02:00",
+          "value": "Valmistelu/Käsittely",
+          "index": 2,
+          "name": "",
+          "help_text": ""
+        },
+        {
+          "id": "test-val-phase-decision-003",
+          "created_at": "2018-02-09T12:16:56.314421+02:00",
+          "modified_at": "2018-02-09T12:16:56.314437+02:00",
+          "value": "Päätöksenteko",
+          "index": 3,
+          "name": "",
+          "help_text": ""
+        },
+        {
+          "id": "test-val-phase-implementation-004",
+          "created_at": "2018-02-09T12:16:56.315951+02:00",
+          "modified_at": "2018-02-09T12:16:56.315967+02:00",
+          "value": "Toimeenpano",
+          "index": 4,
+          "name": "",
+          "help_text": ""
+        }
+      ],
+      "group": "Perustiedot",
+      "created_at": "2018-02-08T11:21:04.571739+02:00",
+      "modified_at": "2022-03-16T12:38:04.882464+02:00",
+      "identifier": "PhaseType",
+      "name": "Käsittelyvaiheen tyyppi",
+      "index": 1,
+      "help_text": ""
+    },
+    {
+      "id": "test-attr-record-type-002",
+      "values": [
+        {
+          "id": "test-val-record-application-001",
+          "created_at": "2018-02-08T17:42:32.134868+02:00",
+          "modified_at": "2018-05-30T11:05:16.491677+03:00",
+          "value": "hakemus",
+          "index": 1,
+          "name": "",
+          "help_text": ""
+        },
+        {
+          "id": "test-val-record-decision-002",
+          "created_at": "2018-02-08T17:42:32.224582+02:00",
+          "modified_at": "2018-05-30T11:05:16.564795+03:00",
+          "value": "päätös",
+          "index": 2,
+          "name": "",
+          "help_text": ""
+        },
+        {
+          "id": "test-val-record-contract-003",
+          "created_at": "2018-02-08T17:42:32.244808+02:00",
+          "modified_at": "2018-05-30T11:05:16.591908+03:00",
+          "value": "sopimus",
+          "index": 3,
+          "name": "",
+          "help_text": ""
+        },
+        {
+          "id": "test-val-record-invoice-004",
+          "created_at": "2018-02-08T17:42:32.172610+02:00",
+          "modified_at": "2018-05-30T11:05:16.515086+03:00",
+          "value": "lasku",
+          "index": 4,
+          "name": "",
+          "help_text": ""
+        },
+        {
+          "id": "test-val-record-report-005",
+          "created_at": "2018-02-08T17:42:32.230670+02:00",
+          "modified_at": "2018-05-30T11:05:16.569013+03:00",
+          "value": "raportti",
+          "index": 5,
+          "name": "",
+          "help_text": ""
+        },
+        {
+          "id": "test-val-record-certificate-006",
+          "created_at": "2018-02-08T17:42:32.275101+02:00",
+          "modified_at": "2018-10-11T12:09:18.820344+03:00",
+          "value": "todistus",
+          "index": 6,
+          "name": "",
+          "help_text": ""
+        }
+      ],
+      "group": "Perustiedot",
+      "created_at": "2018-02-08T11:21:04.575040+02:00",
+      "modified_at": "2018-10-11T12:09:18.819241+03:00",
+      "identifier": "RecordType",
+      "name": "Asiakirjatyyppi",
+      "index": 2,
+      "help_text": ""
+    },
+    {
+      "id": "test-attr-publicity-class-003",
+      "values": [
+        {
+          "id": "test-val-publicity-public-001",
+          "created_at": "2018-02-08T17:42:32.355313+02:00",
+          "modified_at": "2018-02-08T17:42:32.355329+02:00",
+          "value": "Julkinen",
+          "index": 1,
+          "name": "",
+          "help_text": ""
+        },
+        {
+          "id": "test-val-publicity-nonpublic-002",
+          "created_at": "2018-02-08T17:42:32.357353+02:00",
+          "modified_at": "2018-02-08T17:42:32.357370+02:00",
+          "value": "Ei-julkinen",
+          "index": 2,
+          "name": "",
+          "help_text": ""
+        },
+        {
+          "id": "test-val-publicity-partial-003",
+          "created_at": "2018-02-08T17:42:32.359340+02:00",
+          "modified_at": "2018-02-08T17:42:32.359356+02:00",
+          "value": "Osittain salassa pidettävä",
+          "index": 3,
+          "name": "",
+          "help_text": ""
+        },
+        {
+          "id": "test-val-publicity-secret-004",
+          "created_at": "2018-02-08T17:42:32.361344+02:00",
+          "modified_at": "2018-02-08T17:42:32.361361+02:00",
+          "value": "Salassa pidettävä",
+          "index": 4,
+          "name": "",
+          "help_text": ""
+        }
+      ],
+      "group": "Julkisuustiedot",
+      "created_at": "2018-02-08T11:21:04.576493+02:00",
+      "modified_at": "2018-02-09T12:34:55.539727+02:00",
+      "identifier": "PublicityClass",
+      "name": "Julkisuusluokka",
+      "index": 3,
+      "help_text": ""
+    },
+    {
+      "id": "test-attr-retention-period-004",
+      "values": [
+        {
+          "id": "test-val-retention-0years-001",
+          "created_at": "2018-02-08T17:42:32.594668+02:00",
+          "modified_at": "2018-02-08T17:42:32.594684+02:00",
+          "value": "0",
+          "index": 1,
+          "name": "",
+          "help_text": ""
+        },
+        {
+          "id": "test-val-retention-1year-002",
+          "created_at": "2018-02-08T17:42:32.596665+02:00",
+          "modified_at": "2018-02-08T17:42:32.596682+02:00",
+          "value": "1",
+          "index": 2,
+          "name": "",
+          "help_text": ""
+        },
+        {
+          "id": "test-val-retention-5years-003",
+          "created_at": "2018-02-08T17:42:32.602684+02:00",
+          "modified_at": "2018-02-08T17:42:32.602700+02:00",
+          "value": "5",
+          "index": 3,
+          "name": "",
+          "help_text": ""
+        },
+        {
+          "id": "test-val-retention-10years-004",
+          "created_at": "2018-02-08T17:42:32.606681+02:00",
+          "modified_at": "2018-02-08T17:42:32.606697+02:00",
+          "value": "10",
+          "index": 4,
+          "name": "",
+          "help_text": ""
+        },
+        {
+          "id": "test-val-retention-permanent-005",
+          "created_at": "2018-02-08T17:42:32.620697+02:00",
+          "modified_at": "2024-10-03T12:32:52.988617+03:00",
+          "value": "-1",
+          "index": 5,
+          "name": "Säilytetään pysyvästi",
+          "help_text": ""
+        }
+      ],
+      "group": "Säilytystiedot",
+      "created_at": "2018-02-08T11:21:04.589724+02:00",
+      "modified_at": "2024-10-03T12:32:52.983576+03:00",
+      "identifier": "RetentionPeriod",
+      "name": "Säilytysaika",
+      "index": 4,
+      "help_text": ""
+    },
+    {
+      "id": "test-attr-personal-data-005",
+      "values": [
+        {
+          "id": "test-val-personal-none-001",
+          "created_at": "2018-02-08T17:42:32.305321+02:00",
+          "modified_at": "2018-02-08T17:42:32.305337+02:00",
+          "value": "Ei sisällä henkilötietoja",
+          "index": 1,
+          "name": "",
+          "help_text": ""
+        },
+        {
+          "id": "test-val-personal-contains-002",
+          "created_at": "2018-02-08T17:42:32.307295+02:00",
+          "modified_at": "2018-02-08T17:42:32.307311+02:00",
+          "value": "Sisältää henkilötietoja",
+          "index": 2,
+          "name": "",
+          "help_text": ""
+        },
+        {
+          "id": "test-val-personal-special-003",
+          "created_at": "2018-06-15T14:03:23.535303+03:00",
+          "modified_at": "2018-06-15T14:05:52.475363+03:00",
+          "value": "Sisältää erityisiä henkilötietoja",
+          "index": 3,
+          "name": "",
+          "help_text": ""
+        }
+      ],
+      "group": "Henkilötiedot",
+      "created_at": "2018-02-08T11:21:04.586786+02:00",
+      "modified_at": "2024-12-19T14:15:17.505764+02:00",
+      "identifier": "PersonalData",
+      "name": "Henkilötietoluonne",
+      "index": 5,
+      "help_text": ""
+    },
+    {
+      "id": "test-attr-social-security-006",
+      "values": [
+        {
+          "id": "test-val-ssn-none-001",
+          "created_at": "2018-02-08T17:42:32.292706+02:00",
+          "modified_at": "2018-02-08T17:42:32.292723+02:00",
+          "value": "Ei sisällä henkilötunnusta",
+          "index": 1,
+          "name": "",
+          "help_text": ""
+        },
+        {
+          "id": "test-val-ssn-contains-002",
+          "created_at": "2018-02-08T17:42:32.294693+02:00",
+          "modified_at": "2018-02-08T17:42:32.294710+02:00",
+          "value": "Sisältää henkilötunnuksen",
+          "index": 2,
+          "name": "",
+          "help_text": ""
+        }
+      ],
+      "group": "Henkilötiedot",
+      "created_at": "2018-02-08T11:21:04.588227+02:00",
+      "modified_at": "2018-02-09T12:36:24.888780+02:00",
+      "identifier": "SocialSecurityNumber",
+      "name": "Henkilötunnus",
+      "index": 6,
+      "help_text": ""
+    },
+    {
+      "id": "test-attr-type-specifier-007",
+      "values": [],
+      "group": "Perustiedot",
+      "created_at": "2018-02-08T11:21:04.616701+02:00",
+      "modified_at": "2018-02-09T12:34:39.173751+02:00",
+      "identifier": "TypeSpecifier",
+      "name": "Tarkenne",
+      "index": 7,
+      "help_text": ""
+    },
+    {
+      "id": "test-attr-information-system-008",
+      "values": [],
+      "group": "Tietojärjestelmä",
+      "created_at": "2018-02-08T11:21:04.604713+02:00",
+      "modified_at": "2018-09-10T13:27:21.654315+03:00",
+      "identifier": "InformationSystem",
+      "name": "Rekisteröinti/ Tietojärjestelmä",
+      "index": 8,
+      "help_text": ""
+    },
+    {
+      "id": "test-attr-additional-info-009",
+      "values": [],
+      "group": "Lisätiedot",
+      "created_at": "2018-02-08T11:21:04.615200+02:00",
+      "modified_at": "2018-02-09T12:39:18.477819+02:00",
+      "identifier": "AdditionalInformation",
+      "name": "Lisätietoja",
+      "index": 9,
+      "help_text": ""
+    },
+    {
+      "id": "test-attr-action-type-010",
+      "values": [],
+      "group": "Perustiedot",
+      "created_at": "2018-02-08T11:21:04.573572+02:00",
+      "modified_at": "2018-02-09T12:34:14.155450+02:00",
+      "identifier": "ActionType",
+      "name": "Toimenpiteen tyyppi",
+      "index": 10,
+      "help_text": "Tiedonohjauksessa on mahdollista kehittää tietomallia siten, että myös toimenpidetasolla määritetään arvojoukko, joka ohjaa tietojärjestelmää."
+    }
+  ]
+}
