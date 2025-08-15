@@ -1,13 +1,30 @@
 import React from 'react';
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import { waitFor } from '@testing-library/react';
 import * as mockLogin from 'hds-react';
 
 import * as useAuth from '../../hooks/useAuth';
-import renderWithProviders from '../../utils/renderWithProviders';
+import renderWithProviders, { storeDefaultState } from '../../utils/renderWithProviders';
 import AppContainer from '../AppContainer';
 import routes from '../../routes';
-import storeCreator from '../../store/createStore';
-import { user } from '../../utils/__mocks__/mockHelpers';
+import { user, attributeTypes, template } from '../../utils/__mocks__/mockHelpers';
 import api from '../../utils/api';
+
+const middlewares = [thunk];
+const mockStore = configureStore(middlewares);
+
+// Mock window.confirm for ReduxToastr
+Object.defineProperty(window, 'confirm', {
+  value: vi.fn(() => true),
+  writable: true,
+});
+
+// Mock ReduxToastr to avoid rendering issues
+vi.mock('react-redux-toastr', () => ({
+  __esModule: true,
+  default: () => <div data-testid='redux-toastr'>ReduxToastr Mock</div>,
+}));
 
 vi.mock('../../components/RouterSync/RouterSync', () => ({
   default: () => <div data-testid='mocked-router-sync'>RouterSync Mock</div>,
@@ -23,46 +40,116 @@ vi.mock('../../components/RouterSyncLayout/RouterSyncLayout', () => ({
 }));
 
 const mockToken = 'mockToken';
-const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => user }));
+
+const mockAttributeTypesApiGet = vi
+  .fn()
+  .mockImplementation(() => Promise.resolve({ ok: true, json: () => attributeTypes }));
+const mockTemplatesApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => template }));
+const mockUserApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => user }));
 
 vi.spyOn(useAuth, 'default').mockImplementation(() => ({
   user: { profile: { sub: 'user123', name: 'Test Tester' } },
   authenticated: true,
 }));
 vi.spyOn(mockLogin, 'getApiTokenFromStorage').mockImplementation(() => mockToken);
-vi.spyOn(api, 'get').mockImplementation(mockApiGet);
+vi.spyOn(api, 'get').mockImplementation((url) => {
+  if (url.includes('attribute/schemas')) {
+    return mockAttributeTypesApiGet();
+  }
+  if (url.includes('templates')) {
+    return mockTemplatesApiGet();
+  }
+  if (url.includes('user')) {
+    return mockUserApiGet();
+  }
+  return Promise.resolve({ ok: false, status: 404, json: () => ({ error: 'Not found' }) });
+});
 
-const renderComponent = () => {
-  const mockState = {};
-  const mockStore = storeCreator(mockState);
-  const mockRoutes = routes(mockStore);
+const renderComponent = (storeOverride) => {
+  const store = storeOverride ?? mockStore(storeDefaultState);
+  const mockRoutes = routes(store);
 
-  return renderWithProviders(<AppContainer routes={mockRoutes} store={mockStore} />, {
-    store: mockStore,
+  return renderWithProviders(<AppContainer routes={mockRoutes} store={store} />, {
+    store,
   });
 };
 
 describe('<AppContainer />', () => {
-  it('should render correctly', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('renders correctly', async () => {
     renderComponent();
   });
 
-  it('should authenticate', () => {
-    renderComponent();
+  it('fetches attribute types and templates on mount', async () => {
+    const store = mockStore(storeDefaultState);
 
-    expect(mockApiGet).toHaveBeenCalled();
+    renderComponent(store);
+
+    await waitFor(() => {
+      const actions = store.getActions();
+
+      // Check that we have pending actions
+      const pendingActions = actions.filter((action) => action.type.endsWith('/pending'));
+      expect(pendingActions).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            type: 'ui/fetchAttributeTypes/pending',
+          }),
+          expect.objectContaining({
+            type: 'ui/fetchTemplates/pending',
+          }),
+          expect.objectContaining({
+            type: 'user/retrieveUserFromSession/pending',
+          }),
+        ]),
+      );
+
+      // Check that we have at least some fulfilled actions
+      const fulfilledActions = actions.filter((action) => action.type.endsWith('/fulfilled'));
+      expect(fulfilledActions.length).toBeGreaterThan(0);
+
+      // Verify at least the user action completed successfully
+      const userFulfilledActions = fulfilledActions.filter(
+        (action) => action.type === 'user/retrieveUserFromSession/fulfilled',
+      );
+      expect(userFulfilledActions.length).toBeGreaterThan(0);
+      expect(userFulfilledActions[0].payload).toEqual(
+        expect.objectContaining({
+          firstName: 'Test',
+          lastName: 'User',
+          permissions: expect.arrayContaining(['can_edit', 'can_review', 'can_approve']),
+        }),
+      );
+    });
   });
 
-  it('should not fetch user if not authenticated', () => {
-    renderComponent();
-
-    const storageSpy = vi.spyOn(mockLogin, 'getApiTokenFromStorage').mockImplementationOnce(() => undefined);
-
-    vi.spyOn(useAuth, 'default').mockImplementationOnce(() => ({
-      user: undefined,
+  it('does not fetch user when not authenticated', async () => {
+    // Mock the useAuth hook to return unauthenticated state for this test only
+    const unauthenticatedMock = vi.spyOn(useAuth, 'default').mockReturnValue({
+      user: null,
       authenticated: false,
-    }));
+    });
 
-    expect(storageSpy).not.toHaveBeenCalled();
+    const store = mockStore(storeDefaultState);
+
+    renderComponent(store);
+
+    await waitFor(() => {
+      const actions = store.getActions();
+      const userActions = actions.filter((action) => action.type.includes('user/retrieveUserFromSession'));
+      expect(userActions).toHaveLength(0);
+
+      // Should still fetch attribute types and templates
+      const uiActions = actions.filter(
+        (action) => action.type.includes('ui/fetchAttributeTypes') || action.type.includes('ui/fetchTemplates'),
+      );
+      expect(uiActions.length).toBeGreaterThan(0);
+    });
+
+    // Restore the mock
+    unauthenticatedMock.mockRestore();
   });
 });
