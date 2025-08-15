@@ -782,7 +782,7 @@ const ViewTOS = () => {
       window.removeEventListener('resize', updateTopOffsetForSticky);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params]);
+  }, [params.id, params.version]);
 
   useEffect(() => {
     if (!selectedTOS.id) return;
@@ -803,6 +803,7 @@ const ViewTOS = () => {
         ...prevState,
         editingMetaData: false,
         complementingMetaData: false,
+        isDirty: false,
       }));
     }
   }, [selectedTOS.documentState]);
@@ -815,7 +816,15 @@ const ViewTOS = () => {
     return (
       <DndProvider backend={HTML5Backend} context={window}>
         <div key={`${params.id}.${params.version}`}>
-          <RouterPrompt when={state.isDirty} onOK={() => true} onCancel={() => false} />
+          <RouterPrompt
+            when={state.isDirty}
+            onOK={() => {
+              return true;
+            }}
+            onCancel={() => {
+              return false;
+            }}
+          />
           <div className='col-xs-12 single-tos-container'>
             <div id='single-tos-header-container' ref={header}>
               <Sticky
