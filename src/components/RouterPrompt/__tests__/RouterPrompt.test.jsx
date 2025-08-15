@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 
 import RouterPrompt from '../RouterPrompt';
 
@@ -37,14 +37,17 @@ describe('<RouterPrompt />', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
-  it('should call the blocker function when `when` is true', () => {
+  it('should call the blocker function when `when` is true', async () => {
     render(<RouterPrompt when={true} onOK={mockOnOK} onCancel={mockOnCancel} />);
     expect(blockerCallback).toBeDefined();
 
     // Test that the blocker function works correctly
-    const result = blockerCallback({
-      currentLocation: { pathname: '/' },
-      nextLocation: { pathname: '/somewhere' },
+    let result;
+    await act(async () => {
+      result = blockerCallback({
+        currentLocation: { pathname: '/' },
+        nextLocation: { pathname: '/somewhere' },
+      });
     });
 
     expect(result).toBe(true); // Should block navigation when 'when' is true
@@ -68,15 +71,19 @@ describe('<RouterPrompt />', () => {
 
     // Simulate blocking navigation
     if (blockerCallback) {
-      blockerCallback({
-        currentLocation: { pathname: '/' },
-        nextLocation: { pathname: '/somewhere' },
+      await act(async () => {
+        blockerCallback({
+          currentLocation: { pathname: '/' },
+          nextLocation: { pathname: '/somewhere' },
+        });
       });
     }
 
     // Set blocker state to blocked and rerender
-    mockBlockerState = 'blocked';
-    rerender(<RouterPrompt when={true} onOK={mockOnOK} onCancel={mockOnCancel} />);
+    await act(async () => {
+      mockBlockerState = 'blocked';
+      rerender(<RouterPrompt when={true} onOK={mockOnOK} onCancel={mockOnCancel} />);
+    });
 
     // The component should have internal logic to handle the blocked state
     // For this test, we're verifying the mocks are set up correctly

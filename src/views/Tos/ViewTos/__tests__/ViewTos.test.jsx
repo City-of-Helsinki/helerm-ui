@@ -2,7 +2,7 @@ import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { screen, waitFor } from '@testing-library/react';
+import { screen, waitFor, act } from '@testing-library/react';
 
 import ViewTos from '../ViewTos';
 import renderWithProviders, { storeDefaultState } from '../../../../utils/renderWithProviders';
@@ -69,13 +69,23 @@ Object.defineProperty(window, 'scrollTo', {
 const createTosFromApiData = (overrides = {}) => ({
   ...validTOS,
   documentState: 'view',
-  classification: validTOS.classification || { id: 'test-classification-health-guidance-001', version: 2 },
+  name: validTOS.name || 'Test TOS Name',
+  showAttributes: validTOS.showAttributes !== undefined ? validTOS.showAttributes : true,
+  is_open: validTOS.is_open !== undefined ? validTOS.is_open : true,
+  is_classification_open: validTOS.is_classification_open !== undefined ? validTOS.is_classification_open : false,
+  classification: validTOS.classification || {
+    id: 'test-classification-health-guidance-001',
+    version: 2,
+    isOpen: false,
+  },
   phases: Array.isArray(validTOS.phases)
     ? validTOS.phases.reduce((acc, phase) => ({ ...acc, [phase.id]: phase }), {})
     : validTOS.phases || {},
   actions: validTOS.actions || {},
   records: validTOS.records || {},
   phasesOrder: validTOS.phasesOrder || (validTOS.phases ? validTOS.phases.map((p) => p.id) : []),
+  version_history: validTOS.version_history || [{ id: 1, state: 'draft', modified_at: '2023-01-01' }],
+  versions: validTOS.versions || [{ id: 1, state: 'draft', modified_at: '2023-01-01' }],
   ...overrides,
 });
 
@@ -135,6 +145,37 @@ const createMockStore = (overrides = {}) => {
   const selectedTOSOverrides = overrides.selectedTOS || {};
   const selectedTOSData = { ...baseTosData, ...selectedTOSOverrides };
 
+  // Ensure required UI state is always present
+  const safeUiDefaults = {
+    attributeTypes: attributeTypes || {},
+    actionTypes: attributeTypes?.ActionType?.values?.reduce((acc, val) => {
+      acc[val.id] = { id: val.id, name: val.value };
+      return acc;
+    }, {}) || {
+      action1: { id: 'action1', name: 'Test Action 1' },
+      action2: { id: 'action2', name: 'Test Action 2' },
+    },
+    phaseTypes: attributeTypes?.PhaseType?.values?.reduce((acc, val) => {
+      acc[val.id] = { id: val.id, name: val.value };
+      return acc;
+    }, {}) || {
+      phase1: { id: 'phase1', name: 'Test Phase 1' },
+      phase2: { id: 'phase2', name: 'Test Phase 2' },
+    },
+    recordTypes: attributeTypes?.RecordType?.values?.reduce((acc, val) => {
+      acc[val.id] = { id: val.id, name: val.value };
+      return acc;
+    }, {}) || {
+      record1: { id: 'record1', name: 'Test Record 1' },
+      record2: { id: 'record2', name: 'Test Record 2' },
+    },
+    templates: templateData.results || [
+      { id: 'template1', name: 'Test Template 1' },
+      { id: 'template2', name: 'Test Template 2' },
+    ],
+    isFetching: false,
+  };
+
   return mockStore({
     ...storeDefaultState,
     user: {
@@ -144,34 +185,10 @@ const createMockStore = (overrides = {}) => {
     },
     ui: {
       ...storeDefaultState.ui,
-      attributeTypes,
-      actionTypes: attributeTypes.ActionType?.values?.map((val) => ({
-        id: val.id,
-        name: val.value,
-      })) || [
-        { id: 'action1', name: 'Test Action 1' },
-        { id: 'action2', name: 'Test Action 2' },
-      ],
-      phaseTypes: attributeTypes.PhaseType?.values?.map((val) => ({
-        id: val.id,
-        name: val.value,
-      })) || [
-        { id: 'phase1', name: 'Test Phase 1' },
-        { id: 'phase2', name: 'Test Phase 2' },
-      ],
-      recordTypes: attributeTypes.RecordType?.values?.map((val) => ({
-        id: val.id,
-        name: val.value,
-      })) || [
-        { id: 'record1', name: 'Test Record 1' },
-        { id: 'record2', name: 'Test Record 2' },
-      ],
-      templates: templateData.results || [
-        { id: 'template1', name: 'Test Template 1' },
-        { id: 'template2', name: 'Test Template 2' },
-      ],
-      isFetching: false,
+      ...safeUiDefaults,
       ...overrides.ui,
+      // Ensure critical properties are never undefined
+      attributeTypes: (overrides.ui && overrides.ui.attributeTypes) || safeUiDefaults.attributeTypes,
     },
     selectedTOS: {
       ...storeDefaultState.selectedTOS,
@@ -368,7 +385,7 @@ describe('<ViewTos />', () => {
   describe('Component State Management', () => {
     it('exits edit mode when documentState changes to view', async () => {
       renderComponent({
-        selectedTOS: {
+        selectedTOS: createTosFromApiData({
           id: 'test-function-id',
           documentState: 'edit',
           name: 'Test TOS',
@@ -378,9 +395,9 @@ describe('<ViewTos />', () => {
           classification: { id: 'test-classification-id' },
           function_id: 'test-function-id',
           version: 1,
-          version_history: [{ version: 1 }],
+          version_history: [{ version: 1, state: 'draft', modified_at: '2023-01-01' }],
           is_classification_open: false,
-        },
+        }),
       });
 
       await waitFor(() => {
@@ -420,9 +437,9 @@ describe('<ViewTos />', () => {
         },
       });
 
-      expect(() => {
+      await act(async () => {
         document.dispatchEvent(scrollEvent);
-      }).not.toThrow();
+      });
     });
 
     it('handles window resize events', async () => {
@@ -432,10 +449,10 @@ describe('<ViewTos />', () => {
         expect(screen.queryByText('Loading..')).not.toBeInTheDocument();
       });
 
-      expect(() => {
+      await act(async () => {
         const resizeEvent = new Event('resize');
         window.dispatchEvent(resizeEvent);
-      }).not.toThrow();
+      });
     });
   });
 
@@ -444,8 +461,8 @@ describe('<ViewTos />', () => {
       renderComponent({
         selectedTOS: {
           ...createTosFromApiData(),
-          name: undefined,
-          attributes: undefined,
+          name: 'Test TOS (Missing Data Scenario)',
+          attributes: {},
           isFetching: false,
         },
       });
