@@ -32,7 +32,7 @@ const ViewClassification = () => {
   const fetchClassification = useCallback(
     (id, requestParams = {}) => {
       if (id) {
-        dispatch(fetchClassificationThunk({ classificationId: id, params: requestParams }))
+        dispatch(fetchClassificationThunk({ id, params: requestParams }))
           .unwrap()
           .then(() => dispatch(setNavigationVisibility(false)))
           .catch((err) => {
@@ -58,7 +58,7 @@ const ViewClassification = () => {
       dispatch(clearClassification());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params]);
+  }, [params.id, params.version]);
 
   useEffect(() => {
     if (location && location.pathname === 'view-classification/:id') {

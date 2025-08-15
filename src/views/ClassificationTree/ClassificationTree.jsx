@@ -21,7 +21,7 @@ const ClassificationTree = () => {
 
   useEffect(() => {
     if (isEmpty(items)) {
-      dispatch(fetchNavigationThunk());
+      dispatch(fetchNavigationThunk({ includeRelated: false }));
     }
 
     if (!isEmpty(items)) {
@@ -137,7 +137,7 @@ const ClassificationTree = () => {
   return (
     <div className='classification-tree'>
       <div className='no-print'>
-        <button type='button' className='btn btn-primary' onClick={navigate(-1)}>
+        <button type='button' className='btn btn-primary' onClick={() => navigate(-1)}>
           Takaisin
         </button>
       </div>

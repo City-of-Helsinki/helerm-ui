@@ -4,8 +4,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import Sticky from 'react-sticky-el';
-import './Action.scss';
 import { uniqueId } from 'lodash';
 
 import Record from '../Record/Record';
@@ -16,8 +14,10 @@ import ReorderView from '../Reorder/ReorderView';
 import ImportView from '../ImportView/ImportView';
 import EditorForm from '../EditorForm/EditorForm';
 import Dropdown from '../../Dropdown';
+import Sticky from '../../Sticky/Sticky';
 import { DROPDOWN_ITEMS } from '../../../constants';
 import { attributeButton } from '../../../utils/attributeHelper';
+import './Action.scss';
 
 const Action = React.forwardRef(
   (
