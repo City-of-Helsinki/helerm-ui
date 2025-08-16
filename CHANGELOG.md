@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.4.0...helerm-ui-v1.4.1) (2025-08-16)
+
+
+### Dependencies
+
+* Bump tmp from 0.2.3 to 0.2.4 ([#584](https://github.com/City-of-Helsinki/helerm-ui/issues/584)) ([41c693b](https://github.com/City-of-Helsinki/helerm-ui/commit/41c693b0683192338f94eabd2d229e2e60e2668a))
+
 ## [1.4.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.3.1...helerm-ui-v1.4.0) (2025-08-08)
 
 
