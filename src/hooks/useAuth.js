@@ -1,21 +1,48 @@
-import { useOidcClient } from 'hds-react';
+import {
+  isApiTokensRemovedSignal,
+  isApiTokensUpdatedSignal,
+  useApiTokens,
+  useOidcClient,
+  useSignalListener,
+} from 'hds-react';
+import { useCallback, useMemo } from 'react';
+
+import config from '../config';
 
 const useAuth = () => {
-  const { isAuthenticated, getUser, login, logout } = useOidcClient();
+  const { isAuthenticated, getUser, logout, login, getState } = useOidcClient();
+  const { isRenewing, getStoredApiTokens } = useApiTokens();
 
-  const handleLogin = async () => {
-    login();
-  };
+  const [error, tokens] = getStoredApiTokens();
 
-  const handleLogout = async () => {
-    logout();
-  };
+  // Memoize the token value to prevent unnecessary re-renders
+  const apiToken = useMemo(() => {
+    if (error || isRenewing()) {
+      return undefined;
+    }
+    return tokens ? tokens[config.API_TOKEN_AUTH_AUDIENCE] : undefined;
+  }, [error, isRenewing, tokens]);
+
+  const signalListener = useCallback(
+    (signal) => isApiTokensUpdatedSignal(signal) || isApiTokensRemovedSignal(signal),
+    [],
+  );
+
+  const getApiToken = useCallback(() => {
+    return apiToken;
+  }, [apiToken]);
+
+  useSignalListener(signalListener);
+
+  const loggingOut = getState() === 'LOGGING_OUT';
 
   return {
     authenticated: isAuthenticated(),
-    login: handleLogin,
-    logout: handleLogout,
     user: getUser(),
+    getApiToken,
+    login,
+    logout,
+    loggingOut,
   };
 };
 

@@ -25,6 +25,7 @@ import RouterPrompt from '../../../components/RouterPrompt/RouterPrompt';
 import { displayMessage, getStatusLabel } from '../../../utils/helpers';
 import { generateDefaultAttributes } from '../../../utils/attributeHelper';
 import { validateTOS, validatePhase, validateAction, validateRecord } from '../../../utils/validators';
+import useAuth from '../../../hooks/useAuth';
 import {
   fetchTOSThunk,
   clearTos,
@@ -160,6 +161,7 @@ const ViewTOS = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const params = useParams();
+  const { getApiToken } = useAuth();
 
   const selectedTOS = useSelector(selectedTOSSelector);
   const classification = useSelector(classificationSelector);
@@ -256,7 +258,10 @@ const ViewTOS = () => {
 
           if (classificationInfo) {
             dispatch(
-              fetchClassificationThunk({ id: classificationInfo.id, params: { version: classificationInfo.version } }),
+              fetchClassificationThunk({
+                id: classificationInfo.id,
+                params: { version: classificationInfo.version },
+              }),
             ).catch(() => {
               displayMessage(
                 {
@@ -311,7 +316,8 @@ const ViewTOS = () => {
 
   const saveDraft = useCallback(() => {
     setState((prevState) => ({ ...prevState, isDirty: false }));
-    return dispatch(saveDraftThunk())
+    const token = getApiToken();
+    return dispatch(saveDraftThunk({ token }))
       .then((res) => {
         if (res?.version && res?.id) {
           navigate(`/view-tos/${res.id}/version/${res.version}`);
@@ -330,12 +336,13 @@ const ViewTOS = () => {
           { type: 'error' },
         ),
       );
-  }, [dispatch, navigate]);
+  }, [dispatch, navigate, getApiToken]);
 
   const changeStatus = useCallback(
     (status) => {
       const { state: currentState } = selectedTOS;
-      return dispatch(changeStatusThunk(status))
+      const token = getApiToken();
+      return dispatch(changeStatusThunk({ status, token }))
         .then(() =>
           displayMessage({
             title: 'Tila vaihdettu!',
@@ -352,7 +359,7 @@ const ViewTOS = () => {
           ),
         );
     },
-    [dispatch, selectedTOS],
+    [dispatch, selectedTOS, getApiToken],
   );
 
   const review = useCallback(
@@ -503,7 +510,7 @@ const ViewTOS = () => {
 
   const cloneFromTemplate = useCallback(
     (selectedMethod, id) => {
-      return dispatch(cloneFromTemplateThunk(selectedMethod, id))
+      return dispatch(cloneFromTemplateThunk({ endpoint: selectedMethod, id }))
         .then(() => {
           displayMessage({
             title: 'Kuvaus',

@@ -50,6 +50,10 @@ const mockUserApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: tr
 vi.spyOn(useAuth, 'default').mockImplementation(() => ({
   user: { profile: { sub: 'user123', name: 'Test Tester' } },
   authenticated: true,
+  getApiToken: vi.fn(() => mockToken),
+  login: vi.fn(),
+  logout: vi.fn(),
+  loggingOut: false,
 }));
 vi.spyOn(mockLogin, 'getApiTokenFromStorage').mockImplementation(() => mockToken);
 vi.spyOn(api, 'get').mockImplementation((url) => {
@@ -131,6 +135,10 @@ describe('<AppContainer />', () => {
     const unauthenticatedMock = vi.spyOn(useAuth, 'default').mockReturnValue({
       user: null,
       authenticated: false,
+      getApiToken: vi.fn(() => null), // Return null for unauthenticated user
+      login: vi.fn(),
+      logout: vi.fn(),
+      loggingOut: false,
     });
 
     const store = mockStore(storeDefaultState);
@@ -142,11 +150,11 @@ describe('<AppContainer />', () => {
       const userActions = actions.filter((action) => action.type.includes('user/retrieveUserFromSession'));
       expect(userActions).toHaveLength(0);
 
-      // Should still fetch attribute types and templates
-      const uiActions = actions.filter(
-        (action) => action.type.includes('ui/fetchAttributeTypes') || action.type.includes('ui/fetchTemplates'),
-      );
-      expect(uiActions.length).toBeGreaterThan(0);
+      const attributeTypesActions = actions.filter((action) => action.type.includes('ui/fetchAttributeTypes'));
+      const templatesActions = actions.filter((action) => action.type.includes('ui/fetchTemplates'));
+
+      expect(attributeTypesActions.length).toBeGreaterThan(0);
+      expect(templatesActions.length).toBeGreaterThan(0);
     });
 
     // Restore the mock

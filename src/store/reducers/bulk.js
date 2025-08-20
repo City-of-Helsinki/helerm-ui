@@ -19,6 +19,7 @@ export const fetchBulkUpdatesThunk = createAsyncThunk(
     try {
       const params = includeApproved ? { include_approved: true, page_size: DEFAULT_PAGE_SIZE } : {};
       const response = await api.get('bulk-update', params);
+
       const data = await response.json();
       const results = data.results || [];
 
@@ -40,48 +41,57 @@ export const fetchBulkUpdateThunk = createAsyncThunk('bulk/fetchBulkUpdate', asy
   }
 });
 
-export const approveBulkUpdateThunk = createAsyncThunk('bulk/approveBulkUpdate', async (id, { rejectWithValue }) => {
-  try {
-    const response = await api.post(`bulk-update/${id}/approve`);
-    if (!response.ok) {
-      throw Error(response.statusText);
+export const approveBulkUpdateThunk = createAsyncThunk(
+  'bulk/approveBulkUpdate',
+  async ({ id, token }, { rejectWithValue }) => {
+    try {
+      const response = await api.post(`bulk-update/${id}/approve`, {}, {}, {}, token);
+      if (!response.ok) {
+        throw Error(response.statusText);
+      }
+
+      return true;
+    } catch (error) {
+      return rejectWithValue(error instanceof Error ? error.message : 'Failed to approve bulk update');
     }
+  },
+);
 
-    return true;
-  } catch (error) {
-    return rejectWithValue(error instanceof Error ? error.message : 'Failed to approve bulk update');
-  }
-});
+export const deleteBulkUpdateThunk = createAsyncThunk(
+  'bulk/deleteBulkUpdate',
+  async ({ id, token }, { rejectWithValue }) => {
+    try {
+      const response = await api.del(`bulk-update/${id}`, {}, {}, token);
+      if (!response.ok) {
+        throw Error(response.statusText);
+      }
 
-export const deleteBulkUpdateThunk = createAsyncThunk('bulk/deleteBulkUpdate', async (id, { rejectWithValue }) => {
-  try {
-    const response = await api.del(`bulk-update/${id}`);
-    if (!response.ok) {
-      throw Error(response.statusText);
+      return true;
+    } catch (error) {
+      return rejectWithValue(error instanceof Error ? error.message : 'Failed to delete bulk update');
     }
+  },
+);
 
-    return true;
-  } catch (error) {
-    return rejectWithValue(error instanceof Error ? error.message : 'Failed to delete bulk update');
-  }
-});
+export const saveBulkUpdateThunk = createAsyncThunk(
+  'bulk/saveBulkUpdate',
+  async ({ bulkUpdate, token }, { rejectWithValue }) => {
+    try {
+      const response = await api.post('bulk-update', bulkUpdate, {}, {}, token);
+      const data = await response.json();
 
-export const saveBulkUpdateThunk = createAsyncThunk('bulk/saveBulkUpdate', async (bulkUpdate, { rejectWithValue }) => {
-  try {
-    const response = await api.post('bulk-update', bulkUpdate);
-    const data = await response.json();
-
-    return data;
-  } catch (error) {
-    return rejectWithValue(error instanceof Error ? error.message : 'Failed to save bulk update');
-  }
-});
+      return data;
+    } catch (error) {
+      return rejectWithValue(error instanceof Error ? error.message : 'Failed to save bulk update');
+    }
+  },
+);
 
 export const updateBulkUpdateThunk = createAsyncThunk(
   'bulk/updateBulkUpdate',
-  async ({ id, bulkUpdate }, { rejectWithValue }) => {
+  async ({ id, bulkUpdate, token }, { rejectWithValue }) => {
     try {
-      const response = await api.patch(`bulk-update/${id}`, bulkUpdate);
+      const response = await api.patch(`bulk-update/${id}`, bulkUpdate, {}, {}, token);
       const data = await response.json();
 
       return data;

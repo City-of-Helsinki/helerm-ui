@@ -77,46 +77,49 @@ export const fetchTOSThunk = createAsyncThunk(
   },
 );
 
-export const saveDraftThunk = createAsyncThunk('selectedTOS/saveDraft', async (_, { getState, rejectWithValue }) => {
-  try {
-    const tos = cloneDeep(getState().selectedTOS);
-    const newTos = cloneDeep(tos);
-    const finalPhases = normalizeTosForApi(newTos);
-    const denormalizedTos = { ...tos, phases: finalPhases };
-    const currentVersion = tos.version;
+export const saveDraftThunk = createAsyncThunk(
+  'selectedTOS/saveDraft',
+  async ({ token }, { getState, rejectWithValue }) => {
+    try {
+      const tos = cloneDeep(getState().selectedTOS);
+      const newTos = cloneDeep(tos);
+      const finalPhases = normalizeTosForApi(newTos);
+      const denormalizedTos = { ...tos, phases: finalPhases };
+      const currentVersion = tos.version;
 
-    const response = await api.put(`function/${tos.id}`, denormalizedTos);
+      const response = await api.put(`function/${tos.id}`, denormalizedTos, {}, {}, token);
 
-    if (!response.ok) {
+      if (!response.ok) {
+        const json = await response.json();
+        const message = !isEmpty(json) ? values(json).join(',') : response.statusText;
+        throw new Error(message);
+      }
+
       const json = await response.json();
-      const message = !isEmpty(json) ? values(json).join(',') : response.statusText;
-      throw new Error(message);
+
+      if (json.version !== currentVersion + 1) {
+        alert(
+          `Muokkasit luonnoksen versiota ${currentVersion}, ` +
+            `mutta tallennettaessa versionumero kasvoi enemmän ` +
+            `kuin yhdellä. Tarkistathan, että tallentamasi luonnoksen (versio ${json.version}) tiedot ovat ajantasalla.`,
+        );
+      }
+
+      return json;
+    } catch (error) {
+      return rejectWithValue(error instanceof Error ? error.message : 'Failed to save draft');
     }
-
-    const json = await response.json();
-
-    if (json.version !== currentVersion + 1) {
-      alert(
-        `Muokkasit luonnoksen versiota ${currentVersion}, ` +
-          `mutta tallennettaessa versionumero kasvoi enemmän ` +
-          `kuin yhdellä. Tarkistathan, että tallentamasi luonnoksen (versio ${json.version}) tiedot ovat ajantasalla.`,
-      );
-    }
-
-    return json;
-  } catch (error) {
-    return rejectWithValue(error instanceof Error ? error.message : 'Failed to save draft');
-  }
-});
+  },
+);
 
 export const changeStatusThunk = createAsyncThunk(
   'selectedTOS/changeStatus',
-  async (status, { getState, dispatch, rejectWithValue }) => {
+  async ({ status, token }, { getState, dispatch, rejectWithValue }) => {
     try {
       const tos = { ...getState().selectedTOS };
       const { includeRelated } = getState().navigation;
 
-      const response = await api.patch(`function/${tos.id}`, { state: status });
+      const response = await api.patch(`function/${tos.id}`, { state: status }, {}, {}, token);
 
       if (!response.ok) {
         throw new Error(response.statusText);

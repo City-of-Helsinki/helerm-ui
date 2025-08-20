@@ -6,6 +6,7 @@ import ClassificationHeader from '../../components/ClassificationHeader/Classifi
 import VersionSelector from '../../components/VersionSelector/VersionSelector';
 import { displayMessage } from '../../utils/helpers';
 import { setNavigationVisibility } from '../../store/reducers/navigation';
+import useAuth from '../../hooks/useAuth';
 import {
   createTosThunk,
   fetchClassificationThunk,
@@ -24,6 +25,7 @@ const ViewClassification = () => {
   const params = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const { getApiToken } = useAuth();
 
   const classification = useSelector(classificationSelector);
   const isFetching = useSelector(isFetchingSelector);
@@ -84,7 +86,7 @@ const ViewClassification = () => {
   };
 
   const createTos = () => {
-    return dispatch(createTosThunk())
+    return dispatch(createTosThunk({ token: getApiToken() }))
       .unwrap()
       .then((result) => {
         navigate(`/view-tos/${result.id}`);

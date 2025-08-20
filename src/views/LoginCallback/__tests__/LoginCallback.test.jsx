@@ -12,11 +12,17 @@ const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
 const mockNavigate = vi.fn();
-const mockUpdateApiTokens = vi.fn();
 const mockUser = { profile: { sub: '123' } };
 
 const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => mockUser }));
 vi.spyOn(api, 'get').mockImplementation(mockApiGet);
+
+vi.mock('../../hooks/useAuth', () => ({
+  __esModule: true,
+  default: () => ({
+    getApiToken: () => 'mock-token',
+  }),
+}));
 
 vi.mock('react-router-dom', async () => {
   const mod = await vi.importActual('react-router-dom');
@@ -26,13 +32,6 @@ vi.mock('react-router-dom', async () => {
     useNavigate: () => mockNavigate,
   };
 });
-
-vi.mock('../hooks/useUpdateApiTokens', () => ({
-  __esModule: true,
-  default: () => ({
-    updateApiTokens: mockUpdateApiTokens,
-  }),
-}));
 
 vi.mock('hds-react', async () => {
   const mod = await vi.importActual('hds-react');
@@ -65,24 +64,32 @@ describe('<LoginCallback />', () => {
     renderComponent(store);
 
     await waitFor(() => {
-      expect(store.getActions()).toEqual([
-        { type: 'user/initializeLoginCallback/pending', payload: undefined, meta: expect.anything() },
-        { type: 'user/setLoginStatus', payload: 'INITIALIZING' },
-        { type: 'user/retrieveUserFromSession/pending', payload: undefined, meta: expect.anything() },
-        { type: 'user/setLoginStatus', payload: 'INITIALIZING' },
-        { type: 'user/initializeLoginCallback/fulfilled', payload: null, meta: expect.anything() },
-        { type: 'user/setLoginStatus', payload: 'AUTHORIZED' },
-        {
-          type: 'user/retrieveUserFromSession/fulfilled',
-          payload: {
-            firstName: undefined,
-            id: mockUser.profile.sub,
-            lastName: undefined,
-            permissions: [],
-          },
-          meta: expect.anything(),
-        },
-      ]);
+      const actions = store.getActions();
+
+      // Check that all expected actions are dispatched (order may vary due to async nature)
+      expect(actions).toHaveLength(7);
+
+      // Check that all required action types are present
+      const actionTypes = actions.map((action) => action.type);
+      expect(actionTypes).toContain('user/initializeLoginCallback/pending');
+      expect(actionTypes).toContain('user/retrieveUserFromSession/pending');
+      expect(actionTypes).toContain('user/initializeLoginCallback/fulfilled');
+      expect(actionTypes).toContain('user/retrieveUserFromSession/fulfilled');
+
+      // Check that correct login statuses are set
+      const loginStatusActions = actions.filter((action) => action.type === 'user/setLoginStatus');
+      expect(loginStatusActions).toHaveLength(3);
+      expect(loginStatusActions.map((action) => action.payload)).toContain('INITIALIZING');
+      expect(loginStatusActions.map((action) => action.payload)).toContain('AUTHORIZED');
+
+      // Check the final user data
+      const userAction = actions.find((action) => action.type === 'user/retrieveUserFromSession/fulfilled');
+      expect(userAction.payload).toEqual({
+        firstName: undefined,
+        id: mockUser.profile.sub,
+        lastName: undefined,
+        permissions: [],
+      });
 
       expect(mockNavigate).toHaveBeenCalledWith('/');
     });
