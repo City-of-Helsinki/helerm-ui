@@ -31,7 +31,8 @@ export const fetchAttributeTypesThunk = createAsyncThunk('ui/fetchAttributeTypes
   } catch (error) {
     return rejectWithValue({
       message: error instanceof Error ? error.message : 'Failed to fetch attribute types',
-      error,
+      name: error?.name || 'Error',
+      status: error?.status || 'unknown',
     });
   }
 });
@@ -53,7 +54,8 @@ export const fetchTemplatesThunk = createAsyncThunk('ui/fetchTemplates', async (
   } catch (error) {
     return rejectWithValue({
       message: error instanceof Error ? error.message : 'Failed to fetch templates',
-      error,
+      name: error?.name || 'Error',
+      status: error?.status || 'unknown',
     });
   }
 });
