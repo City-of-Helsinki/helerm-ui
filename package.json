@@ -59,6 +59,7 @@
     "react-redux-toastr": "^7.6.5",
     "react-router-dom": "^6.26.2",
     "react-select": "^5.8.1",
+    "react-sticky-el": "^2.1.1",
     "redux-thunk": "^2.3.0",
     "remark-gfm": "^1.0.0",
     "sass": "^1.79.4",

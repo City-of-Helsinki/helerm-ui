@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import classnames from 'classnames';
 import { filter, find, includes, isArray, isEmpty, orderBy, slice, uniq, without } from 'lodash';
+import Sticky from 'react-sticky-el';
 
 import {
   FACET_ATTRIBUTE_SIZE,
@@ -23,7 +24,6 @@ import FacetedSearchHelp, {
 import FacetedSearchResults from '../../components/FacetedSearch/FacetedSearchResults/FacetedSearchResults';
 import FacetedSearchSuggestions from '../../components/FacetedSearch/FacetedSearchSuggestions/FacetedSearchSuggestions';
 import PreviewItem from '../../components/FacetedSearch/PreviewItem/PreviewItem';
-import Sticky from '../../components/Sticky/Sticky';
 import './FacetedSearch.scss';
 import { getDisplayLabelForAttribute } from '../../utils/attributeHelper';
 import { setNavigationVisibility } from '../../store/reducers/navigation';

@@ -140,7 +140,7 @@ const Record = React.forwardRef(
               <button
                 type='button'
                 className='btn btn-info btn-xs record-button pull-right'
-                onClick={() => setRecordVisibility({ recordId: record.id, visibility: !record.is_open })}
+                onClick={() => setRecordVisibility(record.id, !record.is_open)}
               >
                 <span className={`fa-solid ${record.is_open ? 'fa-minus' : 'fa-plus'}`} aria-hidden='true' />
               </button>

@@ -145,8 +145,8 @@ const Attributes = ({
     <div data-testid={`${type}-attributes`} className={classnames('list-group', `${type}-attributes`)}>
       {basicAttributes}
       {buttons}
-      <div data-testid='default-attributes'>{safeRenderArray(defaultViewAttributes)}</div>
-      <div data-testid='custom-attributes'>{safeRenderArray(attributes)}</div>
+      {safeRenderArray(defaultViewAttributes)}
+      {safeRenderArray(attributes)}
     </div>
   );
 };

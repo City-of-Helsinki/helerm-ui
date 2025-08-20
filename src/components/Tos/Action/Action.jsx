@@ -5,6 +5,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { uniqueId } from 'lodash';
+import Sticky from 'react-sticky-el';
 
 import Record from '../Record/Record';
 import Attributes from '../Attribute/Attributes';
@@ -14,7 +15,6 @@ import ReorderView from '../Reorder/ReorderView';
 import ImportView from '../ImportView/ImportView';
 import EditorForm from '../EditorForm/EditorForm';
 import Dropdown from '../../Dropdown';
-import Sticky from '../../Sticky/Sticky';
 import { DROPDOWN_ITEMS } from '../../../constants';
 import { attributeButton } from '../../../utils/attributeHelper';
 import './Action.scss';

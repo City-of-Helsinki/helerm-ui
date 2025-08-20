@@ -91,10 +91,7 @@ describe('<Record />', () => {
 
     fireEvent.click(toggleButton);
 
-    expect(mockProps.setRecordVisibility).toHaveBeenCalledWith({
-      recordId: mockRecord.id,
-      visibility: !mockRecord.is_open,
-    });
+    expect(mockProps.setRecordVisibility).toHaveBeenCalledWith(mockRecord.id, !mockRecord.is_open);
   });
 
   it('enters edit mode when edit button is clicked', async () => {
