@@ -296,7 +296,10 @@ describe('<Phase />', () => {
 
       fireEvent.click(metadataButton);
 
-      expect(mockProps.setPhaseAttributesVisibility).toHaveBeenCalledWith(mockPhase.id, !mockPhase.is_attributes_open);
+      expect(mockProps.setPhaseAttributesVisibility).toHaveBeenCalledWith(
+        mockProps.phaseIndex,
+        !mockPhase.is_attributes_open,
+      );
     });
   });
 
@@ -520,7 +523,8 @@ describe('<Phase />', () => {
       renderComponent({ documentState: 'view' });
 
       expect(screen.queryByTestId('phase-dropdown-button')).not.toBeInTheDocument();
-      expect(screen.queryByRole('button', { name: 'Näytä metatiedot' })).not.toBeInTheDocument();
+      // The metadata button should be visible in view mode (matches old implementation)
+      expect(screen.queryByRole('button', { name: 'Näytä metatiedot' })).toBeInTheDocument();
     });
   });
 

@@ -5,6 +5,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import Sticky from 'react-sticky-el';
 
 import { HEADER_HEIGHT } from '../../../constants';
 import Phase from '../../../components/Tos/Phase/Phase';
@@ -21,7 +22,6 @@ import VersionData from '../../../components/Tos/Version/VersionData';
 import VersionSelector from '../../../components/VersionSelector/VersionSelector';
 import Popup from '../../../components/Popup';
 import RouterPrompt from '../../../components/RouterPrompt/RouterPrompt';
-import Sticky from '../../../components/Sticky/Sticky';
 import { displayMessage, getStatusLabel } from '../../../utils/helpers';
 import { generateDefaultAttributes } from '../../../utils/attributeHelper';
 import { validateTOS, validatePhase, validateAction, validateRecord } from '../../../utils/validators';
@@ -47,6 +47,7 @@ import {
   editPhaseAttribute,
   removePhase,
   setPhaseAttributesVisibility,
+  setPhaseVisibility as setPhaseVisibilityAction,
   addRecord,
   editRecord,
   editRecordAttribute,
@@ -173,6 +174,27 @@ const ViewTOS = () => {
   const tosIsFetching = useSelector(isFetchingTosSelector);
   const isFetching = uiIsFetching || tosIsFetching;
 
+  // Stable callback functions for Redux dispatches to prevent unnecessary re-renders
+  const handleSetPhaseVisibility = useCallback(
+    (phaseId, isVisible) => dispatch(setPhaseVisibilityAction({ phaseId, visibility: isVisible })),
+    [dispatch],
+  );
+
+  const handleSetPhaseAttributesVisibility = useCallback(
+    (phaseId, isVisible) => dispatch(setPhaseAttributesVisibility({ phaseId, visibility: isVisible })),
+    [dispatch],
+  );
+
+  const handleSetActionVisibility = useCallback(
+    (actionId, isVisible) => dispatch(setActionVisibility({ actionId, visibility: isVisible })),
+    [dispatch],
+  );
+
+  const handleSetRecordVisibility = useCallback(
+    (recordId, isVisible) => dispatch(setRecordVisibility({ recordId, visibility: isVisible })),
+    [dispatch],
+  );
+
   const handleScroll = useCallback(
     (event) => {
       const element = event.srcElement.scrollingElement || event.srcElement.documentElement || {};
@@ -185,10 +207,17 @@ const ViewTOS = () => {
   );
 
   const updateTopOffsetForSticky = useCallback(() => {
+    // calculates heights for elements that are already sticking (navigation menu)
     const menuEl = document.getElementById('navigation-menu');
     const menuHeight = menuEl ? menuEl.getBoundingClientRect().height : 0;
     setState((prevState) => ({ ...prevState, topOffset: menuHeight }));
   }, []);
+
+  // Initialize sticky positioning on mount
+  useEffect(() => {
+    updateTopOffsetForSticky();
+    // Note: resize listener is already set up in the main useEffect below
+  }, [updateTopOffsetForSticky]);
 
   const getClassificationInfo = useCallback((tosResponse) => {
     if (tosResponse?.payload) {
@@ -548,13 +577,6 @@ const ViewTOS = () => {
     [dispatch],
   );
 
-  const setPhaseVisibility = useCallback(
-    (phaseId, isVisible) => {
-      dispatch(setPhaseVisibility({ phaseId, isVisible }));
-    },
-    [dispatch],
-  );
-
   const generateTypeOptions = useCallback((typeOptions) => {
     const options = [];
 
@@ -660,12 +682,10 @@ const ViewTOS = () => {
                 phaseIndex={phaseData[key].id}
                 phase={selectedTOS.phases[key]}
                 phasesOrder={phasesOrder}
-                setActionVisibility={(actionId, isVisible) => dispatch(setActionVisibility({ actionId, isVisible }))}
-                setPhaseAttributesVisibility={(phaseId, isVisible) =>
-                  dispatch(setPhaseAttributesVisibility({ phaseId, isVisible }))
-                }
-                setPhaseVisibility={setPhaseVisibility}
-                setRecordVisibility={(recordId, isVisible) => dispatch(setRecordVisibility({ recordId, isVisible }))}
+                setActionVisibility={handleSetActionVisibility}
+                setPhaseAttributesVisibility={handleSetPhaseAttributesVisibility}
+                setPhaseVisibility={handleSetPhaseVisibility}
+                setRecordVisibility={handleSetRecordVisibility}
                 actions={selectedTOS.actions}
                 actionTypes={actionTypes}
                 phases={selectedTOS.phases}
@@ -708,8 +728,11 @@ const ViewTOS = () => {
       phaseTypes,
       recordTypes,
       attributeTypes,
+      handleSetActionVisibility,
+      handleSetPhaseAttributesVisibility,
+      handleSetPhaseVisibility,
+      handleSetRecordVisibility,
       dispatch,
-      setPhaseVisibility,
     ],
   );
 

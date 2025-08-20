@@ -8,13 +8,13 @@ import cloneDeep from 'lodash/cloneDeep';
 import _get from 'lodash/get';
 import NestedObjects from 'nested-objects';
 import Defiant from 'defiant.js';
+import Sticky from 'react-sticky-el';
 
 import ClassificationLink from './ClassificationLink';
 import EmptyTree from './EmptyTree';
 import Exporter from '../Exporter';
 import SearchInputs from './SearchInput/SearchInputs';
 import SearchFilters from './SearchFilter/SearchFilters';
-import Sticky from '../Sticky/Sticky';
 
 const DEFAULT_FILTER_CONDITION = 'and';
 

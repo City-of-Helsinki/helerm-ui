@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import './Phase.scss';
 import { uniqueId } from 'lodash';
+import { RenderPropSticky } from 'react-sticky-el';
 
 import Action from '../Action/Action';
 import Attributes from '../Attribute/Attributes';
@@ -12,7 +14,11 @@ import ReorderView from '../Reorder/ReorderView';
 import Dropdown from '../../Dropdown';
 import AddElementInput from '../AddElementInput/AddElementInput';
 import EditorForm from '../EditorForm/EditorForm';
-import { generateDefaultAttributes } from '../../../utils/attributeHelper';
+import {
+  generateDefaultAttributes,
+  getDisplayLabelForAttribute,
+  attributeButton,
+} from '../../../utils/attributeHelper';
 import { DROPDOWN_ITEMS } from '../../../constants';
 
 const Phase = React.forwardRef(
@@ -62,23 +68,20 @@ const Phase = React.forwardRef(
     const [actionDefaultAttributes, setActionDefaultAttributes] = useState({});
     const [actionTypeSpecifier, setActionTypeSpecifier] = useState('');
     const [actionType, setActionType] = useState('');
+    const [editingTypeSpecifier, setEditingTypeSpecifier] = useState(false);
+    const [editingType, setEditingType] = useState(false);
+    const [topOffset, setTopOffset] = useState(0);
 
     const element = ref;
     const actions_ref = useRef({});
 
     const updateTopOffsetForSticky = useCallback(() => {
-      if (element.current) {
-        const offset = element.current.offsetTop;
-        if (offset > 0) {
-          element.current.style.top = `${offset}px`;
-        }
-      }
-    }, [element]);
-
-    const disableEditMode = useCallback(() => {
-      setMode('view');
-      setEditingPhase(false);
-      setComplementingPhase(false);
+      // calculates heights for elements that are already sticking (navigation menu and tos header)
+      const headerEl = document.getElementById('single-tos-header-container');
+      const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 0;
+      const menuEl = document.getElementById('navigation-menu');
+      const menuHeight = menuEl ? menuEl.getBoundingClientRect().height : 0;
+      setTopOffset(headerHeight + menuHeight);
     }, []);
 
     useEffect(() => {
@@ -89,6 +92,14 @@ const Phase = React.forwardRef(
         window.removeEventListener('resize', updateTopOffsetForSticky);
       };
     }, [updateTopOffsetForSticky]);
+
+    const disableEditMode = useCallback(() => {
+      setMode('view');
+      setEditingPhase(false);
+      setComplementingPhase(false);
+      setEditingTypeSpecifier(false);
+      setEditingType(false);
+    }, []);
 
     useEffect(() => {
       if (phase.attributes.TypeSpecifier) {
@@ -164,6 +175,28 @@ const Phase = React.forwardRef(
       },
       [editPhase, disableEditMode],
     );
+
+    const editTypeSpecifier = useCallback(() => {
+      if (documentState === 'edit') {
+        setMode('edit');
+        setEditingTypeSpecifier(true);
+      }
+    }, [documentState]);
+
+    const editType = useCallback(() => {
+      if (documentState === 'edit') {
+        setMode('edit');
+        setEditingType(true);
+      }
+    }, [documentState]);
+
+    const onTypeSpecifierChange = useCallback((event) => {
+      setTypeSpecifier(event.target.value);
+    }, []);
+
+    const onTypeChange = useCallback((value) => {
+      setType(value);
+    }, []);
 
     const cancelDeletion = useCallback(() => {
       setDeleting(false);
@@ -258,12 +291,6 @@ const Phase = React.forwardRef(
       [disableEditMode],
     );
 
-    const togglePhaseAttributesVisibility = useCallback(() => {
-      if (setPhaseAttributesVisibility) {
-        setPhaseAttributesVisibility(phase.id, !phase.is_attributes_open);
-      }
-    }, [phase.id, phase.is_attributes_open, setPhaseAttributesVisibility]);
-
     const generateDropdownItems = useCallback(() => {
       return [
         { ...DROPDOWN_ITEMS[0], text: 'Uusi toimenpide', action: () => createNewAction() },
@@ -300,7 +327,7 @@ const Phase = React.forwardRef(
               className='btn btn-info btn-sm pull-right'
               title={phase.is_open ? 'Pienennä' : 'Laajenna'}
               aria-label={phase.is_open ? 'Pienennä' : 'Laajenna'}
-              onClick={() => setPhaseVisibility && setPhaseVisibility(phaseIndex, !phase.is_open)}
+              onClick={() => setPhaseVisibility(phaseIndex, !phase.is_open)}
             >
               <span className={`fa-solid ${phase.is_open ? 'fa-minus' : 'fa-plus'}`} aria-hidden='true' />
             </button>
@@ -310,9 +337,15 @@ const Phase = React.forwardRef(
               <Dropdown items={phaseDropdownItems} small />
             </span>
           )}
-          {documentState === 'edit' && (
-            <button type='button' className='btn btn-default' onClick={() => togglePhaseAttributesVisibility()}>
-              {phase.is_attributes_open ? 'Piilota metatiedot' : 'Näytä metatiedot'}
+          {attributeButton(phase.attributes, attributeTypes) && (
+            <button
+              type='button'
+              className='btn btn-info btn-xs record-button pull-right'
+              title={phase.is_attributes_open ? 'Piilota metatiedot' : 'Näytä metatiedot'}
+              aria-label={phase.is_attributes_open ? 'Piilota metatiedot' : 'Näytä metatiedot'}
+              onClick={() => setPhaseAttributesVisibility(phaseIndex, !phase.is_attributes_open)}
+            >
+              <span className={`fa-solid ${phase.is_attributes_open ? 'fa-minus' : 'fa-plus'}`} aria-hidden='true' />
             </button>
           )}
         </div>
@@ -320,12 +353,175 @@ const Phase = React.forwardRef(
     }, [
       documentState,
       phase.actions,
+      phase.attributes,
       phase.is_attributes_open,
       phase.is_open,
-      generateDropdownItems,
-      togglePhaseAttributesVisibility,
       phaseIndex,
+      generateDropdownItems,
+      setPhaseAttributesVisibility,
       setPhaseVisibility,
+      attributeTypes,
+    ]);
+
+    const renderBasicAttributesContent = useCallback(() => {
+      const classNames = classnames([
+        'col-md-6',
+        'basic-attribute',
+        'phase-basic-attribute',
+        documentState === 'edit' ? 'editable' : null,
+      ]);
+
+      // TypeSpecifier element (editable)
+      const typeSpecifierElement = () => {
+        if (mode === 'edit' && editingTypeSpecifier) {
+          return (
+            <div className='col-md-5 phase-title-input row'>
+              <form onSubmit={updateTypeSpecifier}>
+                <input
+                  className='input-title form-control'
+                  value={typeSpecifier || ''}
+                  onChange={onTypeSpecifierChange}
+                  autoFocus
+                />
+              </form>
+            </div>
+          );
+        }
+
+        return (
+          <span
+            className={classNames}
+            onClick={editTypeSpecifier}
+            onKeyUp={(e) => {
+              if (e.key === 'Enter') {
+                editTypeSpecifier();
+              }
+            }}
+            role='button'
+            tabIndex={0}
+          >
+            {typeSpecifier}
+          </span>
+        );
+      };
+
+      // PhaseType element (editable)
+      const phaseTypeElement = () => {
+        if (mode === 'edit' && editingType) {
+          const phaseTypesAsOptions = Object.values(phaseTypes || {}).map((pt) => ({
+            value: pt.value,
+            label: getDisplayLabelForAttribute({
+              attributeValue: pt.value,
+              identifier: 'PhaseType',
+            }),
+          }));
+
+          return (
+            <div className='col-md-6 phase-title-dropdown'>
+              <form onSubmit={updatePhaseType}>
+                <select
+                  className='form-control'
+                  value={type || ''}
+                  onChange={(e) => onTypeChange(e.target.value)}
+                  autoFocus
+                >
+                  <option value=''>Select phase type...</option>
+                  {phaseTypesAsOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </form>
+            </div>
+          );
+        }
+
+        const phaseTypeValue =
+          type && getDisplayLabelForAttribute
+            ? getDisplayLabelForAttribute({
+                attributeValue: type,
+                identifier: 'PhaseType',
+              })
+            : type;
+
+        return (
+          <span
+            className={classNames}
+            onClick={editType}
+            onKeyUp={(e) => {
+              if (e.key === 'Enter') {
+                editType();
+              }
+            }}
+            role='button'
+            tabIndex={0}
+          >
+            {phaseTypeValue}
+          </span>
+        );
+      };
+
+      // If phase is open and has actions, use sticky behavior like in the old implementation
+      if (phase.is_open && phase.actions && phase.actions.length > 0) {
+        return (
+          <RenderPropSticky topOffset={-1 * topOffset}>
+            {({ isFixed, wrapperStyles, wrapperRef, holderStyles, holderRef }) => (
+              <div ref={holderRef} style={holderStyles}>
+                <div
+                  className={isFixed ? 'phase-title-sticky' : 'phase-title'}
+                  style={
+                    isFixed
+                      ? {
+                          ...wrapperStyles,
+                          ...{
+                            position: 'fixed',
+                            top: topOffset,
+                            left: 0,
+                          },
+                        }
+                      : wrapperStyles
+                  }
+                  ref={wrapperRef}
+                >
+                  <div className='basic-attributes'>
+                    {phaseTypeElement()}
+                    {typeSpecifierElement()}
+                  </div>
+                </div>
+              </div>
+            )}
+          </RenderPropSticky>
+        );
+      }
+
+      // Default non-sticky render
+      return (
+        <div className={`phase-title ${phase.is_attributes_open ? 'phase-open' : 'phase-closed'}`}>
+          <div className='basic-attributes'>
+            {phaseTypeElement()}
+            {typeSpecifierElement()}
+          </div>
+        </div>
+      );
+    }, [
+      documentState,
+      mode,
+      editingTypeSpecifier,
+      editingType,
+      typeSpecifier,
+      type,
+      phase.is_attributes_open,
+      phase.is_open,
+      phase.actions,
+      topOffset,
+      phaseTypes,
+      updateTypeSpecifier,
+      onTypeSpecifierChange,
+      editTypeSpecifier,
+      updatePhaseType,
+      onTypeChange,
+      editType,
     ]);
 
     const renderBasicAttributes = useCallback(() => {
@@ -341,23 +537,22 @@ const Phase = React.forwardRef(
       }
 
       return (
-        <div className='basic-attributes'>
-          <Attributes
-            attributeTypes={attributeTypes}
-            documentState={documentState}
-            element={{
-              id: phase.id,
-              attributes: phase.attributes,
-            }}
-            showAttributes={phase.is_attributes_open || false}
-            type='phase'
-            typeOptions={typeOptions}
-            renderButtons={renderPhaseButtons}
-            updateAttribute={updatePhaseAttribute}
-            updateType={updatePhaseType}
-            updateTypeSpecifier={updateTypeSpecifier}
-          />
-        </div>
+        <Attributes
+          attributeTypes={attributeTypes}
+          documentState={documentState}
+          element={{
+            id: phase.id,
+            attributes: phase.attributes,
+          }}
+          showAttributes={phase.is_attributes_open || false}
+          type='phase'
+          typeOptions={typeOptions}
+          renderBasicAttributes={renderBasicAttributesContent}
+          renderButtons={renderPhaseButtons}
+          updateAttribute={updatePhaseAttribute}
+          updateType={updatePhaseType}
+          updateTypeSpecifier={updateTypeSpecifier}
+        />
       );
     }, [
       attributeTypes,
@@ -366,6 +561,7 @@ const Phase = React.forwardRef(
       phase.attributes,
       phase.is_attributes_open,
       phaseTypes,
+      renderBasicAttributesContent,
       renderPhaseButtons,
       updatePhaseAttribute,
       updatePhaseType,
@@ -374,39 +570,51 @@ const Phase = React.forwardRef(
 
     const renderActions = useCallback(
       (phaseActions) => {
-        return Object.keys(phaseActions).map((actionId) => (
-          <Action
-            key={actionId}
-            action={phaseActions[actionId]}
-            phase={phase}
-            documentState={documentState}
-            attributeTypes={attributeTypes}
-            editPhaseAttribute={editPhaseAttribute}
-            displayMessage={displayMessage}
-            setActionVisibility={setActionVisibility}
-            editActionAttribute={editActionAttribute}
-            editRecord={editRecord}
-            editRecordAttribute={editRecordAttribute}
-            removeAction={removeAction}
-            removeRecord={removeRecord}
-            setRecordVisibility={setRecordVisibility}
-            actionTypes={actionTypes}
-            actions={actions}
-            records={records}
-            phases={phases}
-            phasesOrder={phasesOrder}
-            recordTypes={recordTypes}
-            addRecord={addRecord}
-            editAction={editAction}
-            importItems={importItems}
-            changeOrder={changeOrder}
-            ref={(element) => {
-              actions_ref.current[actionId] = element;
-            }}
-          />
-        ));
+        if (!phaseActions || !Array.isArray(phaseActions)) {
+          return null;
+        }
+
+        return phaseActions.map((actionId) => {
+          const action = actions[actionId];
+          if (!action) {
+            return null;
+          }
+
+          return (
+            <Action
+              key={actionId}
+              action={action}
+              phase={phase}
+              documentState={documentState}
+              attributeTypes={attributeTypes}
+              editPhaseAttribute={editPhaseAttribute}
+              displayMessage={displayMessage}
+              setActionVisibility={setActionVisibility}
+              editActionAttribute={editActionAttribute}
+              editRecord={editRecord}
+              editRecordAttribute={editRecordAttribute}
+              removeAction={removeAction}
+              removeRecord={removeRecord}
+              setRecordVisibility={setRecordVisibility}
+              actionTypes={actionTypes}
+              actions={actions}
+              records={records}
+              phases={phases}
+              phasesOrder={phasesOrder}
+              recordTypes={recordTypes}
+              addRecord={addRecord}
+              editAction={editAction}
+              importItems={importItems}
+              changeOrder={changeOrder}
+              ref={(element) => {
+                actions_ref.current[actionId] = element;
+              }}
+            />
+          );
+        });
       },
       [
+        actions,
         phase,
         documentState,
         attributeTypes,
@@ -419,7 +627,6 @@ const Phase = React.forwardRef(
         removeAction,
         removeRecord,
         setRecordVisibility,
-        actions,
         actionTypes,
         records,
         phases,
@@ -498,7 +705,9 @@ const Phase = React.forwardRef(
                   showMoreOrLess={showMore}
                 />
               )}
-              <div className={`actions ${phase.is_open ? '' : 'hidden'}`}>{actions && renderActions(actions)}</div>
+              <div className={`actions ${phase.is_open ? '' : 'hidden'}`}>
+                {phase.actions && renderActions(phase.actions)}
+              </div>
             </div>
           )}
 
