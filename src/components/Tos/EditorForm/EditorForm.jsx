@@ -226,6 +226,7 @@ const EditorForm = (props) => {
     (value, key, field) => {
       if (key && field) {
         setNewAttributes((prevState) => update(prevState, createUpdate(value, key, field)));
+        // Call resolveOnSubmit after state update - this matches old behavior
         resolveOnSubmit(null, targetId, false);
       }
     },
@@ -524,11 +525,11 @@ const EditorForm = (props) => {
     (e) => {
       e.preventDefault();
 
+      // Just reset state and close form - don't trigger submission logic on cancel
       setNewAttributes(initialAttrState);
-      resolveOnSubmit(null, targetId, false);
       propCloseEditorForm();
     },
-    [initialAttrState, resolveOnSubmit, targetId, propCloseEditorForm],
+    [initialAttrState, propCloseEditorForm],
   );
 
   const renderDescriptions = useCallback(() => {
