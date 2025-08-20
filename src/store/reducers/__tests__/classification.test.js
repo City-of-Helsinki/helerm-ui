@@ -112,7 +112,7 @@ describe('ViewClassification reducer', () => {
     vi.spyOn(api, 'get').mockImplementationOnce(mockApiGet);
     vi.spyOn(api, 'post').mockImplementationOnce(mockApiPost);
 
-    return store.dispatch(createTosThunk()).then(() => {
+    return store.dispatch(createTosThunk({ token: 'mock-token' })).then(() => {
       const actions = store.getActions();
 
       expect(actions).toEqual(expectedActions);

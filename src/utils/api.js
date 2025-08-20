@@ -1,7 +1,6 @@
 /* eslint-disable no-param-reassign */
 import fetch from 'isomorphic-fetch';
 import { forEach, merge } from 'lodash';
-import { getApiTokenFromStorage } from 'hds-react';
 
 import config from '../config';
 
@@ -55,11 +54,10 @@ export function getApiUrl(url, query = {}) {
  * @param endpoint
  * @param params
  * @param options
+ * @param token - Required token parameter for authenticated requests
  * @returns {*}
  */
-export function callApi(endpoint, params, options = {}) {
-  const token = getApiTokenFromStorage(config.API_TOKEN_AUTH_AUDIENCE);
-
+export function callApi(endpoint, params, options = {}, token = null) {
   const defaultHeaders = new Headers();
   const url = getApiUrl(endpoint, params);
   const finalOptions = merge(
@@ -106,8 +104,8 @@ export function callApi(endpoint, params, options = {}) {
  * @param options
  * @returns {*}
  */
-export function get(endpoint, params = {}, options = {}) {
-  return callApi(endpoint, params, options);
+export function get(endpoint, params = {}, options = {}, token = null) {
+  return callApi(endpoint, params, options, token);
 }
 
 /**
@@ -116,14 +114,15 @@ export function get(endpoint, params = {}, options = {}) {
  * @param data
  * @param params
  * @param options
+ * @param token
  * @returns {*}
  */
-export function post(endpoint, data, params = {}, options = {}) {
+export function post(endpoint, data, params = {}, options = {}, token = null) {
   if (typeof data !== 'string') {
     data = JSON.stringify(data);
     options.headers = merge({ 'Content-Type': CONTENT_TYPE_JSON }, options.headers);
   }
-  return callApi(endpoint, params, merge({ body: data, method: 'POST' }, options));
+  return callApi(endpoint, params, merge({ body: data, method: 'POST' }, options), token);
 }
 
 /**
@@ -132,22 +131,23 @@ export function post(endpoint, data, params = {}, options = {}) {
  * @param data
  * @param params
  * @param options
+ * @param token
  * @returns {*}
  */
-export function put(endpoint, data, params = {}, options = {}) {
+export function put(endpoint, data, params = {}, options = {}, token = null) {
   if (typeof data !== 'string') {
     data = JSON.stringify(data);
     options.headers = merge({ 'Content-Type': CONTENT_TYPE_JSON }, options.headers);
   }
-  return callApi(endpoint, params, merge({ body: data, method: 'PUT' }, options));
+  return callApi(endpoint, params, merge({ body: data, method: 'PUT' }, options), token);
 }
 
-export function patch(endpoint, data, params = {}, options = {}) {
+export function patch(endpoint, data, params = {}, options = {}, token = null) {
   if (typeof data !== 'string') {
     data = JSON.stringify(data);
     options.headers = merge({ 'Content-Type': CONTENT_TYPE_JSON }, options.headers);
   }
-  return callApi(endpoint, params, merge({ body: data, method: 'PATCH' }, options));
+  return callApi(endpoint, params, merge({ body: data, method: 'PATCH' }, options), token);
 }
 
 /**
@@ -155,10 +155,11 @@ export function patch(endpoint, data, params = {}, options = {}) {
  * @param endpoint
  * @param params
  * @param options
+ * @param token
  * @returns {*}
  */
-export function del(endpoint, params = {}, options = { method: 'DELETE' }) {
-  return callApi(endpoint, params, options);
+export function del(endpoint, params = {}, options = { method: 'DELETE' }, token = null) {
+  return callApi(endpoint, params, options, token);
 }
 
 const methods = { get, post, put, patch, del };

@@ -17,24 +17,27 @@ import config from '../config';
 import '../styles/core.scss';
 
 const App = ({ router }) => {
-  const { authenticated, user } = useAuth();
+  const { authenticated, user, getApiToken } = useAuth();
   const dispatch = useDispatch();
+
+  // Extract userId to prevent unnecessary effect runs
+  const userId = authenticated && user?.profile?.sub;
+
+  const apiToken = getApiToken();
 
   useEffect(() => {
     async function fetchData() {
+      // These are public API endpoints that don't require authentication
       dispatch(fetchAttributeTypesThunk());
       dispatch(fetchTemplatesThunk());
 
-      if (authenticated) {
-        const { profile } = user;
-        const { sub: userId } = profile;
-
-        dispatch(retrieveUserFromSession(userId));
+      if (authenticated && userId && apiToken) {
+        dispatch(retrieveUserFromSession({ id: userId, token: apiToken }));
       }
     }
 
     fetchData();
-  }, [authenticated, user, dispatch]);
+  }, [authenticated, userId, dispatch, apiToken]);
 
   return (
     <div style={{ height: '100%' }}>

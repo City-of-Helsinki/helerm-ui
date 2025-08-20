@@ -17,7 +17,6 @@ import './PrintView.scss';
 
 const PrintView = () => {
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
   const location = useLocation();
   const params = useParams();

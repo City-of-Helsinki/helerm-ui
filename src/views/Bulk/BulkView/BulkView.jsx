@@ -15,6 +15,7 @@ import IsAllowed from '../../../components/IsAllowed/IsAllowed';
 import Popup from '../../../components/Popup';
 import './BulkView.scss';
 import { getDisplayLabelForAttribute } from '../../../utils/attributeHelper';
+import useAuth from '../../../hooks/useAuth';
 import {
   approveBulkUpdateThunk,
   clearSelectedBulkUpdate,
@@ -40,6 +41,7 @@ const BulkView = () => {
   const isFetchingNavigation = useSelector(isFetchingSelector);
   const isUpdating = useSelector(isUpdatingSelector);
   const attributeTypes = useSelector(attributeTypesSelector);
+  const { getApiToken } = useAuth();
 
   const navigate = useNavigate();
   const params = useParams();
@@ -135,7 +137,7 @@ const BulkView = () => {
 
   const onConfirmApprove = () => {
     setIsApproving(false);
-    dispatch(approveBulkUpdateThunk(selectedBulk.id))
+    dispatch(approveBulkUpdateThunk({ id: selectedBulk.id, token: getApiToken() }))
       .then(() => {
         navigate('/bulk');
         return displayMessage({
@@ -169,7 +171,7 @@ const BulkView = () => {
 
   const onConfirmDelete = () => {
     setIsDeleting(false);
-    dispatch(deleteBulkUpdateThunk(selectedBulk.id))
+    dispatch(deleteBulkUpdateThunk({ id: selectedBulk.id, token: getApiToken() }))
       .then(() => {
         setItemList([]);
         navigate('/bulk');
@@ -214,7 +216,7 @@ const BulkView = () => {
       selectedBulk.changes[`${itemToRemove.id}__${itemToRemove.changes.version}`]
     ) {
       const changes = omit(selectedBulk.changes, [`${itemToRemove.id}__${itemToRemove.changes.version}`]);
-      dispatch(updateBulkUpdateThunk({ id: selectedBulk.id, bulkUpdate: { changes } }))
+      dispatch(updateBulkUpdateThunk({ id: selectedBulk.id, bulkUpdate: { changes }, token: getApiToken() }))
         .then(() =>
           displayMessage({
             title: 'Massamuutos',

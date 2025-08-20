@@ -45,6 +45,7 @@ import { displayMessage } from '../../../utils/helpers';
 import { fetchNavigationThunk, isFetchingSelector, itemsSelector } from '../../../store/reducers/navigation';
 import { saveBulkUpdateThunk } from '../../../store/reducers/bulk';
 import { attributeTypesSelector } from '../../../store/reducers/ui';
+import useAuth from '../../../hooks/useAuth';
 
 import './BulkCreateView.scss';
 
@@ -55,6 +56,7 @@ const BulkCreateView = () => {
   const items = useSelector(itemsSelector);
   const isFetching = useSelector(isFetchingSelector);
   const attributeTypes = useSelector(attributeTypesSelector);
+  const { getApiToken } = useAuth();
 
   const navigate = useNavigate();
 
@@ -486,7 +488,7 @@ const BulkCreateView = () => {
         changes,
         state: stateValue,
       };
-      dispatch(saveBulkUpdateThunk(bulkUpdate))
+      dispatch(saveBulkUpdateThunk({ bulkUpdate, token: getApiToken() }))
         .then(() => {
           setConversion(null);
           setConversions(null);

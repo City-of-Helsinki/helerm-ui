@@ -224,7 +224,7 @@ describe('TOS Reducer', () => {
 
   it('should save draft', async () => {
     const mockResponse = { ok: true, json: createJsonResponse(validTOS) };
-    const actions = await testAsyncThunk(saveDraftThunk(), setupApiMock('put', mockResponse), {
+    const actions = await testAsyncThunk(saveDraftThunk({ token: 'test-token' }), setupApiMock('put', mockResponse), {
       selectedTOS: validTOS,
     });
 
@@ -232,9 +232,13 @@ describe('TOS Reducer', () => {
   });
 
   it('should handle save draft error', async () => {
-    const actions = await testAsyncThunk(saveDraftThunk(), setupApiMockError('put', new Error('Error')), {
-      selectedTOS: validTOS,
-    });
+    const actions = await testAsyncThunk(
+      saveDraftThunk({ token: 'test-token' }),
+      setupApiMockError('put', new Error('Error')),
+      {
+        selectedTOS: validTOS,
+      },
+    );
 
     expectAsyncActions(actions, 'selectedTOS/saveDraft', 'rejected');
   });

@@ -1,10 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { get } from 'lodash';
-import { getApiTokenFromStorage } from 'hds-react';
 
 import api, { Unauthorized } from '../../utils/api';
 import { USER_LOGIN_STATUS } from '../../constants';
-import config from '../../config';
 
 export const initialState = {
   data: null,
@@ -15,10 +13,8 @@ export const initialState = {
 
 export const retrieveUserFromSession = createAsyncThunk(
   'user/retrieveUserFromSession',
-  async (id, { dispatch, rejectWithValue }) => {
+  async ({ id, token }, { dispatch, rejectWithValue }) => {
     try {
-      const token = getApiTokenFromStorage(config.API_TOKEN_AUTH_AUDIENCE);
-
       if (!id || !token) {
         dispatch(loginSlice.actions.setLoginStatus(USER_LOGIN_STATUS.NONE));
 
@@ -28,7 +24,7 @@ export const retrieveUserFromSession = createAsyncThunk(
       dispatch(loginSlice.actions.setLoginStatus(USER_LOGIN_STATUS.INITIALIZING));
 
       const url = `user/${id}`;
-      const response = await api.get(url);
+      const response = await api.get(url, {}, {}, token);
 
       if (response.status === 401) {
         throw new Unauthorized(url);

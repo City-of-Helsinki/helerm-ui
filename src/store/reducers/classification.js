@@ -46,14 +46,14 @@ export const fetchClassificationThunk = createAsyncThunk(
 
 export const createTosThunk = createAsyncThunk(
   'classification/createTos',
-  async (_, { dispatch, getState, rejectWithValue }) => {
+  async ({ token }, { dispatch, getState, rejectWithValue }) => {
     try {
       const classification = { ...getState().classification };
       const newTos = {
         classification: { id: classification.id, version: classification.version },
       };
 
-      const response = await api.post('function', newTos);
+      const response = await api.post('function', newTos, {}, {}, token);
 
       if (!response.ok) {
         throw Error(response.statusText);

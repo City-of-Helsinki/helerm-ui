@@ -20,5 +20,5 @@ export const providerProperties = {
     },
     audiences: [config.API_TOKEN_AUTH_AUDIENCE],
   },
-  sessionPollerSettings: { pollIntervalInMs: 10000 },
+  sessionPollerSettings: { pollIntervalInMs: 60000 },
 };
