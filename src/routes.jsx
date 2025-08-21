@@ -18,6 +18,7 @@ const PrintTOS = React.lazy(() => import('./views/Tos/Print/PrintView'));
 const ViewClassification = React.lazy(() => import('./views/ViewClassification/ViewClassification'));
 const ClassificationTree = React.lazy(() => import('./views/ClassificationTree/ClassificationTree'));
 const CookieManagement = React.lazy(() => import('./views/CookieManagement/CookieManagement'));
+const AccessibilityStatement = React.lazy(() => import('./views/AccessibilityStatement/AccessibilityStatement'));
 
 const RoutesComponent = () => (
   <Route element={<RouterSyncLayout />}>
@@ -176,6 +177,16 @@ const RoutesComponent = () => (
       element={
         <InfoLayout>
           <CookieManagement />
+        </InfoLayout>
+      }
+      errorElement={<Navigate to='/error' />}
+    />
+    <Route
+      exact
+      path='/accessibility'
+      element={
+        <InfoLayout>
+          <AccessibilityStatement />
         </InfoLayout>
       }
       errorElement={<Navigate to='/error' />}
