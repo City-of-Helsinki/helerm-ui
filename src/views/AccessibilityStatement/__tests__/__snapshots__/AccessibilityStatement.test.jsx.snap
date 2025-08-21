@@ -1,0 +1,298 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`<AccessibilityStatement /> > renders correctly 1`] = `
+<div>
+  <div
+    class="container-fluid"
+  >
+    <h1>
+      Saavutettavuusseloste
+    </h1>
+    
+
+    <p>
+      Tämä saavutettavuusseloste koskee Tiedonohjaus-verkkosivustoa (
+      <a
+        href="https://tiedonohjaus.hel.fi/"
+        rel="noopener noreferrer"
+      >
+        https://tiedonohjaus.hel.fi/
+      </a>
+      ). Verkkosivustosta vastaa Helsingin kaupunki. Tässä selosteessa kerrotaan, kuinka saavutettava verkkosivusto on ja miten voit antaa meille palautetta saavutettavuudesta.
+    </p>
+    
+
+    <h2>
+      Kuinka saavutettava tämä verkkosivusto on?
+    </h2>
+    
+
+    <p>
+      Digitaalisten palveluiden tarjoamista koskevan lain mukaan julkisten verkkosivustojen on oltava saavutettavia, eli kaikilla tulee olla tasavertaiset mahdollisuudet käyttää niitä.
+    </p>
+    
+
+    <p>
+      Tämä verkkosivusto täyttää osittain lain vaatimat saavutettavuuskriteerit (WCAG-kriteeristö 2.1, A- ja AA-taso). Verkkosivustossa on merkittäviä saavutettavuuspuutteita, jotka on kuvattu tarkemmin alempana.
+    </p>
+    
+
+    <h3>
+      Sisällöt, jotka eivät ole saavutettavia
+    </h3>
+    
+
+    <p>
+      Tämä verkkosivusto ei ole kaikilta osin saavutettava. Alla mainitut sisällöt tai toiminnot eivät täytä kaikkia lain asettamia saavutettavuusvaatimuksia. Korjaamme havaittuja saavutettavuuspuutteita jatkuvasti. Päivitämme tämän selosteen havaittujen puutteiden listausta, kun saamme puutteita korjattua.
+    </p>
+    
+
+    <h4>
+      Näppäimistö
+    </h4>
+    
+
+    <ul>
+      
+
+      <li>
+        Kaikki interaktiiviset elementit eivät ole käytettävissä näppäimistöllä (WCAG 2.1: 2.1.1 Näppäimistö).
+      </li>
+      
+
+    </ul>
+    
+
+    <h4>
+      Kohdistuksen ilmaisin
+    </h4>
+    
+
+    <ul>
+      
+
+      <li>
+        Kaikilla interaktiivisilla elementeillä ei ole selkeää kohdistuksen ilmaisinta (WCAG 2.1: 2.4.7 Näkyvä kohdistus).
+      </li>
+      
+
+    </ul>
+    
+
+    <h4>
+      Linkkien yksilöllinen nimeäminen
+    </h4>
+    
+
+    <ul>
+      
+
+      <li>
+        Kaikilla linkeillä ei ole yksilöllistä nimeä, joka ilmaisee selkeästi linkin kohteen (WCAG 2.1: 2.4.4 Linkin tarkoitus (kontekstissa)).
+      </li>
+      
+
+    </ul>
+    
+
+    <h4>
+      Elementtien nimi / rooli
+    </h4>
+    
+
+    <ul>
+      
+
+      <li>
+        Sivustolla on elementtejä (painikkeet, syötekentät, alasvetovalikot), joiden saavutettava nimi ja/tai rooli puuttuu tai ilmaistaan virheellisesti / epäselvästi (WCAG 2.1: 4.1.2 Nimi, rooli, arvo).
+      </li>
+      
+
+    </ul>
+    
+
+    <h4>
+      Tilaviestit
+    </h4>
+    
+
+    <ul>
+      
+
+      <li>
+        Sivustolla on dynaamista sisältöä, jonka tilan muutos ei välity automaattisesti avustavan teknologian käyttäjille, kuten hakutoiminnot (WCAG 2.1: 4.1.3 Tilasta kertovat viestit).
+      </li>
+      
+
+    </ul>
+    
+
+    <h4>
+      Syöte
+    </h4>
+    
+
+    <ul>
+      
+
+      <li>
+        Sivustolla on hakutoimintoja, jotka päivittyvät automaattisesti ilman käyttäjän erillistä syötettä (WCAG 2.1: 3.2.2 Syöte).
+      </li>
+      
+
+    </ul>
+    
+
+    <h4>
+      Kontrasti
+    </h4>
+    
+
+    <ul>
+      
+
+      <li>
+        Sivustolla on sisältöä, jonka kontrasti on alle määritetyn raja-arvon (WCAG 2.1: 1.4.3 Kontrasti (minimi)).
+      </li>
+      
+
+    </ul>
+    
+
+    <h4>
+      Responsiivisuus
+    </h4>
+    
+
+    <ul>
+      
+
+      <li>
+        Sivuston sisältö ei ole lainkaan responsiivinen, jolloin sisältö ei ole käytettävissä kapealla näytöllä (WCAG 2.1: 1.4.10 Responsiivisuus).
+      </li>
+      
+
+    </ul>
+    
+
+    <p>
+      Sovellus on tarkoitettu työpöytäkäyttöön. Sovelluksen mobiilikäyttöä ei ole arvioitu ja se saattaa olla haasteellista.
+    </p>
+    
+
+    <h3>
+      Saavutettavuuden arviointi
+    </h3>
+    
+
+    <p>
+      Saavutettavuuden arvioinnissa on noudatettu Helsingin kaupungin työohjetta ja menetelmiä, jotka pyrkivät varmistamaan palvelun saavutettavuuden kaikissa työvaiheissa.
+    </p>
+    
+
+    <p>
+      Saavutettavuus on tarkistettu ulkopuolisen asiantuntijan suorittamana arviointina. Saavutettavuus on tarkistettu käyttäen ohjelmallista saavutettavuustarkistusta sekä verkkosivuston ja sisällön manuaalista tarkistusta.
+    </p>
+    
+
+    <h2>
+      Huomasitko puutteita saavutettavuudessa?
+    </h2>
+    
+
+    <p>
+      Pyrimme jatkuvasti parantamaan verkkosivuston saavutettavuutta. Ota meihin yhteyttä, jos löydät saavutettavuuspuutteita, joita ei ole kuvattu tällä sivulla, tai tarvitsemasi aineisto ei ole saavutettavaa. 
+      <a
+        href="https://palautteet.hel.fi/fi"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Anna palautetta palautelomakkeella
+      </a>
+      .
+    </p>
+    
+
+    <h2>
+      Saavutettavuuden valvonta
+    </h2>
+    
+
+    <p>
+      Liikenne- ja viestintävirasto Traficom valvoo saavutettavuusvaatimusten toteutumista. Jos et ole tyytyväinen saamaasi vastaukseen tai et saa vastausta lainkaan kahden viikon aikana, voit tehdä ilmoituksen Liikenne- ja viestintävirasto Traficomiin. Liikenne- ja viestintävirasto Traficomin sivulla kerrotaan tarkasti, miten ilmoituksen voi tehdä ja miten asia käsitellään.
+    </p>
+    
+
+    <p>
+      Liikenne- ja viestintävirasto Traficom
+    </p>
+    
+
+    <p>
+      Digitaalisen esteettömyyden ja saavutettavuuden valvontayksikkö
+    </p>
+    
+
+    <p>
+      <a
+        href="https://www.saavutettavuusvaatimukset.fi"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        www.saavutettavuusvaatimukset.fi
+      </a>
+    </p>
+    
+
+    <p>
+      <a
+        href="mailto:saavutettavuus@traficom.fi"
+      >
+        saavutettavuus@traficom.fi
+      </a>
+    </p>
+    
+
+    <p>
+      puhelinnumero vaihde 029 534 5000
+    </p>
+    
+
+    <p>
+      <a
+        href="https://www.saavutettavuusvaatimukset.fi"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        www.saavutettavuusvaatimukset.fi
+      </a>
+    </p>
+    
+
+    <h2>
+      Saavutettavuusselosteen tiedot
+    </h2>
+    
+
+    <p>
+      Verkkosivusto on julkaistu 1.6.2018.
+    </p>
+    
+
+    <p>
+      Seloste on laadittu 28.5.2025.
+    </p>
+    
+
+    <p>
+      <a
+        href="https://www.finlex.fi/fi/lainsaadanto/saadoskokoelma/2019/306"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Laki digitaalisten palvelujen tarjoamisesta (306/2019)
+      </a>
+    </p>
+  </div>
+</div>
+`;

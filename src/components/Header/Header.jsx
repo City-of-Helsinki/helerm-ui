@@ -60,6 +60,11 @@ const Header = () => {
               </Link>
             </li>
             <li className='navbar-text'>
+              <Link to='/accessibility' className='navbar-link'>
+                Saavutettavuusseloste
+              </Link>
+            </li>
+            <li className='navbar-text'>
               <Link to='/cookies' className='navbar-link'>
                 Evästeasetukset
               </Link>
