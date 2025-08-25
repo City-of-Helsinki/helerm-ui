@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.4.1](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.4.0...helerm-ui-v1.4.1) (2025-08-25)
+
+
+### Bug Fixes
+
+* EditorForm action buttons TIED-180 ([5a93862](https://github.com/City-of-Helsinki/helerm-ui/commit/5a93862ba44403887f83ba0b514791a3ebac2418))
+* GetApiToken from useAuth TIED-180 ([65870b2](https://github.com/City-of-Helsinki/helerm-ui/commit/65870b2ece663b3680f0f885346967fbbf9d740e))
+* Ui reducer error handling TIED-180 ([1c2bc51](https://github.com/City-of-Helsinki/helerm-ui/commit/1c2bc5104895adf54ccafb66698317574199ba77))
+
+
+### Dependencies
+
+* Bump tmp from 0.2.3 to 0.2.4 ([#584](https://github.com/City-of-Helsinki/helerm-ui/issues/584)) ([41c693b](https://github.com/City-of-Helsinki/helerm-ui/commit/41c693b0683192338f94eabd2d229e2e60e2668a))
+* React dependency updates TIED-180 ([3b9e95e](https://github.com/City-of-Helsinki/helerm-ui/commit/3b9e95e0330a73b7c972b67a757668d5f2d81653))
+* Upgrade react to 18, testing-library/react to 15 TIED-180 ([2b049e5](https://github.com/City-of-Helsinki/helerm-ui/commit/2b049e50a23d005be2c4cf59f575a79384cbf6ab))
+* Upgrade react-datepicker TIED-180 ([3b9e95e](https://github.com/City-of-Helsinki/helerm-ui/commit/3b9e95e0330a73b7c972b67a757668d5f2d81653))
+* Upgrade react-dnd to 16.0.1 TIED-180 ([48dc24a](https://github.com/City-of-Helsinki/helerm-ui/commit/48dc24adbd29074720dda59b6379b04e652e4530))
+* Upgrade react-markdown TIED-180 ([3b9e95e](https://github.com/City-of-Helsinki/helerm-ui/commit/3b9e95e0330a73b7c972b67a757668d5f2d81653))
+* Upgrade react-select TIED-180 ([3b9e95e](https://github.com/City-of-Helsinki/helerm-ui/commit/3b9e95e0330a73b7c972b67a757668d5f2d81653))
+* Upgrade Redux to 9.2.0 TIED-180 ([e788cf7](https://github.com/City-of-Helsinki/helerm-ui/commit/e788cf74cc77be16863e9417fed249b0c88efae0))
+
 ## [1.4.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.3.1...helerm-ui-v1.4.0) (2025-08-08)
 
 
