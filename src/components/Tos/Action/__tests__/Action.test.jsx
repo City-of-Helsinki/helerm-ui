@@ -393,4 +393,137 @@ describe('<Action />', () => {
       expect(screen.getByText('Lomake')).toBeInTheDocument();
     });
   });
+
+  describe('Action UI Interactions', () => {
+    describe('Action Creation UI Flow', () => {
+      it('opens action edit form when dropdown option is selected', async () => {
+        const user = setupUserAndRender({ documentState: 'edit' });
+
+        await clickDropdownItem(user, 1); // "Muokkaa toimenpidettä"
+
+        expect(screen.getByRole('heading', { name: 'Muokkaa toimenpidettä' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'OK' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Peruuta' })).toBeInTheDocument();
+      });
+
+      it('allows user to cancel action editing', async () => {
+        const user = setupUserAndRender({ documentState: 'edit' });
+
+        await clickDropdownItem(user, 1); // Open action edit form
+
+        expect(screen.getByRole('heading', { name: 'Muokkaa toimenpidettä' })).toBeInTheDocument();
+
+        // Cancel the form
+        const cancelButton = screen.getByRole('button', { name: 'Peruuta' });
+        await user.click(cancelButton);
+
+        // Verify form is closed
+        expect(screen.queryByRole('heading', { name: 'Muokkaa toimenpidettä' })).not.toBeInTheDocument();
+      });
+
+      it('does not show edit form in view mode', () => {
+        renderComponent({ documentState: 'view' });
+
+        // Dropdown should not be present in view mode
+        expect(screen.queryByTestId('action-dropdown-button')).not.toBeInTheDocument();
+      });
+
+      it('shows record creation form when "Uusi asiakirja" is clicked', async () => {
+        const user = setupUserAndRender({ documentState: 'edit' });
+
+        await clickDropdownItem(user, 0); // "Uusi asiakirja"
+
+        expect(screen.getByRole('heading', { name: 'Uusi asiakirja' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'OK' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Peruuta' })).toBeInTheDocument();
+      });
+    });
+
+    describe('Action Removal UI Flow', () => {
+      it('allows user to delete an action through dropdown menu in edit mode', async () => {
+        const user = setupUserAndRender({ documentState: 'edit' });
+
+        await openActionDropdown(user);
+
+        // Click delete option
+        const deleteOption = screen.getByText('Poista toimenpide');
+        await user.click(deleteOption);
+
+        // Verify delete confirmation popup appears
+        const popupContent = verifyPopupContent(DELETE_VIEW_TEST_IDS);
+        expect(within(popupContent).getByTestId('delete-view-delete-button')).toBeInTheDocument();
+        expect(within(popupContent).getByTestId('delete-view-cancel-button')).toBeInTheDocument();
+
+        // Confirm deletion
+        const confirmButton = within(popupContent).getByTestId('delete-view-delete-button');
+        await user.click(confirmButton);
+
+        // Verify the action removal was attempted
+        expect(mockProps.removeAction).toHaveBeenCalledWith(mockAction.id, mockAction.phase);
+      });
+
+      it('allows user to cancel action deletion', async () => {
+        const user = setupUserAndRender({ documentState: 'edit' });
+
+        await openActionDropdown(user);
+
+        // Click delete option
+        const deleteOption = screen.getByText('Poista toimenpide');
+        await user.click(deleteOption);
+
+        // Wait for confirmation popup
+        const popupContent = verifyPopupContent(DELETE_VIEW_TEST_IDS);
+
+        // Cancel deletion
+        const cancelButton = within(popupContent).getByTestId('delete-view-cancel-button');
+        await user.click(cancelButton);
+
+        // Verify popup is closed and no deletion occurred
+        expect(screen.queryByTestId('popup-component')).not.toBeInTheDocument();
+        expect(mockProps.removeAction).not.toHaveBeenCalled();
+      });
+
+      it('does not show action delete option in view mode', () => {
+        renderComponent({ documentState: 'view' });
+
+        // Dropdown menus should not be present in view mode
+        expect(screen.queryByTestId('action-dropdown-button')).not.toBeInTheDocument();
+      });
+
+      it('handles deletion of action with associated records', async () => {
+        const user = setupUserAndRender({ documentState: 'edit' });
+
+        // Verify action with records is present
+        expect(screen.getByText('Testikäsittelyvaihe')).toBeInTheDocument();
+        verifyRecordContent(['Testilomake 1', 'Testilomake 2']);
+
+        await openActionDropdown(user);
+
+        // Click delete option
+        const deleteOption = screen.getByText('Poista toimenpide');
+        await user.click(deleteOption);
+
+        // Confirm deletion (this should cascade to remove associated records)
+        const popupContent = verifyPopupContent(DELETE_VIEW_TEST_IDS);
+        const confirmButton = within(popupContent).getByTestId('delete-view-delete-button');
+        await user.click(confirmButton);
+
+        // Verify the deletion process was initiated
+        expect(mockProps.removeAction).toHaveBeenCalledWith(mockAction.id, mockAction.phase);
+      });
+
+      it('shows appropriate confirmation message with action details', async () => {
+        const user = setupUserAndRender({ documentState: 'edit' });
+
+        await openActionDropdown(user);
+
+        const deleteOption = screen.getByText('Poista toimenpide');
+        await user.click(deleteOption);
+
+        // Verify confirmation message includes action details
+        const popupContent = verifyPopupContent(DELETE_VIEW_TEST_IDS);
+        expect(within(popupContent).getByTestId('delete-view-confirmation')).toBeInTheDocument();
+      });
+    });
+  });
 });

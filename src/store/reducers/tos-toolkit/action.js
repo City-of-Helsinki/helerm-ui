@@ -1,4 +1,3 @@
-import update from 'immutability-helper';
 import { indexOf } from 'lodash';
 
 import { randomActionId } from '../../../utils/helpers';
@@ -24,101 +23,91 @@ export const addActionReducer = (state, action) => {
   const actionId = newAction.id;
   const phaseId = newAction.phase;
 
-  return update(state, {
-    actions: {
-      [actionId]: {
-        $set: newAction,
-      },
-    },
-    phases: {
-      [phaseId]: {
-        actions: {
-          $push: [actionId],
-        },
-      },
-    },
-  });
+  if (!state.actions) {
+    state.actions = {};
+  }
+  if (!state.phases) {
+    state.phases = {};
+  }
+
+  if (state.phases[phaseId]) {
+    if (!state.phases[phaseId].actions) {
+      state.phases[phaseId].actions = [];
+    }
+
+    state.phases[phaseId].actions.push(actionId);
+  }
+
+  state.actions[actionId] = newAction;
 };
 
 export const editActionReducer = (state, action) => {
   const { editedAction, actionId } = action.payload;
 
-  return update(state, {
-    actions: {
-      [actionId]: {
-        attributes: {
-          $merge: editedAction.attributes,
-        },
-      },
-    },
-  });
+  if (!state.actions) {
+    state.actions = {};
+  }
+  if (!state.actions[actionId]) {
+    return;
+  }
+
+  if (!state.actions[actionId].attributes) {
+    state.actions[actionId].attributes = {};
+  }
+  Object.assign(state.actions[actionId].attributes, editedAction.attributes);
 };
 
 export const editActionAttributeReducer = (state, action) => {
   const { actionId, attributeName, attributeValue } = action.payload;
 
-  return update(state, {
-    actions: {
-      [actionId]: {
-        attributes: {
-          [attributeName]: {
-            $set: attributeValue,
-          },
-        },
-      },
-    },
-  });
+  if (!state.actions) {
+    state.actions = {};
+  }
+  if (!state.actions[actionId]) {
+    return;
+  }
+  if (!state.actions[actionId].attributes) {
+    state.actions[actionId].attributes = {};
+  }
+
+  state.actions[actionId].attributes[attributeName] = attributeValue;
 };
 
 export const removeActionReducer = (state, action) => {
   const { actionToRemove, phaseId } = action.payload;
-  const updatedState = { ...state };
+
+  if (!state.phases[phaseId]) {
+    return;
+  }
 
   const phaseActions = state.phases[phaseId].actions;
   const actionIndex = indexOf(phaseActions, actionToRemove);
 
   if (actionIndex > -1) {
-    updatedState.phases = {
-      ...updatedState.phases,
-      [phaseId]: {
-        ...updatedState.phases[phaseId],
-        actions: [...phaseActions.slice(0, actionIndex), ...phaseActions.slice(actionIndex + 1)],
-      },
-    };
+    state.phases[phaseId].actions.splice(actionIndex, 1);
   }
 
   const recordsToRemove = [];
-  if (updatedState.actions[actionToRemove]?.records) {
-    recordsToRemove.push(...updatedState.actions[actionToRemove].records);
+  if (state.actions[actionToRemove]?.records) {
+    recordsToRemove.push(...state.actions[actionToRemove].records);
   }
 
-  const remainingActions = {};
-  Object.keys(updatedState.actions).forEach((key) => {
-    if (key !== actionToRemove) {
-      remainingActions[key] = updatedState.actions[key];
-    }
-  });
-  updatedState.actions = remainingActions;
+  delete state.actions[actionToRemove];
 
-  const updatedRecords = { ...updatedState.records };
   recordsToRemove.forEach((recordId) => {
-    delete updatedRecords[recordId];
+    delete state.records[recordId];
   });
-  updatedState.records = updatedRecords;
-
-  return updatedState;
 };
 
 export const setActionVisibilityReducer = (state, action) => {
   const { actionId, visibility } = action.payload;
 
-  return update(state, {
-    actions: {
-      [actionId]: {
-        is_open: {
-          $set: visibility,
-        },
-      },
-    },
-  });
+  if (!state.actions) {
+    state.actions = {};
+  }
+  if (!state.actions[actionId]) {
+    return;
+  }
+
+  state.actions[actionId].is_open = visibility;
 };

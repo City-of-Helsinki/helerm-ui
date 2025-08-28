@@ -1,7 +1,6 @@
 /* eslint-disable consistent-return */
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import update from 'immutability-helper';
 import includes from 'lodash/includes';
 import capitalize from 'lodash/capitalize';
 import sortBy from 'lodash/sortBy';
@@ -53,24 +52,12 @@ const EditorForm = (props) => {
   const filterAttributes = useCallback((attrs) => {
     const filteredAttributes = { ...attrs };
     Object.keys(filteredAttributes).forEach((key) => {
-      if (Object.hasOwn(filteredAttributes, key) && !filteredAttributes[key].value) {
+      if (Object.hasOwn(filteredAttributes, key) && !filteredAttributes[key].checked) {
         delete filteredAttributes[key];
       }
     });
     return filteredAttributes;
   }, []);
-
-  const createUpdate = (value, key, field) => {
-    return {
-      [key]:
-        field === 'checked' && !value
-          ? {
-              [field]: { $set: value },
-              value: { $set: null },
-            }
-          : { [field]: { $set: value } },
-    };
-  };
 
   const editMetaData = useCallback(
     (stopEditing) => {
@@ -225,8 +212,23 @@ const EditorForm = (props) => {
   const onBlur = useCallback(
     (value, key, field) => {
       if (key && field) {
-        setNewAttributes((prevState) => update(prevState, createUpdate(value, key, field)));
-        // Call resolveOnSubmit after state update - this matches old behavior
+        setNewAttributes((prevState) => {
+          const newState = { ...prevState };
+          if (field === 'checked' && !value) {
+            newState[key] = {
+              ...newState[key],
+              [field]: value,
+              value: null,
+            };
+          } else {
+            newState[key] = {
+              ...newState[key],
+              [field]: value,
+            };
+          }
+          return newState;
+        });
+
         resolveOnSubmit(null, targetId, false);
       }
     },
@@ -525,7 +527,6 @@ const EditorForm = (props) => {
     (e) => {
       e.preventDefault();
 
-      // Just reset state and close form - don't trigger submission logic on cancel
       setNewAttributes(initialAttrState);
       propCloseEditorForm();
     },

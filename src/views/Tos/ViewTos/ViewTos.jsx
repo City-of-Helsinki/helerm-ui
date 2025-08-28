@@ -39,6 +39,7 @@ import {
   changeStatusThunk,
   resetTos,
   addPhase,
+  createNewPhase as createPhaseFactory,
   addAction,
   editAction,
   editActionAttribute,
@@ -50,6 +51,7 @@ import {
   setPhaseAttributesVisibility,
   setPhaseVisibility as setPhaseVisibilityAction,
   addRecord,
+  createNewRecord,
   editRecord,
   editRecordAttribute,
   removeRecord,
@@ -176,7 +178,6 @@ const ViewTOS = () => {
   const tosIsFetching = useSelector(isFetchingTosSelector);
   const isFetching = uiIsFetching || tosIsFetching;
 
-  // Stable callback functions for Redux dispatches to prevent unnecessary re-renders
   const handleSetPhaseVisibility = useCallback(
     (phaseId, isVisible) => dispatch(setPhaseVisibilityAction({ phaseId, visibility: isVisible })),
     [dispatch],
@@ -215,10 +216,8 @@ const ViewTOS = () => {
     setState((prevState) => ({ ...prevState, topOffset: menuHeight }));
   }, []);
 
-  // Initialize sticky positioning on mount
   useEffect(() => {
     updateTopOffsetForSticky();
-    // Note: resize listener is already set up in the main useEffect below
   }, [updateTopOffsetForSticky]);
 
   const getClassificationInfo = useCallback((tosResponse) => {
@@ -389,12 +388,14 @@ const ViewTOS = () => {
       }
 
       dispatch(
-        addPhase({
-          typeSpecifier: state.phaseTypeSpecifier || '',
-          type: state.phaseType || '',
-          attributes: filterCheckedAttributes(state.phaseDefaultAttributes || {}),
-          parent: selectedTOS.id,
-        }),
+        addPhase(
+          createPhaseFactory({
+            typeSpecifier: state.phaseTypeSpecifier || '',
+            phaseType: state.phaseType || '',
+            phaseAttributes: filterCheckedAttributes(state.phaseDefaultAttributes || {}),
+            parent: selectedTOS.id,
+          }),
+        ),
       );
 
       setState((prevState) => ({
@@ -640,7 +641,6 @@ const ViewTOS = () => {
       const { documentState, is_open: isOpen } = selectedTOS;
       const attributeElements = [];
 
-      // Check if attrTypes and attributes are valid objects
       if (!attrTypes || typeof attrTypes !== 'object') {
         return null;
       }
@@ -705,14 +705,14 @@ const ViewTOS = () => {
                 documentState={selectedTOS.documentState}
                 attributeTypes={attributeTypes}
                 addAction={(action) => dispatch(addAction(action))}
-                addRecord={(record) => dispatch(addRecord(record))}
+                addRecord={(attributes, actionId) => dispatch(addRecord(createNewRecord({ attributes, actionId })))}
                 editAction={(action) => dispatch(editAction(action))}
                 editActionAttribute={(data) => dispatch(editActionAttribute(data))}
                 editPhase={(phase) => dispatch(editPhase(phase))}
                 editPhaseAttribute={(data) => dispatch(editPhaseAttribute(data))}
                 editRecord={(record) => dispatch(editRecord(record))}
                 editRecordAttribute={(data) => dispatch(editRecordAttribute(data))}
-                removeAction={(actionId) => dispatch(removeAction(actionId))}
+                removeAction={(actionId, phaseId) => dispatch(removeAction({ actionToRemove: actionId, phaseId }))}
                 removePhase={(phaseId) => dispatch(removePhase(phaseId))}
                 removeRecord={(recordId) => dispatch(removeRecord(recordId))}
                 displayMessage={displayMessage}

@@ -1,5 +1,3 @@
-import update from 'immutability-helper';
-
 import { randomActionId } from '../../../utils/helpers';
 
 export const createNewPhase = ({ typeSpecifier, phaseType, phaseAttributes, parent }) => {
@@ -25,129 +23,108 @@ export const addPhaseReducer = (state, action) => {
   const newPhase = action.payload;
   const phaseId = newPhase.id;
 
-  return update(state, {
-    phases: {
-      [phaseId]: {
-        $set: newPhase,
-      },
-    },
-  });
+  if (!state.phases) {
+    state.phases = {};
+  }
+
+  state.phases[phaseId] = newPhase;
 };
 
 export const editPhaseReducer = (state, action) => {
   const { editedAttributes, phaseId } = action.payload;
 
-  return update(state, {
-    phases: {
-      [phaseId]: {
-        attributes: {
-          $merge: editedAttributes,
-        },
-      },
-    },
-  });
+  if (!state.phases) {
+    state.phases = {};
+  }
+  if (!state.phases[phaseId]) {
+    return;
+  }
+
+  if (!state.phases[phaseId].attributes) {
+    state.phases[phaseId].attributes = {};
+  }
+  Object.assign(state.phases[phaseId].attributes, editedAttributes);
 };
 
 export const editPhaseAttributeReducer = (state, action) => {
   const { phaseId, attributeName, attributeValue } = action.payload;
 
-  return update(state, {
-    phases: {
-      [phaseId]: {
-        attributes: {
-          [attributeName]: {
-            $set: attributeValue,
-          },
-        },
-      },
-    },
-  });
+  if (!state.phases) {
+    state.phases = {};
+  }
+  if (!state.phases[phaseId]) {
+    return;
+  }
+  if (!state.phases[phaseId].attributes) {
+    state.phases[phaseId].attributes = {};
+  }
+
+  state.phases[phaseId].attributes[attributeName] = attributeValue;
 };
 
 export const removePhaseReducer = (state, action) => {
   const phaseId = action.payload;
-  const updatedState = { ...state };
   const phase = state.phases[phaseId];
 
   if (!phase) {
-    return state;
+    return;
   }
 
   const actionsToRemove = phase.actions || [];
   const recordsToRemove = [];
 
   actionsToRemove.forEach((actionId) => {
-    const action = state.actions[actionId];
-    if (action?.records) {
-      recordsToRemove.push(...action.records);
+    const actionToCheck = state.actions[actionId];
+    if (actionToCheck?.records) {
+      recordsToRemove.push(...actionToCheck.records);
     }
   });
 
-  const remainingPhases = {};
-  Object.keys(updatedState.phases).forEach((key) => {
-    if (key !== phaseId) {
-      remainingPhases[key] = updatedState.phases[key];
-    }
-  });
-  updatedState.phases = remainingPhases;
+  delete state.phases[phaseId];
 
-  const updatedActions = { ...updatedState.actions };
   actionsToRemove.forEach((actionId) => {
-    delete updatedActions[actionId];
+    delete state.actions[actionId];
   });
-  updatedState.actions = updatedActions;
 
-  const updatedRecords = { ...updatedState.records };
   recordsToRemove.forEach((recordId) => {
-    delete updatedRecords[recordId];
+    delete state.records[recordId];
   });
-  updatedState.records = updatedRecords;
-
-  return updatedState;
 };
 
 export const setPhaseAttributesVisibilityReducer = (state, action) => {
   const { phaseId, visibility } = action.payload;
 
-  return update(state, {
-    phases: {
-      [phaseId]: {
-        is_attributes_open: {
-          $set: visibility,
-        },
-      },
-    },
-  });
+  if (!state.phases) {
+    state.phases = {};
+  }
+  if (!state.phases[phaseId]) {
+    return;
+  }
+
+  state.phases[phaseId].is_attributes_open = visibility;
 };
 
 export const setPhaseVisibilityReducer = (state, action) => {
   const { phaseId, visibility } = action.payload;
 
-  return update(state, {
-    phases: {
-      [phaseId]: {
-        is_open: {
-          $set: visibility,
-        },
-      },
-    },
-  });
+  if (!state.phases) {
+    state.phases = {};
+  }
+  if (!state.phases[phaseId]) {
+    return;
+  }
+
+  state.phases[phaseId].is_open = visibility;
 };
 
 export const setPhasesVisibilityReducer = (state, action) => {
   const visibility = action.payload;
-  const updatedPhases = {};
+
+  if (!state.phases) {
+    state.phases = {};
+  }
 
   Object.keys(state.phases).forEach((phaseId) => {
-    updatedPhases[phaseId] = {
-      ...state.phases[phaseId],
-      is_open: visibility,
-    };
-  });
-
-  return update(state, {
-    phases: {
-      $set: updatedPhases,
-    },
+    state.phases[phaseId].is_open = visibility;
   });
 };
