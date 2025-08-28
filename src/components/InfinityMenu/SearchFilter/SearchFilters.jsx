@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import SearchFilter from './SearchFilter';
 import { statusFilters } from '../../../constants';
 
-const SearchFilters = ({ attributeTypes, isDetailSearch, isUser, filters, handleFilterChange }) => {
+const SearchFilters = ({ attributeTypes, isDetailSearch, isUser, filters, handleFilterChange, disabled = false }) => {
   const statusFilterOptions = statusFilters;
   const retentionPeriods = attributeTypes?.RetentionPeriod ? attributeTypes?.RetentionPeriod.values : [];
 
@@ -25,6 +25,7 @@ const SearchFilters = ({ attributeTypes, isDetailSearch, isUser, filters, handle
         value={filters.statusFilters.values}
         options={statusFilterOptions}
         handleChange={(values) => handleFilterChange(values, 'statusFilters')}
+        isDisabled={disabled}
       />
       <SearchFilter
         placeholder='Suodata säilytysajan mukaan'
@@ -32,6 +33,7 @@ const SearchFilters = ({ attributeTypes, isDetailSearch, isUser, filters, handle
         options={retentionPeriodOptions}
         handleChange={(values) => handleFilterChange(values, 'retentionPeriodFilters')}
         isVisible={isDetailSearch}
+        isDisabled={disabled}
       />
     </div>
   );
@@ -39,6 +41,7 @@ const SearchFilters = ({ attributeTypes, isDetailSearch, isUser, filters, handle
 
 SearchFilters.propTypes = {
   attributeTypes: PropTypes.object,
+  disabled: PropTypes.bool,
   isDetailSearch: PropTypes.bool,
   isUser: PropTypes.bool.isRequired,
   filters: PropTypes.object.isRequired,
