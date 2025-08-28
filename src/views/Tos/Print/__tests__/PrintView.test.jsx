@@ -6,6 +6,7 @@ import thunk from 'redux-thunk';
 import PrintView from '../PrintView';
 import renderWithProviders from '../../../../utils/renderWithProviders';
 import { validTOS, attributeTypes, classification } from '../../../../utils/__mocks__/mockHelpers';
+import * as useAuth from '../../../../hooks/useAuth';
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
@@ -21,6 +22,12 @@ vi.mock('react-router-dom', async () => {
     }),
   };
 });
+
+vi.spyOn(useAuth, 'default').mockImplementation(() => ({
+  getApiToken: vi.fn(() => 'mock-token'),
+  isAuthenticated: true,
+  user: { name: 'Test User' },
+}));
 
 const renderComponent = (propOverrides) => {
   const store = mockStore({

@@ -27,9 +27,9 @@ export const initialState = {
 
 export const fetchClassificationThunk = createAsyncThunk(
   'classification/fetchClassification',
-  async ({ id, params = {} }, { rejectWithValue }) => {
+  async ({ id, params = {}, token }, { rejectWithValue }) => {
     try {
-      const response = await api.get(`classification/${id}`, params);
+      const response = await api.get(`classification/${id}`, params, {}, token);
 
       if (!response.ok) {
         throw new URIError(response.statusText);

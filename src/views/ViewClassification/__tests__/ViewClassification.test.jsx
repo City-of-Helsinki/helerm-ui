@@ -7,6 +7,7 @@ import { waitFor } from '@testing-library/react';
 import renderWithProviders from '../../../utils/renderWithProviders';
 import { classification } from '../../../utils/__mocks__/mockHelpers';
 import api from '../../../utils/api';
+import * as useAuth from '../../../hooks/useAuth';
 import ViewClassification from '../ViewClassification';
 import { initialState } from '../../../store/reducers/classification';
 
@@ -16,6 +17,12 @@ const mockStore = configureStore(middlewares);
 // Mock API to return the first classification item from our array
 const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => classification[0] }));
 vi.spyOn(api, 'get').mockImplementation(mockApiGet);
+
+vi.spyOn(useAuth, 'default').mockImplementation(() => ({
+  getApiToken: vi.fn(() => 'mock-token'),
+  isAuthenticated: true,
+  user: { name: 'Test User' },
+}));
 
 vi.mock('react-router-dom', async () => {
   const mod = await vi.importActual('react-router-dom');

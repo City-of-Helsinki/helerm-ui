@@ -249,7 +249,8 @@ const ViewTOS = () => {
 
   const fetchTOS = useCallback(
     (id, requestParams = {}) => {
-      return dispatch(fetchTOSThunk({ tosId: id, params: requestParams }))
+      const token = getApiToken();
+      return dispatch(fetchTOSThunk({ tosId: id, params: requestParams, token }))
         .then((res) => {
           dispatch(setNavigationVisibility(false));
           setTosVisibility(true, false);
@@ -261,6 +262,7 @@ const ViewTOS = () => {
               fetchClassificationThunk({
                 id: classificationInfo.id,
                 params: { version: classificationInfo.version },
+                token,
               }),
             ).catch(() => {
               displayMessage(
@@ -281,7 +283,7 @@ const ViewTOS = () => {
           throw err;
         });
     },
-    [dispatch, navigate, getClassificationInfo, setTosVisibility],
+    [dispatch, navigate, getClassificationInfo, setTosVisibility, getApiToken],
   );
 
   const setTosDocumentState = useCallback(
@@ -510,7 +512,8 @@ const ViewTOS = () => {
 
   const cloneFromTemplate = useCallback(
     (selectedMethod, id) => {
-      return dispatch(cloneFromTemplateThunk({ endpoint: selectedMethod, id }))
+      const token = getApiToken();
+      return dispatch(cloneFromTemplateThunk({ endpoint: selectedMethod, id, token }))
         .then(() => {
           displayMessage({
             title: 'Kuvaus',
@@ -528,7 +531,7 @@ const ViewTOS = () => {
           );
         });
     },
-    [dispatch, toggleCloneView],
+    [dispatch, toggleCloneView, getApiToken],
   );
 
   const scrollToMetadata = useCallback(() => {

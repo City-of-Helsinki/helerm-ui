@@ -16,6 +16,7 @@ import {
 import api from '../../../../utils/api';
 import { USER_LOGIN_STATUS } from '../../../../constants';
 import * as helpers from '../../../../utils/helpers';
+import * as useAuth from '../../../../hooks/useAuth';
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
@@ -57,6 +58,12 @@ vi.spyOn(api, 'get').mockImplementation((url) => {
 
 vi.spyOn(api, 'post').mockImplementation(() => mockApiPost());
 vi.spyOn(api, 'put').mockImplementation(() => mockApiPut());
+
+vi.spyOn(useAuth, 'default').mockImplementation(() => ({
+  getApiToken: vi.fn(() => 'mock-token'),
+  isAuthenticated: true,
+  user: { name: 'Test User' },
+}));
 
 const mockDisplayMessage = vi.fn();
 vi.spyOn(helpers, 'displayMessage').mockImplementation(mockDisplayMessage);

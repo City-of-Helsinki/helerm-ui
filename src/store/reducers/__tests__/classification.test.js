@@ -30,7 +30,7 @@ describe('ViewClassification reducer', () => {
     const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => classification }));
     vi.spyOn(api, 'get').mockImplementationOnce(mockApiGet);
 
-    return store.dispatch(fetchClassificationThunk({ id: classificationId, params })).then(() => {
+    return store.dispatch(fetchClassificationThunk({ id: classificationId, params, token: 'mock-token' })).then(() => {
       const actions = store.getActions();
       expect(actions.length).toBe(2);
       expect(actions[0].type).toEqual(expectedActions[0].type);
@@ -61,7 +61,7 @@ describe('ViewClassification reducer', () => {
     const mockApiGet = vi.fn().mockImplementation(() => Promise.reject(new Error('ERROR')));
     vi.spyOn(api, 'get').mockImplementationOnce(mockApiGet);
 
-    return store.dispatch(fetchClassificationThunk({ id: classificationId })).then(() => {
+    return store.dispatch(fetchClassificationThunk({ id: classificationId, token: 'mock-token' })).then(() => {
       const actions = store.getActions();
       expect(actions.length).toBe(2);
       expect(actions[0].type).toEqual(expectedActions[0].type);

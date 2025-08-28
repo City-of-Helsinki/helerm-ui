@@ -5,6 +5,7 @@ import Select from 'react-select';
 import { filter, includes, isEmpty, keys } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 
+import useAuth from '../../hooks/useAuth';
 import { CHANGE_BULKUPDATE, BULK_UPDATE_PACKAGE_APPROVE_OPTIONS } from '../../constants';
 import { formatDateTime, getStatusLabel, resolveReturnValues, resolveSelectValues } from '../../utils/helpers';
 import IsAllowed from '../../components/IsAllowed/IsAllowed';
@@ -14,6 +15,7 @@ import './BulkListView.scss';
 
 const BulkListView = () => {
   const dispatch = useDispatch();
+  const { getApiToken } = useAuth();
   const bulkUpdates = useSelector(bulkUpdatesSelector);
 
   const [filters, setFilters] = useState([false]);
@@ -21,7 +23,8 @@ const BulkListView = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(fetchBulkUpdatesThunk(true));
+    const token = getApiToken();
+    dispatch(fetchBulkUpdatesThunk({ includeApproved: true, token }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

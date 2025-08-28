@@ -32,7 +32,7 @@ describe('cloneFromTemplateThunk', () => {
     vi.spyOn(api, 'get').mockImplementationOnce(mockApiGet);
 
     const store = mockStore({});
-    await store.dispatch(cloneFromTemplateThunk({ endpoint, id }));
+    await store.dispatch(cloneFromTemplateThunk({ endpoint, id, token: 'mock-token' }));
 
     const actions = store.getActions();
 
@@ -56,7 +56,7 @@ describe('cloneFromTemplateThunk', () => {
     vi.spyOn(api, 'get').mockImplementationOnce(mockApiGet);
 
     const store = mockStore({});
-    await store.dispatch(cloneFromTemplateThunk({ endpoint, id }));
+    await store.dispatch(cloneFromTemplateThunk({ endpoint, id, token: 'mock-token' }));
 
     const actions = store.getActions();
 
