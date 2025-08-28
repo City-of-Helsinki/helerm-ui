@@ -129,5 +129,128 @@
     "function_version": 3,
     "function_valid_from": "2018-01-01",
     "function_valid_to": "2019-01-31"
+  },
+  {
+    "id": "test-classification-draft-001",
+    "created_at": "2023-01-01T00:00:00.000000Z",
+    "modified_at": "2023-01-01T10:30:00.000000Z",
+    "modified_by": "Draft User",
+    "version": 1,
+    "state": "draft",
+    "valid_from": null,
+    "valid_to": null,
+    "code": "08 01 00 00",
+    "title": "Luonnos tehtäväluokka",
+    "parent": null,
+    "description": "Test draft classification",
+    "description_internal": "Internal draft description",
+    "related_classification": "",
+    "additional_information": "",
+    "function_allowed": true,
+    "version_history": [
+      {
+        "state": "draft",
+        "version": 1,
+        "modified_at": "2023-01-01T10:30:00.000000Z",
+        "valid_from": null,
+        "valid_to": null,
+        "modified_by": "Draft User"
+      }
+    ],
+    "function": "test-function-draft-001",
+    "function_state": "draft",
+    "function_attributes": {
+      "PersonalData": "Ei sisällä henkilötietoja",
+      "PublicityClass": "Julkinen",
+      "RetentionPeriod": "3",
+      "RetentionReason": "Test draft retention reason",
+      "InformationSystem": "Test Draft System",
+      "SocialSecurityNumber": "Ei sisällä henkilötunnusta"
+    },
+    "function_version": 1,
+    "function_valid_from": "2023-01-01",
+    "function_valid_to": null
+  },
+  {
+    "id": "test-classification-sent-for-review-001",
+    "created_at": "2023-01-02T00:00:00.000000Z",
+    "modified_at": "2023-01-02T14:15:00.000000Z",
+    "modified_by": "Review User",
+    "version": 1,
+    "state": "sent_for_review",
+    "valid_from": null,
+    "valid_to": null,
+    "code": "09 01 00 00",
+    "title": "Tarkastuksessa oleva tehtäväluokka",
+    "parent": null,
+    "description": "Test classification sent for review",
+    "description_internal": "Internal review description",
+    "related_classification": "",
+    "additional_information": "",
+    "function_allowed": true,
+    "version_history": [
+      {
+        "state": "draft",
+        "version": 1,
+        "modified_at": "2023-01-02T10:00:00.000000Z",
+        "valid_from": null,
+        "valid_to": null,
+        "modified_by": "Review User"
+      }
+    ],
+    "function": "test-function-review-001",
+    "function_state": "sent_for_review",
+    "function_attributes": {
+      "PersonalData": "Sisältää henkilötietoja",
+      "PublicityClass": "Osittain salassa pidettävä",
+      "RetentionPeriod": "7",
+      "RetentionReason": "Test review retention reason",
+      "InformationSystem": "Test Review System",
+      "SocialSecurityNumber": "Ei sisällä henkilötunnusta"
+    },
+    "function_version": 1,
+    "function_valid_from": "2023-01-02",
+    "function_valid_to": null
+  },
+  {
+    "id": "test-classification-waiting-approval-001",
+    "created_at": "2023-01-03T00:00:00.000000Z",
+    "modified_at": "2023-01-03T16:45:00.000000Z",
+    "modified_by": "Approval User",
+    "version": 1,
+    "state": "waiting_for_approval",
+    "valid_from": null,
+    "valid_to": null,
+    "code": "10 01 00 00",
+    "title": "Hyväksyntää odottava tehtäväluokka",
+    "parent": null,
+    "description": "Test classification waiting for approval",
+    "description_internal": "Internal approval description",
+    "related_classification": "",
+    "additional_information": "",
+    "function_allowed": true,
+    "version_history": [
+      {
+        "state": "draft",
+        "version": 1,
+        "modified_at": "2023-01-03T10:00:00.000000Z",
+        "valid_from": null,
+        "valid_to": null,
+        "modified_by": "Approval User"
+      }
+    ],
+    "function": "test-function-waiting-001",
+    "function_state": "waiting_for_approval",
+    "function_attributes": {
+      "PersonalData": "Sisältää henkilötietoja",
+      "PublicityClass": "Julkinen",
+      "RetentionPeriod": "10",
+      "RetentionReason": "Test waiting approval retention reason",
+      "InformationSystem": "Test Approval System",
+      "SocialSecurityNumber": "Sisältää henkilötunnuksen"
+    },
+    "function_version": 1,
+    "function_valid_from": "2023-01-03",
+    "function_valid_to": null
   }
 ]

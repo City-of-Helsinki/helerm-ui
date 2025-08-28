@@ -13,6 +13,7 @@ import Sticky from 'react-sticky-el';
 import ClassificationLink from './ClassificationLink';
 import EmptyTree from './EmptyTree';
 import Exporter from '../Exporter';
+import Loader from '../Loader';
 import SearchInputs from './SearchInput/SearchInputs';
 import SearchFilters from './SearchFilter/SearchFilters';
 
@@ -467,12 +468,16 @@ const InfinityMenu = ({
       if (displayTree.length) {
         return displayTree;
       }
-      if (emptyTreeComponent && !isFetching) {
+      // Only show loader during initialization when Header loader is not active
+      if (!isFetching && isInitializing) {
+        return <Loader show />;
+      }
+      if (emptyTreeComponent) {
         return React.createElement(emptyTreeComponent, emptyTreeComponentProps);
       }
       return null;
     },
-    [emptyTreeComponent, emptyTreeComponentProps, isFetching],
+    [emptyTreeComponent, emptyTreeComponentProps, isFetching, isInitializing],
   );
 
   useEffect(() => {
@@ -591,6 +596,7 @@ const InfinityMenu = ({
                       setSearchInput={setSearchInput}
                       removeSearchInput={removeSearchInput}
                       onFilterConditionChange={onFilterConditionChange}
+                      disabled={isFetching || isInitializing}
                     />
                     <div
                       className={classnames({
@@ -604,6 +610,7 @@ const InfinityMenu = ({
                         isUser={isUser}
                         filters={filters}
                         handleFilterChange={handleFilterChange}
+                        disabled={isFetching || isInitializing}
                       />
                     </div>
                   </div>

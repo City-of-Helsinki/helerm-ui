@@ -19,6 +19,7 @@ const SearchInputs = ({
   setSearchInput,
   removeSearchInput,
   onFilterConditionChange,
+  disabled = false,
 }) =>
   searchInputs.map((input, index) => (
     <div
@@ -33,6 +34,7 @@ const SearchInputs = ({
         searchInput={input}
         placeholder='Etsi...'
         setSearchInput={(event) => setSearchInput(index, event.target.value)}
+        disabled={disabled}
       />
       {isDetailSearch && (
         <div className='filters-detail-search-input-buttons'>
@@ -40,7 +42,7 @@ const SearchInputs = ({
             <Select
               className='Select'
               autoBlur
-              isDisabled={index > 0}
+              isDisabled={disabled || index > 0}
               placeholder='Ehto'
               value={FILTER_CONDITION_OPTIONS.find(({ value }) => value === filterCondition)}
               isClearable={false}
@@ -54,6 +56,7 @@ const SearchInputs = ({
             onClick={() => removeSearchInput(index)}
             title='Poista hakuehto'
             aria-label='Poista hakuehto'
+            disabled={disabled}
           >
             <span className='fa-solid fa-minus' aria-hidden='true' />
           </button>
@@ -64,6 +67,7 @@ const SearchInputs = ({
               onClick={addSearchInput}
               title='Lisää hakuehto'
               aria-label='Lisää hakuehto'
+              disabled={disabled}
             >
               <span className='fa-solid fa-plus' aria-hidden='true' />
             </button>
@@ -82,6 +86,7 @@ SearchInputs.propTypes = {
   setSearchInput: PropTypes.func.isRequired,
   removeSearchInput: PropTypes.func.isRequired,
   onFilterConditionChange: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
 };
 
 export default SearchInputs;

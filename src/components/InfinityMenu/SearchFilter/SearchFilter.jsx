@@ -12,6 +12,7 @@ const SearchFilter = ({
   multi = true,
   className = 'col-sm-6',
   isVisible = true,
+  isDisabled = false,
 }) => {
   if (!isVisible) {
     return null;
@@ -28,6 +29,7 @@ const SearchFilter = ({
         isMulti={multi}
         options={options}
         isClearable
+        isDisabled={isDisabled}
         onChange={(emittedValue) => handleChange(resolveReturnValues(emittedValue, multi))}
       />
     </div>
@@ -37,6 +39,7 @@ const SearchFilter = ({
 SearchFilter.propTypes = {
   className: PropTypes.string,
   handleChange: PropTypes.func,
+  isDisabled: PropTypes.bool,
   isVisible: PropTypes.bool,
   multi: PropTypes.bool,
   options: PropTypes.array,

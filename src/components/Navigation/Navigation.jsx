@@ -16,6 +16,7 @@ import { userDataSelector } from '../../store/reducers/user';
 import { classificationSelector } from '../../store/reducers/classification';
 import { selectedTOSSelector } from '../../store/reducers/tos-toolkit';
 import { itemById } from '../../utils/helpers';
+import useAuth from '../../hooks/useAuth';
 import InfinityMenu from '../InfinityMenu/InfinityMenu';
 import './Navigation.scss';
 import { navigationStateFilters } from '../../constants';
@@ -39,6 +40,7 @@ const Navigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { getApiToken, authenticated } = useAuth();
 
   const attributeTypes = useSelector(attributeTypesSelector);
   const is_open = useSelector(isOpenSelector);
@@ -59,9 +61,10 @@ const Navigation = () => {
 
   const fetchNavigation = useCallback(
     (includeRelated) => {
-      dispatch(fetchNavigationThunk({ includeRelated }));
+      const token = getApiToken();
+      dispatch(fetchNavigationThunk({ includeRelated, token }));
     },
-    [dispatch],
+    [dispatch, getApiToken],
   );
 
   const toggleNavigationVisibility = useCallback(() => {
@@ -155,8 +158,8 @@ const Navigation = () => {
               return itemPaths.some((itemPath) => {
                 const value = getValueForItemWithAttributePath(item, itemPath.split('.'));
 
-                if (value?.toString) {
-                  return currentFilter.some((filterValue) => value.toString().includes(filterValue));
+                if (value !== undefined && value !== null) {
+                  return currentFilter.includes(value.toString());
                 }
 
                 return false;
@@ -206,6 +209,10 @@ const Navigation = () => {
   useEffect(() => {
     setTree(getFilteredTree());
   }, [filters, getFilteredTree]);
+
+  useEffect(() => {
+    fetchNavigation(isDetailSearch());
+  }, [fetchNavigation, isDetailSearch, authenticated]);
 
   const onNodeMouseClick = useCallback((event, newTree) => {
     setTree(newTree);
@@ -265,22 +272,6 @@ const Navigation = () => {
     [isDetailSearch],
   );
 
-  const stopSearching = useCallback(() => {
-    setIsSearchChanged(false);
-    setSearchInputs(['']);
-    setSearchTimestamp(0);
-  }, []);
-
-  const receiveItemsAndResetNavigation = useCallback(
-    (newItems) => {
-      setTree(newItems);
-
-      setFilters(navigationStateFilters);
-      stopSearching();
-    },
-    [stopSearching],
-  );
-
   const addSearchInput = useCallback(() => {
     setSearchInputs((prev) => [...prev, '']);
   }, []);
@@ -308,18 +299,6 @@ const Navigation = () => {
     },
     [onSearchTimeout, searchInputs],
   );
-
-  useEffect(() => {
-    fetchNavigation(isDetailSearch());
-  }, [fetchNavigation, isDetailSearch]);
-
-  useEffect(() => {
-    const isReceivingNewlyFetchedItems = itemsTimestamp && itemsTimestamp !== '';
-
-    if (isReceivingNewlyFetchedItems) {
-      receiveItemsAndResetNavigation(items);
-    }
-  }, [items, itemsTimestamp, receiveItemsAndResetNavigation]);
 
   useEffect(() => {
     if (isSearchChanged) {
@@ -355,7 +334,7 @@ const Navigation = () => {
     return [];
   }, [selectedTOS.classification, classification.id, items]);
 
-  if (!isFetching && isEmpty(items) && !isEmpty(itemsTimestamp)) {
+  if (!isFetching && isEmpty(items) && !isEmpty(itemsTimestamp) && !hasFilters()) {
     return (
       <div className='container-fluid helerm-navigation'>
         <div className='navigation-error'>

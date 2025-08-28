@@ -38,7 +38,7 @@ export const initialState = {
 
 export const fetchNavigationThunk = createAsyncThunk(
   'navigation/fetchNavigation',
-  async ({ includeRelated = false, page = 1 }, { dispatch, getState, rejectWithValue }) => {
+  async ({ includeRelated = false, page = 1, token = null }, { dispatch, getState, rejectWithValue }) => {
     try {
       const pageSize = includeRelated ? config.SEARCH_PAGE_SIZE : config.RESULTS_PER_PAGE;
 
@@ -55,11 +55,16 @@ export const fetchNavigationThunk = createAsyncThunk(
         return null;
       }
 
-      const response = await api.get('classification', {
-        include_related: includeRelated,
-        page_size: pageSize,
-        page,
-      });
+      const response = await api.get(
+        'classification',
+        {
+          include_related: includeRelated,
+          page_size: pageSize,
+          page,
+        },
+        {},
+        token,
+      );
 
       const json = await response.json();
 
@@ -72,7 +77,7 @@ export const fetchNavigationThunk = createAsyncThunk(
       );
 
       if (json.next) {
-        await dispatch(fetchNavigationThunk({ includeRelated, page: page + 1 }));
+        await dispatch(fetchNavigationThunk({ includeRelated, page: page + 1, token }));
       } else {
         const list = getState().navigation.list || [];
         const orderedTree = convertToTree(list);
