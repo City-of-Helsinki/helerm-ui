@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './ReorderView.scss';
 import capitalize from 'lodash/capitalize';
-import update from 'immutability-helper';
 
 import ReorderItem from './ReorderItem';
 import { getBaseValues } from '../../../utils/helpers';
@@ -47,14 +46,12 @@ const ReorderView = ({
   const moveItem = (dragIndex, hoverIndex) => {
     const dragItem = items[dragIndex];
 
-    setItems((prevItems) =>
-      update(prevItems, {
-        $splice: [
-          [dragIndex, 1],
-          [hoverIndex, 0, dragItem],
-        ],
-      }),
-    );
+    setItems((prevItems) => {
+      const newItems = [...prevItems];
+      newItems.splice(dragIndex, 1);
+      newItems.splice(hoverIndex, 0, dragItem);
+      return newItems;
+    });
   };
 
   return (

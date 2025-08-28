@@ -73,28 +73,42 @@ Object.defineProperty(window, 'scrollTo', {
   writable: true,
 });
 
-const createTosFromApiData = (overrides = {}) => ({
-  ...validTOS,
-  documentState: 'view',
-  name: validTOS.name || 'Test TOS Name',
-  showAttributes: validTOS.showAttributes !== undefined ? validTOS.showAttributes : true,
-  is_open: validTOS.is_open !== undefined ? validTOS.is_open : true,
-  is_classification_open: validTOS.is_classification_open !== undefined ? validTOS.is_classification_open : false,
-  classification: validTOS.classification || {
-    id: 'test-classification-health-guidance-001',
-    version: 2,
-    isOpen: false,
-  },
-  phases: Array.isArray(validTOS.phases)
-    ? validTOS.phases.reduce((acc, phase) => ({ ...acc, [phase.id]: phase }), {})
-    : validTOS.phases || {},
-  actions: validTOS.actions || {},
-  records: validTOS.records || {},
-  phasesOrder: validTOS.phasesOrder || (validTOS.phases ? validTOS.phases.map((p) => p.id) : []),
-  version_history: validTOS.version_history || [{ id: 1, state: 'draft', modified_at: '2023-01-01' }],
-  versions: validTOS.versions || [{ id: 1, state: 'draft', modified_at: '2023-01-01' }],
-  ...overrides,
-});
+const createTosFromApiData = (overrides = {}) => {
+  const mergedData = { ...validTOS, ...overrides };
+
+  // Handle phasesOrder calculation
+  let phasesOrderResult = [];
+  if (mergedData.phasesOrder) {
+    phasesOrderResult = mergedData.phasesOrder;
+  } else if (mergedData.phases) {
+    phasesOrderResult = Array.isArray(mergedData.phases)
+      ? mergedData.phases.map((p) => p.id)
+      : Object.keys(mergedData.phases);
+  }
+
+  return {
+    ...validTOS,
+    documentState: 'view',
+    name: validTOS.name || 'Test TOS Name',
+    showAttributes: validTOS.showAttributes !== undefined ? validTOS.showAttributes : true,
+    is_open: validTOS.is_open !== undefined ? validTOS.is_open : true,
+    is_classification_open: validTOS.is_classification_open !== undefined ? validTOS.is_classification_open : false,
+    classification: validTOS.classification || {
+      id: 'test-classification-health-guidance-001',
+      version: 2,
+      isOpen: false,
+    },
+    phases: Array.isArray(mergedData.phases)
+      ? mergedData.phases.reduce((acc, phase) => ({ ...acc, [phase.id]: phase }), {})
+      : mergedData.phases || {},
+    actions: mergedData.actions || {},
+    records: mergedData.records || {},
+    phasesOrder: phasesOrderResult,
+    version_history: validTOS.version_history || [{ id: 1, state: 'draft', modified_at: '2023-01-01' }],
+    versions: validTOS.versions || [{ id: 1, state: 'draft', modified_at: '2023-01-01' }],
+    ...overrides,
+  };
+};
 
 const createTosWithDifferentState = (state) => createTosFromApiData({ state });
 

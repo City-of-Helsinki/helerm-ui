@@ -3,7 +3,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import './ImportView.scss';
 import _ from 'lodash';
-import update from 'immutability-helper';
 
 const ImportView = (props) => {
   const {
@@ -42,20 +41,16 @@ const ImportView = (props) => {
 
   const selectForImport = useCallback((e, element) => {
     e.preventDefault();
-    setSelectedElements((prev) =>
-      update(prev, {
-        $push: [element],
-      }),
-    );
+    setSelectedElements((prev) => [...prev, element]);
   }, []);
 
   const removeFromImport = useCallback((e, elementIndex) => {
     e.preventDefault();
-    setSelectedElements((prev) =>
-      update(prev, {
-        $splice: [[elementIndex, 1]],
-      }),
-    );
+    setSelectedElements((prev) => {
+      const newArray = [...prev];
+      newArray.splice(elementIndex, 1);
+      return newArray;
+    });
   }, []);
 
   const generateLinks = useCallback(

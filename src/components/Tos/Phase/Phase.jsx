@@ -5,6 +5,7 @@ import './Phase.scss';
 import { uniqueId } from 'lodash';
 import { RenderPropSticky } from 'react-sticky-el';
 
+import { randomActionId } from '../../../utils/helpers';
 import Action from '../Action/Action';
 import Attributes from '../Attribute/Attributes';
 import DeleteView from '../DeleteView/DeleteView';
@@ -203,14 +204,9 @@ const Phase = React.forwardRef(
     }, []);
 
     const deletePhase = useCallback(() => {
-      if (phase.actions) {
-        phase.actions.forEach((actionId) => {
-          removeAction(actionId, phase.id);
-        });
-      }
       removePhase(phase.id);
       setDeleting(false);
-    }, [phase.id, phase.actions, removeAction, removePhase]);
+    }, [phase.id, removePhase]);
 
     const editPhaseForm = useCallback(() => {
       if (documentState === 'edit') {
@@ -259,7 +255,20 @@ const Phase = React.forwardRef(
         if (setPhaseVisibility) {
           setPhaseVisibility(phaseIndex, true);
         }
-        addAction(actionTypeSpecifier || '', actionType || '', actionDefaultAttributes || {}, phaseIndex);
+
+        const newAction = {
+          id: randomActionId(),
+          phase: phaseIndex,
+          records: [],
+          attributes: {
+            TypeSpecifier: actionTypeSpecifier || '',
+            ActionType: actionType || '',
+            ...actionDefaultAttributes,
+          },
+          is_open: false,
+        };
+
+        addAction(newAction);
         setActionTypeSpecifier('');
         setActionType('');
         setActionDefaultAttributes({});
@@ -371,7 +380,6 @@ const Phase = React.forwardRef(
         documentState === 'edit' ? 'editable' : null,
       ]);
 
-      // TypeSpecifier element (editable)
       const typeSpecifierElement = () => {
         if (mode === 'edit' && editingTypeSpecifier) {
           return (
@@ -405,7 +413,6 @@ const Phase = React.forwardRef(
         );
       };
 
-      // PhaseType element (editable)
       const phaseTypeElement = () => {
         if (mode === 'edit' && editingType) {
           const phaseTypesAsOptions = Object.values(phaseTypes || {}).map((pt) => ({
@@ -462,7 +469,6 @@ const Phase = React.forwardRef(
         );
       };
 
-      // If phase is open and has actions, use sticky behavior like in the old implementation
       if (phase.is_open && phase.actions && phase.actions.length > 0) {
         return (
           <RenderPropSticky topOffset={-1 * topOffset}>
@@ -495,7 +501,6 @@ const Phase = React.forwardRef(
         );
       }
 
-      // Default non-sticky render
       return (
         <div className={`phase-title ${phase.is_attributes_open ? 'phase-open' : 'phase-closed'}`}>
           <div className='basic-attributes'>

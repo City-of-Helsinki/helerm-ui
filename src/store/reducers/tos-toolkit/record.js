@@ -1,5 +1,3 @@
-import update from 'immutability-helper';
-
 import { randomActionId } from '../../../utils/helpers';
 
 export const createNewRecord = ({ attributes, actionId }) => {
@@ -25,50 +23,53 @@ export const createNewRecord = ({ attributes, actionId }) => {
 export const addRecordReducer = (state, action) => {
   const { actionId, recordId, newRecord } = action.payload;
 
-  return update(state, {
-    actions: {
-      [actionId]: {
-        records: {
-          $push: [recordId],
-        },
-      },
-    },
-    records: {
-      [recordId]: {
-        $set: newRecord,
-      },
-    },
-  });
+  if (!state.actions) {
+    state.actions = {};
+  }
+  if (!state.records) {
+    state.records = {};
+  }
+
+  if (state.actions[actionId]) {
+    if (!state.actions[actionId].records) {
+      state.actions[actionId].records = [];
+    }
+    state.actions[actionId].records.push(recordId);
+  }
+
+  state.records[recordId] = newRecord;
 };
 
 export const editRecordReducer = (state, action) => {
   const { editedRecord, recordId } = action.payload;
 
-  return update(state, {
-    records: {
-      [recordId]: {
-        attributes: {
-          $merge: editedRecord.attributes,
-        },
-      },
-    },
-  });
+  if (!state.records) {
+    state.records = {};
+  }
+  if (!state.records[recordId]) {
+    return;
+  }
+
+  if (!state.records[recordId].attributes) {
+    state.records[recordId].attributes = {};
+  }
+  Object.assign(state.records[recordId].attributes, editedRecord.attributes);
 };
 
 export const editRecordAttributeReducer = (state, action) => {
   const { recordId, attributeName, attributeValue } = action.payload;
 
-  return update(state, {
-    records: {
-      [recordId]: {
-        attributes: {
-          [attributeName]: {
-            $set: attributeValue,
-          },
-        },
-      },
-    },
-  });
+  if (!state.records) {
+    state.records = {};
+  }
+  if (!state.records[recordId]) {
+    return;
+  }
+  if (!state.records[recordId].attributes) {
+    state.records[recordId].attributes = {};
+  }
+
+  state.records[recordId].attributes[attributeName] = attributeValue;
 };
 
 export const removeRecordReducer = (state, action) => {
@@ -104,13 +105,12 @@ export const removeRecordReducer = (state, action) => {
 export const setRecordVisibilityReducer = (state, action) => {
   const { recordId, visibility } = action.payload;
 
-  return update(state, {
-    records: {
-      [recordId]: {
-        is_open: {
-          $set: visibility,
-        },
-      },
-    },
-  });
+  if (!state.records) {
+    state.records = {};
+  }
+  if (!state.records[recordId]) {
+    return;
+  }
+
+  state.records[recordId].is_open = visibility;
 };

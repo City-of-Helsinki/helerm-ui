@@ -9,7 +9,6 @@ import Phase from '../Phase';
 import renderWithProviders from '../../../../utils/renderWithProviders';
 import { attributeTypes, createMockPhase, createRecord } from '../../../../utils/__mocks__/mockHelpers';
 
-// Create local test data
 const createPhaseTestMocks = () => {
   const mockPhase = createMockPhase({
     id: 'phase-test-001',
@@ -447,7 +446,7 @@ describe('<Phase />', () => {
       );
     });
 
-    it('calls removeAction for each action when phase is deleted', async () => {
+    it('calls removePhase when phase is deleted', async () => {
       const user = setupEditMode();
 
       await clickDropdownItem(user, 4);
@@ -461,12 +460,8 @@ describe('<Phase />', () => {
 
       await user.click(screen.getByTestId('delete-view-delete-button'));
 
-      expect(mockProps.removeAction).toHaveBeenCalledTimes(mockPhase.actions.length);
-      mockPhase.actions.forEach((actionId) => {
-        expect(mockProps.removeAction).toHaveBeenCalledWith(actionId, mockPhase.id);
-      });
-
       expect(mockProps.removePhase).toHaveBeenCalledWith(mockPhase.id);
+      expect(mockProps.removeAction).not.toHaveBeenCalled();
     });
   });
 
@@ -523,7 +518,6 @@ describe('<Phase />', () => {
       renderComponent({ documentState: 'view' });
 
       expect(screen.queryByTestId('phase-dropdown-button')).not.toBeInTheDocument();
-      // The metadata button should be visible in view mode (matches old implementation)
       expect(screen.queryByRole('button', { name: 'Näytä metatiedot' })).toBeInTheDocument();
     });
   });
@@ -549,6 +543,138 @@ describe('<Phase />', () => {
       expect(actionsContainer).toBeInTheDocument();
       expect(actionsContainer).not.toHaveClass('hidden');
       expect(actionsContainer.children).toHaveLength(0);
+    });
+  });
+
+  describe('Phase UI Interactions', () => {
+    describe('Phase Creation UI Flow', () => {
+      it('opens phase edit form when dropdown option is selected', async () => {
+        const user = setupEditMode();
+
+        await clickDropdownItem(user, 1); // "Muokkaa käsittelyvaihetta"
+
+        expect(screen.getByRole('heading', { name: 'Muokkaa käsittelyvaihetta' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'OK' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Peruuta' })).toBeInTheDocument();
+      });
+
+      it('allows user to cancel phase editing', async () => {
+        const user = setupEditMode();
+
+        await clickDropdownItem(user, 1); // Open phase edit form
+
+        expect(screen.getByRole('heading', { name: 'Muokkaa käsittelyvaihetta' })).toBeInTheDocument();
+
+        // Cancel the form
+        const cancelButton = screen.getByRole('button', { name: 'Peruuta' });
+        await user.click(cancelButton);
+
+        // Verify form is closed
+        expect(screen.queryByRole('heading', { name: 'Muokkaa käsittelyvaihetta' })).not.toBeInTheDocument();
+      });
+
+      it('does not show edit form in view mode', () => {
+        renderComponent({ documentState: 'view' });
+
+        // Dropdown should not be present in view mode
+        expect(screen.queryByTestId('phase-dropdown-button')).not.toBeInTheDocument();
+      });
+    });
+
+    describe('Phase Removal UI Flow', () => {
+      it('allows user to delete a phase through dropdown menu in edit mode', async () => {
+        const user = setupEditMode();
+
+        await openPhaseDropdown(user);
+
+        // Click delete option
+        const deleteOption = await screen.findByText('Poista käsittelyvaihe');
+        expect(deleteOption).toBeInTheDocument();
+
+        await user.click(deleteOption);
+
+        // Verify delete confirmation popup appears
+        const deleteView = await screen.findByTestId('delete-view');
+        expect(deleteView).toBeInTheDocument();
+        expect(screen.getByTestId('delete-view-delete-button')).toBeInTheDocument();
+        expect(screen.getByTestId('delete-view-cancel-button')).toBeInTheDocument();
+
+        // Confirm deletion
+        const confirmButton = screen.getByTestId('delete-view-delete-button');
+        await user.click(confirmButton);
+
+        // Verify the phase removal was attempted
+        expect(mockProps.removePhase).toHaveBeenCalledWith(mockPhase.id);
+      });
+
+      it('allows user to cancel phase deletion', async () => {
+        const user = setupEditMode();
+
+        await openPhaseDropdown(user);
+
+        // Click delete option
+        const deleteOption = screen.getByText('Poista käsittelyvaihe');
+        await user.click(deleteOption);
+
+        // Wait for confirmation popup
+        const deleteView = await screen.findByTestId('delete-view');
+        expect(deleteView).toBeInTheDocument();
+
+        // Cancel deletion
+        const cancelButton = screen.getByTestId('delete-view-cancel-button');
+        await user.click(cancelButton);
+
+        // Verify popup is closed and no deletion occurred
+        const closedPopup = screen.queryByTestId('delete-view');
+        expect(closedPopup).not.toBeInTheDocument();
+
+        expect(mockProps.removePhase).not.toHaveBeenCalled();
+      });
+
+      it('does not show phase delete option in view mode', () => {
+        renderComponent({ documentState: 'view' });
+
+        // Dropdown menus should not be present in view mode
+        expect(screen.queryByTestId('phase-dropdown-button')).not.toBeInTheDocument();
+      });
+
+      it('handles deletion of phase with associated actions', async () => {
+        const user = setupEditMode();
+
+        // Verify phase with actions is present
+        expect(screen.getByText(PHASE_TITLE)).toBeInTheDocument();
+        expect(screen.getByText(ACTION_TITLES[0])).toBeInTheDocument();
+
+        await openPhaseDropdown(user);
+
+        // Click delete option
+        const deleteOption = screen.getByText('Poista käsittelyvaihe');
+        await user.click(deleteOption);
+
+        // Confirm deletion (this should cascade to remove associated actions)
+        const deleteButton = await screen.findByTestId('delete-view-delete-button');
+        expect(deleteButton).toBeInTheDocument();
+
+        const confirmButton = screen.getByTestId('delete-view-delete-button');
+        await user.click(confirmButton);
+
+        // Verify the deletion process was initiated
+        expect(mockProps.removePhase).toHaveBeenCalledWith(mockPhase.id);
+      });
+
+      it('shows appropriate confirmation message with phase details', async () => {
+        const user = setupEditMode();
+
+        await openPhaseDropdown(user);
+
+        const deleteOption = screen.getByText('Poista käsittelyvaihe');
+        await user.click(deleteOption);
+
+        // Verify confirmation message includes phase details
+        const deleteView = await screen.findByTestId('delete-view');
+        expect(deleteView).toBeInTheDocument();
+        expect(screen.getByTestId('delete-view-confirmation')).toBeInTheDocument();
+      });
     });
   });
 });
