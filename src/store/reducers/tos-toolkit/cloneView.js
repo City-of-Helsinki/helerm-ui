@@ -5,9 +5,9 @@ import api from '../../../utils/api';
 
 export const cloneFromTemplateThunk = createAsyncThunk(
   'selectedTOS/cloneFromTemplate',
-  async ({ endpoint, id }, { rejectWithValue }) => {
+  async ({ endpoint, id, token }, { rejectWithValue }) => {
     try {
-      const response = await api.get(`${endpoint}/${id}`);
+      const response = await api.get(`${endpoint}/${id}`, {}, {}, token);
 
       if (!response.ok) {
         throw new URIError(response.statusText);

@@ -7,6 +7,7 @@ import { waitFor } from '@testing-library/react';
 import BulkListView from '../BulkListView';
 import renderWithProviders, { storeDefaultState } from '../../../utils/renderWithProviders';
 import api from '../../../utils/api';
+import * as useAuth from '../../../hooks/useAuth';
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
@@ -29,6 +30,12 @@ vi.spyOn(api, 'get').mockImplementation((url) => {
 
   return Promise.resolve({ ok: false, status: 404, json: () => ({ error: 'Not found' }) });
 });
+
+vi.spyOn(useAuth, 'default').mockImplementation(() => ({
+  getApiToken: vi.fn(() => 'mock-token'),
+  isAuthenticated: true,
+  user: { name: 'Test User' },
+}));
 
 const renderComponent = (storeOverride) => {
   const store = storeOverride ?? mockStore(storeDefaultState);

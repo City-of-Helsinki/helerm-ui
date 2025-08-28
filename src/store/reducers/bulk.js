@@ -15,10 +15,10 @@ export const initialState = {
 
 export const fetchBulkUpdatesThunk = createAsyncThunk(
   'bulk/fetchBulkUpdates',
-  async (includeApproved = false, { rejectWithValue }) => {
+  async ({ includeApproved = false, token }, { rejectWithValue }) => {
     try {
       const params = includeApproved ? { include_approved: true, page_size: DEFAULT_PAGE_SIZE } : {};
-      const response = await api.get('bulk-update', params);
+      const response = await api.get('bulk-update', params, {}, token);
 
       const data = await response.json();
       const results = data.results || [];
@@ -30,16 +30,19 @@ export const fetchBulkUpdatesThunk = createAsyncThunk(
   },
 );
 
-export const fetchBulkUpdateThunk = createAsyncThunk('bulk/fetchBulkUpdate', async (id, { rejectWithValue }) => {
-  try {
-    const response = await api.get(`bulk-update/${id}`, { include_approved: true });
-    const data = await response.json();
+export const fetchBulkUpdateThunk = createAsyncThunk(
+  'bulk/fetchBulkUpdate',
+  async ({ id, token }, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`bulk-update/${id}`, { include_approved: true }, {}, token);
+      const data = await response.json();
 
-    return data;
-  } catch (error) {
-    return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch bulk update');
-  }
-});
+      return data;
+    } catch (error) {
+      return rejectWithValue(error instanceof Error ? error.message : 'Failed to fetch bulk update');
+    }
+  },
+);
 
 export const approveBulkUpdateThunk = createAsyncThunk(
   'bulk/approveBulkUpdate',

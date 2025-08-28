@@ -34,7 +34,7 @@ const ViewClassification = () => {
   const fetchClassification = useCallback(
     (id, requestParams = {}) => {
       if (id) {
-        dispatch(fetchClassificationThunk({ id, params: requestParams }))
+        dispatch(fetchClassificationThunk({ id, params: requestParams, token: getApiToken() }))
           .unwrap()
           .then(() => dispatch(setNavigationVisibility(false)))
           .catch((err) => {
@@ -44,7 +44,7 @@ const ViewClassification = () => {
           });
       }
     },
-    [dispatch, navigate],
+    [dispatch, navigate, getApiToken],
   );
 
   useEffect(() => {

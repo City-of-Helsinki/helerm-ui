@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import get from 'lodash/get';
 
+import useAuth from '../../../hooks/useAuth';
 import { fetchTOSThunk } from '../../../store/reducers/tos-toolkit';
 import { itemsSelector, setNavigationVisibility } from '../../../store/reducers/navigation';
 import { getStatusLabel, formatDateTime, getNewPath, itemById } from '../../../utils/helpers';
@@ -20,6 +21,7 @@ const PrintView = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const params = useParams();
+  const { getApiToken } = useAuth();
 
   const selectedTOS = useSelector(selectedTOSSelector);
 
@@ -58,7 +60,8 @@ const PrintView = () => {
       if (typeof params.version !== 'undefined') {
         requestParams.version = params.version;
       }
-      dispatch(fetchTOSThunk({ tosId: params.id, params: requestParams })).catch((err) => {
+      const token = getApiToken();
+      dispatch(fetchTOSThunk({ tosId: params.id, params: requestParams, token })).catch((err) => {
         if (err instanceof URIError) {
           navigate(`/404?tos-id=${params.id}`);
         }

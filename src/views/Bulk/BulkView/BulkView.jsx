@@ -425,7 +425,8 @@ const BulkView = () => {
 
   useEffect(() => {
     if (params.id) {
-      dispatch(fetchBulkUpdateThunk(params.id));
+      const token = getApiToken();
+      dispatch(fetchBulkUpdateThunk({ id: params.id, token }));
     }
     if (isEmpty(items) || !itemsIncludeRelated) {
       dispatch(fetchNavigationThunk({ includeRelated: true }));

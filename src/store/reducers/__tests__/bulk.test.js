@@ -34,7 +34,7 @@ describe('Bulk reducer', () => {
     const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ json: () => ({ results: [] }) }));
     vi.spyOn(api, 'get').mockImplementationOnce(mockApiGet);
 
-    return store.dispatch(fetchBulkUpdatesThunk()).then(() => {
+    return store.dispatch(fetchBulkUpdatesThunk({ includeApproved: false, token: 'mock-token' })).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -60,7 +60,7 @@ describe('Bulk reducer', () => {
     const mockApiGet = vi.fn().mockImplementation(() => Promise.reject(new Error('ERROR')));
     vi.spyOn(api, 'get').mockImplementationOnce(mockApiGet);
 
-    return store.dispatch(fetchBulkUpdatesThunk()).then(() => {
+    return store.dispatch(fetchBulkUpdatesThunk({ includeApproved: false, token: 'mock-token' })).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -84,7 +84,7 @@ describe('Bulk reducer', () => {
     const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ json: () => ({}) }));
     vi.spyOn(api, 'get').mockImplementationOnce(mockApiGet);
 
-    return store.dispatch(fetchBulkUpdateThunk(bulkUpdateId)).then(() => {
+    return store.dispatch(fetchBulkUpdateThunk({ id: bulkUpdateId, token: 'mock-token' })).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });

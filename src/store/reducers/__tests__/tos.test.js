@@ -208,14 +208,17 @@ const testRemoveEntity = (removeAction, removeParams, entityType, entityId) => {
 describe('TOS Reducer', () => {
   it('should fetch TOS', async () => {
     const mockResponse = { ok: true, json: createJsonResponse(validTOS) };
-    const actions = await testAsyncThunk(fetchTOSThunk({ tosId: validTOS.id }), setupApiMock('get', mockResponse));
+    const actions = await testAsyncThunk(
+      fetchTOSThunk({ tosId: validTOS.id, token: 'mock-token' }),
+      setupApiMock('get', mockResponse),
+    );
 
     expectAsyncActions(actions, 'selectedTOS/fetchTOS');
   });
 
   it('should handle fetch TOS error', async () => {
     const actions = await testAsyncThunk(
-      fetchTOSThunk({ tosId: validTOS.id }),
+      fetchTOSThunk({ tosId: validTOS.id, token: 'mock-token' }),
       setupApiMockError('get', new Error('ERROR')),
     );
 
@@ -720,7 +723,7 @@ describe('TOS Reducer', () => {
       it('should clone from template successfully', async () => {
         const mockResponse = { ok: true, json: createJsonResponse(template) };
         const actions = await testAsyncThunk(
-          cloneFromTemplateThunk({ endpoint: 'templates', id: 'template-001' }),
+          cloneFromTemplateThunk({ endpoint: 'templates', id: 'template-001', token: 'mock-token' }),
           setupApiMock('get', mockResponse),
         );
 
@@ -730,7 +733,7 @@ describe('TOS Reducer', () => {
       it('should handle clone from template error', async () => {
         const mockResponse = { ok: false, statusText: 'Not Found' };
         const actions = await testAsyncThunk(
-          cloneFromTemplateThunk({ endpoint: 'templates', id: 'invalid' }),
+          cloneFromTemplateThunk({ endpoint: 'templates', id: 'invalid', token: 'mock-token' }),
           setupApiMock('get', mockResponse),
         );
 

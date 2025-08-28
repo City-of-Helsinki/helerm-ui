@@ -60,9 +60,9 @@ export const initialState = {
 
 export const fetchTOSThunk = createAsyncThunk(
   'selectedTOS/fetchTOS',
-  async ({ tosId, params = {} }, { rejectWithValue }) => {
+  async ({ tosId, params = {}, token }, { rejectWithValue }) => {
     try {
-      const response = await api.get(`function/${tosId}`, params);
+      const response = await api.get(`function/${tosId}`, params, {}, token);
 
       if (!response.ok) {
         throw new URIError(response.statusText);
