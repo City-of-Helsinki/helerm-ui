@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.5.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.4.1...helerm-ui-v1.5.0) (2025-09-01)
+
+
+### Features
+
+* Add accessiblity-statement-spec.js TIED-192 ([c3cd146](https://github.com/City-of-Helsinki/helerm-ui/commit/c3cd1462f31d49984d5615e24c2186cf52932616))
+* Add AccessiblityStatement view TIED-192 ([c3cd146](https://github.com/City-of-Helsinki/helerm-ui/commit/c3cd1462f31d49984d5615e24c2186cf52932616))
+
+
+### Bug Fixes
+
+* Add/remove phases, actions and records Ref: TIED-203 ([829f70d](https://github.com/City-of-Helsinki/helerm-ui/commit/829f70dcfd4bb3e75210c882ab4e62eb6217885c))
+* Admin endpoints require auth token Ref: TIED-203 ([cdb9c1d](https://github.com/City-of-Helsinki/helerm-ui/commit/cdb9c1df5cfd7f2f28330bfab9ab05a34ac24e2f))
+* Initialize classification tree properly ([4cb3b30](https://github.com/City-of-Helsinki/helerm-ui/commit/4cb3b30e47b759a29348482730b011bf29f9eadc))
+* Keep filters disabled while loading navigation ([4cb3b30](https://github.com/City-of-Helsinki/helerm-ui/commit/4cb3b30e47b759a29348482730b011bf29f9eadc))
+* Navigation filter classification by state Ref: TIED-204 ([4cb3b30](https://github.com/City-of-Helsinki/helerm-ui/commit/4cb3b30e47b759a29348482730b011bf29f9eadc))
+
+
+### Dependencies
+
+* Upgrade react-markdown to 8.0.7 TIED-192 ([c3cd146](https://github.com/City-of-Helsinki/helerm-ui/commit/c3cd1462f31d49984d5615e24c2186cf52932616))
+
 ## [1.4.1](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.4.0...helerm-ui-v1.4.1) (2025-08-25)
 
 
