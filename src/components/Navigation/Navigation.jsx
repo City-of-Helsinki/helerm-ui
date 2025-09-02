@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { isEmpty } from 'lodash';
@@ -36,7 +37,7 @@ const getValueForItemWithAttributePath = (item, path) => {
 
 const SEARCH_TIMEOUT = 500;
 
-const Navigation = () => {
+const Navigation = ({ onLeafMouseClick: customOnLeafMouseClick } = {}) => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -220,6 +221,12 @@ const Navigation = () => {
 
   const handleLeafMouseClick = useCallback(
     (event, leaf) => {
+      // If a custom onLeafMouseClick is provided (e.g., from CloneView), use it
+      if (customOnLeafMouseClick) {
+        return customOnLeafMouseClick(event, leaf);
+      }
+
+      // Default navigation behavior
       if (leaf.function) {
         navigate(`/view-tos/${leaf.function}`);
 
@@ -232,7 +239,7 @@ const Navigation = () => {
 
       return toggleNavigationVisibility();
     },
-    [navigate, toggleNavigationVisibility],
+    [navigate, toggleNavigationVisibility, customOnLeafMouseClick],
   );
 
   const onSearchTimeout = useCallback(() => {
@@ -369,6 +376,10 @@ const Navigation = () => {
       />
     </div>
   );
+};
+
+Navigation.propTypes = {
+  onLeafMouseClick: PropTypes.func,
 };
 
 export default Navigation;
