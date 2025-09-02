@@ -39,7 +39,11 @@ const ReorderView = ({
   const handleChangeOrder = (itemsList) => {
     const itemsMap = itemsList.map((item) => item.id);
 
-    changeOrder(itemsMap, target, parent);
+    changeOrder({
+      newOrder: itemsMap,
+      itemType: target,
+      itemParent: parent,
+    });
     toggleReorderView();
   };
 
