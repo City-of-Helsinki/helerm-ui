@@ -323,6 +323,7 @@ const ViewTOS = () => {
         if (res?.version && res?.id) {
           navigate(`/view-tos/${res.id}/version/${res.version}`);
         }
+        dispatch(setDocumentState('view'));
         return displayMessage({
           title: 'Luonnos',
           body: 'Luonnos tallennettu!',
