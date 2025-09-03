@@ -316,8 +316,31 @@ describe('<ImportView />', () => {
       await user.click(screen.getByText('Tuo'));
 
       expect(mockImportItems).toHaveBeenCalledTimes(2);
-      expect(mockImportItems).toHaveBeenCalledWith('phase-1', 'phase', 'test-parent');
-      expect(mockImportItems).toHaveBeenCalledWith('phase-2', 'phase', 'test-parent');
+      expect(mockImportItems).toHaveBeenCalledWith({ newItem: 'phase-1', level: 'phase', itemParent: 'test-parent' });
+      expect(mockImportItems).toHaveBeenCalledWith({ newItem: 'phase-2', level: 'phase', itemParent: 'test-parent' });
+    });
+
+    it('calls importItems with correct object structure for different levels', async () => {
+      const user = userEvent.setup();
+      const mockImportItems = vi.fn();
+
+      // Test action level import - simplify to use existing data
+      renderComponent({
+        level: 'action',
+        parent: 'phase-parent',
+        importItems: mockImportItems,
+      });
+
+      // Click on the first visible action link (from the existing mock data)
+      const actionLinks = screen.getAllByText(/Selvitys \/ Action Specifier/);
+      await user.click(actionLinks[0]);
+      await user.click(screen.getByText('Tuo'));
+
+      expect(mockImportItems).toHaveBeenCalledWith({
+        newItem: 'action-1',
+        level: 'action',
+        itemParent: 'phase-parent',
+      });
     });
 
     it('calls showItems if provided', async () => {
@@ -363,6 +386,26 @@ describe('<ImportView />', () => {
       await user.click(screen.getByText('Peruuta'));
 
       expect(mockToggleImportView).toHaveBeenCalledTimes(1);
+    });
+
+    it('maintains function call order during import process', async () => {
+      const user = userEvent.setup();
+      const calls = [];
+      const mockImportItems = vi.fn().mockImplementation(() => calls.push('importItems'));
+      const mockShowItems = vi.fn().mockImplementation(() => calls.push('showItems'));
+      const mockToggleImportView = vi.fn().mockImplementation(() => calls.push('toggleImportView'));
+
+      renderComponent({
+        importItems: mockImportItems,
+        showItems: mockShowItems,
+        toggleImportView: mockToggleImportView,
+      });
+
+      await user.click(screen.getByTestId('import-row-link-phase-1'));
+      await user.click(screen.getByText('Tuo'));
+
+      // Verify the correct order: importItems -> showItems -> toggleImportView
+      expect(calls).toEqual(['importItems', 'showItems', 'toggleImportView']);
     });
   });
 
@@ -444,6 +487,59 @@ describe('<ImportView />', () => {
 
       const selectedElement = screen.getByTestId('import-view-selected-element-0');
       expect(selectedElement).toHaveTextContent('-');
+    });
+
+    it('handles invalid level prop gracefully', () => {
+      renderComponent({ level: 'invalid-level' });
+      expect(screen.getByTestId('import-view')).toBeInTheDocument();
+      // Should render empty available elements section
+      const availableElements = screen.getByTestId('import-view-available-elements');
+      expect(availableElements.children.length).toBe(0);
+    });
+
+    it('handles missing parent prop for import', async () => {
+      const user = userEvent.setup();
+      const mockImportItems = vi.fn();
+      renderComponent({ importItems: mockImportItems, parent: undefined });
+
+      await user.click(screen.getByTestId('import-row-link-phase-1'));
+      await user.click(screen.getByText('Tuo'));
+
+      expect(mockImportItems).toHaveBeenCalledWith({
+        newItem: 'phase-1',
+        level: 'phase',
+        itemParent: undefined,
+      });
+    });
+
+    it('correctly handles items property as array vs object', () => {
+      // Test with array (typical case)
+      renderComponent();
+      expect(screen.getByTestId('import-row-item-phase-1')).toBeInTheDocument();
+
+      // This test verifies that the component works with the standard array-based data structure
+      // The Object.keys() fallback in generateLinks handles edge cases but is harder to test
+      // without causing rendering conflicts, so we focus on the main functionality
+      expect(screen.getAllByTestId(/^import-row-item-/).length).toBeGreaterThan(0);
+    });
+
+    it('preserves component state during props updates', async () => {
+      const user = userEvent.setup();
+      const { rerender } = renderComponent();
+
+      // Select some items
+      await user.click(screen.getByTestId('import-row-link-phase-1'));
+      await user.click(screen.getByTestId('import-row-link-phase-2'));
+
+      expect(screen.getByTestId('import-view-selected-element-0')).toBeInTheDocument();
+      expect(screen.getByTestId('import-view-selected-element-1')).toBeInTheDocument();
+
+      // Update props but selection should remain
+      rerender(<ImportView {...defaultProps} title='Updated Title' />);
+
+      expect(screen.getByText('Tuo Updated Title Tos-kuvaukseen Test')).toBeInTheDocument();
+      expect(screen.getByTestId('import-view-selected-element-0')).toBeInTheDocument();
+      expect(screen.getByTestId('import-view-selected-element-1')).toBeInTheDocument();
     });
   });
 

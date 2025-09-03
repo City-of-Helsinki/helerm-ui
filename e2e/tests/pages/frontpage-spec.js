@@ -10,13 +10,19 @@ test.describe('Frontpage', () => {
     await acceptCookieConcent(page);
   });
 
+  test.beforeEach(async () => {
+    await page.goto('/');
+
+    // Wait for navigation to be fully loaded
+    await page.waitForLoadState('networkidle');
+  });
+
   test('title', async () => {
     const pageTitle = await page.title();
     expect(pageTitle).toContain('Tiedonohjaus');
   });
 
   test('Open links', async () => {
-    await page.goto('/');
     await page.getByRole('button', { name: '14 Elinkeino- ja työvoimapalvelut' }).click();
     await page.getByRole('button', { name: '13 Tilastointi-, tutkimus- ja' }).click();
     await page.getByRole('button', { name: 'Opetus- ja sivistystoimi  +' }).click();
@@ -35,7 +41,6 @@ test.describe('Frontpage', () => {
   });
 
   test('Filter', async () => {
-    await page.goto('/');
     await expect(page.getByText('12 02 02 02')).not.toBeVisible();
     await expect(page.getByRole('button', { name: 'Hallintoasiat  +' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Liikenne  +' })).toBeVisible();
