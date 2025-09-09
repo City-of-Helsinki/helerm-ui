@@ -63,7 +63,7 @@
     "redux-thunk": "^2.3.0",
     "remark-gfm": "^4.0.1",
     "sass": "^1.79.4",
-    "vite": "^5.4.19",
+    "vite": "^5.4.20",
     "vite-plugin-babel-macros": "^1.0.6",
     "vite-plugin-eslint": "^1.8.1",
     "vitest": "^3.0.9"
