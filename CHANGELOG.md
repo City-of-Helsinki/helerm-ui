@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.1](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.5.0...helerm-ui-v1.5.1) (2025-09-10)
+
+
+### Dependencies
+
+* Bump remark-gfm from 1.0.0 to 4.0.1 ([81479b9](https://github.com/City-of-Helsinki/helerm-ui/commit/81479b9244989e77b90e3b51adb8d372eca28794))
+* Bump vite from 5.4.19 to 5.4.20 ([16c742e](https://github.com/City-of-Helsinki/helerm-ui/commit/16c742e5b39dee95035c90d9be83a3f709a9d5a0))
+
 ## [1.5.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.4.1...helerm-ui-v1.5.0) (2025-09-01)
 
 
