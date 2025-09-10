@@ -49,8 +49,6 @@ const CloneView = ({ templates, toggleCloneView, cloneFromTemplate, setNavigatio
   const hasSelectedItem = !!selectedItem.id;
 
   const treeViewProps = {
-    tosPath: [],
-    showNavigation: true,
     onLeafMouseClick: (event, leaf) => {
       const { name } = leaf;
       return handleSelectItem({ id: leaf.function, name });

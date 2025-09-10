@@ -162,7 +162,7 @@ const ImportView = (props) => {
   const handleImportItems = useCallback(() => {
     const newElements = selectedElements;
     newElements.forEach((element) => {
-      importItems(element, level, parent);
+      importItems({ newItem: element, level, itemParent: parent });
     });
     if (typeof showItems === 'function') {
       showItems();

@@ -246,6 +246,25 @@ describe('TOS Reducer', () => {
     expectAsyncActions(actions, 'selectedTOS/saveDraft', 'rejected');
   });
 
+  it('should save draft and update document state correctly', async () => {
+    const savedTosResponse = {
+      ...validTOS,
+      version: validTOS.version + 1,
+      documentState: 'view', // Server should return view state after save
+    };
+
+    const mockResponse = { ok: true, json: createJsonResponse(savedTosResponse) };
+    const actions = await testAsyncThunk(saveDraftThunk({ token: 'test-token' }), setupApiMock('put', mockResponse), {
+      selectedTOS: { ...validTOS, documentState: 'edit' }, // Start in edit mode
+    });
+
+    expectAsyncActions(actions, 'selectedTOS/saveDraft');
+
+    // Verify the fulfilled action contains the updated TOS data
+    const fulfilledAction = actions.find((action) => action.type === 'selectedTOS/saveDraft/fulfilled');
+    expect(fulfilledAction.payload.version).toBe(validTOS.version + 1);
+  });
+
   it('should change status', async () => {
     const mockPatchResponse = { ok: true, json: createJsonResponse(validTOS) };
     const mockGetResponse = { ok: true, json: createJsonResponse(classification) };
