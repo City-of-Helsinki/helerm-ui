@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.5.2](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.5.1...helerm-ui-v1.5.2) (2025-09-16)
+
+
+### Bug Fixes
+
+* Clone data from function TIED-206 ([09d9fdc](https://github.com/City-of-Helsinki/helerm-ui/commit/09d9fdcf017c188bfae99d3e2fb21502158d7057))
+* Frontpage e2e test wait for navigation ([e5e8eaf](https://github.com/City-of-Helsinki/helerm-ui/commit/e5e8eaf82e3a890d7b98a6a3a5688aef0b9dd8ad))
+* ImportView import to correct parent Ref: TIED-205 ([b1cb953](https://github.com/City-of-Helsinki/helerm-ui/commit/b1cb953396a2bf69e4b86fee72b53bc9eaaab242))
+* Reorder items correctly TIED-205 ([ccf089c](https://github.com/City-of-Helsinki/helerm-ui/commit/ccf089cd772698a337b79089d3918bb07f67116b))
+* ViewTos after save set documentState Ref: TIED-207 ([31886dd](https://github.com/City-of-Helsinki/helerm-ui/commit/31886ddc30db80f3f309088351c5c678b7649a1c))
+
 ## [1.5.1](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.5.0...helerm-ui-v1.5.1) (2025-09-10)
 
 
