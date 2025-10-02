@@ -1298,4 +1298,38 @@ describe('<ViewTos />', () => {
       unmount();
     }
   });
+
+  describe('Phase Management', () => {
+    it('allows creating phase with just text input and empty phase type', async () => {
+      const store = mockStore({
+        ...storeDefaultState,
+        selectedTOS: createTosInEditMode(),
+        ui: {
+          ...storeDefaultState.ui,
+          attributeTypes,
+          phaseTypes:
+            attributeTypes?.PhaseType?.values?.reduce((acc, val) => {
+              acc[val.value] = val;
+              return acc;
+            }, {}) || {},
+        },
+      });
+
+      renderComponent({
+        selectedTOS: createTosInEditMode(),
+        store,
+      });
+
+      await waitFor(() => {
+        expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+      });
+
+      expect(screen.getByText('Käsittelyprosessin tiedot')).toBeInTheDocument();
+
+      const tosInEditMode = createTosInEditMode();
+      expect(tosInEditMode.documentState).toBe('edit');
+
+      expect(mockDisplayMessage).not.toHaveBeenCalledWith('Valitse käsittelyvaiheen tyyppi', { type: 'error' });
+    });
+  });
 });
