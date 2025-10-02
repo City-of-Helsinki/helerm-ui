@@ -383,11 +383,6 @@ const ViewTOS = () => {
     (event) => {
       event.preventDefault();
 
-      if (!state.phaseType) {
-        displayMessage('Valitse käsittelyvaiheen tyyppi', { type: 'error' });
-        return;
-      }
-
       dispatch(
         addPhase(
           createPhaseFactory({

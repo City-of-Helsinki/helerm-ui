@@ -343,6 +343,30 @@ describe('TOS Reducer', () => {
           is_open: false,
         });
       });
+
+      it('should create a new phase with empty phaseType', () => {
+        const phaseData = {
+          typeSpecifier: 'Custom Phase Name',
+          phaseType: '', // Empty - this should be allowed
+          phaseAttributes: { PersonalData: 'Yes' },
+          parent: 'test-function-001',
+        };
+
+        const newPhase = createNewPhase(phaseData);
+
+        expect(newPhase).toEqual({
+          id: expect.any(String),
+          function: phaseData.parent,
+          actions: [],
+          attributes: {
+            TypeSpecifier: phaseData.typeSpecifier,
+            PhaseType: '', // Empty phaseType should be preserved
+            ...phaseData.phaseAttributes,
+          },
+          is_attributes_open: false,
+          is_open: false,
+        });
+      });
     });
 
     describe('createNewRecord', () => {
