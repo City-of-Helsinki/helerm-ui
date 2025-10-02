@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.3](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.5.2...helerm-ui-v1.5.3) (2025-10-02)
+
+
+### Bug Fixes
+
+* Should add phases without type Ref: TIED-213 ([45fed6e](https://github.com/City-of-Helsinki/helerm-ui/commit/45fed6e27205d29cc62df3d5b36ef5209358cde8))
+* Stricter yarn configurations ([e44dd9b](https://github.com/City-of-Helsinki/helerm-ui/commit/e44dd9b59226b95cf0449c7b4394570953aba871))
+
 ## [1.5.2](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.5.1...helerm-ui-v1.5.2) (2025-09-16)
 
 
