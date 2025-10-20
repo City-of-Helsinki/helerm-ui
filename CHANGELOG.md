@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.5.3...helerm-ui-v1.6.0) (2025-10-20)
+
+
+### Features
+
+* Pilvi sentry TIED-210 ([#596](https://github.com/City-of-Helsinki/helerm-ui/issues/596)) ([b1bb28a](https://github.com/City-of-Helsinki/helerm-ui/commit/b1bb28adfa3f26e4e7f4f9b9e531c45161a84aa4))
+
 ## [1.5.3](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.5.2...helerm-ui-v1.5.3) (2025-10-02)
 
 
