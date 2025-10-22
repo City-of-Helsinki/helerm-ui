@@ -43,6 +43,13 @@ const Header = () => {
         <span className='navbar-text'>
           <small>
             {siteTitle} {gitVersion}
+
+            <button onClick={() => {
+              throw new Error('Test Sentry Error Tracking');
+            }}>
+              Test Sentry
+            </button>
+
           </small>
         </span>
         <div className='menu'>
