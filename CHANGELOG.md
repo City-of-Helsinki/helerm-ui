@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.1](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.0...helerm-ui-v1.6.1) (2025-10-23)
+
+
+### Bug Fixes
+
+* Names for sentry parameters ([#599](https://github.com/City-of-Helsinki/helerm-ui/issues/599)) ([7735216](https://github.com/City-of-Helsinki/helerm-ui/commit/7735216cb499ef1f5ec3ae0fca5ffd67a61e8b04))
+
 ## [1.6.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.5.3...helerm-ui-v1.6.0) (2025-10-20)
 
 
