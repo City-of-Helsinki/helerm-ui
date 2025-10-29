@@ -17,26 +17,14 @@ setDefaultLocale('fi');
 // Sentry config
 if (config.SENTRY_DSN) {
   Sentry.init({
-  
     dsn: config.SENTRY_DSN,
     environment: config.SENTRY_ENVIRONMENT,
     release: config.SENTRY_RELEASE,
-    integrations: [
-      Sentry.browserTracingIntegration(),
-      Sentry.replayIntegration(),
-    ],
-    tracesSampleRate: parseFloat(
-      config.SENTRY_TRACES_SAMPLE_RATE || '0'
-    ),
-    tracePropagationTargets: (
-      config.SENTRY_TRACE_PROPAGATION_TARGETS || ''
-    ).split(','),
-    replaysSessionSampleRate: parseFloat(
-      config.SENTRY_REPLAYS_SESSION_SAMPLE_RATE || '0'
-    ),
-    replaysOnErrorSampleRate: parseFloat(
-      config.SENTRY_REPLAYS_ON_ERROR_SAMPLE_RATE || '0'
-    ),
+    integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
+    tracesSampleRate: parseFloat(config.SENTRY_TRACES_SAMPLE_RATE || '0'),
+    tracePropagationTargets: (config.SENTRY_TRACE_PROPAGATION_TARGETS || '').split(','),
+    replaysSessionSampleRate: parseFloat(config.SENTRY_REPLAYS_SESSION_SAMPLE_RATE || '0'),
+    replaysOnErrorSampleRate: parseFloat(config.SENTRY_REPLAYS_ON_ERROR_SAMPLE_RATE || '0'),
   });
 }
 

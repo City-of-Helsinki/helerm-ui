@@ -1,74 +1,71 @@
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import classnames from 'classnames';
 import { min, uniqueId } from 'lodash';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import Sticky from 'react-sticky-el';
 
-import { HEADER_HEIGHT } from '../../../constants';
-import Phase from '../../../components/Tos/Phase/Phase';
+import Popup from '../../../components/Popup';
+import RouterPrompt from '../../../components/RouterPrompt/RouterPrompt';
 import AddElementInput from '../../../components/Tos/AddElementInput/AddElementInput';
 import Attribute from '../../../components/Tos/Attribute/Attribute';
-import ReorderView from '../../../components/Tos/Reorder/ReorderView';
-import ImportView from '../../../components/Tos/ImportView/ImportView';
 import CloneView from '../../../components/Tos/CloneView/CloneView';
 import EditorForm from '../../../components/Tos/EditorForm/EditorForm';
-import TosHeader from '../../../components/Tos/Header/TosHeader';
 import ClassificationHeader from '../../../components/Tos/Header/ClassificationHeader';
+import TosHeader from '../../../components/Tos/Header/TosHeader';
+import ImportView from '../../../components/Tos/ImportView/ImportView';
+import Phase from '../../../components/Tos/Phase/Phase';
+import ReorderView from '../../../components/Tos/Reorder/ReorderView';
 import ValidationBar from '../../../components/Tos/ValidationBar/ValidationBar';
 import VersionData from '../../../components/Tos/Version/VersionData';
 import VersionSelector from '../../../components/VersionSelector/VersionSelector';
-import Popup from '../../../components/Popup';
-import RouterPrompt from '../../../components/RouterPrompt/RouterPrompt';
-import { displayMessage, getStatusLabel } from '../../../utils/helpers';
-import { generateDefaultAttributes } from '../../../utils/attributeHelper';
-import { validateTOS, validatePhase, validateAction, validateRecord } from '../../../utils/validators';
+import { HEADER_HEIGHT } from '../../../constants';
 import useAuth from '../../../hooks/useAuth';
 import {
-  fetchTOSThunk,
-  clearTos,
-  editMetaData,
-  editValidDates,
-  setClassificationVisibility,
-  setMetadataVisibility,
-  setVersionVisibility,
-  setDocumentState,
-  saveDraftThunk,
-  changeStatusThunk,
-  resetTos,
-  addPhase,
-  createNewPhase as createPhaseFactory,
+  classificationSelector,
+  clearClassification,
+  fetchClassificationThunk,
+} from '../../../store/reducers/classification';
+import { setNavigationVisibility } from '../../../store/reducers/navigation';
+import {
   addAction,
+  addPhase,
+  addRecord,
+  changeOrderThunk,
+  changeStatusThunk,
+  clearTos,
+  cloneFromTemplateThunk,
+  createNewRecord,
+  createNewPhase as createPhaseFactory,
   editAction,
   editActionAttribute,
-  removeAction,
-  setActionVisibility,
+  editMetaData,
   editPhase,
   editPhaseAttribute,
-  removePhase,
-  setPhaseAttributesVisibility,
-  setPhaseVisibility as setPhaseVisibilityAction,
-  addRecord,
-  createNewRecord,
   editRecord,
   editRecordAttribute,
-  removeRecord,
-  setRecordVisibility,
+  editValidDates,
+  fetchTOSThunk,
   importItemsThunk,
-  changeOrderThunk,
-  selectedTOSSelector,
   isFetchingSelector as isFetchingTosSelector,
+  removeAction,
+  removePhase,
+  removeRecord,
+  resetTos,
+  saveDraftThunk,
+  selectedTOSSelector,
+  setActionVisibility,
+  setClassificationVisibility,
+  setDocumentState,
+  setMetadataVisibility,
+  setPhaseAttributesVisibility,
+  setPhaseVisibility as setPhaseVisibilityAction,
+  setRecordVisibility,
+  setVersionVisibility,
   updateTosVisibility,
-  cloneFromTemplateThunk,
 } from '../../../store/reducers/tos-toolkit';
-import {
-  fetchClassificationThunk,
-  clearClassification,
-  classificationSelector,
-} from '../../../store/reducers/classification';
-import { isOpenSelector, setValidationVisibility } from '../../../store/reducers/validation';
 import {
   actionTypesSelector,
   attributeTypesSelector,
@@ -77,7 +74,10 @@ import {
   recordTypesSelector,
   templatesSelector,
 } from '../../../store/reducers/ui';
-import { setNavigationVisibility } from '../../../store/reducers/navigation';
+import { isOpenSelector, setValidationVisibility } from '../../../store/reducers/validation';
+import { generateDefaultAttributes } from '../../../utils/attributeHelper';
+import { displayMessage, getStatusLabel } from '../../../utils/helpers';
+import { validateAction, validatePhase, validateRecord, validateTOS } from '../../../utils/validators';
 
 import './ViewTos.scss';
 
@@ -467,7 +467,7 @@ const ViewTOS = () => {
           complementingMetaData: false,
         }));
       }
-      dispatch(editMetaData({ attributes: filterCheckedAttributes(attributes) }));
+      dispatch(editMetaData(filterCheckedAttributes(attributes)));
     },
     [dispatch],
   );
@@ -575,11 +575,14 @@ const ViewTOS = () => {
 
   const updateFunctionAttribute = useCallback(
     (attribute, attributeIndex) => {
-      const updatedTOSAttribute = {
-        tosAttribute: attribute,
-        attributeIndex,
+      // Create the format expected by editMetaData
+      const attributeUpdate = {
+        [attributeIndex]: {
+          checked: true,
+          value: attribute,
+        },
       };
-      dispatch(editRecordAttribute(updatedTOSAttribute));
+      dispatch(editMetaData(attributeUpdate));
     },
     [dispatch],
   );

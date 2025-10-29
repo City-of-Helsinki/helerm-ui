@@ -1,11 +1,11 @@
-import React from 'react';
-import { screen, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
+import { fireEvent, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import React from 'react';
 
+import { attributeTypes, createMockComponentProps, createRecord } from '../../../../utils/__mocks__/mockHelpers';
 import renderWithProviders from '../../../../utils/renderWithProviders';
 import Record from '../Record';
-import { createMockComponentProps, createRecord, attributeTypes } from '../../../../utils/__mocks__/mockHelpers';
 
 const mockRecord = createRecord({
   id: 'test-record-001',
@@ -196,13 +196,13 @@ describe('<Record />', () => {
 
       mockProps.editRecordAttribute({
         recordId: mockRecord.id,
-        attributeName: 'typeSpecifier',
+        attributeName: 'TypeSpecifier',
         attributeValue: typeSpecifier,
       });
 
       expect(recordInstance).toHaveBeenCalledWith({
         recordId: mockRecord.id,
-        attributeName: 'typeSpecifier',
+        attributeName: 'TypeSpecifier',
         attributeValue: typeSpecifier,
       });
     });
@@ -213,13 +213,13 @@ describe('<Record />', () => {
 
       mockProps.editRecordAttribute({
         recordId: mockRecord.id,
-        attributeName: 'type',
+        attributeName: 'RecordType',
         attributeValue: recordType,
       });
 
       expect(mockProps.editRecordAttribute).toHaveBeenCalledWith({
         recordId: mockRecord.id,
-        attributeName: 'type',
+        attributeName: 'RecordType',
         attributeValue: recordType,
       });
     });

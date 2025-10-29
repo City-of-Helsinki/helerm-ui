@@ -1,14 +1,14 @@
 /* eslint-disable consistent-return */
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 
-import './Record.scss';
+import Dropdown from '../../Dropdown';
+import Popup from '../../Popup';
 import Attributes from '../Attribute/Attributes';
 import DeleteView from '../DeleteView/DeleteView';
-import Dropdown from '../../Dropdown';
 import EditorForm from '../EditorForm/EditorForm';
-import Popup from '../../Popup';
+import './Record.scss';
 
 const Record = React.forwardRef(
   (
@@ -70,7 +70,7 @@ const Record = React.forwardRef(
     const updateTypeSpecifier = (typeSpecifier, recordId) => {
       editRecordAttribute({
         recordId,
-        attributeName: 'typeSpecifier',
+        attributeName: 'TypeSpecifier',
         attributeValue: typeSpecifier,
       });
     };
@@ -78,7 +78,7 @@ const Record = React.forwardRef(
     const updateRecordType = (type, recordId) => {
       editRecordAttribute({
         recordId,
-        attributeName: 'type',
+        attributeName: 'RecordType',
         attributeValue: type,
       });
     };

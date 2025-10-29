@@ -1,18 +1,18 @@
-import React from 'react';
-import { screen, fireEvent, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
+import { fireEvent, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import React from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-import Action from '../Action';
-import renderWithProviders from '../../../../utils/renderWithProviders';
 import {
-  createMockComponentProps,
-  createMockAction,
-  createRecord,
   attributeTypes,
+  createMockAction,
+  createMockComponentProps,
+  createRecord,
 } from '../../../../utils/__mocks__/mockHelpers';
+import renderWithProviders from '../../../../utils/renderWithProviders';
+import Action from '../Action';
 
 const mockAction = createMockAction({
   attributes: {
@@ -257,7 +257,8 @@ describe('<Action />', () => {
 
       await performEditAction(user, 'Updated Action Title', mockProps.editActionAttribute, {
         actionId: mockAction.id,
-        typeSpecifier: 'Updated Action Title',
+        attributeName: 'TypeSpecifier',
+        attributeValue: 'Updated Action Title',
       });
     });
 

@@ -1,26 +1,26 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import './Phase.scss';
 import { uniqueId } from 'lodash';
+import PropTypes from 'prop-types';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { RenderPropSticky } from 'react-sticky-el';
+import './Phase.scss';
 
-import { randomActionId } from '../../../utils/helpers';
-import Action from '../Action/Action';
-import Attributes from '../Attribute/Attributes';
-import DeleteView from '../DeleteView/DeleteView';
-import Popup from '../../Popup';
-import ImportView from '../ImportView/ImportView';
-import ReorderView from '../Reorder/ReorderView';
-import Dropdown from '../../Dropdown';
-import AddElementInput from '../AddElementInput/AddElementInput';
-import EditorForm from '../EditorForm/EditorForm';
+import { DROPDOWN_ITEMS } from '../../../constants';
 import {
+  attributeButton,
   generateDefaultAttributes,
   getDisplayLabelForAttribute,
-  attributeButton,
 } from '../../../utils/attributeHelper';
-import { DROPDOWN_ITEMS } from '../../../constants';
+import { randomActionId } from '../../../utils/helpers';
+import Dropdown from '../../Dropdown';
+import Popup from '../../Popup';
+import Action from '../Action/Action';
+import AddElementInput from '../AddElementInput/AddElementInput';
+import Attributes from '../Attribute/Attributes';
+import DeleteView from '../DeleteView/DeleteView';
+import EditorForm from '../EditorForm/EditorForm';
+import ImportView from '../ImportView/ImportView';
+import ReorderView from '../Reorder/ReorderView';
 
 const Phase = React.forwardRef(
   (
@@ -133,8 +133,9 @@ const Phase = React.forwardRef(
     const updateTypeSpecifier = useCallback(
       (newTypeSpecifier, phaseId) => {
         const updatedTypeSpecifier = {
-          typeSpecifier: newTypeSpecifier,
           phaseId: phaseId || phase.id,
+          attributeName: 'TypeSpecifier',
+          attributeValue: newTypeSpecifier,
         };
         editPhaseAttribute(updatedTypeSpecifier);
         disableEditMode();
@@ -148,8 +149,9 @@ const Phase = React.forwardRef(
           event.preventDefault();
         }
         const updatedPhaseType = {
-          type,
           phaseId: phase.id,
+          attributeName: 'PhaseType',
+          attributeValue: type,
         };
         editPhaseAttribute(updatedPhaseType);
         disableEditMode();
@@ -159,7 +161,11 @@ const Phase = React.forwardRef(
 
     const updatePhaseAttribute = useCallback(
       (attribute, attributeIndex) => {
-        const updatedPhaseAttribute = { attribute, attributeIndex, phaseId: phase.id };
+        const updatedPhaseAttribute = {
+          phaseId: phase.id,
+          attributeName: attributeIndex,
+          attributeValue: attribute,
+        };
         editPhaseAttribute(updatedPhaseAttribute);
       },
       [phase.id, editPhaseAttribute],
@@ -169,7 +175,7 @@ const Phase = React.forwardRef(
       (attributes, phaseId, disableEditModeFlag = true) => {
         setTypeSpecifier(attributes.TypeSpecifier);
         setType(attributes.PhaseType);
-        editPhase(attributes, phaseId);
+        editPhase({ editedAttributes: attributes, phaseId });
         if (disableEditModeFlag) {
           disableEditMode();
         }
@@ -384,7 +390,12 @@ const Phase = React.forwardRef(
         if (mode === 'edit' && editingTypeSpecifier) {
           return (
             <div className='col-md-5 phase-title-input row'>
-              <form onSubmit={updateTypeSpecifier}>
+              <form
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  updateTypeSpecifier(typeSpecifier);
+                }}
+              >
                 <input
                   className='input-title form-control'
                   value={typeSpecifier || ''}
