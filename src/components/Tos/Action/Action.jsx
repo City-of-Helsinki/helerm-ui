@@ -1,22 +1,22 @@
 /* eslint-disable sonarjs/todo-tag */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { uniqueId } from 'lodash';
+import PropTypes from 'prop-types';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Sticky from 'react-sticky-el';
 
-import Record from '../Record/Record';
-import Attributes from '../Attribute/Attributes';
-import DeleteView from '../DeleteView/DeleteView';
-import Popup from '../../Popup';
-import ReorderView from '../Reorder/ReorderView';
-import ImportView from '../ImportView/ImportView';
-import EditorForm from '../EditorForm/EditorForm';
-import Dropdown from '../../Dropdown';
 import { DROPDOWN_ITEMS } from '../../../constants';
 import { attributeButton } from '../../../utils/attributeHelper';
+import Dropdown from '../../Dropdown';
+import Popup from '../../Popup';
+import Attributes from '../Attribute/Attributes';
+import DeleteView from '../DeleteView/DeleteView';
+import EditorForm from '../EditorForm/EditorForm';
+import ImportView from '../ImportView/ImportView';
+import Record from '../Record/Record';
+import ReorderView from '../Reorder/ReorderView';
 import './Action.scss';
 
 const Action = React.forwardRef(
@@ -146,8 +146,9 @@ const Action = React.forwardRef(
       (event) => {
         event?.preventDefault();
         const updatedTypeSpecifier = {
-          typeSpecifier,
           actionId: action.id,
+          attributeName: 'TypeSpecifier',
+          attributeValue: typeSpecifier,
         };
         editActionAttribute(updatedTypeSpecifier);
         disableEditMode();
@@ -159,8 +160,9 @@ const Action = React.forwardRef(
       (event) => {
         event?.preventDefault();
         const updatedActionType = {
-          type,
           actionId: action.id,
+          attributeName: 'ActionType',
+          attributeValue: type,
         };
         editActionAttribute(updatedActionType);
         disableEditMode();
@@ -170,7 +172,11 @@ const Action = React.forwardRef(
 
     const updateActionAttribute = useCallback(
       (attribute, attributeIndex) => {
-        const updatedActionAttribute = { attribute, attributeIndex, actionId: action.id };
+        const updatedActionAttribute = {
+          actionId: action.id,
+          attributeName: attributeIndex,
+          attributeValue: attribute,
+        };
         editActionAttribute(updatedActionAttribute);
       },
       [action.id, editActionAttribute],
@@ -180,7 +186,7 @@ const Action = React.forwardRef(
       (attributes, actionId, disableEditModeFlag = true) => {
         setTypeSpecifier(attributes.TypeSpecifier);
         setType(attributes.ActionType);
-        editAction(attributes, actionId);
+        editAction({ editedAction: { attributes }, actionId });
         if (disableEditModeFlag) {
           disableEditMode();
         }

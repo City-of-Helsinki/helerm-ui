@@ -1,12 +1,12 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import CreatableSelect from 'react-select/creatable';
 import classnames from 'classnames';
-import { includes, forEach, find, map } from 'lodash';
+import { find, forEach, includes, map } from 'lodash';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import CreatableSelect from 'react-select/creatable';
 
-import { resolveSelectValues, resolveReturnValues } from '../../../utils/helpers';
 import { getDisplayLabelForAttribute } from '../../../utils/attributeHelper';
+import { resolveReturnValues, resolveSelectValues } from '../../../utils/helpers';
 import './Attribute.scss';
 
 const Attribute = ({
@@ -31,10 +31,8 @@ const Attribute = ({
   const [mode, setMode] = useState('view');
 
   useEffect(() => {
-    if (attribute !== initialAttribute) {
-      setAttribute(initialAttribute);
-    }
-  }, [initialAttribute, attribute]);
+    setAttribute(initialAttribute);
+  }, [initialAttribute]);
 
   const onPromptCreate = (label) => {
     return `Lisää "${label}"`;
