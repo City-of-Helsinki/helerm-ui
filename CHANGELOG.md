@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.3](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.2...helerm-ui-v1.6.3) (2025-10-29)
+
+
+### Bug Fixes
+
+* Attribute form-control height Ref: TIED-220 ([75a9c94](https://github.com/City-of-Helsinki/helerm-ui/commit/75a9c9475183cb42a207ad75cc1a643ab19d0f06))
+* Tos fields editing data payload fixes Ref: TIED-220 ([7378d70](https://github.com/City-of-Helsinki/helerm-ui/commit/7378d70babb86ce1764e5c369ea14bb4b2df4a71))
+
 ## [1.6.2](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.1...helerm-ui-v1.6.2) (2025-10-27)
 
 
