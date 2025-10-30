@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.4](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.3...helerm-ui-v1.6.4) (2025-10-30)
+
+
+### Bug Fixes
+
+* Resolve PropTypes warnings in TOS attribute editing Ref: TIED-220 ([71159fd](https://github.com/City-of-Helsinki/helerm-ui/commit/71159fda75ebac7d3e8c304844813c164813268b))
+
 ## [1.6.3](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.2...helerm-ui-v1.6.3) (2025-10-29)
 
 
