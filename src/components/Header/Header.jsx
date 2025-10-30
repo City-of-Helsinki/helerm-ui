@@ -1,15 +1,14 @@
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { EDIT } from '../../constants';
 import config from '../../config';
+import { EDIT } from '../../constants';
 import { fetchNavigationThunk } from '../../store/reducers/navigation';
 import IsAllowed from '../IsAllowed/IsAllowed';
 import Loader from '../Loader';
-import Logo from './Logo';
-import './Header.scss';
 import Login from '../Login/Login';
+import './Header.scss';
+import Logo from './Logo';
 
 const Header = () => {
   const gitVersion = config.GIT_VERSION;
