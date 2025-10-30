@@ -1,15 +1,15 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import { reducer as toastr } from 'react-redux-toastr';
 
-import user from './reducers/user';
-import ui from './reducers/ui';
-import selectedTOS from './reducers/tos-toolkit';
-import navigation from './reducers/navigation';
-import validation from './reducers/validation';
-import classification from './reducers/classification';
 import bulk from './reducers/bulk';
-import search from './reducers/search';
+import classification from './reducers/classification';
+import navigation from './reducers/navigation';
 import router from './reducers/router';
+import search from './reducers/search';
+import selectedTOS from './reducers/tos-toolkit';
+import ui from './reducers/ui';
+import user from './reducers/user';
+import validation from './reducers/validation';
 
 const makeRootReducer = () =>
   combineReducers({

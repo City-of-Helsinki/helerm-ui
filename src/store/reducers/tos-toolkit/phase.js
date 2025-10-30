@@ -1,3 +1,4 @@
+import getProcessedAttributeValue from '../../../utils/attributeProcessing';
 import { randomActionId } from '../../../utils/helpers';
 
 export const createNewPhase = ({ typeSpecifier, phaseType, phaseAttributes, parent }) => {
@@ -59,7 +60,8 @@ export const editPhaseAttributeReducer = (state, action) => {
     state.phases[phaseId].attributes = {};
   }
 
-  state.phases[phaseId].attributes[attributeName] = attributeValue;
+  // Process complex objects that might have { checked: true, value: 'something' } structure
+  state.phases[phaseId].attributes[attributeName] = getProcessedAttributeValue(attributeValue);
 };
 
 export const removePhaseReducer = (state, action) => {

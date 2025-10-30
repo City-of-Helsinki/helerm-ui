@@ -1,5 +1,6 @@
 import { indexOf } from 'lodash';
 
+import getProcessedAttributeValue from '../../../utils/attributeProcessing';
 import { randomActionId } from '../../../utils/helpers';
 
 export const createNewAction = (typeSpecifier, actionType, actionAttributes, phaseIndex) => {
@@ -70,7 +71,8 @@ export const editActionAttributeReducer = (state, action) => {
     state.actions[actionId].attributes = {};
   }
 
-  state.actions[actionId].attributes[attributeName] = attributeValue;
+  // Process complex objects that might have { checked: true, value: 'something' } structure
+  state.actions[actionId].attributes[attributeName] = getProcessedAttributeValue(attributeValue);
 };
 
 export const removeActionReducer = (state, action) => {

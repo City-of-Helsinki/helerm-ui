@@ -76,6 +76,7 @@ import {
 } from '../../../store/reducers/ui';
 import { isOpenSelector, setValidationVisibility } from '../../../store/reducers/validation';
 import { generateDefaultAttributes } from '../../../utils/attributeHelper';
+import getProcessedAttributeValue from '../../../utils/attributeProcessing';
 import { displayMessage, getStatusLabel } from '../../../utils/helpers';
 import { validateAction, validatePhase, validateRecord, validateTOS } from '../../../utils/validators';
 
@@ -84,8 +85,16 @@ import './ViewTos.scss';
 const filterCheckedAttributes = (attributes) => {
   const filteredAttributes = {};
   Object.keys(attributes).forEach((key) => {
-    if (attributes[key].checked) {
-      filteredAttributes[key] = attributes[key];
+    if (
+      attributes[key] &&
+      typeof attributes[key] === 'object' &&
+      'checked' in attributes[key] &&
+      attributes[key].checked
+    ) {
+      // Extract the value from complex objects, handle null values
+      const attributeValue = attributes[key];
+
+      filteredAttributes[key] = getProcessedAttributeValue(attributeValue);
     }
   });
   return filteredAttributes;
