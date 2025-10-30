@@ -1,21 +1,20 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { Link } from 'react-router-dom';
+import Defiant from 'defiant.js';
 import cloneDeep from 'lodash/cloneDeep';
 import _get from 'lodash/get';
 import NestedObjects from 'nested-objects';
-import Defiant from 'defiant.js';
+import PropTypes from 'prop-types';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Sticky from 'react-sticky-el';
 
+import Exporter from '../Exporter';
 import ClassificationLink from './ClassificationLink';
 import EmptyTree from './EmptyTree';
-import Exporter from '../Exporter';
-import Loader from '../Loader';
-import SearchInputs from './SearchInput/SearchInputs';
 import SearchFilters from './SearchFilter/SearchFilters';
+import SearchInputs from './SearchInput/SearchInputs';
 
 const DEFAULT_FILTER_CONDITION = 'and';
 
@@ -468,13 +467,12 @@ const InfinityMenu = ({
       if (displayTree.length) {
         return displayTree;
       }
-      // Only show loader during initialization when Header loader is not active
-      if (!isFetching && isInitializing) {
-        return <Loader show />;
-      }
-      if (emptyTreeComponent) {
+
+      // Only show empty tree component when we're not fetching/initializing and have no items
+      if (!isFetching && !isInitializing && emptyTreeComponent) {
         return React.createElement(emptyTreeComponent, emptyTreeComponentProps);
       }
+
       return null;
     },
     [emptyTreeComponent, emptyTreeComponentProps, isFetching, isInitializing],
