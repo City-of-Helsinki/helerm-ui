@@ -1,13 +1,14 @@
 /* eslint-disable consistent-return */
-import React, { useState, useCallback } from 'react';
-import PropTypes from 'prop-types';
-import includes from 'lodash/includes';
 import capitalize from 'lodash/capitalize';
+import includes from 'lodash/includes';
 import sortBy from 'lodash/sortBy';
+import PropTypes from 'prop-types';
+import { useCallback, useState } from 'react';
 
-import DropdownInput from '../DropdownInput/DropdownInput';
-import { validateConditionalRules } from '../../../utils/validators';
 import { getDisplayLabelForAttribute } from '../../../utils/attributeHelper';
+import getProcessedAttributeValue from '../../../utils/attributeProcessing';
+import { validateConditionalRules } from '../../../utils/validators';
+import DropdownInput from '../DropdownInput/DropdownInput';
 import './EditorForm.scss';
 
 const EditorForm = (props) => {
@@ -31,10 +32,13 @@ const EditorForm = (props) => {
       let initialState = {};
       Object.keys(attrTypes).forEach((key) => {
         if (Object.hasOwn(attrTypes, key)) {
+          // Handle case where attributes[key] might already be a complex object
+          const attributeValue = attributes[key] || null;
+
           initialState = {
             ...initialState,
             [key]: {
-              value: attributes[key] || null,
+              value: getProcessedAttributeValue(attributeValue),
               checked: true,
             },
           };
@@ -50,10 +54,11 @@ const EditorForm = (props) => {
   const [initialAttrState] = useState(initialAttributes);
 
   const filterAttributes = useCallback((attrs) => {
-    const filteredAttributes = { ...attrs };
-    Object.keys(filteredAttributes).forEach((key) => {
-      if (Object.hasOwn(filteredAttributes, key) && !filteredAttributes[key].checked) {
-        delete filteredAttributes[key];
+    const filteredAttributes = {};
+    Object.keys(attrs).forEach((key) => {
+      if (Object.hasOwn(attrs, key) && attrs[key].checked) {
+        // Extract the value from the complex object structure
+        filteredAttributes[key] = attrs[key].value;
       }
     });
     return filteredAttributes;

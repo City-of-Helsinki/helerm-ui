@@ -262,6 +262,15 @@ const Phase = React.forwardRef(
           setPhaseVisibility(phaseIndex, true);
         }
 
+        // Filter out null values from actionDefaultAttributes
+        const filteredDefaultAttributes = {};
+        Object.keys(actionDefaultAttributes).forEach((key) => {
+          const attributeValue = actionDefaultAttributes[key];
+          if (attributeValue !== null && attributeValue !== undefined) {
+            filteredDefaultAttributes[key] = attributeValue;
+          }
+        });
+
         const newAction = {
           id: randomActionId(),
           phase: phaseIndex,
@@ -269,7 +278,7 @@ const Phase = React.forwardRef(
           attributes: {
             TypeSpecifier: actionTypeSpecifier || '',
             ActionType: actionType || '',
-            ...actionDefaultAttributes,
+            ...filteredDefaultAttributes,
           },
           is_open: false,
         };

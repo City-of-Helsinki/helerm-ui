@@ -1,3 +1,4 @@
+import getProcessedAttributeValue from '../../../utils/attributeProcessing';
 import { randomActionId } from '../../../utils/helpers';
 
 export const createNewRecord = ({ attributes, actionId }) => {
@@ -69,7 +70,8 @@ export const editRecordAttributeReducer = (state, action) => {
     state.records[recordId].attributes = {};
   }
 
-  state.records[recordId].attributes[attributeName] = attributeValue;
+  // Process complex objects that might have { checked: true, value: 'something' } structure
+  state.records[recordId].attributes[attributeName] = getProcessedAttributeValue(attributeValue);
 };
 
 export const removeRecordReducer = (state, action) => {
