@@ -4,12 +4,7 @@ import { randomActionId } from '../../../utils/helpers';
 export const createNewRecord = ({ attributes, actionId }) => {
   const recordId = randomActionId();
 
-  const newAttributes = {};
-  Object.keys(attributes).forEach((key) => {
-    if (Object.hasOwn(attributes, key) && attributes[key].checked) {
-      newAttributes[key] = attributes[key].value;
-    }
-  });
+  const newAttributes = { ...attributes };
 
   const newRecord = {
     id: recordId,

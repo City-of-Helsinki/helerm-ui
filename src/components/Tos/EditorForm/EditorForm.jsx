@@ -56,7 +56,7 @@ const EditorForm = (props) => {
   const filterAttributes = useCallback((attrs) => {
     const filteredAttributes = {};
     Object.keys(attrs).forEach((key) => {
-      if (Object.hasOwn(attrs, key) && attrs[key].checked) {
+      if (Object.hasOwn(attrs, key) && attrs[key]?.checked) {
         // Extract the value from the complex object structure
         filteredAttributes[key] = attrs[key].value;
       }

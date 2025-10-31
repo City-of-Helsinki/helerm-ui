@@ -1,50 +1,50 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
+import { WAITING_FOR_APPROVAL } from '../../../constants';
+import { classification, validTOS } from '../../../utils/__mocks__/mockHelpers';
+import api from '../../../utils/api';
 import {
-  fetchTOSThunk,
-  saveDraftThunk,
-  changeStatusThunk,
-  cloneFromTemplateThunk,
-  importItemsThunk,
+  addAction,
+  addPhase,
+  addRecord,
   changeOrderThunk,
+  changeStatusThunk,
+  clearTos,
+  cloneFromTemplateThunk,
   createNewAction,
   createNewPhase,
   createNewRecord,
-  clearTos,
-  resetTos,
-  editMetaData,
-  editValidDates,
-  setDocumentState,
-  setClassificationVisibility,
-  setMetadataVisibility,
-  updateTosVisibility,
-  setVersionVisibility,
-  addAction,
   editAction,
   editActionAttribute,
-  removeAction,
-  setActionVisibility,
-  addPhase,
+  editMetaData,
   editPhase,
   editPhaseAttribute,
+  editRecord,
+  editRecordAttribute,
+  editValidDates,
+  executeImport,
+  executeOrderChange,
+  fetchTOSThunk,
+  importItemsThunk,
+  receiveTemplate,
+  removeAction,
   removePhase,
+  removeRecord,
+  resetTos,
+  saveDraftThunk,
+  setActionVisibility,
+  setClassificationVisibility,
+  setDocumentState,
+  setMetadataVisibility,
   setPhaseAttributesVisibility,
   setPhaseVisibility,
   setPhasesVisibility,
-  addRecord,
-  editRecord,
-  editRecordAttribute,
-  removeRecord,
   setRecordVisibility,
-  executeImport,
-  receiveTemplate,
-  executeOrderChange,
+  setVersionVisibility,
+  updateTosVisibility,
 } from '../tos-toolkit';
 import tosReducer, { initialState } from '../tos-toolkit/main';
-import api from '../../../utils/api';
-import { validTOS, classification } from '../../../utils/__mocks__/mockHelpers';
-import { WAITING_FOR_APPROVAL } from '../../../constants';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -370,12 +370,12 @@ describe('TOS Reducer', () => {
     });
 
     describe('createNewRecord', () => {
-      it('should create a new record with correct structure', () => {
+      it('should create a new record with already-processed attributes', () => {
         const recordData = {
           attributes: {
-            TypeSpecifier: { checked: true, value: 'Test Record' },
-            RecordType: { checked: true, value: 'Document' },
-            PersonalData: { checked: false, value: 'No' },
+            TypeSpecifier: 'Test Record',
+            RecordType: 'Document',
+            Description: 'Test description',
           },
           actionId: 'test-action-001',
         };
@@ -391,6 +391,55 @@ describe('TOS Reducer', () => {
             attributes: {
               TypeSpecifier: 'Test Record',
               RecordType: 'Document',
+              Description: 'Test description',
+            },
+            is_open: false,
+          },
+        });
+      });
+
+      it('should create a new record with empty attributes', () => {
+        const recordData = {
+          attributes: {},
+          actionId: 'test-action-001',
+        };
+
+        const result = createNewRecord(recordData);
+
+        expect(result).toEqual({
+          actionId: recordData.actionId,
+          recordId: expect.any(String),
+          newRecord: {
+            id: expect.any(String),
+            action: recordData.actionId,
+            attributes: {},
+            is_open: false,
+          },
+        });
+      });
+
+      it('should handle null attributes gracefully', () => {
+        const recordData = {
+          attributes: {
+            TypeSpecifier: 'Valid Record',
+            InvalidAttribute: null,
+            UndefinedAttribute: undefined,
+          },
+          actionId: 'test-action-001',
+        };
+
+        const result = createNewRecord(recordData);
+
+        expect(result).toEqual({
+          actionId: recordData.actionId,
+          recordId: expect.any(String),
+          newRecord: {
+            id: expect.any(String),
+            action: recordData.actionId,
+            attributes: {
+              TypeSpecifier: 'Valid Record',
+              InvalidAttribute: null,
+              UndefinedAttribute: undefined,
             },
             is_open: false,
           },
