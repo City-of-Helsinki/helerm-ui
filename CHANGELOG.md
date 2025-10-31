@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.6](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.5...helerm-ui-v1.6.6) (2025-10-31)
+
+
+### Bug Fixes
+
+* Editing records and metadata Ref: TIED-222 ([0dd4451](https://github.com/City-of-Helsinki/helerm-ui/commit/0dd44511dc6c698103a11be7f6d5efb084648dac))
+
 ## [1.6.5](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.4...helerm-ui-v1.6.5) (2025-10-31)
 
 
