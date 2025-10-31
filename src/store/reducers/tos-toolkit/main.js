@@ -1,22 +1,24 @@
 /* eslint-disable sonarjs/todo-tag */
 /* eslint-disable no-alert */
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { cloneDeep, isEmpty, values } from 'lodash';
 
-import { fetchNavigationThunk } from '../navigation';
 import api from '../../../utils/api';
-import { normalizeTosFromApi, normalizeTosForApi } from '../../../utils/helpers';
+import { normalizeTosForApi, normalizeTosFromApi } from '../../../utils/helpers';
+import { fetchNavigationThunk } from '../navigation';
 import {
   addActionReducer,
-  editActionReducer,
   editActionAttributeReducer,
+  editActionReducer,
   removeActionReducer,
   setActionVisibilityReducer,
 } from './action';
+import { cloneFromTemplateThunk, receiveTemplateReducer } from './cloneView';
+import { executeImportReducer, importItemsThunk } from './importView';
 import {
   addPhaseReducer,
-  editPhaseReducer,
   editPhaseAttributeReducer,
+  editPhaseReducer,
   removePhaseReducer,
   setPhaseAttributesVisibilityReducer,
   setPhaseVisibilityReducer,
@@ -24,14 +26,12 @@ import {
 } from './phase';
 import {
   addRecordReducer,
-  editRecordReducer,
   editRecordAttributeReducer,
+  editRecordReducer,
   removeRecordReducer,
   setRecordVisibilityReducer,
 } from './record';
-import { executeImportReducer, importItemsThunk } from './importView';
-import { receiveTemplateReducer, cloneFromTemplateThunk } from './cloneView';
-import { executeOrderChangeReducer, changeOrderThunk } from './reorder';
+import { changeOrderThunk, executeOrderChangeReducer } from './reorder';
 
 export const initialState = {
   id: null,
@@ -157,15 +157,8 @@ const tosSlice = createSlice({
     },
     editMetaData: (state, action) => {
       const attributes = action.payload;
-      const editedMetaData = {};
 
-      Object.keys(attributes).forEach((key) => {
-        if (Object.hasOwn(attributes, key) && attributes[key].checked) {
-          editedMetaData[key] = attributes[key].value;
-        }
-      });
-
-      state.attributes = editedMetaData;
+      state.attributes = attributes;
     },
     editValidDates: (state, action) => {
       if (action.payload.validFrom !== undefined) {
