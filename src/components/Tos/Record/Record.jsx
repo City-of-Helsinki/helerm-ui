@@ -55,7 +55,7 @@ const Record = React.forwardRef(
     const editRecordWithForm = (attributesToEdit, recordId, shouldDisableEditMode = true) => {
       const editedAttributes = {};
       Object.keys(attributesToEdit).forEach((key) => {
-        if (Object.hasOwn(attributesToEdit, key) && attributesToEdit[key].checked) {
+        if (attributesToEdit[key]?.checked) {
           editedAttributes[key] = attributesToEdit[key].value;
         }
       });

@@ -160,7 +160,7 @@ const tosSlice = createSlice({
       const editedMetaData = {};
 
       Object.keys(attributes).forEach((key) => {
-        if (Object.hasOwn(attributes, key) && attributes[key].checked) {
+        if (attributes[key]?.checked) {
           editedMetaData[key] = attributes[key].value;
         }
       });

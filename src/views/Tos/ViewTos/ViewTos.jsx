@@ -86,10 +86,7 @@ const filterCheckedAttributes = (attributes) => {
   const filteredAttributes = {};
   Object.keys(attributes).forEach((key) => {
     if (
-      attributes[key] &&
-      typeof attributes[key] === 'object' &&
-      'checked' in attributes[key] &&
-      attributes[key].checked
+      attributes[key]?.checked
     ) {
       // Extract the value from complex objects, handle null values
       const attributeValue = attributes[key];
