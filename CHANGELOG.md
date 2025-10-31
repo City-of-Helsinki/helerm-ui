@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.5](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.4...helerm-ui-v1.6.5) (2025-10-31)
+
+
+### Bug Fixes
+
+* EmptyTree notification logic Ref: TIED-221 ([e8558bb](https://github.com/City-of-Helsinki/helerm-ui/commit/e8558bbd02105fd9674ae7af6057c5f30623a421))
+* Record creation failure null attribute Ref: TIED-222 ([415c0f8](https://github.com/City-of-Helsinki/helerm-ui/commit/415c0f8c1d0ba252480283a96aa752a7f56b01c9))
+
 ## [1.6.4](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.3...helerm-ui-v1.6.4) (2025-10-30)
 
 
