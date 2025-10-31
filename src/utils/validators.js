@@ -1,4 +1,4 @@
-import { includes, difference, uniq } from 'lodash';
+import { difference, includes, uniq } from 'lodash';
 
 /**
  * Validate conditional rules
@@ -16,7 +16,7 @@ export const validateConditionalRules = (key, attributeTypes, attributes) => {
     // for each attribute
     requiredIf.forEach((item) => {
       // for each item in requiredIf and if requiredIf has attribute
-      if (item.key === attribute && includes(item.values, attributes[attribute].value)) {
+      if (item.key === attribute && includes(item.values, attributes[attribute]?.value)) {
         // if requiredIf has same value as attribute
         valid = true;
       }

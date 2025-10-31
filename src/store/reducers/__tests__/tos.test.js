@@ -467,8 +467,8 @@ describe('TOS Reducer', () => {
     describe('editMetaData', () => {
       it('should update metadata attributes', () => {
         const metaData = {
-          TypeSpecifier: { checked: true, value: 'Updated TOS' },
-          Description: { checked: true, value: 'Updated description' },
+          TypeSpecifier: 'Updated TOS',
+          Description: 'Updated description',
         };
 
         const result = testReducerAction(editMetaData(metaData));
