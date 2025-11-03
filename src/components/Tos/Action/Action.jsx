@@ -60,7 +60,7 @@ const Action = React.forwardRef(
     const [record, setRecord] = useState(null);
     const [topOffset, setTopOffset] = useState(0);
 
-    const element = useRef(null);
+    const element = ref;
     const records_ref = useRef({});
 
     // Expose scroll methods to parent components via ref
