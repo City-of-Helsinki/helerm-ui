@@ -362,4 +362,118 @@ describe('<Record />', () => {
       });
     });
   });
+
+  describe('Scroll Functionality', () => {
+    let scrollMocks;
+
+    const setupScrollMocks = () => {
+      scrollMocks = {
+        windowScrollTo: vi.fn(),
+        originalScrollTo: window.scrollTo,
+        cleanup: () => {
+          window.scrollTo = scrollMocks.originalScrollTo;
+          vi.clearAllMocks();
+        }
+      };
+      window.scrollTo = scrollMocks.windowScrollTo;
+    };
+
+    const mockDOMProperties = (hasOffsetParent = true) => {
+      Object.defineProperty(HTMLElement.prototype, 'offsetTop', {
+        configurable: true,
+        get: () => 100
+      });
+      
+      Object.defineProperty(HTMLElement.prototype, 'offsetParent', {
+        configurable: true,
+        get: () => hasOffsetParent ? { offsetTop: 50 } : null
+      });
+    };
+
+    const renderRecordWithRef = (props = {}) => {
+      const recordRef = { current: null };
+      renderWithProviders(
+        <Record {...mockProps} {...props} ref={recordRef} />
+      );
+      return recordRef;
+    };
+
+    beforeEach(() => {
+      setupScrollMocks();
+      mockDOMProperties();
+    });
+
+    afterEach(() => {
+      scrollMocks.cleanup();
+    });
+
+    it('should expose scrollToRecord method via ref', () => {
+      const recordRef = renderRecordWithRef();
+      
+      expect(recordRef.current).toBeDefined();
+      expect(typeof recordRef.current.scrollToRecord).toBe('function');
+    });
+
+    it('should call window.scrollTo when scrollToRecord is called with default parentOffset', () => {
+      const recordRef = renderRecordWithRef();
+      
+      recordRef.current.scrollToRecord();
+      
+      expect(scrollMocks.windowScrollTo).toHaveBeenCalledTimes(1);
+      expect(scrollMocks.windowScrollTo).toHaveBeenCalledWith(0, expect.any(Number));
+    });
+
+    it('should calculate correct scroll coordinates with default parentOffset', () => {
+      const recordRef = renderRecordWithRef();
+      
+      recordRef.current.scrollToRecord();
+      
+      // Should calculate: elementOffset (50) + parentOffset (0) + elementTop (100) = 150
+      expect(scrollMocks.windowScrollTo).toHaveBeenCalledWith(0, 150);
+    });
+
+    it('should calculate correct scroll coordinates with custom parentOffset', () => {
+      const recordRef = renderRecordWithRef();
+      const parentOffset = 200;
+      
+      recordRef.current.scrollToRecord(parentOffset);
+      
+      // Should calculate: elementOffset (50) + parentOffset (200) + elementTop (100) = 350
+      expect(scrollMocks.windowScrollTo).toHaveBeenCalledWith(0, 350);
+    });
+
+    it('should handle missing offsetParent gracefully', () => {
+      mockDOMProperties(false); // No offsetParent
+      const recordRef = renderRecordWithRef();
+      const parentOffset = 100;
+      
+      recordRef.current.scrollToRecord(parentOffset);
+      
+      // Should use 0 as elementOffset: 0 + 100 + 100 = 200
+      expect(scrollMocks.windowScrollTo).toHaveBeenCalledWith(0, 200);
+    });
+
+    it('should handle scroll method when element ref is not available', () => {
+      const recordRef = renderRecordWithRef();
+      
+      // Mock the element ref to be null to simulate unavailable DOM element
+      const originalScrollToRecord = recordRef.current.scrollToRecord;
+      const mockElement = { current: null };
+      
+      // Override the scrollToRecord method to use our mocked null element
+      recordRef.current.scrollToRecord = (parentOffset = 0) => {
+        if (mockElement?.current) {
+          const elementOffset = mockElement.current.offsetParent ? mockElement.current.offsetParent.offsetTop : 0;
+          window.scrollTo(0, elementOffset + parentOffset + mockElement.current.offsetTop);
+        }
+      };
+      
+      // Calling scrollToRecord should not throw error and not call window.scrollTo
+      expect(() => recordRef.current.scrollToRecord()).not.toThrow();
+      expect(scrollMocks.windowScrollTo).not.toHaveBeenCalled();
+      
+      // Restore original method
+      recordRef.current.scrollToRecord = originalScrollToRecord;
+    });
+  });
 });

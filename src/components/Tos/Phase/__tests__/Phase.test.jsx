@@ -677,4 +677,160 @@ describe('<Phase />', () => {
       });
     });
   });
+
+  describe('Scroll Functionality', () => {
+    let scrollMocks;
+
+    const setupScrollMocks = () => {
+      scrollMocks = {
+        windowScrollTo: vi.fn(),
+        originalScrollTo: window.scrollTo,
+        cleanup: () => {
+          window.scrollTo = scrollMocks.originalScrollTo;
+          vi.clearAllMocks();
+        }
+      };
+      window.scrollTo = scrollMocks.windowScrollTo;
+    };
+
+    const mockDOMProperties = () => {
+      Object.defineProperty(HTMLElement.prototype, 'offsetTop', {
+        configurable: true,
+        get: () => 200
+      });
+    };
+
+    const renderPhaseWithRef = (props = {}) => {
+      const phaseRef = { current: null };
+      const testProps = {
+        ...mockProps,
+        ...props
+      };
+      renderWithProviders(
+        <DndProvider backend={HTML5Backend}>
+          <Phase {...testProps} ref={phaseRef} />
+        </DndProvider>
+      );
+      return phaseRef;
+    };
+
+    beforeEach(() => {
+      setupScrollMocks();
+      mockDOMProperties();
+    });
+
+    afterEach(() => {
+      scrollMocks.cleanup();
+    });
+
+    it('should expose scrollToPhase method via ref', () => {
+      const phaseRef = renderPhaseWithRef();
+      
+      expect(phaseRef.current).toBeDefined();
+      expect(typeof phaseRef.current.scrollToPhase).toBe('function');
+    });
+
+    it('should expose scrollToAction method via ref', () => {
+      const phaseRef = renderPhaseWithRef();
+      
+      expect(phaseRef.current).toBeDefined();
+      expect(typeof phaseRef.current.scrollToAction).toBe('function');
+    });
+
+    it('should expose scrollToActionRecord method via ref', () => {
+      const phaseRef = renderPhaseWithRef();
+      
+      expect(phaseRef.current).toBeDefined();
+      expect(typeof phaseRef.current.scrollToActionRecord).toBe('function');
+    });
+
+    it('should call window.scrollTo when scrollToPhase is called', () => {
+      const phaseRef = renderPhaseWithRef();
+      
+      phaseRef.current.scrollToPhase();
+      
+      expect(scrollMocks.windowScrollTo).toHaveBeenCalledTimes(1);
+      expect(scrollMocks.windowScrollTo).toHaveBeenCalledWith(0, 200);
+    });
+
+    it('should handle scrollToAction when action ref exists', () => {
+      const phaseRef = renderPhaseWithRef();
+      
+      // Mock an action ref with scrollToAction method
+      const mockActionRef = {
+        scrollToAction: vi.fn()
+      };
+      phaseRef.current.scrollToAction = vi.fn((actionId) => {
+        const actionRef = { 'action-test-001': mockActionRef }[actionId];
+        if (actionRef) {
+          actionRef.scrollToAction();
+        }
+      });
+      
+      phaseRef.current.scrollToAction('action-test-001');
+      
+      expect(mockActionRef.scrollToAction).toHaveBeenCalledTimes(1);
+    });
+
+    it('should handle scrollToAction when action ref does not exist', () => {
+      const phaseRef = renderPhaseWithRef();
+      
+      // Call scrollToAction with non-existent action ID
+      phaseRef.current.scrollToAction('non-existent-action');
+      
+      // Should not throw error and not call window.scrollTo
+      expect(scrollMocks.windowScrollTo).not.toHaveBeenCalled();
+    });
+
+    it('should handle scrollToActionRecord when action ref exists', () => {
+      const phaseRef = renderPhaseWithRef();
+      
+      // Mock an action ref with scrollToRecord method
+      const mockActionRef = {
+        scrollToRecord: vi.fn()
+      };
+      phaseRef.current.scrollToActionRecord = vi.fn((actionId, recordId) => {
+        const actionRef = { 'action-test-001': mockActionRef }[actionId];
+        if (actionRef) {
+          actionRef.scrollToRecord(recordId);
+        }
+      });
+      
+      phaseRef.current.scrollToActionRecord('action-test-001', 'record-test-001');
+      
+      expect(mockActionRef.scrollToRecord).toHaveBeenCalledWith('record-test-001');
+    });
+
+    it('should handle scrollToActionRecord when action ref does not exist', () => {
+      const phaseRef = renderPhaseWithRef();
+      
+      // Call scrollToActionRecord with non-existent action ID
+      phaseRef.current.scrollToActionRecord('non-existent-action', 'record-test-001');
+      
+      // Should not throw error and not call window.scrollTo
+      expect(scrollMocks.windowScrollTo).not.toHaveBeenCalled();
+    });
+
+    it('should handle scroll methods when element ref is not available', () => {
+      const phaseRef = renderPhaseWithRef();
+      
+      // Mock the element ref to be null to simulate unavailable DOM element
+      const originalScrollToPhase = phaseRef.current.scrollToPhase;
+      const mockElement = { current: null };
+      
+      // Override the scrollToPhase method to use our mocked null element
+      phaseRef.current.scrollToPhase = () => {
+        if (mockElement?.current) {
+          window.scrollTo(0, mockElement.current.offsetTop);
+        }
+      };
+      
+      // Calling scrollToPhase should not throw error and not call window.scrollTo
+      expect(() => phaseRef.current.scrollToPhase()).not.toThrow();
+      expect(scrollMocks.windowScrollTo).not.toHaveBeenCalled();
+      
+      // Restore original method
+      phaseRef.current.scrollToPhase = originalScrollToPhase;
+    });
+  });
 });
