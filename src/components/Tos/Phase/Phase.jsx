@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import { uniqueId } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { RenderPropSticky } from 'react-sticky-el';
 import './Phase.scss';
 
@@ -75,6 +75,27 @@ const Phase = React.forwardRef(
 
     const element = ref;
     const actions_ref = useRef({});
+
+    // Expose scroll methods to parent components via ref
+    useImperativeHandle(ref, () => ({
+      scrollToPhase: () => {
+        if (element?.current) {
+          window.scrollTo(0, element.current.offsetTop);
+        }
+      },
+      scrollToAction: (actionId) => {
+        const actionRef = actions_ref.current[actionId];
+        if (actionRef) {
+          actionRef.scrollToAction();
+        }
+      },
+      scrollToActionRecord: (actionId, recordId) => {
+        const actionRef = actions_ref.current[actionId];
+        if (actionRef) {
+          actionRef.scrollToRecord(recordId);
+        }
+      },
+    }));
 
     const updateTopOffsetForSticky = useCallback(() => {
       // calculates heights for elements that are already sticking (navigation menu and tos header)
