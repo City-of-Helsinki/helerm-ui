@@ -4,7 +4,7 @@
 import classnames from 'classnames';
 import { uniqueId } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import Sticky from 'react-sticky-el';
 
 import { DROPDOWN_ITEMS } from '../../../constants';
@@ -60,8 +60,25 @@ const Action = React.forwardRef(
     const [record, setRecord] = useState(null);
     const [topOffset, setTopOffset] = useState(0);
 
-    const element = ref;
+    const element = useRef(null);
     const records_ref = useRef({});
+
+    // Expose scroll methods to parent components via ref
+    useImperativeHandle(ref, () => ({
+      scrollToAction: () => {
+        if (element?.current) {
+          const parentOffset = element.current.offsetParent ? element.current.offsetParent.offsetTop : 0;
+          window.scrollTo(0, parentOffset + element.current.offsetTop);
+        }
+      },
+      scrollToRecord: (recordId) => {
+        const recordRef = records_ref.current[recordId];
+        if (element?.current && recordRef) {
+          const parentOffset = element.current.offsetParent ? element.current.offsetParent.offsetTop : 0;
+          recordRef.scrollToRecord(parentOffset + element.current.offsetTop);
+        }
+      },
+    }));
 
     const updateTopOffsetForSticky = useCallback(() => {
       const headerEl = document.getElementById('single-tos-header-container');
