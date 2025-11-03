@@ -73,7 +73,7 @@ const Phase = React.forwardRef(
     const [editingType, setEditingType] = useState(false);
     const [topOffset, setTopOffset] = useState(0);
 
-    const element = ref;
+    const element = useRef(null);
     const actions_ref = useRef({});
 
     // Expose scroll methods to parent components via ref

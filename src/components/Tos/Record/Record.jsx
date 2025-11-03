@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import React, { useState, useImperativeHandle } from 'react';
+import React, { useState, useRef, useImperativeHandle } from 'react';
 
 import Dropdown from '../../Dropdown';
 import Popup from '../../Popup';
@@ -30,7 +30,7 @@ const Record = React.forwardRef(
     const [editingRecord, setEditingRecord] = useState(false);
     const [mode, setMode] = useState('view');
 
-    const element = ref;
+    const element = useRef(null);
 
     // Expose scroll method to parent components via ref
     useImperativeHandle(ref, () => ({
