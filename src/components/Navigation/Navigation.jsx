@@ -1,26 +1,26 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { isEmpty } from 'lodash';
 
+import { navigationStateFilters } from '../../constants';
+import useAuth from '../../hooks/useAuth';
+import { classificationSelector } from '../../store/reducers/classification';
 import {
   fetchNavigationThunk,
-  setNavigationVisibility,
-  itemsSelector,
-  isOpenSelector,
   isFetchingSelector,
+  isOpenSelector,
+  itemsSelector,
+  setNavigationVisibility,
   timestampSelector,
 } from '../../store/reducers/navigation';
+import { selectedTOSSelector } from '../../store/reducers/tos-toolkit';
 import { attributeTypesSelector } from '../../store/reducers/ui';
 import { userDataSelector } from '../../store/reducers/user';
-import { classificationSelector } from '../../store/reducers/classification';
-import { selectedTOSSelector } from '../../store/reducers/tos-toolkit';
 import { itemById } from '../../utils/helpers';
-import useAuth from '../../hooks/useAuth';
 import InfinityMenu from '../InfinityMenu/InfinityMenu';
 import './Navigation.scss';
-import { navigationStateFilters } from '../../constants';
 
 const getValueForItemWithAttributePath = (item, path) => {
   if (!path.length) return item;
@@ -41,7 +41,7 @@ const Navigation = ({ onLeafMouseClick: customOnLeafMouseClick } = {}) => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { getApiToken, authenticated } = useAuth();
+  const { getApiToken } = useAuth();
 
   const attributeTypes = useSelector(attributeTypesSelector);
   const is_open = useSelector(isOpenSelector);
@@ -207,13 +207,19 @@ const Navigation = ({ onLeafMouseClick: customOnLeafMouseClick } = {}) => {
     });
   }, []);
 
+  const [hasInitiallyFetched, setHasInitiallyFetched] = useState(false);
+
   useEffect(() => {
     setTree(getFilteredTree());
   }, [filters, getFilteredTree]);
 
   useEffect(() => {
-    fetchNavigation(isDetailSearch());
-  }, [fetchNavigation, isDetailSearch, authenticated]);
+    if (!hasInitiallyFetched) {
+      fetchNavigation(isDetailSearch());
+
+      setHasInitiallyFetched(true);
+    }
+  }, [fetchNavigation, isDetailSearch, hasInitiallyFetched]);
 
   const onNodeMouseClick = useCallback((event, newTree) => {
     setTree(newTree);
