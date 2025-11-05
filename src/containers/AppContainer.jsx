@@ -1,20 +1,19 @@
-import React, { useEffect, useMemo } from 'react';
+import { CookieBanner, CookieConsentContextProvider, LoginProvider, SessionEndedHandler } from 'hds-react';
 import PropTypes from 'prop-types';
+import React, { useEffect, useMemo } from 'react';
 import { Provider, useDispatch } from 'react-redux';
-import { createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom';
 import ReduxToastr from 'react-redux-toastr';
-import { LoginProvider, SessionEndedHandler } from 'hds-react';
+import { createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom';
 
-import { retrieveUserFromSession } from '../store/reducers/user';
-import { fetchAttributeTypesThunk, fetchTemplatesThunk } from '../store/reducers/ui';
-import { providerProperties } from '../utils/oidc/constants';
-import useAuth from '../hooks/useAuth';
-import CookieConsent from '../components/CookieConsent/CookieConsent';
 import MatomoContext from '../components/Matomo/matomo-context';
 import MatomoTracker from '../components/Matomo/MatomoTracker';
 import config from '../config';
-
+import useAuth from '../hooks/useAuth';
+import useCookieConsentSettings from '../hooks/useCookieConsentSettings';
+import { fetchAttributeTypesThunk, fetchTemplatesThunk } from '../store/reducers/ui';
+import { retrieveUserFromSession } from '../store/reducers/user';
 import '../styles/core.scss';
+import { providerProperties } from '../utils/oidc/constants';
 
 const App = ({ router }) => {
   const { authenticated, user, getApiToken } = useAuth();
@@ -41,7 +40,7 @@ const App = ({ router }) => {
 
   return (
     <div style={{ height: '100%' }}>
-      <CookieConsent />
+      <CookieBanner />
       <SessionEndedHandler
         content={{
           title: 'Istunto on vanhentunut!',
@@ -83,16 +82,20 @@ const AppContainer = ({ routes, store }) => {
 
   const router = createBrowserRouter(createRoutesFromElements(routes), { basename: '/' });
 
+  const cookieConsentProps = useCookieConsentSettings();
+
   return (
-    <LoginProvider {...providerProperties}>
-      <Provider store={store}>
-        <MatomoContext.Provider value={matomoTracker}>
-          <React.StrictMode>
-            <App router={router} />
-          </React.StrictMode>
-        </MatomoContext.Provider>
-      </Provider>
-    </LoginProvider>
+    <CookieConsentContextProvider {...cookieConsentProps}>
+      <LoginProvider {...providerProperties}>
+        <Provider store={store}>
+          <MatomoContext.Provider value={matomoTracker}>
+            <React.StrictMode>
+              <App router={router} />
+            </React.StrictMode>
+          </MatomoContext.Provider>
+        </Provider>
+      </LoginProvider>
+    </CookieConsentContextProvider>
   );
 };
 
