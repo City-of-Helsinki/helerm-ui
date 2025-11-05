@@ -13,15 +13,15 @@ const useCookieConsentSettings = () => {
     onChange: (changeEvent) => {
       const { acceptedGroups } = changeEvent;
 
-      const hasStatisticsConsent = acceptedGroups.indexOf(COOKIE_CONSENT_GROUP.Statistics) > -1;
+      const hasStatisticsConsent = acceptedGroups.includes(COOKIE_CONSENT_GROUP.Statistics);
 
       if (hasStatisticsConsent) {
         //  start tracking
-        window._paq.push(['setConsentGiven']);
-        window._paq.push(['setCookieConsentGiven']);
+        globalThis._paq.push(['setConsentGiven']);
+        globalThis._paq.push(['setCookieConsentGiven']);
       } else {
         // tell matomo to forget conset
-        window._paq.push(['forgetConsentGiven']);
+        globalThis._paq.push(['forgetConsentGiven']);
       }
     },
     siteSettings: siteSettings,

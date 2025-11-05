@@ -27,9 +27,9 @@ class MatomoTracker {
       return;
     }
 
-    window._paq = window._paq || [];
+    globalThis._paq = globalThis._paq || [];
 
-    if (window._paq.length !== 0) {
+    if (globalThis._paq.length !== 0) {
       return;
     }
 
@@ -72,7 +72,7 @@ class MatomoTracker {
 
   pushInstruction(name, ...args) {
     if (typeof window !== 'undefined') {
-      window._paq.push([name, ...args]);
+      globalThis._paq.push([name, ...args]);
     }
 
     return this;
