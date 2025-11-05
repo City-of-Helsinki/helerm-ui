@@ -538,7 +538,7 @@ describe('<Action />', () => {
         cleanup: () => {
           window.scrollTo = scrollMocks.originalScrollTo;
           vi.clearAllMocks();
-        }
+        },
       };
       window.scrollTo = scrollMocks.windowScrollTo;
     };
@@ -546,12 +546,12 @@ describe('<Action />', () => {
     const mockDOMProperties = (hasOffsetParent = true) => {
       Object.defineProperty(HTMLElement.prototype, 'offsetTop', {
         configurable: true,
-        get: () => 100
+        get: () => 100,
       });
-      
+
       Object.defineProperty(HTMLElement.prototype, 'offsetParent', {
         configurable: true,
-        get: () => hasOffsetParent ? { offsetTop: 50 } : null
+        get: () => (hasOffsetParent ? { offsetTop: 50 } : null),
       });
     };
 
@@ -560,7 +560,7 @@ describe('<Action />', () => {
       renderWithProviders(
         <DndProvider backend={HTML5Backend}>
           <Action {...mockProps} {...props} ref={actionRef} />
-        </DndProvider>
+        </DndProvider>,
       );
       return actionRef;
     };
@@ -576,32 +576,32 @@ describe('<Action />', () => {
 
     it('should expose scrollToAction method via ref', () => {
       const actionRef = renderActionWithRef();
-      
+
       expect(actionRef.current).toBeDefined();
       expect(typeof actionRef.current.scrollToAction).toBe('function');
     });
 
     it('should expose scrollToRecord method via ref', () => {
       const actionRef = renderActionWithRef();
-      
+
       expect(actionRef.current).toBeDefined();
       expect(typeof actionRef.current.scrollToRecord).toBe('function');
     });
 
     it('should call window.scrollTo when scrollToAction is called', () => {
       const actionRef = renderActionWithRef();
-      
+
       actionRef.current.scrollToAction();
-      
+
       expect(scrollMocks.windowScrollTo).toHaveBeenCalledTimes(1);
       expect(scrollMocks.windowScrollTo).toHaveBeenCalledWith(0, expect.any(Number));
     });
 
     it('should calculate correct scroll coordinates for scrollToAction', () => {
       const actionRef = renderActionWithRef();
-      
+
       actionRef.current.scrollToAction();
-      
+
       // Should calculate: parentOffset (50) + elementTop (100) = 150
       expect(scrollMocks.windowScrollTo).toHaveBeenCalledWith(0, 150);
     });
@@ -609,30 +609,30 @@ describe('<Action />', () => {
     it('should handle missing offsetParent gracefully in scrollToAction', () => {
       mockDOMProperties(false); // No offsetParent
       const actionRef = renderActionWithRef();
-      
+
       actionRef.current.scrollToAction();
-      
+
       // Should use 0 as offsetParent: 0 + 100 = 100
       expect(scrollMocks.windowScrollTo).toHaveBeenCalledWith(0, 100);
     });
 
     it('should handle scrollToRecord when record ref does not exist', () => {
       const actionRef = renderActionWithRef();
-      
+
       // Call scrollToRecord with non-existent record ID
       actionRef.current.scrollToRecord('non-existent-record');
-      
+
       // Should not throw error and not call window.scrollTo
       expect(scrollMocks.windowScrollTo).not.toHaveBeenCalled();
     });
 
     it('should handle scroll methods when element ref is not available', () => {
       const actionRef = renderActionWithRef({ records: {} });
-      
+
       // Mock the element ref to be null to simulate unavailable DOM element
       const originalScrollToAction = actionRef.current.scrollToAction;
       const mockElement = { current: null };
-      
+
       // Override the scrollToAction method to use our mocked null element
       actionRef.current.scrollToAction = () => {
         if (mockElement?.current) {
@@ -640,11 +640,11 @@ describe('<Action />', () => {
           window.scrollTo(0, parentOffset + mockElement.current.offsetTop);
         }
       };
-      
+
       // Calling scrollToAction should not throw error and not call window.scrollTo
       expect(() => actionRef.current.scrollToAction()).not.toThrow();
       expect(scrollMocks.windowScrollTo).not.toHaveBeenCalled();
-      
+
       // Restore original method
       actionRef.current.scrollToAction = originalScrollToAction;
     });

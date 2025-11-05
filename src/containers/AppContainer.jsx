@@ -1,6 +1,6 @@
 import { CookieBanner, CookieConsentContextProvider, LoginProvider, SessionEndedHandler } from 'hds-react';
 import PropTypes from 'prop-types';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Provider, useDispatch } from 'react-redux';
 import ReduxToastr from 'react-redux-toastr';
 import { createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom';
@@ -16,27 +16,32 @@ import '../styles/core.scss';
 import { providerProperties } from '../utils/oidc/constants';
 
 const App = ({ router }) => {
-  const { authenticated, user, getApiToken } = useAuth();
+  const [initialDataFetched, setInitialDataFetched] = useState(false);
+  const [userDataFetched, setUserDataFetched] = useState(false);
+
   const dispatch = useDispatch();
+  const { authenticated, user, getApiToken } = useAuth();
 
-  // Extract userId to prevent unnecessary effect runs
   const userId = authenticated && user?.profile?.sub;
-
   const apiToken = getApiToken();
 
   useEffect(() => {
-    async function fetchData() {
-      // These are public API endpoints that don't require authentication
+    if (!initialDataFetched) {
       dispatch(fetchAttributeTypesThunk());
       dispatch(fetchTemplatesThunk());
 
-      if (authenticated && userId && apiToken) {
-        dispatch(retrieveUserFromSession({ id: userId, token: apiToken }));
-      }
+      setInitialDataFetched(true);
     }
+  }, [dispatch, initialDataFetched]);
 
-    fetchData();
-  }, [authenticated, userId, dispatch, apiToken]);
+  useEffect(() => {
+    if (authenticated && userId && apiToken && !userDataFetched) {
+      dispatch(retrieveUserFromSession({ id: userId, token: apiToken }));
+      setUserDataFetched(true);
+    } else if (!authenticated && userDataFetched) {
+      setUserDataFetched(false);
+    }
+  }, [authenticated, userId, dispatch, apiToken, userDataFetched]);
 
   return (
     <div style={{ height: '100%' }}>

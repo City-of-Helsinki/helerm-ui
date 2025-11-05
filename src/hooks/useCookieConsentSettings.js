@@ -6,15 +6,14 @@ export const COOKIE_CONSENT_GROUP = {
   Tunnistamo: 'tunnistamo',
   Shared: 'shared',
   Statistics: 'statistics',
-}
+};
 
 const useCookieConsentSettings = () => {
   const cookieConsentProps = {
     onChange: (changeEvent) => {
       const { acceptedGroups } = changeEvent;
 
-      const hasStatisticsConsent =
-        acceptedGroups.indexOf(COOKIE_CONSENT_GROUP.Statistics) > -1;
+      const hasStatisticsConsent = acceptedGroups.indexOf(COOKIE_CONSENT_GROUP.Statistics) > -1;
 
       if (hasStatisticsConsent) {
         //  start tracking
