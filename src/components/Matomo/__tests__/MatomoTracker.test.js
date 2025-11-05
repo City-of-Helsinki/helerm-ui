@@ -9,10 +9,10 @@ const MOCK_TRACKER_URL = 'https://www.test.fi/matomo.php';
 
 describe('MatomoTracker', () => {
   beforeEach(() => {
-    window._paq = [];
+    globalThis._paq = [];
   });
 
-  it('should initialise window._paq', () => {
+  it('should initialise globalThis._paq', () => {
     new MatomoTracker({
       urlBase: MOCK_URL_BASE,
       siteId: 'test123',
@@ -25,7 +25,7 @@ describe('MatomoTracker', () => {
       },
     });
 
-    expect(window._paq).toEqual([
+    expect(globalThis._paq).toEqual([
       ['setTrackerUrl', MOCK_TRACKER_URL],
       ['setSiteId', 'test123'],
       ['foo', 'bar'],
@@ -59,7 +59,7 @@ describe('MatomoTracker', () => {
 
     tracker.trackPageView();
 
-    expect(window._paq).toEqual([
+    expect(globalThis._paq).toEqual([
       ['setTrackerUrl', MOCK_TRACKER_URL],
       ['setSiteId', 'test123'],
       ['enableLinkTracking', true],
@@ -84,7 +84,7 @@ describe('MatomoTracker', () => {
       href: 'https://www.test.fi/custom-event',
     });
 
-    expect(window._paq).toEqual([
+    expect(globalThis._paq).toEqual([
       ['setTrackerUrl', MOCK_TRACKER_URL],
       ['setSiteId', 'test123'],
       ['enableLinkTracking', true],

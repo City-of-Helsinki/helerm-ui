@@ -1,13 +1,14 @@
 import { expect, test } from '@playwright/test';
 
-import { acceptCookieConcent } from '../utils.js';
+import { acceptCookieConsent } from '../utils.js';
 
 test.describe('Search page', () => {
   let page;
 
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
-    await acceptCookieConcent(page);
+    await page.goto('/');
+    await acceptCookieConsent(page);
   });
 
   // Haku / Sisältöhaku
@@ -23,12 +24,15 @@ test.describe('Search page', () => {
     await page.getByRole('button', { name: 'Hae' }).click();
     await expect(page.getByText('Lisätietoja: Ajoneuvon')).toBeVisible();
     await expect(page.getByText('Hakutulokset (1)')).toBeVisible();
-    await page.locator('div').filter({ hasText: /^Vie hakutulokset Exceliin \(1\)$/ }).nth(3).click();
+    await page
+      .locator('div')
+      .filter({ hasText: /^Vie hakutulokset Exceliin \(1\)$/ })
+      .nth(3)
+      .click();
     const downloadPromise = page.waitForEvent('download');
     await page.getByText('Yhdelle välilehdelle', { exact: true }).click();
-    const download = await downloadPromise;
+    await downloadPromise;
   });
-
 
   test.afterAll(async () => {
     await page.close();
