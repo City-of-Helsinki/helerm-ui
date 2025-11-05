@@ -1,27 +1,27 @@
-import React, { Suspense, useEffect } from 'react';
+import { useGroupConsent } from 'hds-react';
 import PropTypes from 'prop-types';
+import { Suspense, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useCookies } from 'hds-react';
 
 import Header from '../../components/Header';
 import Loader from '../../components/Loader';
 import useMatomo from '../../components/Matomo/hooks/useMatomo';
-
+import { COOKIE_CONSENT_GROUP } from '../../hooks/useCookieConsentSettings';
 import '../CoreLayout/CoreLayout.scss';
 
 const InfoLayout = ({ children }) => {
   const location = useLocation();
-  const { getAllConsents } = useCookies();
+  const statisticsConsent = useGroupConsent(COOKIE_CONSENT_GROUP.Statistics);
   const { trackPageView } = useMatomo();
 
   useEffect(() => {
-    if (getAllConsents().matomo) {
+    if (statisticsConsent) {
       trackPageView({
         href: window.location.href,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getAllConsents, location.pathname, location.search]);
+  }, [statisticsConsent, location.pathname, location.search]);
 
   return (
     <div className='core-layout__viewport'>

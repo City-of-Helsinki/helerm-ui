@@ -218,3 +218,5 @@ export const DROPDOWN_ITEMS = [
     action: undefined,
   },
 ];
+
+export const PAGE_HEADER_ID = 'main';

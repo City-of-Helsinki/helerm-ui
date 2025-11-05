@@ -1,12 +1,13 @@
+import { CookieSettingsPage } from 'hds-react';
 import React from 'react';
-import { Route, Navigate } from 'react-router-dom';
+import { Navigate, Route } from 'react-router-dom';
 
+import NotFound from './components/NotFound/NotFound';
+import RouterSyncLayout from './components/RouterSyncLayout/RouterSyncLayout';
 import CoreLayout from './layouts/CoreLayout/CoreLayout';
 import InfoLayout from './layouts/InfoLayout/InfoLayout';
-import LoginCallback from './views/LoginCallback/LoginCallback';
-import NotFound from './components/NotFound/NotFound';
 import ErrorPage from './views/ErrorPage/ErrorPage';
-import RouterSyncLayout from './components/RouterSyncLayout/RouterSyncLayout';
+import LoginCallback from './views/LoginCallback/LoginCallback';
 
 const ViewInfo = React.lazy(() => import('./views/ViewInfo/ViewInfo'));
 const BulkListView = React.lazy(() => import('./views/Bulk/BulkListView'));
@@ -17,7 +18,6 @@ const ViewTOS = React.lazy(() => import('./views/Tos/ViewTos/ViewTos'));
 const PrintTOS = React.lazy(() => import('./views/Tos/Print/PrintView'));
 const ViewClassification = React.lazy(() => import('./views/ViewClassification/ViewClassification'));
 const ClassificationTree = React.lazy(() => import('./views/ClassificationTree/ClassificationTree'));
-const CookieManagement = React.lazy(() => import('./views/CookieManagement/CookieManagement'));
 const AccessibilityStatement = React.lazy(() => import('./views/AccessibilityStatement/AccessibilityStatement'));
 
 const RoutesComponent = () => (
@@ -176,7 +176,7 @@ const RoutesComponent = () => (
       path='/cookies'
       element={
         <InfoLayout>
-          <CookieManagement />
+          <CookieSettingsPage />
         </InfoLayout>
       }
       errorElement={<Navigate to='/error' />}

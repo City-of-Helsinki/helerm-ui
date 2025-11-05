@@ -1,0 +1,180 @@
+{
+  "languages": [
+    {
+      "code": "fi",
+      "name": "Finnish",
+      "direction": "ltr"
+    }
+  ],
+  "siteName": "Tiedonohjaus",
+  "cookieName": "helfi-cookie-consents",
+  "monitorInterval": 0,
+  "fallbackLanguage": "fi",
+  "requiredGroups": [
+    {
+      "groupId": "tunnistamo",
+      "title": {
+        "fi": "Kirjautuminen"
+      },
+      "description": {
+        "fi": "Kirjautumisevästeitä käytetään käyttäjän kirjautuessa palveluun."
+      },
+      "cookies": [
+        {
+          "name": "sso-sessionid",
+          "host": "api.hel.fi",
+          "storageType": 1,
+          "description": {
+            "fi": "Tunnistautumisistunnon säilymiseksi vaadittu eväste."
+          },
+          "expiration": {
+            "fi": "Istunto"
+          }
+        }
+      ]
+    },
+    {
+      "groupId": "shared",
+      "title": {
+        "fi": "Yhteiset evästeet"
+      },
+      "description": {
+        "fi": "Helsingin kaupungin palvelut käyttävät yhteisiä evästeitä. Tallennamme nämä suostumukset, jottei sinun tarvitse hyväksyä samoja evästeitä uudelleen kaupungin muissa palveluissa."
+      },
+      "cookies": [
+        {
+          "name": "helfi-cookie-consents",
+          "host": "https://tiedonohjaus.hel.fi/",
+          "storageType": 1,
+          "description": {
+            "fi": "Sivusto käyttää tätä evästettä tietojen tallentamiseen siitä, ovatko kävijät antaneet hyväksyntänsä tai kieltäytyneet evästeiden käytöstä."
+          },
+          "expiration": {
+            "fi": "1 vuosi"
+          }
+        },
+        {
+          "name": "helfi-consent-version",
+          "host": "https://tiedonohjaus.hel.fi/",
+          "storageType": 1,
+          "description": {
+            "fi": "Tähän evästeeseen tallennetaan käyttäjän hyväksymän evästeselosteen versio."
+          },
+          "expiration": {
+            "fi": "1 vuosi"
+          }
+        }
+      ]
+    }
+  ],
+  "optionalGroups": [
+    {
+      "groupId": "statistics",
+      "title": {
+        "fi": "Tilastointi"
+      },
+      "description": {
+        "fi": "Tilastointievästeiden keräämää tietoa käytetään verkkosivuston kehittämiseen."
+      },
+      "cookies": [
+        {
+          "name": "_pk_id.*",
+          "host": "https://tiedonohjaus.hel.fi/",
+          "storageType": 1,
+          "description": {
+            "fi": "Eväste kerää tietoa kävijän liikkeistä sivustolla."
+          },
+          "expiration": {
+            "fi": "393 päivää"
+          }
+        },
+        {
+          "name": "_pk_ses*",
+          "host": "https://tiedonohjaus.hel.fi/",
+          "description": {
+            "fi": "Eväste kerää tietoa kävijän liikkeistä sivustolla."
+          },
+          "expiration": {
+            "fi": "30 minuuttia"
+          },
+          "storageType": 1
+        }
+      ]
+    }
+  ],
+  "translations": {
+    "bannerAriaLabel": {
+      "fi": "Evästeasetukset"
+    },
+    "heading": {
+      "fi": "{{siteName}} käyttää evästeitä"
+    },
+    "description": {
+      "fi": "Tämä sivusto käyttää välttämättömiä evästeitä sivun perustoimintojen ja suorituskyvyn varmistamiseksi. Lisäksi käytämme kohdennusevästeitä käyttäjäkokemuksen parantamiseksi, analytiikkaan ja yksilöidyn sisällön näyttämiseen."
+    },
+    "showDetails": {
+      "fi": "Näytä yksityiskohdat"
+    },
+    "hideDetails": {
+      "fi": "Piilota yksityiskohdat"
+    },
+    "formHeading": {
+      "fi": "Tietoa sivustolla käytetyistä evästeistä"
+    },
+    "formText": {
+      "fi": "Sivustolla käytetyt evästeet on luokiteltu käyttötarkoituksen mukaan. Alla voit lukea eri luokista ja sallia tai kieltää evästeiden käytön."
+    },
+    "highlightedGroup": {
+      "fi": "Sinun on hyväksyttävä tämä kategoria, jotta voit näyttää valitsemasi sisällön."
+    },
+    "highlightedGroupAria": {
+      "fi": "Hyvä tietää kategorialle: {{title}}"
+    },
+    "showCookieSettings": {
+      "fi": "Näytä evästeasetukset"
+    },
+    "hideCookieSettings": {
+      "fi": "Piilota evästeasetukset"
+    },
+    "acceptedAt": {
+      "fi": "Olet hyväksynyt tämän kategorian: {{date}} klo {{time}}."
+    },
+    "tableHeadingsName": {
+      "fi": "Nimi"
+    },
+    "tableHeadingsHostName": {
+      "fi": "Evästeen asettaja"
+    },
+    "tableHeadingsDescription": {
+      "fi": "Käyttötarkoitus"
+    },
+    "tableHeadingsExpiration": {
+      "fi": "Voimassaoloaika"
+    },
+    "tableHeadingsType": {
+      "fi": "Tyyppi"
+    },
+    "approveAllConsents": {
+      "fi": "Hyväksy kaikki evästeet"
+    },
+    "approveRequiredAndSelectedConsents": {
+      "fi": "Hyväksy valitut evästeet"
+    },
+    "approveOnlyRequiredConsents": {
+      "fi": "Hyväksy vain välttämättömät evästeet"
+    },
+    "settingsSaved": {
+      "fi": "Asetukset tallennettu!"
+    },
+    "notificationAriaLabel": {
+      "fi": "Ilmoitus"
+    },
+    "storageType1": {
+      "fi": "Eväste"
+    },
+    "storageType2": "localStorage",
+    "storageType3": "sessionStorage",
+    "storageType4": "IndexedDB",
+    "storageType5": "Cache Storage"
+  }
+}
