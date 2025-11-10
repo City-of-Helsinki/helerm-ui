@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.6.7](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.6...helerm-ui-v1.6.7) (2025-11-10)
+
+
+### Bug Fixes
+
+* Refresh token should not reset app data Ref: TIED-224 ([6cc92c4](https://github.com/City-of-Helsinki/helerm-ui/commit/6cc92c418aa655928aac061bb4dd7579fcb76d16))
+* Reimplemented the scrollTo functionalities ([#612](https://github.com/City-of-Helsinki/helerm-ui/issues/612)) ([a28f4f4](https://github.com/City-of-Helsinki/helerm-ui/commit/a28f4f484a02eb5645bf160815f3f8121d5f84da))
+
+
+### Dependencies
+
+* Upgrade hds to 4.8.0 Ref: TIED-209 ([15d6436](https://github.com/City-of-Helsinki/helerm-ui/commit/15d643651dd67a1fb364422115dc8525afcd1173))
+
 ## [1.6.6](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.5...helerm-ui-v1.6.6) (2025-10-31)
 
 
