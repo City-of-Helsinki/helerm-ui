@@ -22,19 +22,6 @@ import { itemById } from '../../utils/helpers';
 import InfinityMenu from '../InfinityMenu/InfinityMenu';
 import './Navigation.scss';
 
-const getValueForItemWithAttributePath = (item, path) => {
-  if (!path.length) return item;
-
-  const [current, ...rest] = path;
-
-  if (current === undefined) return item;
-
-  if (item === null || item === undefined) return undefined;
-
-  const next = item[current];
-  return getValueForItemWithAttributePath(next, rest);
-};
-
 const SEARCH_TIMEOUT = 500;
 
 const Navigation = ({ onLeafMouseClick: customOnLeafMouseClick } = {}) => {
@@ -89,94 +76,45 @@ const Navigation = ({ onLeafMouseClick: customOnLeafMouseClick } = {}) => {
 
     const itemsCopy = (item) => JSON.parse(JSON.stringify(item));
 
-    const getItemFilters = (item, currentPath, nextPath) => {
-      if (Array.isArray(item[currentPath])) {
-        return item[currentPath].flatMap((arrayItem, i) => {
-          if (nextPath) {
-            const filters = getItemFilters(arrayItem, nextPath.split('.')[0], nextPath.split('.').slice(1).join('.'));
-            // eslint-disable-next-line sonarjs/no-nested-functions
-            return filters.map((path) => `${currentPath}.${i}.${path}`);
-          } else {
-            return `${currentPath}.${i}`;
-          }
-        });
-      } else if (item[currentPath] && nextPath) {
-        const filters = getItemFilters(
-          item[currentPath],
-          nextPath.split('.')[0],
-          nextPath.split('.').slice(1).join('.'),
-        );
-        return filters.map((path) => `${currentPath}.${path}`);
-      } else {
-        return [currentPath];
-      }
+    const getValueByPath = (obj, path) => {
+      return path.split('.').reduce((current, key) => {
+        if (current === null || current === undefined) return undefined;
+        return current[key];
+      }, obj);
     };
 
-    // returns item filter paths e.g.
-    // [
-    //   ['phases', 0, 'actions', 0, 'records', 0, 'attributes', 'RetentionPeriod'],
-    //   ['phases', 1, 'actions', 0, 'records', 0, 'attributes', 'RetentionPeriod']
-    // ]
-    const getItemFilterPaths = (path, item) =>
-      path.split('.').reduce((currentFilters, currentPath) => {
-        if (!currentFilters.length) {
-          return getItemFilters(item, currentPath, path.split('.').slice(1).join('.'));
-        }
-
-        return (
-          currentFilters
-            // eslint-disable-next-line sonarjs/no-nested-functions
-            .map((filterPath) =>
-              getItemFilters(
-                getValueForItemWithAttributePath(item, filterPath.split('.')),
-                currentPath,
-                path
-                  .split('.')
-                  .slice(path.split('.').indexOf(currentPath) + 1)
-                  .join('.'),
-              ).map((newPath) => `${filterPath}.${newPath}`),
-            )
-            // eslint-disable-next-line sonarjs/no-nested-functions
-            .reduce((a, b) => a.concat(b), [])
-        );
-      }, []);
-
-    const filterFunction = (item) => {
-      const matchesFilters = Object.keys(filters)
-        .map((key) => {
-          const currentFilter = filters[key].values;
-          const paths = filters[key].path;
-
-          if (!currentFilter || currentFilter.length === 0) {
-            return true;
-          }
-
-          if (paths?.length) {
-            // eslint-disable-next-line sonarjs/no-nested-functions
-            return paths.some((path) => {
-              const itemPaths = getItemFilterPaths(path, item);
-
-              return itemPaths.some((itemPath) => {
-                const value = getValueForItemWithAttributePath(item, itemPath.split('.'));
-
-                if (value !== undefined && value !== null) {
-                  return currentFilter.includes(value.toString());
-                }
-
-                return false;
-              });
-            });
-          }
-
-          return true;
-        })
-        .every(Boolean);
-
-      if (item.children) {
-        item.children = item.children.filter(filterFunction);
+    const matchesFilter = (item, filterKey, filterValues, filterPaths) => {
+      if (!filterValues || filterValues.length === 0) {
+        return true;
       }
 
-      return matchesFilters || (item.children && item.children.length > 0);
+      // Handle direct property access (like function_state)
+      if (filterPaths.length === 1 && !filterPaths[0].includes('.')) {
+        const value = item[filterPaths[0]];
+        return value !== undefined && value !== null && filterValues.includes(value.toString());
+      }
+
+      // Handle nested paths for complex attributes
+      return filterPaths.some((path) => {
+        const value = getValueByPath(item, path);
+        return value !== undefined && value !== null && filterValues.includes(value.toString());
+      });
+    };
+
+    const filterFunction = (item) => {
+      const clonedItem = itemsCopy(item);
+
+      const matchesFilters = Object.entries(filters).every(([filterKey, filterConfig]) => {
+        return matchesFilter(clonedItem, filterKey, filterConfig.values, filterConfig.path);
+      });
+
+      // Recursively filter children
+      if (clonedItem.children) {
+        clonedItem.children = clonedItem.children.map(filterFunction).filter((child) => child !== null);
+      }
+
+      // Return item if it matches filters OR has matching children
+      return matchesFilters || (clonedItem.children && clonedItem.children.length > 0) ? clonedItem : null;
     };
 
     const setAllOpen = (item) => {
@@ -190,7 +128,10 @@ const Navigation = ({ onLeafMouseClick: customOnLeafMouseClick } = {}) => {
       return item;
     };
 
-    return items.map(itemsCopy).filter(filterFunction).map(setAllOpen);
+    return items
+      .map(filterFunction)
+      .filter((item) => item !== null)
+      .map(setAllOpen);
   }, [hasFilters, items, filters]);
   const handleFilterChange = useCallback((filterValues, filterName) => {
     const mappedValues = filterValues.map(({ value }) => value);
