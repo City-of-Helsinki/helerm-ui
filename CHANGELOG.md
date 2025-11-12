@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.6.8](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.7...helerm-ui-v1.6.8) (2025-11-12)
+
+
+### Bug Fixes
+
+* Status filtering broken Ref: TIED-231 ([72d3cf7](https://github.com/City-of-Helsinki/helerm-ui/commit/72d3cf79b5c82b035e0e2dd432e0ce110b649bf5))
+
+
+### Dependencies
+
+* Upgrade hds to 4.8.1 ([9f49041](https://github.com/City-of-Helsinki/helerm-ui/commit/9f49041720d9b51203407e04d215f97886d874cd))
+
 ## [1.6.7](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.6...helerm-ui-v1.6.7) (2025-11-10)
 
 
