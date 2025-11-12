@@ -17,7 +17,7 @@ import {
 } from '../../store/reducers/navigation';
 import { selectedTOSSelector } from '../../store/reducers/tos-toolkit';
 import { attributeTypesSelector } from '../../store/reducers/ui';
-import { userDataSelector } from '../../store/reducers/user';
+import { loginStatusSelector, userDataSelector } from '../../store/reducers/user';
 import { itemById } from '../../utils/helpers';
 import InfinityMenu from '../InfinityMenu/InfinityMenu';
 import './Navigation.scss';
@@ -28,7 +28,7 @@ const Navigation = ({ onLeafMouseClick: customOnLeafMouseClick } = {}) => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { getApiToken } = useAuth();
+  const { getApiToken, authenticated } = useAuth();
 
   const attributeTypes = useSelector(attributeTypesSelector);
   const is_open = useSelector(isOpenSelector);
@@ -36,6 +36,7 @@ const Navigation = ({ onLeafMouseClick: customOnLeafMouseClick } = {}) => {
   const isFetching = useSelector(isFetchingSelector);
   const itemsTimestamp = useSelector(timestampSelector);
   const userData = useSelector(userDataSelector);
+  const loginStatus = useSelector(loginStatusSelector);
   const selectedTOS = useSelector(selectedTOSSelector);
   const classification = useSelector(classificationSelector);
 
@@ -149,18 +150,45 @@ const Navigation = ({ onLeafMouseClick: customOnLeafMouseClick } = {}) => {
   }, []);
 
   const [hasInitiallyFetched, setHasInitiallyFetched] = useState(false);
+  const [lastAuthState, setLastAuthState] = useState(null);
+  const [lastUserData, setLastUserData] = useState(null);
+  const [lastLoginStatus, setLastLoginStatus] = useState(null);
 
   useEffect(() => {
     setTree(getFilteredTree());
   }, [filters, getFilteredTree]);
 
+  // Effect to handle initial fetch and authentication state changes
   useEffect(() => {
-    if (!hasInitiallyFetched) {
-      fetchNavigation(isDetailSearch());
+    const currentAuthState = authenticated;
+    const currentUserDataId = userData?.id;
+    const currentLoginStatus = loginStatus;
 
+    // Check if this is the initial fetch or if auth state has changed
+    const shouldFetch =
+      !hasInitiallyFetched ||
+      lastAuthState !== currentAuthState ||
+      lastUserData !== currentUserDataId ||
+      lastLoginStatus !== currentLoginStatus;
+
+    if (shouldFetch) {
+      fetchNavigation(isDetailSearch());
       setHasInitiallyFetched(true);
+      setLastAuthState(currentAuthState);
+      setLastUserData(currentUserDataId);
+      setLastLoginStatus(currentLoginStatus);
     }
-  }, [fetchNavigation, isDetailSearch, hasInitiallyFetched]);
+  }, [
+    fetchNavigation,
+    isDetailSearch,
+    hasInitiallyFetched,
+    authenticated,
+    userData?.id,
+    loginStatus,
+    lastAuthState,
+    lastUserData,
+    lastLoginStatus,
+  ]);
 
   const onNodeMouseClick = useCallback((event, newTree) => {
     setTree(newTree);

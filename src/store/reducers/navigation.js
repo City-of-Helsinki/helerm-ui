@@ -1,8 +1,8 @@
-import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit';
 
 import config from '../../config';
-import { convertToTree, itemById } from '../../utils/helpers';
 import api from '../../utils/api';
+import { convertToTree, itemById } from '../../utils/helpers';
 
 export const getTOS = (selectedTOS, items, classification) => {
   if (selectedTOS.classification) {
