@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.9](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.8...helerm-ui-v1.6.9) (2025-11-12)
+
+
+### Bug Fixes
+
+* Refresh navigation if auth changes Ref: TIED-231 ([2cc6417](https://github.com/City-of-Helsinki/helerm-ui/commit/2cc641749fd60899b51222964882fb8ce5016153))
+
 ## [1.6.8](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.7...helerm-ui-v1.6.8) (2025-11-12)
 
 
