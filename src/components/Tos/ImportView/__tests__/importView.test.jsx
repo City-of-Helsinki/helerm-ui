@@ -1,10 +1,14 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import ImportView from '../ImportView';
 import { attributeTypes } from '../../../../utils/__mocks__/attributeHelpers';
 import { createMockPhase, createMockAction, createRecord } from '../../../../utils/__mocks__/universalHelpers';
+import * as helpers from '../../../../utils/helpers';
+
+// Spy on displayMessage
+const mockDisplayMessage = vi.spyOn(helpers, 'displayMessage');
 
 // Mock data for different levels using centralized functions
 const mockPhases = {
@@ -109,7 +113,7 @@ const defaultProps = {
   phasesOrder: ['phase-1', 'phase-2', 'phase-3'],
   actions: mockActions,
   records: mockRecords,
-  importItems: vi.fn(),
+  importItems: vi.fn().mockResolvedValue(undefined),
   toggleImportView: vi.fn(),
   showItems: vi.fn(),
   parent: 'test-parent',
@@ -121,6 +125,7 @@ const renderComponent = (props = {}) => render(<ImportView {...defaultProps} {..
 describe('<ImportView />', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockDisplayMessage.mockClear();
     // Clear any existing body classes
     document.body.className = '';
   });
@@ -305,7 +310,7 @@ describe('<ImportView />', () => {
   describe('Import Functionality', () => {
     it('calls importItems for each selected element when import button clicked', async () => {
       const user = userEvent.setup();
-      const mockImportItems = vi.fn();
+      const mockImportItems = vi.fn().mockResolvedValue(undefined);
       renderComponent({ importItems: mockImportItems });
 
       // Select multiple items
@@ -315,14 +320,18 @@ describe('<ImportView />', () => {
       // Click import button
       await user.click(screen.getByText('Tuo'));
 
-      expect(mockImportItems).toHaveBeenCalledTimes(2);
+      // Wait for async operations to complete
+      await waitFor(() => {
+        expect(mockImportItems).toHaveBeenCalledTimes(2);
+      });
+
       expect(mockImportItems).toHaveBeenCalledWith({ newItem: 'phase-1', level: 'phase', itemParent: 'test-parent' });
       expect(mockImportItems).toHaveBeenCalledWith({ newItem: 'phase-2', level: 'phase', itemParent: 'test-parent' });
     });
 
     it('calls importItems with correct object structure for different levels', async () => {
       const user = userEvent.setup();
-      const mockImportItems = vi.fn();
+      const mockImportItems = vi.fn().mockResolvedValue(undefined);
 
       // Test action level import - simplify to use existing data
       renderComponent({
@@ -336,10 +345,12 @@ describe('<ImportView />', () => {
       await user.click(actionLinks[0]);
       await user.click(screen.getByText('Tuo'));
 
-      expect(mockImportItems).toHaveBeenCalledWith({
-        newItem: 'action-1',
-        level: 'action',
-        itemParent: 'phase-parent',
+      await waitFor(() => {
+        expect(mockImportItems).toHaveBeenCalledWith({
+          newItem: 'action-1',
+          level: 'action',
+          itemParent: 'phase-parent',
+        });
       });
     });
 
@@ -351,7 +362,9 @@ describe('<ImportView />', () => {
       await user.click(screen.getByTestId('import-row-link-phase-1'));
       await user.click(screen.getByText('Tuo'));
 
-      expect(mockShowItems).toHaveBeenCalledTimes(1);
+      await waitFor(() => {
+        expect(mockShowItems).toHaveBeenCalledTimes(1);
+      });
     });
 
     it('calls toggleImportView after import', async () => {
@@ -362,20 +375,24 @@ describe('<ImportView />', () => {
       await user.click(screen.getByTestId('import-row-link-phase-1'));
       await user.click(screen.getByText('Tuo'));
 
-      expect(mockToggleImportView).toHaveBeenCalledTimes(1);
+      await waitFor(() => {
+        expect(mockToggleImportView).toHaveBeenCalledTimes(1);
+      });
     });
 
     it('handles import with no selected elements', async () => {
       const user = userEvent.setup();
-      const mockImportItems = vi.fn();
+      const mockImportItems = vi.fn().mockResolvedValue(undefined);
       const mockToggleImportView = vi.fn();
       renderComponent({ importItems: mockImportItems, toggleImportView: mockToggleImportView });
 
       // Click import without selecting anything
       await user.click(screen.getByText('Tuo'));
 
-      expect(mockImportItems).not.toHaveBeenCalled();
-      expect(mockToggleImportView).toHaveBeenCalledTimes(1);
+      await waitFor(() => {
+        expect(mockImportItems).not.toHaveBeenCalled();
+        expect(mockToggleImportView).toHaveBeenCalledTimes(1);
+      });
     });
 
     it('calls toggleImportView when cancel button is clicked', async () => {
@@ -391,7 +408,12 @@ describe('<ImportView />', () => {
     it('maintains function call order during import process', async () => {
       const user = userEvent.setup();
       const calls = [];
-      const mockImportItems = vi.fn().mockImplementation(() => calls.push('importItems'));
+      const mockImportItems = vi
+        .fn()
+        .mockImplementation(() => {
+          calls.push('importItems');
+          return Promise.resolve();
+        });
       const mockShowItems = vi.fn().mockImplementation(() => calls.push('showItems'));
       const mockToggleImportView = vi.fn().mockImplementation(() => calls.push('toggleImportView'));
 
@@ -403,6 +425,11 @@ describe('<ImportView />', () => {
 
       await user.click(screen.getByTestId('import-row-link-phase-1'));
       await user.click(screen.getByText('Tuo'));
+
+      // Wait for async operations to complete
+      await waitFor(() => {
+        expect(calls.length).toBe(3);
+      });
 
       // Verify the correct order: importItems -> showItems -> toggleImportView
       expect(calls).toEqual(['importItems', 'showItems', 'toggleImportView']);
@@ -417,8 +444,50 @@ describe('<ImportView />', () => {
       await user.click(screen.getByTestId('import-row-link-phase-1'));
       await user.click(screen.getByText('Tuo'));
 
-      // Should not crash
-      expect(screen.getByTestId('import-view')).toBeInTheDocument();
+      // Wait for async operations to complete
+      await waitFor(() => {
+        // Should not crash
+        expect(screen.getByTestId('import-view')).toBeInTheDocument();
+      });
+    });
+
+    it('handles import errors gracefully and continues with next import', async () => {
+      const user = userEvent.setup();
+      mockDisplayMessage.mockClear();
+
+      // Make first import fail, second succeed
+      const mockImportItems = vi
+        .fn()
+        .mockImplementationOnce(() => {
+          return Promise.reject(new Error('Import failed'));
+        })
+        .mockResolvedValueOnce(undefined);
+
+      renderComponent({ importItems: mockImportItems });
+
+      await user.click(screen.getByTestId('import-row-link-phase-1'));
+      await user.click(screen.getByTestId('import-row-link-phase-2'));
+      await user.click(screen.getByText('Tuo'));
+
+      // Wait for both imports to be attempted
+      await waitFor(() => {
+        expect(mockImportItems).toHaveBeenCalledTimes(2);
+      });
+
+      // Wait a bit for the error handling to complete (async catch block)
+      await waitFor(() => {
+        expect(mockDisplayMessage).toHaveBeenCalled();
+      }, { timeout: 1000 });
+
+      // Check the call arguments - verify it was called with correct structure
+      expect(mockDisplayMessage).toHaveBeenCalledTimes(1);
+      const callArgs = mockDisplayMessage.mock.calls[0];
+      expect(callArgs[0]).toMatchObject({
+        title: 'Virhe',
+      });
+      expect(callArgs[0].body).toContain('Tuonti epäonnistui');
+      expect(callArgs[0].body).toContain('phase-1');
+      expect(callArgs[1]).toMatchObject({ type: 'error' });
     });
 
     it('handles empty data structures gracefully', () => {
@@ -499,16 +568,18 @@ describe('<ImportView />', () => {
 
     it('handles missing parent prop for import', async () => {
       const user = userEvent.setup();
-      const mockImportItems = vi.fn();
+      const mockImportItems = vi.fn().mockResolvedValue(undefined);
       renderComponent({ importItems: mockImportItems, parent: undefined });
 
       await user.click(screen.getByTestId('import-row-link-phase-1'));
       await user.click(screen.getByText('Tuo'));
 
-      expect(mockImportItems).toHaveBeenCalledWith({
-        newItem: 'phase-1',
-        level: 'phase',
-        itemParent: undefined,
+      await waitFor(() => {
+        expect(mockImportItems).toHaveBeenCalledWith({
+          newItem: 'phase-1',
+          level: 'phase',
+          itemParent: undefined,
+        });
       });
     });
 
