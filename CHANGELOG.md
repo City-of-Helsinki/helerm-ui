@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.10](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.9...helerm-ui-v1.6.10) (2025-12-06)
+
+
+### Dependencies
+
+* Bump js-yaml from 4.1.0 to 4.1.1 ([#619](https://github.com/City-of-Helsinki/helerm-ui/issues/619)) ([45e985c](https://github.com/City-of-Helsinki/helerm-ui/commit/45e985c4023bc9cbb1e14a84f9fce013a4b1eeba))
+
 ## [1.6.9](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.8...helerm-ui-v1.6.9) (2025-11-12)
 
 
