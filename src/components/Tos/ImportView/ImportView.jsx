@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import './ImportView.scss';
 import _ from 'lodash';
 
+import { displayMessage } from '../../../utils/helpers';
+
 const ImportView = (props) => {
   const {
     actions,
@@ -159,11 +161,19 @@ const ImportView = (props) => {
     [phases, phasesOrder, generateLinks, generateActionItems, generateRecordItems],
   );
 
-  const handleImportItems = useCallback(() => {
+  const handleImportItems = useCallback(async () => {
     const newElements = selectedElements;
-    newElements.forEach((element) => {
-      importItems({ newItem: element, level, itemParent: parent });
-    });
+    for (const element of newElements) {
+      try {
+        await importItems({ newItem: element, level, itemParent: parent });
+      } catch {
+        // Continue with next import even if one fails (JSON stringify because element is not typed)
+        displayMessage(
+          { title: 'Virhe', body: `Tuonti epäonnistui - kohde (${JSON.stringify(element)})` },
+          { type: 'error' },
+        );
+      }
+    }
     if (typeof showItems === 'function') {
       showItems();
     }
