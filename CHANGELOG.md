@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.6.10](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.9...helerm-ui-v1.6.10) (2025-12-12)
+
+
+### Bug Fixes
+
+* Multiple document import ([#622](https://github.com/City-of-Helsinki/helerm-ui/issues/622)) ([1598192](https://github.com/City-of-Helsinki/helerm-ui/commit/15981920890ab515834ea0c261b3f030b7e64e0c))
+
+
+### Dependencies
+
+* Bump js-yaml from 4.1.0 to 4.1.1 ([#619](https://github.com/City-of-Helsinki/helerm-ui/issues/619)) ([45e985c](https://github.com/City-of-Helsinki/helerm-ui/commit/45e985c4023bc9cbb1e14a84f9fce013a4b1eeba))
+* Bump mdast-util-to-hast from 13.2.0 to 13.2.1 ([93f6617](https://github.com/City-of-Helsinki/helerm-ui/commit/93f66174b9bb26bb4f566b353a210695959383a7))
+* Upgrade react-markdown to 10.1.0 ([e7994ff](https://github.com/City-of-Helsinki/helerm-ui/commit/e7994ff40aa264629a54b447dae8e282374d3cdb))
+
 ## [1.6.9](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.8...helerm-ui-v1.6.9) (2025-11-12)
 
 
