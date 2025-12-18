@@ -16,7 +16,7 @@ import {
 } from '../../../utils/validators';
 import { VALIDATION_FILTER_ERROR, VALIDATION_FILTER_WARN } from '../../../constants';
 import { setValidationVisibility } from '../../../store/reducers/validation';
-import { uiSelector } from '../../../store/reducers/ui';
+import { attributeTypesSelector } from '../../../store/reducers/ui';
 import { selectedTOSSelector } from '../../../store/reducers/tos-toolkit/main';
 
 import './ValidationBar.scss';
@@ -27,10 +27,8 @@ const ValidationBar = (props) => {
   const { top, scrollToMetadata, scrollToType } = props;
 
   const dispatch = useDispatch();
-  const ui = useSelector(uiSelector);
+  const attributeTypes = useSelector(attributeTypesSelector);
   const selectedTOS = useSelector(selectedTOSSelector);
-
-  const { attributeTypes } = ui;
 
   const [filter, setFilter] = useState('');
 

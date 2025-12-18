@@ -44,9 +44,11 @@ import {
   termsSelector,
 } from '../../store/reducers/search';
 import { attributeTypesSelector } from '../../store/reducers/ui';
+import useAuth from '../../hooks/useAuth';
 
 const FacetedSearch = () => {
   const dispatch = useDispatch();
+  const { getApiToken } = useAuth();
 
   const attributeTypes = useSelector(attributeTypesSelector);
   const attributes = useSelector(filteredAttributesSelector);
@@ -73,17 +75,17 @@ const FacetedSearch = () => {
     dispatch(setNavigationVisibility(false));
 
     if (!isEmpty(attributeTypes) && !isFetching && isEmpty(items)) {
-      dispatch(fetchClassificationsThunk());
+      const token = getApiToken();
+      dispatch(fetchClassificationsThunk({ token }));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch, attributeTypes, isFetching, items, getApiToken]);
 
   useEffect(() => {
     if (!isEmpty(attributeTypes) && !isFetching && isEmpty(classifications)) {
-      dispatch(fetchClassificationsThunk());
+      const token = getApiToken();
+      dispatch(fetchClassificationsThunk({ token }));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [attributeTypes, isFetching, classifications]);
+  }, [dispatch, attributeTypes, isFetching, classifications, getApiToken]);
 
   const onToggleFacet = (type) => {
     setFacetsOpen((prevFacetsOpen) =>
@@ -110,14 +112,11 @@ const FacetedSearch = () => {
 
     if (facets) {
       const facet = find(facets, { key, value });
-      setSelectedFacets(
-        (prevSelectedFacets) => {
-          const updatedFacets = { ...prevSelectedFacets };
-
-          if (facet) {
-            updatedFacets[type] = without(facets, facet);
-          } else {
-            updatedFacets[type] = [
+      const updatedFacets = {
+        ...selectedFacets,
+        [type]: facet
+          ? without(facets, facet)
+          : [
               ...facets,
               {
                 hits,
@@ -126,15 +125,11 @@ const FacetedSearch = () => {
                 type,
                 value,
               },
-            ];
-          }
+            ],
+      };
 
-          return updatedFacets;
-        },
-        () => {
-          dispatch(filterItemsThunk(selectedFacets));
-        },
-      );
+      setSelectedFacets(updatedFacets);
+      dispatch(filterItemsThunk(updatedFacets));
     }
   };
 
@@ -168,16 +163,13 @@ const FacetedSearch = () => {
       const facet = find(facets, { key, value });
 
       if (facet) {
-        setSelectedFacets(
-          (prevSelectedFacets) => {
-            const updatedFacets = { ...prevSelectedFacets };
-            updatedFacets[type] = without(facets, facet);
-            return updatedFacets;
-          },
-          () => {
-            dispatch(filterItemsThunk(selectedFacets));
-          },
-        );
+        const updatedFacets = {
+          ...selectedFacets,
+          [type]: without(facets, facet),
+        };
+
+        setSelectedFacets(updatedFacets);
+        dispatch(filterItemsThunk(updatedFacets));
       }
     }
   };

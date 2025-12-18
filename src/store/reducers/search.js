@@ -187,7 +187,7 @@ let isFetchingClassifications = false;
 
 export const fetchClassificationsThunk = createAsyncThunk(
   'search/fetchClassifications',
-  async (page = 1, { dispatch, getState }) => {
+  async ({ page = 1, token = null } = {}, { dispatch, getState }) => {
     if (isFetchingClassifications && page == 1) {
       return { skipped: true };
     }
@@ -208,14 +208,14 @@ export const fetchClassificationsThunk = createAsyncThunk(
         include_related: true,
         page_size: pageSize,
         page,
-      });
+      }, {}, token);
 
       const json = await response.json();
 
       dispatch(receiveClassifications({ items: json.results, page }));
 
       if (json.next) {
-        return dispatch(fetchClassificationsThunk(page + 1));
+        return dispatch(fetchClassificationsThunk({ page: page + 1, token }));
       } else {
         dispatch(classificationsReady());
 
@@ -340,7 +340,7 @@ export const searchItemsThunk = createAsyncThunk(
             : [],
         records:
           type === TYPE_RECORD ||
-          (!type && isEmpty(classifications) && isEmpty(functions) && isEmpty(phases) && isEmpty(actions))
+            (!type && isEmpty(classifications) && isEmpty(functions) && isEmpty(phases) && isEmpty(actions))
             ? records
             : [],
         suggestions: [],
@@ -657,9 +657,9 @@ const searchSlice = createSlice({
             matchedName: isEmpty(terms)
               ? item.name
               : terms.reduce(
-                  (acc, term) => acc.replace(new RegExp(term, 'gi'), (match) => `<mark>${match}</mark>`),
-                  item.name || '',
-                ),
+                (acc, term) => acc.replace(new RegExp(term, 'gi'), (match) => `<mark>${match}</mark>`),
+                item.name || '',
+              ),
           };
         }
         return item;
