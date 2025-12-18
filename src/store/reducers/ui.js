@@ -225,17 +225,15 @@ const uiSlice = createSlice({
   },
 });
 
-export const {
-  uiSelector,
-  attributeTypesSelector,
-  phaseTypesSelector,
-  actionTypesSelector,
-  recordTypesSelector,
-  templatesSelector,
-  isFetchingSelector,
-  errorSelector,
-  templateByIdSelector,
-  attributeTypeByIdentifierSelector,
-} = uiSlice.selectors;
+// Root state selectors - access ui slice from root state
+export const attributeTypesSelector = (state) => state.ui.attributeTypes;
+export const phaseTypesSelector = (state) => state.ui.phaseTypes;
+export const actionTypesSelector = (state) => state.ui.actionTypes;
+export const recordTypesSelector = (state) => state.ui.recordTypes;
+export const templatesSelector = (state) => state.ui.templates;
+export const isFetchingSelector = (state) => state.ui.isFetching;
+export const errorSelector = (state) => state.ui.error;
+export const templateByIdSelector = (state, templateId) => state.ui.templates.find((template) => template.id === templateId);
+export const attributeTypeByIdentifierSelector = (state, identifier) => state.ui.attributeTypes[identifier];
 
 export default uiSlice.reducer;

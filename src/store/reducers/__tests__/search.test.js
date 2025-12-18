@@ -199,6 +199,8 @@ describe('Search reducer', () => {
           page_size: 10,
           page: 1,
         }),
+        {},
+        null,
       );
 
       const receiveAction = actions.find((action) => action.type === 'search/receiveClassifications');
@@ -239,8 +241,8 @@ describe('Search reducer', () => {
       const actions = store.getActions();
 
       expect(api.get).toHaveBeenCalledTimes(2);
-      expect(api.get).toHaveBeenNthCalledWith(1, 'classification', expect.objectContaining({ page: 1 }));
-      expect(api.get).toHaveBeenNthCalledWith(2, 'classification', expect.objectContaining({ page: 2 }));
+      expect(api.get).toHaveBeenNthCalledWith(1, 'classification', expect.objectContaining({ page: 1 }), {}, null);
+      expect(api.get).toHaveBeenNthCalledWith(2, 'classification', expect.objectContaining({ page: 2 }), {}, null);
 
       expect(actions.some((action) => action.type === 'search/requestClassifications')).toBe(true);
       expect(actions.filter((action) => action.type === 'search/receiveClassifications').length).toBe(2);
