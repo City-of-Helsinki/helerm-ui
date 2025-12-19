@@ -230,22 +230,31 @@ const handleFetchError = (page, dispatch, error, sessionId) => {
   return { error: error instanceof Error ? error.message : 'Failed to fetch classifications' };
 };
 
-const createAbortController = (page, sessionId) => {
-  if (page === 1) {
-    // New search session - abort any existing controller
-    if (currentAbortController && !currentAbortController.signal.aborted) {
-      currentAbortController.abort();
-    }
-    currentAbortController = new AbortController();
-    currentSessionId = sessionId;
-    isFetchingClassifications = false;
-    paginationCompletedSuccessfully = false;
-    activePaginationPages.clear();
-  } else if (!currentAbortController || currentAbortController.signal.aborted || currentSessionId !== sessionId) {
-    // Invalid state for pagination - should not happen
-    return false;
+const createNewAbortController = () => {
+  // Abort any existing controller
+  if (currentAbortController && !currentAbortController.signal.aborted) {
+    currentAbortController.abort();
   }
-  return true;
+  currentAbortController = new AbortController();
+};
+
+const initializeNewSession = (sessionId) => {
+  currentSessionId = sessionId;
+  isFetchingClassifications = false;
+  paginationCompletedSuccessfully = false;
+  activePaginationPages.clear();
+};
+
+const validateSessionForFetch = (page, sessionId) => {
+  if (page === 1) {
+    // New search session - always valid
+    createNewAbortController();
+    initializeNewSession(sessionId);
+    return true;
+  }
+
+  // For pagination pages, validate session state
+  return !(!currentAbortController || currentAbortController.signal.aborted || currentSessionId !== sessionId);
 };
 
 const handleSuccessfulFetch = async (json, page, token, dispatch, sessionId) => {
@@ -268,15 +277,16 @@ const handleSuccessfulFetch = async (json, page, token, dispatch, sessionId) => 
 export const fetchClassificationsThunk = createAsyncThunk(
   'search/fetchClassifications',
   async ({ page = 1, token = null, sessionId = null } = {}, { dispatch, getState }) => {
+    const isInitialPage = page === 1;
     // Generate session ID for new searches
-    const currentSession = sessionId || (page === 1 ? Date.now().toString() : currentSessionId);
+    const currentSession = sessionId || (isInitialPage ? Date.now().toString() : currentSessionId);
 
     // Prevent duplicate requests for the same page in the same session
     if (activePaginationPages.has(page) && currentSession === currentSessionId) {
       return { skipped: true, reason: 'duplicate-page' };
     }
 
-    if (!createAbortController(page, currentSession)) {
+    if (!validateSessionForFetch(page, currentSession)) {
       return { cancelled: true, reason: 'invalid-session' };
     }
 
@@ -284,7 +294,7 @@ export const fetchClassificationsThunk = createAsyncThunk(
       return { cancelled: true, reason: 'aborted' };
     }
 
-    if (isFetchingClassifications && page === 1) {
+    if (isFetchingClassifications && isInitialPage) {
       return { skipped: true, reason: 'already-fetching' };
     }
 
@@ -293,7 +303,7 @@ export const fetchClassificationsThunk = createAsyncThunk(
 
       const pageSize = config.SEARCH_PAGE_SIZE;
 
-      if (page === 1) {
+      if (isInitialPage) {
         await dispatch(updateAttributeTypesThunk(getState().ui.attributeTypes));
       }
 
