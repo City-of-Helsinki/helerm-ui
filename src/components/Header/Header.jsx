@@ -1,9 +1,8 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import config from '../../config';
 import { EDIT } from '../../constants';
-import { fetchNavigationThunk } from '../../store/reducers/navigation';
 import IsAllowed from '../IsAllowed/IsAllowed';
 import Loader from '../Loader';
 import Login from '../Login/Login';
@@ -16,8 +15,6 @@ const Header = () => {
   const feedbackUrl = config.FEEDBACK_URL;
   const themeColor = config.SITE_THEME;
 
-  const dispatch = useDispatch();
-
   const isFetching = useSelector(
     (state) => state.ui.isFetching || state.navigation.isFetching || state.selectedTOS.isFetching,
   );
@@ -25,18 +22,10 @@ const Header = () => {
   return (
     <header className='header'>
       <nav className='navbar navbar-inverse container-fluid' style={{ backgroundColor: themeColor }}>
-        <Link
-          to='/'
-          className='brand-title navbar-brand logo'
-          onClick={() => dispatch(fetchNavigationThunk({ includeRelated: false }))}
-        >
+        <Link to='/' className='brand-title navbar-brand logo'>
           <Logo />
         </Link>
-        <Link
-          to='/'
-          className='brand-title navbar-brand'
-          onClick={() => dispatch(fetchNavigationThunk({ includeRelated: false }))}
-        >
+        <Link to='/' className='brand-title navbar-brand'>
           Tiedonohjaus
         </Link>
         <span className='navbar-text'>

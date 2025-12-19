@@ -34,6 +34,7 @@ import {
   resetSuggestionsThunk,
   toggleAttribute,
   toggleShowAllAttributeOptions,
+  cancelClassificationFetch,
   classificationsSelector,
   exportItemsSelector,
   filteredAttributesSelector,
@@ -74,11 +75,11 @@ const FacetedSearch = () => {
   useEffect(() => {
     dispatch(setNavigationVisibility(false));
 
-    if (!isEmpty(attributeTypes) && !isFetching && isEmpty(items)) {
-      const token = getApiToken();
-      dispatch(fetchClassificationsThunk({ token }));
-    }
-  }, [dispatch, attributeTypes, isFetching, items, getApiToken]);
+    return () => {
+      dispatch(setNavigationVisibility(true));
+      dispatch(cancelClassificationFetch());
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     if (!isEmpty(attributeTypes) && !isFetching && isEmpty(classifications)) {

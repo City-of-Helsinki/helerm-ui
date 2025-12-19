@@ -408,12 +408,10 @@ describe('<ImportView />', () => {
     it('maintains function call order during import process', async () => {
       const user = userEvent.setup();
       const calls = [];
-      const mockImportItems = vi
-        .fn()
-        .mockImplementation(() => {
-          calls.push('importItems');
-          return Promise.resolve();
-        });
+      const mockImportItems = vi.fn().mockImplementation(() => {
+        calls.push('importItems');
+        return Promise.resolve();
+      });
       const mockShowItems = vi.fn().mockImplementation(() => calls.push('showItems'));
       const mockToggleImportView = vi.fn().mockImplementation(() => calls.push('toggleImportView'));
 
@@ -475,9 +473,12 @@ describe('<ImportView />', () => {
       });
 
       // Wait a bit for the error handling to complete (async catch block)
-      await waitFor(() => {
-        expect(mockDisplayMessage).toHaveBeenCalled();
-      }, { timeout: 1000 });
+      await waitFor(
+        () => {
+          expect(mockDisplayMessage).toHaveBeenCalled();
+        },
+        { timeout: 1000 },
+      );
 
       // Check the call arguments - verify it was called with correct structure
       expect(mockDisplayMessage).toHaveBeenCalledTimes(1);
