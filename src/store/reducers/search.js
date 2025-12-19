@@ -184,54 +184,147 @@ const parseTerms = (searchTerm) => {
 };
 
 let isFetchingClassifications = false;
+let currentAbortController = null;
+let paginationCompletedSuccessfully = false;
+let currentSessionId = null;
+let activePaginationPages = new Set();
+
+const shouldCancelFetch = (sessionId) => {
+  if (currentAbortController?.signal.aborted || (currentSessionId && currentSessionId !== sessionId)) {
+    // Clean up if this is an old session
+    if (sessionId !== currentSessionId) {
+      isFetchingClassifications = false;
+      activePaginationPages.clear();
+    }
+    return true;
+  }
+  return false;
+};
+
+const initializeFetch = (page, dispatch, sessionId) => {
+  if (page === 1) {
+    isFetchingClassifications = true;
+    currentSessionId = sessionId;
+    activePaginationPages.clear();
+    dispatch(requestClassifications());
+  }
+  activePaginationPages.add(page);
+};
+
+const finalizeFetch = (page, dispatch) => {
+  dispatch(classificationsReady());
+  isFetchingClassifications = false;
+  paginationCompletedSuccessfully = true;
+  activePaginationPages.clear();
+};
+
+const handleFetchError = (page, dispatch, error, sessionId) => {
+  // Clean up state for any error in the current session
+  if (sessionId === currentSessionId) {
+    isFetchingClassifications = false;
+    activePaginationPages.clear();
+  } else {
+    activePaginationPages.delete(page);
+  }
+  dispatch(classificationsError());
+  return { error: error instanceof Error ? error.message : 'Failed to fetch classifications' };
+};
+
+const createAbortController = (page, sessionId) => {
+  if (page === 1) {
+    // New search session - abort any existing controller
+    if (currentAbortController && !currentAbortController.signal.aborted) {
+      currentAbortController.abort();
+    }
+    currentAbortController = new AbortController();
+    currentSessionId = sessionId;
+    isFetchingClassifications = false;
+    paginationCompletedSuccessfully = false;
+    activePaginationPages.clear();
+  } else if (!currentAbortController || currentAbortController.signal.aborted || currentSessionId !== sessionId) {
+    // Invalid state for pagination - should not happen
+    return false;
+  }
+  return true;
+};
+
+const handleSuccessfulFetch = async (json, page, token, dispatch, sessionId) => {
+  dispatch(receiveClassifications({ items: json.results, page }));
+  activePaginationPages.delete(page);
+
+  // Handle pagination or completion
+  if (json.next && !currentAbortController?.signal.aborted && currentSessionId === sessionId) {
+    const nextPage = page + 1;
+    // Prevent duplicate requests for the same page
+    if (!activePaginationPages.has(nextPage)) {
+      return dispatch(fetchClassificationsThunk({ page: nextPage, token, sessionId }));
+    }
+  }
+
+  finalizeFetch(page, dispatch);
+  return { complete: true, page };
+};
 
 export const fetchClassificationsThunk = createAsyncThunk(
   'search/fetchClassifications',
-  async ({ page = 1, token = null } = {}, { dispatch, getState }) => {
-    if (isFetchingClassifications && page == 1) {
-      return { skipped: true };
+  async ({ page = 1, token = null, sessionId = null } = {}, { dispatch, getState }) => {
+    // Generate session ID for new searches
+    const currentSession = sessionId || (page === 1 ? Date.now().toString() : currentSessionId);
+
+    // Prevent duplicate requests for the same page in the same session
+    if (activePaginationPages.has(page) && currentSession === currentSessionId) {
+      return { skipped: true, reason: 'duplicate-page' };
+    }
+
+    if (!createAbortController(page, currentSession)) {
+      return { cancelled: true, reason: 'invalid-session' };
+    }
+
+    if (shouldCancelFetch(currentSession)) {
+      return { cancelled: true, reason: 'aborted' };
+    }
+
+    if (isFetchingClassifications && page === 1) {
+      return { skipped: true, reason: 'already-fetching' };
     }
 
     try {
-      if (page == 1) {
-        isFetchingClassifications = true;
-        dispatch(requestClassifications());
-      }
+      initializeFetch(page, dispatch, currentSession);
 
       const pageSize = config.SEARCH_PAGE_SIZE;
 
-      if (page == 1) {
+      if (page === 1) {
         await dispatch(updateAttributeTypesThunk(getState().ui.attributeTypes));
       }
 
-      const response = await api.get('classification', {
-        include_related: true,
-        page_size: pageSize,
-        page,
-      }, {}, token);
+      // Check cancellation before API call
+      if (shouldCancelFetch(currentSession)) {
+        return { cancelled: true, reason: 'aborted-before-api' };
+      }
+
+      const requestOptions = currentAbortController?.signal ? { signal: currentAbortController.signal } : {};
+
+      const response = await api.get(
+        'classification',
+        {
+          include_related: true,
+          page_size: pageSize,
+          page,
+        },
+        requestOptions,
+        token,
+      );
 
       const json = await response.json();
 
-      dispatch(receiveClassifications({ items: json.results, page }));
-
-      if (json.next) {
-        return dispatch(fetchClassificationsThunk({ page: page + 1, token }));
-      } else {
-        dispatch(classificationsReady());
-
-        if (page >= 1) {
-          isFetchingClassifications = false;
-        }
-
-        return { complete: true, page };
+      // Check cancellation before processing results
+      if (shouldCancelFetch(currentSession)) {
+        return { cancelled: true, reason: 'aborted-after-api' };
       }
+
+      return await handleSuccessfulFetch(json, page, token, dispatch, currentSession);
     } catch (error) {
-      if (page == 1) {
-        isFetchingClassifications = false;
-      }
-
-      dispatch(classificationsError());
-      return { error: error instanceof Error ? error.message : 'Failed to fetch classifications' };
+      return handleFetchError(page, dispatch, error, currentSession);
     }
   },
 );
@@ -340,7 +433,7 @@ export const searchItemsThunk = createAsyncThunk(
             : [],
         records:
           type === TYPE_RECORD ||
-            (!type && isEmpty(classifications) && isEmpty(functions) && isEmpty(phases) && isEmpty(actions))
+          (!type && isEmpty(classifications) && isEmpty(functions) && isEmpty(phases) && isEmpty(actions))
             ? records
             : [],
         suggestions: [],
@@ -444,6 +537,19 @@ const searchSlice = createSlice({
     },
     requestClassifications: (state) => {
       state.isFetching = true;
+    },
+    cancelClassificationFetch: (state) => {
+      // The actual cancellation is handled by aborting the module-level controller
+      // This action is kept for component interface compatibility
+      if (currentAbortController) {
+        currentAbortController.abort();
+      }
+      // Only clear data if pagination was incomplete - preserve completed results
+      if (!paginationCompletedSuccessfully) {
+        state.classifications = [];
+        state.items = [];
+      }
+      state.isFetching = false;
     },
     receiveClassifications: (state, action) => {
       const { items, page } = action.payload;
@@ -580,7 +686,10 @@ const searchSlice = createSlice({
     setAttributeTypes: (state, action) => {
       state.attributes = action.payload.attributes;
       state.metadata = action.payload.metadata;
-      state.filteredAttributes = action.payload.attributes;
+      // Only reset filteredAttributes if there are no current search results
+      if (isEmpty(state.items)) {
+        state.filteredAttributes = action.payload.attributes;
+      }
     },
     searchItemsAction: (state, action) => {
       const { classifications, functions, phases, actions, records } = state;
@@ -657,9 +766,9 @@ const searchSlice = createSlice({
             matchedName: isEmpty(terms)
               ? item.name
               : terms.reduce(
-                (acc, term) => acc.replace(new RegExp(term, 'gi'), (match) => `<mark>${match}</mark>`),
-                item.name || '',
-              ),
+                  (acc, term) => acc.replace(new RegExp(term, 'gi'), (match) => `<mark>${match}</mark>`),
+                  item.name || '',
+                ),
           };
         }
         return item;
@@ -744,6 +853,7 @@ export const {
   toggleAttribute,
   toggleAttributeOption,
   toggleShowAllAttributeOptions,
+  cancelClassificationFetch,
 } = searchSlice.actions;
 
 export const attributesSelector = (state) => state.search.attributes;

@@ -16,6 +16,7 @@ import '../styles/core.scss';
 import { providerProperties } from '../utils/oidc/constants';
 
 const App = ({ router }) => {
+  const [initialDataFetched, setInitialDataFetched] = useState(false);
   const [userDataFetched, setUserDataFetched] = useState(false);
 
   const dispatch = useDispatch();
@@ -25,24 +26,22 @@ const App = ({ router }) => {
   const apiToken = getApiToken();
 
   useEffect(() => {
-    const fetchData = async () => {
+    if (!initialDataFetched) {
       dispatch(fetchAttributeTypesThunk());
       dispatch(fetchTemplatesThunk());
 
-      if (authenticated && userId && apiToken) {
-        dispatch(retrieveUserFromSession({ id: userId, token: apiToken }));
-        setUserDataFetched(true);
-      }
-    };
-
-    fetchData();
-  }, [dispatch, authenticated, userId, apiToken]);
+      setInitialDataFetched(true);
+    }
+  }, [dispatch, initialDataFetched]);
 
   useEffect(() => {
-    if (!authenticated && userDataFetched) {
+    if (authenticated && userId && apiToken && !userDataFetched) {
+      dispatch(retrieveUserFromSession({ id: userId, token: apiToken }));
+      setUserDataFetched(true);
+    } else if (!authenticated && userDataFetched) {
       setUserDataFetched(false);
     }
-  }, [authenticated, userDataFetched]);
+  }, [authenticated, userId, dispatch, apiToken, userDataFetched]);
 
   return (
     <div style={{ height: '100%' }}>
