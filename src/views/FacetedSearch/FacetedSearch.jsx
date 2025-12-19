@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import classnames from 'classnames';
 import { filter, find, includes, isArray, isEmpty, orderBy, slice, uniq, without } from 'lodash';
@@ -72,6 +72,8 @@ const FacetedSearch = () => {
     record: [],
   });
 
+  const apiToken = useMemo(() => getApiToken(), [getApiToken]);
+
   useEffect(() => {
     dispatch(setNavigationVisibility(false));
 
@@ -83,10 +85,9 @@ const FacetedSearch = () => {
 
   useEffect(() => {
     if (!isEmpty(attributeTypes) && !isFetching && isEmpty(classifications)) {
-      const token = getApiToken();
-      dispatch(fetchClassificationsThunk({ token }));
+      dispatch(fetchClassificationsThunk({ token: apiToken }));
     }
-  }, [dispatch, attributeTypes, isFetching, classifications, getApiToken]);
+  }, [dispatch, attributeTypes, isFetching, classifications, apiToken]);
 
   const onToggleFacet = (type) => {
     setFacetsOpen((prevFacetsOpen) =>
