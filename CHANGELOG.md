@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.11](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.10...helerm-ui-v1.6.11) (2025-12-19)
+
+
+### Bug Fixes
+
+* Authenticated should see more facets Ref: TIED-226 ([ff8915e](https://github.com/City-of-Helsinki/helerm-ui/commit/ff8915e25278e702ecde0080676549e66fecbb0d))
+* Optimize pagination in FacetedSearch Ref: TIED-226 ([08186c6](https://github.com/City-of-Helsinki/helerm-ui/commit/08186c6d6dfbed534773eb0e25c2f870744bc4cc))
+
 ## [1.6.10](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.9...helerm-ui-v1.6.10) (2025-12-12)
 
 
