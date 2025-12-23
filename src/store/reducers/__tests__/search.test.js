@@ -134,6 +134,296 @@ describe('Search reducer', () => {
       expect(nextState.headers).toBeTruthy();
     });
 
+    it('should preserve UI state (open/showAll) from existing filteredAttributes when receiving classifications', () => {
+      // Set up initial state with existing filteredAttributes that have UI state
+      const existingFilteredAttributes = [
+        {
+          key: 'name',
+          name: 'Nimi',
+          type: TYPE_CLASSIFICATION,
+          open: true,
+          showAll: true,
+          options: [],
+        },
+        {
+          key: 'description',
+          name: 'Kuvaus',
+          type: TYPE_CLASSIFICATION,
+          open: false,
+          showAll: false,
+          options: [],
+        },
+        {
+          key: 'function_state',
+          name: 'Tila',
+          type: TYPE_FUNCTION,
+          open: true,
+          showAll: false,
+          options: [],
+        },
+      ];
+
+      const stateWithExistingAttributes = {
+        ...initialState,
+        attributes: [
+          { key: 'name', name: 'Nimi', type: TYPE_CLASSIFICATION, options: [] },
+          { key: 'description', name: 'Kuvaus', type: TYPE_CLASSIFICATION, options: [] },
+          { key: 'function_state', name: 'Tila', type: TYPE_FUNCTION, options: [] },
+        ],
+        filteredAttributes: existingFilteredAttributes,
+      };
+
+      const items = classification.map((item) => ({
+        ...item,
+        type: TYPE_CLASSIFICATION,
+        attributes: {
+          name: `${item.code} ${item.title}`,
+          description: item.description,
+        },
+      }));
+
+      const action = receiveClassifications({ items, page: 1 });
+      const nextState = searchReducer(stateWithExistingAttributes, action);
+
+      // Find the preserved attributes
+      const nameAttr = nextState.filteredAttributes.find((attr) => attr.key === 'name' && attr.type === TYPE_CLASSIFICATION);
+      const descriptionAttr = nextState.filteredAttributes.find(
+        (attr) => attr.key === 'description' && attr.type === TYPE_CLASSIFICATION,
+      );
+      const functionStateAttr = nextState.filteredAttributes.find(
+        (attr) => attr.key === 'function_state' && attr.type === TYPE_FUNCTION,
+      );
+
+      // Verify UI state was preserved
+      expect(nameAttr).toBeDefined();
+      expect(nameAttr.open).toBe(true);
+      expect(nameAttr.showAll).toBe(true);
+
+      expect(descriptionAttr).toBeDefined();
+      expect(descriptionAttr.open).toBe(false);
+      expect(descriptionAttr.showAll).toBe(false);
+
+      expect(functionStateAttr).toBeDefined();
+      expect(functionStateAttr.open).toBe(true);
+      expect(functionStateAttr.showAll).toBe(false);
+    });
+
+    it('should set default UI state (open: false, showAll: false) for new attributes not in existing filteredAttributes', () => {
+      // Set up initial state with some existing filteredAttributes
+      const existingFilteredAttributes = [
+        {
+          key: 'name',
+          name: 'Nimi',
+          type: TYPE_CLASSIFICATION,
+          open: true,
+          showAll: true,
+          options: [],
+        },
+      ];
+
+      const stateWithExistingAttributes = {
+        ...initialState,
+        attributes: [
+          { key: 'name', name: 'Nimi', type: TYPE_CLASSIFICATION, options: [], open: false, showAll: false },
+          { key: 'description', name: 'Kuvaus', type: TYPE_CLASSIFICATION, options: [], open: false, showAll: false },
+          { key: 'additional_information', name: 'Lisätiedot', type: TYPE_CLASSIFICATION, options: [], open: false, showAll: false },
+        ],
+        filteredAttributes: existingFilteredAttributes,
+      };
+
+      const items = classification.map((item) => ({
+        ...item,
+        type: TYPE_CLASSIFICATION,
+        attributes: {
+          name: `${item.code} ${item.title}`,
+          description: item.description,
+          additional_information: item.additional_information,
+        },
+      }));
+
+      const action = receiveClassifications({ items, page: 1 });
+      const nextState = searchReducer(stateWithExistingAttributes, action);
+
+      // Find the new attribute (not in existing filteredAttributes)
+      const descriptionAttr = nextState.filteredAttributes.find(
+        (attr) => attr.key === 'description' && attr.type === TYPE_CLASSIFICATION,
+      );
+      const additionalInfoAttr = nextState.filteredAttributes.find(
+        (attr) => attr.key === 'additional_information' && attr.type === TYPE_CLASSIFICATION,
+      );
+
+      // Verify new attributes have default UI state
+      expect(descriptionAttr).toBeDefined();
+      expect(descriptionAttr.open).toBe(false);
+      expect(descriptionAttr.showAll).toBe(false);
+
+      expect(additionalInfoAttr).toBeDefined();
+      expect(additionalInfoAttr.open).toBe(false);
+      expect(additionalInfoAttr.showAll).toBe(false);
+    });
+
+    it('should preserve UI state for different attribute types (CLASSIFICATION, FUNCTION, PHASE, ACTION, RECORD)', () => {
+      const existingFilteredAttributes = [
+        {
+          key: 'name',
+          name: 'Nimi',
+          type: TYPE_CLASSIFICATION,
+          open: true,
+          showAll: false,
+          options: [],
+        },
+        {
+          key: 'function_state',
+          name: 'Tila',
+          type: TYPE_FUNCTION,
+          open: false,
+          showAll: true,
+          options: [],
+        },
+        {
+          key: 'phase_name',
+          name: 'Vaiheen nimi',
+          type: TYPE_PHASE,
+          open: true,
+          showAll: true,
+          options: [],
+        },
+        {
+          key: 'action_name',
+          name: 'Toimenpiteen nimi',
+          type: TYPE_ACTION,
+          open: false,
+          showAll: false,
+          options: [],
+        },
+        {
+          key: 'record_name',
+          name: 'Asiakirjan nimi',
+          type: TYPE_RECORD,
+          open: true,
+          showAll: false,
+          options: [],
+        },
+      ];
+
+      const stateWithExistingAttributes = {
+        ...initialState,
+        attributes: [
+          { key: 'name', name: 'Nimi', type: TYPE_CLASSIFICATION, options: [] },
+          { key: 'function_state', name: 'Tila', type: TYPE_FUNCTION, options: [] },
+          { key: 'phase_name', name: 'Vaiheen nimi', type: TYPE_PHASE, options: [] },
+          { key: 'action_name', name: 'Toimenpiteen nimi', type: TYPE_ACTION, options: [] },
+          { key: 'record_name', name: 'Asiakirjan nimi', type: TYPE_RECORD, options: [] },
+        ],
+        filteredAttributes: existingFilteredAttributes,
+      };
+
+      const items = classification.map((item) => ({
+        ...item,
+        type: TYPE_CLASSIFICATION,
+        attributes: {
+          name: `${item.code} ${item.title}`,
+        },
+      }));
+
+      const action = receiveClassifications({ items, page: 1 });
+      const nextState = searchReducer(stateWithExistingAttributes, action);
+
+      // Verify preservation for each type
+      const classAttr = nextState.filteredAttributes.find(
+        (attr) => attr.key === 'name' && attr.type === TYPE_CLASSIFICATION,
+      );
+      const funcAttr = nextState.filteredAttributes.find(
+        (attr) => attr.key === 'function_state' && attr.type === TYPE_FUNCTION,
+      );
+      const phaseAttr = nextState.filteredAttributes.find(
+        (attr) => attr.key === 'phase_name' && attr.type === TYPE_PHASE,
+      );
+      const actionAttr = nextState.filteredAttributes.find(
+        (attr) => attr.key === 'action_name' && attr.type === TYPE_ACTION,
+      );
+      const recordAttr = nextState.filteredAttributes.find(
+        (attr) => attr.key === 'record_name' && attr.type === TYPE_RECORD,
+      );
+
+      expect(classAttr?.open).toBe(true);
+      expect(classAttr?.showAll).toBe(false);
+
+      expect(funcAttr?.open).toBe(false);
+      expect(funcAttr?.showAll).toBe(true);
+
+      expect(phaseAttr?.open).toBe(true);
+      expect(phaseAttr?.showAll).toBe(true);
+
+      expect(actionAttr?.open).toBe(false);
+      expect(actionAttr?.showAll).toBe(false);
+
+      expect(recordAttr?.open).toBe(true);
+      expect(recordAttr?.showAll).toBe(false);
+    });
+
+    it('should preserve UI state when receiving classifications with page > 1 (isAdd = true)', () => {
+      const existingFilteredAttributes = [
+        {
+          key: 'name',
+          name: 'Nimi',
+          type: TYPE_CLASSIFICATION,
+          open: true,
+          showAll: true,
+          options: [],
+        },
+      ];
+
+      const stateWithExistingAttributes = {
+        ...initialState,
+        attributes: [{ key: 'name', name: 'Nimi', type: TYPE_CLASSIFICATION, options: [] }],
+        filteredAttributes: existingFilteredAttributes,
+        classifications: [classification[0]], // Some existing classifications
+      };
+
+      const items = [classification[1]]; // New items for page 2
+
+      const action = receiveClassifications({ items, page: 2 });
+      const nextState = searchReducer(stateWithExistingAttributes, action);
+
+      // Verify UI state was preserved even when adding (page > 1)
+      const nameAttr = nextState.filteredAttributes.find(
+        (attr) => attr.key === 'name' && attr.type === TYPE_CLASSIFICATION,
+      );
+
+      expect(nameAttr).toBeDefined();
+      expect(nameAttr.open).toBe(true);
+      expect(nameAttr.showAll).toBe(true);
+    });
+
+    it('should handle preservation when existing filteredAttributes is empty', () => {
+      const stateWithEmptyAttributes = {
+        ...initialState,
+        attributes: [{ key: 'name', name: 'Nimi', type: TYPE_CLASSIFICATION, options: [], open: false, showAll: false }],
+        filteredAttributes: [],
+      };
+
+      const items = classification.map((item) => ({
+        ...item,
+        type: TYPE_CLASSIFICATION,
+        attributes: {
+          name: `${item.code} ${item.title}`,
+        },
+      }));
+
+      const action = receiveClassifications({ items, page: 1 });
+      const nextState = searchReducer(stateWithEmptyAttributes, action);
+
+      // All attributes should have default UI state
+      const nameAttr = nextState.filteredAttributes.find(
+        (attr) => attr.key === 'name' && attr.type === TYPE_CLASSIFICATION,
+      );
+
+      expect(nameAttr).toBeDefined();
+      expect(nameAttr.open).toBe(false);
+      expect(nameAttr.showAll).toBe(false);
+    });
+
     it('should handle searchSuggestionsAction', () => {
       const suggestions = [
         { type: TYPE_CLASSIFICATION, hits: ['class1'] },

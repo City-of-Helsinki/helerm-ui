@@ -670,6 +670,15 @@ const searchSlice = createSlice({
       const recordAttr = getFacetAttributesForType(state.attributes, records, TYPE_RECORD);
       const filteredAttributes = [...classificationAttr, ...functionAttr, ...phaseAttr, ...actionAttr, ...recordAttr];
 
+      // Preserve UI state (open/showAll) from existing filteredAttributes
+      filteredAttributes.forEach((attr) => {
+        const existing = find(state.filteredAttributes, { key: attr.key, type: attr.type });
+        if (existing) {
+          attr.open = existing.open;
+          attr.showAll = existing.showAll;
+        }
+      });
+
       if (isAdd) {
         state.actions.push(...actions);
         state.classifications.push(...classifications);

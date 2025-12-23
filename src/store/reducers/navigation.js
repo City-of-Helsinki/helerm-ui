@@ -80,8 +80,16 @@ export const fetchNavigationThunk = createAsyncThunk(
         await dispatch(fetchNavigationThunk({ includeRelated, page: page + 1, token }));
       } else {
         const list = getState().navigation.list || [];
-        const orderedTree = convertToTree(list);
-        dispatch(parseNavigationSliceAction({ items: orderedTree }));
+        try {
+          const orderedTree = convertToTree(list);
+          dispatch(parseNavigationSliceAction({ items: orderedTree }));
+        } catch (treeError) {
+          // If convertToTree fails (e.g., broken parent references), dispatch parseNavigation
+          // with empty array to update timestamp and prevent infinite loading state
+          // eslint-disable-next-line no-console
+          console.warn('Failed to convert navigation list to tree:', treeError);
+          dispatch(parseNavigationSliceAction({ items: [] }));
+        }
       }
 
       return json;
