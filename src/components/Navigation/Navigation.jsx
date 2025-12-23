@@ -153,10 +153,74 @@ const Navigation = ({ onLeafMouseClick: customOnLeafMouseClick } = {}) => {
   const [lastAuthState, setLastAuthState] = useState(null);
   const [lastUserData, setLastUserData] = useState(null);
   const [lastLoginStatus, setLastLoginStatus] = useState(null);
+  // Track previous itemsTimestamp to detect when navigation items update from server
+  // Used to preserve menu open/closed state when items refresh
+  const prevItemsTimestampRef = useRef(itemsTimestamp);
+  // Track previous filters to detect filter changes
+  // When filters change, we don't preserve state (create fresh tree)
+  const prevFiltersRef = useRef(filters);
+  // Track current tree state without adding it to effect dependencies
+  // Needed because: when user clicks to open/close menus, tree state changes via onNodeMouseClick
+  // If tree was in dependencies, it would trigger this effect and reset the tree, preventing menus from opening
+  const treeRef = useRef(tree);
+
+  // Keep tree ref in sync with tree state so we can access current tree in effects
+  // without adding tree to dependency arrays (which would cause infinite loops)
+  useEffect(() => {
+    treeRef.current = tree;
+  }, [tree]);
+
+  // Preserve tree state (isOpen/isSearchOpen) when items update
+  const preserveTreeState = useCallback((newTree, oldTree) => {
+    if (!oldTree?.length || !newTree?.length) return newTree;
+
+    // Build map of open node states by ID
+    const stateMap = new Map();
+    const collectStates = (nodes) => {
+      nodes.forEach((node) => {
+        if (node.id && (node.isOpen || node.isSearchOpen)) {
+          stateMap.set(node.id, { isOpen: node.isOpen, isSearchOpen: node.isSearchOpen });
+        }
+        if (node.children) collectStates(node.children);
+      });
+    };
+    collectStates(oldTree);
+
+    if (stateMap.size === 0) return newTree;
+
+    // Apply preserved states to new tree
+    const applyStates = (nodes) =>
+      nodes.map((node) => {
+        const newNode = { ...node };
+        if (node.id && stateMap.has(node.id)) {
+          const state = stateMap.get(node.id);
+          newNode.isOpen = state.isOpen;
+          newNode.isSearchOpen = state.isSearchOpen;
+        }
+        if (node.children) {
+          newNode.children = applyStates(node.children);
+        }
+        return newNode;
+      });
+
+    return applyStates(newTree);
+  }, []);
 
   useEffect(() => {
-    setTree(getFilteredTree());
-  }, [filters, getFilteredTree]);
+    const newTree = getFilteredTree();
+    const itemsChanged = prevItemsTimestampRef.current !== itemsTimestamp;
+    const filtersChanged = prevFiltersRef.current !== filters;
+
+    // Preserve state only when items update (not when filters change)
+    if (itemsChanged && !filtersChanged && treeRef.current.length > 0 && itemsTimestamp) {
+      setTree(preserveTreeState(newTree, treeRef.current));
+      prevItemsTimestampRef.current = itemsTimestamp;
+    } else {
+      setTree(newTree);
+      if (itemsTimestamp) prevItemsTimestampRef.current = itemsTimestamp;
+    }
+    prevFiltersRef.current = filters;
+  }, [filters, getFilteredTree, itemsTimestamp, preserveTreeState]);
 
   // Effect to handle initial fetch and authentication state changes
   useEffect(() => {
