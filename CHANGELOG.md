@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.12](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.11...helerm-ui-v1.6.12) (2026-01-07)
+
+
+### Bug Fixes
+
+* Preserve search and navigation trees open/closed states ([#625](https://github.com/City-of-Helsinki/helerm-ui/issues/625)) ([d26bee3](https://github.com/City-of-Helsinki/helerm-ui/commit/d26bee3e238bf2f26f9c781bc36b38a0f509af74))
+
 ## [1.6.11](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.10...helerm-ui-v1.6.11) (2025-12-19)
 
 
