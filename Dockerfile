@@ -26,8 +26,8 @@ RUN chown -R default:root /app
 # Install npm dependencies and build the bundle
 USER default
 
+RUN yarn install --frozen-lockfile --ignore-scripts
 RUN yarn cache clean --force
-RUN yarn
 
 COPY index.html vite.config.mjs eslint.config.mjs .prettierrc .env* /app/
 COPY ./src /app/src
