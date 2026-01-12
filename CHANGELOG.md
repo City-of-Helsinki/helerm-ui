@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.12...helerm-ui-v1.7.0) (2026-01-12)
+
+
+### Features
+
+* Yarn install hardening RATY-280 ([13265d3](https://github.com/City-of-Helsinki/helerm-ui/commit/13265d3e0f1ff2c85dd7a98ec13f285fa4aed1b0))
+
 ## [1.6.12](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.11...helerm-ui-v1.6.12) (2026-01-07)
 
 
