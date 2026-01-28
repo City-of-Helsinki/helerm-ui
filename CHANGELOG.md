@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.1](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.7.0...helerm-ui-v1.7.1) (2026-01-28)
+
+
+### Dependencies
+
+* Bump lodash from 4.17.21 to 4.17.23 ([e5f80ac](https://github.com/City-of-Helsinki/helerm-ui/commit/e5f80ac5a4a0e1462e0032fbf292605735629f0b))
+
 ## [1.7.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.6.12...helerm-ui-v1.7.0) (2026-01-12)
 
 
