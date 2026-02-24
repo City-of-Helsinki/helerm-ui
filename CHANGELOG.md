@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.8.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.7.1...helerm-ui-v1.8.0) (2026-02-24)
+
+
+### Features
+
+* Readiness endpoint KEH-228 ([5612104](https://github.com/City-of-Helsinki/helerm-ui/commit/56121048697842a9c6d77409639a03cc495d01d9))
+
+
+### Dependencies
+
+* Upgrade playwright to 1.58.2 Refs: RATY-299 ([9a9459d](https://github.com/City-of-Helsinki/helerm-ui/commit/9a9459df446235d369858c8a6a92ecc0a3043ac3))
+* Upgrade react-router-dom to 6.30.3 Refs: RATY-299 ([1d6efd8](https://github.com/City-of-Helsinki/helerm-ui/commit/1d6efd813dc2413d5c61b8e372974a4ee1465a4d))
+
 ## [1.7.1](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.7.0...helerm-ui-v1.7.1) (2026-01-28)
 
 
