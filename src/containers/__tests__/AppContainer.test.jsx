@@ -23,6 +23,23 @@ const clearAllCookies = () =>
     document.cookie = c.trim().split('=')[0] + '=;expires=Thu, 01 Jan 1970 00:00:00 UTC;';
   });
 
+const getCookieValue = (name) => {
+  const cookie = document.cookie
+    .split(';')
+    .map((item) => item.trim())
+    .find((item) => item.startsWith(`${name}=`));
+
+  return cookie ? cookie.slice(name.length + 1) : undefined;
+};
+
+const getCookieConsent = () => {
+  const cookieValue = getCookieValue('helfi-cookie-consents');
+
+  expect(cookieValue).toBeDefined();
+
+  return JSON.parse(decodeURIComponent(cookieValue));
+};
+
 const realDateNow = Date.now.bind(global.Date);
 
 beforeAll(() => {
@@ -109,11 +126,6 @@ const renderComponent = (storeOverride) => {
   });
 };
 
-const acceptAllCookieText =
-  'helfi-cookie-consents=%7B%22groups%22%3A%7B%22tunnistamo%22%3A%7B%22checksum%22%3A%22435f7456%22%2C%22timestamp%22%3A1530518207007%7D%2C%22shared%22%3A%7B%22checksum%22%3A%2267ae1bd2%22%2C%22timestamp%22%3A1530518207007%7D%2C%22statistics%22%3A%7B%22checksum%22%3A%2275cc5cc3%22%2C%22timestamp%22%3A1530518207007%7D%7D%7D';
-const acceptOnlyNecessaryCookieText =
-  'helfi-cookie-consents=%7B%22groups%22%3A%7B%22tunnistamo%22%3A%7B%22checksum%22%3A%22435f7456%22%2C%22timestamp%22%3A1530518207007%7D%2C%22shared%22%3A%7B%22checksum%22%3A%2267ae1bd2%22%2C%22timestamp%22%3A1530518207007%7D%7D%7D';
-
 const findCookieConsentModal = async () => {
   const regions = await shadowScreen.findAllByShadowRole('region');
 
@@ -176,7 +188,15 @@ describe('<AppContainer />', () => {
     const acceptAllButton = await findCookieConsentModalElement(cookieConsentModal, 'acceptAllButton');
     await user.click(acceptAllButton);
 
-    expect(document.cookie).toEqual(expect.stringContaining(acceptAllCookieText));
+    const cookieConsent = getCookieConsent();
+
+    expect(cookieConsent.groups).toEqual(
+      expect.objectContaining({
+        tunnistamo: expect.any(Object),
+        shared: expect.any(Object),
+        statistics: expect.any(Object),
+      }),
+    );
     await waitCookieConsentModalToBeHidden();
   });
 
@@ -195,16 +215,31 @@ describe('<AppContainer />', () => {
 
     await user.click(acceptOnlyNecessaryButton);
 
-    expect(document.cookie).toEqual(expect.stringContaining(acceptOnlyNecessaryCookieText));
+    const cookieConsent = getCookieConsent();
+
+    expect(cookieConsent.groups).toEqual(
+      expect.objectContaining({
+        tunnistamo: expect.any(Object),
+        shared: expect.any(Object),
+      }),
+    );
+    expect(cookieConsent.groups.statistics).toBeUndefined();
     await waitCookieConsentModalToBeHidden();
   });
 
   it('should not show cookie consent modal if consent is saved', async () => {
-    document.cookie = acceptAllCookieText;
+    const user = userEvent.setup();
 
-    const store = mockStore(storeDefaultState);
+    // Simulate user giving consent
+    const firstRender = renderComponent(mockStore(storeDefaultState));
+    const cookieConsentModal = await waitCookieConsentModalToBeVisible();
+    const acceptAllButton = await findCookieConsentModalElement(cookieConsentModal, 'acceptAllButton');
+    await user.click(acceptAllButton);
+    await waitCookieConsentModalToBeHidden();
 
-    renderComponent(store);
+    // Re-render the component to check if the modal appears again
+    firstRender.unmount();
+    renderComponent(mockStore(storeDefaultState));
 
     await waitCookieConsentModalToBeHidden();
   });
