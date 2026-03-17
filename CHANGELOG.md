@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.1](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.8.0...helerm-ui-v1.8.1) (2026-03-17)
+
+
+### Bug Fixes
+
+* Enhance cookie consent settings with auth cookies ([d5c18f9](https://github.com/City-of-Helsinki/helerm-ui/commit/d5c18f9441d62f542474ec33213cbef4fb8c67f6))
+
 ## [1.8.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.7.1...helerm-ui-v1.8.0) (2026-02-24)
 
 
