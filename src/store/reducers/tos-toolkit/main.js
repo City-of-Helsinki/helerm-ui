@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/todo-tag */
 /* eslint-disable no-alert */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { cloneDeep, isEmpty, values } from 'lodash';
@@ -100,8 +99,8 @@ export const saveDraftThunk = createAsyncThunk(
       if (json.version !== currentVersion + 1) {
         alert(
           `Muokkasit luonnoksen versiota ${currentVersion}, ` +
-            `mutta tallennettaessa versionumero kasvoi enemmän ` +
-            `kuin yhdellä. Tarkistathan, että tallentamasi luonnoksen (versio ${json.version}) tiedot ovat ajantasalla.`,
+          `mutta tallennettaessa versionumero kasvoi enemmän ` +
+          `kuin yhdellä. Tarkistathan, että tallentamasi luonnoksen (versio ${json.version}) tiedot ovat ajantasalla.`,
         );
       }
 

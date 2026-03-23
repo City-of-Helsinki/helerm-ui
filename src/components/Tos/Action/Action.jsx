@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/todo-tag */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import classnames from 'classnames';
