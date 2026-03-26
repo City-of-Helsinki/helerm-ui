@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.8.2](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.8.1...helerm-ui-v1.8.2) (2026-03-26)
+
+
+### Bug Fixes
+
+* Pipelines from components -directory ([#639](https://github.com/City-of-Helsinki/helerm-ui/issues/639)) ([5eeaa40](https://github.com/City-of-Helsinki/helerm-ui/commit/5eeaa4090eeea66d5ff38ae07cd34910b4131405))
+
+
+### Dependencies
+
+* Bump eslint and plugins Refs: RATY-294 ([d830c3e](https://github.com/City-of-Helsinki/helerm-ui/commit/d830c3e9a062d4f95efbf017751e6f51f11dbbc1))
+* Bump flatted from 3.3.1 to 3.4.2 ([3c0d4fb](https://github.com/City-of-Helsinki/helerm-ui/commit/3c0d4fb2f82bcb4ccaabd3af24902854dd63e799))
+* Bump immutable from 4.3.7 to 4.3.8 ([017b3ec](https://github.com/City-of-Helsinki/helerm-ui/commit/017b3ec510916a234f682876187480c107e3da2e))
+
 ## [1.8.1](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.8.0...helerm-ui-v1.8.1) (2026-03-17)
 
 
