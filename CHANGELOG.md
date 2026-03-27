@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.8.3](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.8.2...helerm-ui-v1.8.3) (2026-03-27)
+
+
+### Dependencies
+
+* Bump picomatch from 2.3.1 to 2.3.2 ([644545e](https://github.com/City-of-Helsinki/helerm-ui/commit/644545e45ab6fab1b6fa5f8f30aa3332085a55cd))
+* Bump yaml from 1.10.2 to 1.10.3 ([60c6163](https://github.com/City-of-Helsinki/helerm-ui/commit/60c616336c129520119dd34ee1976705477234b4))
+
 ## [1.8.2](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.8.1...helerm-ui-v1.8.2) (2026-03-26)
 
 
