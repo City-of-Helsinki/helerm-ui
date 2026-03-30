@@ -437,14 +437,12 @@ const BulkView = () => {
     return () => {
       dispatch(clearSelectedBulkUpdate());
     };
-    // eslint-disable-next-line @eslint-react/exhaustive-deps
   }, [params.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!isEmpty(items) && !isEmpty(selectedBulk) && !isFetchingNavigation) {
       parseItemList(items, selectedBulk);
     }
-    // eslint-disable-next-line @eslint-react/exhaustive-deps
   }, [items, selectedBulk, isFetchingNavigation, isUpdating]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const isApproved = selectedBulk ? selectedBulk.is_approved : false;

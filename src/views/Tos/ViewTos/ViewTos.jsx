@@ -818,7 +818,7 @@ const ViewTOS = () => {
       document.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', updateTopOffsetForSticky);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id, params.version]);
 
   useEffect(() => {

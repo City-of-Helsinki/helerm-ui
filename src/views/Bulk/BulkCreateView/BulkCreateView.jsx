@@ -697,7 +697,7 @@ const BulkCreateView = () => {
 
   useEffect(() => {
     dispatch(fetchNavigationThunk({ includeRelated: true }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -722,7 +722,7 @@ const BulkCreateView = () => {
       setAttributeValues(newAttributeValues);
       setItemList(newItemList);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, isFetching]);
 
   if (!isEmpty(preview) && previewItems) {

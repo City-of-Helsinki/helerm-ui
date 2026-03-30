@@ -20,7 +20,7 @@ const FacetedSearchSuggestions = ({ onSelect, suggestions, term }) => {
     } else {
       setShowSuggestions(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [term, suggestions]);
 
   const shouldShow = show && showSuggestions && !isEmpty(suggestions);

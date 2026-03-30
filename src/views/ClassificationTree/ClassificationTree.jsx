@@ -28,7 +28,7 @@ const ClassificationTree = () => {
       setTree(items);
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
 
   useEffect(() => {
