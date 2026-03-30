@@ -2,7 +2,7 @@ import { defineConfig } from 'eslint/config';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import eslintConfigPrettier from 'eslint-config-prettier';
-import importPlugin from 'eslint-plugin-import';
+import importPlugin from 'eslint-plugin-import-x';
 import sonarjs from 'eslint-plugin-sonarjs';
 import globals from 'globals';
 import js from '@eslint/js';
@@ -30,7 +30,6 @@ export default defineConfig([
       importPlugin.flatConfigs.recommended,
       jsxA11y.flatConfigs.recommended,
       eslintConfigPrettier,
-      reactHooks.configs['recommended-latest'],
       sonarjs.configs.recommended,
       vitestGlobals()
     ],
@@ -47,18 +46,27 @@ export default defineConfig([
         },
       },
     },
+    plugins: {
+      'react-hooks': reactHooks,
+    },
     settings: {
       react: {
-        version: 'detect',
+        version: '18',
       },
-      "import/resolver": {
+      "import-x/resolver": {
         node: {
           extensions: [
             ".js",
-            ".jsx"
+            ".jsx",
+            ".ts",
+            ".tsx",
+            ".json"
           ]
         }
-      }
+      },
+      "import-x/ignore": [
+        "node_modules"
+      ]
     },
     rules: {
       'react/jsx-uses-react': 1,
@@ -87,17 +95,20 @@ export default defineConfig([
       ],
       'react/no-unstable-nested-components': 0,
       'react/require-default-props': 0,
-      'import/extensions': 0,
-      'import/order': [
+      'import-x/extensions': 0,
+      'import-x/order': [
         'error',
         {
           groups: ['builtin', 'external', 'internal', ['parent', 'sibling', 'index']],
           'newlines-between': 'always',
         },
       ],
-      'import/no-named-as-default': 0,
-      'import/no-named-as-default-member': 0,
-      'import/prefer-default-export': 1,
+      'import-x/no-named-as-default': 0,
+      'import-x/no-named-as-default-member': 0,
+      'import-x/prefer-default-export': 1,
+      'import-x/no-unresolved': ['error', { ignore: ['.css$', '.scss$', 'raw.macro'] }],
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
       'vitest/expect-expect': 0,
       'vitest/valid-title': 0,
       'camelcase': 0,
