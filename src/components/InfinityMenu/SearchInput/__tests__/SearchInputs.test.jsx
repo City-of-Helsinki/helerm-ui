@@ -1,6 +1,5 @@
 import { BrowserRouter } from 'react-router-dom';
 import { screen } from '@testing-library/react';
-import React from 'react';
 import userEvent from '@testing-library/user-event';
 
 import SearchInputs, { FILTER_CONDITION_OPTIONS } from '../SearchInputs';

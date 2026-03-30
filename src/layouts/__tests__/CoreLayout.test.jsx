@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { act, screen } from '@testing-library/react';
 
@@ -28,16 +27,16 @@ vi.mock('hds-react', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-    useCookies: () => ({
+    useCookies: vi.fn(() => ({
       getAllConsents: () => ({ matomo: false }),
-    }),
-    LoginProvider: ({ children }) => <div data-testid='login-provider'>{children}</div>, // eslint-disable-line react/prop-types
-    useOidcClient: () => ({
+    })),
+    LoginProvider: vi.fn(({ children }) => <div data-testid='login-provider'>{children}</div>),
+    useOidcClient: vi.fn(() => ({
       isAuthenticated: () => false,
       getUser: () => null,
       login: vi.fn(),
       logout: vi.fn(),
-    }),
+    })),
   };
 });
 

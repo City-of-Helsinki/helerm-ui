@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 const DropdownMenuWrapper = ({ children, listenEvents = ['mouseup', 'touchend'], onClickOutside, ...divProps }) => {

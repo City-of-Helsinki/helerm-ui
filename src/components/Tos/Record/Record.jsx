@@ -30,14 +30,14 @@ const Record = React.forwardRef(
     const [editingRecord, setEditingRecord] = useState(false);
     const [mode, setMode] = useState('view');
 
-    const element = useRef(null);
+    const elementRef = useRef(null);
 
     // Expose scroll method to parent components via ref
     useImperativeHandle(ref, () => ({
       scrollToRecord: (parentOffset = 0) => {
-        if (element?.current) {
-          const elementOffset = element.current.offsetParent ? element.current.offsetParent.offsetTop : 0;
-          window.scrollTo(0, elementOffset + parentOffset + element.current.offsetTop);
+        if (elementRef?.current) {
+          const elementOffset = elementRef.current.offsetParent ? elementRef.current.offsetParent.offsetTop : 0;
+          window.scrollTo(0, elementOffset + parentOffset + elementRef.current.offsetTop);
         }
       },
     }));
@@ -161,7 +161,7 @@ const Record = React.forwardRef(
           { 'record-open': record.is_open },
           { 'record-closed': !record.is_open },
         )}
-        ref={element}
+        ref={elementRef}
       >
         <div>
           {mode === 'edit' && editingRecord && (

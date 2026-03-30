@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';

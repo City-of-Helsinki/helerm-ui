@@ -11,7 +11,7 @@ const RouterSync = () => {
 
   useEffect(() => {
     dispatch(locationChange({ location, action }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps
   }, [location, action]);
 
   return null;

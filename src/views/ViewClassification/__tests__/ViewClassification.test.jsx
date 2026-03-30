@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -29,10 +28,10 @@ vi.mock('react-router-dom', async () => {
 
   return {
     ...mod,
-    useParams: () => ({
+    useParams: vi.fn(() => ({
       id: 'test',
       version: 1,
-    }),
+    })),
   };
 });
 

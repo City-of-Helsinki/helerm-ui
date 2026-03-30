@@ -1,3 +1,4 @@
+/* eslint-disable @eslint-react/no-create-ref */
 import '@testing-library/jest-dom';
 import { fireEvent, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';

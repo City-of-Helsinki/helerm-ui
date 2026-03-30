@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import { filter, includes, isEmpty, keys } from 'lodash';
@@ -25,7 +25,7 @@ const BulkListView = () => {
   useEffect(() => {
     const token = getApiToken();
     dispatch(fetchBulkUpdatesThunk({ includeApproved: true, token }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps
   }, []);
 
   const onChangeFilter = (options) => {

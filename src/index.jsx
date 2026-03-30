@@ -1,5 +1,4 @@
 import 'fast-text-encoding';
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import * as Sentry from '@sentry/react';
 import { registerLocale, setDefaultLocale } from 'react-datepicker';
