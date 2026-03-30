@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { render, renderHook } from '@testing-library/react';
 
 import MatomoContext, { MatomoProvider } from '../../matomo-context';
@@ -19,6 +19,7 @@ describe('useMatomo', () => {
     expect(result.current.trackPageView).toBeDefined();
   });
 
+  // eslint-disable-next-line @eslint-react/component-hook-factories
   const MockedComponent = () => {
     const { trackPageView } = useMatomo();
 
@@ -43,6 +44,7 @@ describe('useMatomo', () => {
       enabled: true,
     });
 
+    // eslint-disable-next-line @eslint-react/component-hook-factories
     const MockProvider = () => (
       <MatomoProvider value={instance}>
         <MockedComponent />

@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { every, filter, isEqual } from 'lodash';
@@ -96,6 +96,7 @@ const SearchResults = ({ hits, onSelect, onSelectAll, searchResults }) => {
                   .join(', ');
                 pathName = `${captured[1].trim()}: ${mappedValue}`;
               }
+              // eslint-disable-next-line @eslint-react/no-array-index-key
               return <h4 key={`${index}-${pathIndex}-${pathName}`}>{pathName}</h4>;
             })}
           </div>

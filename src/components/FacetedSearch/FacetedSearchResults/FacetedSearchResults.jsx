@@ -1,8 +1,7 @@
-/* eslint-disable react/no-danger */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import DOMPurify from 'dompurify';
 
 import { TYPE_LABELS } from '../../../constants';
 
@@ -19,6 +18,7 @@ const FacetedSearchResults = ({ items, highlightedId, metadata, onSelectItem }) 
           className={classnames('faceted-search-results-item', {
             'faceted-search-results-item-selected': item.id === highlightedId,
           })}
+          // eslint-disable-next-line @eslint-react/no-array-index-key
           key={`${item.type}-${item.id}-${index}`}
           onClick={() => onSelectItem(item)}
           onKeyUp={(event) => {
@@ -31,15 +31,19 @@ const FacetedSearchResults = ({ items, highlightedId, metadata, onSelectItem }) 
             <div className='faceted-search-results-item-type'>{TYPE_LABELS[item.type]}</div>
             <div
               className='faceted-search-results-item-title'
-              dangerouslySetInnerHTML={{ __html: item.matchedName || item.name }}
+              // eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.matchedName || item.name) }}
             />
             <div className='faceted-search-results-item-path'>{item.path ? item.path.join(' > ') : ''}</div>
             {(item.matchedAttributes || []).map((attr) => (
               <div
                 className='faceted-search-results-item-attribute'
                 key={`${item.id}-${attr.key}`}
+                // eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
                 dangerouslySetInnerHTML={{
-                  __html: `${metadata[attr.key] ? metadata[attr.key].name : attr.key}: ${attr.value}`,
+                  __html: DOMPurify.sanitize(
+                    `${metadata[attr.key] ? metadata[attr.key].name : attr.key}: ${attr.value}`,
+                  ),
                 }}
               />
             ))}

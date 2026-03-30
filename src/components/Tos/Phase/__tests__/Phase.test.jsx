@@ -1,3 +1,4 @@
+/* eslint-disable @eslint-react/no-create-ref */
 import React from 'react';
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';

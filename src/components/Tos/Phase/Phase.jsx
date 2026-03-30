@@ -73,24 +73,24 @@ const Phase = React.forwardRef(
     const [editingType, setEditingType] = useState(false);
     const [topOffset, setTopOffset] = useState(0);
 
-    const element = useRef(null);
-    const actions_ref = useRef({});
+    const elementRef = useRef(null);
+    const actionsRef = useRef({});
 
     // Expose scroll methods to parent components via ref
     useImperativeHandle(ref, () => ({
       scrollToPhase: () => {
-        if (element?.current) {
-          window.scrollTo(0, element.current.offsetTop);
+        if (elementRef?.current) {
+          window.scrollTo(0, elementRef.current.offsetTop);
         }
       },
       scrollToAction: (actionId) => {
-        const actionRef = actions_ref.current[actionId];
+        const actionRef = actionsRef.current[actionId];
         if (actionRef) {
           actionRef.scrollToAction();
         }
       },
       scrollToActionRecord: (actionId, recordId) => {
-        const actionRef = actions_ref.current[actionId];
+        const actionRef = actionsRef.current[actionId];
         if (actionRef) {
           actionRef.scrollToRecord(recordId);
         }
@@ -653,7 +653,7 @@ const Phase = React.forwardRef(
               importItems={importItems}
               changeOrder={changeOrder}
               ref={(element) => {
-                actions_ref.current[actionId] = element;
+                actionsRef.current[actionId] = element;
               }}
             />
           );
@@ -692,7 +692,7 @@ const Phase = React.forwardRef(
       })) || [];
 
     return (
-      <div className='phase' ref={element}>
+      <div className='phase' ref={elementRef}>
         <div className='box'>
           {mode === 'edit' && editingPhase && (
             <EditorForm

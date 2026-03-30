@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -59,14 +59,14 @@ const ViewClassification = () => {
       removeBodyClass();
       dispatch(clearClassification());
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps, react-hooks/exhaustive-deps
   }, [params.id, params.version]);
 
   useEffect(() => {
     if (location && location.pathname === 'view-classification/:id') {
       dispatch(setNavigationVisibility(false));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps
   }, [location]);
 
   const addBodyClass = () => {

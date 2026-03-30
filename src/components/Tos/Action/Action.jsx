@@ -59,22 +59,22 @@ const Action = React.forwardRef(
     const [record, setRecord] = useState(null);
     const [topOffset, setTopOffset] = useState(0);
 
-    const element = useRef(null);
-    const records_ref = useRef({});
+    const elementRef = useRef(null);
+    const recordsRef = useRef({});
 
     // Expose scroll methods to parent components via ref
     useImperativeHandle(ref, () => ({
       scrollToAction: () => {
-        if (element?.current) {
-          const parentOffset = element.current.offsetParent ? element.current.offsetParent.offsetTop : 0;
-          window.scrollTo(0, parentOffset + element.current.offsetTop);
+        if (elementRef?.current) {
+          const parentOffset = elementRef.current.offsetParent ? elementRef.current.offsetParent.offsetTop : 0;
+          window.scrollTo(0, parentOffset + elementRef.current.offsetTop);
         }
       },
       scrollToRecord: (recordId) => {
-        const recordRef = records_ref.current[recordId];
-        if (element?.current && recordRef) {
-          const parentOffset = element.current.offsetParent ? element.current.offsetParent.offsetTop : 0;
-          recordRef.scrollToRecord(parentOffset + element.current.offsetTop);
+        const recordRef = recordsRef.current[recordId];
+        if (elementRef?.current && recordRef) {
+          const parentOffset = elementRef.current.offsetParent ? elementRef.current.offsetParent.offsetTop : 0;
+          recordRef.scrollToRecord(parentOffset + elementRef.current.offsetTop);
         }
       },
     }));
@@ -295,7 +295,7 @@ const Action = React.forwardRef(
                 setRecordVisibility={setRecordVisibility}
                 displayMessage={displayMessage}
                 ref={(element) => {
-                  records_ref.current[recordId] = element;
+                  recordsRef.current[recordId] = element;
                 }}
               />,
             );
@@ -427,7 +427,7 @@ const Action = React.forwardRef(
       : [];
 
     return (
-      <div className='action row' ref={element}>
+      <div className='action row' ref={elementRef}>
         {mode === 'edit' && editingAction && (
           <EditorForm
             onShowMore={onEditFormShowMoreAction}

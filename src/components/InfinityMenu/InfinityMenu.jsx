@@ -490,6 +490,7 @@ const InfinityMenu = ({
         initialRenderRef.current = false;
         setFilteredTree(tree);
 
+        // eslint-disable-next-line @eslint-react/web-api/no-leaked-timeout
         setTimeout(() => {
           setIsInitializing(false);
         }, 300);
@@ -553,6 +554,7 @@ const InfinityMenu = ({
                     className={classnames({
                       active: index === path.length,
                     })}
+                    // eslint-disable-next-line @eslint-react/no-array-index-key
                     key={index}
                   >
                     {item}

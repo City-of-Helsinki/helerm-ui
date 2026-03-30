@@ -1,5 +1,5 @@
 /* eslint-disable operator-assignment */
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -28,7 +28,7 @@ const ClassificationTree = () => {
       setTree(items);
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps
   }, [items]);
 
   useEffect(() => {

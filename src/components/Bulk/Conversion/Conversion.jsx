@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { find, includes, isArray, isEmpty, keys, map, sortBy } from 'lodash';
 import moment from 'moment';

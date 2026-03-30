@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-import React from 'react';
 import { Provider } from 'react-redux';
 import { render } from '@testing-library/react';
 import { LoginProvider } from 'hds-react';
@@ -31,6 +29,7 @@ const renderWithProviders = (
   ui,
   { preloadedState = storeDefaultState, store = storeCreator(preloadedState), ...renderOptions } = {},
 ) => {
+  // eslint-disable-next-line @eslint-react/component-hook-factories
   const Wrapper = ({ children }) => (
     <LoginProvider>
       <Provider store={store}>{children}</Provider>

@@ -1,5 +1,4 @@
 /* eslint-disable sonarjs/todo-tag */
-import React from 'react';
 import { normalize, schema } from 'normalizr';
 import { toastr } from 'react-redux-toastr';
 import moment from 'moment';

@@ -1,5 +1,5 @@
 import { Button, Dialog } from 'hds-react';
-import React, { useCallback, useState, useEffect, useRef } from 'react';
+import { useCallback, useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useBlocker } from 'react-router-dom';
 

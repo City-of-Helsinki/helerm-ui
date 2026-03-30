@@ -1,5 +1,4 @@
 /* eslint-disable consistent-return */
-import React from 'react';
 import PropTypes from 'prop-types';
 import CreatableSelect from 'react-select/creatable';
 import { find, forEach, includes, isEmpty, map } from 'lodash';

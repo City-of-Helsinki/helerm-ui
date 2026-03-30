@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom';
 import Header from '../../components/Header';
 import Loader from '../../components/Loader';
 import useMatomo from '../../components/Matomo/hooks/useMatomo';
-import { COOKIE_CONSENT_GROUP } from '../../hooks/useCookieConsentSettings';
+import { COOKIE_CONSENT_GROUP } from '../../utils/getCookieConsentSettings';
 import '../CoreLayout/CoreLayout.scss';
 
 const InfoLayout = ({ children }) => {
@@ -20,7 +20,7 @@ const InfoLayout = ({ children }) => {
         href: window.location.href,
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps
   }, [statisticsConsent, location.pathname, location.search]);
 
   return (

@@ -1,5 +1,4 @@
 import { defineConfig } from 'eslint/config';
-import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import importPlugin from 'eslint-plugin-import-x';
@@ -8,6 +7,7 @@ import globals from 'globals';
 import js from '@eslint/js';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import vitestGlobals from "eslint-config-vitest-globals/flat";
+import eslintReact from "@eslint-react/eslint-plugin";
 
 export default defineConfig([
   {
@@ -25,8 +25,7 @@ export default defineConfig([
     ],
     extends: [
       js.configs.recommended,
-      react.configs.flat.recommended,
-      react.configs.flat['jsx-runtime'],
+      eslintReact.configs.recommended,
       importPlugin.flatConfigs.recommended,
       jsxA11y.flatConfigs.recommended,
       eslintConfigPrettier,
@@ -48,6 +47,7 @@ export default defineConfig([
     },
     plugins: {
       'react-hooks': reactHooks,
+      'react': eslintReact
     },
     settings: {
       react: {
@@ -69,18 +69,16 @@ export default defineConfig([
       ]
     },
     rules: {
-      'react/jsx-uses-react': 1,
-      'react/forbid-prop-types': 0,
-      'react/prop-types': 1,
-      'react/function-component-definition': 0,
-      'react/default-props-match-prop-types': 0,
-      'react/destructuring-assignment': 0,
-      'react/jsx-props-no-spreading': 0,
-      'react/jsx-no-constructed-context-values': 0,
-      'react/jsx-filename-extension': 0,
-      'react/display-name': 0,
-      'react/no-access-state-in-setstate': 1,
-      'react/no-danger': 1,
+      '@eslint-react/set-state-in-effect': 0,
+      '@eslint-react/no-access-state-in-setstate': 1,
+      '@eslint-react/display-name': 0,
+      '@eslint-react/jsx-filename-extension': 0,
+      '@eslint-react/jsx-no-constructed-context-values': 0,
+      '@eslint-react/jsx-props-no-spreading': 0,
+      '@eslint-react/destructuring-assignment': 0,
+      '@eslint-react/default-props-match-prop-types': 0,
+      '@eslint-react/function-component-definition': 0,
+      '@eslint-react/forbid-prop-types': 0,
       'jsx-a11y/no-autofocus': 0,
       'jsx-a11y/control-has-associated-label': 1,
       'jsx-a11y/label-has-associated-control': [
@@ -93,8 +91,8 @@ export default defineConfig([
           allowChildren: false,
         },
       ],
-      'react/no-unstable-nested-components': 0,
-      'react/require-default-props': 0,
+      '@eslint-react/no-unstable-nested-components': 0,
+      '@eslint-react/require-default-props': 0,
       'import-x/extensions': 0,
       'import-x/order': [
         'error',
