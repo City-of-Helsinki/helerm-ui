@@ -71,7 +71,7 @@ const PrintView = () => {
     return () => {
       removeBodyClass();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params, location]);
 
   if (!TOS.id) return null;

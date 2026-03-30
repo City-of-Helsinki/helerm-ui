@@ -10,14 +10,16 @@ vi.mock('exceljs', async (importOriginal) => {
 
   return {
     ...mod,
-    Workbook: vi.fn().mockImplementation(() => ({
-      addWorksheet: vi.fn().mockReturnValue({
-        addRow: vi.fn(),
-      }),
-      xlsx: {
-        writeBuffer: vi.fn().mockResolvedValue(new ArrayBuffer(8)),
-      },
-    })),
+    Workbook: vi.fn(function () {
+      return {
+        addWorksheet: vi.fn().mockReturnValue({
+          addRow: vi.fn(),
+        }),
+        xlsx: {
+          writeBuffer: vi.fn().mockResolvedValue(new ArrayBuffer(8)),
+        },
+      };
+    }),
   };
 });
 

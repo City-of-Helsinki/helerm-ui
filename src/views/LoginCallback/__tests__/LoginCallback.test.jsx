@@ -41,7 +41,7 @@ vi.mock('hds-react', async () => {
     LoginCallbackHandler: vi.fn(({ onSuccess, children }) => {
       useEffect(() => {
         onSuccess(mockUser);
-        // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
 
       return <div>{children}</div>;

@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved */
 import react from '@vitejs/plugin-react-swc';
 import macros from "vite-plugin-babel-macros";
 import eslint from 'vite-plugin-eslint';
@@ -47,7 +46,7 @@ export default defineConfig({
     reporters: ['verbose'],
     coverage: {
       reporter: ['clover', 'json', 'lcov', 'text'],
-      include: ['src/**/*'],
+      include: ['src/**/*.{js,jsx}'],
       exclude: [
         ...coverageConfigDefaults.exclude,
         '**/__snapshots__/**',

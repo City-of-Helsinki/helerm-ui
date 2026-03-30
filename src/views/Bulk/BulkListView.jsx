@@ -25,7 +25,7 @@ const BulkListView = () => {
   useEffect(() => {
     const token = getApiToken();
     dispatch(fetchBulkUpdatesThunk({ includeApproved: true, token }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onChangeFilter = (options) => {

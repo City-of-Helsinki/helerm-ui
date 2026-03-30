@@ -16,11 +16,13 @@ console.error = (msg, ...optionalParams) => {
 };
 
 // Mock the ResizeObserver
-const ResizeObserverMock = vi.fn(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}));
+class ResizeObserverMock {
+  constructor() {
+    this.observe = vi.fn();
+    this.unobserve = vi.fn();
+    this.disconnect = vi.fn();
+  }
+}
 
 // Stub the global ResizeObserver
 vi.stubGlobal('ResizeObserver', ResizeObserverMock);
@@ -82,7 +84,7 @@ vi.mock('hds-react', async () => {
       login: vi.fn(),
       getState: vi.fn(() => 'LOGGED_IN'),
     })),
-    useSignalListener: vi.fn(() => {}),
+    useSignalListener: vi.fn(() => { }),
     isApiTokensRemovedSignal: vi.fn(() => false),
     isApiTokensUpdatedSignal: vi.fn(() => false),
     getApiTokenFromStorage: vi.fn(() => 'test-token'),

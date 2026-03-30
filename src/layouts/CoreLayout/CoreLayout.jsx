@@ -21,7 +21,7 @@ const CoreLayout = ({ children }) => {
         href: window.location.href,
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statisticsConsent, location.pathname, location.search]);
 
   return (

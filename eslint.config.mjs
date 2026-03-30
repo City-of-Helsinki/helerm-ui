@@ -79,6 +79,7 @@ export default defineConfig([
       '@eslint-react/default-props-match-prop-types': 0,
       '@eslint-react/function-component-definition': 0,
       '@eslint-react/forbid-prop-types': 0,
+      '@eslint-react/exhaustive-deps': 0,
       'jsx-a11y/no-autofocus': 0,
       'jsx-a11y/control-has-associated-label': 1,
       'jsx-a11y/label-has-associated-control': [
