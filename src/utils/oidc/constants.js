@@ -1,6 +1,6 @@
-/* eslint-disable import/prefer-default-export */
 import config from '../../config';
 
+// eslint-disable-next-line import-x/prefer-default-export
 export const providerProperties = {
   debug: config.OIDC_DEBUG,
   userManagerSettings: {

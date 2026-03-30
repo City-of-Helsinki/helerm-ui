@@ -8,5 +8,5 @@ import createStore from './store/createStore';
 
 const initialState = window.___INITIAL_STATE__;
 
-// eslint-disable-next-line import/prefer-default-export
+// eslint-disable-next-line import-x/prefer-default-export
 export const store = createStore(initialState);
