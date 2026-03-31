@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import CreatableSelect from 'react-select/creatable';
 import { find, forEach, includes, isEmpty, map } from 'lodash';
 
-import KeyStrokeSupport from '../../../decorators/key-stroke-support';
+import useKeyStrokeSupport from '../../../hooks/useKeyStrokeSupport';
 import './AddElementInput.scss';
 import { resolveSelectValues } from '../../../utils/helpers';
 import { getDisplayLabelForAttribute } from '../../../utils/attributeHelper';
@@ -134,7 +134,10 @@ const AddElementInput = ({
   cancel,
   onAddFormShowMore,
   showMoreOrLess,
-}) => (
+}) => {
+  useKeyStrokeSupport(submit, cancel);
+
+  return (
   <form onSubmit={submit} className='row add-element'>
     <h5 className='col-xs-12'>{resolveHeader(type)}</h5>
     {/* ActionType disabled for now. */}
@@ -192,7 +195,8 @@ const AddElementInput = ({
       </button>
     </div>
   </form>
-);
+  );
+};
 
 AddElementInput.propTypes = {
   cancel: PropTypes.func.isRequired,
@@ -211,4 +215,4 @@ AddElementInput.propTypes = {
   typeOptions: PropTypes.array.isRequired,
 };
 
-export default KeyStrokeSupport(AddElementInput);
+export default AddElementInput;
