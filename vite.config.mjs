@@ -3,7 +3,7 @@ import macros from "vite-plugin-babel-macros";
 import eslintPlugin from "@nabla/vite-plugin-eslint";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   base: '/',
   envPrefix: 'REACT_APP_',
   plugins: [
@@ -12,7 +12,7 @@ export default defineConfig({
         plugins: ['babel-plugin-macros']
       }
     }),
-    eslintPlugin(),
+    ...(mode !== 'test' ? [eslintPlugin()] : []),
     macros()
   ],
   build: {
@@ -56,4 +56,4 @@ export default defineConfig({
     },
     testTimeout: 1000000
   }
-})
+}));
