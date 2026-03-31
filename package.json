@@ -17,6 +17,7 @@
     "@eslint-react/eslint-plugin": "^3.0.0",
     "@eslint/js": "^10.0.1",
     "@fortawesome/fontawesome-free": "^6.3.0",
+    "@nabla/vite-plugin-eslint": "^3.0.1",
     "@reduxjs/toolkit": "^2.8.2",
     "@sentry/react": "^10.19.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -102,7 +103,6 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
-    "@nabla/vite-plugin-eslint": "^3.0.1",
     "@playwright/test": "^1.58.2",
     "@types/node": "^22.14.0",
     "@vitest/coverage-istanbul": "^4.1.2",
