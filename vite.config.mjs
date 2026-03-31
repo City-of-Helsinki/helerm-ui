@@ -1,6 +1,6 @@
-import react from '@vitejs/plugin-react-swc';
+import react from '@vitejs/plugin-react';
 import macros from "vite-plugin-babel-macros";
-import eslint from 'vite-plugin-eslint';
+import eslintPlugin from "@nabla/vite-plugin-eslint";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
 
 export default defineConfig({
@@ -12,7 +12,7 @@ export default defineConfig({
         plugins: ['babel-plugin-macros']
       }
     }),
-    eslint(),
+    eslintPlugin(),
     macros()
   ],
   build: {
