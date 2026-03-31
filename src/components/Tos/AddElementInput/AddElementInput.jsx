@@ -135,66 +135,66 @@ const AddElementInput = ({
   onAddFormShowMore,
   showMoreOrLess,
 }) => {
-  useKeyStrokeSupport(submit, cancel);
+  const keyStrokeRef = useKeyStrokeSupport(submit, cancel);
 
   return (
-  <form onSubmit={submit} className='row add-element'>
-    <h5 className='col-xs-12'>{resolveHeader(type)}</h5>
-    {/* ActionType disabled for now. */}
-    {type !== 'action' && (
-      <div className='col-xs-12 col-md-6 add-element-col'>
-        {typeOptions.length !== 0 ? (
-          <CreatableSelect
-            openMenuOnFocus
-            className={`form-control edit-${type}-type__input`}
-            isClearable
-            value={resolveSelectOptions(typeOptions, newType).find(({ value }) => value === newType)}
-            onChange={(option) => onTypeChange(option ? option.value : null)}
-            autoFocus={false}
-            options={resolveSelectOptions(typeOptions, newType)}
-            placeholder={resolveSelectPlaceHolder(type)}
-            formatCreateLabel={onPromptCreate}
-          />
-        ) : (
-          <input
-            type='text'
-            className='form-control'
-            value={newType}
-            onChange={onTypeInputChange}
-            onSubmit={submit}
-            placeholder={resolveTypePlaceHolder(type)}
-          />
-        )}
-      </div>
-    )}
-    <div className='col-xs-12 col-md-6 add-element-col'>
-      <input
-        type='text'
-        className='form-control'
-        value={newTypeSpecifier}
-        onChange={onTypeSpecifierChange}
-        onSubmit={submit}
-        placeholder={resolveSpecifierPlaceHolder(type)}
-      />
-    </div>
-    {!isEmpty(defaultAttributes) &&
-      Object.keys(defaultAttributes).map((key) => (
-        <div className='col-xs-12 col-md-6' key={`${type}_${key}`}>
-          {renderInput(defaultAttributes, newDefaultAttributes, key, onDefaultAttributeChange, type, submit)}
+    <form ref={keyStrokeRef} onSubmit={submit} className='row add-element'>
+      <h5 className='col-xs-12'>{resolveHeader(type)}</h5>
+      {/* ActionType disabled for now. */}
+      {type !== 'action' && (
+        <div className='col-xs-12 col-md-6 add-element-col'>
+          {typeOptions.length !== 0 ? (
+            <CreatableSelect
+              openMenuOnFocus
+              className={`form-control edit-${type}-type__input`}
+              isClearable
+              value={resolveSelectOptions(typeOptions, newType).find(({ value }) => value === newType)}
+              onChange={(option) => onTypeChange(option ? option.value : null)}
+              autoFocus={false}
+              options={resolveSelectOptions(typeOptions, newType)}
+              placeholder={resolveSelectPlaceHolder(type)}
+              formatCreateLabel={onPromptCreate}
+            />
+          ) : (
+            <input
+              type='text'
+              className='form-control'
+              value={newType}
+              onChange={onTypeInputChange}
+              onSubmit={submit}
+              placeholder={resolveTypePlaceHolder(type)}
+            />
+          )}
         </div>
-      ))}
-    <div className='add-element-buttons'>
-      <button type='button' className='btn btn-success' onClick={onAddFormShowMore}>
-        {showMoreOrLess ? 'Näytä vähemmän' : 'Näytä lisää'}
-      </button>
-      <button type='button' className='btn btn-danger' onClick={cancel}>
-        Peruuta
-      </button>
-      <button className='btn btn-primary' type='submit'>
-        OK
-      </button>
-    </div>
-  </form>
+      )}
+      <div className='col-xs-12 col-md-6 add-element-col'>
+        <input
+          type='text'
+          className='form-control'
+          value={newTypeSpecifier}
+          onChange={onTypeSpecifierChange}
+          onSubmit={submit}
+          placeholder={resolveSpecifierPlaceHolder(type)}
+        />
+      </div>
+      {!isEmpty(defaultAttributes) &&
+        Object.keys(defaultAttributes).map((key) => (
+          <div className='col-xs-12 col-md-6' key={`${type}_${key}`}>
+            {renderInput(defaultAttributes, newDefaultAttributes, key, onDefaultAttributeChange, type, submit)}
+          </div>
+        ))}
+      <div className='add-element-buttons'>
+        <button type='button' className='btn btn-success' onClick={onAddFormShowMore}>
+          {showMoreOrLess ? 'Näytä vähemmän' : 'Näytä lisää'}
+        </button>
+        <button type='button' className='btn btn-danger' onClick={cancel}>
+          Peruuta
+        </button>
+        <button className='btn btn-primary' type='submit'>
+          OK
+        </button>
+      </div>
+    </form>
   );
 };
 

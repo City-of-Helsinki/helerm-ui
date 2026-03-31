@@ -1,6 +1,8 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 
 const useKeyStrokeSupport = (submit, cancel) => {
+  const elementRef = useRef(null);
+
   const handleKeyDown = useCallback(
     (e) => {
       switch (e.keyCode) {
@@ -18,11 +20,19 @@ const useKeyStrokeSupport = (submit, cancel) => {
   );
 
   useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown);
+    const element = elementRef.current;
+
+    if (!element) return;
+
+    element.addEventListener('keydown', handleKeyDown);
+
+    // eslint-disable-next-line consistent-return
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      element.removeEventListener('keydown', handleKeyDown);
     };
   }, [handleKeyDown]);
+
+  return elementRef;
 };
 
 export default useKeyStrokeSupport;
