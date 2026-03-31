@@ -140,7 +140,6 @@ const Record = React.forwardRef(
               />
             )}
             {showAttributeButton(record.attributes) && (
-              // eslint-disable-next-line jsx-a11y/control-has-associated-label
               <button
                 type='button'
                 className='btn btn-info btn-xs record-button pull-right'

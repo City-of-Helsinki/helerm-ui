@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 import classnames from 'classnames';
 import { uniqueId } from 'lodash';
 import PropTypes from 'prop-types';
