@@ -10,6 +10,8 @@ const useKeyStrokeSupport = (submit, cancel) => {
       const isEscape = e.key === 'Escape' || e.keyCode === 27;
 
       if (isEnter) {
+        e.preventDefault();
+
         submit(e);
       } else if (isEscape) {
         cancel(e);
