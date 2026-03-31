@@ -55,7 +55,6 @@ const InfinityMenu = ({
   const [isInitializing, setIsInitializing] = useState(true);
 
   const setDisplayTreeRef = useRef();
-  const initialRenderRef = useRef(true);
   const snapshotsRef = useRef({});
   const filteredTreeLengthRef = useRef(0);
   const filterTreeRef = useRef();
@@ -484,19 +483,16 @@ const InfinityMenu = ({
 
   useEffect(() => {
     if (tree !== undefined) {
-      if (initialRenderRef.current) {
-        initialRenderRef.current = false;
-        setFilteredTree(tree);
-
-        // eslint-disable-next-line @eslint-react/web-api/no-leaked-timeout
-        setTimeout(() => {
-          setIsInitializing(false);
-        }, 300);
-      } else if (!isInitializing) {
-        setFilteredTree(tree);
-      }
+      setFilteredTree(tree);
     }
-  }, [tree, isInitializing]);
+  }, [tree]);
+
+  // End initialization when fetching starts or data arrives
+  useEffect(() => {
+    if (isInitializing && (isFetching || tree.length > 0)) {
+      setIsInitializing(false);
+    }
+  }, [isInitializing, isFetching, tree]);
 
   useEffect(() => {
     if (!tree || isInitializing) return;
