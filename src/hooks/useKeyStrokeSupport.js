@@ -5,15 +5,14 @@ const useKeyStrokeSupport = (submit, cancel) => {
 
   const handleKeyDown = useCallback(
     (e) => {
-      switch (e.keyCode) {
-        case 13:
-          submit(e);
-          break;
-        case 27:
-          cancel(e);
-          break;
-        default:
-          break;
+      // Support both modern e.key and legacy e.keyCode
+      const isEnter = e.key === 'Enter' || e.keyCode === 13;
+      const isEscape = e.key === 'Escape' || e.keyCode === 27;
+
+      if (isEnter) {
+        submit(e);
+      } else if (isEscape) {
+        cancel(e);
       }
     },
     [submit, cancel],
