@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';

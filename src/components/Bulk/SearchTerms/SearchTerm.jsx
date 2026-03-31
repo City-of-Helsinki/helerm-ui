@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
 import { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';

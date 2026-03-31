@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import DOMPurify from 'dompurify';

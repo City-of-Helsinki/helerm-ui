@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 import classnames from 'classnames';
 import { find, forEach, includes, map } from 'lodash';
 import PropTypes from 'prop-types';

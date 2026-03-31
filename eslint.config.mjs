@@ -5,7 +5,6 @@ import importPlugin from 'eslint-plugin-import-x';
 import sonarjs from 'eslint-plugin-sonarjs';
 import globals from 'globals';
 import js from '@eslint/js';
-import jsxA11y from 'eslint-plugin-jsx-a11y';
 import vitestGlobals from "eslint-config-vitest-globals/flat";
 import eslintReact from "@eslint-react/eslint-plugin";
 
@@ -27,7 +26,6 @@ export default defineConfig([
       js.configs.recommended,
       eslintReact.configs.recommended,
       importPlugin.flatConfigs.recommended,
-      jsxA11y.flatConfigs.recommended,
       eslintConfigPrettier,
       sonarjs.configs.recommended,
       vitestGlobals()
@@ -80,18 +78,6 @@ export default defineConfig([
       '@eslint-react/function-component-definition': 0,
       '@eslint-react/forbid-prop-types': 0,
       '@eslint-react/exhaustive-deps': 0,
-      'jsx-a11y/no-autofocus': 0,
-      'jsx-a11y/control-has-associated-label': 1,
-      'jsx-a11y/label-has-associated-control': [
-        'error',
-        {
-          components: ['Label'],
-          required: {
-            some: ['nesting', 'id'],
-          },
-          allowChildren: false,
-        },
-      ],
       '@eslint-react/no-unstable-nested-components': 0,
       '@eslint-react/require-default-props': 0,
       'import-x/extensions': 0,

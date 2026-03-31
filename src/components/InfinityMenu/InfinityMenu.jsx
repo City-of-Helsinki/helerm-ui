@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import classnames from 'classnames';
 import Defiant from 'defiant.js';
 import cloneDeep from 'lodash/cloneDeep';
