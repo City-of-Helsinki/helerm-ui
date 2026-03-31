@@ -39,7 +39,7 @@
     "exceljs": "^4.4.0",
     "fast-text-encoding": "^1.0.6",
     "globals": "^17.4.0",
-    "gzipper": "^7.2.0",
+    "gzipper": "^8.2.1",
     "hds-core": "^4.9.0",
     "hds-design-tokens": "^4.9.0",
     "hds-react": "^4.9.0",
@@ -114,6 +114,7 @@
     "shadow-dom-testing-library": "^1.13.1"
   },
   "resolutions": {
-    "brace-expansion": ">=1.1.13"
+    "brace-expansion": ">=1.1.13",
+    "minimatch": "^10.2.4"
   }
 }
