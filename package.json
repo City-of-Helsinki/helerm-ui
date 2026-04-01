@@ -43,7 +43,6 @@
     "hds-core": "^4.9.0",
     "hds-design-tokens": "^4.9.0",
     "hds-react": "^4.9.0",
-    "immutability-helper": "^3.1.1",
     "isomorphic-fetch": "^3.0.0",
     "lodash": "^4.17.23",
     "moment": "^2.29.4",
