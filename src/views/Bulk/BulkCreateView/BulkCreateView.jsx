@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign, sonarjs/no-nested-functions */
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -77,7 +77,9 @@ const BulkCreateView = () => {
     phases: 0,
     records: 0,
   });
-  const [searchTerms, setSearchTerms] = useState([{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }]);
+  const [searchTerms, setSearchTerms] = useState(() => [
+    { ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() },
+  ]);
   const [stateValue, setStateValue] = useState('draft');
 
   const getAttributeName = (attribute) => {

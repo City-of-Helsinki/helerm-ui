@@ -9,7 +9,7 @@ import MatomoContext from '../components/Matomo/matomo-context';
 import MatomoTracker from '../components/Matomo/MatomoTracker';
 import config from '../config';
 import useAuth from '../hooks/useAuth';
-import useCookieConsentSettings from '../hooks/useCookieConsentSettings';
+import getCookieConsentSettings from '../utils/getCookieConsentSettings';
 import { fetchAttributeTypesThunk, fetchTemplatesThunk } from '../store/reducers/ui';
 import { retrieveUserFromSession } from '../store/reducers/user';
 import '../styles/core.scss';
@@ -87,7 +87,7 @@ const AppContainer = ({ routes, store }) => {
 
   const router = createBrowserRouter(createRoutesFromElements(routes), { basename: '/' });
 
-  const cookieConsentProps = useCookieConsentSettings();
+  const cookieConsentProps = getCookieConsentSettings();
 
   return (
     <CookieConsentContextProvider {...cookieConsentProps}>

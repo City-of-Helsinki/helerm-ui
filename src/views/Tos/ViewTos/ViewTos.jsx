@@ -160,9 +160,9 @@ const ViewTOS = () => {
     topOffset: 0,
   });
 
-  const phases = useRef({});
-  const metadata = useRef(null);
-  const header = useRef(null);
+  const phasesRef = useRef({});
+  const metadataRef = useRef(null);
+  const headerRef = useRef(null);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -537,20 +537,20 @@ const ViewTOS = () => {
   );
 
   const scrollToMetadata = useCallback(() => {
-    if (metadata.current) {
-      window.scrollTo(0, metadata.current.offsetTop + HEADER_HEIGHT);
+    if (metadataRef.current) {
+      window.scrollTo(0, metadataRef.current.offsetTop + HEADER_HEIGHT);
     }
   }, []);
 
   const scrollToType = useCallback(
     (type, id) => {
-      if (type === 'phase' && phases.current[id]) {
-        phases.current[id].scrollToPhase();
+      if (type === 'phase' && phasesRef.current[id]) {
+        phasesRef.current[id].scrollToPhase();
       } else if (type === 'action') {
         const action = selectedTOS.actions[id];
 
-        if (action?.phase && phases.current[action?.phase]) {
-          phases.current[action?.phase].scrollToAction(id);
+        if (action?.phase && phasesRef.current[action?.phase]) {
+          phasesRef.current[action?.phase].scrollToAction(id);
         }
       } else if (type === 'record') {
         const record = selectedTOS.records[id];
@@ -558,8 +558,8 @@ const ViewTOS = () => {
         if (record?.action) {
           const action = selectedTOS.actions[record?.action];
 
-          if (action?.phase && phases.current[action?.phase]) {
-            phases.current[action?.phase].scrollToActionRecord(record?.action, id);
+          if (action?.phase && phasesRef.current[action?.phase]) {
+            phasesRef.current[action?.phase].scrollToActionRecord(record?.action, id);
           }
         }
       }
@@ -723,7 +723,7 @@ const ViewTOS = () => {
                 changeOrder={(data) => dispatch(changeOrderThunk(data))}
                 importItems={(data) => dispatch(importItemsThunk(data))}
                 ref={(element) => {
-                  phases.current[key] = element;
+                  phasesRef.current[key] = element;
                 }}
               />,
             );
@@ -848,7 +848,7 @@ const ViewTOS = () => {
   if (!isFetching && selectedTOS.id) {
     const { phasesOrder, phaseElements, metaDataButtons, TOSMetaData, reorderPhases } = memoizedTosData;
     const { scrollTop } = state;
-    const headerHeight = header.current ? header.current.clientHeight : 0;
+    const headerHeight = headerRef.current ? headerRef.current.clientHeight : 0;
 
     return (
       <DndProvider backend={HTML5Backend} context={window}>
@@ -863,7 +863,7 @@ const ViewTOS = () => {
             }}
           />
           <div className='col-xs-12 single-tos-container'>
-            <div id='single-tos-header-container' ref={header}>
+            <div id='single-tos-header-container' ref={headerRef}>
               <Sticky
                 topOffset={-1 * state.topOffset}
                 stickyStyle={{
@@ -919,7 +919,7 @@ const ViewTOS = () => {
                     selectedTOS={selectedTOS}
                     setVersionVisibility={(isVisible) => dispatch(setVersionVisibility(isVisible))}
                   />
-                  <div className='row tos-metadata-header' ref={metadata}>
+                  <div className='row tos-metadata-header' ref={metadataRef}>
                     <div className='col-xs-6'>
                       <h4>Käsittelyprosessin tiedot</h4>
                     </div>

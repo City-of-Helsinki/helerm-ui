@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -29,7 +29,7 @@ vi.mock('react-router-dom', async () => {
 
   return {
     ...mod,
-    useNavigate: () => mockNavigate,
+    useNavigate: vi.fn(() => mockNavigate),
   };
 });
 
@@ -38,15 +38,14 @@ vi.mock('hds-react', async () => {
 
   return {
     ...mod,
-    // eslint-disable-next-line react/prop-types
-    LoginCallbackHandler: ({ onSuccess, children }) => {
+    LoginCallbackHandler: vi.fn(({ onSuccess, children }) => {
       useEffect(() => {
         onSuccess(mockUser);
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
 
       return <div>{children}</div>;
-    },
+    }),
     getApiTokenFromStorage: vi.fn().mockReturnValue('mock-token'),
   };
 });

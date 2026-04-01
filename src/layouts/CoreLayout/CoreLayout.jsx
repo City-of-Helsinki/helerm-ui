@@ -7,7 +7,7 @@ import Header from '../../components/Header';
 import Loader from '../../components/Loader';
 import useMatomo from '../../components/Matomo/hooks/useMatomo';
 import Navigation from '../../components/Navigation/Navigation';
-import { COOKIE_CONSENT_GROUP } from '../../hooks/useCookieConsentSettings';
+import { COOKIE_CONSENT_GROUP } from '../../utils/getCookieConsentSettings';
 import './CoreLayout.scss';
 
 const CoreLayout = ({ children }) => {

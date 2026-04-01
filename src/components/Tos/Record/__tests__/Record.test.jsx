@@ -32,6 +32,7 @@ const mockProps = createMockComponentProps('record', {
 });
 
 const renderComponent = (props = {}) => {
+  // eslint-disable-next-line @eslint-react/no-create-ref
   return renderWithProviders(<Record {...mockProps} {...props} ref={React.createRef()} />);
 };
 
@@ -180,6 +181,7 @@ describe('<Record />', () => {
         is_open: false,
       };
 
+      // eslint-disable-next-line @eslint-react/no-create-ref
       rerender(<Record {...mockProps} record={closedRecord} ref={React.createRef()} />);
 
       expect(container.querySelector('.record-open')).not.toBeInTheDocument();

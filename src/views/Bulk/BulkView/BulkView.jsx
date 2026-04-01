@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import classnames from 'classnames';
 import { cloneDeep, every, find, isEmpty, keys, omit, split } from 'lodash';

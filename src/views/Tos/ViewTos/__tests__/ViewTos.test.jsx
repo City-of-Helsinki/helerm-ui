@@ -1,4 +1,3 @@
-import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -31,8 +30,8 @@ vi.mock('react-router-dom', async () => {
 
   return {
     ...mod,
-    useParams: () => mockUseParams(),
-    useNavigate: () => mockNavigate,
+    useParams: vi.fn(() => mockUseParams()),
+    useNavigate: vi.fn(() => mockNavigate),
   };
 });
 

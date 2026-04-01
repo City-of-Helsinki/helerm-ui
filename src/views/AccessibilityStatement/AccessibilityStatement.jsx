@@ -1,4 +1,3 @@
-import React from 'react';
 import raw from 'raw.macro';
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';

@@ -1,4 +1,3 @@
-/* eslint-disable import/order */
 import tosReducer, {
   // Thunks
   fetchTOSThunk,
@@ -48,7 +47,6 @@ import tosReducer, {
   receiveTemplate,
   executeOrderChange,
 } from './main';
-
 import { createNewAction } from './action';
 import { createNewPhase } from './phase';
 import { createNewRecord } from './record';

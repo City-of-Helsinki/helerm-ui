@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { render, renderHook } from '@testing-library/react';
 
 import MatomoContext, { MatomoProvider } from '../../matomo-context';
@@ -19,6 +19,7 @@ describe('useMatomo', () => {
     expect(result.current.trackPageView).toBeDefined();
   });
 
+  // eslint-disable-next-line @eslint-react/component-hook-factories
   const MockedComponent = () => {
     const { trackPageView } = useMatomo();
 
@@ -32,9 +33,11 @@ describe('useMatomo', () => {
   it('should trackPageView', () => {
     const trackPageViewMock = vi.fn();
 
-    vi.spyOn(MatomoTracker, 'default').mockImplementation(() => ({
-      trackPageView: trackPageViewMock,
-    }));
+    vi.spyOn(MatomoTracker, 'default').mockImplementation(function () {
+      return {
+        trackPageView: trackPageViewMock,
+      };
+    });
 
     const instance = new MatomoTracker.default({
       urlBase: MOCK_URL,
@@ -43,6 +46,7 @@ describe('useMatomo', () => {
       enabled: true,
     });
 
+    // eslint-disable-next-line @eslint-react/component-hook-factories
     const MockProvider = () => (
       <MatomoProvider value={instance}>
         <MockedComponent />

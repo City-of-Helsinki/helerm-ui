@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -188,10 +187,13 @@ describe('<Navigation />', () => {
       );
 
       // Component fetches on mount - wait for fetch to complete
-      await waitFor(() => {
-        const state = store.getState().navigation;
-        expect(state.isFetching).toBe(false);
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          const state = store.getState().navigation;
+          expect(state.isFetching).toBe(false);
+        },
+        { timeout: 5000 },
+      );
 
       // Get the fetched items - if convertToTree failed, items will be empty
       // In that case, skip the state preservation test since there's nothing to preserve
@@ -241,10 +243,13 @@ describe('<Navigation />', () => {
       );
 
       // Component fetches on mount - wait for fetch to complete
-      await waitFor(() => {
-        const state = store.getState().navigation;
-        expect(state.isFetching).toBe(false);
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          const state = store.getState().navigation;
+          expect(state.isFetching).toBe(false);
+        },
+        { timeout: 5000 },
+      );
 
       // Get the fetched items - if convertToTree failed, items will be empty
       // In that case, skip the state preservation test since there's nothing to preserve
@@ -292,10 +297,13 @@ describe('<Navigation />', () => {
       );
 
       // Component fetches on mount - wait for fetch to complete
-      await waitFor(() => {
-        const state = store.getState().navigation;
-        expect(state.isFetching).toBe(false);
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          const state = store.getState().navigation;
+          expect(state.isFetching).toBe(false);
+        },
+        { timeout: 5000 },
+      );
 
       // Get the fetched items - if convertToTree failed, items will be empty
       // In that case, skip the state preservation test since there's nothing to preserve
@@ -375,10 +383,13 @@ describe('<Navigation />', () => {
       );
 
       // Component fetches on mount - wait for fetch to complete
-      await waitFor(() => {
-        const state = store.getState().navigation;
-        expect(state.isFetching).toBe(false);
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          const state = store.getState().navigation;
+          expect(state.isFetching).toBe(false);
+        },
+        { timeout: 5000 },
+      );
 
       // Get the fetched items - if convertToTree failed, items will be empty
       // In that case, skip the state preservation test since there's nothing to preserve
@@ -425,10 +436,13 @@ describe('<Navigation />', () => {
       );
 
       // Component fetches on mount - wait for fetch to complete
-      await waitFor(() => {
-        const state = store.getState().navigation;
-        expect(state.isFetching).toBe(false);
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          const state = store.getState().navigation;
+          expect(state.isFetching).toBe(false);
+        },
+        { timeout: 5000 },
+      );
 
       // Get the fetched items - if convertToTree failed, items will be empty
       const fetchedItems = store.getState().navigation.items;
@@ -498,10 +512,13 @@ describe('<Navigation />', () => {
       );
 
       // Component fetches on mount - wait for fetch to complete
-      await waitFor(() => {
-        const state = store.getState().navigation;
-        expect(state.isFetching).toBe(false);
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          const state = store.getState().navigation;
+          expect(state.isFetching).toBe(false);
+        },
+        { timeout: 5000 },
+      );
 
       // Get the fetched items - if convertToTree failed, items will be empty
       // In that case, skip the state preservation test since there's nothing to preserve
@@ -547,10 +564,13 @@ describe('<Navigation />', () => {
       );
 
       // Component fetches on mount - wait for fetch to complete
-      await waitFor(() => {
-        const state = store.getState().navigation;
-        expect(state.isFetching).toBe(false);
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          const state = store.getState().navigation;
+          expect(state.isFetching).toBe(false);
+        },
+        { timeout: 5000 },
+      );
 
       // Get the fetched items - if convertToTree failed, items will be empty
       // In that case, skip the state preservation test since there's nothing to preserve
@@ -594,10 +614,13 @@ describe('<Navigation />', () => {
         { preloadedState: initialState },
       );
 
-      await waitFor(() => {
-        const state = store.getState().navigation;
-        expect(state.isFetching).toBe(false);
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          const state = store.getState().navigation;
+          expect(state.isFetching).toBe(false);
+        },
+        { timeout: 5000 },
+      );
 
       const fetchedItems = store.getState().navigation.items;
       if (fetchedItems.length === 0) {
@@ -627,10 +650,13 @@ describe('<Navigation />', () => {
         { preloadedState: initialState },
       );
 
-      await waitFor(() => {
-        const state = store.getState().navigation;
-        expect(state.isFetching).toBe(false);
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          const state = store.getState().navigation;
+          expect(state.isFetching).toBe(false);
+        },
+        { timeout: 5000 },
+      );
 
       const fetchedItems = store.getState().navigation.items;
       if (fetchedItems.length === 0) {
@@ -674,10 +700,13 @@ describe('<Navigation />', () => {
       );
 
       // Component fetches on mount - wait for fetch to complete
-      await waitFor(() => {
-        const state = store.getState().navigation;
-        expect(state.isFetching).toBe(false);
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          const state = store.getState().navigation;
+          expect(state.isFetching).toBe(false);
+        },
+        { timeout: 5000 },
+      );
 
       const fetchedItems = store.getState().navigation.items;
       if (fetchedItems.length === 0) {
@@ -720,10 +749,13 @@ describe('<Navigation />', () => {
         { preloadedState: initialState },
       );
 
-      await waitFor(() => {
-        const state = store.getState().navigation;
-        expect(state.isFetching).toBe(false);
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          const state = store.getState().navigation;
+          expect(state.isFetching).toBe(false);
+        },
+        { timeout: 5000 },
+      );
 
       const fetchedItems = store.getState().navigation.items;
       if (fetchedItems.length === 0) {
@@ -752,10 +784,13 @@ describe('<Navigation />', () => {
         { preloadedState: initialState },
       );
 
-      await waitFor(() => {
-        const state = store.getState().navigation;
-        expect(state.isFetching).toBe(false);
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          const state = store.getState().navigation;
+          expect(state.isFetching).toBe(false);
+        },
+        { timeout: 5000 },
+      );
 
       // When itemsTimestamp is falsy, the if (itemsTimestamp) check in else branch fails
       // This tests line 220: if (itemsTimestamp) prevItemsTimestampRef.current = itemsTimestamp;

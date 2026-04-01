@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import { PAGE_HEADER_ID } from '../constants';
-import siteSettings from './data/siteSettings.json';
+import siteSettings from '../hooks/data/siteSettings.json';
 
 export const COOKIE_CONSENT_GROUP = {
   Tunnistamo: 'tunnistamo',
@@ -8,7 +8,7 @@ export const COOKIE_CONSENT_GROUP = {
   Statistics: 'statistics',
 };
 
-const useCookieConsentSettings = () => {
+const getCookieConsentSettings = () => {
   const cookieConsentProps = {
     onChange: (changeEvent) => {
       const { acceptedGroups } = changeEvent;
@@ -31,4 +31,4 @@ const useCookieConsentSettings = () => {
   return cookieConsentProps;
 };
 
-export default useCookieConsentSettings;
+export default getCookieConsentSettings;

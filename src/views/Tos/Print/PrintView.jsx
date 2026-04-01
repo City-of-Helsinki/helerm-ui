@@ -1,5 +1,5 @@
 /* eslint-disable operator-assignment */
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import get from 'lodash/get';

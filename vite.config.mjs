@@ -1,10 +1,9 @@
-/* eslint-disable import/no-unresolved */
-import react from '@vitejs/plugin-react-swc';
+import react from '@vitejs/plugin-react';
 import macros from "vite-plugin-babel-macros";
-import eslint from 'vite-plugin-eslint';
+import eslintPlugin from "@nabla/vite-plugin-eslint";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   base: '/',
   envPrefix: 'REACT_APP_',
   plugins: [
@@ -13,7 +12,7 @@ export default defineConfig({
         plugins: ['babel-plugin-macros']
       }
     }),
-    eslint(),
+    ...(mode !== 'test' ? [eslintPlugin()] : []),
     macros()
   ],
   build: {
@@ -47,7 +46,7 @@ export default defineConfig({
     reporters: ['verbose'],
     coverage: {
       reporter: ['clover', 'json', 'lcov', 'text'],
-      include: ['src/**/*'],
+      include: ['src/**/*.{js,jsx}'],
       exclude: [
         ...coverageConfigDefaults.exclude,
         '**/__snapshots__/**',
@@ -57,4 +56,4 @@ export default defineConfig({
     },
     testTimeout: 1000000
   }
-})
+}));
