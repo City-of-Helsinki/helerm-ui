@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.8.4](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.8.3...helerm-ui-v1.8.4) (2026-04-08)
+
+
+### Bug Fixes
+
+* InfinityMenu initalizing state bug Refs: KEH-277 ([1eb3405](https://github.com/City-of-Helsinki/helerm-ui/commit/1eb3405c6e4f94d1117169553a0a37d51577e55c))
+* UseKeyStrokeSupport preventDefault Refs: KEH-277 ([8464292](https://github.com/City-of-Helsinki/helerm-ui/commit/84642920d235298b862a7bfc315af5fb0c054fbe))
+* UseKeyStrokeSupport ref Refs: KEH-277 ([f435646](https://github.com/City-of-Helsinki/helerm-ui/commit/f435646c4ad6767e6ccc5e2288cfef442dc737c0))
+
+
+### Dependencies
+
+* Brace-expansion resolution Refs: KEH-277 ([623c2b8](https://github.com/City-of-Helsinki/helerm-ui/commit/623c2b8734f5c669a89af544d91eee21745fd67c))
+* Bump @babel/runtime from 7.24.4 to 7.29.2 ([252e5c2](https://github.com/City-of-Helsinki/helerm-ui/commit/252e5c287eb1d7c89d81f551fd5aa25c0fb3b0b0))
+* Bump lodash from 4.17.23 to 4.18.1 ([f22b171](https://github.com/City-of-Helsinki/helerm-ui/commit/f22b171c2673b85e651dca25e4a3ac1904fc2678))
+* Bump vite from 8.0.3 to 8.0.5 ([c83bb66](https://github.com/City-of-Helsinki/helerm-ui/commit/c83bb6693bf0baf55a434e3e9e4e30d8f34503ad))
+* Eslint-plugin-react to @eslint-react/eslint-plugin Refs: KEH-277 ([6e0ff38](https://github.com/City-of-Helsinki/helerm-ui/commit/6e0ff383d199be1e87868c8e9034bdcfe10e952a))
+* Jsdom to 29.0.1 Refs: KEH-277 ([ecd03af](https://github.com/City-of-Helsinki/helerm-ui/commit/ecd03af9721402f66e1aa115e1ab3de3117e7ac6))
+* Migrate eslint v9 to v10 Refs: KEH-277 ([0befaef](https://github.com/City-of-Helsinki/helerm-ui/commit/0befaef42373df10d403b74650397d6f96d873f7))
+* Minimatch resolution Refs: KEH-277 ([eec160a](https://github.com/City-of-Helsinki/helerm-ui/commit/eec160a41a6567a4e86a32d260e3a1e16cd22681))
+* Remove eslint-plugin-jsx-a11y Refs: KEH-277 ([e5da0cf](https://github.com/City-of-Helsinki/helerm-ui/commit/e5da0cf7c693e6478e8390dab05b4087e7075b60))
+* Remove resolutions, upgrade vite Refs: KEH-277 ([8f9ae31](https://github.com/City-of-Helsinki/helerm-ui/commit/8f9ae31a5c475c5ae201bebdf53b362f65a05768))
+* Remove unnecessary history Refs: KEH-277 ([ffaffb6](https://github.com/City-of-Helsinki/helerm-ui/commit/ffaffb693bc76cf2a418fbe57a3ac099f60200cd))
+* Remove unnecessary immutability-helper Refs: KEH-277 ([447141f](https://github.com/City-of-Helsinki/helerm-ui/commit/447141fdd6d0e750dcf0e0292aaa8d78d8fed19f))
+
 ## [1.8.3](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.8.2...helerm-ui-v1.8.3) (2026-03-27)
 
 
