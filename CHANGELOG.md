@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.5](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.8.4...helerm-ui-v1.8.5) (2026-04-21)
+
+
+### Dependencies
+
+* Bump dompurify from 3.3.3 to 3.4.0 ([8d06f82](https://github.com/City-of-Helsinki/helerm-ui/commit/8d06f829e702089414b65d0d46feb6c7d18780c5))
+
 ## [1.8.4](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.8.3...helerm-ui-v1.8.4) (2026-04-08)
 
 
