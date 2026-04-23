@@ -28,7 +28,7 @@ export class Unauthorized extends Error {
  * @param query
  * @returns {string}
  */
-export function buildQueryString(query) {
+function buildQueryString(query) {
   const pairs = [];
 
   forEach(query, (value, key) => {
