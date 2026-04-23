@@ -71,17 +71,19 @@ const App = ({ router }) => {
 const AppContainer = ({ routes, store }) => {
   const matomoTracker = useMemo(
     () =>
-      new MatomoTracker({
-        urlBase: config.MATOMO_URL_BASE,
-        siteId: config.MATOMO_SITE_ID,
-        srcUrl: config.MATOMO_SRC_URL,
-        enabled: config.MATOMO_ENABLED,
-        configurations: {
-          ...(config.MATOMO_COOKIE_DOMAIN && { setCookieDomain: config.MATOMO_COOKIE_DOMAIN }),
-          ...(config.MATOMO_DOMAINS && { setDomains: config.MATOMO_DOMAINS.split(',') }),
-          setDoNotTrack: true,
-        },
-      }),
+      config.MATOMO_URL_BASE && config.MATOMO_SITE_ID
+        ? new MatomoTracker({
+            urlBase: config.MATOMO_URL_BASE,
+            siteId: config.MATOMO_SITE_ID,
+            srcUrl: config.MATOMO_SRC_URL,
+            enabled: config.MATOMO_ENABLED,
+            configurations: {
+              ...(config.MATOMO_COOKIE_DOMAIN && { setCookieDomain: config.MATOMO_COOKIE_DOMAIN }),
+              ...(config.MATOMO_DOMAINS && { setDomains: config.MATOMO_DOMAINS.split(',') }),
+              setDoNotTrack: true,
+            },
+          })
+        : null,
     [],
   );
 
