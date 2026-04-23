@@ -1,5 +1,6 @@
 import { BrowserRouter } from 'react-router-dom';
-import { fireEvent, waitFor, render } from '@testing-library/react';
+import { waitFor, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import InfinityMenu from '../InfinityMenu';
 import { navigationStateFilters } from '../../../constants';
@@ -92,6 +93,11 @@ const renderMenu = (props = {}) =>
       <InfinityMenu {...defaultProps} {...props} />
     </BrowserRouter>,
   );
+
+const renderMenuWithUser = (props = {}) => {
+  const user = userEvent.setup();
+  return { user, ...renderMenu(props) };
+};
 
 describe('<InfinityMenu />', () => {
   beforeEach(() => {
@@ -219,7 +225,7 @@ describe('<InfinityMenu />', () => {
       const onNodeMouseClick = vi.fn();
       const tree = buildSimpleTree();
 
-      const { container } = renderMenu({ tree, onNodeMouseClick });
+      const { user, container } = renderMenuWithUser({ tree, onNodeMouseClick });
 
       await waitFor(() => {
         const nodeBtn = container.querySelector('.infinity-menu-node-container');
@@ -227,7 +233,7 @@ describe('<InfinityMenu />', () => {
       });
 
       const nodeBtn = container.querySelector('.infinity-menu-node-container');
-      fireEvent.click(nodeBtn);
+      await user.click(nodeBtn);
 
       expect(onNodeMouseClick).toHaveBeenCalledOnce();
       const [, newTree] = onNodeMouseClick.mock.calls[0];
@@ -239,7 +245,7 @@ describe('<InfinityMenu />', () => {
       const tree = buildSimpleTree();
       tree[0].isOpen = true;
 
-      const { container } = renderMenu({ tree, onNodeMouseClick });
+      const { user, container } = renderMenuWithUser({ tree, onNodeMouseClick });
 
       await waitFor(() => {
         const nodeBtns = container.querySelectorAll('.infinity-menu-node-container');
@@ -248,7 +254,7 @@ describe('<InfinityMenu />', () => {
 
       // The first button is node-1 (already open)
       const openNodeBtn = container.querySelectorAll('.infinity-menu-node-container')[0];
-      fireEvent.click(openNodeBtn);
+      await user.click(openNodeBtn);
 
       expect(onNodeMouseClick).toHaveBeenCalledOnce();
       const [, newTree] = onNodeMouseClick.mock.calls[0];
@@ -260,14 +266,14 @@ describe('<InfinityMenu />', () => {
       const tree = buildSimpleTree();
       tree[0].isOpen = true;
 
-      const { container } = renderMenu({ tree, onLeafMouseClick });
+      const { user, container } = renderMenuWithUser({ tree, onLeafMouseClick });
 
       await waitFor(() => {
         expect(container.querySelector('.infinity-menu-leaf-container')).toBeInTheDocument();
       });
 
       const leaf = container.querySelector('.infinity-menu-leaf-container');
-      fireEvent.click(leaf);
+      await user.click(leaf);
 
       expect(onLeafMouseClick).toHaveBeenCalledOnce();
       expect(onLeafMouseClick.mock.calls[0][1].id).toBe('leaf-1');
@@ -339,11 +345,11 @@ describe('<InfinityMenu />', () => {
       const onNodeMouseClick = vi.fn();
       const tree = buildSimpleTree();
       tree[0].isOpen = true;
-      const { getByText } = renderMenu({ tree, maxLeaves: 1, onNodeMouseClick });
+      const { user, getByText } = renderMenuWithUser({ tree, maxLeaves: 1, onNodeMouseClick });
       await waitFor(() => {
         expect(getByText(/Näytä lisää/)).toBeInTheDocument();
       });
-      fireEvent.click(getByText(/Näytä lisää/));
+      await user.click(getByText(/Näytä lisää/));
       expect(onNodeMouseClick).toHaveBeenCalledOnce();
     });
   });
@@ -375,9 +381,9 @@ describe('<InfinityMenu />', () => {
   describe('Navigation header', () => {
     it('nav-button click calls toggleNavigationVisibility', async () => {
       const toggleNavigationVisibility = vi.fn();
-      const { container } = renderMenu({ toggleNavigationVisibility });
+      const { user, container } = renderMenuWithUser({ toggleNavigationVisibility });
       const navBtn = container.querySelector('.nav-button');
-      fireEvent.click(navBtn);
+      await user.click(navBtn);
       expect(toggleNavigationVisibility).toHaveBeenCalledOnce();
     });
     it('breadcrumb path items render as li elements', async () => {
@@ -395,11 +401,11 @@ describe('<InfinityMenu />', () => {
     it('clicking breadcrumb calls toggleNavigationVisibility', async () => {
       const toggleNavigationVisibility = vi.fn();
       const path = ['Taso 1'];
-      const { container } = renderMenu({ path, toggleNavigationVisibility });
+      const { user, container } = renderMenuWithUser({ path, toggleNavigationVisibility });
       await waitFor(() => {
         expect(container.querySelector('.breadcrumb')).toBeInTheDocument();
       });
-      fireEvent.click(container.querySelector('.breadcrumb'));
+      await user.click(container.querySelector('.breadcrumb'));
       expect(toggleNavigationVisibility).toHaveBeenCalled();
     });
     it('does not render breadcrumb when path is empty', async () => {
@@ -466,6 +472,81 @@ describe('<InfinityMenu />', () => {
 
     it('does not crash when path is undefined', () => {
       expect(() => renderMenu({ path: undefined })).not.toThrow();
+    });
+  });
+
+  describe('onNodeClick', () => {
+    it('toggles node isOpen and calls onNodeMouseClick with updated tree', async () => {
+      const tree = [
+        {
+          id: 'node-1',
+          name: 'Parent Node',
+          isOpen: false,
+          children: [{ id: 'leaf-1', name: 'Leaf Node' }],
+        },
+      ];
+      const onNodeMouseClick = vi.fn();
+      const { user } = renderMenuWithUser({ tree, onNodeMouseClick });
+
+      await user.click(screen.getByText('Parent Node', { exact: false }));
+
+      expect(onNodeMouseClick).toHaveBeenCalledTimes(1);
+
+      const [, newTree, updatedNode] = onNodeMouseClick.mock.calls[0];
+
+      expect(updatedNode.isOpen).toBe(true);
+      expect(newTree[0].isOpen).toBe(true);
+    });
+
+    it('toggles node isOpen back to false when node is already open', async () => {
+      const tree = [
+        {
+          id: 'node-1',
+          name: 'Open Node',
+          isOpen: true,
+          children: [{ id: 'leaf-1', name: 'Leaf Node' }],
+        },
+      ];
+      const onNodeMouseClick = vi.fn();
+      const { user } = renderMenuWithUser({ tree, onNodeMouseClick });
+
+      // click the button for the open node (first one)
+      const buttons = screen.getAllByRole('button', { name: /Open Node/i });
+      await user.click(buttons[0]);
+
+      const [, newTree, updatedNode] = onNodeMouseClick.mock.calls[0];
+
+      expect(updatedNode.isOpen).toBe(false);
+      expect(newTree[0].isOpen).toBe(false);
+    });
+  });
+
+  describe('onLoadMoreClick', () => {
+    it('increases parent maxLeaves and calls onNodeMouseClick with updated tree', async () => {
+      const tree = [
+        {
+          id: 'node-1',
+          name: 'Parent Node',
+          isOpen: true,
+          maxLeaves: 1,
+          children: [
+            { id: 'leaf-1', name: 'Leaf One' },
+            { id: 'leaf-2', name: 'Leaf Two' },
+          ],
+        },
+      ];
+      const onNodeMouseClick = vi.fn();
+      // maxLeaves=1 means only first child renders; second child triggers "load more"
+      const { user } = renderMenuWithUser({ tree, onNodeMouseClick, maxLeaves: 1 });
+
+      await user.click(screen.getByText('Näytä lisää'));
+
+      expect(onNodeMouseClick).toHaveBeenCalledTimes(1);
+
+      const [, newTree] = onNodeMouseClick.mock.calls[0];
+
+      // parent maxLeaves should increase from 1 to 2
+      expect(newTree[0].maxLeaves).toBe(2);
     });
   });
 });

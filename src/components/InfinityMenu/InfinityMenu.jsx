@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import cloneDeep from 'lodash/cloneDeep';
 import _get from 'lodash/get';
-import NestedObjects from 'nested-objects';
+import _set from 'lodash/set';
 import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -156,7 +156,7 @@ const InfinityMenu = ({
         };
 
         const newTree = cloneDeep(tree);
-        NestedObjects.set(newTree, keyPath, updatedNode);
+        _set(newTree, keyPath, updatedNode);
 
         if (onNodeMouseClick) {
           const currLevel = Math.floor(keyPath.split('.').length / 2);
@@ -182,7 +182,7 @@ const InfinityMenu = ({
 
       const newTree = cloneDeep(tree);
 
-      NestedObjects.set(newTree, parentPath.join('.'), updatedParentNode);
+      _set(newTree, parentPath.join('.'), updatedParentNode);
 
       if (onNodeMouseClick) {
         const currLevel = Math.floor(keyPath.split('.').length / 2);
