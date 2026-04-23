@@ -1,6 +1,12 @@
-import deepFreeze from 'deep-freeze';
-
 import { convertToTree } from '../helpers';
+
+const deepFreeze = (obj) => {
+  Object.getOwnPropertyNames(obj).forEach((name) => {
+    const value = obj[name];
+    if (value && typeof value === 'object') deepFreeze(value);
+  });
+  return Object.freeze(obj);
+};
 
 // Single-use test data - specific to this test file only
 const mockNavigationDataShort = [
