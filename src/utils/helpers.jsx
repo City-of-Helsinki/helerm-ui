@@ -114,7 +114,7 @@ export function normalizeTosFromApi(tos) {
  * @param tosCopy
  * @returns {*}
  */
-export function trimAttributes(tosCopy) {
+function trimAttributes(tosCopy) {
   Object.keys(tosCopy.phases).forEach((phase) => {
     if (Object.hasOwn(tosCopy.phases, phase)) {
       Object.keys(tosCopy.phases[phase].attributes).forEach((attribute) => {
@@ -210,33 +210,6 @@ export function itemById(items, id) {
 }
 
 /**
- * Centered PopUp-Window
- * @param url
- * @param title
- * @param w
- * @param h
- * @returns {Window}
- */
-export function centeredPopUp(url, title, w, h) {
-  const left = window.screen.width / 2 - w / 2;
-  const top = window.screen.height / 2 - h / 2;
-  return window.open(
-    url,
-    title,
-    `
-    toolbar=no,
-    location=no,
-    directories=no,
-    status=no, menubar=no,
-    scrollbars=no,
-    resizable=no,
-    copyhistory=no,
-    width=${w}, height=${h}, top=${top}, left=${left}
-  `,
-  );
-}
-
-/**
  * Check for user permissions
  * @param user
  * @param permission
@@ -274,21 +247,6 @@ export function getStatusLabel(status) {
 export function displayMessage(message, opts = { type: 'success' }) {
   const { title, body } = message;
   return toastr[opts.type](title, body, opts);
-}
-
-export function confirmMessage(message, options = { onOk: () => {}, onCancel: () => {} }) {
-  toastr.removeByType('confirm');
-  toastr.confirm(null, {
-    ...options,
-    component: () => (
-      <div className='confirm-toastr-component'>
-        <div>
-          <i className='fa-solid fa-triangle-exclamation' />
-        </div>
-        <div>{message}</div>
-      </div>
-    ),
-  });
 }
 
 /**
