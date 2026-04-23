@@ -105,9 +105,6 @@ importers:
       moment:
         specifier: ^2.29.4
         version: 2.30.1
-      nested-objects:
-        specifier: 0.0.2
-        version: 0.0.2
       normalizr:
         specifier: ^3.6.2
         version: 3.6.2
@@ -2805,9 +2802,6 @@ packages:
 
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
-
-  nested-objects@0.0.2:
-    resolution: {integrity: sha512-0EF0fPUEZZmAOypxKI7lVSVMncyYxpve/4JVDPUd+hvgNXJQgZuvv9/X7iuL/rZvMkb0J+BwHTK7wPVjTXOQAA==}
 
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
@@ -6650,8 +6644,6 @@ snapshots:
   napi-postinstall@0.3.4: {}
 
   natural-compare@1.4.0: {}
-
-  nested-objects@0.0.2: {}
 
   node-fetch@2.7.0:
     dependencies:
