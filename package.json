@@ -46,7 +46,6 @@
     "normalizr": "^3.6.2",
     "prettier": "^2.8.4",
     "prop-types": "^15.8.1",
-    "raw.macro": "^0.4.2",
     "react": "^18.3.1",
     "react-datepicker": "^4.25.0",
     "react-dnd": "^16.0.1",
@@ -61,7 +60,6 @@
     "remark-gfm": "^4.0.1",
     "sass": "^1.79.4",
     "vite": "^8.0.5",
-    "vite-plugin-babel-macros": "^1.0.6",
     "vitest": "^4.1.2"
   },
   "scripts": {

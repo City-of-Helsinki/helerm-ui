@@ -1,20 +1,15 @@
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
-import raw from 'raw.macro';
 import classnames from 'classnames';
 
 import './FacetedSearchHelp.scss';
+import facet from './facet_fi.md?raw';
+import searchterm from './searchterm_fi.md?raw';
 import useOutsideClick from '../../../hooks/useOutsideClick';
 
 export const FACETED_SEARCH_HELP_TYPE_FACET = 'facet';
 export const FACETED_SEARCH_HELP_TYPE_TERM = 'searchterm';
-
-// CRA does not support importing text files
-// this is offered as a solution here
-// (https://github.com/facebook/create-react-app/issues/3722)
-const searchterm = raw('./searchterm_fi.md');
-const facet = raw('./facet_fi.md');
 
 const FacetedSearchHelp = ({ type }) => {
   const { show, setShow, ref } = useOutsideClick();

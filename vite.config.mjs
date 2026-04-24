@@ -1,5 +1,4 @@
 import react from '@vitejs/plugin-react';
-import macros from "vite-plugin-babel-macros";
 import eslintPlugin from "@nabla/vite-plugin-eslint";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
 
@@ -7,13 +6,8 @@ export default defineConfig(({ mode }) => ({
   base: '/',
   envPrefix: 'REACT_APP_',
   plugins: [
-    react({
-      babel: {
-        plugins: ['babel-plugin-macros']
-      }
-    }),
+    react(),
     ...(mode !== 'test' ? [eslintPlugin()] : []),
-    macros()
   ],
   build: {
     outDir: './build',

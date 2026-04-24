@@ -1,8 +1,7 @@
-import raw from 'raw.macro';
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 
-const markdown = raw('./accessibility-statement.md');
+import markdown from './accessibility-statement.md?raw';
 
 const EXTERNAL_LINKS = [
   'https://palautteet.hel.fi',

@@ -2,16 +2,11 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
-import raw from 'raw.macro';
 import { useLocation } from 'react-router-dom';
 
 import { setNavigationVisibility } from '../../store/reducers/navigation';
+import markdown from './content_fi.md?raw';
 import './ViewInfo.scss';
-
-// CRA does not support importing text files
-// this is offered as a solution here
-// (https://github.com/facebook/create-react-app/issues/3722)
-const markdown = raw('./content_fi.md');
 
 const BODY_CLASS = 'helerm-info-view';
 

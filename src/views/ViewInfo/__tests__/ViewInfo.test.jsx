@@ -1,5 +1,5 @@
 import { BrowserRouter } from 'react-router-dom';
-import { waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 
 import ViewInfo from '../ViewInfo';
 import renderWithProviders from '../../../utils/renderWithProviders';
@@ -30,5 +30,18 @@ describe('<ViewInfo />', () => {
     unmount();
 
     await waitFor(() => expect(document.body.className).not.toContain('info-view'));
+  });
+
+  it('renders the info content heading from markdown', () => {
+    renderComponent();
+
+    expect(screen.getByRole('heading', { name: /tietoa palvelusta/i })).toBeInTheDocument();
+  });
+
+  it('renders markdown content as HTML elements', () => {
+    const { container } = renderComponent();
+
+    expect(container.querySelector('h1')).toBeInTheDocument();
+    expect(container.querySelector('p')).toBeInTheDocument();
   });
 });
