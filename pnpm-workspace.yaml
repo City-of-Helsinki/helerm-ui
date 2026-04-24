@@ -14,3 +14,8 @@ overrides:
 allowBuilds:
   esbuild: true
   unrs-resolver: true
+
+minimumReleaseAgeExclude:
+  - hds-core@6.0.2
+  - hds-design-tokens@6.0.2
+  - hds-react@6.0.2
