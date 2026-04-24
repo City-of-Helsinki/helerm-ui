@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import { uniqueId } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import Sticky from 'react-sticky-el';
 
 import { DROPDOWN_ITEMS } from '../../../constants';
@@ -16,9 +16,7 @@ import Record from '../Record/Record';
 import ReorderView from '../Reorder/ReorderView';
 import './Action.scss';
 
-const Action = React.forwardRef(
-  (
-    {
+const Action = ({
       action,
       actionTypes,
       actions,
@@ -40,9 +38,8 @@ const Action = React.forwardRef(
       removeRecord,
       setActionVisibility,
       setRecordVisibility,
-    },
-    ref,
-  ) => {
+      ref,
+    }) => {
     const [typeSpecifier, setTypeSpecifier] = useState(action.attributes.TypeSpecifier || null);
     const [type, setType] = useState(action.attributes.ActionType || null);
     const [deleting, setDeleting] = useState(false);
@@ -582,8 +579,7 @@ const Action = React.forwardRef(
         )}
       </div>
     );
-  },
-);
+};
 
 Action.propTypes = {
   action: PropTypes.object.isRequired,
@@ -603,6 +599,12 @@ Action.propTypes = {
   phasesOrder: PropTypes.array.isRequired,
   recordTypes: PropTypes.object.isRequired,
   records: PropTypes.object.isRequired,
+  ref: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.any,
+    }),
+  ]),
   removeAction: PropTypes.func.isRequired,
   removeRecord: PropTypes.func.isRequired,
   setActionVisibility: PropTypes.func.isRequired,

@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import { uniqueId } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { RenderPropSticky } from 'react-sticky-el';
 import './Phase.scss';
 
@@ -22,9 +22,7 @@ import EditorForm from '../EditorForm/EditorForm';
 import ImportView from '../ImportView/ImportView';
 import ReorderView from '../Reorder/ReorderView';
 
-const Phase = React.forwardRef(
-  (
-    {
+const Phase = ({
       phase,
       actions,
       actionTypes,
@@ -54,9 +52,8 @@ const Phase = React.forwardRef(
       editPhase,
       setPhaseVisibility,
       phaseIndex,
-    },
-    ref,
-  ) => {
+      ref,
+    }) => {
     const [typeSpecifier, setTypeSpecifier] = useState(phase.attributes.TypeSpecifier || null);
     const [type, setType] = useState(phase.attributes.PhaseType || null);
     const [deleting, setDeleting] = useState(false);
@@ -808,8 +805,7 @@ const Phase = React.forwardRef(
         </div>
       </div>
     );
-  },
-);
+};
 
 Phase.propTypes = {
   phase: PropTypes.object.isRequired,
@@ -841,6 +837,12 @@ Phase.propTypes = {
   recordTypes: PropTypes.object,
   addRecord: PropTypes.func,
   editAction: PropTypes.func,
+  ref: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.any,
+    }),
+  ]),
 };
 
 export default Phase;

@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import React, { useState, useRef, useImperativeHandle } from 'react';
+import { useState, useRef, useImperativeHandle } from 'react';
 
 import Dropdown from '../../Dropdown';
 import Popup from '../../Popup';
@@ -10,9 +10,7 @@ import DeleteView from '../DeleteView/DeleteView';
 import EditorForm from '../EditorForm/EditorForm';
 import './Record.scss';
 
-const Record = React.forwardRef(
-  (
-    {
+const Record = ({
       attributeTypes,
       displayMessage,
       documentState,
@@ -22,9 +20,8 @@ const Record = React.forwardRef(
       recordTypes,
       removeRecord,
       setRecordVisibility,
-    },
-    ref,
-  ) => {
+      ref,
+    }) => {
     const [complementingRecord, setComplementingRecord] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const [editingRecord, setEditingRecord] = useState(false);
@@ -230,8 +227,7 @@ const Record = React.forwardRef(
         </div>
       </div>
     );
-  },
-);
+};
 
 Record.propTypes = {
   attributeTypes: PropTypes.object.isRequired,
@@ -241,6 +237,12 @@ Record.propTypes = {
   editRecordAttribute: PropTypes.func.isRequired,
   record: PropTypes.object.isRequired,
   recordTypes: PropTypes.object.isRequired,
+  ref: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.any,
+    }),
+  ]),
   removeRecord: PropTypes.func.isRequired,
   setRecordVisibility: PropTypes.func.isRequired,
 };
