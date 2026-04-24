@@ -52,6 +52,7 @@ const EditorForm = (props) => {
   const initialAttributes = initializeAttributes(attributeTypes);
   const [newAttributes, setNewAttributes] = useState(initialAttributes);
   const [initialAttrState] = useState(initialAttributes);
+  const [showMore, setShowMore] = useState(false);
 
   const filterAttributes = useCallback((attrs) => {
     const filteredAttributes = {};
@@ -346,7 +347,7 @@ const EditorForm = (props) => {
   const generateAttributeElements = useCallback(
     (attrTypes) => {
       const attributesToShow =
-        editorConfig.action === 'complement'
+        editorConfig.action === 'complement' || showMore
           ? getComplementAttributes(attrTypes)
           : getAttributesToShow(attrTypes, attributes);
 
@@ -428,6 +429,7 @@ const EditorForm = (props) => {
       getActiveValue,
       getCheckedState,
       newAttributes,
+      showMore,
     ],
   );
 
@@ -573,12 +575,10 @@ const EditorForm = (props) => {
 
   let showMoreLabel;
 
-  if (editorConfig.action === 'edit') {
-    showMoreLabel = 'Näytä lisää';
+  if (editorConfig.action === 'edit' || editorConfig.action === 'add') {
+    showMoreLabel = showMore ? 'Näytä vähemmän' : 'Näytä lisää';
   } else if (editorConfig.action === 'complement') {
     showMoreLabel = 'Näytä vähemmän';
-  } else if (editorConfig.action === 'add') {
-    showMoreLabel = 'Näytä lisää';
   }
 
   const attributeElements = generateAttributeElements(attributeTypes);
@@ -613,11 +613,14 @@ const EditorForm = (props) => {
               data-testid='editor-form-show-more'
               type='button'
               className={showMoreLabel ? 'btn btn-primary pull-right editor-form__cancel' : 'non-display'}
-              onClick={(e) =>
-                editorConfig.action === 'add' || (editorConfig.action === 'complement' && complementRecordAdd)
-                  ? onShowMoreForm(e, newAttributes)
-                  : onShowMore(e, { newAttributes, initialAttributes: initialAttrState })
-              }
+              onClick={(e) => {
+                setShowMore((prev) => !prev);
+                if (editorConfig.action === 'add' || (editorConfig.action === 'complement' && complementRecordAdd)) {
+                  onShowMoreForm(e, newAttributes);
+                } else {
+                  onShowMore?.(e, { newAttributes, initialAttributes: initialAttrState });
+                }
+              }}
             >
               {showMoreLabel}
             </button>
