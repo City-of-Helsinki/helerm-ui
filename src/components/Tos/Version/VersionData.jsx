@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import DatePicker from 'react-datepicker';
-import moment from 'moment';
+import { format as formatDate, parseISO } from 'date-fns';
 
 import EditorForm from '../EditorForm/EditorForm';
 import { formatDateTime, getStatusLabel } from '../../../utils/helpers';
@@ -22,7 +22,7 @@ const VersionData = ({ attributeTypes, displayMessage, editValidDates, selectedT
   }, [selectedTOS.documentState]);
 
   const onValidDateChange = (key, date) => {
-    const value = date ? moment(date).format('YYYY-MM-DD') : null;
+    const value = date ? formatDate(date, 'yyyy-MM-dd') : null;
 
     if (value) {
       if (key === 'validFrom') {
@@ -132,7 +132,7 @@ const VersionData = ({ attributeTypes, displayMessage, editValidDates, selectedT
             showYearDropdown
             dateFormatCalendar='MMMM'
             placeholderText='PP.KK.VVVV'
-            selected={value ? moment(value).toDate() : null}
+            selected={value ? parseISO(value) : null}
             onChange={(date) => onValidDateChange(field, date)}
           />
         </div>
@@ -149,7 +149,7 @@ const VersionData = ({ attributeTypes, displayMessage, editValidDates, selectedT
         className='list-group-item col-xs-6 attribute-basic'
       >
         <strong>{label}:</strong>
-        <div>{value ? formatDateTime(value, 'D.M.YYYY') : '\u00A0'}</div>
+        <div>{value ? formatDateTime(value, 'd.M.yyyy') : ' '}</div>
       </span>
     );
   };
@@ -172,7 +172,7 @@ const VersionData = ({ attributeTypes, displayMessage, editValidDates, selectedT
           showYearDropdown
           dateFormatCalendar='MMMM'
           placeholderText='PP.KK.VVVV'
-          selected={value ? moment(value).toDate() : null}
+          selected={value ? parseISO(value) : null}
           onChange={(date) => onValidDateChange(field, date)}
         />
       </div>
