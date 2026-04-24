@@ -4,19 +4,14 @@ import { webcrypto } from 'crypto';
 import { waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as mockLogin from 'hds-react';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { screen as shadowScreen } from 'shadow-dom-testing-library';
 
 import * as useAuth from '../../hooks/useAuth';
 import routes from '../../routes';
 import { attributeTypes, template, user } from '../../utils/__mocks__/mockHelpers';
 import api from '../../utils/api';
-import renderWithProviders, { storeDefaultState } from '../../utils/renderWithProviders';
+import renderWithProviders, { storeDefaultState, createTestStore } from '../../utils/renderWithProviders';
 import AppContainer from '../AppContainer';
-
-const middlewares = [thunk];
-const mockStore = configureStore(middlewares);
 
 const clearAllCookies = () =>
   document.cookie.split(';').forEach((c) => {
@@ -72,6 +67,7 @@ Object.defineProperty(window, 'confirm', {
 vi.mock('react-redux-toastr', () => ({
   __esModule: true,
   default: () => <div data-testid='redux-toastr'>ReduxToastr Mock</div>,
+  reducer: (state = {}) => state,
 }));
 
 vi.mock('../../components/RouterSync/RouterSync', () => ({
@@ -118,7 +114,7 @@ vi.spyOn(api, 'get').mockImplementation((url) => {
 });
 
 const renderComponent = (storeOverride) => {
-  const store = storeOverride ?? mockStore(storeDefaultState);
+  const store = storeOverride ?? createTestStore(storeDefaultState);
   const mockRoutes = routes(store);
 
   return renderWithProviders(<AppContainer routes={mockRoutes} store={store} />, {
@@ -170,7 +166,7 @@ describe('<AppContainer />', () => {
   });
 
   it('should show cookie consent modal if consent is not saved to cookie', async () => {
-    const store = mockStore(storeDefaultState);
+    const store = createTestStore(storeDefaultState);
 
     renderComponent(store);
 
@@ -180,7 +176,7 @@ describe('<AppContainer />', () => {
   it('should store consent to cookie when clicking accept all button', async () => {
     const user = userEvent.setup();
 
-    const store = mockStore(storeDefaultState);
+    const store = createTestStore(storeDefaultState);
 
     renderComponent(store);
 
@@ -203,7 +199,7 @@ describe('<AppContainer />', () => {
   it('should store consent to cookie when clicking accept only necessary button', async () => {
     const user = userEvent.setup();
 
-    const store = mockStore(storeDefaultState);
+    const store = createTestStore(storeDefaultState);
 
     renderComponent(store);
 
@@ -231,7 +227,7 @@ describe('<AppContainer />', () => {
     const user = userEvent.setup();
 
     // Simulate user giving consent
-    const firstRender = renderComponent(mockStore(storeDefaultState));
+    const firstRender = renderComponent(createTestStore(storeDefaultState));
     const cookieConsentModal = await waitCookieConsentModalToBeVisible();
     const acceptAllButton = await findCookieConsentModalElement(cookieConsentModal, 'acceptAllButton');
     await user.click(acceptAllButton);
@@ -239,13 +235,13 @@ describe('<AppContainer />', () => {
 
     // Re-render the component to check if the modal appears again
     firstRender.unmount();
-    renderComponent(mockStore(storeDefaultState));
+    renderComponent(createTestStore(storeDefaultState));
 
     await waitCookieConsentModalToBeHidden();
   });
 
   it('fetches attribute types and templates on mount', async () => {
-    const store = mockStore(storeDefaultState);
+    const store = createTestStore(storeDefaultState);
 
     renderComponent(store);
 
@@ -298,7 +294,7 @@ describe('<AppContainer />', () => {
       loggingOut: false,
     });
 
-    const store = mockStore(storeDefaultState);
+    const store = createTestStore(storeDefaultState);
 
     renderComponent(store);
 

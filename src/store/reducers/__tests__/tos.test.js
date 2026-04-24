@@ -1,6 +1,4 @@
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-
+import { createTestStore } from '../../../utils/renderWithProviders';
 import { WAITING_FOR_APPROVAL } from '../../../constants';
 import { classification, validTOS } from '../../../utils/__mocks__/mockHelpers';
 import api from '../../../utils/api';
@@ -45,9 +43,6 @@ import {
   updateTosVisibility,
 } from '../tos-toolkit';
 import tosReducer, { initialState } from '../tos-toolkit/main';
-
-const middlewares = [thunk];
-const mockStore = configureMockStore(middlewares);
 
 beforeAll(() => {
   globalThis.alert = vi.fn();
@@ -134,7 +129,7 @@ const testVisibilityAction = (action, visibilityProperty, expectedValue = true) 
 };
 
 const setupMockStore = (initialState = {}) => {
-  return mockStore(initialState);
+  return createTestStore(initialState);
 };
 
 const testWithCustomState = (action, stateOverrides = {}) => {
@@ -810,10 +805,8 @@ describe('TOS Reducer', () => {
 
   describe('Async Thunks', () => {
     describe('cloneFromTemplateThunk', () => {
-      const template = { id: 'template-001', name: 'Template' };
-
       it('should clone from template successfully', async () => {
-        const mockResponse = { ok: true, json: createJsonResponse(template) };
+        const mockResponse = { ok: true, json: createJsonResponse(validTOS) };
         const actions = await testAsyncThunk(
           cloneFromTemplateThunk({ endpoint: 'templates', id: 'template-001', token: 'mock-token' }),
           setupApiMock('get', mockResponse),

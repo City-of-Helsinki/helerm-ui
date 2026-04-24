@@ -1,6 +1,4 @@
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-
+import { createTestStore } from '../../../utils/renderWithProviders';
 import searchReducer, {
   initialState,
   fetchClassificationsThunk,
@@ -19,9 +17,6 @@ import searchReducer, {
 import api from '../../../utils/api';
 import { TYPE_CLASSIFICATION, TYPE_FUNCTION, TYPE_ACTION, TYPE_PHASE, TYPE_RECORD } from '../../../constants';
 import { classification, attributeTypes as mockAttributeTypes } from '../../../utils/__mocks__/mockHelpers';
-
-const middlewares = [thunk];
-const mockStore = configureMockStore(middlewares);
 
 vi.mock('../../../utils/api', () => ({
   default: {
@@ -66,7 +61,7 @@ const createAttribute = (key, name, type, options = []) => ({
   showAll: false,
 });
 
-const createTestStore = (customState = {}) => {
+const createSearchTestStore = (customState = {}) => {
   const state = {
     search: {
       ...initialState,
@@ -74,7 +69,7 @@ const createTestStore = (customState = {}) => {
     },
     ui: { attributeTypes: mockAttributeTypes },
   };
-  return mockStore(state);
+  return createTestStore(state);
 };
 
 const HEALTH_GUIDANCE_ID = 'test-classification-health-guidance-001';
@@ -472,7 +467,7 @@ describe('Search reducer', () => {
         }),
       });
 
-      const store = createTestStore();
+      const store = createSearchTestStore();
 
       await store.dispatch(fetchClassificationsThunk());
 
@@ -526,7 +521,7 @@ describe('Search reducer', () => {
           json: async () => page2Response,
         });
 
-      const store = createTestStore();
+      const store = createSearchTestStore();
 
       await store.dispatch(fetchClassificationsThunk());
 
@@ -556,7 +551,7 @@ describe('Search reducer', () => {
     it('should handle error when fetching classifications', async () => {
       api.get.mockRejectedValueOnce(new Error('Network error'));
 
-      const store = createTestStore();
+      const store = createSearchTestStore();
 
       const result = await store.dispatch(fetchClassificationsThunk());
 
@@ -569,7 +564,7 @@ describe('Search reducer', () => {
 
   describe('updateAttributeTypesThunk', () => {
     it('should transform attribute types correctly', async () => {
-      const store = mockStore({ search: initialState });
+      const store = createTestStore({ search: initialState });
 
       await store.dispatch(updateAttributeTypesThunk(mockAttributeTypes));
 
@@ -609,7 +604,7 @@ describe('Search reducer', () => {
       const attributes = [createAttribute('name', 'Name', TYPE_CLASSIFICATION, options)];
       const mappedClassifications = createMappedClassifications();
 
-      const store = mockStore({
+      const store = createTestStore({
         search: {
           ...initialState,
           attributes,
@@ -638,7 +633,7 @@ describe('Search reducer', () => {
 
       const mappedClassifications = createMappedClassifications();
 
-      const store = mockStore({
+      const store = createTestStore({
         search: {
           ...initialState,
           attributes,
@@ -685,7 +680,7 @@ describe('Search reducer', () => {
           },
         }));
 
-      const store = mockStore({
+      const store = createTestStore({
         search: {
           ...initialState,
           attributes,
@@ -711,7 +706,7 @@ describe('Search reducer', () => {
 
       const mappedClassifications = createMappedClassifications();
 
-      const store = mockStore({
+      const store = createTestStore({
         search: {
           ...initialState,
           filteredAttributes,
@@ -747,7 +742,7 @@ describe('Search reducer', () => {
 
       const mappedClassifications = createMappedClassifications();
 
-      const store = mockStore({
+      const store = createTestStore({
         search: {
           ...initialState,
           filteredAttributes,
@@ -773,7 +768,7 @@ describe('Search reducer', () => {
 
   describe('resetSuggestionsThunk', () => {
     it('should clear suggestions', async () => {
-      const store = mockStore({
+      const store = createTestStore({
         search: {
           ...initialState,
           suggestions: [{ type: TYPE_CLASSIFICATION, hits: ['class1'] }],

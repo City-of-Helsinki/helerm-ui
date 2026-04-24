@@ -1,12 +1,8 @@
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-
 import api from '../../../utils/api';
-import { clearClassification, fetchClassificationThunk, createTosThunk } from '../classification';
+import { createTestStore } from '../../../utils/renderWithProviders';
+import { clearClassification, fetchClassificationThunk, createTosThunk, initialState as classificationInitialState  } from '../classification';
 import { classification } from '../../../utils/__mocks__/mockHelpers';
-
-const middlewares = [thunk];
-const mockStore = configureMockStore(middlewares);
+import { initialState as navigationInitialState } from '../navigation';
 
 describe('ViewClassification reducer', () => {
   it('should fetch classification with thunk', () => {
@@ -25,7 +21,7 @@ describe('ViewClassification reducer', () => {
         payload: expect.anything(),
       },
     ];
-    const store = mockStore({});
+    const store = createTestStore({});
 
     const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => classification }));
     vi.spyOn(api, 'get').mockImplementationOnce(mockApiGet);
@@ -56,7 +52,7 @@ describe('ViewClassification reducer', () => {
         payload: 'ERROR',
       },
     ];
-    const store = mockStore({});
+    const store = createTestStore({});
 
     const mockApiGet = vi.fn().mockImplementation(() => Promise.reject(new Error('ERROR')));
     vi.spyOn(api, 'get').mockImplementationOnce(mockApiGet);
@@ -104,7 +100,10 @@ describe('ViewClassification reducer', () => {
         },
       },
     ];
-    const store = mockStore({ classification, navigation: { includeRelated: true } });
+    const store = createTestStore({
+      classification: classificationInitialState,
+      navigation: { ...navigationInitialState, includeRelated: true },
+    });
 
     const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => classification }));
     const mockApiPost = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => newTos }));
@@ -131,7 +130,10 @@ describe('ViewClassification reducer', () => {
         payload: 'ERROR',
       },
     ];
-    const store = mockStore({ classification, navigation: { includeRelated: true } });
+    const store = createTestStore({
+      classification: classificationInitialState,
+      navigation: { ...navigationInitialState, includeRelated: true },
+    });
 
     const mockApiPost = vi.fn().mockImplementation(() => Promise.reject(new Error('ERROR')));
     vi.spyOn(api, 'post').mockImplementationOnce(mockApiPost);

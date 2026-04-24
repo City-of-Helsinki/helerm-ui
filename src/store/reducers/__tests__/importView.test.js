@@ -1,14 +1,9 @@
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-
+import { createTestStore } from '../../../utils/renderWithProviders';
 import { importItemsThunk, prepareImport } from '../tos-toolkit/importView';
 
 vi.mock('../../../utils/helpers', () => ({
   randomActionId: () => 'test-id-123',
 }));
-
-const middlewares = [thunk];
-const mockStore = configureMockStore(middlewares);
 
 // Single-use test helpers - specific to this import test file only
 const createMockPhase = (overrides = {}) => ({
@@ -132,7 +127,7 @@ describe('Import View', () => {
 
   describe('importItemsThunk', () => {
     it('should dispatch thunk lifecycle actions with prepared data', async () => {
-      const store = mockStore({
+      const store = createTestStore({
         selectedTOS: mockTOS,
       });
 

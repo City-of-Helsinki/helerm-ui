@@ -67,7 +67,10 @@ export function convertToTree(itemList) {
  * @param tos
  * @returns {{entities: any, result: any}}
  */
-export function normalizeTosFromApi(tos) {
+export function normalizeTosFromApi(orgTos) {
+  // Deep-clone to avoid mutating frozen/imported objects (e.g. from Immer or JSON imports)
+   
+  const tos = structuredClone(orgTos);
   const classificationInfo = tos.classification;
 
   tos.phases.forEach((p, phaseIndex) => {

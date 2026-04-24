@@ -1,10 +1,8 @@
 import { BrowserRouter } from 'react-router-dom';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
-import renderWithProviders from '../../../../utils/renderWithProviders';
+import renderWithProviders, { createTestStore } from '../../../../utils/renderWithProviders';
 import { attributeTypes, errorsAndWarningsTOS } from '../../../../utils/__mocks__/mockHelpers';
 import ValidationBar from '../ValidationBar';
 import storeCreator from '../../../../store/createStore';
@@ -71,10 +69,7 @@ describe('<ValidationBar />', () => {
   it('should close validation bar', async () => {
     const mocks = { ...baseMocks };
 
-    const middlewares = [thunk];
-    const mockStore = configureMockStore(middlewares);
-
-    const store = mockStore({ selectedTOS: mocks.selectedTOS, ui: { attributeTypes } });
+    const store = createTestStore({ selectedTOS: mocks.selectedTOS, ui: { attributeTypes } });
 
     renderComponent(undefined, store);
 

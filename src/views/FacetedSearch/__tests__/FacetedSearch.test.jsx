@@ -1,11 +1,9 @@
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { BrowserRouter } from 'react-router-dom';
-import { screen, act } from '@testing-library/react';
+import { screen, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import FacetedSearch from '../FacetedSearch';
-import renderWithProviders, { storeDefaultState } from '../../../utils/renderWithProviders';
+import renderWithProviders, { storeDefaultState, createTestStore } from '../../../utils/renderWithProviders';
 import api from '../../../utils/api';
 import { classification, attributeTypes, template } from '../../../utils/__mocks__/mockHelpers';
 import { TYPE_CLASSIFICATION, TYPE_FUNCTION } from '../../../constants';
@@ -16,9 +14,6 @@ const mockClassificationResponse = {
   previous: null,
   results: classification,
 };
-
-const middlewares = [thunk];
-const mockStore = configureStore(middlewares);
 
 vi.spyOn(api, 'get').mockImplementation((url) => {
   if (url.includes('classification')) {
@@ -129,7 +124,7 @@ const renderComponent = (initialState = {}) => {
     },
   };
 
-  const store = mockStore(state);
+  const store = createTestStore(state);
   const user = userEvent.setup();
 
   const component = renderWithProviders(
@@ -351,6 +346,10 @@ describe('<FacetedSearch />', () => {
     expect(suggestions.length).toBeGreaterThan(0);
 
     await user.click(suggestions[0]);
-    expect(suggestions[0]).toBeInTheDocument();
+
+    // Clicking a suggestion triggers resetSuggestionsThunk, clearing suggestions from state
+    await waitFor(() => {
+      expect(document.querySelectorAll('.faceted-search-suggestion').length).toBe(0);
+    });
   });
 });

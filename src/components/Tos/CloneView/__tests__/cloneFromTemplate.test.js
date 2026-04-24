@@ -1,37 +1,17 @@
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-
 import api from '../../../../utils/api';
+import { createTestStore } from '../../../../utils/renderWithProviders';
 import { cloneFromTemplateThunk } from '../../../../store/reducers/tos-toolkit/cloneView';
-
-const middlewares = [thunk];
-const mockStore = configureMockStore(middlewares);
+import templateMock from '../../../../utils/__mocks__/api/function.json';
 
 describe('cloneFromTemplateThunk', () => {
   it('should dispatch pending and fulfilled actions on successful API response', async () => {
-    const template = {
-      count: 1,
-      next: null,
-      previous: null,
-      results: [
-        {
-          id: '123',
-          attributes: {},
-          phases: ['123', '456'],
-          created_at: '2018-02-09T13:10:13.843467+02:00',
-          modified_at: '2018-02-09T13:10:13.971611+02:00',
-          name: 'Test',
-        },
-      ],
-    };
-
     const endpoint = '/api/templates';
     const id = 123;
 
-    const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => template }));
+    const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => templateMock }));
     vi.spyOn(api, 'get').mockImplementationOnce(mockApiGet);
 
-    const store = mockStore({});
+    const store = createTestStore({});
     await store.dispatch(cloneFromTemplateThunk({ endpoint, id, token: 'mock-token' }));
 
     const actions = store.getActions();
@@ -40,7 +20,7 @@ describe('cloneFromTemplateThunk', () => {
 
     const lastAction = actions[actions.length - 1];
     expect(lastAction.type).toBe('selectedTOS/cloneFromTemplate/fulfilled');
-    expect(lastAction.payload).toEqual(template);
+    expect(lastAction.payload).toEqual(templateMock);
   });
 
   it('should dispatch pending and rejected actions on failed API response', async () => {
@@ -55,7 +35,7 @@ describe('cloneFromTemplateThunk', () => {
     );
     vi.spyOn(api, 'get').mockImplementationOnce(mockApiGet);
 
-    const store = mockStore({});
+    const store = createTestStore({});
     await store.dispatch(cloneFromTemplateThunk({ endpoint, id, token: 'mock-token' }));
 
     const actions = store.getActions();

@@ -1,17 +1,12 @@
 import { BrowserRouter } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { waitFor } from '@testing-library/react';
 
-import renderWithProviders from '../../../utils/renderWithProviders';
+import renderWithProviders, { createTestStore } from '../../../utils/renderWithProviders';
 import { classification } from '../../../utils/__mocks__/mockHelpers';
 import api from '../../../utils/api';
 import * as useAuth from '../../../hooks/useAuth';
 import ViewClassification from '../ViewClassification';
 import { initialState } from '../../../store/reducers/classification';
-
-const middlewares = [thunk];
-const mockStore = configureStore(middlewares);
 
 // Mock API to return the first classification item from our array
 const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => classification[0] }));
@@ -36,7 +31,7 @@ vi.mock('react-router-dom', async () => {
 });
 
 const renderComponent = (storeOverride) => {
-  const store = storeOverride ?? mockStore({ classification: { ...initialState } });
+  const store = storeOverride ?? createTestStore({ classification: { ...initialState } });
 
   return renderWithProviders(
     <BrowserRouter>
@@ -47,12 +42,19 @@ const renderComponent = (storeOverride) => {
 };
 
 describe('<ViewClassification />', () => {
-  it('renders correctly', () => {
-    renderComponent();
+  it('renders correctly', async () => {
+    const { store } = renderComponent();
+
+    // Wait for the API call to be made and the store to be updated
+    await waitFor(() => {
+      const actions = store.getActions();
+      expect(actions.some((action) => action.type === 'classification/fetchClassification/fulfilled')).toBe(true);
+      expect(actions.some((action) => action.type === 'navigation/setNavigationVisibility')).toBe(true);
+    });
   });
 
   it('fetches classification on mount', async () => {
-    const store = mockStore({ classification: { ...initialState } });
+    const store = createTestStore({ classification: { ...initialState } });
 
     renderComponent(store);
 
@@ -82,7 +84,7 @@ describe('<ViewClassification />', () => {
     const mockApiGet = vi.fn().mockImplementationOnce(() => Promise.reject(new Error('FETCH ERROR')));
     vi.spyOn(api, 'get').mockImplementationOnce(mockApiGet);
 
-    const store = mockStore({ classification: { ...initialState } });
+    const store = createTestStore({ classification: { ...initialState } });
 
     renderComponent(store);
 

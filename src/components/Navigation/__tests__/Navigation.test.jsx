@@ -1,9 +1,7 @@
 import { BrowserRouter, MemoryRouter } from 'react-router-dom';
 import { act, waitFor } from '@testing-library/react';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
-import renderWithProviders, { storeDefaultState } from '../../../utils/renderWithProviders';
+import renderWithProviders, { storeDefaultState, createTestStore } from '../../../utils/renderWithProviders';
 import Navigation from '../Navigation';
 import api from '../../../utils/api';
 import useAuth from '../../../hooks/useAuth';
@@ -37,9 +35,6 @@ const getLastInfinityMenuProps = () => {
   const calls = MockedInfinityMenu.mock.calls;
   return calls[calls.length - 1]?.[0] ?? null;
 };
-
-const middlewares = [thunk];
-const mockStore = configureStore(middlewares);
 
 const mockClassificationApiResponse = {
   count: 2,
@@ -98,6 +93,10 @@ const mockTreeItems = [
 ];
 
 const renderWithItems = (items = mockTreeItems, extraState = {}, RouterComponent = BrowserRouter) => {
+  // Keep the preloaded tree stable for tests that assert filtering/search behavior.
+  // Otherwise the mount-time fetch can replace it with API-driven empty/error state.
+  vi.spyOn(api, 'get').mockImplementationOnce(() => new Promise(() => {}));
+
   const stateWithItems = {
     ...storeDefaultState,
     navigation: {
@@ -107,7 +106,7 @@ const renderWithItems = (items = mockTreeItems, extraState = {}, RouterComponent
     },
     ...extraState,
   };
-  const store = mockStore(stateWithItems);
+  const store = createTestStore(stateWithItems);
   return renderWithProviders(
     <RouterComponent>
       <Navigation />
@@ -132,7 +131,7 @@ describe('<Navigation />', () => {
     });
 
     it('dispatches fetchNavigation/pending with token on mount', async () => {
-      const store = mockStore(storeDefaultState);
+      const store = createTestStore(storeDefaultState);
       renderWithProviders(
         <BrowserRouter>
           <Navigation />
@@ -148,7 +147,7 @@ describe('<Navigation />', () => {
     });
 
     it('calls fetchNavigation with includeRelated=true when route is /filter', async () => {
-      const store = mockStore(storeDefaultState);
+      const store = createTestStore(storeDefaultState);
       renderWithProviders(
         <MemoryRouter initialEntries={['/filter']}>
           <Navigation />
@@ -169,7 +168,7 @@ describe('<Navigation />', () => {
         authenticated: false,
       });
 
-      const store = mockStore(storeDefaultState);
+      const store = createTestStore(storeDefaultState);
       const { rerender } = renderWithProviders(
         <BrowserRouter>
           <Navigation />
@@ -498,7 +497,17 @@ describe('<Navigation />', () => {
     });
 
     it('setSearchInput on /filter route defers isSearchChanged via timeout', async () => {
-      const store = mockStore(storeDefaultState);
+      vi.spyOn(api, 'get').mockImplementationOnce(() => new Promise(() => {}));
+
+      const store = createTestStore({
+        ...storeDefaultState,
+        navigation: {
+          ...navigationInitialState,
+          items: mockTreeItems,
+          timestamp: Date.now().toString(),
+        },
+      });
+
       renderWithProviders(
         <MemoryRouter initialEntries={['/filter']}>
           <Navigation />
@@ -510,36 +519,28 @@ describe('<Navigation />', () => {
         expect(getLastInfinityMenuProps()).not.toBeNull();
       });
 
-      // Switch to fake timers AFTER initial render — waitFor polls with setTimeout,
-      // so faking timers earlier would make the polling hang.
-      vi.useFakeTimers();
+      const { setSearchInput } = getLastInfinityMenuProps();
 
-      try {
-        const { setSearchInput } = getLastInfinityMenuProps();
+      act(() => {
+        setSearchInput(0, 'test-filter');
+      });
 
-        act(() => {
-          setSearchInput(0, 'test-filter');
-        });
+      // Immediately after input change, debounce timer has not fired yet.
+      expect(getLastInfinityMenuProps().isSearchChanged).toBe(false);
 
-        // Before timeout fires, searchInputs updates but isSearchChanged stays false on /filter
-        expect(getLastInfinityMenuProps().searchInputs[0]).toBe('test-filter');
-        expect(getLastInfinityMenuProps().isSearchChanged).toBe(false);
-
-        // Advance past SEARCH_TIMEOUT (500ms) — isSearchChanged should flip to true
-        await act(async () => {
-          await vi.advanceTimersByTimeAsync(600);
-        });
-
-        expect(getLastInfinityMenuProps().isSearchChanged).toBe(true);
-      } finally {
-        vi.useRealTimers();
-      }
+      await waitFor(
+        () => {
+          expect(getLastInfinityMenuProps().searchInputs[0]).toBe('test-filter');
+          expect(getLastInfinityMenuProps().isSearchChanged).toBe(true);
+        },
+        { timeout: 1200 },
+      );
     });
   });
 
   describe('Leaf click handling', () => {
     it('default handler on a leaf with function navigates to /view-tos/:id', async () => {
-      const store = mockStore({
+      const store = createTestStore({
         ...storeDefaultState,
         navigation: { ...navigationInitialState, is_open: true },
       });
@@ -564,7 +565,7 @@ describe('<Navigation />', () => {
     });
 
     it('default handler on a leaf with parent navigates to /view-classification/:id', async () => {
-      const store = mockStore({
+      const store = createTestStore({
         ...storeDefaultState,
         navigation: { ...navigationInitialState, is_open: true },
       });
@@ -590,7 +591,7 @@ describe('<Navigation />', () => {
 
     it('custom onLeafMouseClick override is called instead of default', async () => {
       const customHandler = vi.fn();
-      const store = mockStore(storeDefaultState);
+      const store = createTestStore(storeDefaultState);
 
       renderWithProviders(
         <BrowserRouter>
@@ -616,7 +617,7 @@ describe('<Navigation />', () => {
 
   describe('Visibility & breadcrumb', () => {
     it('toggleNavigationVisibility dispatches setNavigationVisibility with toggled value', async () => {
-      const store = mockStore({
+      const store = createTestStore({
         ...storeDefaultState,
         navigation: { ...navigationInitialState, is_open: true },
       });
@@ -644,7 +645,7 @@ describe('<Navigation />', () => {
     });
 
     it('renders empty-state error banner when items empty, timestamp set, not fetching, no filters', async () => {
-      const store = mockStore({
+      const store = createTestStore({
         ...storeDefaultState,
         navigation: {
           ...navigationInitialState,
@@ -680,7 +681,7 @@ describe('<Navigation />', () => {
         children: [],
       };
 
-      const store = mockStore({
+      const store = createTestStore({
         ...storeDefaultState,
         navigation: {
           ...navigationInitialState,
@@ -720,7 +721,7 @@ describe('<Navigation />', () => {
         children: [],
       };
 
-      const store = mockStore({
+      const store = createTestStore({
         ...storeDefaultState,
         navigation: {
           ...navigationInitialState,

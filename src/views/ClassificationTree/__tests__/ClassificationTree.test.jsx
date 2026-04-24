@@ -1,15 +1,10 @@
 import { BrowserRouter } from 'react-router-dom';
-import thunk from 'redux-thunk';
-import configureStore from 'redux-mock-store';
 import { waitFor } from '@testing-library/react';
 
 import ClassificationTree from '../ClassificationTree';
-import renderWithProviders, { storeDefaultState } from '../../../utils/renderWithProviders';
+import renderWithProviders, { storeDefaultState, createTestStore } from '../../../utils/renderWithProviders';
 import { classification } from '../../../utils/__mocks__/mockHelpers';
 import api from '../../../utils/api';
-
-const middlewares = [thunk];
-const mockStore = configureStore(middlewares);
 
 const mockClassificationResponse = {
   count: classification.length,
@@ -31,7 +26,7 @@ vi.spyOn(api, 'get').mockImplementation((url) => {
 });
 
 const renderComponent = (storeOverride) => {
-  const store = storeOverride ?? mockStore(storeDefaultState);
+  const store = storeOverride ?? createTestStore(storeDefaultState);
 
   return renderWithProviders(
     <BrowserRouter>
@@ -44,10 +39,14 @@ const renderComponent = (storeOverride) => {
 describe('<ClassificationTree />', () => {
   it('renders correctly', async () => {
     renderComponent();
+
+    await waitFor(() => {
+      expect(mockClassificationApiGet).toHaveBeenCalled();
+    });
   });
 
   it('fetches classifications', async () => {
-    const store = mockStore(storeDefaultState);
+    const store = createTestStore(storeDefaultState);
 
     renderComponent(store);
 
@@ -69,7 +68,7 @@ describe('<ClassificationTree />', () => {
         {
           type: 'navigation/parseNavigation',
           payload: {
-            items: [],
+            items: expect.any(Array),
           },
         },
         {

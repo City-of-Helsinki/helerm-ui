@@ -228,7 +228,7 @@ const InfinityMenu = ({
         let relativeIndex = visIds.indexOf(curr.id);
         relativeIndex = relativeIndex === -1 ? Infinity : relativeIndex;
 
-        const parentMaxLeaves = parentNode.maxLeaves || maxLeaves;
+        const parentMaxLeaves = parentNode?.maxLeaves || maxLeaves;
         if (shouldDisplay && parentMaxLeaves > relativeIndex) {
           if (curr.customComponent) {
             const componentProps = {
