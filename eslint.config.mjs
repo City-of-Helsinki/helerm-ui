@@ -91,7 +91,7 @@ export default defineConfig([
       'import-x/no-named-as-default': 0,
       'import-x/no-named-as-default-member': 0,
       'import-x/prefer-default-export': 1,
-      'import-x/no-unresolved': ['error', { ignore: ['.css$', '.scss$', 'raw.macro'] }],
+      'import-x/no-unresolved': ['error', { ignore: ['.css$', '.scss$', '\\?raw$'] }],
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
       'vitest/expect-expect': 0,
