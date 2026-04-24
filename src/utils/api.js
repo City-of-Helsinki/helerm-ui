@@ -1,5 +1,4 @@
 /* eslint-disable no-param-reassign */
-import fetch from 'isomorphic-fetch';
 import { forEach, merge } from 'lodash';
 
 import config from '../config';
