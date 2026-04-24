@@ -95,11 +95,11 @@ const AppContainer = ({ routes, store }) => {
     <CookieConsentContextProvider {...cookieConsentProps}>
       <LoginProvider {...providerProperties}>
         <Provider store={store}>
-          <MatomoContext.Provider value={matomoTracker}>
+          <MatomoContext value={matomoTracker}>
             <React.StrictMode>
               <App router={router} />
             </React.StrictMode>
-          </MatomoContext.Provider>
+          </MatomoContext>
         </Provider>
       </LoginProvider>
     </CookieConsentContextProvider>

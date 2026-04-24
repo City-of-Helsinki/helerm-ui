@@ -12,7 +12,7 @@ describe('useMatomo', () => {
     const trackPageView = vi.fn();
     const instance = { trackPageView };
 
-    const wrapper = ({ children }) => <MatomoContext.Provider value={instance}>{children}</MatomoContext.Provider>;
+    const wrapper = ({ children }) => <MatomoContext value={instance}>{children}</MatomoContext>;
 
     const { result } = renderHook(() => useMatomo(), { wrapper });
 
