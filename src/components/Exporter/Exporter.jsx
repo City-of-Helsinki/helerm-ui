@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import Select from 'react-select';
 import { includes, isArray, isEmpty } from 'lodash';
 import * as ExcelJs from 'exceljs';
-import moment from 'moment';
+import { format as formatDate } from 'date-fns';
 
 const CLASSIFICATION_ATTRIBUTES = [
   { attribute: 'code', name: 'Koodi', type: 'classification' },
@@ -312,7 +312,6 @@ const Exporter = ({ attributeTypes, data, className, isVisible = true }) => {
   }
 
   const exportData = data.reduce(getChildren, []);
-  const fileName = `helerm-export_${moment().format('DD.MM.YYYY')}.xlsx`;
 
   return (
     <div className={classnames('exporter', className)}>
@@ -327,6 +326,8 @@ const Exporter = ({ attributeTypes, data, className, isVisible = true }) => {
         isClearable={false}
         value={null}
         onChange={async (e) => {
+          const fileName = `helerm-export_${formatDate(new Date(), 'dd.MM.yyyy')}.xlsx`;
+
           if (e.value === 0) {
             await createSingleSheetWorkBook(attributeTypes, fileName, exportData);
           } else {

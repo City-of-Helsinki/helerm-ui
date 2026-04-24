@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { find, includes, isArray, isEmpty, keys, map, sortBy } from 'lodash';
-import moment from 'moment';
+import { format as formatDate, parseISO } from 'date-fns';
 import DatePicker from 'react-datepicker';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
@@ -37,7 +37,7 @@ const Conversion = ({ attributeTypes, conversion, disabled, onConvert }) => {
   }, []);
 
   const onChangeValidDate = useCallback((date) => {
-    const newValue = date ? moment(date).format('YYYY-MM-DD') : '';
+    const newValue = date ? formatDate(date, 'yyyy-MM-dd') : '';
     setValue(newValue);
   }, []);
 
@@ -118,7 +118,7 @@ const Conversion = ({ attributeTypes, conversion, disabled, onConvert }) => {
               dateFormatCalendar='MMMM'
               isClearable
               placeholderText='PP.KK.VVVV'
-              selected={value ? moment(value).toDate() : null}
+              selected={value ? parseISO(value) : null}
               onChange={onChangeValidDate}
             />
           </div>

@@ -102,8 +102,8 @@ const PrintView = () => {
           ['Tila', getStatusLabel(TOS.state)],
           ['Muokkausajankohta', formatDateTime(TOS.modified_at)],
           ['Muokkaaja', TOS.modified_by],
-          ['Voimassaolo alkaa', TOS.valid_from ? formatDateTime(TOS.valid_from, 'DD.MM.YYYY') : ''],
-          ['Voimassaolo päättyy', TOS.valid_to ? formatDateTime(TOS.valid_to, 'DD.MM.YYYY') : ''],
+          ['Voimassaolo alkaa', TOS.valid_from ? formatDateTime(TOS.valid_from, 'dd.MM.yyyy') : ''],
+          ['Voimassaolo päättyy', TOS.valid_to ? formatDateTime(TOS.valid_to, 'dd.MM.yyyy') : ''],
         ]}
       />
       {classification && <PrintClassification classification={classification} />}

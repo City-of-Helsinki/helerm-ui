@@ -1,4 +1,4 @@
-import { convertToTree } from '../helpers';
+import { convertToTree, formatDateTime } from '../helpers';
 
 const deepFreeze = (obj) => {
   Object.getOwnPropertyNames(obj).forEach((name) => {
@@ -121,5 +121,48 @@ describe('convertToTree', () => {
   });
   it('Throws descriptive error when tree is broken', () => {
     expect(() => convertToTree(mockNavigationDataOrphan)).toThrow(/^Parent with id .* not found$/);
+  });
+});
+
+describe('formatDateTime', () => {
+  // Use a date-only string to avoid timezone ambiguity in assertions
+  const isoDateOnly = '2024-06-01';
+  const isoDateOnlyShort = '2024-03-05'; // day=5, month=3 for testing non-padded formats
+
+  it('returns empty string for falsy input', () => {
+    expect(formatDateTime()).toBe('');
+    expect(formatDateTime(null)).toBe('');
+    expect(formatDateTime('')).toBe('');
+  });
+
+  it('returns empty string for invalid date input', () => {
+    expect(formatDateTime('not-a-date')).toBe('');
+    expect(formatDateTime(new Date('invalid-date'))).toBe('');
+  });
+
+  it('formats with default format (dd.MM.yyyy HH:mm)', () => {
+    const result = formatDateTime('2024-06-01T14:05:00.000Z');
+    expect(result).toMatch(/^\d{2}\.\d{2}\.\d{4} \d{2}:\d{2}$/);
+  });
+
+  it('formats date-only string with dd.MM.yyyy', () => {
+    const result = formatDateTime(isoDateOnly, 'dd.MM.yyyy');
+    expect(result).toBe('01.06.2024');
+  });
+
+  it('formats date-only string with yyyy-MM-dd (used by Conversion and VersionData)', () => {
+    const result = formatDateTime(isoDateOnly, 'yyyy-MM-dd');
+    expect(result).toBe('2024-06-01');
+  });
+
+  it('formats with d.M.yyyy short format (used by VersionData)', () => {
+    const result = formatDateTime(isoDateOnlyShort, 'd.M.yyyy');
+    expect(result).toBe('5.3.2024');
+  });
+
+  it('accepts a Date object as input', () => {
+    const date = new Date(2024, 5, 1); // June 1 2024 local time
+    const result = formatDateTime(date, 'yyyy-MM-dd');
+    expect(result).toBe('2024-06-01');
   });
 });

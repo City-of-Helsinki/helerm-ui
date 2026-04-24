@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/todo-tag */
 import { normalize, schema } from 'normalizr';
 import { toastr } from 'react-redux-toastr';
-import moment from 'moment';
+import { format as formatDate, isValid, parseISO } from 'date-fns';
 import { filter, find, flatten, includes, isEmpty, map, orderBy } from 'lodash';
 
 import { DRAFT, SENT_FOR_REVIEW, WAITING_FOR_APPROVAL, APPROVED } from '../constants';
@@ -258,8 +258,10 @@ export function displayMessage(message, opts = { type: 'success' }) {
  * @param format
  * @returns {string}
  */
-export function formatDateTime(dateTime, format = 'DD.MM.YYYY HH:mm') {
-  return moment(dateTime).format(format);
+export function formatDateTime(dateTime, formatStr = 'dd.MM.yyyy HH:mm') {
+  if (!dateTime) return '';
+  const date = typeof dateTime === 'string' ? parseISO(dateTime) : dateTime;
+  return isValid(date) ? formatDate(date, formatStr) : '';
 }
 
 /**
