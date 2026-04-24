@@ -100,7 +100,7 @@
     "valid_to": null,
     "code": "07 01 01",
     "title": "Koulutuksen järjestäminen",
-    "parent": "test-classification-education-001",
+    "parent": null,
     "description": "",
     "description_internal": "",
     "related_classification": "",

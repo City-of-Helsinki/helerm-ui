@@ -1,15 +1,10 @@
 import { useEffect } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { waitFor } from '@testing-library/react';
 
 import api from '../../../utils/api';
-import renderWithProviders from '../../../utils/renderWithProviders';
+import renderWithProviders, { createTestStore } from '../../../utils/renderWithProviders';
 import LoginCallback from '../LoginCallback';
-
-const middlewares = [thunk];
-const mockStore = configureStore(middlewares);
 
 const mockNavigate = vi.fn();
 const mockUser = { profile: { sub: '123' } };
@@ -58,7 +53,7 @@ const renderComponent = (store) => {
 
 describe('<LoginCallback />', () => {
   it('calls onSuccess and navigates on successful login', async () => {
-    const store = mockStore({});
+    const store = createTestStore({});
 
     renderComponent(store);
 

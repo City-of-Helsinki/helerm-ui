@@ -1,10 +1,8 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { screen, waitFor, act } from '@testing-library/react';
 
 import ViewTos from '../ViewTos';
-import renderWithProviders, { storeDefaultState } from '../../../../utils/renderWithProviders';
+import renderWithProviders, { storeDefaultState, createTestStore } from '../../../../utils/renderWithProviders';
 import {
   attributeTypes,
   classification,
@@ -16,9 +14,6 @@ import api from '../../../../utils/api';
 import { USER_LOGIN_STATUS } from '../../../../constants';
 import * as helpers from '../../../../utils/helpers';
 import * as useAuth from '../../../../hooks/useAuth';
-
-const middlewares = [thunk];
-const mockStore = configureStore(middlewares);
 
 const mockNavigate = vi.fn();
 const mockUseParams = vi.fn(() => ({
@@ -196,7 +191,7 @@ const createMockStore = (overrides = {}) => {
     isFetching: false,
   };
 
-  return mockStore({
+  return createTestStore({
     ...storeDefaultState,
     user: {
       ...storeDefaultState.user,
@@ -244,7 +239,8 @@ const createMockStore = (overrides = {}) => {
 };
 
 const renderComponent = (storeOverrides = {}) => {
-  const store = createMockStore(storeOverrides);
+  const { store: explicitStore, ...stateOverrides } = storeOverrides;
+  const store = explicitStore ?? createMockStore(stateOverrides);
   const router = createBrowserRouter([{ path: '/', element: <ViewTos /> }]);
 
   return renderWithProviders(<RouterProvider router={router} />, { store });
@@ -260,6 +256,8 @@ describe('<ViewTos />', () => {
 
   describe('Basic Rendering', () => {
     it('renders loading state when fetching data', () => {
+      mockTosApiGet.mockImplementationOnce(() => new Promise(() => {}));
+
       renderComponent({
         selectedTOS: { isFetching: true, id: null },
         ui: { isFetching: true },
@@ -268,7 +266,10 @@ describe('<ViewTos />', () => {
       expect(screen.getByText('Loading...')).toBeInTheDocument();
     });
 
-    it('renders nothing when not fetching and no TOS id', () => {
+    it('renders nothing when not fetching and no TOS id', async () => {
+      mockUseParams.mockReturnValue({ id: null });
+      mockTosApiGet.mockRejectedValueOnce(new Error('No id'));
+
       renderComponent({
         selectedTOS: {
           id: null,
@@ -278,7 +279,9 @@ describe('<ViewTos />', () => {
         ui: { isFetching: false },
       });
 
-      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+      });
       expect(screen.queryByText('Käsittelyprosessin tiedot')).not.toBeInTheDocument();
       expect(screen.queryByText('Vaiheet')).not.toBeInTheDocument();
     });
@@ -477,9 +480,12 @@ describe('<ViewTos />', () => {
 
       // Test that setDocumentState action can be dispatched correctly
       // This verifies the action that would be dispatched in the saveDraft callback
-      const action = store.dispatch({
-        type: 'selectedTOS/setDocumentState',
-        payload: 'view',
+      let action;
+      await act(async () => {
+        action = store.dispatch({
+          type: 'selectedTOS/setDocumentState',
+          payload: 'view',
+        });
       });
 
       // Verify the action was dispatched with correct type and payload
@@ -577,7 +583,10 @@ describe('<ViewTos />', () => {
   });
 
   describe('Error Handling', () => {
-    it('handles missing TOS data gracefully', () => {
+    it('handles missing TOS data gracefully', async () => {
+      mockUseParams.mockReturnValue({ id: null });
+      mockTosApiGet.mockRejectedValueOnce(new Error('No id'));
+
       renderComponent({
         selectedTOS: {
           ...createTosFromApiData(),
@@ -587,7 +596,9 @@ describe('<ViewTos />', () => {
         },
       });
 
-      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+      });
     });
 
     it('handles API errors during component lifecycle', async () => {
@@ -1300,7 +1311,7 @@ describe('<ViewTos />', () => {
 
   describe('Phase Management', () => {
     it('allows creating phase with just text input and empty phase type', async () => {
-      const store = mockStore({
+      const store = createTestStore({
         ...storeDefaultState,
         selectedTOS: createTosInEditMode(),
         ui: {

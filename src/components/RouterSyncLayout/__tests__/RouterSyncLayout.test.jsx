@@ -1,14 +1,9 @@
 import { screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import * as ReactRouterDom from 'react-router-dom';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import RouterSyncLayout from '../RouterSyncLayout';
-import renderWithProviders, { storeDefaultState } from '../../../utils/renderWithProviders';
-
-const middlewares = [thunk];
-const mockStore = configureStore(middlewares);
+import renderWithProviders, { storeDefaultState, createTestStore } from '../../../utils/renderWithProviders';
 
 vi.mock('react-router-dom', async (importOriginal) => {
   const actual = await importOriginal();
@@ -19,7 +14,7 @@ vi.mock('react-router-dom', async (importOriginal) => {
 });
 
 const renderComponent = (props = {}, storeOverride) => {
-  const store = storeOverride ?? mockStore(storeDefaultState);
+  const store = storeOverride ?? createTestStore(storeDefaultState);
 
   return renderWithProviders(
     <BrowserRouter>
@@ -39,7 +34,7 @@ describe('<RouterSyncLayout />', () => {
   });
 
   it('renders the RouterSync component', async () => {
-    const store = mockStore(storeDefaultState);
+    const store = createTestStore(storeDefaultState);
 
     renderComponent(null, store);
 

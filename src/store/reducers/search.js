@@ -366,12 +366,12 @@ export const updateAttributeTypesThunk = createAsyncThunk(
       { ...attributeTypes },
     );
 
-    const allAttributes = [...FACETED_SEARCH_DEFAULT_ATTRIBUTES, ...attributes];
-    allAttributes.forEach((attr) => {
-      attr.open = false;
-      attr.showAll = false;
-      attr.options = [];
-    });
+    const allAttributes = [...FACETED_SEARCH_DEFAULT_ATTRIBUTES, ...attributes].map((attr) => ({
+      ...attr,
+      open: false,
+      showAll: false,
+      options: [],
+    }));
 
     dispatch(
       setAttributeTypes({

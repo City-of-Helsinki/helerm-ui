@@ -1,15 +1,10 @@
 import { BrowserRouter } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { waitFor } from '@testing-library/react';
 
 import BulkListView from '../BulkListView';
-import renderWithProviders, { storeDefaultState } from '../../../utils/renderWithProviders';
+import renderWithProviders, { storeDefaultState, createTestStore } from '../../../utils/renderWithProviders';
 import api from '../../../utils/api';
 import * as useAuth from '../../../hooks/useAuth';
-
-const middlewares = [thunk];
-const mockStore = configureStore(middlewares);
 
 const mockBulkUpdatesResponse = {
   count: 0,
@@ -37,7 +32,7 @@ vi.spyOn(useAuth, 'default').mockImplementation(() => ({
 }));
 
 const renderComponent = (storeOverride) => {
-  const store = storeOverride ?? mockStore(storeDefaultState);
+  const store = storeOverride ?? createTestStore(storeDefaultState);
 
   return renderWithProviders(
     <BrowserRouter>
@@ -48,12 +43,17 @@ const renderComponent = (storeOverride) => {
 };
 
 describe('<BulkListView />', () => {
-  it('renders correctly', () => {
-    renderComponent();
+  it('renders correctly', async () => {
+    const { store } = renderComponent();
+
+    // Wait for the API call to be made and the store to be updated
+    await waitFor(() => {
+      expect(store.getActions().some((action) => action.type === 'bulk/fetchBulkUpdates/fulfilled')).toBe(true);
+    });
   });
 
   it('fetches bulk updates on mount', async () => {
-    const store = mockStore(storeDefaultState);
+    const store = createTestStore(storeDefaultState);
 
     renderComponent(store);
 

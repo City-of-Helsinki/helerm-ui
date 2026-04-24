@@ -1,15 +1,10 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { waitFor } from '@testing-library/react';
 
 import BulkCreateView from '../BulkCreateView';
-import renderWithProviders, { storeDefaultState } from '../../../../utils/renderWithProviders';
+import renderWithProviders, { storeDefaultState, createTestStore } from '../../../../utils/renderWithProviders';
 import { classification } from '../../../../utils/__mocks__/mockHelpers';
 import api from '../../../../utils/api';
-
-const middlewares = [thunk];
-const mockStore = configureStore(middlewares);
 
 const mockClassificationResponse = {
   count: classification.length,
@@ -31,7 +26,7 @@ vi.spyOn(api, 'get').mockImplementation((url) => {
 });
 
 const renderComponent = (storeOverride) => {
-  const store = storeOverride ?? mockStore(storeDefaultState);
+  const store = storeOverride ?? createTestStore(storeDefaultState);
   const router = createBrowserRouter([{ path: '/', element: <BulkCreateView /> }]);
 
   return renderWithProviders(<RouterProvider router={router} />, { store });
@@ -39,11 +34,18 @@ const renderComponent = (storeOverride) => {
 
 describe('<BulkCreateView /> - Simple async thunk test', () => {
   it('renders correctly', async () => {
-    renderComponent();
+    const { store } = renderComponent();
+
+    // Wait for the API call to be made and the store to be updated
+    await waitFor(() => {
+      const actions = store.getActions();
+      expect(actions.some((action) => action.type === 'navigation/fetchNavigation/fulfilled')).toBe(true);
+      expect(store.getState().navigation.items.length).toBeGreaterThan(0);
+    });
   });
 
   it('fetches navigation on mount', async () => {
-    const store = mockStore(storeDefaultState);
+    const store = createTestStore(storeDefaultState);
 
     renderComponent(store);
 
@@ -65,7 +67,7 @@ describe('<BulkCreateView /> - Simple async thunk test', () => {
         {
           type: 'navigation/parseNavigation',
           payload: {
-            items: [],
+            items: expect.any(Array),
           },
         },
         {

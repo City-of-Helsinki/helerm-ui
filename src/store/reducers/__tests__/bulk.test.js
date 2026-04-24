@@ -1,6 +1,4 @@
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-
+import { createTestStore } from '../../../utils/renderWithProviders';
 import {
   fetchBulkUpdatesThunk,
   fetchBulkUpdateThunk,
@@ -11,9 +9,6 @@ import {
   clearSelectedBulkUpdate,
 } from '../bulk';
 import api from '../../../utils/api';
-
-const middlewares = [thunk];
-const mockStore = configureMockStore(middlewares);
 
 describe('Bulk reducer', () => {
   it('should create an action to fetch bulk updates', async () => {
@@ -29,7 +24,7 @@ describe('Bulk reducer', () => {
         meta: expect.anything(),
       },
     ];
-    const store = mockStore({});
+    const store = createTestStore({});
 
     const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ json: () => ({ results: [] }) }));
     vi.spyOn(api, 'get').mockImplementationOnce(mockApiGet);
@@ -55,7 +50,7 @@ describe('Bulk reducer', () => {
         meta: expect.anything(),
       },
     ];
-    const store = mockStore({});
+    const store = createTestStore({});
 
     const mockApiGet = vi.fn().mockImplementation(() => Promise.reject(new Error('ERROR')));
     vi.spyOn(api, 'get').mockImplementationOnce(mockApiGet);
@@ -79,7 +74,7 @@ describe('Bulk reducer', () => {
         meta: expect.anything(),
       },
     ];
-    const store = mockStore({});
+    const store = createTestStore({});
 
     const mockApiGet = vi.fn().mockImplementation(() => Promise.resolve({ json: () => ({}) }));
     vi.spyOn(api, 'get').mockImplementationOnce(mockApiGet);
@@ -103,7 +98,7 @@ describe('Bulk reducer', () => {
         meta: expect.anything(),
       },
     ];
-    const store = mockStore({});
+    const store = createTestStore({});
 
     const mockApiPost = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => ({}) }));
     vi.spyOn(api, 'post').mockImplementationOnce(mockApiPost);
@@ -130,7 +125,7 @@ describe('Bulk reducer', () => {
         meta: expect.anything(),
       },
     ];
-    const store = mockStore({});
+    const store = createTestStore({});
 
     const mockApiPost = vi.fn().mockImplementation(() => Promise.reject(new Error('ERROR')));
     vi.spyOn(api, 'post').mockImplementationOnce(mockApiPost);
@@ -154,7 +149,7 @@ describe('Bulk reducer', () => {
         meta: expect.anything(),
       },
     ];
-    const store = mockStore({});
+    const store = createTestStore({});
 
     const mockApiDel = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => ({}) }));
     vi.spyOn(api, 'del').mockImplementationOnce(mockApiDel);
@@ -181,7 +176,7 @@ describe('Bulk reducer', () => {
         meta: expect.anything(),
       },
     ];
-    const store = mockStore({});
+    const store = createTestStore({});
 
     const mockApiDel = vi.fn().mockImplementation(() => Promise.reject(new Error('ERROR')));
     vi.spyOn(api, 'del').mockImplementationOnce(mockApiDel);
@@ -205,7 +200,7 @@ describe('Bulk reducer', () => {
         meta: expect.anything(),
       },
     ];
-    const store = mockStore({});
+    const store = createTestStore({});
 
     const mockApiPost = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => ({}) }));
     vi.spyOn(api, 'post').mockImplementationOnce(mockApiPost);
@@ -232,7 +227,7 @@ describe('Bulk reducer', () => {
         meta: expect.anything(),
       },
     ];
-    const store = mockStore({});
+    const store = createTestStore({});
 
     const mockApiPost = vi.fn().mockImplementation(() => Promise.reject(new Error('ERROR')));
     vi.spyOn(api, 'post').mockImplementationOnce(mockApiPost);
@@ -257,7 +252,7 @@ describe('Bulk reducer', () => {
         meta: expect.anything(),
       },
     ];
-    const store = mockStore({});
+    const store = createTestStore({});
 
     const mockApiPatch = vi.fn().mockImplementation(() => Promise.resolve({ ok: true, json: () => ({}) }));
     vi.spyOn(api, 'patch').mockImplementationOnce(mockApiPatch);
@@ -285,7 +280,7 @@ describe('Bulk reducer', () => {
         meta: expect.anything(),
       },
     ];
-    const store = mockStore({});
+    const store = createTestStore({});
 
     const mockApiPatch = vi.fn().mockImplementation(() => Promise.reject(new Error('ERROR')));
     vi.spyOn(api, 'patch').mockImplementationOnce(mockApiPatch);

@@ -2,13 +2,9 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import CloneView from '../CloneView';
-
-const middlewares = [thunk];
-const mockStore = configureStore(middlewares);
+import { createTestStore } from '../../../../utils/renderWithProviders';
 
 const initialState = {
   navigation: {
@@ -41,7 +37,7 @@ vi.mock('../../../Navigation/Navigation', () => ({
 }));
 
 const renderComponent = (props = {}, storeState = initialState) => {
-  const store = mockStore(storeState);
+  const store = createTestStore(storeState);
   return render(
     <Provider store={store}>
       <BrowserRouter>

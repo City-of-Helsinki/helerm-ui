@@ -1,3 +1,4 @@
+import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { render } from '@testing-library/react';
 import { LoginProvider } from 'hds-react';
@@ -11,6 +12,7 @@ import { initialState as userInitialState } from '../store/reducers/user';
 import { initialState as uiInitialState } from '../store/reducers/ui';
 import { initialState as bulkInitialState } from '../store/reducers/bulk';
 import { initialState as searchInitialState } from '../store/reducers/search';
+import makeRootReducer from '../store/rootReducers';
 import storeCreator from '../store/createStore';
 
 export const storeDefaultState = {
@@ -23,6 +25,41 @@ export const storeDefaultState = {
   ui: uiInitialState,
   bulk: bulkInitialState,
   search: searchInitialState,
+};
+
+/**
+ * Creates a real RTK store that also records dispatched actions.
+ * Drop-in replacement for redux-mock-store: supports store.getActions() and
+ * store.clearActions() while applying real reducers so state actually updates.
+ */
+export const createTestStore = (preloadedState = {}) => {
+  const dispatchedActions = [];
+
+  const actionRecorder = () => (next) => (action) => {
+    if (typeof action !== 'function') {
+      dispatchedActions.push(action);
+    }
+    return next(action);
+  };
+
+  const store = configureStore({
+    reducer: makeRootReducer(),
+    preloadedState,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: ['router/LOCATION_CHANGE'],
+          ignoredPaths: ['router.location'],
+        },
+      }).concat(actionRecorder),
+  });
+
+  store.getActions = () => [...dispatchedActions];
+  store.clearActions = () => {
+    dispatchedActions.length = 0;
+  };
+
+  return store;
 };
 
 const renderWithProviders = (

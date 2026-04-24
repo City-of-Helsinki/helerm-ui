@@ -1,16 +1,11 @@
 import { MemoryRouter } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import { waitFor } from '@testing-library/react';
 
 import BulkView from '../BulkView';
-import renderWithProviders, { storeDefaultState } from '../../../../utils/renderWithProviders';
+import renderWithProviders, { storeDefaultState, createTestStore } from '../../../../utils/renderWithProviders';
 import { classification, bulkUpdate } from '../../../../utils/__mocks__/mockHelpers';
 import api from '../../../../utils/api';
 import * as useAuth from '../../../../hooks/useAuth';
-
-const middlewares = [thunk];
-const mockStore = configureStore(middlewares);
 
 // Mock useParams hook
 vi.mock('react-router-dom', async () => {
@@ -56,7 +51,7 @@ vi.spyOn(useAuth, 'default').mockImplementation(() => ({
 }));
 
 const renderComponent = (storeOverride) => {
-  const store = storeOverride ?? mockStore(storeDefaultState);
+  const store = storeOverride ?? createTestStore(storeDefaultState);
 
   return renderWithProviders(
     <MemoryRouter initialEntries={['/bulk/1']}>
@@ -68,11 +63,18 @@ const renderComponent = (storeOverride) => {
 
 describe('<BulkView /> - Simple async thunk test', () => {
   it('renders correctly', async () => {
-    renderComponent();
+    const { store } = renderComponent();
+
+    // Wait for the API calls to be made and the store to be updated
+    await waitFor(() => {
+      const actions = store.getActions();
+      expect(actions.some((action) => action.type === 'bulk/fetchBulkUpdate/fulfilled')).toBe(true);
+      expect(actions.some((action) => action.type === 'navigation/fetchNavigation/fulfilled')).toBe(true);
+    });
   });
 
   it('fetches bulk update and navigation on mount', async () => {
-    const store = mockStore(storeDefaultState);
+    const store = createTestStore(storeDefaultState);
 
     renderComponent(store);
 

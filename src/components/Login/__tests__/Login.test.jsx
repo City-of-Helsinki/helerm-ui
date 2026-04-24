@@ -1,15 +1,10 @@
 import { BrowserRouter } from 'react-router-dom';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 
 import * as useAuth from '../../../hooks/useAuth';
 import Login from '../Login';
-import renderWithProviders from '../../../utils/renderWithProviders';
-
-const middlewares = [thunk];
-const mockStore = configureStore(middlewares);
+import renderWithProviders, { createTestStore } from '../../../utils/renderWithProviders';
 
 vi.mock('../../../store/reducers/user', async (importOriginal) => {
   const actual = await importOriginal();
@@ -33,7 +28,7 @@ vi.spyOn(useAuth, 'default').mockImplementation(() => ({
 }));
 
 const renderComponent = (storeOverride) => {
-  const store = storeOverride ?? mockStore({});
+  const store = storeOverride ?? createTestStore({});
 
   return renderWithProviders(
     <BrowserRouter>
@@ -85,7 +80,7 @@ describe('<Login />', () => {
       authenticated: false,
     }));
 
-    const store = mockStore({});
+    const store = createTestStore({});
 
     renderComponent(store);
 
@@ -108,7 +103,7 @@ describe('<Login />', () => {
       authenticated: true,
     }));
 
-    const store = mockStore({});
+    const store = createTestStore({});
 
     renderComponent(store);
 
