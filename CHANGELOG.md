@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.6](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.8.5...helerm-ui-v1.8.6) (2026-04-29)
+
+
+### Bug Fixes
+
+* ViewTos metadata show more Refs: TIED-271 ([380d776](https://github.com/City-of-Helsinki/helerm-ui/commit/380d776b532e976b9ff77150006b336fc67290c6))
+
 ## [1.8.5](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.8.4...helerm-ui-v1.8.5) (2026-04-21)
 
 
