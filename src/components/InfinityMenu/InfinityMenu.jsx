@@ -1,5 +1,4 @@
 import classnames from 'classnames';
-import Defiant from 'defiant.js';
 import cloneDeep from 'lodash/cloneDeep';
 import _get from 'lodash/get';
 import NestedObjects from 'nested-objects';
@@ -8,6 +7,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Sticky from 'react-sticky-el';
 
+import { matchesFilters, parseDetailFilters } from './searchUtils';
 import Exporter from '../Exporter';
 import ClassificationLink from './ClassificationLink';
 import EmptyTree from './EmptyTree';
@@ -15,6 +15,7 @@ import SearchFilters from './SearchFilter/SearchFilters';
 import SearchInputs from './SearchInput/SearchInputs';
 
 const DEFAULT_FILTER_CONDITION = 'and';
+const EMPTY_TREE = [];
 
 /**
  * Extracted from https://github.com/socialtables/react-infinity-menu
@@ -23,9 +24,8 @@ const DEFAULT_FILTER_CONDITION = 'and';
 const InfinityMenu = ({
   isDetailSearch,
   isSearchChanged,
-  items,
   searchInputs,
-  tree = [],
+  tree = EMPTY_TREE,
   isSearching,
   maxLeaves = Infinity,
   onNodeMouseClick = () => {},
@@ -50,107 +50,37 @@ const InfinityMenu = ({
   headerProps = {},
 }) => {
   const [filteredTree, setFilteredTree] = useState([]);
-  const [snapshots, setSnapshots] = useState({});
   const [filterCondition, setFilterCondition] = useState(DEFAULT_FILTER_CONDITION);
   const [isInitializing, setIsInitializing] = useState(true);
 
   const setDisplayTreeRef = useRef();
-  const snapshotsRef = useRef({});
   const filteredTreeLengthRef = useRef(0);
   const filterTreeRef = useRef();
-
-  // Keep snapshots ref in sync with snapshots state
-  React.useEffect(() => {
-    snapshotsRef.current = snapshots;
-  }, [snapshots]);
 
   // Keep filtered tree length ref in sync
   React.useEffect(() => {
     filteredTreeLengthRef.current = filteredTree.length;
   }, [filteredTree.length]);
 
-  const formatDetailFilter = useCallback((field, value) => {
-    // returns xpath query e.g.
-    // InformationSystem=*ahjo returns: contains(InformationSystem, "ahjo")
-    // InformationSystem=ahjo* returns: starts-with(InformationSystem, "ahjo")
-    // InformationSystem=ahjo returns: InformationSystem="ahjo"
-    const wildcardIndex = value.indexOf('*');
-    const fieldValue = value.replace(/\*/g, '');
-    if (!fieldValue) {
-      return null;
-    }
-    if (wildcardIndex === 0) {
-      return `contains(${field}, "${fieldValue}")`;
-    }
-    if (wildcardIndex > 0) {
-      return `starts-with(${field}, "${fieldValue}")`;
-    }
-    return `${field}="${fieldValue}"`;
-  }, []);
-
   const getDetailFilters = useCallback(
-    (searchInputs) => {
-      const filters = [];
-      searchInputs.forEach((input) => {
-        const splitted = input.split('=').map((m) => m.trim());
-        let filter;
-        if (splitted.length === 2 && splitted[0] && splitted[1]) {
-          filter = formatDetailFilter(splitted[0], splitted[1]);
-        } else if (splitted[0]) {
-          filter = formatDetailFilter('.', splitted[0]);
-        }
-        if (filter) {
-          filters.push(filter);
-        }
-      });
-
-      const filterConditionString = ` ${filterCondition} `;
-
-      return filters.length ? `//*[${filters.join(filterConditionString)}]` : '';
-    },
-    [filterCondition, formatDetailFilter],
+    (searchInputs) => ({
+      parsedFilters: parseDetailFilters(searchInputs),
+      condition: filterCondition,
+    }),
+    [filterCondition],
   );
 
   const getNodeMatchesSearchFilter = useCallback(
     (filters, node) => {
-      if (filters.length) {
-        if (isDetailSearch) {
-          const currentSnapshots = snapshotsRef.current;
-          const snapshot = currentSnapshots[node.id] ? currentSnapshots[node.id] : null;
-          const result = snapshot ? JSON.search(snapshot, filters) : [];
-
-          return result.length > 0;
-        }
-
+      if (isDetailSearch) {
+        return matchesFilters(node, filters.parsedFilters, filters.condition);
+      }
+      if (filters) {
         return filter(node, filters);
       }
-
       return true;
     },
     [isDetailSearch, filter],
-  );
-
-  const findSnapshot = useCallback((snapshots, node) => {
-    if (!node.children) {
-      return {
-        ...snapshots,
-        [node.id]: Defiant.getSnapshot(node),
-      };
-    }
-    return node.children.length ? node.children.reduce((prev, curr) => findSnapshot(prev, curr), snapshots) : snapshots;
-  }, []);
-
-  const createSnapshots = useCallback(
-    (tree) => {
-      const newSnapshots = tree.reduce((prev, curr, key) => {
-        if (key === undefined) {
-          return prev;
-        }
-        return findSnapshot(prev, curr);
-      }, {});
-      setSnapshots(newSnapshots);
-    },
-    [findSnapshot],
   );
 
   const findFiltered = useCallback(
@@ -171,7 +101,8 @@ const InfinityMenu = ({
         ? node.children.reduce((p, c, k) => findFiltered(p, c, k, filters), [])
         : [];
 
-      const shouldDisplay = filteredSubFolder.some((child) => child.isSearchDisplay) || filter(node, filters);
+      const shouldDisplay =
+        filteredSubFolder.some((child) => child.isSearchDisplay) || (!isDetailSearch && filter(node, filters));
 
       if (shouldDisplay) {
         newNode.isSearchOpen = true;
@@ -183,14 +114,16 @@ const InfinityMenu = ({
 
       return trees;
     },
-    [getNodeMatchesSearchFilter, filter, maxLeaves],
+    [getNodeMatchesSearchFilter, filter, maxLeaves, isDetailSearch],
   );
 
   const filterTree = useCallback(
     (searchInputs, tree, isDetailSearch) => {
       const filters = isDetailSearch ? getDetailFilters(searchInputs) : searchInputs[0];
 
-      if (!filters || (typeof filters === 'string' && !filters.trim())) {
+      const hasNoFilters = isDetailSearch ? filters.parsedFilters.length === 0 : !filters?.trim();
+
+      if (hasNoFilters) {
         setFilteredTree(tree);
         return;
       }
@@ -283,6 +216,9 @@ const InfinityMenu = ({
         const keyPathArray = keyPath.split('.');
         const parentPath = Object.assign([], keyPathArray).splice(0, keyPathArray.length - 2);
         const parentNode = _get(tree, parentPath);
+        if (!parentNode?.children) {
+          return prevs;
+        }
         const filteredChildren = parentNode.children.some((child) => child.isSearchDisplay === true)
           ? parentNode.children.filter((child) => child.isSearchDisplay === true)
           : parentNode.children;
@@ -476,12 +412,6 @@ const InfinityMenu = ({
   );
 
   useEffect(() => {
-    if (isDetailSearch && items !== undefined) {
-      createSnapshots(items);
-    }
-  }, [isDetailSearch, items, createSnapshots]);
-
-  useEffect(() => {
     if (tree !== undefined) {
       setFilteredTree(tree);
     }
@@ -642,7 +572,6 @@ InfinityMenu.propTypes = {
   isSearchChanged: PropTypes.bool,
   isSearching: PropTypes.bool,
   isUser: PropTypes.bool.isRequired,
-  items: PropTypes.array,
   maxLeaves: PropTypes.number,
   onLeafMouseClick: PropTypes.func,
   onLeafMouseDown: PropTypes.func,
