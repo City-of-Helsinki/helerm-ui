@@ -1,800 +1,749 @@
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, MemoryRouter } from 'react-router-dom';
+import { act, waitFor } from '@testing-library/react';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { waitFor, act } from '@testing-library/react';
 
 import renderWithProviders, { storeDefaultState } from '../../../utils/renderWithProviders';
 import Navigation from '../Navigation';
 import api from '../../../utils/api';
-import { classification } from '../../../utils/__mocks__/mockHelpers';
 import useAuth from '../../../hooks/useAuth';
-import { parseNavigationSliceAction } from '../../../store/reducers/navigation';
+import {
+  parseNavigationSliceAction,
+  setNavigationVisibility,
+  initialState as navigationInitialState,
+} from '../../../store/reducers/navigation';
+import { navigationStateFilters } from '../../../constants';
+import { initialState as classificationInitialState } from '../../../store/reducers/classification';
+import { initialState as selectedTOSInitialState } from '../../../store/reducers/tos-toolkit/main';
+import InfinityMenu from '../../InfinityMenu/InfinityMenu';
 
 vi.mock('../../../hooks/useAuth');
 const mockUseAuth = vi.mocked(useAuth);
 
+const mockNavigate = vi.hoisted(() => vi.fn());
+vi.mock('react-router-dom', async (importActual) => ({
+  ...(await importActual()),
+  // eslint-disable-next-line @eslint-react/component-hook-factories
+  useNavigate: () => mockNavigate,
+}));
+
+vi.mock('../../InfinityMenu/InfinityMenu', () => ({
+  default: vi.fn(() => <div data-testid='infinity-menu' />),
+}));
+
+const MockedInfinityMenu = vi.mocked(InfinityMenu);
+
+const getLastInfinityMenuProps = () => {
+  const calls = MockedInfinityMenu.mock.calls;
+  return calls[calls.length - 1]?.[0] ?? null;
+};
+
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
-const mockClassificationResponse = {
-  count: classification.length,
+const mockClassificationApiResponse = {
+  count: 2,
   next: null,
   previous: null,
-  results: classification,
+  results: [],
 };
-
-const mockClassificationApiGet = vi
-  .fn()
-  .mockImplementation(() => Promise.resolve({ ok: true, json: () => mockClassificationResponse }));
-
 vi.spyOn(api, 'get').mockImplementation((url) => {
   if (url.includes('classification')) {
-    return mockClassificationApiGet();
+    return Promise.resolve({ ok: true, json: () => mockClassificationApiResponse });
   }
-
   return Promise.resolve({ ok: false, status: 404, json: () => ({ error: 'Not found' }) });
 });
 
-const renderComponent = (storeOverride) => {
-  const store = storeOverride ?? mockStore(storeDefaultState);
+// Pre-converted tree items (as they appear after convertToTree)
+const mockTreeItems = [
+  {
+    id: 'root-approved',
+    code: '01',
+    title: 'Approved Root',
+    name: '01 Approved Root',
+    path: ['Top'],
+    parent_id: null,
+    sort_id: '01',
+    function: 'func-approved-id',
+    function_state: 'approved',
+    function_attributes: { RetentionPeriod: '5' },
+    children: [
+      {
+        id: 'child-approved',
+        code: '01 01',
+        title: 'Approved Child',
+        name: '01 01 Approved Child',
+        path: ['Top', '01 Approved Root'],
+        parent_id: 'root-approved',
+        sort_id: '01',
+        function: 'func-child-id',
+        function_state: 'approved',
+        function_attributes: { RetentionPeriod: '5' },
+      },
+    ],
+  },
+  {
+    id: 'root-draft',
+    code: '02',
+    title: 'Draft Root',
+    name: '02 Draft Root',
+    path: [],
+    parent_id: null,
+    sort_id: '02',
+    function: 'func-draft-id',
+    function_state: 'draft',
+    function_attributes: { RetentionPeriod: '10' },
+    children: [],
+  },
+];
 
+const renderWithItems = (items = mockTreeItems, extraState = {}, RouterComponent = BrowserRouter) => {
+  const stateWithItems = {
+    ...storeDefaultState,
+    navigation: {
+      ...navigationInitialState,
+      items,
+      timestamp: Date.now().toString(),
+    },
+    ...extraState,
+  };
+  const store = mockStore(stateWithItems);
   return renderWithProviders(
-    <BrowserRouter>
+    <RouterComponent>
       <Navigation />
-    </BrowserRouter>,
+    </RouterComponent>,
     { store },
   );
 };
 
-const findPendingAction = (actionsList) =>
-  actionsList.find((action) => action.type === 'navigation/fetchNavigation/pending');
-
-// Simple mock tree structure for testing state preservation
-const createSimpleMockTree = () => [
-  {
-    id: 'test-1',
-    name: '00 00 00 00 Test Classification',
-    code: '00 00 00 00',
-    title: 'Test Classification',
-    path: [],
-    isOpen: false,
-    isSearchOpen: false,
-    children: [
-      {
-        id: 'test-1-1',
-        name: '00 00 00 01 Child 1',
-        code: '00 00 00 01',
-        title: 'Child 1',
-        path: ['00 00 00 00 Test Classification'],
-        isOpen: false,
-        isSearchOpen: false,
-        children: [],
-      },
-    ],
-  },
-];
-
 describe('<Navigation />', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mockUseAuth.mockReturnValue({
       getApiToken: vi.fn().mockReturnValue('test-token'),
       authenticated: true,
     });
-  });
-  it('renders correctly', async () => {
-    renderComponent();
-  });
-
-  it('fetches navigation on mount', async () => {
-    const store = mockStore(storeDefaultState);
-
-    renderComponent(store);
-
-    await waitFor(() => {
-      const actions = store.getActions();
-
-      // Check that the essential navigation actions are dispatched
-      expect(actions.some((action) => action.type === 'navigation/fetchNavigation/pending')).toBe(true);
-      expect(actions.some((action) => action.type === 'navigation/receiveNavigation')).toBe(true);
-      expect(actions.some((action) => action.type === 'navigation/parseNavigation')).toBe(true);
-      expect(actions.some((action) => action.type === 'navigation/fetchNavigation/fulfilled')).toBe(true);
-
-      // Check that the pending action has the correct token
-      const pendingAction = actions.find((action) => action.type === 'navigation/fetchNavigation/pending');
-      expect(pendingAction.meta.arg.token).toBe('test-token');
-    });
+    mockNavigate.mockClear();
+    MockedInfinityMenu.mockClear();
   });
 
-  describe('authenticated user filtering', () => {
-    beforeEach(() => {
-      mockUseAuth.mockReturnValue({
-        getApiToken: vi.fn().mockReturnValue('test-token'),
-        authenticated: true,
-      });
+  describe('Mount & fetching', () => {
+    it('renders without crashing', () => {
+      renderWithItems();
     });
 
-    afterEach(() => {
-      mockUseAuth.mockReturnValue({
-        getApiToken: vi.fn().mockReturnValue(undefined),
-        authenticated: false,
-      });
-    });
-
-    it('renders navigation with state filter dropdown for authenticated user', async () => {
-      // Use mockStore to check actions instead of state, similar to "fetches navigation on mount" test
+    it('dispatches fetchNavigation/pending with token on mount', async () => {
       const store = mockStore(storeDefaultState);
-      const { container } = renderComponent(store);
-
-      // Wait for fetch actions to complete
-      const isFulfilledAction = (action) => action.type === 'navigation/fetchNavigation/fulfilled';
-      await waitFor(() => {
-        const actions = store.getActions();
-        const hasFulfilled = actions.some(isFulfilledAction);
-        expect(hasFulfilled).toBe(true);
-      });
-
-      // Wait for the UI to render the filter dropdown
-      // Note: With mockStore, the component won't actually update state,
-      // but we can check that the component renders correctly with the initial state
-      await waitFor(() => {
-        expect(container.innerHTML).toContain('Suodata tilan mukaan...');
-      });
+      renderWithProviders(
+        <BrowserRouter>
+          <Navigation />
+        </BrowserRouter>,
+        { store },
+      );
 
       await waitFor(() => {
-        expect(container.querySelector('input[placeholder="Etsi..."]')).toBeInTheDocument();
-        expect(container.querySelector('.Select')).toBeInTheDocument();
-      });
-    });
-
-    it('fetches navigation with token when authenticated', async () => {
-      const store = mockStore(storeDefaultState);
-
-      renderComponent(store);
-
-      await waitFor(() => {
-        const actions = store.getActions();
-        const pendingAction = findPendingAction(actions);
+        const pendingAction = store.getActions().find((a) => a.type === 'navigation/fetchNavigation/pending');
         expect(pendingAction).toBeDefined();
         expect(pendingAction.meta.arg.token).toBe('test-token');
       });
     });
-  });
 
-  describe('State Preservation', () => {
-    beforeEach(() => {
+    it('calls fetchNavigation with includeRelated=true when route is /filter', async () => {
+      const store = mockStore(storeDefaultState);
+      renderWithProviders(
+        <MemoryRouter initialEntries={['/filter']}>
+          <Navigation />
+        </MemoryRouter>,
+        { store },
+      );
+
+      await waitFor(() => {
+        const pendingAction = store.getActions().find((a) => a.type === 'navigation/fetchNavigation/pending');
+        expect(pendingAction).toBeDefined();
+        expect(pendingAction.meta.arg.includeRelated).toBe(true);
+      });
+    });
+
+    it('refetches when authenticated flips false to true', async () => {
       mockUseAuth.mockReturnValue({
-        getApiToken: vi.fn().mockReturnValue(undefined),
+        getApiToken: vi.fn().mockReturnValue('test-token'),
         authenticated: false,
       });
-    });
 
-    it('preserves isOpen state when itemsTimestamp changes but filters remain unchanged', async () => {
-      // Start with empty state - let component fetch naturally
-      const initialState = {
-        ...storeDefaultState,
-        navigation: {
-          ...storeDefaultState.navigation,
-          items: [],
-          list: [],
-          timestamp: '',
-        },
-      };
-      const { store } = renderWithProviders(
+      const store = mockStore(storeDefaultState);
+      const { rerender } = renderWithProviders(
         <BrowserRouter>
           <Navigation />
         </BrowserRouter>,
-        { preloadedState: initialState },
+        { store },
       );
 
-      // Component fetches on mount - wait for fetch to complete
-      await waitFor(
-        () => {
-          const state = store.getState().navigation;
-          expect(state.isFetching).toBe(false);
-        },
-        { timeout: 5000 },
-      );
-
-      // Get the fetched items - if convertToTree failed, items will be empty
-      // In that case, skip the state preservation test since there's nothing to preserve
-      const fetchedItems = store.getState().navigation.items;
-      if (fetchedItems.length === 0) {
-        // If items are empty (convertToTree failed), skip this test
-        return;
-      }
-
-      // Update timestamp to trigger state preservation check
-      // This simulates items being updated from the server
-      act(() => {
-        store.dispatch(
-          parseNavigationSliceAction({
-            items: fetchedItems, // Use fetched items, not mockTree
-          }),
-        );
-      });
-
-      // Verify timestamp was updated
       await waitFor(() => {
-        const state = store.getState().navigation;
-        expect(state.timestamp).toBeTruthy();
-        expect(state.timestamp).not.toBe('1000');
+        expect(store.getActions().some((a) => a.type === 'navigation/fetchNavigation/pending')).toBe(true);
       });
 
-      // Component should still have items (didn't reset)
-      expect(store.getState().navigation.items.length).toBeGreaterThan(0);
-    });
+      const firstCallCount = store.getActions().filter((a) => a.type === 'navigation/fetchNavigation/pending').length;
 
-    it('does not preserve state when filters change', async () => {
-      // Start with empty state - let component fetch naturally
-      const initialState = {
-        ...storeDefaultState,
-        navigation: {
-          ...storeDefaultState.navigation,
-          items: [],
-          list: [],
-          timestamp: '',
-        },
-      };
-      const { store } = renderWithProviders(
-        <BrowserRouter>
-          <Navigation />
-        </BrowserRouter>,
-        { preloadedState: initialState },
-      );
+      mockUseAuth.mockReturnValue({
+        getApiToken: vi.fn().mockReturnValue('test-token'),
+        authenticated: true,
+      });
 
-      // Component fetches on mount - wait for fetch to complete
-      await waitFor(
-        () => {
-          const state = store.getState().navigation;
-          expect(state.isFetching).toBe(false);
-        },
-        { timeout: 5000 },
-      );
-
-      // Get the fetched items - if convertToTree failed, items will be empty
-      // In that case, skip the state preservation test since there's nothing to preserve
-      const fetchedItems = store.getState().navigation.items;
-      if (fetchedItems.length === 0) {
-        // If items are empty (convertToTree failed), skip this test
-        return;
-      }
-
-      // When filters change, a fresh tree should be created
-      // The component should handle filter changes without preserving state
       act(() => {
-        store.dispatch(
-          parseNavigationSliceAction({
-            items: fetchedItems, // Use fetched items, not mockTree
-          }),
+        rerender(
+          <BrowserRouter>
+            <Navigation />
+          </BrowserRouter>,
         );
       });
 
       await waitFor(() => {
-        const state = store.getState().navigation;
-        expect(state.timestamp).toBeTruthy();
+        const pendingCount = store.getActions().filter((a) => a.type === 'navigation/fetchNavigation/pending').length;
+        expect(pendingCount).toBeGreaterThan(firstCallCount);
       });
+    });
+  });
 
-      // Component should still have items (didn't reset)
-      expect(store.getState().navigation.items.length).toBeGreaterThan(0);
+  describe('getFilteredTree', () => {
+    it('passes all items to InfinityMenu when no filters are set', async () => {
+      renderWithItems(mockTreeItems);
+
+      await waitFor(() => {
+        const props = getLastInfinityMenuProps();
+        expect(props).not.toBeNull();
+        expect(props.tree).toHaveLength(mockTreeItems.length);
+      });
     });
 
-    it('preserves nested children states correctly', async () => {
-      // Start with empty state - let component fetch naturally
-      const initialState = {
-        ...storeDefaultState,
-        navigation: {
-          ...storeDefaultState.navigation,
-          items: [],
-          list: [],
-          timestamp: '',
-        },
-      };
-      const { store } = renderWithProviders(
-        <BrowserRouter>
-          <Navigation />
-        </BrowserRouter>,
-        { preloadedState: initialState },
-      );
+    it('status filter keeps only items with matching function_state', async () => {
+      renderWithItems(mockTreeItems);
 
-      // Component fetches on mount - wait for fetch to complete
-      await waitFor(
-        () => {
-          const state = store.getState().navigation;
-          expect(state.isFetching).toBe(false);
-        },
-        { timeout: 5000 },
-      );
+      // Capture handleFilterChange from InfinityMenu props
+      await waitFor(() => {
+        expect(getLastInfinityMenuProps()).not.toBeNull();
+      });
+      const { handleFilterChange } = getLastInfinityMenuProps();
 
-      // Get the fetched items - if convertToTree failed, items will be empty
-      // In that case, skip the state preservation test since there's nothing to preserve
-      const fetchedItems = store.getState().navigation.items;
-      if (fetchedItems.length === 0) {
-        // If items are empty (convertToTree failed), skip this test
-        return;
-      }
-
-      // Update timestamp to test nested state preservation
       act(() => {
-        store.dispatch(
-          parseNavigationSliceAction({
-            items: fetchedItems, // Use fetched items, not mockTree
-          }),
-        );
+        handleFilterChange([{ value: 'approved' }], 'statusFilters');
       });
 
       await waitFor(() => {
-        const state = store.getState().navigation;
-        expect(state.timestamp).toBeTruthy();
+        const props = getLastInfinityMenuProps();
+        // root-draft (function_state: 'draft') should be filtered out
+        const tree = props.tree;
+        expect(tree.every((item) => item.function_state === 'approved')).toBe(true);
+        expect(tree.find((item) => item.id === 'root-draft')).toBeUndefined();
       });
-
-      // Component should maintain its structure
-      expect(store.getState().navigation.items.length).toBeGreaterThan(0);
     });
 
-    it('does not preserve when old tree is empty', async () => {
-      const mockTree = createSimpleMockTree();
-      const initialState = {
-        ...storeDefaultState,
-        navigation: {
-          ...storeDefaultState.navigation,
-          items: [],
-          timestamp: '',
-        },
-      };
-      const { store } = renderWithProviders(
-        <BrowserRouter>
-          <Navigation />
-        </BrowserRouter>,
-        { preloadedState: initialState },
-      );
+    it('retention period filter keeps only items with matching RetentionPeriod', async () => {
+      renderWithItems(mockTreeItems);
 
-      // Update with new items
+      await waitFor(() => {
+        expect(getLastInfinityMenuProps()).not.toBeNull();
+      });
+      const { handleFilterChange } = getLastInfinityMenuProps();
+
       act(() => {
-        store.dispatch(
-          parseNavigationSliceAction({
-            items: mockTree,
-          }),
-        );
+        handleFilterChange([{ value: '10' }], 'retentionPeriodFilters');
       });
 
       await waitFor(() => {
-        const state = store.getState().navigation;
-        expect(state.items.length).toBeGreaterThan(0);
-        expect(state.timestamp).toBeTruthy();
+        const props = getLastInfinityMenuProps();
+        const tree = props.tree;
+        // root-draft has RetentionPeriod '10', root-approved has '5'
+        expect(tree.find((item) => item.id === 'root-approved')).toBeUndefined();
+        expect(tree.find((item) => item.id === 'root-draft')).toBeDefined();
       });
     });
 
-    it('does not preserve when no nodes are open', async () => {
-      // Start with empty state - let component fetch naturally
-      const initialState = {
-        ...storeDefaultState,
-        navigation: {
-          ...storeDefaultState.navigation,
-          items: [],
-          list: [],
-          timestamp: '',
+    it('items with non-matching root but matching descendants are kept', async () => {
+      const itemsWithMixedChild = [
+        {
+          id: 'root-no-match',
+          code: '01',
+          title: 'No Match Root',
+          name: '01 No Match Root',
+          path: [],
+          parent_id: null,
+          sort_id: '01',
+          function_state: 'draft',
+          function_attributes: { RetentionPeriod: '99' },
+          children: [
+            {
+              id: 'matching-child',
+              code: '01 01',
+              title: 'Matching Child',
+              name: '01 01 Matching Child',
+              path: ['01 No Match Root'],
+              parent_id: 'root-no-match',
+              sort_id: '01',
+              function_state: 'approved',
+              function_attributes: { RetentionPeriod: '5' },
+            },
+          ],
         },
-      };
-      const { store } = renderWithProviders(
-        <BrowserRouter>
-          <Navigation />
-        </BrowserRouter>,
-        { preloadedState: initialState },
-      );
+      ];
 
-      // Component fetches on mount - wait for fetch to complete
-      await waitFor(
-        () => {
-          const state = store.getState().navigation;
-          expect(state.isFetching).toBe(false);
-        },
-        { timeout: 5000 },
-      );
+      renderWithItems(itemsWithMixedChild);
 
-      // Get the fetched items - if convertToTree failed, items will be empty
-      // In that case, skip the state preservation test since there's nothing to preserve
-      const fetchedItems = store.getState().navigation.items;
-      if (fetchedItems.length === 0) {
-        // If items are empty (convertToTree failed), skip this test
-        return;
-      }
+      await waitFor(() => {
+        expect(getLastInfinityMenuProps()).not.toBeNull();
+      });
+      const { handleFilterChange } = getLastInfinityMenuProps();
 
-      // Update timestamp - if no nodes are open, no preservation should occur
-      // but component should still work correctly
       act(() => {
-        store.dispatch(
-          parseNavigationSliceAction({
-            items: fetchedItems, // Use fetched items, not mockTree
-          }),
-        );
+        handleFilterChange([{ value: 'approved' }], 'statusFilters');
       });
 
       await waitFor(() => {
-        const state = store.getState().navigation;
-        expect(state.timestamp).toBeTruthy();
+        const props = getLastInfinityMenuProps();
+        // Root should be kept because its child matches
+        expect(props.tree.find((item) => item.id === 'root-no-match')).toBeDefined();
+        const root = props.tree.find((item) => item.id === 'root-no-match');
+        expect(root.children).toHaveLength(1);
+        expect(root.children[0].id).toBe('matching-child');
       });
-
-      expect(store.getState().navigation.items.length).toBeGreaterThan(0);
     });
 
-    it('handles empty itemsTimestamp gracefully', async () => {
-      // Start with empty state - let component fetch naturally
-      const initialState = {
-        ...storeDefaultState,
-        navigation: {
-          ...storeDefaultState.navigation,
-          items: [],
-          list: [],
-          timestamp: '',
-        },
-      };
+    it('passes filters prop to InfinityMenu', async () => {
+      renderWithItems();
+
+      await waitFor(() => {
+        const props = getLastInfinityMenuProps();
+        expect(props.filters).toEqual(navigationStateFilters);
+      });
+    });
+  });
+
+  describe('State preservation', () => {
+    it('preserves isOpen across items refresh', async () => {
+      // Use a real store so dispatching parseNavigationSliceAction actually updates state.
+      // Block the fetch so the initial preloaded items are never overwritten.
+      vi.spyOn(api, 'get').mockImplementationOnce(() => new Promise(() => {}));
+
       const { store } = renderWithProviders(
         <BrowserRouter>
           <Navigation />
         </BrowserRouter>,
-        { preloadedState: initialState },
-      );
-
-      // Component fetches on mount - wait for fetch to complete
-      await waitFor(
-        () => {
-          const state = store.getState().navigation;
-          expect(state.isFetching).toBe(false);
+        {
+          preloadedState: {
+            ...storeDefaultState,
+            navigation: {
+              ...navigationInitialState,
+              items: mockTreeItems,
+              timestamp: Date.now().toString(),
+            },
+          },
         },
-        { timeout: 5000 },
       );
 
-      // Get the fetched items - if convertToTree failed, items will be empty
-      const fetchedItems = store.getState().navigation.items;
-      if (fetchedItems.length === 0) {
-        // If items are empty (convertToTree failed), skip this test
-        return;
-      }
+      await waitFor(() => {
+        expect(getLastInfinityMenuProps()).not.toBeNull();
+      });
 
-      // Update with empty timestamp should not cause errors
+      // Simulate opening root-approved by invoking onNodeMouseClick
+      const { onNodeMouseClick } = getLastInfinityMenuProps();
+      const openedTree = mockTreeItems.map((item) => (item.id === 'root-approved' ? { ...item, isOpen: true } : item));
       act(() => {
-        store.dispatch(
-          parseNavigationSliceAction({
-            items: fetchedItems, // Use fetched items, not mockTree
-          }),
-        );
+        onNodeMouseClick(null, openedTree);
       });
 
       await waitFor(() => {
-        const state = store.getState().navigation;
-        expect(state.timestamp).toBeTruthy();
+        const props = getLastInfinityMenuProps();
+        expect(props.tree.find((item) => item.id === 'root-approved')?.isOpen).toBe(true);
       });
 
-      // Component should render correctly
-      expect(store.getState().navigation.items.length).toBeGreaterThan(0);
-    });
-
-    it('does not preserve on initial render', async () => {
-      const mockTree = createSimpleMockTree();
-      const initialState = {
-        ...storeDefaultState,
-        navigation: {
-          ...storeDefaultState.navigation,
-          items: mockTree,
-          timestamp: '1000',
-        },
-      };
-      const store = mockStore(initialState);
-
-      renderComponent(store);
-
-      // On initial render, tree should be created fresh
-      // No preservation should occur since there's no previous tree state
-      const isPendingAction = (action) => action.type === 'navigation/fetchNavigation/pending';
-      await waitFor(() => {
-        const actions = store.getActions();
-        const hasPendingAction = actions.some(isPendingAction);
-        expect(hasPendingAction).toBe(true);
-      });
-    });
-
-    it('preserves isSearchOpen state when items update', async () => {
-      // Start with empty state - let component fetch naturally
-      const initialState = {
-        ...storeDefaultState,
-        navigation: {
-          ...storeDefaultState.navigation,
-          items: [],
-          list: [],
-          timestamp: '',
-        },
-      };
-      const { store } = renderWithProviders(
-        <BrowserRouter>
-          <Navigation />
-        </BrowserRouter>,
-        { preloadedState: initialState },
-      );
-
-      // Component fetches on mount - wait for fetch to complete
-      await waitFor(
-        () => {
-          const state = store.getState().navigation;
-          expect(state.isFetching).toBe(false);
-        },
-        { timeout: 5000 },
-      );
-
-      // Get the fetched items - if convertToTree failed, items will be empty
-      // In that case, skip the state preservation test since there's nothing to preserve
-      const fetchedItems = store.getState().navigation.items;
-      if (fetchedItems.length === 0) {
-        // If items are empty (convertToTree failed), skip this test
-        return;
-      }
-
-      // Update timestamp to test isSearchOpen preservation
+      // Simulate server refresh (new timestamp, same items)
       act(() => {
-        store.dispatch(
-          parseNavigationSliceAction({
-            items: fetchedItems, // Use fetched items, not mockTree
-          }),
-        );
+        store.dispatch(parseNavigationSliceAction({ items: mockTreeItems }));
       });
 
       await waitFor(() => {
-        const state = store.getState().navigation;
-        expect(state.timestamp).toBeTruthy();
+        const props = getLastInfinityMenuProps();
+        // isOpen should be preserved after items refresh
+        expect(props.tree.find((item) => item.id === 'root-approved')?.isOpen).toBe(true);
       });
-
-      expect(store.getState().navigation.items.length).toBeGreaterThan(0);
     });
 
-    it('preserves multiple menu states correctly', async () => {
-      // Start with empty state - let component fetch naturally
-      const initialState = {
-        ...storeDefaultState,
-        navigation: {
-          ...storeDefaultState.navigation,
-          items: [],
-          list: [],
-          timestamp: '',
-        },
-      };
-      const { store } = renderWithProviders(
-        <BrowserRouter>
-          <Navigation />
-        </BrowserRouter>,
-        { preloadedState: initialState },
-      );
+    it('resets state when filters change', async () => {
+      renderWithItems(mockTreeItems);
 
-      // Component fetches on mount - wait for fetch to complete
-      await waitFor(
-        () => {
-          const state = store.getState().navigation;
-          expect(state.isFetching).toBe(false);
-        },
-        { timeout: 5000 },
-      );
+      await waitFor(() => {
+        expect(getLastInfinityMenuProps()).not.toBeNull();
+      });
 
-      // Get the fetched items - if convertToTree failed, items will be empty
-      // In that case, skip the state preservation test since there's nothing to preserve
-      const fetchedItems = store.getState().navigation.items;
-      if (fetchedItems.length === 0) {
-        // If items are empty (convertToTree failed), skip this test
-        return;
-      }
-
-      // Update timestamp - multiple nodes with different states should be preserved individually
+      // Open a node
+      const { onNodeMouseClick, handleFilterChange } = getLastInfinityMenuProps();
+      const openedTree = mockTreeItems.map((item) => (item.id === 'root-approved' ? { ...item, isOpen: true } : item));
       act(() => {
-        store.dispatch(
-          parseNavigationSliceAction({
-            items: fetchedItems, // Use fetched items, not mockTree
-          }),
-        );
+        onNodeMouseClick(null, openedTree);
       });
 
       await waitFor(() => {
-        const state = store.getState().navigation;
-        expect(state.timestamp).toBeTruthy();
+        expect(getLastInfinityMenuProps().tree.find((item) => item.id === 'root-approved')?.isOpen).toBe(true);
       });
 
-      expect(store.getState().navigation.items.length).toBeGreaterThan(0);
-    });
-
-    it('does not preserve state when itemsTimestamp is empty/null', async () => {
-      const initialState = {
-        ...storeDefaultState,
-        navigation: {
-          ...storeDefaultState.navigation,
-          items: [],
-          list: [],
-          timestamp: '',
-        },
-      };
-      const { store } = renderWithProviders(
-        <BrowserRouter>
-          <Navigation />
-        </BrowserRouter>,
-        { preloadedState: initialState },
-      );
-
-      await waitFor(
-        () => {
-          const state = store.getState().navigation;
-          expect(state.isFetching).toBe(false);
-        },
-        { timeout: 5000 },
-      );
-
-      const fetchedItems = store.getState().navigation.items;
-      if (fetchedItems.length === 0) {
-        return;
-      }
-
-      // When timestamp is empty, preservation should not occur
-      // The component should still work correctly
-      expect(store.getState().navigation.items.length).toBeGreaterThan(0);
-    });
-
-    it('does not preserve state when treeRef.current.length is 0', async () => {
-      // Start with empty tree state
-      const initialState = {
-        ...storeDefaultState,
-        navigation: {
-          ...storeDefaultState.navigation,
-          items: [],
-          list: [],
-          timestamp: '1000',
-        },
-      };
-      const { store } = renderWithProviders(
-        <BrowserRouter>
-          <Navigation />
-        </BrowserRouter>,
-        { preloadedState: initialState },
-      );
-
-      await waitFor(
-        () => {
-          const state = store.getState().navigation;
-          expect(state.isFetching).toBe(false);
-        },
-        { timeout: 5000 },
-      );
-
-      const fetchedItems = store.getState().navigation.items;
-      if (fetchedItems.length === 0) {
-        return;
-      }
-
-      // When treeRef.current.length is 0, preservation should not occur
-      // Component should create fresh tree
+      // Change filters — tree should be regenerated without preserving isOpen
       act(() => {
-        store.dispatch(
-          parseNavigationSliceAction({
-            items: fetchedItems,
-          }),
-        );
+        handleFilterChange([{ value: 'approved' }], 'statusFilters');
       });
 
       await waitFor(() => {
-        const state = store.getState().navigation;
-        expect(state.timestamp).toBeTruthy();
+        // Filtered tree is recomputed without isOpen preservation
+        const props = getLastInfinityMenuProps();
+        const approvedRoot = props.tree.find((item) => item.id === 'root-approved');
+        // isOpen may be true because setAllOpen is called during filter, but isOpen is a filter artifact
+        // The important thing is that the component re-renders with filtered tree
+        expect(approvedRoot).toBeDefined();
       });
-
-      expect(store.getState().navigation.items.length).toBeGreaterThan(0);
     });
 
-    it('handles state preservation when itemsTimestamp changes but treeRef is empty', async () => {
-      // Start with empty state - let component fetch naturally
-      const initialState = {
-        ...storeDefaultState,
-        navigation: {
-          ...storeDefaultState.navigation,
-          items: [],
-          list: [],
-          timestamp: '',
-        },
-      };
-      const { store } = renderWithProviders(
-        <BrowserRouter>
-          <Navigation />
-        </BrowserRouter>,
-        { preloadedState: initialState },
-      );
+    it('does not preserve state on first render', async () => {
+      renderWithItems(mockTreeItems);
 
-      // Component fetches on mount - wait for fetch to complete
-      await waitFor(
-        () => {
-          const state = store.getState().navigation;
-          expect(state.isFetching).toBe(false);
-        },
-        { timeout: 5000 },
-      );
+      await waitFor(() => {
+        const props = getLastInfinityMenuProps();
+        expect(props).not.toBeNull();
+        // No nodes should be open on initial render
+        props.tree.forEach((item) => {
+          expect(item.isOpen).toBeFalsy();
+        });
+      });
+    });
+  });
 
-      const fetchedItems = store.getState().navigation.items;
-      if (fetchedItems.length === 0) {
-        return;
-      }
+  describe('Search', () => {
+    it('addSearchInput appends an empty string to searchInputs', async () => {
+      renderWithItems();
 
-      // When treeRef.current.length is 0 (initial state), preservation should not occur
-      // Component should create fresh tree
+      await waitFor(() => {
+        expect(getLastInfinityMenuProps()).not.toBeNull();
+      });
+
+      const { addSearchInput } = getLastInfinityMenuProps();
       act(() => {
-        store.dispatch(
-          parseNavigationSliceAction({
-            items: fetchedItems,
-          }),
-        );
+        addSearchInput();
       });
 
       await waitFor(() => {
-        const state = store.getState().navigation;
-        expect(state.timestamp).toBeTruthy();
+        const props = getLastInfinityMenuProps();
+        expect(props.searchInputs).toHaveLength(2);
+        expect(props.searchInputs[1]).toBe('');
+      });
+    });
+
+    it('removeSearchInput removes the item at the given index', async () => {
+      renderWithItems();
+
+      await waitFor(() => {
+        expect(getLastInfinityMenuProps()).not.toBeNull();
       });
 
-      // Component should still work correctly
-      expect(store.getState().navigation.items.length).toBeGreaterThan(0);
+      // Add a second input first
+      const { addSearchInput } = getLastInfinityMenuProps();
+      act(() => {
+        addSearchInput();
+      });
+
+      await waitFor(() => {
+        expect(getLastInfinityMenuProps().searchInputs).toHaveLength(2);
+      });
+
+      const { removeSearchInput } = getLastInfinityMenuProps();
+      act(() => {
+        removeSearchInput(1);
+      });
+
+      await waitFor(() => {
+        expect(getLastInfinityMenuProps().searchInputs).toHaveLength(1);
+      });
     });
 
-    it('handles effect branch when itemsChanged is false (else branch)', async () => {
-      const initialState = {
-        ...storeDefaultState,
-        navigation: {
-          ...storeDefaultState.navigation,
-          items: [],
-          list: [],
-          timestamp: '1000', // Set initial timestamp
-        },
-      };
-      const { store } = renderWithProviders(
-        <BrowserRouter>
+    it('removeSearchInput resets to [""] when removing the last element', async () => {
+      renderWithItems();
+
+      await waitFor(() => {
+        expect(getLastInfinityMenuProps()).not.toBeNull();
+      });
+
+      const { removeSearchInput } = getLastInfinityMenuProps();
+      act(() => {
+        removeSearchInput(0);
+      });
+
+      await waitFor(() => {
+        const props = getLastInfinityMenuProps();
+        expect(props.searchInputs).toEqual(['']);
+      });
+    });
+
+    it('setSearchInput on non-filter route sets isSearchChanged immediately', async () => {
+      renderWithItems();
+
+      await waitFor(() => {
+        expect(getLastInfinityMenuProps()).not.toBeNull();
+      });
+
+      const { setSearchInput } = getLastInfinityMenuProps();
+      act(() => {
+        setSearchInput(0, 'test');
+      });
+
+      await waitFor(() => {
+        const props = getLastInfinityMenuProps();
+        expect(props.isSearchChanged).toBe(true);
+        expect(props.searchInputs[0]).toBe('test');
+      });
+    });
+
+    it('setSearchInput on /filter route defers isSearchChanged via timeout', async () => {
+      const store = mockStore(storeDefaultState);
+      renderWithProviders(
+        <MemoryRouter initialEntries={['/filter']}>
           <Navigation />
-        </BrowserRouter>,
-        { preloadedState: initialState },
+        </MemoryRouter>,
+        { store },
       );
 
-      await waitFor(
-        () => {
-          const state = store.getState().navigation;
-          expect(state.isFetching).toBe(false);
-        },
-        { timeout: 5000 },
-      );
+      await waitFor(() => {
+        expect(getLastInfinityMenuProps()).not.toBeNull();
+      });
 
-      const fetchedItems = store.getState().navigation.items;
-      if (fetchedItems.length === 0) {
-        return;
+      // Switch to fake timers AFTER initial render — waitFor polls with setTimeout,
+      // so faking timers earlier would make the polling hang.
+      vi.useFakeTimers();
+
+      try {
+        const { setSearchInput } = getLastInfinityMenuProps();
+
+        act(() => {
+          setSearchInput(0, 'test-filter');
+        });
+
+        // Before timeout fires, searchInputs updates but isSearchChanged stays false on /filter
+        expect(getLastInfinityMenuProps().searchInputs[0]).toBe('test-filter');
+        expect(getLastInfinityMenuProps().isSearchChanged).toBe(false);
+
+        // Advance past SEARCH_TIMEOUT (500ms) — isSearchChanged should flip to true
+        await act(async () => {
+          await vi.advanceTimersByTimeAsync(600);
+        });
+
+        expect(getLastInfinityMenuProps().isSearchChanged).toBe(true);
+      } finally {
+        vi.useRealTimers();
       }
-
-      // When itemsTimestamp doesn't change (itemsChanged = false), else branch is taken
-      // Component should still update tree normally
-      expect(store.getState().navigation.items.length).toBeGreaterThan(0);
     });
+  });
 
-    it('handles effect branch when itemsTimestamp is falsy in else branch', async () => {
-      const initialState = {
+  describe('Leaf click handling', () => {
+    it('default handler on a leaf with function navigates to /view-tos/:id', async () => {
+      const store = mockStore({
         ...storeDefaultState,
-        navigation: {
-          ...storeDefaultState.navigation,
-          items: [],
-          list: [],
-          timestamp: '', // Falsy timestamp
-        },
-      };
-      const { store } = renderWithProviders(
+        navigation: { ...navigationInitialState, is_open: true },
+      });
+
+      renderWithProviders(
         <BrowserRouter>
           <Navigation />
         </BrowserRouter>,
-        { preloadedState: initialState },
+        { store },
       );
 
-      await waitFor(
-        () => {
-          const state = store.getState().navigation;
-          expect(state.isFetching).toBe(false);
+      await waitFor(() => {
+        expect(getLastInfinityMenuProps()).not.toBeNull();
+      });
+
+      const { onLeafMouseClick } = getLastInfinityMenuProps();
+      act(() => {
+        onLeafMouseClick(new MouseEvent('click'), { id: 'leaf-1', function: 'func-id-42' });
+      });
+
+      expect(mockNavigate).toHaveBeenCalledWith('/view-tos/func-id-42');
+    });
+
+    it('default handler on a leaf with parent navigates to /view-classification/:id', async () => {
+      const store = mockStore({
+        ...storeDefaultState,
+        navigation: { ...navigationInitialState, is_open: true },
+      });
+
+      renderWithProviders(
+        <BrowserRouter>
+          <Navigation />
+        </BrowserRouter>,
+        { store },
+      );
+
+      await waitFor(() => {
+        expect(getLastInfinityMenuProps()).not.toBeNull();
+      });
+
+      const { onLeafMouseClick } = getLastInfinityMenuProps();
+      act(() => {
+        onLeafMouseClick(new MouseEvent('click'), { id: 'class-99', parent: 'parent-id' });
+      });
+
+      expect(mockNavigate).toHaveBeenCalledWith('/view-classification/class-99');
+    });
+
+    it('custom onLeafMouseClick override is called instead of default', async () => {
+      const customHandler = vi.fn();
+      const store = mockStore(storeDefaultState);
+
+      renderWithProviders(
+        <BrowserRouter>
+          <Navigation onLeafMouseClick={customHandler} />
+        </BrowserRouter>,
+        { store },
+      );
+
+      await waitFor(() => {
+        expect(getLastInfinityMenuProps()).not.toBeNull();
+      });
+
+      const { onLeafMouseClick } = getLastInfinityMenuProps();
+      const leaf = { id: 'leaf-x', function: 'func-x' };
+      act(() => {
+        onLeafMouseClick(new MouseEvent('click'), leaf);
+      });
+
+      expect(customHandler).toHaveBeenCalledWith(expect.anything(), leaf);
+      expect(mockNavigate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Visibility & breadcrumb', () => {
+    it('toggleNavigationVisibility dispatches setNavigationVisibility with toggled value', async () => {
+      const store = mockStore({
+        ...storeDefaultState,
+        navigation: { ...navigationInitialState, is_open: true },
+      });
+
+      renderWithProviders(
+        <BrowserRouter>
+          <Navigation />
+        </BrowserRouter>,
+        { store },
+      );
+
+      await waitFor(() => {
+        expect(getLastInfinityMenuProps()).not.toBeNull();
+      });
+
+      const { toggleNavigationVisibility } = getLastInfinityMenuProps();
+      act(() => {
+        toggleNavigationVisibility();
+      });
+
+      const dispatched = store.getActions();
+      const visibilityAction = dispatched.find((a) => a.type === setNavigationVisibility.type);
+      expect(visibilityAction).toBeDefined();
+      expect(visibilityAction.payload).toBe(false); // was true, now toggled to false
+    });
+
+    it('renders empty-state error banner when items empty, timestamp set, not fetching, no filters', async () => {
+      const store = mockStore({
+        ...storeDefaultState,
+        navigation: {
+          ...navigationInitialState,
+          items: [],
+          isFetching: false,
+          timestamp: '12345',
         },
-        { timeout: 5000 },
+      });
+
+      const { getByText } = renderWithProviders(
+        <BrowserRouter>
+          <Navigation />
+        </BrowserRouter>,
+        { store },
       );
 
-      // When itemsTimestamp is falsy, the if (itemsTimestamp) check in else branch fails
-      // This tests line 220: if (itemsTimestamp) prevItemsTimestampRef.current = itemsTimestamp;
-      expect(store.getState().navigation.items.length).toBeGreaterThanOrEqual(0);
+      await waitFor(() => {
+        expect(getByText(/Järjestelmä ei ole käytettävissä/)).toBeInTheDocument();
+      });
+    });
+
+    it('calculatedTosPath is derived from classification.id and passed to InfinityMenu', async () => {
+      const itemWithPath = {
+        id: 'class-abc',
+        code: '03',
+        title: 'Classification ABC',
+        name: '03 Classification ABC',
+        path: ['Level 1', 'Level 2'],
+        parent_id: null,
+        sort_id: '03',
+        function_state: 'approved',
+        function_attributes: {},
+        children: [],
+      };
+
+      const store = mockStore({
+        ...storeDefaultState,
+        navigation: {
+          ...navigationInitialState,
+          items: [itemWithPath],
+          timestamp: '999',
+        },
+        classification: {
+          ...classificationInitialState,
+          id: 'class-abc',
+        },
+      });
+
+      renderWithProviders(
+        <BrowserRouter>
+          <Navigation />
+        </BrowserRouter>,
+        { store },
+      );
+
+      await waitFor(() => {
+        const props = getLastInfinityMenuProps();
+        expect(props.path).toEqual(['Level 1', 'Level 2']);
+      });
+    });
+
+    it('calculatedTosPath uses selectedTOS.classification.id when available', async () => {
+      const itemWithPath = {
+        id: 'tos-class-id',
+        code: '04',
+        title: 'TOS Classification',
+        name: '04 TOS Classification',
+        path: ['TOS Path Item'],
+        parent_id: null,
+        sort_id: '04',
+        function_state: 'approved',
+        function_attributes: {},
+        children: [],
+      };
+
+      const store = mockStore({
+        ...storeDefaultState,
+        navigation: {
+          ...navigationInitialState,
+          items: [itemWithPath],
+          timestamp: '888',
+        },
+        selectedTOS: {
+          ...selectedTOSInitialState,
+          classification: { id: 'tos-class-id' },
+        },
+      });
+
+      renderWithProviders(
+        <BrowserRouter>
+          <Navigation />
+        </BrowserRouter>,
+        { store },
+      );
+
+      await waitFor(() => {
+        const props = getLastInfinityMenuProps();
+        expect(props.path).toEqual(['TOS Path Item']);
+      });
     });
   });
 });

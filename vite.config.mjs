@@ -54,6 +54,6 @@ export default defineConfig(({ mode }) => ({
       ],
       provider: 'istanbul'
     },
-    testTimeout: 1000000
+    testTimeout: 30000
   }
 }));

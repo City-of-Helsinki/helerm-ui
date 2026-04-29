@@ -43,7 +43,6 @@ const Navigation = ({ onLeafMouseClick: customOnLeafMouseClick } = {}) => {
   const [filters, setFilters] = useState(navigationStateFilters);
   const [tree, setTree] = useState(items);
   const [searchInputs, setSearchInputs] = useState(['']);
-  const [searchTimestamp, setSearchTimestamp] = useState(0);
   const [isSearchChanged, setIsSearchChanged] = useState(false);
 
   const searchTimeoutRef = useRef(null);
@@ -281,41 +280,25 @@ const Navigation = ({ onLeafMouseClick: customOnLeafMouseClick } = {}) => {
     [navigate, toggleNavigationVisibility, customOnLeafMouseClick],
   );
 
-  const onSearchTimeout = useCallback(() => {
-    if (!isSearchChanged && Date.now() - searchTimestamp >= SEARCH_TIMEOUT) {
-      const searchQuery = searchInputs.filter((input) => input).join(' ');
-
-      if (searchQuery) {
-        navigate(`/search/${encodeURIComponent(searchQuery)}`);
-        toggleNavigationVisibility();
-      }
-    }
-  }, [isSearchChanged, navigate, searchInputs, searchTimestamp, toggleNavigationVisibility]);
-
   const setSearchInput = useCallback(
     (index, value) => {
-      const isDetailSearchActive = isDetailSearch();
-
       setSearchInputs((prev) => {
         const newInputs = [...prev];
         newInputs[index] = value;
         return newInputs;
       });
 
-      setIsSearchChanged(!isDetailSearchActive);
-      setSearchTimestamp(Date.now());
+      setIsSearchChanged(false);
 
-      if (isDetailSearchActive) {
-        if (searchTimeoutRef.current) {
-          clearTimeout(searchTimeoutRef.current);
-        }
-
-        searchTimeoutRef.current = setTimeout(() => {
-          setIsSearchChanged(false);
-        }, SEARCH_TIMEOUT);
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
       }
+
+      searchTimeoutRef.current = setTimeout(() => {
+        setIsSearchChanged(true);
+      }, SEARCH_TIMEOUT);
     },
-    [isDetailSearch],
+    [],
   );
 
   const addSearchInput = useCallback(() => {
@@ -330,39 +313,29 @@ const Navigation = ({ onLeafMouseClick: customOnLeafMouseClick } = {}) => {
         setSearchInputs((prev) => prev.filter((_, i) => i !== index));
       }
 
-      setSearchTimestamp(Date.now());
       setIsSearchChanged(false);
 
-      if (searchInputs[index].length > 0) {
+      if (searchInputs[index].length > 0 || isDetailSearch()) {
         if (searchTimeoutRef.current) {
           clearTimeout(searchTimeoutRef.current);
         }
 
         searchTimeoutRef.current = setTimeout(() => {
-          onSearchTimeout();
+          setIsSearchChanged(true);
         }, SEARCH_TIMEOUT);
       }
     },
-    [onSearchTimeout, searchInputs],
+    [isDetailSearch, searchInputs],
   );
 
   useEffect(() => {
-    if (isSearchChanged) {
-      if (searchTimeoutRef.current) {
-        clearTimeout(searchTimeoutRef.current);
-      }
-
-      searchTimeoutRef.current = setTimeout(() => {
-        onSearchTimeout();
-      }, SEARCH_TIMEOUT);
-    }
-
     return () => {
       if (searchTimeoutRef.current) {
         clearTimeout(searchTimeoutRef.current);
+        searchTimeoutRef.current = null;
       }
     };
-  }, [isSearchChanged, onSearchTimeout]);
+  }, []);
 
   const calculatedTosPath = React.useMemo(() => {
     let tos = null;
@@ -399,7 +372,6 @@ const Navigation = ({ onLeafMouseClick: customOnLeafMouseClick } = {}) => {
         isSearchChanged={isSearchChanged}
         isSearching={searchInputs.filter((input) => input.length > 0).length > 0}
         isFetching={isFetching}
-        items={items}
         onLeafMouseClick={handleLeafMouseClick}
         onNodeMouseClick={onNodeMouseClick}
         path={calculatedTosPath}
