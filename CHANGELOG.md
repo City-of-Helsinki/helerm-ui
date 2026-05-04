@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.8.7](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.8.6...helerm-ui-v1.8.7) (2026-05-04)
+
+
+### Bug Fixes
+
+* Remove defiant.js, fix details search Refs: TIED-279 ([d80e9ec](https://github.com/City-of-Helsinki/helerm-ui/commit/d80e9ec41661c86db09bbed7df3bfc9769c76c9c))
+
+
+### Dependencies
+
+* Bump postcss from 8.5.8 to 8.5.12 ([33639ec](https://github.com/City-of-Helsinki/helerm-ui/commit/33639ec70649e716d773033d712e6bf965c3ff17))
+
 ## [1.8.6](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.8.5...helerm-ui-v1.8.6) (2026-04-29)
 
 
