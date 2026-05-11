@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.8](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.8.7...helerm-ui-v1.8.8) (2026-05-11)
+
+
+### Dependencies
+
+* Bump fast-uri from 3.0.2 to 3.1.2 ([c3bfc4f](https://github.com/City-of-Helsinki/helerm-ui/commit/c3bfc4f9ef45a5a082010b3eb24d6f2c76026665))
+
 ## [1.8.7](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.8.6...helerm-ui-v1.8.7) (2026-05-04)
 
 
