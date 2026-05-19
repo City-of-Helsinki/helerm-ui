@@ -14,3 +14,4 @@ jobs:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     with:
       node-version: 22
+      extra-commands: pnpm update-runtime-env

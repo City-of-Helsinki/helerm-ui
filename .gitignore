@@ -2,6 +2,8 @@
 /node_modules
 /.pnp
 .pnp.js
+public/env-config.js
+public/test-env-config.js
 
 # testing
 /coverage
@@ -13,7 +15,6 @@
 .eslintcache
 .idea/
 .vscode/
-.env
 .DS_Store
 .env.local
 .env.development.local
@@ -21,6 +22,10 @@
 .env.production.local
 
 npm-debug.log*
+# yarn – not used anymore
+yarn.lock
+.yarn/
+.yarnrc.yml
 yarn-debug.log*
 yarn-error.log*
 
