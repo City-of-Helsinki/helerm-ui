@@ -27,9 +27,9 @@ $ cd helerm-ui
 $ pnpm install              # Install project dependencies
 ```
 
-#### 3. Add needed environmental variables
+#### 3. Add needed local environmental variables
 
-Add these by copying the `.env.example` to `.env` and adding the values to the file, or directly through import.meta.env.
+Add these by copying the `.env.local.example` to `.env.local` and adding the values to the file.
 
 ### Running the app locally:
 
