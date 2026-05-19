@@ -4,6 +4,8 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/vitest';
+// Load generated runtime configuration to be available in tests
+require('../public/test-env-config.js');
 
 vi.mock('./utils/api.js');
 
@@ -26,16 +28,6 @@ class ResizeObserverMock {
 
 // Stub the global ResizeObserver
 vi.stubGlobal('ResizeObserver', ResizeObserverMock);
-
-import.meta.env.REACT_APP_GIT_VERSION = '123';
-import.meta.env.REACT_APP_FEEDBACK_URL = 'https://hel.fi';
-import.meta.env.REACT_APP_API_URL = 'https://api.test.com';
-import.meta.env.REACT_APP_API_VERSION = 'v1';
-import.meta.env.REACT_APP_MATOMO_URL_BASE = 'https://www.test.fi/';
-import.meta.env.REACT_APP_MATOMO_SITE_ID = 'test123';
-import.meta.env.REACT_APP_MATOMO_SRC_URL = 'test.js';
-import.meta.env.REACT_APP_MATOMO_ENABLED = 'false';
-import.meta.env.REACT_APP_API_TOKEN_AUTH_AUDIENCE = 'test-audience';
 
 vi.mock('./hooks/useAuth.js', () => ({
   default: vi.fn(() => ({
@@ -65,7 +57,7 @@ vi.mock('hds-react', async () => {
       getStoredApiTokens: vi.fn(() => [
         null, // error
         {
-          [import.meta.env.REACT_APP_API_TOKEN_AUTH_AUDIENCE || 'test-audience']: 'test-token',
+          [ import.meta.env.REACT_APP_API_TOKEN_AUTH_AUDIENCE || 'test-audience' ]: 'test-token',
         }, // tokens
       ]),
     })),

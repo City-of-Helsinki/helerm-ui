@@ -12,4 +12,5 @@ overrides:
   'minimatch': '^10.2.4'
 
 allowBuilds:
+  esbuild: true
   unrs-resolver: true

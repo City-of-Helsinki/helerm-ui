@@ -31,12 +31,14 @@
     "date-fns": "^2.29.3",
     "deep-freeze": "^0.0.1",
     "dompurify": "^3.4.0",
+    "dotenv": "^17.4.2",
     "eslint": "^10.1.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-config-vitest-globals": "^2.0.2",
     "eslint-plugin-import-x": "^4.16.2",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-sonarjs": "^4.0.2",
+    "esrun": "^3.2.30",
     "exceljs": "^4.4.0",
     "fast-text-encoding": "^1.0.6",
     "globals": "^17.4.0",
@@ -71,17 +73,18 @@
   },
   "scripts": {
     "app:version": "echo \"$npm_package_version\"",
-    "start": "vite",
+    "start": "pnpm update-runtime-env && vite",
     "build": "vite build",
     "serve": "vite preview",
-    "test": "vitest",
+    "test": "NODE_ENV=test pnpm update-runtime-env && vitest",
     "test:coverage": "pnpm test run --coverage --watch=false",
     "lint": "pnpm eslint \"src/**/*.{js,jsx}\"",
     "postinstall": "if test \"$NODE_ENV\" != \"production\" ; then husky install ; fi",
     "test:e2e:install": "npx playwright install",
     "test:e2e:ci": "npx playwright test",
     "test:e2e:start": "npx playwright test",
-    "test:e2e:record": "npx playwright codegen https://tiedonohjaus.dev.hel.ninja/"
+    "test:e2e:record": "npx playwright codegen https://tiedonohjaus.dev.hel.ninja/",
+    "update-runtime-env": "esrun scripts/update-runtime-env.js"
   },
   "browserslist": {
     "production": [

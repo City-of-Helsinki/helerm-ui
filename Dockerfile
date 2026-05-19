@@ -5,14 +5,16 @@ FROM helsinki.azurecr.io/ubi9/nodejs-22-pnpm-builder-base AS appbase
 
 # 1. Copy only necessary files for build
 COPY --chown=default:root package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY --chown=default:root ./scripts ./scripts
 COPY --chown=default:root ./public ./public
-COPY --chown=default:root index.html vite.config.mjs eslint.config.mjs .prettierrc .env* ./
+COPY --chown=default:root index.html vite.config.mjs eslint.config.mjs .prettierrc .env ./
 COPY --chown=default:root ./src ./src
 
 # 2. Run the install and update-runtime-env script
 # corepack in the base image will automatically use the version of pnpm
 # defined in your package.json 'packageManager' field if present.
 RUN pnpm install --frozen-lockfile --ignore-scripts && pnpm store prune
+RUN pnpm update-runtime-env
 
 # ============================================================
 # STAGE 2: Development
