@@ -12,7 +12,7 @@ Looking for the backend code? It's in this repository: [helerm - Helsinki Electr
 
 ### Install from source
 
-Make sure you have [Yarn](https://yarnpkg.com/en/docs/install) installed globally.
+Make sure you have [pnpm](https://pnpm.io/installation) installed globally.
 
 #### 1. Clone the project:
 
@@ -24,7 +24,7 @@ $ cd helerm-ui
 #### 2. Install project dependencies
 
 ```bash
-$ yarn              # Install project dependencies
+$ pnpm install              # Install project dependencies
 ```
 
 #### 3. Add needed environmental variables
@@ -34,13 +34,13 @@ Add these by copying the `.env.example` to `.env` and adding the values to the f
 ### Running the app locally:
 
 ```bash
-$ yarn start    # Launch on local environment
+$ pnpm start    # Launch on local environment
 ```
 
 ### Running e2e tests:
 
 ```bash
-$ yarn test:e2e:start    # Runs e2e tests using playwright (using dev frontend if not set to local)
+$ pnpm test:e2e:start    # Runs e2e tests using playwright (using dev frontend if not set to local)
 ```
 
 
