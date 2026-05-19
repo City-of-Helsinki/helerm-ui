@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import * as consts from './constants';
 
 // env variables for the react app
@@ -35,13 +36,13 @@ export default {
   NODE_ENV: globalThis.window._env_.NODE_ENV,
   API_URL: globalThis.window._env_.REACT_APP_API_URL,
   API_VERSION: globalThis.window._env_.REACT_APP_API_VERSION,
-  RESULTS_PER_PAGE: parseInt(globalThis.window._env_.REACT_APP_RESULTS_PER_PAGE, 10) || consts.DEFAULT_PAGE_SIZE,
-  SEARCH_PAGE_SIZE: parseInt(globalThis.window._env_.REACT_APP_SEARCH_PAGE_SIZE, 10) || consts.DEFAULT_SEARCH_PAGE_SIZE,
+  RESULTS_PER_PAGE: Number.parseInt(globalThis.window._env_.REACT_APP_RESULTS_PER_PAGE, 10) || consts.DEFAULT_PAGE_SIZE,
+  SEARCH_PAGE_SIZE: Number.parseInt(globalThis.window._env_.REACT_APP_SEARCH_PAGE_SIZE, 10) || consts.DEFAULT_SEARCH_PAGE_SIZE,
   GIT_VERSION: globalThis.window._env_.REACT_APP_GIT_VERSION,
   SITE_TITLE: globalThis.window._env_.REACT_APP_SITE_TITLE || '',
   FEEDBACK_URL: globalThis.window._env_.REACT_APP_FEEDBACK_URL,
   FACETED_SEARCH_LENGTH:
-    parseInt(globalThis.window._env_.REACT_APP_FACETED_SEARCH_LENGTH, 10) || consts.DEFAULT_FACETED_SEARCH_LENGTH,
+    Number.parseInt(globalThis.window._env_.REACT_APP_FACETED_SEARCH_LENGTH, 10) || consts.DEFAULT_FACETED_SEARCH_LENGTH,
   SITE_THEME: THEMES[ globalThis.window._env_.REACT_APP_SITE_THEME ] || THEMES.coat,
   SENTRY_DSN: globalThis.window._env_.REACT_APP_SENTRY_DSN,
   SENTRY_ENVIRONMENT: globalThis.window._env_.REACT_APP_SENTRY_ENVIRONMENT,

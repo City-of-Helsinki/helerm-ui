@@ -5,6 +5,7 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/vitest';
 // Load generated runtime configuration to be available in tests
+// eslint-disable-next-line no-undef
 require('../public/test-env-config.js');
 
 vi.mock('./utils/api.js');
