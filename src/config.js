@@ -33,7 +33,6 @@ function envValueToBoolean(value, defaultValue) {
 }
 
 export default {
-  NODE_ENV: globalThis.window._env_.NODE_ENV,
   API_URL: globalThis.window._env_.REACT_APP_API_URL,
   API_VERSION: globalThis.window._env_.REACT_APP_API_VERSION,
   RESULTS_PER_PAGE: Number.parseInt(globalThis.window._env_.REACT_APP_RESULTS_PER_PAGE, 10) || consts.DEFAULT_PAGE_SIZE,
