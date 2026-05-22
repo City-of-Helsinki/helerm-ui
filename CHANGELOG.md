@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.9.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.8.8...helerm-ui-v1.9.0) (2026-05-22)
+
+
+### Features
+
+* Migrate yarn classic to pnpm Refs: TIED-275 ([184bf3e](https://github.com/City-of-Helsinki/helerm-ui/commit/184bf3ead60d61b45d78b5d2d362115589aae4fb))
+
+
+### Bug Fixes
+
+* .env commented line Refs: TIED-275 ([6d5a6ac](https://github.com/City-of-Helsinki/helerm-ui/commit/6d5a6acd5a5c34ba3c0bdabbcb80317d7b0a2e3e))
+
 ## [1.8.8](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.8.7...helerm-ui-v1.8.8) (2026-05-11)
 
 
