@@ -44,7 +44,7 @@ RUN pnpm build
 # ============================================================
 # STAGE 4: Production Runtime
 # ============================================================
-FROM helsinki.azurecr.io/ubi9/nginx-126-spa-standard AS production
+FROM helsinki.azurecr.io/ubi10/nginx-126-spa-standard AS production
 
 ARG REACT_APP_SENTRY_RELEASE
 ENV APP_RELEASE=${REACT_APP_SENTRY_RELEASE:-""}
