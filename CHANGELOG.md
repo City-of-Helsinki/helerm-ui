@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.9.1](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.9.0...helerm-ui-v1.9.1) (2026-06-01)
+
+
+### Bug Fixes
+
+* Update nginx image to ubi10 ([859c586](https://github.com/City-of-Helsinki/helerm-ui/commit/859c586b51c48d66d7bca79e1e4a4b43eef9c5b3))
+
+
+### Dependencies
+
+* Bump brace-expansion from 5.0.5 to 5.0.6 ([51dd788](https://github.com/City-of-Helsinki/helerm-ui/commit/51dd788c21accfb76f2877c442f9320975c03db7))
+
 ## [1.9.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.8.8...helerm-ui-v1.9.0) (2026-05-22)
 
 
