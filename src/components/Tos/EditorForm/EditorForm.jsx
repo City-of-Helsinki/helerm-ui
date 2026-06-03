@@ -8,6 +8,7 @@ import { useCallback, useState } from 'react';
 import { getDisplayLabelForAttribute } from '../../../utils/attributeHelper';
 import getProcessedAttributeValue from '../../../utils/attributeProcessing';
 import { validateConditionalRules } from '../../../utils/validators';
+import { useNotificationsContext } from '../../NotificationsContext/hooks/useNotificationsContext';
 import DropdownInput from '../DropdownInput/DropdownInput';
 import './EditorForm.scss';
 
@@ -19,7 +20,6 @@ const EditorForm = (props) => {
     elementConfig,
     closeEditorForm: propCloseEditorForm,
     targetId,
-    displayMessage,
     editMetaDataWithForm,
     onShowMore,
     onShowMoreForm,
@@ -27,6 +27,7 @@ const EditorForm = (props) => {
     complementRecordAdd,
   } = props;
 
+  const { addNotification } = useNotificationsContext();
   const initializeAttributes = useCallback(
     (attrTypes) => {
       let initialState = {};
@@ -77,8 +78,9 @@ const EditorForm = (props) => {
       if (action === 'edit') {
         editMetaData(stopEditing);
         messageHandler({
-          title: 'Version tiedot',
-          body: 'Tietojen muokkaus onnistui!',
+          label: 'Version tiedot',
+          children: 'Tietojen muokkaus onnistui!',
+          type: 'success',
         });
       }
     },
@@ -90,8 +92,9 @@ const EditorForm = (props) => {
       if (action === 'edit' || action === 'complement') {
         editMetaData(stopEditing);
         messageHandler({
-          title: 'Käsittelyprosessin tiedot',
-          body: 'Tietojen muokkaus onnistui!',
+          label: 'Käsittelyprosessin tiedot',
+          children: 'Tietojen muokkaus onnistui!',
+          type: 'success',
         });
       }
     },
@@ -113,8 +116,9 @@ const EditorForm = (props) => {
       if (action === 'edit' || action === 'complement') {
         editElement(e, targetId, stopEditing);
         messageHandler({
-          title: 'Käsittelyvaihe',
-          body: 'Käsittelyvaiheen muokkaus onnistui!',
+          label: 'Käsittelyvaihe',
+          children: 'Käsittelyvaiheen muokkaus onnistui!',
+          type: 'success',
         });
       }
     },
@@ -126,8 +130,9 @@ const EditorForm = (props) => {
       if (action === 'edit' || action === 'complement') {
         editElement(e, targetId, stopEditing);
         messageHandler({
-          title: 'Toimenpide',
-          body: 'Toimenpiteen muokkaus onnistui!',
+          label: 'Toimenpide',
+          children: 'Toimenpiteen muokkaus onnistui!',
+          type: 'success',
         });
       }
     },
@@ -149,12 +154,13 @@ const EditorForm = (props) => {
       }
 
       elementConfig.createRecord(filterAttributes(newAttributes), targetId);
-      displayMessage({
-        title: 'Asiakirja',
-        body: 'Asiakirjan lisäys onnistui!',
+      addNotification({
+        label: 'Asiakirja',
+        children: 'Asiakirjan lisäys onnistui!',
+        type: 'success',
       });
     },
-    [elementConfig, filterAttributes, newAttributes, displayMessage],
+    [elementConfig, filterAttributes, newAttributes, addNotification],
   );
 
   const handleRecordAction = useCallback(
@@ -165,8 +171,9 @@ const EditorForm = (props) => {
       if (action === 'edit' || from === 'editRecord') {
         editElement(e, targetId, stopEditing);
         messageHandler({
-          title: 'Asiakirja',
-          body: 'Asiakirjan muokkaus onnistui!',
+          label: 'Asiakirja',
+          children: 'Asiakirjan muokkaus onnistui!',
+          type: 'success',
         });
       }
     },
@@ -182,7 +189,7 @@ const EditorForm = (props) => {
       if (!targetId) return;
 
       const { action, type, from } = editorConfig;
-      const messageHandler = stopEditing ? displayMessage : () => {};
+      const messageHandler = stopEditing ? addNotification : () => {};
 
       switch (type) {
         case 'version':
@@ -206,7 +213,7 @@ const EditorForm = (props) => {
     },
     [
       editorConfig,
-      displayMessage,
+      addNotification,
       handleVersionAction,
       handleFunctionAction,
       handlePhaseAction,
@@ -637,7 +644,6 @@ EditorForm.propTypes = {
   attributes: PropTypes.object.isRequired,
   closeEditorForm: PropTypes.func.isRequired,
   complementRecordAdd: PropTypes.func,
-  displayMessage: PropTypes.func.isRequired,
   editMetaDataWithForm: PropTypes.func,
   editorConfig: PropTypes.shape({
     type: PropTypes.string.isRequired,

@@ -57,19 +57,6 @@ afterAll(() => {
   global.Date.now = realDateNow;
 });
 
-// Mock window.confirm for ReduxToastr
-Object.defineProperty(window, 'confirm', {
-  value: vi.fn(() => true),
-  writable: true,
-});
-
-// Mock ReduxToastr to avoid rendering issues
-vi.mock('react-redux-toastr', () => ({
-  __esModule: true,
-  default: () => <div data-testid='redux-toastr'>ReduxToastr Mock</div>,
-  reducer: (state = {}) => state,
-}));
-
 vi.mock('../../components/RouterSync/RouterSync', () => ({
   default: () => <div data-testid='mocked-router-sync'>RouterSync Mock</div>,
 }));

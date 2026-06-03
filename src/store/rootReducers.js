@@ -1,5 +1,4 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import { reducer as toastr } from 'react-redux-toastr';
 
 import bulk from './reducers/bulk';
 import classification from './reducers/classification';
@@ -18,7 +17,6 @@ const makeRootReducer = () =>
     router,
     selectedTOS,
     classification,
-    toastr,
     user,
     ui,
     bulk,

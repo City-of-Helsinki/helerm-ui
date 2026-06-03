@@ -2,12 +2,9 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import ImportView from '../ImportView';
+import { NotificationsProvider } from '../../../../components/NotificationsContext/NotificationsContext';
 import { attributeTypes } from '../../../../utils/__mocks__/attributeHelpers';
 import { createMockPhase, createMockAction, createRecord } from '../../../../utils/__mocks__/universalHelpers';
-import * as helpers from '../../../../utils/helpers';
-
-// Spy on displayMessage
-const mockDisplayMessage = vi.spyOn(helpers, 'displayMessage');
 
 // Mock data for different levels using centralized functions
 const mockPhases = {
@@ -119,12 +116,11 @@ const defaultProps = {
   attributeTypes,
 };
 
-const renderComponent = (props = {}) => render(<ImportView {...defaultProps} {...props} />);
+const renderComponent = (props = {}) => render(<ImportView {...defaultProps} {...props} />, { wrapper: NotificationsProvider });
 
 describe('<ImportView />', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockDisplayMessage.mockClear();
     // Clear any existing body classes
     document.body.className = '';
   });
@@ -450,7 +446,6 @@ describe('<ImportView />', () => {
 
     it('handles import errors gracefully and continues with next import', async () => {
       const user = userEvent.setup();
-      mockDisplayMessage.mockClear();
 
       // Make first import fail, second succeed
       const mockImportItems = vi
@@ -471,23 +466,9 @@ describe('<ImportView />', () => {
         expect(mockImportItems).toHaveBeenCalledTimes(2);
       });
 
-      // Wait a bit for the error handling to complete (async catch block)
-      await waitFor(
-        () => {
-          expect(mockDisplayMessage).toHaveBeenCalled();
-        },
-        { timeout: 1000 },
-      );
-
-      // Check the call arguments - verify it was called with correct structure
-      expect(mockDisplayMessage).toHaveBeenCalledTimes(1);
-      const callArgs = mockDisplayMessage.mock.calls[0];
-      expect(callArgs[0]).toMatchObject({
-        title: 'Virhe',
-      });
-      expect(callArgs[0].body).toContain('Tuonti epäonnistui');
-      expect(callArgs[0].body).toContain('phase-1');
-      expect(callArgs[1]).toMatchObject({ type: 'error' });
+      // Error notification should be visible
+      expect(await screen.findByText('Virhe')).toBeInTheDocument();
+      expect(await screen.findByText(/Tuonti epäonnistui - kohde \("phase-1"\)/)).toBeInTheDocument();
     });
 
     it('handles empty data structures gracefully', () => {

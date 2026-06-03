@@ -12,6 +12,7 @@ import {
   getDisplayLabelForAttribute,
 } from '../../../utils/attributeHelper';
 import { randomActionId } from '../../../utils/helpers';
+import { useNotificationsContext } from '../../NotificationsContext/hooks/useNotificationsContext';
 import Dropdown from '../../Dropdown';
 import Popup from '../../Popup';
 import Action from '../Action/Action';
@@ -30,7 +31,6 @@ const Phase = ({
       attributeTypes,
       documentState,
       editPhaseAttribute,
-      displayMessage,
       changeOrder,
       importItems,
       removePhase,
@@ -54,6 +54,7 @@ const Phase = ({
       phaseIndex,
       ref,
     }) => {
+    const { addNotification } = useNotificationsContext();
     const [typeSpecifier, setTypeSpecifier] = useState(phase.attributes.TypeSpecifier || null);
     const [type, setType] = useState(phase.attributes.PhaseType || null);
     const [deleting, setDeleting] = useState(false);
@@ -306,9 +307,10 @@ const Phase = ({
         setActionType('');
         setActionDefaultAttributes({});
         disableEditMode();
-        displayMessage({
-          title: 'Toimenpide',
-          body: 'Toimenpiteen lisäys onnistui!',
+        addNotification({
+          label: 'Toimenpide',
+          children: 'Toimenpiteen lisäys onnistui!',
+          type: 'success',
         });
       },
       [
@@ -319,7 +321,7 @@ const Phase = ({
         addAction,
         setPhaseVisibility,
         disableEditMode,
-        displayMessage,
+        addNotification,
       ],
     );
 
@@ -631,7 +633,6 @@ const Phase = ({
               documentState={documentState}
               attributeTypes={attributeTypes}
               editPhaseAttribute={editPhaseAttribute}
-              displayMessage={displayMessage}
               setActionVisibility={setActionVisibility}
               editActionAttribute={editActionAttribute}
               editRecord={editRecord}
@@ -662,7 +663,6 @@ const Phase = ({
         documentState,
         attributeTypes,
         editPhaseAttribute,
-        displayMessage,
         setActionVisibility,
         editActionAttribute,
         editRecord,
@@ -706,7 +706,6 @@ const Phase = ({
                 action: 'edit',
               }}
               closeEditorForm={disableEditMode}
-              displayMessage={displayMessage}
             />
           )}
           {mode === 'edit' && complementingPhase && (
@@ -724,7 +723,6 @@ const Phase = ({
                 action: 'complement',
               }}
               closeEditorForm={disableEditMode}
-              displayMessage={displayMessage}
             />
           )}
           {!editingPhase && !complementingPhase && (
@@ -814,9 +812,6 @@ Phase.propTypes = {
   documentState: PropTypes.string.isRequired,
   editPhaseAttribute: PropTypes.func.isRequired,
   removePhase: PropTypes.func.isRequired,
-  displayMessage: PropTypes.func.isRequired,
-  changeOrder: PropTypes.func.isRequired,
-  importItems: PropTypes.func.isRequired,
   setActionVisibility: PropTypes.func.isRequired,
   editActionAttribute: PropTypes.func.isRequired,
   editRecord: PropTypes.func.isRequired,

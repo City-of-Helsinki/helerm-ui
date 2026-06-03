@@ -1,5 +1,6 @@
 import { BrowserRouter } from 'react-router-dom';
-import { waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import renderWithProviders, { createTestStore } from '../../../utils/renderWithProviders';
 import { classification } from '../../../utils/__mocks__/mockHelpers';
@@ -23,12 +24,33 @@ vi.mock('react-router-dom', async () => {
 
   return {
     ...mod,
+    useNavigate: vi.fn(() => vi.fn()),
     useParams: vi.fn(() => ({
       id: 'test',
       version: 1,
     })),
   };
 });
+
+// Classification state with no existing function, so "Luo kuvaus" button is shown
+const classificationWithoutFunction = {
+  ...initialState,
+  id: 'test-classification-001',
+  code: '00 00 00',
+  title: 'Testitehtäväluokka',
+  version: 1,
+  version_history: [{ version: 1, state: 'approved', modified_at: '2024-01-01T00:00:00Z', modified_by: 'Test User' }],
+  function: null,
+  function_allowed: true,
+};
+
+// User state with edit permission so IsAllowed renders the button
+const userWithEditPermission = {
+  data: { permissions: ['can_edit'] },
+  isFetching: false,
+  status: 'AUTHORIZED',
+  error: null,
+};
 
 const renderComponent = (storeOverride) => {
   const store = storeOverride ?? createTestStore({ classification: { ...initialState } });
@@ -106,6 +128,58 @@ describe('<ViewClassification />', () => {
 
     await waitFor(() => {
       expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  describe('createTos notifications', () => {
+    beforeEach(() => {
+      // Return classification without an existing function so "Luo kuvaus" button is shown
+      vi.spyOn(api, 'get').mockResolvedValue({
+        ok: true,
+        json: () => ({
+          ...classificationWithoutFunction,
+          error: null,
+          isFetching: false,
+        }),
+      });
+    });
+
+    it('shows success notification after creating a TOS', async () => {
+      const user = userEvent.setup();
+      vi.spyOn(api, 'post').mockResolvedValueOnce({
+        ok: true,
+        json: () => ({ id: 'new-tos-001', version: 1 }),
+      });
+
+      const store = createTestStore({
+        classification: classificationWithoutFunction,
+        user: userWithEditPermission,
+      });
+
+      renderComponent(store);
+
+      await user.click(await screen.findByText('Luo kuvaus'));
+
+      expect(await screen.findByRole('alert', { name: 'Luonnos' })).toBeInTheDocument();
+    });
+
+    it('shows error notification when creating a TOS fails', async () => {
+      const user = userEvent.setup();
+      vi.spyOn(api, 'post').mockResolvedValueOnce({
+        ok: false,
+        statusText: 'Internal Server Error',
+      });
+
+      const store = createTestStore({
+        classification: classificationWithoutFunction,
+        user: userWithEditPermission,
+      });
+
+      renderComponent(store);
+
+      await user.click(await screen.findByText('Luo kuvaus'));
+
+      expect(await screen.findByRole('alert', { name: 'Virhe' })).toBeInTheDocument();
     });
   });
 });

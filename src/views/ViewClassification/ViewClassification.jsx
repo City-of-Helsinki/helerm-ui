@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import ClassificationHeader from '../../components/ClassificationHeader/ClassificationHeader';
 import VersionSelector from '../../components/VersionSelector/VersionSelector';
-import { displayMessage } from '../../utils/helpers';
+import { useNotificationsContext } from '../../components/NotificationsContext/hooks/useNotificationsContext';
 import { setNavigationVisibility } from '../../store/reducers/navigation';
 import useAuth from '../../hooks/useAuth';
 import {
@@ -26,6 +26,7 @@ const ViewClassification = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { getApiToken } = useAuth();
+  const { addNotification } = useNotificationsContext();
 
   const classification = useSelector(classificationSelector);
   const isFetching = useSelector(isFetchingSelector);
@@ -90,19 +91,20 @@ const ViewClassification = () => {
       .unwrap()
       .then((result) => {
         navigate(`/view-tos/${result.id}`);
-        return displayMessage({
-          title: 'Luonnos',
-          body: 'Luonnos tallennettu!',
+        return addNotification({
+          label: 'Luonnos',
+          children: 'Luonnos tallennettu!',
+          type: 'success',
         });
       })
       .catch((err) =>
-        displayMessage(
-          {
-            title: 'Virhe',
-            body: `"${err}"`,
-          },
-          { type: 'error' },
-        ),
+        addNotification({
+          label: 'Virhe',
+          children: err?.message 
+            ? `"${err.message}"` 
+            : 'Luonnoksen tallennus epäonnistui',
+          type: 'error',
+        }),
       );
   };
 

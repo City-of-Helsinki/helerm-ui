@@ -10,7 +10,8 @@ import {
   DELETE_BULKUPDATE,
   BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES,
 } from '../../../constants';
-import { formatDateTime, getStatusLabel, displayMessage } from '../../../utils/helpers';
+import { formatDateTime, getStatusLabel } from '../../../utils/helpers';
+import { useNotificationsContext } from '../../../components/NotificationsContext/hooks/useNotificationsContext';
 import IsAllowed from '../../../components/IsAllowed/IsAllowed';
 import Popup from '../../../components/Popup';
 import './BulkView.scss';
@@ -42,6 +43,7 @@ const BulkView = () => {
   const isUpdating = useSelector(isUpdatingSelector);
   const attributeTypes = useSelector(attributeTypesSelector);
   const { getApiToken } = useAuth();
+  const { addNotification } = useNotificationsContext();
 
   const navigate = useNavigate();
   const params = useParams();
@@ -140,19 +142,18 @@ const BulkView = () => {
     dispatch(approveBulkUpdateThunk({ id: selectedBulk.id, token: getApiToken() }))
       .then(() => {
         navigate('/bulk');
-        return displayMessage({
-          title: 'Massamuutos',
-          body: 'Massamuutos hyväksytty!',
+        return addNotification({
+          label: 'Massamuutos',
+          children: 'Massamuutos hyväksytty!',
+          type: 'success',
         });
       })
       .catch((err) =>
-        displayMessage(
-          {
-            title: 'Virhe',
-            body: `"${err.message}"`,
-          },
-          { type: 'error' },
-        ),
+        addNotification({
+          label: 'Virhe',
+          children: `"${err.message}"`,
+          type: 'error',
+        }),
       );
   };
 
@@ -175,19 +176,18 @@ const BulkView = () => {
       .then(() => {
         setItemList([]);
         navigate('/bulk');
-        return displayMessage({
-          title: 'Massamuutos',
-          body: 'Massamuutos poistettu!',
+        return addNotification({
+          label: 'Massamuutos',
+          children: 'Massamuutos poistettu!',
+          type: 'success',
         });
       })
       .catch((err) =>
-        displayMessage(
-          {
-            title: 'Virhe',
-            body: `"${err.message}"`,
-          },
-          { type: 'error' },
-        ),
+        addNotification({
+          label: 'Virhe',
+          children: `"${err.message}"`,
+          type: 'error',
+        }),
       );
   };
 
@@ -218,19 +218,18 @@ const BulkView = () => {
       const changes = omit(selectedBulk.changes, [`${itemToRemove.id}__${itemToRemove.changes.version}`]);
       dispatch(updateBulkUpdateThunk({ id: selectedBulk.id, bulkUpdate: { changes }, token: getApiToken() }))
         .then(() =>
-          displayMessage({
-            title: 'Massamuutos',
-            body: 'Massamuutos päivitetty!',
+          addNotification({
+            label: 'Massamuutos',
+            children: 'Massamuutos päivitetty!',
+            type: 'success',
           }),
         )
         .catch((err) =>
-          displayMessage(
-            {
-              title: 'Virhe',
-              body: `"${err.message}"`,
-            },
-            { type: 'error' },
-          ),
+          addNotification({
+            label: 'Virhe',
+            children: `"${err.message}"`,
+            type: 'error',
+          }),
         );
     }
   };

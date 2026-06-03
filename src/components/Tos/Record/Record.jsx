@@ -12,7 +12,6 @@ import './Record.scss';
 
 const Record = ({
       attributeTypes,
-      displayMessage,
       documentState,
       editRecord,
       editRecordAttribute,
@@ -175,7 +174,6 @@ const Record = ({
                 action: 'edit',
               }}
               closeEditorForm={disableEditMode}
-              displayMessage={displayMessage}
             />
           )}
           {mode === 'edit' && complementingRecord && (
@@ -194,7 +192,6 @@ const Record = ({
                 from: 'editRecord',
               }}
               closeEditorForm={disableEditMode}
-              displayMessage={displayMessage}
             />
           )}
           {!editingRecord && !complementingRecord && (
@@ -231,7 +228,6 @@ const Record = ({
 
 Record.propTypes = {
   attributeTypes: PropTypes.object.isRequired,
-  displayMessage: PropTypes.func.isRequired,
   documentState: PropTypes.string.isRequired,
   editRecord: PropTypes.func.isRequired,
   editRecordAttribute: PropTypes.func.isRequired,

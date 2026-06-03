@@ -6,7 +6,7 @@ import { format as formatDate, parseISO } from 'date-fns';
 import EditorForm from '../EditorForm/EditorForm';
 import { formatDateTime, getStatusLabel } from '../../../utils/helpers';
 
-const VersionData = ({ attributeTypes, displayMessage, editValidDates, selectedTOS, setVersionVisibility }) => {
+const VersionData = ({ attributeTypes, editValidDates, selectedTOS, setVersionVisibility }) => {
   const [editing, setEditing] = useState(false);
   const [validFrom, setValidFrom] = useState(null);
   const [validFromEditing, setValidFromEditing] = useState(false);
@@ -216,7 +216,6 @@ const VersionData = ({ attributeTypes, displayMessage, editValidDates, selectedT
             action: 'edit',
           }}
           closeEditorForm={cancelVersionEdit}
-          displayMessage={displayMessage}
         />
       )}
     </div>
@@ -225,7 +224,6 @@ const VersionData = ({ attributeTypes, displayMessage, editValidDates, selectedT
 
 VersionData.propTypes = {
   attributeTypes: PropTypes.object.isRequired,
-  displayMessage: PropTypes.func.isRequired,
   editValidDates: PropTypes.func.isRequired,
   selectedTOS: PropTypes.object.isRequired,
   setVersionVisibility: PropTypes.func.isRequired,

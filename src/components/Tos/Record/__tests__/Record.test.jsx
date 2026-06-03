@@ -28,7 +28,6 @@ const mockProps = createMockComponentProps('record', {
   editRecordAttribute: vi.fn(),
   removeRecord: vi.fn(),
   setRecordVisibility: vi.fn(),
-  displayMessage: vi.fn(),
 });
 
 const renderComponent = (props = {}) => {

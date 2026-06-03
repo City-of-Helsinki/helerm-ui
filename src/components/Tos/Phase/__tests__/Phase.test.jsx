@@ -78,7 +78,6 @@ const mockProps = {
   attributeTypes: attributeTypes,
   documentState: 'view',
   editPhaseAttribute: vi.fn(),
-  displayMessage: vi.fn(),
   changeOrder: vi.fn(),
   importItems: vi.fn(),
   removePhase: vi.fn(),

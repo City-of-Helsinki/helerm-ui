@@ -2,9 +2,9 @@ import { CookieBanner, CookieConsentContextProvider, LoginProvider, SessionEnded
 import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Provider, useDispatch } from 'react-redux';
-import ReduxToastr from 'react-redux-toastr';
 import { createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom';
 
+import { NotificationsProvider } from '../components/NotificationsContext/NotificationsContext';
 import MatomoContext from '../components/Matomo/matomo-context';
 import MatomoTracker from '../components/Matomo/MatomoTracker';
 import config from '../config';
@@ -54,16 +54,9 @@ const App = ({ router }) => {
           closeButtonLabelText: 'Kirjaudu ulos',
         }}
       />
-      <RouterProvider router={router} />
-      <ReduxToastr
-        timeOut={4000}
-        newestOnTop
-        preventDuplicates
-        position='top-right'
-        transitionIn='fadeIn'
-        transitionOut='bounceOutUp'
-        progressBar
-      />
+      <NotificationsProvider>
+        <RouterProvider router={router} />
+      </NotificationsProvider>
     </div>
   );
 };
