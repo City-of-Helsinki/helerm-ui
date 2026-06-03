@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { render } from '@testing-library/react';
 import { LoginProvider } from 'hds-react';
 
+import { NotificationsProvider } from '../components/NotificationsContext/NotificationsContext';
 import { initialState as navigationInitialState } from '../store/reducers/navigation';
 import { initialState as validationInitialState } from '../store/reducers/validation';
 import { initialState as routerInitialState } from '../store/reducers/router';
@@ -69,7 +70,9 @@ const renderWithProviders = (
   // eslint-disable-next-line @eslint-react/component-hook-factories
   const Wrapper = ({ children }) => (
     <LoginProvider>
-      <Provider store={store}>{children}</Provider>
+      <Provider store={store}>
+        <NotificationsProvider>{children}</NotificationsProvider>
+      </Provider>
     </LoginProvider>
   );
 

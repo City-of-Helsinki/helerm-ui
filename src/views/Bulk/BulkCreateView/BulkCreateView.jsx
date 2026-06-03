@@ -41,7 +41,7 @@ import Preview from '../../../components/Bulk/Preview/Preview';
 import SearchResults from '../../../components/Bulk/SearchResults/SearchResults';
 import SearchTerms from '../../../components/Bulk/SearchTerms/SearchTerms';
 import RouterPrompt from '../../../components/RouterPrompt/RouterPrompt';
-import { displayMessage } from '../../../utils/helpers';
+import { useNotificationsContext } from '../../../components/NotificationsContext/hooks/useNotificationsContext';
 import { fetchNavigationThunk, isFetchingSelector, itemsSelector } from '../../../store/reducers/navigation';
 import { saveBulkUpdateThunk } from '../../../store/reducers/bulk';
 import { attributeTypesSelector } from '../../../store/reducers/ui';
@@ -57,6 +57,7 @@ const BulkCreateView = () => {
   const isFetching = useSelector(isFetchingSelector);
   const attributeTypes = useSelector(attributeTypesSelector);
   const { getApiToken } = useAuth();
+  const { addNotification } = useNotificationsContext();
 
   const navigate = useNavigate();
 
@@ -502,19 +503,18 @@ const BulkCreateView = () => {
           setSearchTerms([{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }]);
           navigate('/bulk');
           dispatch(fetchNavigationThunk({ includeRelated: true }));
-          return displayMessage({
-            title: 'Massamuutos',
-            body: 'Massamuutos tallennettu!',
+          return addNotification({
+            label: 'Massamuutos',
+            children: 'Massamuutos tallennettu!',
+            type: 'success',
           });
         })
         .catch((err) =>
-          displayMessage(
-            {
-              title: 'Virhe',
-              body: `"${err.message}"`,
-            },
-            { type: 'error' },
-          ),
+          addNotification({
+            label: 'Virhe',
+            children: `"${err.message}"`,
+            type: 'error',
+          }),
         );
     }
   };

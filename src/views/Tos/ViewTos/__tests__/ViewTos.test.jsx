@@ -1,3 +1,5 @@
+/* eslint-disable @eslint-react/component-hook-factories */
+
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { screen, waitFor, act } from '@testing-library/react';
 
@@ -12,8 +14,12 @@ import {
 } from '../../../../utils/__mocks__/mockHelpers';
 import api from '../../../../utils/api';
 import { USER_LOGIN_STATUS } from '../../../../constants';
-import * as helpers from '../../../../utils/helpers';
 import * as useAuth from '../../../../hooks/useAuth';
+
+const mockAddNotification = vi.fn();
+vi.mock('../../../../components/NotificationsContext/hooks/useNotificationsContext', () => ({
+  useNotificationsContext: () => ({ addNotification: mockAddNotification }),
+}));
 
 const mockNavigate = vi.fn();
 const mockUseParams = vi.fn(() => ({
@@ -60,7 +66,6 @@ vi.spyOn(useAuth, 'default').mockImplementation(() => ({
 }));
 
 const mockDisplayMessage = vi.fn();
-vi.spyOn(helpers, 'displayMessage').mockImplementation(mockDisplayMessage);
 
 Object.defineProperty(window, 'scrollTo', {
   value: vi.fn(),
@@ -251,6 +256,7 @@ describe('<ViewTos />', () => {
     vi.clearAllMocks();
     mockNavigate.mockClear();
     mockDisplayMessage.mockClear();
+    mockAddNotification.mockClear();
     mockUseParams.mockReturnValue({ id: 'test-function-election-001' });
   });
 
@@ -1339,7 +1345,9 @@ describe('<ViewTos />', () => {
       const tosInEditMode = createTosInEditMode();
       expect(tosInEditMode.documentState).toBe('edit');
 
-      expect(mockDisplayMessage).not.toHaveBeenCalledWith('Valitse käsittelyvaiheen tyyppi', { type: 'error' });
+      expect(mockAddNotification).not.toHaveBeenCalledWith(
+        expect.objectContaining({ label: 'Valitse käsittelyvaiheen tyyppi', type: 'error' }),
+      );
     });
   });
 });

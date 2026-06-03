@@ -63,7 +63,6 @@ const mockProps = createMockComponentProps('action', {
   editRecordAttribute: vi.fn(),
   removeRecord: vi.fn(),
   setRecordVisibility: vi.fn(),
-  displayMessage: vi.fn(),
   changeOrder: vi.fn(),
   importItems: vi.fn(),
   // Add missing object props

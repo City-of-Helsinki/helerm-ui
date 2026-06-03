@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import './ImportView.scss';
 import _ from 'lodash';
 
-import { displayMessage } from '../../../utils/helpers';
+import { useNotificationsContext } from '../../NotificationsContext/hooks/useNotificationsContext';
 
 const ImportView = (props) => {
+  const { addNotification } = useNotificationsContext();
   const {
     actions,
     importItems,
@@ -167,17 +168,18 @@ const ImportView = (props) => {
         await importItems({ newItem: element, level, itemParent: parent });
       } catch {
         // Continue with next import even if one fails (JSON stringify because element is not typed)
-        displayMessage(
-          { title: 'Virhe', body: `Tuonti epäonnistui - kohde (${JSON.stringify(element)})` },
-          { type: 'error' },
-        );
+        addNotification({
+            label: 'Virhe',
+            children: `Tuonti epäonnistui - kohde (${JSON.stringify(element)})`,
+            type: 'error',
+          });
       }
     }
     if (typeof showItems === 'function') {
       showItems();
     }
     toggleImportView();
-  }, [selectedElements, importItems, level, parent, showItems, toggleImportView]);
+  }, [selectedElements, importItems, level, parent, showItems, toggleImportView, addNotification]);
 
   const importableElements = generateImportableElements(level);
 

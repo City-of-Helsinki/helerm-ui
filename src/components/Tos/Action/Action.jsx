@@ -23,7 +23,6 @@ const Action = ({
       addRecord,
       attributeTypes,
       changeOrder,
-      displayMessage,
       documentState,
       editAction,
       editActionAttribute,
@@ -288,7 +287,6 @@ const Action = ({
                 editRecordAttribute={editRecordAttribute}
                 removeRecord={removeRecord}
                 setRecordVisibility={setRecordVisibility}
-                displayMessage={displayMessage}
                 ref={(element) => {
                   recordsRef.current[recordId] = element;
                 }}
@@ -307,7 +305,6 @@ const Action = ({
         editRecordAttribute,
         removeRecord,
         setRecordVisibility,
-        displayMessage,
       ],
     );
 
@@ -438,7 +435,6 @@ const Action = ({
               action: 'edit',
             }}
             closeEditorForm={disableEditMode}
-            displayMessage={displayMessage}
           />
         )}
         {mode === 'edit' && complementingAction && (
@@ -456,7 +452,6 @@ const Action = ({
               action: 'complement',
             }}
             closeEditorForm={disableEditMode}
-            displayMessage={displayMessage}
           />
         )}
         {!editingAction && !complementingAction && (
@@ -490,7 +485,6 @@ const Action = ({
                     action: 'add',
                   }}
                   closeEditorForm={cancelRecordCreation}
-                  displayMessage={displayMessage}
                 />
               )}
               {complementingRecordAdd && (
@@ -510,7 +504,6 @@ const Action = ({
                   }}
                   complementRecordAdd={complementRecordAdd}
                   closeEditorForm={cancelRecordComplement}
-                  displayMessage={displayMessage}
                 />
               )}
             </div>
@@ -588,7 +581,6 @@ Action.propTypes = {
   addRecord: PropTypes.func.isRequired,
   attributeTypes: PropTypes.object.isRequired,
   changeOrder: PropTypes.func.isRequired,
-  displayMessage: PropTypes.func.isRequired,
   documentState: PropTypes.string.isRequired,
   editAction: PropTypes.func.isRequired,
   editActionAttribute: PropTypes.func.isRequired,

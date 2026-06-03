@@ -1,6 +1,5 @@
 /* eslint-disable sonarjs/todo-tag */
 import { normalize, schema } from 'normalizr';
-import { toastr } from 'react-redux-toastr';
 import { format as formatDate, isValid, parseISO } from 'date-fns';
 import { filter, find, flatten, includes, isEmpty, map, orderBy } from 'lodash';
 
@@ -240,16 +239,6 @@ export function getStatusLabel(status) {
     default:
       return 'Luonnos';
   }
-}
-
-/**
- * Display message in UI
- * @param message
- * @param opts
- */
-export function displayMessage(message, opts = { type: 'success' }) {
-  const { title, body } = message;
-  return toastr[opts.type](title, body, opts);
 }
 
 /**

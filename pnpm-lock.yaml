@@ -126,9 +126,6 @@ importers:
       react-redux:
         specifier: ^9.2.0
         version: 9.2.0(@types/react@18.3.28)(react@19.2.6)(redux@5.0.1)
-      react-redux-toastr:
-        specifier: ^7.6.5
-        version: 7.6.13(prop-types@15.8.1)(react-redux@9.2.0(@types/react@18.3.28)(react@19.2.6)(redux@5.0.1))(react@19.2.6)(redux@5.0.1)
       react-router-dom:
         specifier: ^6.30.3
         version: 6.30.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -1898,9 +1895,6 @@ packages:
     resolution: {integrity: sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==}
     engines: {node: '>=0.10.0'}
 
-  eventemitter3@3.1.2:
-    resolution: {integrity: sha512-tvtQIeLVHjDkJYnzf2dgVMxfuSGJeM/7UCG17TT4EumTfNtF+0nebF/4zWOIkCreAbtNqhGEboB6BWrwqNaw4Q==}
-
   exceljs@4.4.0:
     resolution: {integrity: sha512-XctvKaEMaj1Ii9oDOqbW/6e1gXknSY4g/aLCDicOXqBE4M0nRWkUu0PTp++UPNzoFY12BNHMfs/VadKIS6llvg==}
     engines: {node: '>=8.3.0'}
@@ -2875,14 +2869,6 @@ packages:
       '@popperjs/core': ^2.0.0
       react: ^16.8.0 || ^17 || ^18
       react-dom: ^16.8.0 || ^17 || ^18
-
-  react-redux-toastr@7.6.13:
-    resolution: {integrity: sha512-dK0Qh5+xkvIYuh8EME8mFQVZMzeRc+DxV3U4SMWjEVpYt2D19+bH/u2hobmQclsebRVszNi0X/vlPIBihsy/GA==}
-    peerDependencies:
-      prop-types: ^15.5.7
-      react: ^0.14 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0
-      react-redux: ^4.0.1 || ^5.0.1 || ^6.0.0 || ^7.0.0 || ^8.0.0
-      redux: ^3.0.5 || ^4.0.0
 
   react-redux@9.2.0:
     resolution: {integrity: sha512-ROY9fvHhwOD9ySfrF0wmvu//bKCQ6AeZZq1nJNtbDC+kk5DuSuNX/n6YWYF/SYy7bSba4D4FSz8DJeKY/S/r+g==}
@@ -5356,8 +5342,6 @@ snapshots:
 
   esutils@2.0.3: {}
 
-  eventemitter3@3.1.2: {}
-
   exceljs@4.4.0:
     dependencies:
       archiver: 5.3.2
@@ -6483,15 +6467,6 @@ snapshots:
       react-dom: 19.2.6(react@19.2.6)
       react-fast-compare: 3.2.2
       warning: 4.0.3
-
-  react-redux-toastr@7.6.13(prop-types@15.8.1)(react-redux@9.2.0(@types/react@18.3.28)(react@19.2.6)(redux@5.0.1))(react@19.2.6)(redux@5.0.1):
-    dependencies:
-      classnames: 2.5.1
-      eventemitter3: 3.1.2
-      prop-types: 15.8.1
-      react: 19.2.6
-      react-redux: 9.2.0(@types/react@18.3.28)(react@19.2.6)(redux@5.0.1)
-      redux: 5.0.1
 
   react-redux@9.2.0(@types/react@18.3.28)(react@19.2.6)(redux@5.0.1):
     dependencies:

@@ -77,7 +77,8 @@ import {
 import { isOpenSelector, setValidationVisibility } from '../../../store/reducers/validation';
 import { generateDefaultAttributes } from '../../../utils/attributeHelper';
 import getProcessedAttributeValue from '../../../utils/attributeProcessing';
-import { displayMessage, getStatusLabel } from '../../../utils/helpers';
+import { getStatusLabel } from '../../../utils/helpers';
+import { useNotificationsContext } from '../../../components/NotificationsContext/hooks/useNotificationsContext';
 import { validateAction, validatePhase, validateRecord, validateTOS } from '../../../utils/validators';
 
 import './ViewTos.scss';
@@ -168,6 +169,7 @@ const ViewTOS = () => {
   const navigate = useNavigate();
   const params = useParams();
   const { getApiToken } = useAuth();
+  const { addNotification } = useNotificationsContext();
 
   const selectedTOS = useSelector(selectedTOSSelector);
   const classification = useSelector(classificationSelector);
@@ -268,13 +270,11 @@ const ViewTOS = () => {
                 token,
               }),
             ).catch(() => {
-              displayMessage(
-                {
-                  title: 'Virhe',
-                  body: `Tehtäväluokan versio ${classificationInfo.version} haku epäonnistui`,
-                },
-                { type: 'error' },
-              );
+              addNotification({
+                label: 'Virhe',
+                children: `Tehtäväluokan versio ${classificationInfo.version} haku epäonnistui`,
+                type: 'error',
+              });
             });
           }
           return res;
@@ -286,7 +286,7 @@ const ViewTOS = () => {
           throw err;
         });
     },
-    [dispatch, navigate, getClassificationInfo, setTosVisibility, getApiToken],
+    [dispatch, navigate, getClassificationInfo, setTosVisibility, getApiToken, addNotification],
   );
 
   const setTosDocumentState = useCallback(
@@ -328,21 +328,20 @@ const ViewTOS = () => {
           navigate(`/view-tos/${res.id}/version/${res.version}`);
         }
         dispatch(setDocumentState('view'));
-        return displayMessage({
-          title: 'Luonnos',
-          body: 'Luonnos tallennettu!',
+        return addNotification({
+          label: 'Luonnos',
+          children: 'Luonnos tallennettu!',
+          type: 'success',
         });
       })
       .catch((err) =>
-        displayMessage(
-          {
-            title: 'Virhe',
-            body: `"${err.message}"`,
-          },
-          { type: 'error' },
-        ),
+        addNotification({
+          label: 'Virhe',
+          children: `"${err.message}"`,
+          type: 'error',
+        }),
       );
-  }, [dispatch, navigate, getApiToken]);
+  }, [dispatch, navigate, getApiToken, addNotification]);
 
   const changeStatus = useCallback(
     (status) => {
@@ -350,22 +349,21 @@ const ViewTOS = () => {
       const token = getApiToken();
       return dispatch(changeStatusThunk({ status, token }))
         .then(() =>
-          displayMessage({
-            title: 'Tila vaihdettu!',
-            body: `${getStatusLabel(currentState)} => ${getStatusLabel(status)}`,
+          addNotification({
+            label: 'Tila vaihdettu!',
+            children: `${getStatusLabel(currentState)} => ${getStatusLabel(status)}`,
+            type: 'success',
           }),
         )
         .catch((err) =>
-          displayMessage(
-            {
-              title: 'Virhe',
-              body: `"${err.message}"`,
-            },
-            { type: 'error' },
-          ),
+          addNotification({
+            label: 'Virhe',
+            children: `"${err.message}"`,
+            type: 'error',
+          }),
         );
     },
-    [dispatch, selectedTOS, getApiToken],
+      [dispatch, selectedTOS, getApiToken, addNotification],
   );
 
   const review = useCallback(
@@ -406,12 +404,13 @@ const ViewTOS = () => {
         phaseType: '',
       }));
 
-      displayMessage({
-        title: 'Käsittelyvaihe',
-        body: 'Käsittelyvaiheen lisäys onnistui!',
+      addNotification({
+        label: 'Käsittelyvaihe',
+        children: 'Käsittelyvaiheen lisäys onnistui!',
+        type: 'success',
       });
     },
-    [dispatch, selectedTOS.id, state.phaseDefaultAttributes, state.phaseType, state.phaseTypeSpecifier],
+    [dispatch, selectedTOS.id, state.phaseDefaultAttributes, state.phaseType, state.phaseTypeSpecifier, addNotification],
   );
 
   const cancelPhaseCreation = useCallback((event) => {
@@ -517,23 +516,22 @@ const ViewTOS = () => {
       const token = getApiToken();
       return dispatch(cloneFromTemplateThunk({ endpoint: selectedMethod, id, token }))
         .then(() => {
-          displayMessage({
-            title: 'Kuvaus',
-            body: 'Kuvauksen tuonti onnistui!',
+          addNotification({
+            label: 'Kuvaus',
+            children: 'Kuvauksen tuonti onnistui!',
+            type: 'success',
           });
           toggleCloneView();
         })
         .catch((err) => {
-          displayMessage(
-            {
-              title: 'Virhe',
-              body: `"${err.message}"`,
-            },
-            { type: 'warning' },
-          );
+          addNotification({
+            label: 'Virhe',
+            children: `"${err.message}"`,
+            type: 'alert',
+          });
         });
     },
-    [dispatch, toggleCloneView, getApiToken],
+      [dispatch, toggleCloneView, getApiToken, addNotification],
   );
 
   const scrollToMetadata = useCallback(() => {
@@ -719,7 +717,6 @@ const ViewTOS = () => {
                 removeAction={(actionId, phaseId) => dispatch(removeAction({ actionToRemove: actionId, phaseId }))}
                 removePhase={(phaseId) => dispatch(removePhase(phaseId))}
                 removeRecord={(recordId) => dispatch(removeRecord(recordId))}
-                displayMessage={displayMessage}
                 changeOrder={(data) => dispatch(changeOrderThunk(data))}
                 importItems={(data) => dispatch(importItemsThunk(data))}
                 ref={(element) => {
@@ -798,13 +795,11 @@ const ViewTOS = () => {
         }
       })
       .catch(() => {
-        displayMessage(
-          {
-            title: 'Virhe',
-            body: 'TOS-tietojen haku epäonnistui',
-          },
-          { type: 'error' },
-        );
+        addNotification({
+          label: 'Virhe',
+          children: 'TOS-tietojen haku epäonnistui',
+          type: 'error',
+        });
       });
 
     window.addEventListener('resize', updateTopOffsetForSticky);
@@ -914,7 +909,6 @@ const ViewTOS = () => {
                   />
                   <VersionData
                     attributeTypes={attributeTypes}
-                    displayMessage={displayMessage}
                     editValidDates={(dates) => dispatch(editValidDates(dates))}
                     selectedTOS={selectedTOS}
                     setVersionVisibility={(isVisible) => dispatch(setVersionVisibility(isVisible))}
@@ -938,7 +932,6 @@ const ViewTOS = () => {
                           action: 'edit',
                         }}
                         closeEditorForm={cancelMetaDataEdit}
-                        displayMessage={displayMessage}
                       />
                     )}
                     {state.complementingMetaData && (
@@ -953,7 +946,6 @@ const ViewTOS = () => {
                           action: 'complement',
                         }}
                         closeEditorForm={cancelMetaDataComplement}
-                        displayMessage={displayMessage}
                       />
                     )}
                     {!state.editingMetaData && !state.complementingMetaData && (
