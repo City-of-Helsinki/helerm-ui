@@ -22,7 +22,6 @@ const defaultProps = {
   attributes: {},
   closeEditorForm: vi.fn(),
   complementRecordAdd: vi.fn(),
-  displayMessage: vi.fn(),
   editMetaDataWithForm: vi.fn(),
   editorConfig: { type: 'function', action: 'edit' },
   elementConfig: { editWithForm: vi.fn(), elementTypes: {}, createRecord: vi.fn() },

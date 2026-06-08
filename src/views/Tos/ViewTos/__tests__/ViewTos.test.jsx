@@ -65,8 +65,6 @@ vi.spyOn(useAuth, 'default').mockImplementation(() => ({
   user: { name: 'Test User' },
 }));
 
-const mockDisplayMessage = vi.fn();
-
 Object.defineProperty(window, 'scrollTo', {
   value: vi.fn(),
   writable: true,
@@ -255,7 +253,6 @@ describe('<ViewTos />', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockNavigate.mockClear();
-    mockDisplayMessage.mockClear();
     mockAddNotification.mockClear();
     mockUseParams.mockReturnValue({ id: 'test-function-election-001' });
   });

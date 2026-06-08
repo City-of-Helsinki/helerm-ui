@@ -812,6 +812,8 @@ Phase.propTypes = {
   documentState: PropTypes.string.isRequired,
   editPhaseAttribute: PropTypes.func.isRequired,
   removePhase: PropTypes.func.isRequired,
+  changeOrder: PropTypes.func.isRequired,
+  importItems: PropTypes.func.isRequired,
   setActionVisibility: PropTypes.func.isRequired,
   editActionAttribute: PropTypes.func.isRequired,
   editRecord: PropTypes.func.isRequired,
