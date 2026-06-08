@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.10.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.9.1...helerm-ui-v1.10.0) (2026-06-08)
+
+
+### Features
+
+* Replace react-redux-toastr with hds-react Notification components ([8137183](https://github.com/City-of-Helsinki/helerm-ui/commit/813718337b4834e06137f0cc5ae680b8bbc5240b))
+* Upgrade React to v19 ([648ac53](https://github.com/City-of-Helsinki/helerm-ui/commit/648ac53743edd691a3adfeadd1ba6faf30975e92))
+
+
+### Bug Fixes
+
+* Guard MatomoTracker instantiation when env vars are missing ([2ca24d2](https://github.com/City-of-Helsinki/helerm-ui/commit/2ca24d21996b5fd544c828a4ecbeabbb748b2c57))
+* **login-callback:** Ignore HANDLING_LOGIN_CALLBACK callback error ([250a940](https://github.com/City-of-Helsinki/helerm-ui/commit/250a94040dbf832f93f3c67160b75fd850250c71))
+
+
+### Dependencies
+
+* Upgrade Playwright for Node.js 24 compatibility ([b4e1750](https://github.com/City-of-Helsinki/helerm-ui/commit/b4e1750cc1267f7f9f3e79405aa0acdb53cea350))
+
 ## [1.9.1](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.9.0...helerm-ui-v1.9.1) (2026-06-01)
 
 
