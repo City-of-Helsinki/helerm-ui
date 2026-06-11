@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.10.0...helerm-ui-v1.11.0) (2026-06-11)
+
+
+### Features
+
+* Add missing props to Phase component ([f02d87b](https://github.com/City-of-Helsinki/helerm-ui/commit/f02d87b04336197adeeab5d065d99b714d7859cc))
+
 ## [1.10.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.9.1...helerm-ui-v1.10.0) (2026-06-08)
 
 
