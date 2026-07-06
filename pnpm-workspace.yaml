@@ -16,6 +16,6 @@ allowBuilds:
   unrs-resolver: true
 
 minimumReleaseAgeExclude:
-  - hds-core@6.0.2
-  - hds-design-tokens@6.0.2
-  - hds-react@6.0.2
+  - '@emnapi/core@1.11.2'
+  - '@emnapi/runtime@1.11.2'
+  - 'picomatch@4.0.5'
