@@ -59,7 +59,7 @@
     "remark-gfm": "^4.0.1",
     "sass": "^1.79.4",
     "vite": "^8.0.16",
-    "vitest": "^4.1.2"
+    "vitest": "^4.1.9"
   },
   "scripts": {
     "app:version": "echo \"$npm_package_version\"",
@@ -96,7 +96,7 @@
     "@playwright/test": "^1.60.0",
     "@testing-library/dom": "^10.4.1",
     "@types/node": "^24.12.2",
-    "@vitest/coverage-istanbul": "^4.1.2",
+    "@vitest/coverage-istanbul": "^4.1.9",
     "fake-indexeddb": "^6.2.4",
     "husky": "^8.0.3",
     "jsdom": "^29.0.1",
