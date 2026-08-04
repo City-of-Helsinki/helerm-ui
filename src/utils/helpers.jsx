@@ -317,8 +317,9 @@ export const resolveSelectValues = (options, receivedValue, multi = false) => {
   if (!receivedValue) {
     return null;
   }
-  if (multi && Array.isArray(receivedValue)) {
-    return options.filter(({ value }) => receivedValue.includes(value));
+  if (multi) {
+    const values = Array.isArray(receivedValue) ? receivedValue : [receivedValue];
+    return options.filter(({ value }) => values.includes(value));
   }
   return options.find(({ value }) => value === receivedValue);
 };
