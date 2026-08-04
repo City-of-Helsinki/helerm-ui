@@ -104,6 +104,82 @@ describe('(TOS validation)', () => {
       });
     });
 
+    describe('Multiple allowed values in SecurityReason', () => {
+      const errors = validateTOS(
+        {
+          ...validTOS,
+          attributes: {
+            ...validTOS.attributes,
+            PublicityClass: 'Salassa pidettävä',
+            RetentionPeriod: '10',
+            RetentionPeriodStart: 'Asian lopullinen ratkaisu',
+            SecurityPeriod: '25',
+            'Restriction.SecurityPeriodStart': 'Asian ratkaisu',
+            SecurityReason: ['JulkL 24.1 § 1 kohta', 'JulkL 24.1 § 2 kohta'],
+          },
+        },
+        attributeRules,
+      );
+
+      shouldReturnArray(errors);
+
+      it('Should not have errors', () => {
+        expect(errors.length).toEqual(0);
+      });
+    });
+
+    describe('Single allowed value in SecurityReason', () => {
+      const errors = validateTOS(
+        {
+          ...validTOS,
+          attributes: {
+            ...validTOS.attributes,
+            PublicityClass: 'Salassa pidettävä',
+            RetentionPeriod: '10',
+            RetentionPeriodStart: 'Asian lopullinen ratkaisu',
+            SecurityPeriod: '25',
+            'Restriction.SecurityPeriodStart': 'Asian ratkaisu',
+            SecurityReason: 'JulkL 24.1 § 1 kohta',
+          },
+        },
+        attributeRules,
+      );
+
+      shouldReturnArray(errors);
+
+      it('Should not have errors', () => {
+        expect(errors.length).toEqual(0);
+      });
+    });
+
+    describe('Empty SecurityReason array when conditionally required', () => {
+      const errors = validateTOS(
+        {
+          ...validTOS,
+          attributes: {
+            ...validTOS.attributes,
+            PublicityClass: 'Salassa pidettävä',
+            RetentionPeriod: '10',
+            RetentionPeriodStart: 'Asian lopullinen ratkaisu',
+            SecurityPeriod: '25',
+            'Restriction.SecurityPeriodStart': 'Asian ratkaisu',
+            SecurityReason: [],
+          },
+        },
+        attributeRules,
+      );
+
+      shouldReturnArray(errors);
+
+      it(SHOULD_HAVE_ONE_ERROR_STRING, () => {
+        expect(errors.length).toEqual(1);
+      });
+
+      it('The error should be SecurityReason', () => {
+        expect(errors[0]).toEqual('SecurityReason');
+      });
+    });
+
     describe('"All or none" - RetentionPeriod of -1 shouldn\'t have RetentionPeriodStart', () => {
       const errors = validateTOS(
         {

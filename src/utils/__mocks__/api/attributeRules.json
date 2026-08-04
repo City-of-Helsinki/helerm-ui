@@ -779,7 +779,10 @@
       "record",
       "function"
     ],
-    "multiIn": [],
+    "multiIn": [
+      "record",
+      "function"
+    ],
     "requiredIf": [
       {
         "key": "PublicityClass",
