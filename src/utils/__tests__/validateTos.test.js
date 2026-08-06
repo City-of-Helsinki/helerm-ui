@@ -128,6 +128,30 @@ describe('(TOS validation)', () => {
       });
     });
 
+    describe('Single allowed value in SecurityReason', () => {
+      const errors = validateTOS(
+        {
+          ...validTOS,
+          attributes: {
+            ...validTOS.attributes,
+            PublicityClass: 'Salassa pidettävä',
+            RetentionPeriod: '10',
+            RetentionPeriodStart: 'Asian lopullinen ratkaisu',
+            SecurityPeriod: '25',
+            'Restriction.SecurityPeriodStart': 'Asian ratkaisu',
+            SecurityReason: 'JulkL 24.1 § 1 kohta',
+          },
+        },
+        attributeRules,
+      );
+
+      shouldReturnArray(errors);
+
+      it('Should not have errors', () => {
+        expect(errors.length).toEqual(0);
+      });
+    });
+
     describe('Empty SecurityReason array when conditionally required', () => {
       const errors = validateTOS(
         {
