@@ -15,8 +15,12 @@ const hasAttributeValue = (value) => {
  * @param attributes
  * @returns {Boolean}
  */
-export const validateConditionalRules = (key, attributeTypes, attributes) => {
+export const validateConditionalRules = (key, attributeTypes, attributes = {}) => {
   const { requiredIf } = attributeTypes[key];
+
+  if (!attributes) {
+    return false;
+  }
 
   let valid = false;
 
