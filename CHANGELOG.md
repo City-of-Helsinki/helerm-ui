@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.11.1](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.11.0...helerm-ui-v1.11.1) (2026-08-07)
+
+
+### Bug Fixes
+
+* Stuck Dependabot workflows ([#676](https://github.com/City-of-Helsinki/helerm-ui/issues/676)) ([cffdb8b](https://github.com/City-of-Helsinki/helerm-ui/commit/cffdb8b0cf71c77367a79553a12db1832cd1f5b3))
+
+
+### Dependencies
+
+* Bump dompurify from 3.4.0 to 3.4.11 ([c162e28](https://github.com/City-of-Helsinki/helerm-ui/commit/c162e286ae4d8a3da21e410164710913957ebe03))
+* Bump dompurify from 3.4.11 to 3.4.12 ([d3b1842](https://github.com/City-of-Helsinki/helerm-ui/commit/d3b1842ce7945f8696628422d7319c64b7e98451))
+* Bump vite from 8.0.5 to 8.0.16 ([9e49e87](https://github.com/City-of-Helsinki/helerm-ui/commit/9e49e87e6945759b58f2df760361fb5c4e087fa6))
+
 ## [1.11.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.10.0...helerm-ui-v1.11.0) (2026-06-11)
 
 
