@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.12.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.11.1...helerm-ui-v1.12.0) (2026-08-11)
+
+
+### Features
+
+* Implement multi-value handling for SecurityReason ([ddd6135](https://github.com/City-of-Helsinki/helerm-ui/commit/ddd6135c8d0b485691d19685f720eb6071389b94))
+
+
+### Dependencies
+
+* Bump dompurify from 3.4.12 to 3.4.13 ([0b5ae54](https://github.com/City-of-Helsinki/helerm-ui/commit/0b5ae5457cb5c6a2768dcfc29e0a0c814c825979))
+* Dompurify minimumReleaseAgeExclude Refs: RATY-357 ([8248dd6](https://github.com/City-of-Helsinki/helerm-ui/commit/8248dd673067dd6043857aa1a65a31ec6fd2cb2e))
+
 ## [1.11.1](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.11.0...helerm-ui-v1.11.1) (2026-08-07)
 
 
