@@ -1,5 +1,4 @@
 import classnames from 'classnames';
-import { uniqueId } from 'lodash';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { RenderPropSticky } from 'react-sticky-el';
@@ -685,7 +684,6 @@ const Phase = ({
     const reorderActions =
       phase.actions?.map((actionId) => ({
         id: actionId,
-        key: uniqueId(actionId),
       })) || [];
 
     return (

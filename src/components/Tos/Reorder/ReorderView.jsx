@@ -20,7 +20,16 @@ const ReorderView = ({
 
   useEffect(() => {
     if (initialItems) {
-      setItems(initialItems);
+      setItems((prevItems) => {
+        // Compare as sets (not order) since initialItems is recreated with the original
+        // order on every parent render, while prevItems may hold the user's in-progress
+        // drag order. Only resync when items were actually added/removed upstream.
+        const prevIds = prevItems.map((item) => item.id).sort();
+        const nextIds = initialItems.map((item) => item.id).sort();
+        const isSameIds =
+          prevIds.length === nextIds.length && prevIds.every((id, index) => id === nextIds[index]);
+        return isSameIds ? prevItems : initialItems;
+      });
     }
   }, [initialItems]);
 
@@ -48,9 +57,11 @@ const ReorderView = ({
   };
 
   const moveItem = (dragIndex, hoverIndex) => {
-    const dragItem = items[dragIndex];
-
     setItems((prevItems) => {
+      const dragItem = prevItems[dragIndex];
+      if (!dragItem) {
+        return prevItems;
+      }
       const newItems = [...prevItems];
       newItems.splice(dragIndex, 1);
       newItems.splice(hoverIndex, 0, dragItem);
@@ -75,7 +86,7 @@ const ReorderView = ({
       <div className='col-xs-12 reorder-list' data-testid='reorder-list'>
         {items.map((item, index) => (
           <ReorderItem
-            key={item.key}
+            key={item.id}
             id={item.id}
             index={index}
             moveItem={moveItem}

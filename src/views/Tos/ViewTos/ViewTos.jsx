@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import { min, uniqueId } from 'lodash';
+import { min } from 'lodash';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -764,7 +764,6 @@ const ViewTOS = () => {
     const TOSMetaData = generateMetaData(attributeTypes, selectedTOS.attributes);
     const reorderPhases = Object.keys(selectedTOS.phases).map((phaseId) => ({
       id: phaseId,
-      key: uniqueId(phaseId),
     }));
 
     return {

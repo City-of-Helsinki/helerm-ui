@@ -6,11 +6,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import ReorderView from '../ReorderView';
 import { attributeTypes } from '../../../../utils/__mocks__/mockHelpers';
 
-const mockItems = [
-  { id: 'action-1', key: 'key-1' },
-  { id: 'action-2', key: 'key-2' },
-  { id: 'action-3', key: 'key-3' },
-];
+const mockItems = [{ id: 'action-1' }, { id: 'action-2' }, { id: 'action-3' }];
 
 const mockValues = {
   'action-1': { attributes: { TypeSpecifier: 'Action 1' } },
