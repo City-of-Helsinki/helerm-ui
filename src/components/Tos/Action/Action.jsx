@@ -1,5 +1,4 @@
 import classnames from 'classnames';
-import { uniqueId } from 'lodash';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import Sticky from 'react-sticky-el';
@@ -414,7 +413,6 @@ const Action = ({
     const reorderRecords = action.records
       ? action.records.map((recordId) => ({
           id: recordId,
-          key: uniqueId(recordId),
         }))
       : [];
 
