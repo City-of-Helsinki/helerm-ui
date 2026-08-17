@@ -64,7 +64,7 @@ function resolveSelectOptions(values, fieldValue) {
     });
   });
   if (fieldValue) {
-    const valueArray = fieldValue instanceof Array ? fieldValue : [fieldValue];
+    const valueArray = Array.isArray(fieldValue) ? fieldValue : [fieldValue];
     forEach(valueArray, (value) => {
       if (!find(options, (option) => option.value === value)) {
         options.push({
@@ -78,7 +78,7 @@ function resolveSelectOptions(values, fieldValue) {
 }
 
 function resolveSelectedOption(option) {
-  if (option instanceof Array) {
+  if (Array.isArray(option)) {
     return option.length ? map(option, 'value') : null;
   }
   return option?.value ? option?.value : option;

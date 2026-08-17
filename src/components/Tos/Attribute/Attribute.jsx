@@ -38,7 +38,7 @@ const Attribute = ({
   };
 
   const onChange = (option) => {
-    if (option instanceof Array) {
+    if (Array.isArray(option)) {
       const values = option.length ? map(option, 'value') : null;
 
       setAttribute(values && values.length === 1 ? values[0] : values);
@@ -103,7 +103,7 @@ const Attribute = ({
       }));
 
       if (currentAttribute) {
-        const valueArray = currentAttribute instanceof Array ? currentAttribute : [currentAttribute];
+        const valueArray = Array.isArray(currentAttribute) ? currentAttribute : [currentAttribute];
 
         forEach(valueArray, (value) => {
           if (!find(options, (option) => option.value === value)) {
@@ -182,7 +182,7 @@ const Attribute = ({
     });
 
     if (attribute) {
-      const valueArray = attribute instanceof Array ? attribute : [attribute];
+      const valueArray = Array.isArray(attribute) ? attribute : [attribute];
 
       forEach(valueArray, (value) => {
         if (!find(selectOptions, (option) => option.value === value)) {
@@ -228,7 +228,7 @@ const Attribute = ({
 
       return (
         <div className='table-value'>
-          {attribute instanceof Array
+          {Array.isArray(attribute)
             ? attribute.map((attr) => resolveDisplayName(attr)).join(', ')
             : resolveDisplayName(attribute)}
         </div>
