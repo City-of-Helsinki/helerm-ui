@@ -66,7 +66,7 @@ const processTypeList = (types, list) => {
   }
 
   types.values.forEach((result) => {
-    const trimmedResult = result.id.replace(/-/g, '');
+    const trimmedResult = result.id.replaceAll('-', '');
     list[trimmedResult] = {
       id: result.id,
       value: result.value,
