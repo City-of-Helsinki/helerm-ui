@@ -56,7 +56,7 @@ export const createTosThunk = createAsyncThunk(
       const response = await api.post('function', newTos, {}, {}, token);
 
       if (!response.ok) {
-        throw Error(response.statusText);
+        throw new Error(response.statusText);
       }
 
       const json = await response.json();

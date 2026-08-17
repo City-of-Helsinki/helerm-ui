@@ -27,7 +27,7 @@ export function convertToTree(itemList) {
       const parent = dict[item.parent_id];
       if (!parent) {
         // in case of a broken tree parent will be null
-        throw Error(`Parent with id ${item.parent_id} not found`);
+        throw new Error(`Parent with id ${item.parent_id} not found`);
       }
       if (Array.isArray(parent.children)) {
         parent.children.push(item);
