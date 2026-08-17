@@ -19,10 +19,10 @@ if (config.SENTRY_DSN) {
     environment: config.SENTRY_ENVIRONMENT,
     release: config.SENTRY_RELEASE,
     integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
-    tracesSampleRate: parseFloat(config.SENTRY_TRACES_SAMPLE_RATE || '0'),
+    tracesSampleRate: Number.parseFloat(config.SENTRY_TRACES_SAMPLE_RATE || '0'),
     tracePropagationTargets: (config.SENTRY_TRACE_PROPAGATION_TARGETS || '').split(','),
-    replaysSessionSampleRate: parseFloat(config.SENTRY_REPLAYS_SESSION_SAMPLE_RATE || '0'),
-    replaysOnErrorSampleRate: parseFloat(config.SENTRY_REPLAYS_ON_ERROR_SAMPLE_RATE || '0'),
+    replaysSessionSampleRate: Number.parseFloat(config.SENTRY_REPLAYS_SESSION_SAMPLE_RATE || '0'),
+    replaysOnErrorSampleRate: Number.parseFloat(config.SENTRY_REPLAYS_ON_ERROR_SAMPLE_RATE || '0'),
   });
 }
 
