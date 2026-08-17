@@ -157,8 +157,8 @@ export function patch(endpoint, data, params = {}, options = {}, token = null) {
  * @param token
  * @returns {*}
  */
-export function del(endpoint, params = {}, options = { method: 'DELETE' }, token = null) {
-  return callApi(endpoint, params, options, token);
+export function del(endpoint, params = {}, options = {}, token = null) {
+  return callApi(endpoint, params, merge({ method: 'DELETE' }, options), token);
 }
 
 const methods = { get, post, put, patch, del };
