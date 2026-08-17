@@ -1,5 +1,6 @@
 import { BrowserRouter } from 'react-router-dom';
 import { screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import Preview from '../Preview';
 import renderWithProviders from '../../../../utils/renderWithProviders';
@@ -205,7 +206,7 @@ describe('<Preview />', () => {
     it('handles item selection on click', () => {
       renderComponent({ items: itemsWithSelection });
 
-      const checkboxes = screen.getAllByRole('generic');
+      const checkboxes = screen.getAllByRole('button');
       const itemCheckbox = checkboxes.find((el) => el.classList.contains('preview-item-check'));
 
       expect(itemCheckbox).toBeDefined();
@@ -213,14 +214,16 @@ describe('<Preview />', () => {
       expect(mockOnSelect).toHaveBeenCalled();
     });
 
-    it('handles item selection on keyboard Enter', () => {
+    it('handles item selection on keyboard Enter', async () => {
+      const user = userEvent.setup();
       renderComponent({ items: itemsWithSelection });
 
-      const checkboxes = screen.getAllByRole('generic');
+      const checkboxes = screen.getAllByRole('button');
       const itemCheckbox = checkboxes.find((el) => el.classList.contains('preview-item-check'));
 
       expect(itemCheckbox).toBeDefined();
-      fireEvent.keyUp(itemCheckbox, { key: 'Enter' });
+      itemCheckbox.focus();
+      await user.keyboard('{Enter}');
       expect(mockOnSelect).toHaveBeenCalled();
     });
   });

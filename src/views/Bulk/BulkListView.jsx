@@ -68,15 +68,11 @@ const BulkListView = () => {
           </div>
           <div className='bulk-updates'>
             {filteredBulkUpdates.map((bulk) => (
-              <div
-                className='bulk-update'
+              <button
+                type='button'
+                className='unstyled-button bulk-update'
                 key={bulk.id}
                 onClick={() => onClickBulkUpdate(bulk.id)}
-                onKeyUp={(event) => {
-                  if (event.key === 'Enter') {
-                    onClickBulkUpdate(bulk.id);
-                  }
-                }}
               >
                 <div className='bulk-update-info'>
                   <div>Paketti ID: {bulk.id}</div>
@@ -90,7 +86,7 @@ const BulkListView = () => {
                 <div className='bulk-update-approved'>
                   <h5>{bulk.is_approved ? 'Hyväksytty' : 'Odottaa'}</h5>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         </div>

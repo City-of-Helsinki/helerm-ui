@@ -231,14 +231,11 @@ const FacetedSearch = () => {
 
     return (
       <div key={attribute.key}>
-        <div
-          className='faceted-search-facets-item-attribute'
+        <button
+          type='button'
+          className='unstyled-button faceted-search-facets-item-attribute'
+          aria-expanded={attribute.open}
           onClick={() => onClickAttribute(attribute)}
-          onKeyUp={(event) => {
-            if (event.key === 'Enter') {
-              onClickAttribute(attribute);
-            }
-          }}
         >
           <i
             className={classnames('fa-solid', {
@@ -248,20 +245,17 @@ const FacetedSearch = () => {
           />
           <span>{attribute.name}</span>
           <span>({total})</span>
-        </div>
+        </button>
         {attribute.open &&
           options.map((option) => (
-            <div
-              className={classnames('faceted-search-facets-item-attribute-value', {
+            <button
+              type='button'
+              className={classnames('unstyled-button', 'faceted-search-facets-item-attribute-value', {
                 'faceted-search-facets-item-attribute-value-selected': isOptionSelected(attribute, option),
               })}
               key={`${attribute.type}-${attribute.key}-${option.value}`}
+              aria-pressed={isOptionSelected(attribute, option)}
               onClick={() => onClickAttributeOption(attribute, option)}
-              onKeyUp={(event) => {
-                if (event.key === 'Enter') {
-                  onClickAttributeOption(attribute, option);
-                }
-              }}
             >
               <i className='fa-solid fa-check' />
               <span>
@@ -280,20 +274,16 @@ const FacetedSearch = () => {
                     })}
               </span>
               <span>({option.hits.length})</span>
-            </div>
+            </button>
           ))}
         {attribute.open && orderedOptions.length > FACET_ATTRIBUTE_SIZE && (
-          <div
-            className='faceted-search-facets-item-attribute-more'
+          <button
+            type='button'
+            className='unstyled-button faceted-search-facets-item-attribute-more'
             onClick={() => onClickShowAll(attribute)}
-            onKeyUp={(event) => {
-              if (event.key === 'Enter') {
-                onClickShowAll(attribute);
-              }
-            }}
           >
             {attribute.showAll ? 'Vähemmän' : `Lisää (${hidden})`}
-          </div>
+          </button>
         )}
       </div>
     );
@@ -325,44 +315,35 @@ const FacetedSearch = () => {
 
     return (
       <div className='faceted-search-facets-item' key={`facet-${type}`}>
-        <div
-          className='faceted-search-facets-item-title'
+        <button
+          type='button'
+          className='unstyled-button faceted-search-facets-item-title'
+          aria-expanded={isOpen}
           onClick={() => onToggleFacet(type)}
-          onKeyUp={(event) => {
-            if (event.key === 'Enter') {
-              onToggleFacet(type);
-            }
-          }}
         >
           <span>
             {TYPE_LABELS[type]} ({totalHits})
           </span>
-          <button type='button' className='btn btn-link'>
-            <i
-              className={classnames('fa-solid', {
-                'fa-angle-down': !isOpen,
-                'fa-angle-up': isOpen,
-              })}
-            />
-          </button>
-        </div>
+          <i
+            className={classnames('fa-solid', 'faceted-search-facets-item-title-icon', {
+              'fa-angle-down': !isOpen,
+              'fa-angle-up': isOpen,
+            })}
+          />
+        </button>
         {isOpen && !isEmpty(orderedAttributes) && (
           <div className='faceted-search-facets-item-attributes'>
             <div>
-              <div
-                className='faceted-search-facets-item-attribute'
+              <button
+                type='button'
+                className='unstyled-button faceted-search-facets-item-attribute'
                 onClick={() => onClickAllByType(type)}
-                onKeyUp={(event) => {
-                  if (event.key === 'Enter') {
-                    onClickAllByType(type);
-                  }
-                }}
               >
                 <span>
                   <strong>Kaikki</strong>
                 </span>
                 <span>({totalHits})</span>
-              </div>
+              </button>
             </div>
             {orderedAttributes.map((attribute) => renderAttribute(attribute))}
           </div>

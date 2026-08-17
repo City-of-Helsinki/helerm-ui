@@ -286,26 +286,39 @@ const Attribute = ({
 
   const testId = `attribute-${type}-${attributeIndex || 'unnamed'}`;
 
-  return (
-    <span
-      data-testid={testId}
-      onClick={() => activateEditMode()}
-      onKeyUp={(e) => {
-        if (e.key === 'Enter') {
-          activateEditMode();
-        }
-      }}
-      className={classnames([
-        'list-group-item col-xs-6 attribute',
-        showAttributes ? 'visible' : 'hidden',
-        type === 'basic' ? 'attribute-basic' : '',
-      ])}
-    >
+  const wrapperClassName = classnames([
+    'list-group-item col-xs-6 attribute',
+    showAttributes ? 'visible' : 'hidden',
+    type === 'basic' ? 'attribute-basic' : '',
+  ]);
+
+  const wrapperContent = (
+    <>
       <span className='table-key' data-testid={`${testId}-key`}>
         {attributeKey}
       </span>
       <span data-testid={`${testId}-value`}>{attributeValue}</span>
-    </span>
+    </>
+  );
+
+  // In edit mode the value renders a form/select, which must not be nested inside a button.
+  if (mode === 'edit' || documentState !== 'edit') {
+    return (
+      <span data-testid={testId} className={wrapperClassName}>
+        {wrapperContent}
+      </span>
+    );
+  }
+
+  return (
+    <button
+      type='button'
+      data-testid={testId}
+      onClick={() => activateEditMode()}
+      className={classnames('unstyled-button', wrapperClassName)}
+    >
+      {wrapperContent}
+    </button>
   );
 };
 

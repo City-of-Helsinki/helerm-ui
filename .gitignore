@@ -32,3 +32,6 @@ yarn-error.log*
 # tests
 report/
 test-results/
+
+# Copilot
+.agents

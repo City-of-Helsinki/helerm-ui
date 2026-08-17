@@ -63,9 +63,15 @@
         display: flex;
         align-items: center;
         border-bottom: solid 1px $black50;
+        width: 100%;
 
         span {
           flex-grow: 1;
+        }
+
+        &-icon {
+          padding: 10px 15px;
+          color: $brand-primary;
         }
       }
 
@@ -77,6 +83,8 @@
       &-attribute,
       &-attribute-value {
         display: flex;
+        width: 100%;
+        text-align: left;
         align-items: baseline;
         padding: 3px;
         color: $brand-primary;
@@ -118,6 +126,9 @@
       }
 
       &-attribute-more {
+        display: block;
+        width: 100%;
+        text-align: left;
         padding: 3px 0 3px 36px;
         color: $brand-primary;
         font-weight: $bold;
@@ -134,13 +145,17 @@
       font-size: 22px;
       padding: 11px;
       display: flex;
+      width: 100%;
       align-items: center;
+      text-align: left;
 
       span {
         flex-grow: 1;
       }
 
-      .btn {
+      &-icon {
+        display: inline-block;
+        padding: 6px 12px;
         color: $white;
         border: solid 1px $white;
         border-radius: $border-radius-large;

@@ -7,6 +7,10 @@
     border: solid 1px $black50;
     border-radius: $border-radius-large;
     margin-left: 15px;
+
+    .fa-question.icon-white {
+      color: $white;
+    }
   }
 
   button:active,
@@ -21,5 +25,14 @@
     max-width: 300px;
     width: 300px;
     margin-left: -120px;
+
+    .popover-close {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: transparent;
+      border: none;
+      color: $black50;
+    }
   }
 }

@@ -1,31 +1,34 @@
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './Popup.scss';
 
 const Popup = ({ content, closePopup }) => {
-  const stop = (e) => {
-    e.stopPropagation();
-  };
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        closePopup();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [closePopup]);
+
   return (
     <div
       className='popup-outer-background'
       data-testid='popup-component'
-      onClick={closePopup}
-      onKeyUp={(event) => {
-        if (event.key === 'Enter') {
+      role='presentation'
+      onClick={(event) => {
+        if (event.target === event.currentTarget) {
           closePopup();
         }
       }}
     >
-      <div
-        className='popup-inner-background'
-        data-testid='popup-content'
-        onClick={(e) => stop(e)}
-        onKeyUp={(event) => {
-          if (event.key === 'Enter') {
-            stop(event);
-          }
-        }}
-      >
+      <div className='popup-inner-background' data-testid='popup-content' role='dialog' aria-modal='true'>
         <button type='button' className='popup__close' onClick={closePopup} data-testid='popup-close-button'>
           <i className='fa-solid fa-xmark' />
         </button>

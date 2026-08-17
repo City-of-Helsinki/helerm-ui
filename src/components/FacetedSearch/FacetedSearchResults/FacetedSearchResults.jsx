@@ -13,25 +13,23 @@ const FacetedSearchResults = ({ items, highlightedId, metadata, onSelectItem }) 
     <div className='faceted-search-results'>
       <div className='faceted-search-results-size'>Hakutulokset ({validItems.length})</div>
       {validItems.map((item, index) => (
-        <div
-          className={classnames('faceted-search-results-item', {
+        <button
+          type='button'
+          className={classnames('unstyled-button', 'faceted-search-results-item', {
             'faceted-search-results-item-selected': item.id === highlightedId,
           })}
           // eslint-disable-next-line @eslint-react/no-array-index-key
           key={`${item.type}-${item.id}-${index}`}
           onClick={() => onSelectItem(item)}
-          onKeyUp={(event) => {
-            if (event.key === 'Enter') {
-              onSelectItem(item);
-            }
-          }}
         >
           <div className='faceted-search-results-item-info'>
             <div className='faceted-search-results-item-type'>{TYPE_LABELS[item.type]}</div>
             <div
               className='faceted-search-results-item-title'
               // eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml
-              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(item.matchedName || item.name) }}
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(item.matchedName || item.name, { ALLOWED_TAGS: ['mark'] }),
+              }}
             />
             <div className='faceted-search-results-item-path'>{item.path ? item.path.join(' > ') : ''}</div>
             {(item.matchedAttributes || []).map((attr) => (
@@ -42,6 +40,7 @@ const FacetedSearchResults = ({ items, highlightedId, metadata, onSelectItem }) 
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(
                     `${metadata[attr.key] ? metadata[attr.key].name : attr.key}: ${attr.value}`,
+                    { ALLOWED_TAGS: ['mark'] },
                   ),
                 }}
               />
@@ -55,7 +54,7 @@ const FacetedSearchResults = ({ items, highlightedId, metadata, onSelectItem }) 
               })}
             />
           </div>
-        </div>
+        </button>
       ))}
     </div>
   );

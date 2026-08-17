@@ -342,19 +342,18 @@ const Action = ({
     const renderBasicAttributes = useCallback(() => {
       const classNames = classnames(['col-xs-12', 'basic-attribute', documentState === 'edit' ? 'editable' : null]);
 
-      let typeSpecifierElement = (
-        <span
-          className={classNames}
-          onClick={() => editTypeSpecifier()}
-          onKeyUp={(e) => {
-            if (e.key === 'Enter') {
-              editTypeSpecifier();
-            }
-          }}
-        >
-          {typeSpecifier}
-        </span>
-      );
+      let typeSpecifierElement =
+        documentState === 'edit' ? (
+          <button
+            type='button'
+            className={classnames('unstyled-button', classNames)}
+            onClick={() => editTypeSpecifier()}
+          >
+            {typeSpecifier}
+          </button>
+        ) : (
+          <span className={classNames}>{typeSpecifier}</span>
+        );
 
       if (mode === 'edit' && editingTypeSpecifier) {
         typeSpecifierElement = (
