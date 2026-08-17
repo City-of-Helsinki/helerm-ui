@@ -29,7 +29,7 @@ function onPromptCreate(label) {
 }
 
 function getMissingValueOptions(value, options) {
-  const valueArray = value instanceof Array ? value : [value];
+  const valueArray = Array.isArray(value) ? value : [value];
   const optionValues = map(options, 'value');
   return difference(valueArray, optionValues);
 }
@@ -50,8 +50,8 @@ const DropdownInput = ({
 }) => {
   const optionsArray = [];
   const validation = () => {
-    if (options instanceof Object) {
-      if (options instanceof Array) {
+    if (options !== null && typeof options === 'object') {
+      if (Array.isArray(options)) {
         return options.length === 0;
       }
       return Object.keys(options).length === 0;
@@ -78,7 +78,7 @@ const DropdownInput = ({
     );
   }
   const onFieldChange = (option) => {
-    if (option instanceof Array) {
+    if (Array.isArray(option)) {
       const values = option.length ? map(option, 'value') : null;
       const value = values && values.length === 1 ? values[0] : values;
 

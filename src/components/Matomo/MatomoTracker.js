@@ -41,7 +41,7 @@ class MatomoTracker {
     this.pushInstruction('setSiteId', siteId);
 
     Object.entries(configurations).forEach(([name, instructions]) => {
-      if (instructions instanceof Array) {
+      if (Array.isArray(instructions)) {
         this.pushInstruction(name, ...instructions);
       } else if (instructions === undefined) {
         this.pushInstruction(name);

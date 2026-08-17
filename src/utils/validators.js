@@ -116,7 +116,7 @@ const createValidateErrors = (type) => (obj, rules) => {
 };
 
 const isValueValidOption = (value, options) => {
-  const valueArray = value instanceof Array ? value : [value];
+  const valueArray = Array.isArray(value) ? value : [value];
   const optionValues = options.map((option) => option.value);
   return difference(valueArray, optionValues).length === 0;
 };
