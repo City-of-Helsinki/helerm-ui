@@ -50,7 +50,7 @@ export const approveBulkUpdateThunk = createAsyncThunk(
     try {
       const response = await api.post(`bulk-update/${id}/approve`, {}, {}, {}, token);
       if (!response.ok) {
-        throw Error(response.statusText);
+        throw new Error(response.statusText);
       }
 
       return true;
@@ -66,7 +66,7 @@ export const deleteBulkUpdateThunk = createAsyncThunk(
     try {
       const response = await api.del(`bulk-update/${id}`, {}, {}, token);
       if (!response.ok) {
-        throw Error(response.statusText);
+        throw new Error(response.statusText);
       }
 
       return true;

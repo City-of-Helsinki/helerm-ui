@@ -71,7 +71,7 @@ export function callApi(endpoint, params, options = {}, token = null) {
   defaultHeaders.append('Accept', CONTENT_TYPE_JSON);
 
   if (!token && ALLOWED_METHODS_WITHOUT_AUTHENTICATION.indexOf(finalOptions.method) !== 0) {
-    throw Error(
+    throw new Error(
       `Following methods for API-endpoint require authentication: ${ALLOWED_METHODS_WITHOUT_AUTHENTICATION.join(', ')}`,
     );
   }
