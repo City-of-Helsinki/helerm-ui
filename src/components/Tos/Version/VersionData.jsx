@@ -138,19 +138,25 @@ const VersionData = ({ attributeTypes, editValidDates, selectedTOS, setVersionVi
         </div>
       );
     }
-    return (
-      <span
-        onClick={() => activateValidDateEditMode(field)}
-        onKeyUp={(event) => {
-          if (event.key === 'Enter') {
-            activateValidDateEditMode(field);
-          }
-        }}
-        className='list-group-item col-xs-6 attribute-basic'
-      >
+    const content = (
+      <>
         <strong>{label}:</strong>
-        <div>{value ? formatDateTime(value, 'd.M.yyyy') : ' '}</div>
-      </span>
+        <div>{value ? formatDateTime(value, 'd.M.yyyy') : ' '}</div>
+      </>
+    );
+
+    if (selectedTOS.documentState !== 'edit') {
+      return <span className='list-group-item col-xs-6 attribute-basic'>{content}</span>;
+    }
+
+    return (
+      <button
+        type='button'
+        onClick={() => activateValidDateEditMode(field)}
+        className='unstyled-button list-group-item col-xs-6 attribute-basic'
+      >
+        {content}
+      </button>
     );
   };
 

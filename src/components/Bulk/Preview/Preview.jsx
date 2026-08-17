@@ -122,19 +122,19 @@ const Preview = ({
       {keys(items).map((id) => (
         <div className='row preview-item' key={id}>
           <div className='col-xs-1'>
-            <div
-              className={classnames('preview-item-check', { 'preview-item-checked': items[id].selected })}
+            <button
+              type='button'
+              className={classnames('unstyled-button', 'preview-item-check', {
+                'preview-item-checked': items[id].selected,
+              })}
+              aria-pressed={items[id].selected}
+              aria-label={`Valitse ${items[id].item.name}`}
               onClick={() => {
                 onSelect(id);
               }}
-              onKeyUp={(event) => {
-                if (event.key === 'Enter') {
-                  onSelect(id);
-                }
-              }}
             >
               <i className='fa-solid fa-check' />
-            </div>
+            </button>
           </div>
           <div className='col-xs-9'>
             <span className='preview-item-path'>{items[id].item.path.join(' > ')}</span>

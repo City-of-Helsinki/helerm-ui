@@ -22,19 +22,17 @@ const SearchResults = ({ hits, onSelect, onSelectAll, searchResults }) => {
     <div className='search-results'>
       <div className='row search-result-header'>
         <div className='col-xs-1'>
-          <div
-            className={classnames('search-result-item-check', {
+          <button
+            type='button'
+            className={classnames('unstyled-button', 'search-result-item-check', {
               'search-result-item-checked': allSelected,
             })}
+            aria-pressed={allSelected}
+            aria-label='Valitse kaikki'
             onClick={() => onSelectAll(!allSelected)}
-            onKeyUp={(event) => {
-              if (event.key === 'Enter') {
-                onSelectAll(!allSelected);
-              }
-            }}
           >
             <i className='fa-solid fa-check' />
-          </div>
+          </button>
         </div>
         <div className='col-xs-8 search-result-header-amounts'>
           <div>
@@ -57,21 +55,19 @@ const SearchResults = ({ hits, onSelect, onSelectAll, searchResults }) => {
       {searchResults.map((result, index) => (
         <div className='row search-result-item' key={result.item?.function || `fallback-${index}`}>
           <div className='col-xs-1'>
-            <div
-              className={classnames('search-result-item-check', {
+            <button
+              type='button'
+              className={classnames('unstyled-button', 'search-result-item-check', {
                 'search-result-item-checked': result.selected,
               })}
+              aria-pressed={result.selected}
+              aria-label={`Valitse ${result.item.name}`}
               onClick={() => {
                 onSelect(index, !result.selected);
               }}
-              onKeyUp={(event) => {
-                if (event.key === 'Enter') {
-                  onSelect(index, !result.selected);
-                }
-              }}
             >
               <i className='fa-solid fa-check' />
-            </div>
+            </button>
           </div>
           <div className='col-xs-8 search-result-item-content'>
             {result.item.path && <h4>{result.item.path.join(' > ')}</h4>}

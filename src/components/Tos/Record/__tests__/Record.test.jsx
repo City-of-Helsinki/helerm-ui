@@ -36,9 +36,9 @@ const renderComponent = (props = {}) => {
 };
 
 const openEditDropdown = async (user) => {
-  const dropdownButtons = screen.getAllByRole('button');
-  await user.click(dropdownButtons[0]);
-  return dropdownButtons;
+  const dropdownButton = screen.getByTestId('record-dropdown-button');
+  await user.click(dropdownButton);
+  return dropdownButton;
 };
 
 describe('<Record />', () => {
@@ -74,10 +74,10 @@ describe('<Record />', () => {
   it('shows edit buttons and dropdown items when documentState is edit', () => {
     renderComponent({ documentState: 'edit' });
 
-    const dropdownButtons = screen.getAllByRole('button');
-    expect(dropdownButtons.length).toBeGreaterThan(0);
+    const dropdownButton = screen.getByTestId('record-dropdown-button');
+    expect(dropdownButton).toBeInTheDocument();
 
-    fireEvent.click(dropdownButtons[0]);
+    fireEvent.click(dropdownButton);
 
     expect(screen.getByText('Muokkaa asiakirjaa')).toBeInTheDocument();
     expect(screen.getByText('Poista asiakirja')).toBeInTheDocument();

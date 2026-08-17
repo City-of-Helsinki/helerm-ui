@@ -12,7 +12,7 @@ describe('<FacetedSearchHelp />', () => {
   it('renders the help toggle button', () => {
     renderComponent();
 
-    expect(screen.getByRole('button')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /ohje/i })).toBeInTheDocument();
   });
 
   it('popover does not have show class initially', () => {
@@ -25,18 +25,29 @@ describe('<FacetedSearchHelp />', () => {
     const user = userEvent.setup();
     const { container } = renderComponent();
 
-    await user.click(screen.getByRole('button'));
+    await user.click(screen.getByRole('button', { name: /ohje/i }));
 
     expect(container.querySelector('.popover')).toHaveClass('show');
   });
 
-  it('clicking the popover itself removes show class', async () => {
+  it('clicking the popover close button removes show class', async () => {
     const user = userEvent.setup();
     const { container } = renderComponent();
 
-    await user.click(screen.getByRole('button'));
-    // The popover has its own onClick that toggles show; click it to close
-    await user.click(container.querySelector('.popover'));
+    await user.click(screen.getByRole('button', { name: /ohje/i }));
+    await user.click(screen.getByRole('button', { name: /sulje/i }));
+
+    expect(container.querySelector('.popover')).not.toHaveClass('show');
+  });
+
+  it('pressing Escape removes show class', async () => {
+    const user = userEvent.setup();
+    const { container } = renderComponent();
+
+    await user.click(screen.getByRole('button', { name: /ohje/i }));
+    expect(container.querySelector('.popover')).toHaveClass('show');
+
+    await user.keyboard('{Escape}');
 
     expect(container.querySelector('.popover')).not.toHaveClass('show');
   });

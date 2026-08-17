@@ -15,7 +15,67 @@ For example:
 @import 'hds-design-tokens/lib/all.min.css';
 
 @import './vendor/hel-components/variables';
+
+// Resets default <button> chrome so a button can be dropped in place of a
+// non-interactive element (div/span) without changing its appearance. Defined
+// here, before Bootstrap and any component styles, so that any more specific
+// or later-loaded class (e.g. .list-group-item, .preview-item-check) always
+// wins the cascade for properties it explicitly sets (padding/border/etc).
+@mixin unstyled-button {
+  appearance: none;
+  background: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  width: auto;
+  cursor: pointer;
+}
+
+.unstyled-button {
+  @include unstyled-button;
+
+  &:focus-visible {
+    outline: 2px solid $brand-primary;
+    outline-offset: 2px;
+  }
+}
+
 @import 'bootstrap-sass/assets/stylesheets/bootstrap';
+
+// Bootstrap styles `button.list-group-item` as an *interactive* list item:
+// full width, left aligned, link colouring and a hover/focus background. Those
+// selectors are element-qualified, so they outrank the `.col-xs-*` grid classes
+// and the component classes that a converted button carries. Undo them here —
+// after Bootstrap — so a button that only borrows `.list-group-item` for its
+// chrome keeps the alignment and colours of the element it replaced.
+// Components that genuinely want a background (e.g. `.record-attributes
+// .list-group-item.attribute.attribute-basic`) declare it at a higher
+// specificity and are unaffected.
+button.unstyled-button.list-group-item {
+  width: auto;
+  text-align: inherit;
+  color: inherit;
+
+  &:hover,
+  &:focus {
+    color: inherit;
+    background-color: inherit;
+  }
+}
+
+// Restate the grid widths at button specificity. `.col-xs-*` alone (0,1,0)
+// loses to `button.list-group-item` (0,1,1), so a converted button would
+// collapse to `width: auto` or stretch to 100% instead of its column width.
+// Declared after the reset above so the column width always wins.
+@for $i from 1 through $grid-columns {
+  button.unstyled-button.col-xs-#{$i} {
+    width: percentage(calc($i / $grid-columns));
+  }
+}
+
 @import '@fortawesome/fontawesome-free/scss/fontawesome.scss';
 @import '@fortawesome/fontawesome-free/scss/solid.scss';
 @import 'react-datepicker/dist/react-datepicker.css';

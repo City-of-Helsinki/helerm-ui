@@ -66,22 +66,18 @@ const ImportView = (props) => {
         if (Object.hasOwn(itemsInArray, key)) {
           links.push(
             <div key={key} className='import-row-title' data-testid={`import-row-item-${itemsInArray[key]}`}>
-              <span
+              <button
+                type='button'
                 key={key}
-                className='import-row-link'
+                className='unstyled-button import-row-link'
                 data-testid={`import-row-link-${values[itemsInArray[key]].id}`}
                 onClick={(e) => selectForImport(e, values[itemsInArray[key]].id)}
-                onKeyUp={(e) => {
-                  if (e.key === 'Enter') {
-                    selectForImport(e, values[itemsInArray[key]].id);
-                  }
-                }}
               >
                 {getTargetName(
                   values[itemsInArray[key]].attributes.TypeSpecifier,
                   values[itemsInArray[key]].attributes[`${_.capitalize(level)}Type`],
                 )}
-              </span>
+              </button>
             </div>,
           );
         }
@@ -202,21 +198,17 @@ const ImportView = (props) => {
           {selectedElements.length > 0 && (
             <div>
               {selectedElements.map((element, index) => (
-                <span
+                <button
+                  type='button'
                   key={element}
                   onClick={(e) => removeFromImport(e, index)}
-                  onKeyUp={(e) => {
-                    if (e.key === 'Enter') {
-                      removeFromImport(e, index);
-                    }
-                  }}
-                  className='col-xs-12 importable-element-link'
+                  className='unstyled-button col-xs-12 importable-element-link'
                   data-testid={`import-view-selected-element-${index}`}
                 >
                   {values[element].attributes.TypeSpecifier ||
                     values[element].attributes[`${_.capitalize(level)}Type`] ||
                     '-'}
-                </span>
+                </button>
               ))}
             </div>
           )}

@@ -330,7 +330,7 @@ describe('<FacetedSearch />', () => {
     });
 
     const facetTitle = document.querySelector('.faceted-search-facets-item-title');
-    const facetButton = facetTitle.querySelector('button');
+    const facetButton = facetTitle;
 
     const iconInitial = facetButton.querySelector('i');
     expect(iconInitial).toHaveClass('fa-angle-down');

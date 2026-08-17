@@ -28,18 +28,14 @@ const FacetedSearchSuggestions = ({ onSelect, suggestions, term }) => {
     <div className={classnames('faceted-search-suggestions popover', { show: shouldShow })} ref={ref}>
       <div className='faceted-search-suggestions-title'>Rajaukset</div>
       {suggestions.map((item) => (
-        <div
-          className='faceted-search-suggestion'
+        <button
+          type='button'
+          className='unstyled-button faceted-search-suggestion'
           key={item.type}
           onClick={() => onSelect(item.type)}
-          onKeyUp={(event) => {
-            if (event.key === 'Enter') {
-              onSelect(item.type);
-            }
-          }}
         >
           {TYPE_LABELS[item.type]} ({item.hits ? item.hits.length : 0})
-        </div>
+        </button>
       ))}
     </div>
   );

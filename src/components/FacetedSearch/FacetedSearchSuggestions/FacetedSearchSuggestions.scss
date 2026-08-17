@@ -16,6 +16,9 @@
 }
 
 .faceted-search-suggestion {
+  display: block;
+  width: 100%;
+  text-align: left;
   padding: 10px;
   color: $brand-primary;
   font-weight: $bold;

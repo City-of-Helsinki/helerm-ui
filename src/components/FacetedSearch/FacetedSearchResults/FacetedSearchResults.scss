@@ -9,6 +9,8 @@
   &-item {
     padding: 10px;
     display: flex;
+    width: 100%;
+    text-align: left;
 
     &-selected {
       .faceted-search-results-item-link {

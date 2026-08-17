@@ -25,11 +25,15 @@ body {
   overflow: hidden;
 }
 
-button:active {
+// Scoped away from `.unstyled-button`: those buttons stand in for plain
+// div/span elements and inherit their border from a component class, which this
+// reset would otherwise strip on click. They provide their own `:focus-visible`
+// indicator instead.
+button:not(.unstyled-button):active {
   outline: none;
   border: none;
 }
-button:focus {
+button:not(.unstyled-button):focus {
   outline: none;
   border: none;
 }
