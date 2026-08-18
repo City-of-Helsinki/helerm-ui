@@ -53,7 +53,7 @@ const SearchResults = ({ hits, onSelect, onSelectAll, searchResults }) => {
         </div>
       </div>
       {searchResults.map((result, index) => (
-        <div className='row search-result-item' key={result.item?.function || `fallback-${index}`}>
+        <div className='row search-result-item' key={`${result.item?.function}-${result.item?.id}-${index}`}>
           <div className='col-xs-1'>
             <button
               type='button'
