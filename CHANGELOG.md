@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.1](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.12.0...helerm-ui-v1.12.1) (2026-08-18)
+
+
+### Bug Fixes
+
+* ReorderView duplicate keys Refs: TIED-294 ([eb166fd](https://github.com/City-of-Helsinki/helerm-ui/commit/eb166fd337c56dd633b7ad3f20c7533d647d5835))
+
 ## [1.12.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.11.1...helerm-ui-v1.12.0) (2026-08-11)
 
 
