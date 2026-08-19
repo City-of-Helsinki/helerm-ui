@@ -162,6 +162,32 @@ describe('<CloneView />', () => {
     expect(mockCloneFromTemplate).toHaveBeenCalledWith('template', 'template-1');
   });
 
+  it('should let keyboard users tab to and activate the method tabs', async () => {
+    const user = userEvent.setup();
+    renderComponent();
+
+    // These elements use role='button' with click/key handlers, so they must be
+    // in the tab order (tabIndex="0") for keyboard-only users to reach them.
+    const templateTab = screen.getByText('Tuo kuvaus moduulista');
+    const functionTab = screen.getByText('Tuo kuvaus toisesta kuvauksesta');
+
+    expect(templateTab).toHaveAttribute('tabIndex', '0');
+    expect(functionTab).toHaveAttribute('tabIndex', '0');
+
+    // Initially should be on template method (no navigation visible)
+    expect(screen.queryByTestId('navigation')).not.toBeInTheDocument();
+
+    await user.tab();
+    expect(templateTab).toHaveFocus();
+
+    await user.tab();
+    expect(functionTab).toHaveFocus();
+
+    await user.keyboard('{Enter}');
+
+    expect(screen.getByTestId('navigation')).toBeInTheDocument();
+  });
+
   it('should allow switching between template and function methods', async () => {
     const user = userEvent.setup();
     const templates = [{ id: 'template-1', name: 'Test Template 1' }];
