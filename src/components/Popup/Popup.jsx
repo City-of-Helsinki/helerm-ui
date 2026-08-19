@@ -26,6 +26,11 @@ const Popup = ({ content, closePopup, label = 'Ponnahdusikkuna' }) => {
           closePopup();
         }
       }}
+      onKeyDown={(event) => {
+        if (event.target === event.currentTarget && event.key === 'Escape') {
+          closePopup();
+        }
+      }}
     >
       <dialog open className='popup-inner-background' data-testid='popup-content' aria-modal='true' aria-label={label}>
         <button type='button' className='popup__close' onClick={closePopup} data-testid='popup-close-button'>
