@@ -74,15 +74,6 @@ const processTypeList = (types, list) => {
   });
 };
 
-const forceMultiValueFields = (identifier, multiIn) => {
-  if (identifier !== 'SecurityReason') {
-    return multiIn;
-  }
-
-  const forcedTypes = ['function', 'record'];
-  return [...new Set([...multiIn, ...forcedTypes])];
-};
-
 const processAttributeTypes = (attributes, validationRules) => {
   const attributeTypeList = {};
 
@@ -109,7 +100,6 @@ const processAttributeTypes = (attributes, validationRules) => {
         .filter((key) =>
           find(validationRules[key].properties[result.identifier]?.anyOf, (item) => item.type === 'array'),
         );
-      const normalizedMultiIn = forceMultiValueFields(result.identifier, multiIn);
 
       const requiredIn = Object.keys(validationRules)
         .filter((key) => validationRules[key]?.required)
@@ -161,7 +151,7 @@ const processAttributeTypes = (attributes, validationRules) => {
         values: result.values,
         allowedIn,
         defaultIn,
-        multiIn: normalizedMultiIn,
+        multiIn,
         requiredIf,
         requiredIn,
         required,

@@ -1,13 +1,5 @@
 import { difference, includes, uniq } from 'lodash';
 
-const hasAttributeValue = (value) => {
-  if (Array.isArray(value)) {
-    return value.length > 0;
-  }
-
-  return value !== undefined && value !== null && value !== '';
-};
-
 /**
  * Validate conditional rules
  * @param key
@@ -15,12 +7,8 @@ const hasAttributeValue = (value) => {
  * @param attributes
  * @returns {Boolean}
  */
-export const validateConditionalRules = (key, attributeTypes, attributes = {}) => {
+export const validateConditionalRules = (key, attributeTypes, attributes) => {
   const { requiredIf } = attributeTypes[key];
-
-  if (!attributes) {
-    return false;
-  }
 
   let valid = false;
 
@@ -28,12 +16,7 @@ export const validateConditionalRules = (key, attributeTypes, attributes = {}) =
     // for each attribute
     requiredIf.forEach((item) => {
       // for each item in requiredIf and if requiredIf has attribute
-      const attributeValue = attributes[attribute]?.value;
-      const matchesRequiredIf = Array.isArray(attributeValue)
-        ? attributeValue.some((value) => includes(item.values, value))
-        : includes(item.values, attributeValue);
-
-      if (item.key === attribute && matchesRequiredIf) {
+      if (item.key === attribute && includes(item.values, attributes[attribute]?.value)) {
         // if requiredIf has same value as attribute
         valid = true;
       }
@@ -53,27 +36,19 @@ export const validateConditionalRules = (key, attributeTypes, attributes = {}) =
 const createValidateErrors = (type) => (obj, rules) => {
   const keys = Object.keys(rules).filter((key) => Object.hasOwn(rules, key));
 
-  const matchesAllowedValues = (rule, value) => {
-    if (!rule.values.length) {
-      return true;
-    }
-
-    if (!hasAttributeValue(value)) {
-      return false;
-    }
-
-    return isValueValidOption(value, rule.values);
-  };
-
   const errors = keys.filter((key) => {
     const rule = rules[key];
 
     const isRequired = rules[key].required;
     const isRequiredInType = includes(rule.requiredIn, type);
-    const objHasRuleAttribute = hasAttributeValue(obj.attributes[key]);
+    const objHasRuleAttribute = Boolean(obj.attributes[key]);
 
     const isAttributeAllowedInType = includes(rules[key].allowedIn, type);
-    const isValid = matchesAllowedValues(rule, obj.attributes[key]);
+    const isValid =
+      includes(
+        rule.values.map(({ value }) => value),
+        obj.attributes[key],
+      ) || rule.values.length === 0;
     const allowValuesOutsideChoices = includes(rule.allowValuesOutsideChoicesIn, type);
 
     return (
@@ -83,31 +58,19 @@ const createValidateErrors = (type) => (obj, rules) => {
     );
   });
 
-  const isPredicateRequired = (predicateValue, values) => {
-    const hasPredicate = Array.isArray(predicateValue) ? predicateValue.length > 0 : typeof predicateValue === 'string';
-
-    if (!hasPredicate) {
-      return false;
-    }
-
-    if (Array.isArray(predicateValue)) {
-      return predicateValue.some((value) => includes(values, value));
-    }
-
-    return includes(values, predicateValue);
-  };
-
   const conditionallyRequired = keys
     .filter((key) => rules[key].requiredIf.length > 0)
     .map((key) => ({ key, items: rules[key].requiredIf }))
     .filter(({ key, items }) =>
       items.some((item) => {
         const predicateValue = obj.attributes[item.key];
-        const requiredByPredicate = isPredicateRequired(predicateValue, item.values);
+        const hasPredicate = typeof predicateValue === 'string';
 
-        const objHasRuleAttribute = hasAttributeValue(obj.attributes[key]);
+        const isPredicateRequired = hasPredicate && includes(item.values, predicateValue);
 
-        return (requiredByPredicate && !objHasRuleAttribute) || (!requiredByPredicate && objHasRuleAttribute);
+        const objHasRuleAttribute = !!obj.attributes[key];
+
+        return (isPredicateRequired && !objHasRuleAttribute) || (!isPredicateRequired && objHasRuleAttribute);
       }),
     )
     .map(({ key }) => key);
