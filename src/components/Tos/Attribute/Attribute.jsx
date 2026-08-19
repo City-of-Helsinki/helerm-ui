@@ -227,11 +227,11 @@ const Attribute = ({
       };
 
       return (
-        <div className='table-value'>
+        <span className='table-value'>
           {Array.isArray(attribute)
             ? attribute.map((attr) => resolveDisplayName(attr)).join(', ')
             : resolveDisplayName(attribute)}
-        </div>
+        </span>
       );
     }
 
@@ -281,7 +281,7 @@ const Attribute = ({
   attributeValue = getAttributeValue(initialAttribute, attributeIndex, attributeTypes, type);
 
   if (attributeValue && typeof attributeValue === 'object' && !React.isValidElement(attributeValue)) {
-    attributeValue = <div className='table-value'>—</div>;
+    attributeValue = <span className='table-value'>—</span>;
   }
 
   const testId = `attribute-${type}-${attributeIndex || 'unnamed'}`;

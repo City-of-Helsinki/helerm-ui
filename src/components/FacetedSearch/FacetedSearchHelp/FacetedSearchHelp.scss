@@ -33,6 +33,14 @@
       background: transparent;
       border: none;
       color: $black50;
+
+      // Global button reset (core.scss) strips the default focus outline for
+      // any button that isn't `.unstyled-button`. Restore a visible keyboard
+      // focus indicator here without altering the button's normal appearance.
+      &:focus-visible {
+        outline: 2px solid $brand-primary;
+        outline-offset: 2px;
+      }
     }
   }
 }

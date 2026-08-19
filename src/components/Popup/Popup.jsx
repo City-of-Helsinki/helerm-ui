@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './Popup.scss';
 
-const Popup = ({ content, closePopup }) => {
+const Popup = ({ content, closePopup, label = 'Ponnahdusikkuna' }) => {
   useEffect(() => {
     const handleEscape = (event) => {
       if (event.key === 'Escape') {
@@ -28,7 +28,13 @@ const Popup = ({ content, closePopup }) => {
         }
       }}
     >
-      <div className='popup-inner-background' data-testid='popup-content' role='dialog' aria-modal='true'>
+      <div
+        className='popup-inner-background'
+        data-testid='popup-content'
+        role='dialog'
+        aria-modal='true'
+        aria-label={label}
+      >
         <button type='button' className='popup__close' onClick={closePopup} data-testid='popup-close-button'>
           <i className='fa-solid fa-xmark' />
         </button>
@@ -41,6 +47,7 @@ const Popup = ({ content, closePopup }) => {
 Popup.propTypes = {
   closePopup: PropTypes.func.isRequired,
   content: PropTypes.object.isRequired,
+  label: PropTypes.string,
 };
 
 export default Popup;

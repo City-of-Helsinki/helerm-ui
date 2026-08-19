@@ -141,7 +141,7 @@ const VersionData = ({ attributeTypes, editValidDates, selectedTOS, setVersionVi
     const content = (
       <>
         <strong>{label}:</strong>
-        <div>{value ? formatDateTime(value, 'd.M.yyyy') : ' '}</div>
+        <span style={{ display: 'block' }}>{value ? formatDateTime(value, 'd.M.yyyy') : ' '}</span>
       </>
     );
 
