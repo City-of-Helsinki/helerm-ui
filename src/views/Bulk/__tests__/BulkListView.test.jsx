@@ -1,16 +1,39 @@
 import { BrowserRouter } from 'react-router-dom';
-import { waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import BulkListView from '../BulkListView';
 import renderWithProviders, { storeDefaultState, createTestStore } from '../../../utils/renderWithProviders';
 import api from '../../../utils/api';
 import * as useAuth from '../../../hooks/useAuth';
 
+const mockNavigate = vi.fn();
+
+vi.mock('react-router-dom', async () => {
+  const mod = await vi.importActual('react-router-dom');
+
+  return {
+    ...mod,
+    useNavigate: vi.fn(() => mockNavigate),
+  };
+});
+
+const mockBulkUpdate = {
+  id: 1,
+  created_at: '2023-01-01T10:00:00Z',
+  modified_at: '2023-01-02T10:00:00Z',
+  modified_by: 'Tester',
+  description: 'Test bulk update',
+  changes: { a: 1, b: 2 },
+  state: 5,
+  is_approved: false,
+};
+
 const mockBulkUpdatesResponse = {
-  count: 0,
+  count: 1,
   next: null,
   previous: null,
-  results: [],
+  results: [mockBulkUpdate],
 };
 
 const mockBulkUpdatesApiGet = vi
@@ -30,6 +53,11 @@ vi.spyOn(useAuth, 'default').mockImplementation(() => ({
   isAuthenticated: true,
   user: { name: 'Test User' },
 }));
+
+const storeStateWithPermission = {
+  ...storeDefaultState,
+  user: { ...storeDefaultState.user, data: { permissions: ['change_bulkupdate'] } },
+};
 
 const renderComponent = (storeOverride) => {
   const store = storeOverride ?? createTestStore(storeDefaultState);
@@ -66,10 +94,36 @@ describe('<BulkListView />', () => {
         },
         {
           type: 'bulk/fetchBulkUpdates/fulfilled',
-          payload: [],
+          payload: [mockBulkUpdate],
           meta: expect.anything(),
         },
       ]),
     );
+  });
+
+  it('renders bulk update rows and navigates on click', async () => {
+    const store = createTestStore(storeStateWithPermission);
+    renderComponent(store);
+
+    const row = await screen.findByText(/Paketti ID: 1/);
+    expect(screen.getByRole('heading', { level: 5, name: 'Odottaa' })).toBeInTheDocument();
+
+    await userEvent.click(row.closest('button'));
+
+    expect(mockNavigate).toHaveBeenCalledWith('/bulk/view/1');
+  });
+
+  it('filters bulk updates by approval status', async () => {
+    const store = createTestStore(storeStateWithPermission);
+    renderComponent(store);
+
+    await screen.findByText(/Paketti ID: 1/);
+
+    await userEvent.click(screen.getByRole('combobox'));
+    await userEvent.click(screen.getByText('Hyväksytty'));
+
+    await waitFor(() => {
+      expect(screen.getByText(/Paketti ID: 1/)).toBeInTheDocument();
+    });
   });
 });

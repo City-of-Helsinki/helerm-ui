@@ -729,7 +729,7 @@ const BulkCreateView = () => {
     return (
       <Preview
         attributeTypes={attributeTypes}
-        conversion={preview.conversion}
+        conversions={preview.conversion}
         getAttributeName={getAttributeName}
         getTypeName={getTypeName}
         isFinalPreview={isFinalPreview}
