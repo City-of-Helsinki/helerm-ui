@@ -68,6 +68,7 @@ const CloneView = ({ templates, toggleCloneView, cloneFromTemplate, setNavigatio
           <span
             className='import-button'
             role='button'
+            tabIndex='0'
             onClick={() => handleSelectMethod(METHOD_TEMPLATE)}
             onKeyUp={(event) => {
               if (event.key === 'Enter') {
@@ -87,6 +88,7 @@ const CloneView = ({ templates, toggleCloneView, cloneFromTemplate, setNavigatio
           <span
             className='import-button'
             role='button'
+            tabIndex='0'
             onClick={() => handleSelectMethod(METHOD_FUNCTION)}
             onKeyUp={(event) => {
               if (event.key === 'Enter') {
