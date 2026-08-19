@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.2](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.12.1...helerm-ui-v1.12.2) (2026-08-19)
+
+
+### Reverts
+
+* Multi-value handling for SecurityReason Refs: TIED-274, TIED-289 ([5c4b3d0](https://github.com/City-of-Helsinki/helerm-ui/commit/5c4b3d0b87e07a2c4b53336a595e9d22862110ae))
+
 ## [1.12.1](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.12.0...helerm-ui-v1.12.1) (2026-08-18)
 
 
