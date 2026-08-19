@@ -34,6 +34,25 @@ describe('<Popup />', () => {
     expect(closePopup).not.toHaveBeenCalled();
   });
 
+  it('closes when pressing Escape on the outer background', () => {
+    const { closePopup } = renderPopup();
+
+    const outerBackground = screen.getByTestId('popup-component');
+    fireEvent.keyDown(outerBackground, { key: 'Escape', target: outerBackground });
+
+    // Bubbles to the document-level Escape listener too, so it fires twice.
+    expect(closePopup).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not close when pressing a different key on the outer background', () => {
+    const { closePopup } = renderPopup();
+
+    const outerBackground = screen.getByTestId('popup-component');
+    fireEvent.keyDown(outerBackground, { key: 'Enter', target: outerBackground });
+
+    expect(closePopup).not.toHaveBeenCalled();
+  });
+
   it('closes when clicking the outer background', async () => {
     const { closePopup } = renderPopup();
 
