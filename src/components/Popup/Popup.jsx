@@ -21,25 +21,18 @@ const Popup = ({ content, closePopup, label = 'Ponnahdusikkuna' }) => {
     <div
       className='popup-outer-background'
       data-testid='popup-component'
-      role='presentation'
       onClick={(event) => {
         if (event.target === event.currentTarget) {
           closePopup();
         }
       }}
     >
-      <div
-        className='popup-inner-background'
-        data-testid='popup-content'
-        role='dialog'
-        aria-modal='true'
-        aria-label={label}
-      >
+      <dialog open className='popup-inner-background' data-testid='popup-content' aria-modal='true' aria-label={label}>
         <button type='button' className='popup__close' onClick={closePopup} data-testid='popup-close-button'>
           <i className='fa-solid fa-xmark' />
         </button>
         {content}
-      </div>
+      </dialog>
     </div>
   );
 };
