@@ -348,6 +348,7 @@ const Action = ({
             type='button'
             className={classnames('unstyled-button', classNames)}
             onClick={() => editTypeSpecifier()}
+            aria-label='Muokkaa tyyppimäärittäjää'
           >
             {typeSpecifier}
           </button>
