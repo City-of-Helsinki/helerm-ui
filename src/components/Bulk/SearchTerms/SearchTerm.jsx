@@ -97,8 +97,7 @@ const SearchTerm = ({
     if (
       !isEmpty(searchTerm.attribute) &&
       !isEmpty(attributeValues) &&
-      attributeValues[attributeTarget] &&
-      attributeValues[attributeTarget][searchTerm.attribute]
+      attributeValues[attributeTarget]?.[searchTerm.attribute]
     ) {
       valueOptions = attributeValues[attributeTarget][searchTerm.attribute].map((value) => {
         const displayLabel = Array.isArray(value)

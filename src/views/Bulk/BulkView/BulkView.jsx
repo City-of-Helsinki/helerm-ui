@@ -40,7 +40,7 @@ const validateActionRecords = (actionChange, action) =>
   isEmpty(actionChange.records) ||
   every(
     Object.keys(actionChange.records),
-    (recordId) => !!(action.records && action.records.find((record) => record.id === recordId)),
+    (recordId) => !!(action.records?.find((record) => record.id === recordId)),
   );
 
 const validatePhaseActions = (phaseChange, phase) =>
@@ -85,7 +85,7 @@ const BulkView = () => {
   const parseItemList = (itemsData, bulk) => {
     const changedFunctions = Object.keys(bulk.changes || {}).reduce((acc, functionVersion) => {
       const versionSplitted = split(functionVersion, '__');
-      if (versionSplitted && versionSplitted.length === 2) {
+      if (versionSplitted?.length === 2) {
         acc[versionSplitted[0]] = {
           ...bulk.changes[functionVersion],
           version: versionSplitted[1],

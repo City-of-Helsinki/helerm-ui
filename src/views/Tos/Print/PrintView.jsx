@@ -50,7 +50,7 @@ const PrintView = () => {
 
   useEffect(() => {
     addBodyClass();
-    if (location && location.pathname.path === '/view-tos/:id/print') {
+    if (location?.pathname.path === '/view-tos/:id/print') {
       dispatch(setNavigationVisibility(false));
     }
 

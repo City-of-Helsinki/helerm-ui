@@ -41,7 +41,7 @@ const Attribute = ({
     if (Array.isArray(option)) {
       const values = option.length ? map(option, 'value') : null;
 
-      setAttribute(values && values.length === 1 ? values[0] : values);
+      setAttribute(values?.length === 1 ? values[0] : values);
     } else {
       setAttribute(option?.value ? option?.value : option);
     }

@@ -64,7 +64,7 @@ const ViewClassification = () => {
   }, [params.id, params.version]);
 
   useEffect(() => {
-    if (location && location.pathname === 'view-classification/:id') {
+    if (location?.pathname === 'view-classification/:id') {
       dispatch(setNavigationVisibility(false));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
