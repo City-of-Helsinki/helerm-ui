@@ -63,7 +63,7 @@ const ValidationBar = (props) => {
   };
 
   const getInvalidSection = (type, section, validateRequired, validateWarn, children) => {
-    const hasChildren = children !== undefined && children.filter((x) => x !== null).length > 0;
+    const hasChildren = children !== undefined && children.some((x) => x !== null);
 
     if (!section || (type !== 'record' && !hasChildren)) {
       return null;

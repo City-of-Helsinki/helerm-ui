@@ -65,13 +65,10 @@ const ReorderItem = ({ id, index, moveItem, labels, target }) => {
     <div
       ref={ref}
       style={{
-        ...{
-          border: '2px dashed #658fcd',
-          padding: '0.2rem 1rem',
-          marginBottom: '.5rem',
-          backgroundColor: 'white',
-          cursor: 'move',
-        },
+        padding: '0.2rem 1rem',
+        marginBottom: '.5rem',
+        backgroundColor: 'white',
+        cursor: 'move',
         opacity,
         border: getBorderStyle(target),
       }}

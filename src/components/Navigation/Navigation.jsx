@@ -370,7 +370,7 @@ const Navigation = ({ onLeafMouseClick: customOnLeafMouseClick } = {}) => {
         attributeTypes={attributeTypes}
         isOpen={is_open}
         isSearchChanged={isSearchChanged}
-        isSearching={searchInputs.filter((input) => input.length > 0).length > 0}
+        isSearching={searchInputs.some((input) => input.length > 0)}
         isFetching={isFetching}
         onLeafMouseClick={handleLeafMouseClick}
         onNodeMouseClick={onNodeMouseClick}

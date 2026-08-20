@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import capitalize from 'lodash/capitalize';
+import keys from 'lodash/keys';
 import './ImportView.scss';
-import _ from 'lodash';
 
 import { useNotificationsContext } from '../../NotificationsContext/hooks/useNotificationsContext';
 
@@ -75,7 +76,7 @@ const ImportView = (props) => {
               >
                 {getTargetName(
                   values[itemsInArray[key]].attributes.TypeSpecifier,
-                  values[itemsInArray[key]].attributes[`${_.capitalize(level)}Type`],
+                  values[itemsInArray[key]].attributes[`${capitalize(level)}Type`],
                 )}
               </button>
             </div>,
@@ -104,9 +105,9 @@ const ImportView = (props) => {
   const generateRecordItems = useCallback(() => {
     return phasesOrder.map((phase) => {
       const actionElements = [];
-      if (_.keys(phases[phase].actions).length > 0) {
+      if (keys(phases[phase].actions).length > 0) {
         phases[phase].actions.forEach((action) => {
-          if (_.keys(actions[action].records).length > 0) {
+          if (keys(actions[action].records).length > 0) {
             const recordElements = generateLinks(records, actions[action].records);
             actionElements.push(
               <div key={actions[action].id} className='import-action-record-wrapper'>
@@ -206,7 +207,7 @@ const ImportView = (props) => {
                   data-testid={`import-view-selected-element-${index}`}
                 >
                   {values[element].attributes.TypeSpecifier ||
-                    values[element].attributes[`${_.capitalize(level)}Type`] ||
+                    values[element].attributes[`${capitalize(level)}Type`] ||
                     '-'}
                 </button>
               ))}

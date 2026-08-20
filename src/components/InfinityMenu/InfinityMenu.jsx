@@ -46,7 +46,7 @@ const InfinityMenu = ({
   onLeafMouseDown = () => {},
   onLeafMouseUp = () => {},
   onLeafMouseClick = () => {},
-  filter = (node, searchInput) => node.name.toLowerCase().indexOf(searchInput.toLowerCase()) >= 0,
+  filter = (node, searchInput) => node.name.toLowerCase().includes(searchInput.toLowerCase()),
   headerProps = {},
 }) => {
   const [filteredTree, setFilteredTree] = useState([]);

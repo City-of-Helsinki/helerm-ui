@@ -55,8 +55,8 @@ export const generateDefaultAttributes = (attributeTypes, type, showMore) => {
   Object.keys(attributeTypes).forEach((key) => {
     if (
       Object.hasOwn(attributeTypes, key) &&
-      ((showMore && attributeTypes[key].allowedIn.indexOf(type) >= 0 && key !== 'PhaseType') ||
-        (!showMore && attributeTypes[key].defaultIn.indexOf(type) >= 0)) &&
+      ((showMore && attributeTypes[key].allowedIn.includes(type) && key !== 'PhaseType') ||
+        (!showMore && attributeTypes[key].defaultIn.includes(type))) &&
       key !== 'TypeSpecifier'
     ) {
       if (attributeTypes[key].requiredIf.length) {
@@ -79,7 +79,7 @@ export const attributeButton = (attributes, attributeTypes) => {
     }
   });
   Object.keys(attributeTypes).forEach((key) => {
-    if (Object.hasOwn(attributeTypes, key) && attributeTypes[key].defaultIn.indexOf('action') >= 0) {
+    if (Object.hasOwn(attributeTypes, key) && attributeTypes[key].defaultIn.includes('action')) {
       actualAttributes.push(key);
     }
   });

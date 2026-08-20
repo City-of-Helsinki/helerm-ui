@@ -79,7 +79,7 @@ const BulkCreateView = () => {
     records: 0,
   });
   const [searchTerms, setSearchTerms] = useState(() => [
-    { ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() },
+    { ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: Date.now() },
   ]);
   const [stateValue, setStateValue] = useState('draft');
 
@@ -449,7 +449,7 @@ const BulkCreateView = () => {
     setPreview(null);
     setPreviewItems(null);
     setSearchResults([]);
-    setSearchTerms([{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }]);
+    setSearchTerms([{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: Date.now() }]);
   };
 
   const onCancel = () => {
@@ -500,7 +500,7 @@ const BulkCreateView = () => {
           setPreview(null);
           setPreviewItems(null);
           setSearchResults([]);
-          setSearchTerms([{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }]);
+          setSearchTerms([{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: Date.now() }]);
           navigate('/bulk');
           dispatch(fetchNavigationThunk({ includeRelated: true }));
           return addNotification({
@@ -741,7 +741,7 @@ const BulkCreateView = () => {
     );
   }
 
-  const isSelectedResults = searchResults.filter((result) => result.selected).length > 0;
+  const isSelectedResults = searchResults.some((result) => result.selected);
   const selectedCount = filter(conversionItems, { selected: true }).length;
 
   return (

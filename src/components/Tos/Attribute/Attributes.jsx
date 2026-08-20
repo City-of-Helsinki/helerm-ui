@@ -25,7 +25,7 @@ const Attributes = ({
   Object.keys(attributeTypes).forEach((key) => {
     if (
       Object.hasOwn(attributeTypes, key) &&
-      attributeTypes[key].defaultIn.indexOf(type) >= 0 &&
+      attributeTypes[key].defaultIn.includes(type) &&
       !includes(unwantedAttributes, key)
     ) {
       defaultAttributes.push(key);
@@ -40,16 +40,18 @@ const Attributes = ({
     } else if (type === 'record') {
       elementType = 'Asiakirjan tyyppi';
     }
-    descriptions.push({
-      descriptionKey: `${elementType} tarkenne`,
-      typeSpecifier: elem.attributes[`${capitalize(type)}Type`],
-      type: elem.attributes[`${capitalize(type)}Type`],
-    });
-    descriptions.push({
-      descriptionKey: 'Tarkenne',
-      typeSpecifier: elem.attributes.TypeSpecifier,
-      type: '',
-    });
+    descriptions.push(
+      {
+        descriptionKey: `${elementType} tarkenne`,
+        typeSpecifier: elem.attributes[`${capitalize(type)}Type`],
+        type: elem.attributes[`${capitalize(type)}Type`],
+      },
+      {
+        descriptionKey: 'Tarkenne',
+        typeSpecifier: elem.attributes.TypeSpecifier,
+        type: '',
+      },
+    );
 
     return descriptions;
   }

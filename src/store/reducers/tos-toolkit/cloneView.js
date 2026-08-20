@@ -28,10 +28,10 @@ export const receiveTemplateReducer = (state, action) => {
     result,
   } = normalizeTosFromApi(template);
 
-  state.attributes = { ...state.attributes, ...(tos[result].attributes || {}) };
-  state.actions = { ...state.actions, ...(actions || {}) };
-  state.phases = { ...state.phases, ...(phases || {}) };
-  state.records = { ...state.records, ...(records || {}) };
+  state.attributes = { ...state.attributes, ...(tos[result]?.attributes) };
+  state.actions = { ...state.actions, ...actions };
+  state.phases = { ...state.phases, ...phases };
+  state.records = { ...state.records, ...records };
   state.lastUpdated = Date.now();
   state.documentState = 'edit';
   state.isFetching = false;

@@ -17,8 +17,7 @@ const getCookieConsentSettings = () => {
 
       if (hasStatisticsConsent) {
         //  start tracking
-        globalThis._paq.push(['setConsentGiven']);
-        globalThis._paq.push(['setCookieConsentGiven']);
+        globalThis._paq.push(['setConsentGiven'], ['setCookieConsentGiven']);
       } else {
         // tell matomo to forget conset
         globalThis._paq.push(['forgetConsentGiven']);

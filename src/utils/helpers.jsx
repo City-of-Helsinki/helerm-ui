@@ -292,7 +292,7 @@ export function getNewPath(absolutePath, relativePath) {
     .reduce((absoluteParts, part) => {
       switch (part) {
         case '..': {
-          return absoluteParts.slice(0, absoluteParts.length - 1);
+          return absoluteParts.slice(0, -1);
         }
         case '.': {
           return absoluteParts;
