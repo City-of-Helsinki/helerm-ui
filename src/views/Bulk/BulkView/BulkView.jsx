@@ -34,6 +34,28 @@ import {
 } from '../../../store/reducers/navigation';
 import { attributeTypesSelector } from '../../../store/reducers/ui';
 
+// Named helpers (one nesting level each) replace the single deeply nested
+// validateBulkUpdate chain flagged by javascript:S2004 (max 5 levels).
+const validateActionRecords = (actionChange, action) =>
+  isEmpty(actionChange.records) ||
+  every(keys(actionChange.records), (recordId) => !!(action.records && find(action.records, { id: recordId })));
+
+const validatePhaseActions = (phaseChange, phase) =>
+  isEmpty(phaseChange.actions) ||
+  every(keys(phaseChange.actions), (actionId) => {
+    const actionChange = phaseChange.actions[actionId];
+    const action = phase.actions ? find(phase.actions, { id: actionId }) : null;
+    return !!action && validateActionRecords(actionChange, action);
+  });
+
+const validateItemPhases = (changes, item) =>
+  isEmpty(changes.phases) ||
+  every(keys(changes.phases), (phaseId) => {
+    const phaseChange = changes.phases[phaseId];
+    const phase = find(item.phases, { id: phaseId });
+    return !!phase && validatePhaseActions(phaseChange, phase);
+  });
+
 const BulkView = () => {
   const dispatch = useDispatch();
   const selectedBulk = useSelector(selectedBulkSelector);
@@ -95,41 +117,8 @@ const BulkView = () => {
     setItemList(newItemList);
   };
 
-  const validateBulkUpdate = (list) => {
-    return !isEmpty(list)
-      ? every(list, (listItem) => {
-          const { changes, item } = listItem;
-          if (!isEmpty(changes.phases)) {
-            return every(keys(changes.phases), (phaseId) => {
-              const phaseChange = changes.phases[phaseId];
-              const phase = find(item.phases, { id: phaseId });
-              if (!phase) {
-                return false;
-              }
-              if (phase && !isEmpty(phaseChange.actions)) {
-                // eslint-disable-next-line sonarjs/no-nested-functions
-                return every(keys(phaseChange.actions), (actionId) => {
-                  const actionChange = phaseChange.actions[actionId];
-                  const action = phase.actions ? find(phase.actions, { id: actionId }) : null;
-                  if (!action) {
-                    return false;
-                  }
-                  if (action && !isEmpty(actionChange.records)) {
-                    return every(keys(actionChange.records), (recordId) => {
-                      const record = action.records ? find(action.records, { id: recordId }) : null;
-                      return !!record;
-                    });
-                  }
-                  return true;
-                });
-              }
-              return true;
-            });
-          }
-          return true;
-        })
-      : false;
-  };
+  const validateBulkUpdate = (list) =>
+    !isEmpty(list) ? every(list, ({ changes, item }) => validateItemPhases(changes, item)) : false;
 
   const onApprove = () => {
     if (!isEmpty(selectedBulk)) {
@@ -234,6 +223,146 @@ const BulkView = () => {
     }
   };
 
+  const renderAttributeChangeHeading = (keySuffix, labelPrefix, attribute, currentValue, newValue) => (
+    <h4 key={keySuffix}>
+      {labelPrefix}
+      {getAttributeName(attribute)}:{' '}
+      <span>({getDisplayLabelForAttribute({ attributeValue: currentValue, identifier: attribute })})</span>{' '}
+      {getDisplayLabelForAttribute({ attributeValue: newValue, identifier: attribute })}
+    </h4>
+  );
+
+  const renderAttributeChanges = (attributesChange, currentAttributes, keyPrefix, labelPrefix) =>
+    keys(attributesChange).map((attribute) =>
+      renderAttributeChangeHeading(
+        `${keyPrefix}_attr_${attribute}`,
+        labelPrefix,
+        attribute,
+        currentAttributes?.[attribute] || ' ',
+        attributesChange[attribute],
+      ),
+    );
+
+  const renderRecordChanges = (recordsChange, currentAction, labelPrefix) => {
+    const elements = [];
+    let hasError = false;
+
+    keys(recordsChange).forEach((record) => {
+      const currentRecord = currentAction.records ? find(currentAction.records, { id: record }) : null;
+      if (!currentRecord) {
+        hasError = true;
+        elements.push(
+          <h5 className='bulk-view-item-record-error' key={`record_${record}_error`}>
+            <i className='fa-solid fa-triangle-exclamation' />
+            Asiakirjaa {record} ei löytynyt, massamuutosta ei voida tehdä tälle käsittelyprosessille
+          </h5>,
+        );
+        return;
+      }
+
+      if (!isEmpty(recordsChange[record].attributes)) {
+        elements.push(
+          ...renderAttributeChanges(
+            recordsChange[record].attributes,
+            currentRecord.attributes,
+            `record_${record}`,
+            `${labelPrefix}${currentRecord.name || ''} > `,
+          ),
+        );
+      }
+    });
+
+    return { elements, hasError };
+  };
+
+  const renderActionChanges = (actionsChange, currentPhase, labelPrefix) => {
+    const elements = [];
+    let hasError = false;
+
+    keys(actionsChange).forEach((action) => {
+      const currentAction = find(currentPhase.actions, { id: action });
+      if (!currentAction) {
+        hasError = true;
+        elements.push(
+          <h5 className='bulk-view-item-action-error' key={`action_${action}_error`}>
+            <i className='fa-solid fa-triangle-exclamation' />
+            Toimenpidettä {action} ei löytynyt, massamuutosta ei voida tehdä tälle käsittelyprosessille
+          </h5>,
+        );
+        return;
+      }
+
+      const actionLabelPrefix = `${labelPrefix}${currentAction.name || ''} > `;
+
+      if (!isEmpty(actionsChange[action].attributes)) {
+        elements.push(
+          ...renderAttributeChanges(
+            actionsChange[action].attributes,
+            currentAction.attributes,
+            `action_${action}`,
+            actionLabelPrefix,
+          ),
+        );
+      }
+
+      if (!isEmpty(actionsChange[action].records)) {
+        const { elements: recordElements, hasError: recordsHadError } = renderRecordChanges(
+          actionsChange[action].records,
+          currentAction,
+          actionLabelPrefix,
+        );
+        elements.push(...recordElements);
+        hasError = hasError || recordsHadError;
+      }
+    });
+
+    return { elements, hasError };
+  };
+
+  const renderPhaseChanges = (phasesChange, item) => {
+    const elements = [];
+    let hasError = false;
+
+    keys(phasesChange).forEach((phase) => {
+      const currentPhase = find(item.phases, { id: phase });
+      if (!currentPhase) {
+        hasError = true;
+        elements.push(
+          <h5 className='bulk-view-item-phase-error' key={`phase_${phase}_error`}>
+            <i className='fa-solid fa-triangle-exclamation' />
+            Käsittelyvaihetta {phase} ei löytynyt, massamuutosta ei voida tehdä tälle käsittelyprosessille
+          </h5>,
+        );
+        return;
+      }
+
+      const phaseLabelPrefix = `${currentPhase.name || ''} > `;
+
+      if (!isEmpty(phasesChange[phase].attributes)) {
+        elements.push(
+          ...renderAttributeChanges(
+            phasesChange[phase].attributes,
+            currentPhase.attributes,
+            `phase_${phase}`,
+            phaseLabelPrefix,
+          ),
+        );
+      }
+
+      if (!isEmpty(phasesChange[phase].actions)) {
+        const { elements: actionElements, hasError: actionsHadError } = renderActionChanges(
+          phasesChange[phase].actions,
+          currentPhase,
+          phaseLabelPrefix,
+        );
+        elements.push(...actionElements);
+        hasError = hasError || actionsHadError;
+      }
+    });
+
+    return { elements, hasError };
+  };
+
   const renderItemChanges = (changedItem) => {
     const { changes, item } = changedItem;
     const changesEl = [];
@@ -251,150 +380,13 @@ const BulkView = () => {
     });
 
     if (!isEmpty(changes.attributes)) {
-      keys(changes.attributes).forEach((attribute) => {
-        const currentValue = item.attributes[attribute] || ' ';
-        changesEl.push(
-          <h4 key={`function_${item.id}_attribute_${attribute}`}>
-            {getAttributeName(attribute)}:{' '}
-            <span>
-              (
-              {getDisplayLabelForAttribute({
-                attributeValue: currentValue,
-                identifier: attribute,
-              })}
-              )
-            </span>{' '}
-            {getDisplayLabelForAttribute({
-              attributeValue: changes.attributes[attribute],
-              identifier: attribute,
-            })}
-          </h4>,
-        );
-      });
+      changesEl.push(...renderAttributeChanges(changes.attributes, item.attributes, `function_${item.id}`, ''));
     }
 
     if (!isEmpty(changes.phases)) {
-      keys(changes.phases).forEach((phase) => {
-        const currentPhase = find(item.phases, { id: phase });
-        if (!currentPhase) {
-          isError = true;
-          changesEl.push(
-            <h5 className='bulk-view-item-phase-error' key={`phase_${phase}_error`}>
-              <i className='fa-solid fa-triangle-exclamation' />
-              Käsittelyvaihetta {phase} ei löytynyt, massamuutosta ei voida tehdä tälle käsittelyprosessille
-            </h5>,
-          );
-        }
-
-        if (currentPhase && !isEmpty(changes.phases[phase].attributes)) {
-          keys(changes.phases[phase].attributes).forEach((attribute) => {
-            const currentValue = currentPhase?.attributes?.[attribute] || ' ';
-            changesEl.push(
-              <h4 key={`phase_${phase}_attr_${attribute}`}>
-                {currentPhase.name || ''} &gt;
-                {getAttributeName(attribute)}:{' '}
-                <span>
-                  (
-                  {getDisplayLabelForAttribute({
-                    attributeValue: currentValue,
-                    identifier: attribute,
-                  })}
-                  )
-                </span>{' '}
-                {getDisplayLabelForAttribute({
-                  attributeValue: changes.phases[phase].attributes[attribute],
-                  identifier: attribute,
-                })}
-              </h4>,
-            );
-          });
-        }
-
-        if (currentPhase && !isEmpty(changes.phases[phase].actions)) {
-          keys(changes.phases[phase].actions).forEach((action) => {
-            const currentAction = find(currentPhase.actions, { id: action });
-            if (!currentAction) {
-              isError = true;
-              changesEl.push(
-                <h5 className='bulk-view-item-action-error' key={`action_${action}_error`}>
-                  <i className='fa-solid fa-triangle-exclamation' />
-                  Toimenpidettä {action} ei löytynyt, massamuutosta ei voida tehdä tälle käsittelyprosessille
-                </h5>,
-              );
-            }
-
-            if (currentAction && !isEmpty(changes.phases[phase].actions[action].attributes)) {
-              // eslint-disable-next-line sonarjs/no-nested-functions
-              keys(changes.phases[phase].actions[action].attributes).forEach((attribute) => {
-                const currentValue = currentAction?.attributes?.[attribute] || ' ';
-                changesEl.push(
-                  <h4 key={`action_${action}_attr_${attribute}`}>
-                    {currentPhase.name || ''} &gt;
-                    {currentAction.name || ''} &gt;
-                    {getAttributeName(attribute)}:{' '}
-                    <span>
-                      (
-                      {getDisplayLabelForAttribute({
-                        attributeValue: currentValue,
-                        identifier: attribute,
-                      })}
-                      )
-                    </span>{' '}
-                    {getDisplayLabelForAttribute({
-                      attributeValue: changes.phases[phase].actions[action].attributes[attribute],
-                      identifier: attribute,
-                    })}
-                  </h4>,
-                );
-              });
-            }
-
-            if (currentAction && !isEmpty(changes.phases[phase].actions[action].records)) {
-              // eslint-disable-next-line sonarjs/no-nested-functions
-              keys(changes.phases[phase].actions[action].records).forEach((record) => {
-                const currentRecord = find(currentAction.records, {
-                  id: record,
-                });
-                if (!currentRecord) {
-                  isError = true;
-                  changesEl.push(
-                    <h5 className='bulk-view-item-record-error' key={`record_${record}_error`}>
-                      <i className='fa-solid fa-triangle-exclamation' />
-                      Asiakirjaa {record} ei löytynyt, massamuutosta ei voida tehdä tälle käsittelyprosessille
-                    </h5>,
-                  );
-                }
-
-                if (currentRecord && !isEmpty(changes.phases[phase].actions[action].records[record].attributes)) {
-                  keys(changes.phases[phase].actions[action].records[record].attributes).forEach((attribute) => {
-                    const currentValue = currentRecord?.attributes?.[attribute] || ' ';
-                    changesEl.push(
-                      <h4 key={`record_${record}_attr_${attribute}`}>
-                        {currentPhase.name || ''} &gt;
-                        {currentAction.name || ''} &gt;
-                        {currentRecord.name || ''} &gt;
-                        {getAttributeName(attribute)}:{' '}
-                        <span>
-                          (
-                          {getDisplayLabelForAttribute({
-                            attributeValue: currentValue,
-                            identifier: attribute,
-                          })}
-                          )
-                        </span>{' '}
-                        {getDisplayLabelForAttribute({
-                          attributeValue: changes.phases[phase].actions[action].records[record].attributes[attribute],
-                          identifier: attribute,
-                        })}
-                      </h4>,
-                    );
-                  });
-                }
-              });
-            }
-          });
-        }
-      });
+      const { elements, hasError } = renderPhaseChanges(changes.phases, item);
+      changesEl.push(...elements);
+      isError = isError || hasError;
     }
 
     return (
