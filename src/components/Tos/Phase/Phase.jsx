@@ -508,7 +508,7 @@ const Phase = ({
         );
       };
 
-      if (phase.is_open && phase.actions && phase.actions.length > 0) {
+      if (phase.is_open && phase.actions?.length > 0) {
         return (
           <RenderPropSticky topOffset={-1 * topOffset}>
             {({ isFixed, wrapperStyles, wrapperRef, holderStyles, holderRef }) => (

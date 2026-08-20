@@ -30,7 +30,7 @@ const Conversion = ({ attributeTypes, conversion, disabled, onConvert }) => {
   const onChangeValue = useCallback((option) => {
     if (Array.isArray(option)) {
       const values = option.length ? map(option, 'value') : null;
-      setValue(values && values.length === 1 ? values[0] : values);
+      setValue(values?.length === 1 ? values[0] : values);
     } else {
       setValue(option?.value ? option?.value : option);
     }

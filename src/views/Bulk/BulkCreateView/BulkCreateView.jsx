@@ -418,7 +418,7 @@ const BulkCreateView = () => {
         [id]: { ...previewItems?.[id], selected: !previewItems?.[id].selected },
       });
     }
-    if (isFinalPreview && conversionItems && conversionItems[id]) {
+    if (isFinalPreview && conversionItems?.[id]) {
       setConversionItems({
         ...conversionItems,
         [id]: {

@@ -79,7 +79,7 @@ const SearchResults = ({ hits, onSelect, onSelectAll, searchResults }) => {
 
               const captured = regex.exec(path);
               let pathName = path;
-              if (captured && captured.length === 3) {
+              if (captured?.length === 3) {
                 const splitAttributes = captured[2].split(/,/g);
                 const mappedValue = splitAttributes
                   .map((attr) =>
