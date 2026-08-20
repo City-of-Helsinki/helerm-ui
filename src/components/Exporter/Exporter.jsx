@@ -172,8 +172,7 @@ const getAttributes = (attributeTypes, type) =>
     .reduce((acc, attribute) => {
       if (
         Object.hasOwn(attributeTypes, attribute) &&
-        attributeTypes[attribute].allowedIn &&
-        attributeTypes[attribute].allowedIn.includes(type)
+        attributeTypes[attribute].allowedIn?.includes(type)
       ) {
         acc.push({
           attribute,

@@ -73,7 +73,7 @@ const Conversion = ({ attributeTypes, conversion, disabled, onConvert }) => {
           }),
           value: item.value,
         }));
-        if (!options.find((o) => o.value === value) && !isEmpty(value)) {
+        if (!options.some((o) => o.value === value) && !isEmpty(value)) {
           options.push({
             label: getDisplayLabelForAttribute({
               attributeValue: value,

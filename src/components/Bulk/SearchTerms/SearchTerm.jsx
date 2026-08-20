@@ -124,7 +124,7 @@ const SearchTerm = ({
 
   const attributeOptions = getAttributeOptions(attributeTypes, searchTerm.target);
   const valueOptions = getValueOptions(attributeValues, searchTerm);
-  if (!valueOptions.find((option) => option.value === searchTerm.value) && !isEmpty(searchTerm.value)) {
+  if (!valueOptions.some((option) => option.value === searchTerm.value) && !isEmpty(searchTerm.value)) {
     const displayLabel = Array.isArray(searchTerm.value)
       ? searchTerm.value
           .map((v) =>

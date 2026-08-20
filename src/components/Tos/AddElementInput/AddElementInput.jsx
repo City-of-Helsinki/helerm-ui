@@ -66,7 +66,7 @@ function resolveSelectOptions(values, fieldValue) {
   if (fieldValue) {
     const valueArray = Array.isArray(fieldValue) ? fieldValue : [fieldValue];
     forEach(valueArray, (value) => {
-      if (!options.find((option) => option.value === value)) {
+      if (!options.some((option) => option.value === value)) {
         options.push({
           label: value,
           value,
