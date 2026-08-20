@@ -1,4 +1,6 @@
-import tosReducer, {
+import tosReducer from './main';
+
+export {
   // Thunks
   fetchTOSThunk,
   saveDraftThunk,
@@ -47,69 +49,12 @@ import tosReducer, {
   receiveTemplate,
   executeOrderChange,
 } from './main';
-import { createNewAction } from './action';
-import { createNewPhase } from './phase';
-import { createNewRecord } from './record';
-import { importItemsThunk } from './importView';
-import { cloneFromTemplateThunk } from './cloneView';
-import { changeOrderThunk } from './reorder';
 
-export {
-  // Helpers
-  createNewAction,
-  createNewPhase,
-  createNewRecord,
-
-  // Thunks
-  fetchTOSThunk,
-  saveDraftThunk,
-  changeStatusThunk,
-  cloneFromTemplateThunk,
-  importItemsThunk,
-  changeOrderThunk,
-
-  // Action creators
-  clearTos,
-  resetTos,
-  editMetaData,
-  editValidDates,
-  setDocumentState,
-  setClassificationVisibility,
-  setMetadataVisibility,
-  updateTosVisibility,
-  setVersionVisibility,
-
-  // Action action creators
-  addAction,
-  editAction,
-  editActionAttribute,
-  removeAction,
-  setActionVisibility,
-
-  // Phase action creators
-  addPhase,
-  editPhase,
-  editPhaseAttribute,
-  removePhase,
-  setPhaseAttributesVisibility,
-  setPhaseVisibility,
-  setPhasesVisibility,
-
-  // Record action creators
-  addRecord,
-  editRecord,
-  editRecordAttribute,
-  removeRecord,
-  setRecordVisibility,
-
-  // Import/Clone action creators
-  executeImport,
-  receiveTemplate,
-  executeOrderChange,
-
-  // Selectors
-  selectedTOSSelector,
-  isFetchingSelector,
-};
+export { createNewAction } from './action';
+export { createNewPhase } from './phase';
+export { createNewRecord } from './record';
+export { importItemsThunk } from './importView';
+export { cloneFromTemplateThunk } from './cloneView';
+export { changeOrderThunk } from './reorder';
 
 export default tosReducer;
