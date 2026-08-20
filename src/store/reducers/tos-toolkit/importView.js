@@ -15,9 +15,9 @@ export const executeImportReducer = (state, action) => {
 };
 
 export const prepareImport = (newItem, level, itemParent, currentState) => {
-  const importPhases = JSON.parse(JSON.stringify(currentState.selectedTOS.phases));
-  let importActions = JSON.parse(JSON.stringify(currentState.selectedTOS.actions));
-  let importRecords = JSON.parse(JSON.stringify(currentState.selectedTOS.records));
+  const importPhases = structuredClone(currentState.selectedTOS.phases);
+  let importActions = structuredClone(currentState.selectedTOS.actions);
+  let importRecords = structuredClone(currentState.selectedTOS.records);
   const newActions = {};
   const newRecords = {};
 

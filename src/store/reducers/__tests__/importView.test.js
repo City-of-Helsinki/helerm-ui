@@ -109,6 +109,24 @@ describe('Import View', () => {
       expect(result.importActions[newActionKey].phase).toBe('phase1');
     });
 
+    it('should deep clone source data so mutating the result does not affect the original state', () => {
+      const currentState = { selectedTOS: JSON.parse(JSON.stringify(mockTOS)) };
+
+      const result = prepareImport('phase1', 'phase', null, currentState);
+
+      // Mutate the returned (cloned) data structures.
+      result.importPhases.phase1.name = 'Mutated Phase Name';
+      result.importPhases.phase1.attributes.TypeSpecifier = 'Mutated';
+      result.importActions.action1.name = 'Mutated Action Name';
+      result.importRecords.record1.name = 'Mutated Record Name';
+
+      // The original state passed in must remain untouched.
+      expect(currentState.selectedTOS.phases.phase1.name).toBe('Import Test Phase');
+      expect(currentState.selectedTOS.phases.phase1.attributes.TypeSpecifier).toBe('Import Test Phase');
+      expect(currentState.selectedTOS.actions.action1.name).toBe('Import Test Action');
+      expect(currentState.selectedTOS.records.record1.name).toBe('Import Test Record');
+    });
+
     it('should prepare record import correctly', () => {
       const result = prepareImport('record1', 'record', 'action1', { selectedTOS: mockTOS });
 
