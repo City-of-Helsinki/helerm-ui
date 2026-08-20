@@ -106,7 +106,7 @@ const Attribute = ({
         const valueArray = Array.isArray(currentAttribute) ? currentAttribute : [currentAttribute];
 
         forEach(valueArray, (value) => {
-          if (!options.find((option) => option.value === value)) {
+          if (!options.some((option) => option.value === value)) {
             options.push({
               label: value,
               value,
@@ -185,7 +185,7 @@ const Attribute = ({
       const valueArray = Array.isArray(attribute) ? attribute : [attribute];
 
       forEach(valueArray, (value) => {
-        if (!selectOptions.find((option) => option.value === value)) {
+        if (!selectOptions.some((option) => option.value === value)) {
           selectOptions.push({
             label: value,
             value,

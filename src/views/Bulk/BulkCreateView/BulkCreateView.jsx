@@ -298,7 +298,7 @@ const BulkCreateView = () => {
       let isChanged = false;
       if (newConversion.type === 'function') {
         if (
-          BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES.find(
+          BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES.some(
             (option) => option.value === newConversion.attribute,
           )
         ) {
