@@ -166,13 +166,13 @@ describe('<CloneView />', () => {
     const user = userEvent.setup();
     renderComponent();
 
-    // These elements use role='button' with click/key handlers, so they must be
-    // in the tab order (tabIndex="0") for keyboard-only users to reach them.
+    // These are native buttons, so they're in the tab order and activate on
+    // both Enter and Space without any extra key handling.
     const templateTab = screen.getByText('Tuo kuvaus moduulista');
     const functionTab = screen.getByText('Tuo kuvaus toisesta kuvauksesta');
 
-    expect(templateTab).toHaveAttribute('tabIndex', '0');
-    expect(functionTab).toHaveAttribute('tabIndex', '0');
+    expect(templateTab.tagName).toBe('BUTTON');
+    expect(functionTab.tagName).toBe('BUTTON');
 
     // Initially should be on template method (no navigation visible)
     expect(screen.queryByTestId('navigation')).not.toBeInTheDocument();
@@ -186,6 +186,28 @@ describe('<CloneView />', () => {
     await user.keyboard('{Enter}');
 
     expect(screen.getByTestId('navigation')).toBeInTheDocument();
+  });
+
+  it('should activate the method tabs with the Space key', async () => {
+    const user = userEvent.setup();
+    renderComponent();
+
+    const templateTab = screen.getByText('Tuo kuvaus moduulista');
+    const functionTab = screen.getByText('Tuo kuvaus toisesta kuvauksesta');
+
+    expect(screen.queryByTestId('navigation')).not.toBeInTheDocument();
+
+    functionTab.focus();
+    await user.keyboard(' ');
+
+    expect(screen.getByTestId('navigation')).toBeInTheDocument();
+    expect(functionTab.parentElement).toHaveClass('active');
+
+    templateTab.focus();
+    await user.keyboard(' ');
+
+    expect(screen.queryByTestId('navigation')).not.toBeInTheDocument();
+    expect(templateTab.parentElement).toHaveClass('active');
   });
 
   it('should allow switching between template and function methods', async () => {
