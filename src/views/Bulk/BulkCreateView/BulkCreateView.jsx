@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   cloneDeep,
   endsWith,
-  every,
   filter,
   isEmpty,
   isEqual,
@@ -263,7 +262,7 @@ const BulkCreateView = () => {
   };
 
   const matchesAll = (attributes, searchAttributes) => {
-    return every(Object.keys(searchAttributes || {}), (attribute) => {
+    return Object.keys(searchAttributes || {}).every((attribute) => {
       const searchAttr = searchAttributes[attribute];
       return attributes?.[attribute] !== undefined
         ? isMatch(
