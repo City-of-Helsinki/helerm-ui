@@ -135,8 +135,8 @@ const getSelectedItemsForType = (attributes, type, items) => {
     acc.push(...attrHits);
     return acc;
   }, []);
-  const uniqIds = [...new Set(ids)];
-  return filter(items, (item) => uniqIds.includes(item.id));
+  const uniqIds = new Set(ids);
+  return filter(items, (item) => uniqIds.has(item.id));
 };
 
 const parseTerms = (searchTerm) => {

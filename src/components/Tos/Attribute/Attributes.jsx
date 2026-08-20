@@ -18,14 +18,14 @@ const Attributes = ({
   updateTypeSpecifier,
   updateType,
 }) => {
-  const unwantedAttributes = ['TypeSpecifier', 'RecordType', 'ActionType', 'PhaseType'];
+  const unwantedAttributes = new Set(['TypeSpecifier', 'RecordType', 'ActionType', 'PhaseType']);
   const defaultAttributes = [];
 
   Object.keys(attributeTypes).forEach((key) => {
     if (
       Object.hasOwn(attributeTypes, key) &&
       attributeTypes[key].defaultIn.includes(type) &&
-      !unwantedAttributes.includes(key)
+      !unwantedAttributes.has(key)
     ) {
       defaultAttributes.push(key);
     }
@@ -103,7 +103,7 @@ const Attributes = ({
         Object.hasOwn(attr, key) &&
         attr[key] &&
         attributeTypes[key] &&
-        !unwantedAttributes.includes(key) &&
+        !unwantedAttributes.has(key) &&
         !defaultAttributes.includes(key)
       ) {
         attributeElements.push(
