@@ -19,7 +19,7 @@ const SearchTerms = ({
   const onAddSearchTerm = useCallback(() => {
     setSearchTerms((prevSearchTerms) => [
       ...prevSearchTerms,
-      { ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() },
+      { ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: Date.now() },
     ]);
     resetSearchResults();
   }, [resetSearchResults]);
@@ -40,7 +40,7 @@ const SearchTerms = ({
     (index) => {
       setSearchTerms((prevSearchTerms) => {
         if (prevSearchTerms.length === 1) {
-          return [{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }];
+          return [{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: Date.now() }];
         } else {
           const start = slice(prevSearchTerms, 0, index);
           const end =
@@ -54,7 +54,7 @@ const SearchTerms = ({
   );
 
   const onResetSearch = useCallback(() => {
-    setSearchTerms([{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }]);
+    setSearchTerms([{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: Date.now() }]);
     resetSearchResults();
   }, [resetSearchResults]);
 

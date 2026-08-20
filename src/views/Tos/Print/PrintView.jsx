@@ -57,7 +57,7 @@ const PrintView = () => {
     const tosAvailable = TOS.id === params.id && (!params.version || TOS.version === params.version);
     if (!tosAvailable) {
       const requestParams = {};
-      if (typeof params.version !== 'undefined') {
+      if (params.version !== undefined) {
         requestParams.version = params.version;
       }
       const token = getApiToken();

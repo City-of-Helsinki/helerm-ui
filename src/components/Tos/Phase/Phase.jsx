@@ -519,11 +519,9 @@ const Phase = ({
                     isFixed
                       ? {
                           ...wrapperStyles,
-                          ...{
-                            position: 'fixed',
-                            top: topOffset,
-                            left: 0,
-                          },
+                          position: 'fixed',
+                          top: topOffset,
+                          left: 0,
                         }
                       : wrapperStyles
                   }
