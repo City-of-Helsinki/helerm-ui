@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Select from 'react-select';
-import { filter, includes, isEmpty, keys } from 'lodash';
+import { filter, isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 
 import useAuth from '../../hooks/useAuth';
@@ -37,7 +37,7 @@ const BulkListView = () => {
   };
 
   const filteredBulkUpdates = filter(bulkUpdates, (bulkUpdate) =>
-    !isEmpty(filters) ? includes(filters, bulkUpdate.is_approved) : true,
+    !isEmpty(filters) ? filters.includes(bulkUpdate.is_approved) : true,
   );
 
   return (
@@ -80,7 +80,7 @@ const BulkListView = () => {
                   <div>Muutettu: {formatDateTime(bulk.modified_at)}</div>
                   <div>Muokkaaja: {bulk.modified_by}</div>
                   <div>Muutokset: {bulk.description}</div>
-                  <div>Käsittelyprosesseja: {keys(bulk.changes).length} kpl</div>
+                  <div>Käsittelyprosesseja: {Object.keys(bulk.changes ?? {}).length} kpl</div>
                   <div>Käsittelyprosessin tila muutoksen jälkeen: {getStatusLabel(bulk.state)}</div>
                 </div>
                 <div className='bulk-update-approved'>

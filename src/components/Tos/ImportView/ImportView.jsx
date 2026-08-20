@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import capitalize from 'lodash/capitalize';
-import keys from 'lodash/keys';
 import './ImportView.scss';
 
 import { useNotificationsContext } from '../../NotificationsContext/hooks/useNotificationsContext';
@@ -105,9 +104,9 @@ const ImportView = (props) => {
   const generateRecordItems = useCallback(() => {
     return phasesOrder.map((phase) => {
       const actionElements = [];
-      if (keys(phases[phase].actions).length > 0) {
+      if (Object.keys(phases[phase].actions).length > 0) {
         phases[phase].actions.forEach((action) => {
-          if (keys(actions[action].records).length > 0) {
+          if (Object.keys(actions[action].records).length > 0) {
             const recordElements = generateLinks(records, actions[action].records);
             actionElements.push(
               <div key={actions[action].id} className='import-action-record-wrapper'>

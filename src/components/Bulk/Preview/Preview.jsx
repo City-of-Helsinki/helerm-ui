@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { filter, find, isEmpty, keys } from 'lodash';
+import { filter, isEmpty } from 'lodash';
 
 import { getStatusLabel } from '../../../utils/helpers';
 import './Preview.scss';
@@ -29,7 +29,7 @@ const Preview = ({
     });
 
     if (!isEmpty(changed.attributes)) {
-      keys(changed.attributes).forEach((attribute) => {
+      Object.keys(changed.attributes).forEach((attribute) => {
         const currentValue = item.attributes[attribute] || ' ';
         changes.push(
           helpers.renderAttributeChange(item, attribute, changed.attributes[attribute], getAttributeName, currentValue),
@@ -58,9 +58,9 @@ const Preview = ({
     }
 
     if (errors.phases) {
-      keys(errors.phases).forEach((phaseId) => {
+      Object.keys(errors.phases).forEach((phaseId) => {
         const phaseError = errors.phases[phaseId];
-        const phase = find(item.phases, { id: phaseId });
+        const phase = item.phases ? item.phases.find((p) => p.id === phaseId) : undefined;
 
         const attributeLabels = phaseError.attributes
           ? phaseError.attributes.map((attribute) => getAttributeName(attribute)).join(', ')
@@ -119,7 +119,7 @@ const Preview = ({
           </button>
         </div>
       </div>
-      {keys(items).map((id) => (
+      {Object.keys(items).map((id) => (
         <div className='row preview-item' key={id}>
           <div className='col-xs-1'>
             <button

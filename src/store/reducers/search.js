@@ -4,14 +4,9 @@ import {
   cloneDeep,
   every,
   filter,
-  find,
   findIndex,
-  includes,
-  isArray,
   isEmpty,
-  some,
   toLower,
-  uniq,
   words,
 } from 'lodash';
 
@@ -53,7 +48,7 @@ const getFilteredHits = (filteredAttributes, type) => {
     acc.push(...hits);
     return acc;
   }, []);
-  return uniq(ids);
+  return [...new Set(ids)];
 };
 
 const getFacetHits = (facets) => {
@@ -69,14 +64,14 @@ const getFacetHits = (facets) => {
     const hits = [];
     if (Object.hasOwn(byKeys, key)) {
       byKeys[key].forEach((hit) => {
-        if ((index === 0 && isEmpty(acc)) || includes(acc, hit)) {
+        if ((index === 0 && isEmpty(acc)) || acc.includes(hit)) {
           hits.push(hit);
         }
       });
     }
     return hits;
   }, []);
-  return uniq(ids);
+  return [...new Set(ids)];
 };
 
 const getFacetAttributesForType = (attributes, items, type) => {
@@ -116,9 +111,9 @@ const getSearchTermsFilteredAttributes = (searchTerm, attributes, andTerms, orTe
     const options = filter(
       attr.options,
       (option) =>
-        (isEmpty(andTerms) || every(andTerms, (st) => includes(option.ref, st))) &&
-        (isEmpty(orTerms) || some(orTerms, (st) => includes(option.ref, st))) &&
-        (isEmpty(notTerms) || every(notTerms, (st) => !includes(option.ref, st))),
+        (isEmpty(andTerms) || every(andTerms, (st) => option.ref.includes(st))) &&
+        (isEmpty(orTerms) || orTerms.some((st) => option.ref.includes(st))) &&
+        (isEmpty(notTerms) || every(notTerms, (st) => !option.ref.includes(st))),
     );
 
     if (!isEmpty(options)) {
@@ -140,8 +135,8 @@ const getSelectedItemsForType = (attributes, type, items) => {
     acc.push(...attrHits);
     return acc;
   }, []);
-  const uniqIds = uniq(ids);
-  return filter(items, (item) => includes(uniqIds, item.id));
+  const uniqIds = [...new Set(ids)];
+  return filter(items, (item) => uniqIds.includes(item.id));
 };
 
 const parseTerms = (searchTerm) => {
@@ -152,7 +147,7 @@ const parseTerms = (searchTerm) => {
 
   return terms.reduce(
     (acc, term, index) => {
-      const isOperator = includes([TERM_AND, TERM_NOT, TERM_OR], term);
+      const isOperator = [TERM_AND, TERM_NOT, TERM_OR].includes(term);
       if (!isOperator) {
         acc.terms.push(toLower(term).trim());
       }
@@ -672,7 +667,7 @@ const searchSlice = createSlice({
 
       // Preserve UI state (open/showAll) from existing filteredAttributes
       filteredAttributes.forEach((attr) => {
-        const existing = find(state.filteredAttributes, { key: attr.key, type: attr.type });
+        const existing = state.filteredAttributes.find((a) => a.key === attr.key && a.type === attr.type);
         if (existing) {
           attr.open = existing.open;
           attr.showAll = existing.showAll;
@@ -756,8 +751,8 @@ const searchSlice = createSlice({
           return filter(
             current.items,
             (item) =>
-              includes(current.facet, item.id) &&
-              (isEmpty(acc) || (!isEmpty(acc) && some(acc, (a) => includes(item.parents, a.id)))),
+              current.facet.includes(item.id) &&
+              (isEmpty(acc) || (!isEmpty(acc) && acc.some((a) => (item.parents || []).includes(a.id)))),
           );
         }
         return acc;
@@ -767,8 +762,10 @@ const searchSlice = createSlice({
         if (!isEmpty(terms)) {
           const matchedAttributes = Object.keys(item.attributes || {}).reduce((acc, key) => {
             if (Object.hasOwn(item.attributes, key) && key !== 'name') {
-              const attrValue = isArray(item.attributes[key]) ? item.attributes[key].join(', ') : item.attributes[key];
-              const isHit = some(terms, (term) => new RegExp(term, 'gi').test(attrValue));
+              const attrValue = Array.isArray(item.attributes[key])
+                ? item.attributes[key].join(', ')
+                : item.attributes[key];
+              const isHit = terms.some((term) => new RegExp(term, 'gi').test(attrValue));
               if (isHit) {
                 const value = terms.reduce(
                   (valAcc, term) => valAcc.replace(new RegExp(term, 'gi'), (match) => `<mark>${match}</mark>`),
@@ -794,14 +791,12 @@ const searchSlice = createSlice({
       });
 
       const exportItems = items.reduce((acc, item) => {
-        const accClass = item.classification ? find(acc, { classification: item.classification }) : null;
+        const accClass = item.classification ? acc.find((a) => a.classification === item.classification) : null;
         if (!accClass) {
           if (item.type === TYPE_CLASSIFICATION) {
             acc.push(item);
           } else {
-            const classification = find(classifications, {
-              id: item.classification,
-            });
+            const classification = classifications.find((c) => c.id === item.classification);
             if (classification) {
               acc.push(classification);
             }

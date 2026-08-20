@@ -1,5 +1,3 @@
-import { indexOf } from 'lodash';
-
 import getProcessedAttributeValue from '../../../utils/attributeProcessing';
 import { randomActionId } from '../../../utils/helpers';
 
@@ -83,7 +81,7 @@ export const removeActionReducer = (state, action) => {
   }
 
   const phaseActions = state.phases[phaseId].actions;
-  const actionIndex = indexOf(phaseActions, actionToRemove);
+  const actionIndex = phaseActions.indexOf(actionToRemove);
 
   if (actionIndex > -1) {
     state.phases[phaseId].actions.splice(actionIndex, 1);

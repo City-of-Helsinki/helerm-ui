@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import classnames from 'classnames';
-import { cloneDeep, every, find, isEmpty, keys, omit, split } from 'lodash';
+import { cloneDeep, every, isEmpty, omit, split } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -38,21 +38,24 @@ import { attributeTypesSelector } from '../../../store/reducers/ui';
 // validateBulkUpdate chain flagged by javascript:S2004 (max 5 levels).
 const validateActionRecords = (actionChange, action) =>
   isEmpty(actionChange.records) ||
-  every(keys(actionChange.records), (recordId) => !!(action.records && find(action.records, { id: recordId })));
+  every(
+    Object.keys(actionChange.records),
+    (recordId) => !!(action.records && action.records.find((record) => record.id === recordId)),
+  );
 
 const validatePhaseActions = (phaseChange, phase) =>
   isEmpty(phaseChange.actions) ||
-  every(keys(phaseChange.actions), (actionId) => {
+  every(Object.keys(phaseChange.actions), (actionId) => {
     const actionChange = phaseChange.actions[actionId];
-    const action = phase.actions ? find(phase.actions, { id: actionId }) : null;
+    const action = phase.actions ? phase.actions.find((item) => item.id === actionId) : null;
     return !!action && validateActionRecords(actionChange, action);
   });
 
 const validateItemPhases = (changes, item) =>
   isEmpty(changes.phases) ||
-  every(keys(changes.phases), (phaseId) => {
+  every(Object.keys(changes.phases), (phaseId) => {
     const phaseChange = changes.phases[phaseId];
-    const phase = find(item.phases, { id: phaseId });
+    const phase = item.phases ? item.phases.find((p) => p.id === phaseId) : undefined;
     return !!phase && validatePhaseActions(phaseChange, phase);
   });
 
@@ -80,7 +83,7 @@ const BulkView = () => {
   const getAttributeName = (key) => attributeTypes?.[key]?.name || key;
 
   const parseItemList = (itemsData, bulk) => {
-    const changedFunctions = keys(bulk.changes).reduce((acc, functionVersion) => {
+    const changedFunctions = Object.keys(bulk.changes || {}).reduce((acc, functionVersion) => {
       const versionSplitted = split(functionVersion, '__');
       if (versionSplitted && versionSplitted.length === 2) {
         acc[versionSplitted[0]] = {
@@ -191,7 +194,7 @@ const BulkView = () => {
   };
 
   const onRemoveBulkItem = (id) => {
-    const itemToBeRemoved = find(itemList, { id });
+    const itemToBeRemoved = itemList.find((item) => item.id === id);
     if (itemToBeRemoved) {
       setItemToRemove(itemToBeRemoved);
     }
@@ -233,7 +236,7 @@ const BulkView = () => {
   );
 
   const renderAttributeChanges = (attributesChange, currentAttributes, keyPrefix, labelPrefix) =>
-    keys(attributesChange).map((attribute) =>
+    Object.keys(attributesChange).map((attribute) =>
       renderAttributeChangeHeading(
         `${keyPrefix}_attr_${attribute}`,
         labelPrefix,
@@ -247,8 +250,8 @@ const BulkView = () => {
     const elements = [];
     let hasError = false;
 
-    keys(recordsChange).forEach((record) => {
-      const currentRecord = currentAction.records ? find(currentAction.records, { id: record }) : null;
+    Object.keys(recordsChange).forEach((record) => {
+      const currentRecord = currentAction.records ? currentAction.records.find((r) => r.id === record) : null;
       if (!currentRecord) {
         hasError = true;
         elements.push(
@@ -279,8 +282,8 @@ const BulkView = () => {
     const elements = [];
     let hasError = false;
 
-    keys(actionsChange).forEach((action) => {
-      const currentAction = find(currentPhase.actions, { id: action });
+    Object.keys(actionsChange).forEach((action) => {
+      const currentAction = currentPhase.actions ? currentPhase.actions.find((a) => a.id === action) : undefined;
       if (!currentAction) {
         hasError = true;
         elements.push(
@@ -323,8 +326,8 @@ const BulkView = () => {
     const elements = [];
     let hasError = false;
 
-    keys(phasesChange).forEach((phase) => {
-      const currentPhase = find(item.phases, { id: phase });
+    Object.keys(phasesChange).forEach((phase) => {
+      const currentPhase = item.phases ? item.phases.find((p) => p.id === phase) : undefined;
       if (!currentPhase) {
         hasError = true;
         elements.push(
@@ -468,7 +471,7 @@ const BulkView = () => {
       {selectedBulk && (
         <div className='bulk-view-changes-header'>
           <div className='bulk-view-changes'>
-            <h4>Tehdyt muutokset ({keys(selectedBulk.changes).length})</h4>
+            <h4>Tehdyt muutokset ({Object.keys(selectedBulk.changes || {}).length})</h4>
           </div>
           <div className='bulk-view-actions'>
             <IsAllowed to={DELETE_BULKUPDATE}>
