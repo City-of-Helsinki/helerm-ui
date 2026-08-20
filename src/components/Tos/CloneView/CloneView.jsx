@@ -65,19 +65,13 @@ const CloneView = ({ templates, toggleCloneView, cloneFromTemplate, setNavigatio
             active: selectedMethod === METHOD_TEMPLATE,
           })}
         >
-          <span
-            className='import-button'
-            role='button'
-            tabIndex='0'
+          <button
+            type='button'
+            className='unstyled-button import-button'
             onClick={() => handleSelectMethod(METHOD_TEMPLATE)}
-            onKeyUp={(event) => {
-              if (event.key === 'Enter') {
-                handleSelectMethod(METHOD_TEMPLATE);
-              }
-            }}
           >
             Tuo kuvaus moduulista
-          </span>
+          </button>
         </li>
         <li
           className={classnames({
@@ -85,19 +79,13 @@ const CloneView = ({ templates, toggleCloneView, cloneFromTemplate, setNavigatio
             active: selectedMethod === METHOD_FUNCTION,
           })}
         >
-          <span
-            className='import-button'
-            role='button'
-            tabIndex='0'
+          <button
+            type='button'
+            className='unstyled-button import-button'
             onClick={() => handleSelectMethod(METHOD_FUNCTION)}
-            onKeyUp={(event) => {
-              if (event.key === 'Enter') {
-                handleSelectMethod(METHOD_FUNCTION);
-              }
-            }}
           >
             Tuo kuvaus toisesta kuvauksesta
-          </span>
+          </button>
         </li>
       </ul>
 
