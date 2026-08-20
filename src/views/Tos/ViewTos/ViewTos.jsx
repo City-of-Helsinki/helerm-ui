@@ -824,7 +824,7 @@ const ViewTOS = () => {
     if (prevParamsRef.current.id !== currentId || prevParamsRef.current.version !== currentVersion) {
       prevParamsRef.current = { id: currentId, version: currentVersion };
 
-      originalTosRef.current = JSON.parse(JSON.stringify(selectedTOS));
+      originalTosRef.current = structuredClone(selectedTOS);
     }
   }, [selectedTOS]);
 

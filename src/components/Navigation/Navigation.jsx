@@ -74,7 +74,7 @@ const Navigation = ({ onLeafMouseClick: customOnLeafMouseClick } = {}) => {
       return items;
     }
 
-    const itemsCopy = (item) => JSON.parse(JSON.stringify(item));
+    const itemsCopy = (item) => structuredClone(item);
 
     const getValueByPath = (obj, path) => {
       return path.split('.').reduce((current, key) => {
