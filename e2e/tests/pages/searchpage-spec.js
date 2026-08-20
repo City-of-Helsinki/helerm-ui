@@ -15,7 +15,7 @@ test.describe('Search page', () => {
   test('Search view', async () => {
     await page.goto('/');
     await page.getByRole('link', { name: 'Haku' }).click();
-    await page.getByRole('button', { name: '?' }).first().click();
+    await page.getByRole('button', { name: 'Ohje' }).first().click();
     await expect(page.getByRole('heading', { name: 'Hakuohje' })).toBeVisible();
     await expect(page.locator('.faceted-search-loader > .fa-solid')).toBeVisible();
     await expect(page.locator('.faceted-search-loader > .fa-solid')).not.toBeVisible({ timeout: 30000 });
