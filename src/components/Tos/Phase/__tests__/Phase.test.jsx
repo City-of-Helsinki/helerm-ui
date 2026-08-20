@@ -326,6 +326,26 @@ describe('<Phase />', () => {
 
       expect(input).toBeInTheDocument();
     });
+
+    it('renders the TypeSpecifier and PhaseType edit triggers as native buttons', () => {
+      setupUserAndRender({ documentState: 'edit' });
+
+      const typeSpecifierTrigger = screen.getByRole('button', { name: PHASE_TITLE });
+      expect(typeSpecifierTrigger.tagName).toBe('BUTTON');
+
+      const phaseTypeTrigger = screen.getByRole('button', { name: 'Valmistelu/Käsittely' });
+      expect(phaseTypeTrigger.tagName).toBe('BUTTON');
+    });
+
+    it('enters edit mode when pressing Enter on the PhaseType trigger', async () => {
+      const user = setupEditMode();
+
+      const phaseTypeTrigger = screen.getByRole('button', { name: 'Valmistelu/Käsittely' });
+      phaseTypeTrigger.focus();
+      await user.keyboard('{Enter}');
+
+      expect(screen.getByRole('combobox')).toBeInTheDocument();
+    });
   });
 
   describe('Dropdown and popup views', () => {
