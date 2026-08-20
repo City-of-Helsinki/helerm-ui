@@ -38,14 +38,13 @@ import { attributeTypesSelector } from '../../../store/reducers/ui';
 // validateBulkUpdate chain flagged by javascript:S2004 (max 5 levels).
 const validateActionRecords = (actionChange, action) =>
   isEmpty(actionChange.records) ||
-  every(
-    Object.keys(actionChange.records),
+  Object.keys(actionChange.records).every(
     (recordId) => !!(action.records?.find((record) => record.id === recordId)),
   );
 
 const validatePhaseActions = (phaseChange, phase) =>
   isEmpty(phaseChange.actions) ||
-  every(Object.keys(phaseChange.actions), (actionId) => {
+  Object.keys(phaseChange.actions).every((actionId) => {
     const actionChange = phaseChange.actions[actionId];
     const action = phase.actions ? phase.actions.find((item) => item.id === actionId) : null;
     return !!action && validateActionRecords(actionChange, action);
@@ -53,7 +52,7 @@ const validatePhaseActions = (phaseChange, phase) =>
 
 const validateItemPhases = (changes, item) =>
   isEmpty(changes.phases) ||
-  every(Object.keys(changes.phases), (phaseId) => {
+  Object.keys(changes.phases).every((phaseId) => {
     const phaseChange = changes.phases[phaseId];
     const phase = item.phases ? item.phases.find((p) => p.id === phaseId) : undefined;
     return !!phase && validatePhaseActions(phaseChange, phase);
