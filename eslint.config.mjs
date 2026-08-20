@@ -1,7 +1,7 @@
 import { defineConfig } from 'eslint/config';
 import reactHooks from 'eslint-plugin-react-hooks';
 import eslintConfigPrettier from 'eslint-config-prettier';
-import importPlugin from 'eslint-plugin-import-x';
+import importPlugin, { createNodeResolver } from 'eslint-plugin-import-x';
 import sonarjs from 'eslint-plugin-sonarjs';
 import globals from 'globals';
 import js from '@eslint/js';
@@ -10,7 +10,7 @@ import eslintReact from "@eslint-react/eslint-plugin";
 
 export default defineConfig([
   {
-    files: ['**/*.{js,jsx,mjs}'],
+    files: [ '**/*.{js,jsx,mjs}' ],
     ignores: [
       '**/*.scss',
       '**/*.css',
@@ -51,8 +51,8 @@ export default defineConfig([
       react: {
         version: '18',
       },
-      "import-x/resolver": {
-        node: {
+      "import-x/resolver-next": [
+        createNodeResolver({
           extensions: [
             ".js",
             ".jsx",
@@ -60,8 +60,8 @@ export default defineConfig([
             ".tsx",
             ".json"
           ]
-        }
-      },
+        })
+      ],
       "import-x/ignore": [
         "node_modules"
       ]
@@ -84,14 +84,14 @@ export default defineConfig([
       'import-x/order': [
         'error',
         {
-          groups: ['builtin', 'external', 'internal', ['parent', 'sibling', 'index']],
+          groups: [ 'builtin', 'external', 'internal', [ 'parent', 'sibling', 'index' ] ],
           'newlines-between': 'always',
         },
       ],
       'import-x/no-named-as-default': 0,
       'import-x/no-named-as-default-member': 0,
       'import-x/prefer-default-export': 1,
-      'import-x/no-unresolved': ['error', { ignore: ['.css$', '.scss$', '\\?raw$'] }],
+      'import-x/no-unresolved': [ 'error', { ignore: [ '.css$', '.scss$', '\\?raw$' ] } ],
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
       'vitest/expect-expect': 0,
