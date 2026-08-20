@@ -131,13 +131,13 @@
 }
 .btn-delete {
   color: #fff;
-  background-color: #ff4e1e;
-  border-color: #ff4e1e;
+  background-color: var(--color-error);
+  border-color: var(--color-error);
 }
 .btn-delete:hover {
   color: #fff;
-  background-color: #c4340d;
-  border-color: #c4340d;
+  background-color: var(--color-error-dark);
+  border-color: var(--color-error-dark);
 }
 
 .basic-attributes {
