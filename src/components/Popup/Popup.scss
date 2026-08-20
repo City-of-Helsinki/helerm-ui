@@ -29,6 +29,11 @@
   border: none;
   color: $gray-light;
   font-size: 1.25rem;
+
+  &:focus-visible {
+    outline: 2px solid $brand-primary;
+    outline-offset: 2px;
+  }
 }
 
 .has-children-text {

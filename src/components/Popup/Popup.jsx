@@ -33,7 +33,13 @@ const Popup = ({ content, closePopup, label = 'Ponnahdusikkuna' }) => {
       }}
     >
       <dialog open className='popup-inner-background' data-testid='popup-content' aria-modal='true' aria-label={label}>
-        <button type='button' className='popup__close' onClick={closePopup} data-testid='popup-close-button'>
+        <button
+          type='button'
+          className='popup__close'
+          onClick={closePopup}
+          data-testid='popup-close-button'
+          aria-label='Sulje'
+        >
           <i className='fa-solid fa-xmark' />
         </button>
         {content}
