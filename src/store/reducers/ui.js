@@ -112,8 +112,7 @@ const processAttributeTypes = (attributes, validationRules) => {
 
       const requiredMap = Object.keys(validationRules)
         .filter((key) => validationRules[key]?.allOf)
-        .map((key) => validationRules[key]?.allOf)
-        .flat()
+        .flatMap((key) => validationRules[key]?.allOf)
         .flatMap((allOf) => allOf.oneOf)
         .filter((oneOf) => oneOf.required.length > 0)
         .filter((oneOf) => oneOf.required.includes(result.identifier))
@@ -123,9 +122,7 @@ const processAttributeTypes = (attributes, validationRules) => {
             const property = properties[propertyKey];
             const values = Object.keys(property)
               // eslint-disable-next-line sonarjs/no-nested-functions
-              .map((valueKey) => property[valueKey])
-               
-              .flat();
+              .flatMap((valueKey) => property[valueKey]);
 
             return { key: propertyKey, values };
           }),
