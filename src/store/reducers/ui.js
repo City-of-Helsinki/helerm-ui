@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import find from 'lodash/find';
 
 import api from '../../utils/api';
 
@@ -98,7 +97,7 @@ const processAttributeTypes = (attributes, validationRules) => {
       const multiIn = Object.keys(validationRules)
         .filter((key) => validationRules[key].properties[result.identifier]?.anyOf)
         .filter((key) =>
-          find(validationRules[key].properties[result.identifier]?.anyOf, (item) => item.type === 'array'),
+          validationRules[key].properties[result.identifier].anyOf.find((item) => item.type === 'array'),
         );
 
       const requiredIn = Object.keys(validationRules)

@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { isArray } from 'lodash';
 
 import './PreviewItem.scss';
 import { getDisplayLabelForAttribute } from '../../../utils/attributeHelper';
@@ -41,7 +40,7 @@ const PreviewItem = ({ item, metadata, onClose }) => {
             <strong>{attr.name}</strong>
           </div>
           <div>
-            {isArray(attr.value)
+            {Array.isArray(attr.value)
               ? attr.value
                   .map((v) =>
                     getDisplayLabelForAttribute({

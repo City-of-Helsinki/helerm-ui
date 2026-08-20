@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { find, includes, isArray, isEmpty, keys, map, sortBy } from 'lodash';
+import { isEmpty, map, sortBy } from 'lodash';
 import { format as formatDate, parseISO } from 'date-fns';
 import DatePicker from 'react-datepicker';
 import Select from 'react-select';
@@ -28,7 +28,7 @@ const Conversion = ({ attributeTypes, conversion, disabled, onConvert }) => {
   }, []);
 
   const onChangeValue = useCallback((option) => {
-    if (isArray(option)) {
+    if (Array.isArray(option)) {
       const values = option.length ? map(option, 'value') : null;
       setValue(values && values.length === 1 ? values[0] : values);
     } else {
@@ -48,9 +48,9 @@ const Conversion = ({ attributeTypes, conversion, disabled, onConvert }) => {
   const getAttributeOptions = useCallback((attributeTypes, type) => {
     const attributes = [...BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES];
     return sortBy(
-      keys(attributeTypes).reduce((acc, key) => {
+      Object.keys(attributeTypes).reduce((acc, key) => {
         const attribute = attributeTypes[key];
-        if (includes(attribute.allowedIn, type)) {
+        if ((attribute.allowedIn ?? []).includes(type)) {
           acc.push({
             label: attribute.name,
             value: key,
@@ -73,7 +73,7 @@ const Conversion = ({ attributeTypes, conversion, disabled, onConvert }) => {
           }),
           value: item.value,
         }));
-        if (!find(options, { value }) && !isEmpty(value)) {
+        if (!options.find((o) => o.value === value) && !isEmpty(value)) {
           options.push({
             label: getDisplayLabelForAttribute({
               attributeValue: value,
@@ -82,8 +82,8 @@ const Conversion = ({ attributeTypes, conversion, disabled, onConvert }) => {
             value,
           });
         }
-        if (includes(attributeType.allowValuesOutsideChoicesIn, type)) {
-          const multi = includes(attributeType.multiIn, attribute);
+        if ((attributeType.allowValuesOutsideChoicesIn ?? []).includes(type)) {
+          const multi = (attributeType.multiIn ?? []).includes(attribute);
           return (
             <CreatableSelect
               isDisabled={isEmpty(attribute)}
@@ -108,7 +108,7 @@ const Conversion = ({ attributeTypes, conversion, disabled, onConvert }) => {
           />
         );
       }
-      if (includes(['valid_from', 'valid_to'], attribute)) {
+      if (['valid_from', 'valid_to'].includes(attribute)) {
         return (
           <div className='conversion-date-field'>
             <DatePicker

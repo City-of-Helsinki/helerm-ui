@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import includes from 'lodash/includes';
 import capitalize from 'lodash/capitalize';
 
 import Attribute from './Attribute';
@@ -26,7 +25,7 @@ const Attributes = ({
     if (
       Object.hasOwn(attributeTypes, key) &&
       attributeTypes[key].defaultIn.includes(type) &&
-      !includes(unwantedAttributes, key)
+      !unwantedAttributes.includes(key)
     ) {
       defaultAttributes.push(key);
     }
@@ -104,8 +103,8 @@ const Attributes = ({
         Object.hasOwn(attr, key) &&
         attr[key] &&
         attributeTypes[key] &&
-        !includes(unwantedAttributes, key) &&
-        !includes(defaultAttributes, key)
+        !unwantedAttributes.includes(key) &&
+        !defaultAttributes.includes(key)
       ) {
         attributeElements.push(
           <Attribute

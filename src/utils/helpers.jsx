@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/todo-tag */
 import { normalize, schema } from 'normalizr';
 import { format as formatDate, isValid, parseISO } from 'date-fns';
-import { filter, find, flatten, includes, isEmpty, map, orderBy } from 'lodash';
+import { filter, isEmpty, map, orderBy } from 'lodash';
 
 import { DRAFT, SENT_FOR_REVIEW, WAITING_FOR_APPROVAL, APPROVED } from '../constants';
 
@@ -197,11 +197,11 @@ export function normalizeTosForApi(tos) {
  * @returns {*}
  */
 export function itemById(items, id) {
-  const searchResult = find(items, (item) => item.id === id);
+  const searchResult = items.find((item) => item.id === id);
 
   if (!searchResult) {
     const filteredItems = filter(items, (item) => item.children);
-    const subset = flatten(map(filteredItems, (item) => item.children));
+    const subset = filteredItems.flatMap((item) => item.children);
 
     if (subset.length !== 0) {
       return itemById(subset, id);
@@ -218,7 +218,7 @@ export function itemById(items, id) {
  * @returns {*}
  */
 export function checkPermissions(user, permission) {
-  return !isEmpty(user) && includes(user.permissions, permission);
+  return !isEmpty(user) && (user.permissions ?? []).includes(permission);
 }
 
 /**

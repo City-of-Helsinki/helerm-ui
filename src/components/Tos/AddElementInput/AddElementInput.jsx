@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import PropTypes from 'prop-types';
 import CreatableSelect from 'react-select/creatable';
-import { find, forEach, includes, isEmpty, map } from 'lodash';
+import { forEach, isEmpty, map } from 'lodash';
 
 import useKeyStrokeSupport from '../../../hooks/useKeyStrokeSupport';
 import './AddElementInput.scss';
@@ -66,7 +66,7 @@ function resolveSelectOptions(values, fieldValue) {
   if (fieldValue) {
     const valueArray = Array.isArray(fieldValue) ? fieldValue : [fieldValue];
     forEach(valueArray, (value) => {
-      if (!find(options, (option) => option.value === value)) {
+      if (!options.find((option) => option.value === value)) {
         options.push({
           label: value,
           value,
@@ -95,10 +95,10 @@ function renderInput(defaultAttributes, newDefaultAttributes, key, onDefaultAttr
         value={resolveSelectValues(
           resolveSelectOptions(defaultAttributes[key].values, newDefaultAttributes[key]),
           newDefaultAttributes[key],
-          includes(defaultAttributes[key].multiIn, type),
+          defaultAttributes[key].multiIn.includes(type),
         )}
         onChange={(option) => onDefaultAttributeChange(key, resolveSelectedOption(option))}
-        isMulti={includes(defaultAttributes[key].multiIn, type)}
+        isMulti={defaultAttributes[key].multiIn.includes(type)}
         options={resolveSelectOptions(defaultAttributes[key].values, newDefaultAttributes[key])}
         placeholder={resolvePlaceHolder(defaultAttributes[key].name)}
         formatCreateLabel={onPromptCreate}

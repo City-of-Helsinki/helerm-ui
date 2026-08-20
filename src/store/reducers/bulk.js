@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { isArray, orderBy } from 'lodash';
+import { orderBy } from 'lodash';
 
 import { DEFAULT_PAGE_SIZE } from '../../constants';
 import api from '../../utils/api';
@@ -118,7 +118,7 @@ const bulkSlice = createSlice({
         state.isFetching = true;
       })
       .addCase(fetchBulkUpdatesThunk.fulfilled, (state, action) => {
-        const sortedBulkUpdates = isArray(action.payload) ? orderBy(action.payload, ['created_at'], ['desc']) : [];
+        const sortedBulkUpdates = Array.isArray(action.payload) ? orderBy(action.payload, ['created_at'], ['desc']) : [];
 
         state.bulkUpdates = sortedBulkUpdates;
         state.isFetching = false;

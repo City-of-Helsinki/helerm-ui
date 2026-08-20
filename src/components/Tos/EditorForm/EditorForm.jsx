@@ -1,6 +1,5 @@
 /* eslint-disable consistent-return */
 import capitalize from 'lodash/capitalize';
-import includes from 'lodash/includes';
 import sortBy from 'lodash/sortBy';
 import PropTypes from 'prop-types';
 import { useCallback, useState } from 'react';
@@ -283,10 +282,10 @@ const EditorForm = (props) => {
     (attributesToShow) => {
       const attrToShow = [...attributesToShow];
 
-      if (includes(attrToShow, `${capitalize(editorConfig.type)}Type`)) {
+      if (attrToShow.includes(`${capitalize(editorConfig.type)}Type`)) {
         attrToShow.splice(attrToShow.indexOf(`${capitalize(editorConfig.type)}Type`), 1);
       }
-      if (includes(attrToShow, 'TypeSpecifier')) {
+      if (attrToShow.includes('TypeSpecifier')) {
         attrToShow.splice(attrToShow.indexOf('TypeSpecifier'), 1);
       }
 
@@ -300,7 +299,7 @@ const EditorForm = (props) => {
       const getAttributeKeys = (attr) => Object.keys(attr);
 
       const attributesToShow = Object.keys(attrTypes)
-        .filter((key) => Object.hasOwn(attrTypes, key) && includes(attrTypes[key].allowedIn, editorConfig.type))
+        .filter((key) => Object.hasOwn(attrTypes, key) && attrTypes[key].allowedIn.includes(editorConfig.type))
         .filter((key) => {
           if (
             (attrTypes[key].requiredIf.length && validateConditionalRules(key, attrTypes, newAttributes)) ||
@@ -309,11 +308,11 @@ const EditorForm = (props) => {
             return true;
           }
 
-          if (attrTypes[key].required || includes(getAttributeKeys(attrs), key)) {
+          if (attrTypes[key].required || getAttributeKeys(attrs).includes(key)) {
             return true;
           }
 
-          return !!includes(attrTypes[key].defaultIn, editorConfig.type);
+          return !!attrTypes[key].defaultIn.includes(editorConfig.type);
         });
 
       return prepareAttributes(attributesToShow);
@@ -325,7 +324,7 @@ const EditorForm = (props) => {
     (attrTypes) => {
       const complementAttributes = [];
       Object.keys(attrTypes).forEach((key) => {
-        if (Object.hasOwn(attrTypes, key) && includes(attrTypes[key].allowedIn, editorConfig.type)) {
+        if (Object.hasOwn(attrTypes, key) && attrTypes[key].allowedIn.includes(editorConfig.type)) {
           if (attrTypes[key].requiredIf.length) {
             if (validateConditionalRules(key, attrTypes, newAttributes) || newAttributes[key]?.value) {
               complementAttributes.push(key);
@@ -388,7 +387,7 @@ const EditorForm = (props) => {
                   onChange={onChange}
                   onInputChange={onFormInputChange}
                   onSubmit={() => null}
-                  multi={includes(attrTypes[key].multiIn, editorConfig.type)}
+                  multi={attrTypes[key].multiIn.includes(editorConfig.type)}
                 />
               </div>
             );
@@ -596,7 +595,7 @@ const EditorForm = (props) => {
     <div data-testid={testId} className='add-box col-xs-12'>
       <h4>{resolveLabel()}</h4>
       <form onSubmit={(e) => resolveOnSubmit(e, targetId)} className='editor-form'>
-        {!includes(['function', 'version'], editorConfig.type) ? renderDescriptions() : null}
+        {!['function', 'version'].includes(editorConfig.type) ? renderDescriptions() : null}
         {additionalFields || null}
         {attributeElements}
         <div className='col-xs-12'>

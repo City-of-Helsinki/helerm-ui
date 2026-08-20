@@ -1,6 +1,6 @@
 /* eslint-disable no-alert */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { cloneDeep, isEmpty, values } from 'lodash';
+import { cloneDeep, isEmpty } from 'lodash';
 
 import api from '../../../utils/api';
 import { normalizeTosForApi, normalizeTosFromApi } from '../../../utils/helpers';
@@ -90,7 +90,7 @@ export const saveDraftThunk = createAsyncThunk(
 
       if (!response.ok) {
         const json = await response.json();
-        const message = !isEmpty(json) ? values(json).join(',') : response.statusText;
+        const message = !isEmpty(json) ? Object.values(json).join(',') : response.statusText;
         throw new Error(message);
       }
 

@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { isEmpty, slice } from 'lodash';
+import { isEmpty } from 'lodash';
 
 import { BULK_UPDATE_SEARCH_TERM_DEFAULT } from '../../../constants';
 import SearchTerm from './SearchTerm';
@@ -27,8 +27,8 @@ const SearchTerms = ({
   const onChangeSearchTerm = useCallback(
     (index, searchTerm) => {
       setSearchTerms((prevSearchTerms) => {
-        const start = slice(prevSearchTerms, 0, index);
-        const end = index + 1 < prevSearchTerms.length ? slice(prevSearchTerms, index + 1, prevSearchTerms.length) : [];
+        const start = prevSearchTerms.slice(0, index);
+        const end = index + 1 < prevSearchTerms.length ? prevSearchTerms.slice(index + 1, prevSearchTerms.length) : [];
         return [...start, searchTerm, ...end];
       });
       resetSearchResults();
@@ -42,9 +42,9 @@ const SearchTerms = ({
         if (prevSearchTerms.length === 1) {
           return [{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: Date.now() }];
         } else {
-          const start = slice(prevSearchTerms, 0, index);
+          const start = prevSearchTerms.slice(0, index);
           const end =
-            index + 1 < prevSearchTerms.length ? slice(prevSearchTerms, index + 1, prevSearchTerms.length) : [];
+            index + 1 < prevSearchTerms.length ? prevSearchTerms.slice(index + 1, prevSearchTerms.length) : [];
           return [...start, ...end];
         }
       });

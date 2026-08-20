@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { map, find } from 'lodash';
+import { map } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -71,7 +71,9 @@ const ValidationBar = (props) => {
 
     const invalidAttributes = validateRequired ? validateRequired(section, attributeTypes) : [];
     const warnAttributes = validateWarn ? validateWarn(section, attributeTypes) : [];
-    const nameAttribute = section.attributes ? find(ATTRIBUTE_NAME_FIELDS, (field) => !!section.attributes[field]) : '';
+    const nameAttribute = section.attributes
+      ? ATTRIBUTE_NAME_FIELDS.find((field) => !!section.attributes[field])
+      : '';
 
     if (invalidAttributes.length || warnAttributes.length || children?.length) {
       return (

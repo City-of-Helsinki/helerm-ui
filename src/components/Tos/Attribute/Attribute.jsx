@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import { find, forEach, includes, map } from 'lodash';
+import { forEach, map } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
@@ -106,7 +106,7 @@ const Attribute = ({
         const valueArray = Array.isArray(currentAttribute) ? currentAttribute : [currentAttribute];
 
         forEach(valueArray, (value) => {
-          if (!find(options, (option) => option.value === value)) {
+          if (!options.find((option) => option.value === value)) {
             options.push({
               label: value,
               value,
@@ -115,7 +115,7 @@ const Attribute = ({
         });
       }
 
-      const multi = includes(attributeConfig.multiIn, parentType);
+      const multi = attributeConfig.multiIn.includes(parentType);
 
       return (
         <CreatableSelect
@@ -185,7 +185,7 @@ const Attribute = ({
       const valueArray = Array.isArray(attribute) ? attribute : [attribute];
 
       forEach(valueArray, (value) => {
-        if (!find(selectOptions, (option) => option.value === value)) {
+        if (!selectOptions.find((option) => option.value === value)) {
           selectOptions.push({
             label: value,
             value,
