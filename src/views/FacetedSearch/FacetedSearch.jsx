@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import classnames from 'classnames';
-import { filter, find, includes, isArray, isEmpty, orderBy, slice, uniq, without } from 'lodash';
+import { filter, isEmpty, orderBy, without } from 'lodash';
 import Sticky from 'react-sticky-el';
 
 import {
@@ -89,7 +89,7 @@ const FacetedSearch = () => {
 
   const onToggleFacet = (type) => {
     setFacetsOpen((prevFacetsOpen) =>
-      includes(prevFacetsOpen, type) ? without(prevFacetsOpen, type) : [...prevFacetsOpen, type],
+      prevFacetsOpen.includes(type) ? without(prevFacetsOpen, type) : [...prevFacetsOpen, type],
     );
   };
 
@@ -111,7 +111,7 @@ const FacetedSearch = () => {
     const facets = selectedFacets[type];
 
     if (facets) {
-      const facet = find(facets, { key, value });
+      const facet = facets.find((f) => f.key === key && f.value === value);
       const updatedFacets = {
         ...selectedFacets,
         [type]: facet
@@ -160,7 +160,7 @@ const FacetedSearch = () => {
     const facets = selectedFacets[type];
 
     if (facets) {
-      const facet = find(facets, { key, value });
+      const facet = facets.find((f) => f.key === key && f.value === value);
 
       if (facet) {
         const updatedFacets = {
@@ -214,20 +214,20 @@ const FacetedSearch = () => {
     const { key, type } = attribute;
     const { value } = option;
     const facets = selectedFacets[type];
-    const facetOption = find(facets, (facet) => facet.key === key && facet.value === value);
+    const facetOption = facets?.find((facet) => facet.key === key && facet.value === value);
     return !!facetOption;
   };
 
   const renderAttribute = (attribute) => {
     const orderedOptions = orderBy(attribute.options, (option) => option.ref, ['asc']);
-    const options = attribute.showAll ? orderedOptions : slice(orderedOptions, 0, FACET_ATTRIBUTE_SIZE);
+    const options = attribute.showAll ? orderedOptions : orderedOptions.slice(0, FACET_ATTRIBUTE_SIZE);
     const hidden = attribute.options.length - options.length;
-    const total = uniq(
+    const total = new Set(
       attribute.options.reduce((acc, val) => {
         acc.push(...val.hits);
         return acc;
       }, []),
-    ).length;
+    ).size;
 
     return (
       <div key={attribute.key}>
@@ -259,7 +259,7 @@ const FacetedSearch = () => {
             >
               <i className='fa-solid fa-check' />
               <span>
-                {isArray(option.value)
+                {Array.isArray(option.value)
                   ? option.value
                       .map((v) =>
                         getDisplayLabelForAttribute({
@@ -298,11 +298,11 @@ const FacetedSearch = () => {
           acc.push(...val.hits);
           return acc;
         }, []);
-        return uniq(hitss).length;
+        return new Set(hitss).size;
       },
       ['desc'],
     );
-    const isOpen = includes(facetsOpen, type);
+    const isOpen = facetsOpen.includes(type);
     const hits = typeAttributes.reduce((acc, attr) => {
       const h = attr.options.reduce((hitAcc, val) => {
         hitAcc.push(...val.hits);
@@ -311,7 +311,7 @@ const FacetedSearch = () => {
       acc.push(...h);
       return acc;
     }, []);
-    const totalHits = uniq(hits).length;
+    const totalHits = new Set(hits).size;
 
     return (
       <div className='faceted-search-facets-item' key={`facet-${type}`}>
@@ -354,7 +354,7 @@ const FacetedSearch = () => {
 
   const renderSelectedFacetButton = (facet) => {
     const { key, name, type, value } = facet;
-    const valueStr = isArray(value)
+    const valueStr = Array.isArray(value)
       ? value
           .map((v) =>
             getDisplayLabelForAttribute({

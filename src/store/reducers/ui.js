@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import find from 'lodash/find';
 
 import api from '../../utils/api';
 
@@ -98,12 +97,12 @@ const processAttributeTypes = (attributes, validationRules) => {
       const multiIn = Object.keys(validationRules)
         .filter((key) => validationRules[key].properties[result.identifier]?.anyOf)
         .filter((key) =>
-          find(validationRules[key].properties[result.identifier]?.anyOf, (item) => item.type === 'array'),
+          validationRules[key].properties[result.identifier].anyOf.find((item) => item.type === 'array'),
         );
 
       const requiredIn = Object.keys(validationRules)
         .filter((key) => validationRules[key]?.required)
-        .filter((key) => validationRules[key]?.required.some((rule) => rule === result.identifier));
+        .filter((key) => validationRules[key]?.required.includes(result.identifier));
 
       Object.keys(validationRules).forEach((key) => {
         if (result.identifier === 'InformationSystem') {
@@ -113,19 +112,17 @@ const processAttributeTypes = (attributes, validationRules) => {
 
       const requiredMap = Object.keys(validationRules)
         .filter((key) => validationRules[key]?.allOf)
-        .map((key) => validationRules[key]?.allOf)
-        .flatMap((allOfs) => allOfs.flatMap((allOf) => allOf.oneOf))
+        .flatMap((key) => validationRules[key]?.allOf)
+        .flatMap((allOf) => allOf.oneOf)
         .filter((oneOf) => oneOf.required.length > 0)
-        .filter((oneOf) => oneOf.required.some((requiredKey) => result.identifier === requiredKey))
+        .filter((oneOf) => oneOf.required.includes(result.identifier))
         .map((oneOf) => oneOf.properties)
         .map((properties) =>
           Object.keys(properties).map((propertyKey) => {
             const property = properties[propertyKey];
             const values = Object.keys(property)
               // eslint-disable-next-line sonarjs/no-nested-functions
-              .map((valueKey) => property[valueKey])
-              // eslint-disable-next-line sonarjs/no-nested-functions
-              .flatMap((value) => value);
+              .flatMap((valueKey) => property[valueKey]);
 
             return { key: propertyKey, values };
           }),
@@ -140,8 +137,8 @@ const processAttributeTypes = (attributes, validationRules) => {
         .filter((key) => validationRules[key].extra_validations)
         .filter((key) => validationRules[key].extra_validations?.allow_values_outside_choices)
         .filter((key) =>
-          validationRules[key].extra_validations?.allow_values_outside_choices?.some(
-            (field) => field === result.identifier,
+          validationRules[key].extra_validations?.allow_values_outside_choices?.includes(
+            result.identifier,
           ),
         );
 

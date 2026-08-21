@@ -80,7 +80,7 @@ const DropdownInput = ({
   const onFieldChange = (option) => {
     if (Array.isArray(option)) {
       const values = option.length ? map(option, 'value') : null;
-      const value = values && values.length === 1 ? values[0] : values;
+      const value = values?.length === 1 ? values[0] : values;
 
       type === 'form' ? onChange(value, keyValue, 'value') : onChange(value);
     } else {

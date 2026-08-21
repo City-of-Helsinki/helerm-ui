@@ -1,7 +1,7 @@
 /* eslint-disable operator-assignment */
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, matchPath, useLocation, useNavigate, useParams } from 'react-router-dom';
 import get from 'lodash/get';
 
 import useAuth from '../../../hooks/useAuth';
@@ -50,14 +50,17 @@ const PrintView = () => {
 
   useEffect(() => {
     addBodyClass();
-    if (location && location.pathname.path === '/view-tos/:id/print') {
+    const isPrintRoute =
+      !!matchPath('/view-tos/:id/print', location?.pathname) ||
+      !!matchPath('/view-tos/:id/version/:version/print', location?.pathname);
+    if (isPrintRoute) {
       dispatch(setNavigationVisibility(false));
     }
 
     const tosAvailable = TOS.id === params.id && (!params.version || TOS.version === params.version);
     if (!tosAvailable) {
       const requestParams = {};
-      if (typeof params.version !== 'undefined') {
+      if (params.version !== undefined) {
         requestParams.version = params.version;
       }
       const token = getApiToken();

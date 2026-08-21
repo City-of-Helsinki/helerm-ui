@@ -5,20 +5,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   cloneDeep,
   endsWith,
-  every,
   filter,
-  find,
-  includes,
-  isArray,
   isEmpty,
   isEqual,
   isString,
-  keys,
   mapKeys,
   merge,
   pickBy,
-  slice,
-  some,
   startsWith,
   trim,
   trimEnd,
@@ -79,15 +72,15 @@ const BulkCreateView = () => {
     records: 0,
   });
   const [searchTerms, setSearchTerms] = useState(() => [
-    { ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() },
+    { ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: Date.now() },
   ]);
   const [stateValue, setStateValue] = useState('draft');
 
   const getAttributeName = (attribute) => {
-    const attributeOption = find(
-      [...BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES, ...BULK_UPDATE_SEARCH_UNEDITABLE_FUNCTION_ATTRIBUTES],
-      { value: attribute },
-    );
+    const attributeOption = [
+      ...BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES,
+      ...BULK_UPDATE_SEARCH_UNEDITABLE_FUNCTION_ATTRIBUTES,
+    ].find((option) => option.value === attribute);
     if (!isEmpty(attributeOption)) {
       return attributeOption.label;
     }
@@ -95,21 +88,21 @@ const BulkCreateView = () => {
   };
 
   const getTypeName = (type) => {
-    const typeName = find(BULK_UPDATE_CONVERSION_TYPES, (option) => option.value === type);
+    const typeName = BULK_UPDATE_CONVERSION_TYPES.find((option) => option.value === type);
     return !isEmpty(typeName) ? typeName.label : type;
   };
 
   const addAttributeValues = (acc, attributes, type) => {
-    keys(attributes || {}).forEach((attribute) => {
+    Object.keys(attributes || {}).forEach((attribute) => {
       if (attributes[attribute]) {
         if (!acc[type][attribute]) {
           acc[type][attribute] = [attributes[attribute]];
-        } else if (isArray(attributes[attribute])) {
-          const isVal = some(acc[type][attribute], (val) => isEqual(attributes[attribute], val));
+        } else if (Array.isArray(attributes[attribute])) {
+          const isVal = acc[type][attribute].some((val) => isEqual(attributes[attribute], val));
           if (!isVal) {
             acc[type][attribute].push(attributes[attribute]);
           }
-        } else if (!includes(acc[type][attribute], attributes[attribute])) {
+        } else if (!acc[type][attribute].includes(attributes[attribute])) {
           acc[type][attribute].push(attributes[attribute]);
         }
       }
@@ -177,7 +170,7 @@ const BulkCreateView = () => {
   }, []);
 
   const getItemErrors = (phases, attrTypes) => {
-    return keys(phases).reduce((acc, phaseId) => {
+    return Object.keys(phases).reduce((acc, phaseId) => {
       const phase = phases[phaseId];
 
       const phaseErrors = validatePhase(phase, attrTypes);
@@ -186,7 +179,7 @@ const BulkCreateView = () => {
       }
 
       if (!isEmpty(phase.actions)) {
-        const actionsReduced = keys(phase.actions).reduce((actionAcc, actionId) => {
+        const actionsReduced = Object.keys(phase.actions).reduce((actionAcc, actionId) => {
           const action = phase.actions[actionId];
 
           const actionErrors = validateAction(action, attrTypes);
@@ -195,7 +188,7 @@ const BulkCreateView = () => {
           }
 
           if (!isEmpty(action.records)) {
-            const recordsReduced = keys(action.records).reduce((recordAcc, recordId) => {
+            const recordsReduced = Object.keys(action.records).reduce((recordAcc, recordId) => {
               const record = action.records[recordId];
 
               const recordErrors = validateRecord(record, attrTypes);
@@ -243,7 +236,7 @@ const BulkCreateView = () => {
     const { phases } = changedItem;
 
     if (!isEmpty(phases)) {
-      if (!isArray(phases)) {
+      if (!Array.isArray(phases)) {
         errors.phases = getItemErrors(
           mapKeys(phases, (value, key) => key),
           attributeTypes,
@@ -261,7 +254,7 @@ const BulkCreateView = () => {
 
   const isMatch = (value, other, isEndsWith, isStartsWith, equals) => {
     return (
-      (isStartsWith && isEndsWith && includes(value, other)) ||
+      (isStartsWith && isEndsWith && value.includes(other)) ||
       (isStartsWith && startsWith(value, other)) ||
       (isEndsWith && endsWith(value, other)) ||
       equals === isEqual(value, other)
@@ -269,7 +262,7 @@ const BulkCreateView = () => {
   };
 
   const matchesAll = (attributes, searchAttributes) => {
-    return every(keys(searchAttributes), (attribute) => {
+    return Object.keys(searchAttributes || {}).every((attribute) => {
       const searchAttr = searchAttributes[attribute];
       return attributes?.[attribute] !== undefined
         ? isMatch(
@@ -305,9 +298,9 @@ const BulkCreateView = () => {
       let isChanged = false;
       if (newConversion.type === 'function') {
         if (
-          find(BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES, {
-            value: newConversion.attribute,
-          })
+          BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES.some(
+            (option) => option.value === newConversion.attribute,
+          )
         ) {
           changed[newConversion.attribute] = newConversion.value;
         } else {
@@ -318,7 +311,7 @@ const BulkCreateView = () => {
         isChanged = true;
       } else if (!isEmpty(result.hit.phases)) {
         changed.phases = {};
-        keys(result.hit.phases).forEach((phase) => {
+        Object.keys(result.hit.phases).forEach((phase) => {
           changed.phases[phase] = {};
           if (newConversion.type === 'phase') {
             changed.phases[phase].attributes = {
@@ -327,7 +320,7 @@ const BulkCreateView = () => {
             isChanged = true;
           } else if (!isEmpty(result.hit.phases[phase].actions)) {
             changed.phases[phase].actions = {};
-            keys(result.hit.phases[phase].actions).forEach((action) => {
+            Object.keys(result.hit.phases[phase].actions).forEach((action) => {
               changed.phases[phase].actions[action] = {};
               if (newConversion.type === 'action') {
                 changed.phases[phase].actions[action] = {
@@ -338,7 +331,7 @@ const BulkCreateView = () => {
                 isChanged = true;
               } else if (!isEmpty(result.hit.phases[phase].actions[action].records)) {
                 changed.phases[phase].actions[action].records = {};
-                keys(result.hit.phases[phase].actions[action].records).forEach((record) => {
+                Object.keys(result.hit.phases[phase].actions[action].records).forEach((record) => {
                   changed.phases[phase].actions[action].records[record] = {
                     attributes: {
                       [newConversion.attribute]: newConversion.value,
@@ -424,7 +417,7 @@ const BulkCreateView = () => {
         [id]: { ...previewItems?.[id], selected: !previewItems?.[id].selected },
       });
     }
-    if (isFinalPreview && conversionItems && conversionItems[id]) {
+    if (isFinalPreview && conversionItems?.[id]) {
       setConversionItems({
         ...conversionItems,
         [id]: {
@@ -449,7 +442,7 @@ const BulkCreateView = () => {
     setPreview(null);
     setPreviewItems(null);
     setSearchResults([]);
-    setSearchTerms([{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }]);
+    setSearchTerms([{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: Date.now() }]);
   };
 
   const onCancel = () => {
@@ -460,8 +453,7 @@ const BulkCreateView = () => {
 
   const onSave = () => {
     if (conversions) {
-      const isErrors = some(
-        keys(conversionItems),
+      const isErrors = Object.keys(conversionItems || {}).some(
         (id) => conversionItems[id].selected && !isEmpty(conversionItems[id].errors),
       );
       setIsSaving(true);
@@ -479,7 +471,7 @@ const BulkCreateView = () => {
       const description = conversions.conversion
         .map((conv) => `${getTypeName(conv.type)}: ${getAttributeName(conv.attribute)} = ${conv.value}`)
         .join(', ');
-      const changes = keys(conversionItems).reduce((acc, id) => {
+      const changes = Object.keys(conversionItems || {}).reduce((acc, id) => {
         if (conversionItems[id].selected) {
           const { item } = conversionItems[id];
           acc[`${id}__${item.function_version}`] = conversionItems[id].changed;
@@ -500,7 +492,7 @@ const BulkCreateView = () => {
           setPreview(null);
           setPreviewItems(null);
           setSearchResults([]);
-          setSearchTerms([{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }]);
+          setSearchTerms([{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: Date.now() }]);
           navigate('/bulk');
           dispatch(fetchNavigationThunk({ includeRelated: true }));
           return addNotification({
@@ -659,12 +651,12 @@ const BulkCreateView = () => {
       (acc, result) => {
         if (!isEmpty(result.hit.phases)) {
           acc.phases += 1;
-          keys(result.hit.phases).forEach((phase) => {
+          Object.keys(result.hit.phases).forEach((phase) => {
             if (!isEmpty(result.hit.phases[phase].actions)) {
               acc.actions += 1;
-              keys(result.hit.phases[phase].actions).forEach((action) => {
+              Object.keys(result.hit.phases[phase].actions).forEach((action) => {
                 if (!isEmpty(result.hit.phases[phase].actions[action].records)) {
-                  acc.records += keys(result.hit.phases[phase].actions[action].records).length;
+                  acc.records += Object.keys(result.hit.phases[phase].actions[action].records).length;
                 }
               });
             }
@@ -686,8 +678,8 @@ const BulkCreateView = () => {
 
   const onSelectSearchResult = (index, selected) => {
     const searchResult = searchResults[index];
-    const start = slice(searchResults, 0, index);
-    const end = index + 1 < searchResults.length ? slice(searchResults, index + 1, searchResults.length) : [];
+    const start = searchResults.slice(0, index);
+    const end = index + 1 < searchResults.length ? searchResults.slice(index + 1, searchResults.length) : [];
     setSearchResults([...start, { ...searchResult, selected }, ...end]);
   };
 
@@ -741,7 +733,7 @@ const BulkCreateView = () => {
     );
   }
 
-  const isSelectedResults = searchResults.filter((result) => result.selected).length > 0;
+  const isSelectedResults = searchResults.some((result) => result.selected);
   const selectedCount = filter(conversionItems, { selected: true }).length;
 
   return (

@@ -1,4 +1,4 @@
-import { find, isEmpty, keys } from 'lodash';
+import { isEmpty } from 'lodash';
 
 const renderAttributeChange = (item, attribute, value, getAttributeName, currentValue = ' ') => (
   <h4 key={`function_${item.id}_attribute_${attribute}`}>
@@ -37,13 +37,13 @@ const renderRecordAttributeChange = (phase, action, record, attribute, value, ge
 );
 
 const renderActionChanges = (changed, phase, currentPhase, changes, getAttributeName) => {
-  keys(changed.actions).forEach((actionId) => {
+  Object.keys(changed.actions).forEach((actionId) => {
     const action = changed.actions[actionId];
-    const currentAction = find(currentPhase.actions, { id: actionId });
+    const currentAction = currentPhase.actions ? currentPhase.actions.find((a) => a.id === actionId) : undefined;
 
     // Action attributes
     if (!isEmpty(action.attributes)) {
-      keys(action.attributes).forEach((attribute) => {
+      Object.keys(action.attributes).forEach((attribute) => {
         const currentValue = currentAction?.attributes?.[attribute] || ' ';
         changes.push(
           renderActionAttributeChange(
@@ -60,12 +60,12 @@ const renderActionChanges = (changed, phase, currentPhase, changes, getAttribute
 
     // Action records
     if (!isEmpty(action.records)) {
-      keys(action.records).forEach((recordId) => {
+      Object.keys(action.records).forEach((recordId) => {
         const record = action.records[recordId];
-        const currentRecord = find(currentAction.records, { id: recordId });
+        const currentRecord = currentAction.records ? currentAction.records.find((r) => r.id === recordId) : undefined;
 
         if (!isEmpty(record.attributes)) {
-          keys(record.attributes).forEach((attribute) => {
+          Object.keys(record.attributes).forEach((attribute) => {
             const currentValue = currentRecord?.attributes?.[attribute] || ' ';
             changes.push(
               renderRecordAttributeChange(
@@ -86,13 +86,13 @@ const renderActionChanges = (changed, phase, currentPhase, changes, getAttribute
 };
 
 const renderPhaseChanges = (changed, item, changes, getAttributeName) => {
-  keys(changed.phases).forEach((phaseId) => {
+  Object.keys(changed.phases).forEach((phaseId) => {
     const phase = changed.phases[phaseId];
-    const currentPhase = find(item.phases, { id: phaseId });
+    const currentPhase = item.phases ? item.phases.find((p) => p.id === phaseId) : undefined;
 
     // Phase attributes
     if (!isEmpty(phase.attributes)) {
-      keys(phase.attributes).forEach((attribute) => {
+      Object.keys(phase.attributes).forEach((attribute) => {
         const currentValue = currentPhase?.attributes?.[attribute] || ' ';
         changes.push(
           renderPhaseAttributeChange(
@@ -116,9 +116,9 @@ const renderPhaseChanges = (changed, item, changes, getAttributeName) => {
 
 const renderRecordErrors = (actionError, action, elem, getAttributeName) => {
   if (actionError.records) {
-    keys(actionError.records).forEach((recordId) => {
+    Object.keys(actionError.records).forEach((recordId) => {
       const recordError = actionError.records[recordId];
-      const record = find(action.records, { id: recordId });
+      const record = action.records ? action.records.find((r) => r.id === recordId) : undefined;
 
       // Always push record error paragraph, even if no attributes (to match old behavior)
       const attributeLabels = recordError.attributes
@@ -137,9 +137,9 @@ const renderRecordErrors = (actionError, action, elem, getAttributeName) => {
 
 const renderActionErrors = (phaseError, phase, elem, getAttributeName) => {
   if (phaseError.actions) {
-    keys(phaseError.actions).forEach((actionId) => {
+    Object.keys(phaseError.actions).forEach((actionId) => {
       const actionError = phaseError.actions[actionId];
-      const action = find(phase.actions, { id: actionId });
+      const action = phase.actions ? phase.actions.find((a) => a.id === actionId) : undefined;
 
       // Always push action error paragraph, even if no attributes (to match old behavior)
       const attributeLabels = actionError.attributes

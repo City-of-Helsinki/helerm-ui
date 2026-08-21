@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
-import { endsWith, find, includes, isArray, isEmpty, keys, sortBy, startsWith, trimEnd } from 'lodash';
+import { endsWith, isEmpty, sortBy, startsWith, trimEnd } from 'lodash';
 
 import {
   BULK_UPDATE_SEARCH_UNEDITABLE_FUNCTION_ATTRIBUTES,
@@ -77,9 +77,9 @@ const SearchTerm = ({
         ? [...BULK_UPDATE_SEARCH_UNEDITABLE_FUNCTION_ATTRIBUTES, ...BULK_UPDATE_SEARCH_ADDITIONAL_FUNCTION_ATTRIBUTES]
         : [];
     return sortBy(
-      keys(attributeTypes).reduce((acc, key) => {
+      Object.keys(attributeTypes ?? {}).reduce((acc, key) => {
         const attribute = attributeTypes[key];
-        if (!!attribute.allowedIn && includes(attribute.allowedIn, attributeTarget)) {
+        if (!!attribute.allowedIn && attribute.allowedIn.includes(attributeTarget)) {
           acc.push({
             label: attribute.name,
             value: key,
@@ -97,11 +97,10 @@ const SearchTerm = ({
     if (
       !isEmpty(searchTerm.attribute) &&
       !isEmpty(attributeValues) &&
-      attributeValues[attributeTarget] &&
-      attributeValues[attributeTarget][searchTerm.attribute]
+      attributeValues[attributeTarget]?.[searchTerm.attribute]
     ) {
       valueOptions = attributeValues[attributeTarget][searchTerm.attribute].map((value) => {
-        const displayLabel = isArray(value)
+        const displayLabel = Array.isArray(value)
           ? value
               .map((v) =>
                 getDisplayLabelForAttribute({
@@ -116,7 +115,7 @@ const SearchTerm = ({
             });
         return {
           label: displayLabel,
-          value: isArray(value) ? JSON.stringify(value) : value,
+          value: Array.isArray(value) ? JSON.stringify(value) : value,
         };
       });
     }
@@ -125,8 +124,8 @@ const SearchTerm = ({
 
   const attributeOptions = getAttributeOptions(attributeTypes, searchTerm.target);
   const valueOptions = getValueOptions(attributeValues, searchTerm);
-  if (!find(valueOptions, { value: searchTerm.value }) && !isEmpty(searchTerm.value)) {
-    const displayLabel = isArray(searchTerm.value)
+  if (!valueOptions.some((option) => option.value === searchTerm.value) && !isEmpty(searchTerm.value)) {
+    const displayLabel = Array.isArray(searchTerm.value)
       ? searchTerm.value
           .map((v) =>
             getDisplayLabelForAttribute({

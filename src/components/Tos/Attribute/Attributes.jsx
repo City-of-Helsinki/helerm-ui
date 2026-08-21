@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import includes from 'lodash/includes';
 import capitalize from 'lodash/capitalize';
 
 import Attribute from './Attribute';
@@ -19,14 +18,14 @@ const Attributes = ({
   updateTypeSpecifier,
   updateType,
 }) => {
-  const unwantedAttributes = ['TypeSpecifier', 'RecordType', 'ActionType', 'PhaseType'];
+  const unwantedAttributes = new Set(['TypeSpecifier', 'RecordType', 'ActionType', 'PhaseType']);
   const defaultAttributes = [];
 
   Object.keys(attributeTypes).forEach((key) => {
     if (
       Object.hasOwn(attributeTypes, key) &&
-      attributeTypes[key].defaultIn.indexOf(type) >= 0 &&
-      !includes(unwantedAttributes, key)
+      attributeTypes[key].defaultIn.includes(type) &&
+      !unwantedAttributes.has(key)
     ) {
       defaultAttributes.push(key);
     }
@@ -40,16 +39,18 @@ const Attributes = ({
     } else if (type === 'record') {
       elementType = 'Asiakirjan tyyppi';
     }
-    descriptions.push({
-      descriptionKey: `${elementType} tarkenne`,
-      typeSpecifier: elem.attributes[`${capitalize(type)}Type`],
-      type: elem.attributes[`${capitalize(type)}Type`],
-    });
-    descriptions.push({
-      descriptionKey: 'Tarkenne',
-      typeSpecifier: elem.attributes.TypeSpecifier,
-      type: '',
-    });
+    descriptions.push(
+      {
+        descriptionKey: `${elementType} tarkenne`,
+        typeSpecifier: elem.attributes[`${capitalize(type)}Type`],
+        type: elem.attributes[`${capitalize(type)}Type`],
+      },
+      {
+        descriptionKey: 'Tarkenne',
+        typeSpecifier: elem.attributes.TypeSpecifier,
+        type: '',
+      },
+    );
 
     return descriptions;
   }
@@ -102,8 +103,8 @@ const Attributes = ({
         Object.hasOwn(attr, key) &&
         attr[key] &&
         attributeTypes[key] &&
-        !includes(unwantedAttributes, key) &&
-        !includes(defaultAttributes, key)
+        !unwantedAttributes.has(key) &&
+        !defaultAttributes.includes(key)
       ) {
         attributeElements.push(
           <Attribute

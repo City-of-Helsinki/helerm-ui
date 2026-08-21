@@ -53,6 +53,7 @@ const SearchResults = ({ hits, onSelect, onSelectAll, searchResults }) => {
         </div>
       </div>
       {searchResults.map((result, index) => (
+        // eslint-disable-next-line @eslint-react/no-array-index-key
         <div className='row search-result-item' key={`${result.item?.function}-${result.item?.id}-${index}`}>
           <div className='col-xs-1'>
             <button
@@ -79,7 +80,7 @@ const SearchResults = ({ hits, onSelect, onSelectAll, searchResults }) => {
 
               const captured = regex.exec(path);
               let pathName = path;
-              if (captured && captured.length === 3) {
+              if (captured?.length === 3) {
                 const splitAttributes = captured[2].split(/,/g);
                 const mappedValue = splitAttributes
                   .map((attr) =>

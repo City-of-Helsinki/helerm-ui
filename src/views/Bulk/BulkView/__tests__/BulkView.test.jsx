@@ -1,5 +1,5 @@
 import { MemoryRouter } from 'react-router-dom';
-import { waitFor } from '@testing-library/react';
+import { waitFor, screen } from '@testing-library/react';
 
 import BulkView from '../BulkView';
 import renderWithProviders, { storeDefaultState, createTestStore } from '../../../../utils/renderWithProviders';
@@ -109,5 +109,175 @@ describe('<BulkView /> - Simple async thunk test', () => {
         ]),
       );
     });
+  });
+});
+
+// Deep-nested phase/action/record structures exercise validateBulkUpdate and
+// renderItemChanges, both of which recurse through phases -> actions ->
+// records -> attributes (javascript:S2004 nesting refactor target).
+describe('<BulkView /> - deeply nested phase/action/record validation and rendering', () => {
+  // Shaped like a classification API result: flat (no parent), so
+  // convertToTree keeps it as a single top-level item and preserves
+  // the custom "phases" field used by validateBulkUpdate/renderItemChanges.
+  const buildClassificationItem = (recordId = 'record-1') => ({
+    id: 'test-item-nested-001',
+    code: '99 99 99',
+    title: 'Testifunktio',
+    parent: null,
+    function: 'test-function-nested-001',
+    function_state: 'approved',
+    function_attributes: {},
+    function_valid_from: null,
+    function_valid_to: null,
+    phases: [
+      {
+        id: 'phase-1',
+        name: 'Testivaihe',
+        attributes: {},
+        actions: [
+          {
+            id: 'action-1',
+            name: 'Testitoimenpide',
+            attributes: {},
+            records: [
+              {
+                id: recordId,
+                name: 'Testiasiakirja',
+                attributes: { RecordType: 'Alkuperäinen' },
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  });
+
+  const buildBulkUpdate = ({ actionId = 'action-1', recordId = 'record-1' } = {}) => ({
+    id: 2,
+    created_at: '2023-01-01T10:00:00.000000Z',
+    modified_at: '2023-01-02T11:00:00.000000Z',
+    modified_by: 'Test User',
+    state: 'sent_for_review',
+    description: 'Nested change test',
+    is_approved: false,
+    changes: {
+      'test-function-nested-001__1': {
+        phases: {
+          'phase-1': {
+            actions: {
+              [actionId]: {
+                records: {
+                  [recordId]: {
+                    attributes: { RecordType: 'Muutettu' },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const mockApiResponses = (classificationItem, bulkUpdate) => {
+    vi.spyOn(api, 'get').mockImplementation((url) => {
+      if (url.includes('classification')) {
+        return Promise.resolve({
+          ok: true,
+          json: () => ({ count: 1, next: null, previous: null, results: [classificationItem] }),
+        });
+      }
+      if (url.includes('bulk-update/1')) {
+        return Promise.resolve({ ok: true, json: () => bulkUpdate });
+      }
+      return Promise.resolve({ ok: false, status: 404, json: () => ({ error: 'Not found' }) });
+    });
+  };
+
+  it('validates a fully matching phase/action/record chain and renders the record-level attribute change', async () => {
+    mockApiResponses(buildClassificationItem(), buildBulkUpdate());
+
+    renderComponent();
+
+    // Record-level attribute change rendered via the deepest nested forEach.
+    await waitFor(() => {
+      expect(screen.getByText(/Testiasiakirja/)).toBeInTheDocument();
+    });
+    expect(screen.getByText(/Alkuperäinen/)).toBeInTheDocument();
+    expect(screen.getByText(/RecordType/)).toBeInTheDocument();
+    const recordChangeHeading = screen
+      .getAllByRole('heading', { level: 4 })
+      .find((heading) => heading.textContent.includes('RecordType'));
+    expect(recordChangeHeading).toBeDefined();
+    expect(recordChangeHeading.textContent).toContain('Testivaihe');
+    expect(recordChangeHeading.textContent).toContain('Testitoimenpide');
+    expect(recordChangeHeading.textContent).toContain('Testiasiakirja');
+    expect(recordChangeHeading.textContent).toContain('Alkuperäinen');
+    expect(recordChangeHeading.textContent).toContain('Muutettu');
+
+    // Valid chain: no "cannot verify" banner shown.
+    expect(
+      screen.queryByText(/Massamuutospaketissa on käsittelyprosesseja, joita ei voida varmistaa/),
+    ).not.toBeInTheDocument();
+  });
+
+  it('flags a missing record id as invalid and renders the record-not-found error', async () => {
+    // Bulk update references a record id that does not exist on the item.
+    mockApiResponses(buildClassificationItem('record-1'), buildBulkUpdate({ recordId: 'record-missing' }));
+
+    renderComponent();
+
+    await waitFor(() => {
+      expect(screen.getByText(/Asiakirjaa record-missing ei löytynyt/)).toBeInTheDocument();
+    });
+
+    expect(
+      screen.getByText(/Massamuutospaketissa on käsittelyprosesseja, joita ei voida varmistaa/),
+    ).toBeInTheDocument();
+  });
+
+  it('flags a missing action id as invalid and renders the action-not-found error', async () => {
+    // Bulk update references an action id that does not exist on the phase.
+    mockApiResponses(buildClassificationItem('record-1'), buildBulkUpdate({ actionId: 'action-missing' }));
+
+    renderComponent();
+
+    await waitFor(() => {
+      expect(screen.getByText(/Toimenpidettä action-missing ei löytynyt/)).toBeInTheDocument();
+    });
+
+    expect(
+      screen.getByText(/Massamuutospaketissa on käsittelyprosesseja, joita ei voida varmistaa/),
+    ).toBeInTheDocument();
+  });
+
+  it('renders a phase-level attribute change', async () => {
+    const classificationItem = buildClassificationItem();
+    const bulk = {
+      ...buildBulkUpdate(),
+      changes: {
+        'test-function-nested-001__1': {
+          phases: {
+            'phase-1': {
+              attributes: { RetentionPeriod: '10 vuotta' },
+            },
+          },
+        },
+      },
+    };
+
+    mockApiResponses(classificationItem, bulk);
+
+    renderComponent();
+
+    await waitFor(() => {
+      expect(screen.getByText(/RetentionPeriod/)).toBeInTheDocument();
+    });
+    expect(screen.getByText(/10 vuotta/)).toBeInTheDocument();
+
+    // Valid chain: no "cannot verify" banner shown.
+    expect(
+      screen.queryByText(/Massamuutospaketissa on käsittelyprosesseja, joita ei voida varmistaa/),
+    ).not.toBeInTheDocument();
   });
 });

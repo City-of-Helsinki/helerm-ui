@@ -1,4 +1,4 @@
-import { difference, includes, uniq } from 'lodash';
+import { difference } from 'lodash';
 
 /**
  * Validate conditional rules
@@ -16,7 +16,7 @@ export const validateConditionalRules = (key, attributeTypes, attributes) => {
     // for each attribute
     requiredIf.forEach((item) => {
       // for each item in requiredIf and if requiredIf has attribute
-      if (item.key === attribute && includes(item.values, attributes[attribute]?.value)) {
+      if (item.key === attribute && (item.values ?? []).includes(attributes[attribute]?.value)) {
         // if requiredIf has same value as attribute
         valid = true;
       }
@@ -40,16 +40,13 @@ const createValidateErrors = (type) => (obj, rules) => {
     const rule = rules[key];
 
     const isRequired = rules[key].required;
-    const isRequiredInType = includes(rule.requiredIn, type);
+    const isRequiredInType = (rule.requiredIn ?? []).includes(type);
     const objHasRuleAttribute = Boolean(obj.attributes[key]);
 
-    const isAttributeAllowedInType = includes(rules[key].allowedIn, type);
+    const isAttributeAllowedInType = (rules[key].allowedIn ?? []).includes(type);
     const isValid =
-      includes(
-        rule.values.map(({ value }) => value),
-        obj.attributes[key],
-      ) || rule.values.length === 0;
-    const allowValuesOutsideChoices = includes(rule.allowValuesOutsideChoicesIn, type);
+      rule.values.map(({ value }) => value).includes(obj.attributes[key]) || rule.values.length === 0;
+    const allowValuesOutsideChoices = (rule.allowValuesOutsideChoicesIn ?? []).includes(type);
 
     return (
       (isRequired && isRequiredInType && !objHasRuleAttribute) ||
@@ -66,7 +63,7 @@ const createValidateErrors = (type) => (obj, rules) => {
         const predicateValue = obj.attributes[item.key];
         const hasPredicate = typeof predicateValue === 'string';
 
-        const isPredicateRequired = hasPredicate && includes(item.values, predicateValue);
+        const isPredicateRequired = hasPredicate && (item.values ?? []).includes(predicateValue);
 
         const objHasRuleAttribute = !!obj.attributes[key];
 
@@ -94,7 +91,7 @@ const createValidateWarnings = (type) => (obj, rules) => {
     if (Object.hasOwn(rules, key)) {
       const rule = rules[key];
       const attributeValue = obj.attributes[key];
-      const allowOutsideValues = includes(rule.allowValuesOutsideChoicesIn, type);
+      const allowOutsideValues = (rule.allowValuesOutsideChoicesIn ?? []).includes(type);
 
       if (
         attributeValue &&
@@ -106,7 +103,7 @@ const createValidateWarnings = (type) => (obj, rules) => {
       }
     }
   });
-  return uniq(warnings);
+  return [...new Set(warnings)];
 };
 
 /**

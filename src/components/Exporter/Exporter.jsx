@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import Select from 'react-select';
-import { includes, isArray, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import * as ExcelJs from 'exceljs';
 import { format as formatDate } from 'date-fns';
 
@@ -41,7 +41,7 @@ const FILE_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.s
  * @returns {Array} - The updated array with the exported items.
  */
 const getChildren = (array, item) => {
-  if (isArray(item.children)) {
+  if (Array.isArray(item.children)) {
     return item.children.reduce(getChildren, array);
   }
   const exportItem = {
@@ -172,8 +172,7 @@ const getAttributes = (attributeTypes, type) =>
     .reduce((acc, attribute) => {
       if (
         Object.hasOwn(attributeTypes, attribute) &&
-        attributeTypes[attribute].allowedIn &&
-        includes(attributeTypes[attribute].allowedIn, type)
+        attributeTypes[attribute].allowedIn?.includes(type)
       ) {
         acc.push({
           attribute,
@@ -198,7 +197,7 @@ const getItemAttributes = (attributes, item) => {
   attributes.forEach((attr) => {
     const value =
       item.attributes && Object.hasOwn(item.attributes, attr.attribute) ? item.attributes[attr.attribute] : null;
-    values.push(isArray(value) ? value.join(', ') : value);
+    values.push(Array.isArray(value) ? value.join(', ') : value);
   });
   return values;
 };

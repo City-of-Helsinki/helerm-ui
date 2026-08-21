@@ -435,20 +435,12 @@ const Phase = ({
           );
         }
 
-        return (
-          <span
-            className={classNames}
-            onClick={editTypeSpecifier}
-            onKeyUp={(e) => {
-              if (e.key === 'Enter') {
-                editTypeSpecifier();
-              }
-            }}
-            role='button'
-            tabIndex={0}
-          >
+        return documentState === 'edit' ? (
+          <button type='button' className={classnames('unstyled-button', classNames)} onClick={editTypeSpecifier}>
             {typeSpecifier}
-          </span>
+          </button>
+        ) : (
+          <span className={classNames}>{typeSpecifier}</span>
         );
       };
 
@@ -491,24 +483,16 @@ const Phase = ({
               })
             : type;
 
-        return (
-          <span
-            className={classNames}
-            onClick={editType}
-            onKeyUp={(e) => {
-              if (e.key === 'Enter') {
-                editType();
-              }
-            }}
-            role='button'
-            tabIndex={0}
-          >
+        return documentState === 'edit' ? (
+          <button type='button' className={classnames('unstyled-button', classNames)} onClick={editType}>
             {phaseTypeValue}
-          </span>
+          </button>
+        ) : (
+          <span className={classNames}>{phaseTypeValue}</span>
         );
       };
 
-      if (phase.is_open && phase.actions && phase.actions.length > 0) {
+      if (phase.is_open && phase.actions?.length > 0) {
         return (
           <RenderPropSticky topOffset={-1 * topOffset}>
             {({ isFixed, wrapperStyles, wrapperRef, holderStyles, holderRef }) => (
@@ -519,11 +503,9 @@ const Phase = ({
                     isFixed
                       ? {
                           ...wrapperStyles,
-                          ...{
-                            position: 'fixed',
-                            top: topOffset,
-                            left: 0,
-                          },
+                          position: 'fixed',
+                          top: topOffset,
+                          left: 0,
                         }
                       : wrapperStyles
                   }

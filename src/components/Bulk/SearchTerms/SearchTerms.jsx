@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { isEmpty, slice } from 'lodash';
+import { isEmpty } from 'lodash';
 
 import { BULK_UPDATE_SEARCH_TERM_DEFAULT } from '../../../constants';
 import SearchTerm from './SearchTerm';
@@ -19,7 +19,7 @@ const SearchTerms = ({
   const onAddSearchTerm = useCallback(() => {
     setSearchTerms((prevSearchTerms) => [
       ...prevSearchTerms,
-      { ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() },
+      { ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: Date.now() },
     ]);
     resetSearchResults();
   }, [resetSearchResults]);
@@ -27,8 +27,8 @@ const SearchTerms = ({
   const onChangeSearchTerm = useCallback(
     (index, searchTerm) => {
       setSearchTerms((prevSearchTerms) => {
-        const start = slice(prevSearchTerms, 0, index);
-        const end = index + 1 < prevSearchTerms.length ? slice(prevSearchTerms, index + 1, prevSearchTerms.length) : [];
+        const start = prevSearchTerms.slice(0, index);
+        const end = index + 1 < prevSearchTerms.length ? prevSearchTerms.slice(index + 1, prevSearchTerms.length) : [];
         return [...start, searchTerm, ...end];
       });
       resetSearchResults();
@@ -40,11 +40,11 @@ const SearchTerms = ({
     (index) => {
       setSearchTerms((prevSearchTerms) => {
         if (prevSearchTerms.length === 1) {
-          return [{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }];
+          return [{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: Date.now() }];
         } else {
-          const start = slice(prevSearchTerms, 0, index);
+          const start = prevSearchTerms.slice(0, index);
           const end =
-            index + 1 < prevSearchTerms.length ? slice(prevSearchTerms, index + 1, prevSearchTerms.length) : [];
+            index + 1 < prevSearchTerms.length ? prevSearchTerms.slice(index + 1, prevSearchTerms.length) : [];
           return [...start, ...end];
         }
       });
@@ -54,7 +54,7 @@ const SearchTerms = ({
   );
 
   const onResetSearch = useCallback(() => {
-    setSearchTerms([{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: new Date().getTime() }]);
+    setSearchTerms([{ ...BULK_UPDATE_SEARCH_TERM_DEFAULT, id: Date.now() }]);
     resetSearchResults();
   }, [resetSearchResults]);
 
