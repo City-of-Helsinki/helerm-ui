@@ -80,7 +80,7 @@ export const removeActionReducer = (state, action) => {
     return;
   }
 
-  const phaseActions = state.phases[phaseId].actions;
+  const phaseActions = state.phases[phaseId].actions ?? [];
   const actionIndex = phaseActions.indexOf(actionToRemove);
 
   if (actionIndex > -1) {
