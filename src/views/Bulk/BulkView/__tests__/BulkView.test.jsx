@@ -235,4 +235,49 @@ describe('<BulkView /> - deeply nested phase/action/record validation and render
       screen.getByText(/Massamuutospaketissa on käsittelyprosesseja, joita ei voida varmistaa/),
     ).toBeInTheDocument();
   });
+
+  it('flags a missing action id as invalid and renders the action-not-found error', async () => {
+    // Bulk update references an action id that does not exist on the phase.
+    mockApiResponses(buildClassificationItem('record-1'), buildBulkUpdate({ actionId: 'action-missing' }));
+
+    renderComponent();
+
+    await waitFor(() => {
+      expect(screen.getByText(/Toimenpidettä action-missing ei löytynyt/)).toBeInTheDocument();
+    });
+
+    expect(
+      screen.getByText(/Massamuutospaketissa on käsittelyprosesseja, joita ei voida varmistaa/),
+    ).toBeInTheDocument();
+  });
+
+  it('renders a phase-level attribute change', async () => {
+    const classificationItem = buildClassificationItem();
+    const bulk = {
+      ...buildBulkUpdate(),
+      changes: {
+        'test-function-nested-001__1': {
+          phases: {
+            'phase-1': {
+              attributes: { RetentionPeriod: '10 vuotta' },
+            },
+          },
+        },
+      },
+    };
+
+    mockApiResponses(classificationItem, bulk);
+
+    renderComponent();
+
+    await waitFor(() => {
+      expect(screen.getByText(/RetentionPeriod/)).toBeInTheDocument();
+    });
+    expect(screen.getByText(/10 vuotta/)).toBeInTheDocument();
+
+    // Valid chain: no "cannot verify" banner shown.
+    expect(
+      screen.queryByText(/Massamuutospaketissa on käsittelyprosesseja, joita ei voida varmistaa/),
+    ).not.toBeInTheDocument();
+  });
 });
