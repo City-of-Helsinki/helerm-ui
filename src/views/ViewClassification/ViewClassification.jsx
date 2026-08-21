@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, matchPath, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import ClassificationHeader from '../../components/ClassificationHeader/ClassificationHeader';
@@ -64,7 +64,10 @@ const ViewClassification = () => {
   }, [params.id, params.version]);
 
   useEffect(() => {
-    if (location?.pathname === 'view-classification/:id') {
+    const isClassificationRoute =
+      !!matchPath('/view-classification/:id', location?.pathname) ||
+      !!matchPath('/view-classification/:id/version/:version', location?.pathname);
+    if (isClassificationRoute) {
       dispatch(setNavigationVisibility(false));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

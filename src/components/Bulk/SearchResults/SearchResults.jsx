@@ -53,6 +53,7 @@ const SearchResults = ({ hits, onSelect, onSelectAll, searchResults }) => {
         </div>
       </div>
       {searchResults.map((result, index) => (
+        // eslint-disable-next-line @eslint-react/no-array-index-key
         <div className='row search-result-item' key={`${result.item?.function}-${result.item?.id}-${index}`}>
           <div className='col-xs-1'>
             <button
