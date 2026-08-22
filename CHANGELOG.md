@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.12.3](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.12.2...helerm-ui-v1.12.3) (2026-08-22)
+
+
+### Bug Fixes
+
+* Api del literal as default parameter Refs: TIED-297 ([422d456](https://github.com/City-of-Helsinki/helerm-ui/commit/422d4565f9c16ee7ebe205ae742e87f7779ec2ba))
+* CloneView buttons should be tabbable Refs: TIED-297 ([afa54a0](https://github.com/City-of-Helsinki/helerm-ui/commit/afa54a0de9d7023df1e3590ac52937f48ab214c7))
+* CloneView use native buttons Refs: TIED-297 ([b4a2798](https://github.com/City-of-Helsinki/helerm-ui/commit/b4a279893ea8a14fadac1b1b8dee54daf6a3401e))
+* No instanceof on buildin objects Refs: TIED-297 ([3856eb6](https://github.com/City-of-Helsinki/helerm-ui/commit/3856eb67bd3e5f505c970f3a5f491042b3cd2422))
+* Non-interactive DOM elements Refs: TIED-297 ([90719a1](https://github.com/City-of-Helsinki/helerm-ui/commit/90719a11c5b5a1e90996b7223adfc8cad0727800))
+* Prefer Number.parseFloat over parseFloat Res: TIED-297 ([beaa746](https://github.com/City-of-Helsinki/helerm-ui/commit/beaa7466f875cdbe630ecb9c298464123e9a2a1b))
+* SearchResults duplicate keys ([1330637](https://github.com/City-of-Helsinki/helerm-ui/commit/1330637e2b56fb77ae5839497f2fcaf538222fea))
+* Use new Error() instead of Error() Refs: TIED-297 ([d5dadb0](https://github.com/City-of-Helsinki/helerm-ui/commit/d5dadb0e7da5af39c7ba3366a0dea21c5a14c633))
+* Use replaceAll() instead of replace() Refs: TIED-297 ([a9a9225](https://github.com/City-of-Helsinki/helerm-ui/commit/a9a9225354b2b9275998b735a864f9b4298a9248))
+
 ## [1.12.2](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.12.1...helerm-ui-v1.12.2) (2026-08-19)
 
 
