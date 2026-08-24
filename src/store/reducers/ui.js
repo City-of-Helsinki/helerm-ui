@@ -127,7 +127,7 @@ const processAttributeTypes = (attributes, validationRules) => {
             return { key: propertyKey, values };
           }),
         )
-        .flatMap((items) => items);
+        .flat();
 
       const requiredIf = requiredMap.filter(
         (value, index, self) => index === self.findIndex((item) => item.key === value.key),
