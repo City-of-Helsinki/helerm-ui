@@ -186,6 +186,27 @@
     overflow-y: auto;
     overflow-x: hidden;
   }
+  .infinity-menu-node-wrapper {
+    display: flex;
+    align-items: center;
+    // Keep this row (button + ClassificationLink) stacked above the child <ul>,
+    // which uses a negative margin-top to overlap it for the tree line effect.
+    position: relative;
+    z-index: 2;
+
+    a {
+      margin-left: var(--spacing-3-xs);
+
+      &:hover {
+        color: color.adjust($link-color, $lightness: 10%);
+      }
+    }
+
+    &:hover {
+      background: #f2f2f2;
+      color: $link-hover-color;
+    }
+  }
   .infinity-menu-node-container {
     text-align: left;
     background-color: transparent;
@@ -193,18 +214,15 @@
     font-size: 0.94rem;
     letter-spacing: 0.02rem;
     color: $link-color;
-    width: 99%;
+    width: auto;
     left: 1px;
-    padding-left: 35px;
+    padding-left: var(--spacing-l);
+    padding-right: var(--spacing-s);
     line-height: 2.125rem;
     display: block;
     position: relative;
     z-index: 1;
-    &:hover {
-      background: #f2f2f2;
-      color: $link-hover-color;
-      cursor: pointer;
-    }
+
     & a:hover {
       color: color.adjust($link-color, $lightness: 10%);
     }
@@ -245,7 +263,7 @@
     padding-top: 20px;
   }
 
-  .infinity-menu-display-tree-container > .infinity-menu-node-container {
+  .infinity-menu-display-tree-container > .infinity-menu-node-wrapper > .infinity-menu-node-container {
     left: 1px;
     text-transform: uppercase;
   }
@@ -269,7 +287,6 @@
     width: 15px;
     color: #003380;
     border-bottom: 0;
-    background-color: #fff;
     font-size: 25px;
     font-weight: 500;
     position: absolute;
@@ -300,17 +317,22 @@
     color: $link-color;
     background: white;
     line-height: 2.125rem;
-    display: block;
+    display: flex;
+    align-items: center;
     position: relative;
-    cursor: pointer;
     left: 1px;
     top: 3px;
+
     &:hover {
       background: #f2f2f2;
       color: $link-hover-color;
     }
-    & a:hover {
-      color: color.adjust($link-color, $lightness: 10%);
+    & a {
+      margin-left: var(--spacing-3-xs);
+
+      &:hover {
+        color: color.adjust($link-color, $lightness: 10%);
+      }
     }
   }
 
@@ -328,7 +350,6 @@
   // appearance the ARIA-role element used to have.
   .infinity-menu-item-button {
     display: block;
-    width: 100%;
     text-align: inherit;
   }
 
