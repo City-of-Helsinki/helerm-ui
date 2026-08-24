@@ -255,41 +255,31 @@ const InfinityMenu = ({
             prevs.push(React.createElement(currCustomComponent, componentProps));
           } else {
             prevs.push(
-              <li
-                key={itemKey}
-                className={`infinity-menu-leaf-container${!curr.function ? ' new-leaf' : ''}`}
-                role='button'
-                tabIndex={0}
-                onMouseDown={(e) => (onLeafMouseDown ? onLeafMouseDown(e, curr) : null)}
-                onMouseUp={(e) => (onLeafMouseUp ? onLeafMouseUp(e, curr) : null)}
-                onClick={(e) => (onLeafMouseClick ? onLeafMouseClick(e, curr) : null)}
-                onKeyUp={(e) => {
-                  if (onLeafMouseClick && e.key === 'Enter') {
-                    onLeafMouseClick(e, curr);
-                  }
-                }}
-              >
-                <span>
-                  {curr.name} <ClassificationLink id={curr.id} />
-                </span>
+              <li key={itemKey} className={`infinity-menu-leaf-container${!curr.function ? ' new-leaf' : ''}`}>
+                <button
+                  type='button'
+                  className='unstyled-button infinity-menu-item-button'
+                  onMouseDown={(e) => (onLeafMouseDown ? onLeafMouseDown(e, curr) : null)}
+                  onMouseUp={(e) => (onLeafMouseUp ? onLeafMouseUp(e, curr) : null)}
+                  onClick={(e) => (onLeafMouseClick ? onLeafMouseClick(e, curr) : null)}
+                >
+                  <span>
+                    {curr.name} <ClassificationLink id={curr.id} />
+                  </span>
+                </button>
               </li>,
             );
           }
         } else if (shouldDisplay && relativeIndex === filteredChildren.length - 1) {
           prevs.push(
-            <li
-              key={itemKey}
-              className='infinity-menu-load-more-container'
-              role='button'
-              tabIndex={0}
-              onClick={(e) => onLoadMoreClick(tree, curr, keyPath, e)}
-              onKeyUp={(e) => {
-                if (e.key === 'Enter') {
-                  onLoadMoreClick(tree, curr, keyPath, e);
-                }
-              }}
-            >
-              <span>Näytä lisää</span>
+            <li key={itemKey} className='infinity-menu-load-more-container'>
+              <button
+                type='button'
+                className='unstyled-button infinity-menu-item-button'
+                onClick={(e) => onLoadMoreClick(tree, curr, keyPath, e)}
+              >
+                <span>Näytä lisää</span>
+              </button>
             </li>,
           );
         }
@@ -468,17 +458,7 @@ const InfinityMenu = ({
               <span className='fa-solid fa-list' aria-hidden='true' />
             </button>
             {!!path?.length && (
-              <ol
-                className='breadcrumb'
-                role='button'
-                tabIndex={0}
-                onClick={toggleNavigationVisibility}
-                onKeyUp={(e) => {
-                  if (e.key === 'Enter') {
-                    toggleNavigationVisibility();
-                  }
-                }}
-              >
+              <ol className='breadcrumb'>
                 {path.map((item, index) => (
                   <li
                     className={classnames({
@@ -487,7 +467,13 @@ const InfinityMenu = ({
                     // eslint-disable-next-line @eslint-react/no-array-index-key
                     key={index}
                   >
-                    {item}
+                    <button
+                      type='button'
+                      className='unstyled-button'
+                      onClick={toggleNavigationVisibility}
+                    >
+                      {item}
+                    </button>
                   </li>
                 ))}
               </ol>
