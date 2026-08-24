@@ -18,6 +18,30 @@ const DEFAULT_FILTER_CONDITION = 'and';
 const EMPTY_TREE = [];
 
 /**
+ * Renders the node button + classification link markup shared by the
+ * closed and opened node states in setDisplayTree.
+ */
+const renderNodeWrapper = (key, nodeName, curr, onClick) => (
+  <div key={key} className='infinity-menu-node-wrapper'>
+    <button
+      type='button'
+      onClick={onClick}
+      onKeyUp={(e) => {
+        if (e.key === 'Enter') {
+          onClick(e);
+        }
+      }}
+      className={classnames('infinity-menu-node-container', {
+        opened: !!curr.isOpen,
+      })}
+    >
+      <label>{nodeName}</label>
+    </button>
+    <ClassificationLink id={curr.id} />
+  </div>
+);
+
+/**
  * Extracted from https://github.com/socialtables/react-infinity-menu
  */
 
@@ -299,25 +323,7 @@ const InfinityMenu = ({
             };
             prevs.push(React.createElement(currCustomComponent, nodeProps));
           } else {
-            prevs.push(
-              <div key={key} className='infinity-menu-node-wrapper'>
-                <button
-                  type='button'
-                  onClick={(e) => onNodeClick(tree, curr, keyPath, e)}
-                  onKeyUp={(e) => {
-                    if (e.key === 'Enter') {
-                      onNodeClick(tree, curr, keyPath, e);
-                    }
-                  }}
-                  className={classnames('infinity-menu-node-container', {
-                    opened: !!curr.isOpen,
-                  })}
-                >
-                  <label>{nodeName}</label>
-                </button>
-                <ClassificationLink id={curr.id} />
-              </div>,
-            );
+            prevs.push(renderNodeWrapper(key, nodeName, curr, (e) => onNodeClick(tree, curr, keyPath, e)));
           }
         }
         return prevs;
@@ -335,25 +341,7 @@ const InfinityMenu = ({
           };
           openedNode.push(React.createElement(currCustomComponent, nodeProps));
         } else {
-          openedNode.push(
-            <div key={key} className='infinity-menu-node-wrapper'>
-              <button
-                type='button'
-                onClick={(e) => onNodeClick(tree, curr, keyPath, e)}
-                onKeyUp={(e) => {
-                  if (e.key === 'Enter') {
-                    onNodeClick(tree, curr, keyPath, e);
-                  }
-                }}
-                className={classnames('infinity-menu-node-container', {
-                  opened: !!curr.isOpen,
-                })}
-              >
-                <label>{nodeName}</label>
-              </button>
-              <ClassificationLink id={curr.id} />
-            </div>,
-          );
+          openedNode.push(renderNodeWrapper(key, nodeName, curr, (e) => onNodeClick(tree, curr, keyPath, e)));
         }
 
         const childrenList = curr.children.length

@@ -217,7 +217,7 @@
     width: auto;
     left: 1px;
     padding-left: var(--spacing-l);
-    padding-right: var(--spacing-s);
+    padding-right: var(--spacing-2-xs);
     line-height: 2.125rem;
     display: block;
     position: relative;
@@ -351,6 +351,7 @@
   .infinity-menu-item-button {
     display: block;
     text-align: inherit;
+    padding-right: var(--spacing-2-xs);
   }
 
   .navigation-menu-items {
