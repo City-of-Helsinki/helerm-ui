@@ -26,11 +26,6 @@ const renderNodeWrapper = (key, nodeName, curr, onClick) => (
     <button
       type='button'
       onClick={onClick}
-      onKeyUp={(e) => {
-        if (e.key === 'Enter') {
-          onClick(e);
-        }
-      }}
       className={classnames('infinity-menu-node-container', {
         opened: !!curr.isOpen,
       })}
