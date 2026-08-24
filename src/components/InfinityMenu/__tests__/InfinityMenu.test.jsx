@@ -261,6 +261,26 @@ describe('<InfinityMenu />', () => {
       expect(newTree[0].isOpen).toBe(false);
     });
 
+    it('pressing Enter on a node button calls onNodeMouseClick, same as a click', async () => {
+      const onNodeMouseClick = vi.fn();
+      const tree = buildSimpleTree();
+
+      const { user, container } = renderMenuWithUser({ tree, onNodeMouseClick });
+
+      await waitFor(() => {
+        const nodeBtn = container.querySelector('.infinity-menu-node-container');
+        expect(nodeBtn).toBeInTheDocument();
+      });
+
+      const nodeBtn = container.querySelector('.infinity-menu-node-container');
+      nodeBtn.focus();
+      await user.keyboard('{Enter}');
+
+      expect(onNodeMouseClick).toHaveBeenCalled();
+      const [, newTree] = onNodeMouseClick.mock.calls[0];
+      expect(newTree[0].isOpen).toBe(true);
+    });
+
     it('leaf click invokes onLeafMouseClick with the leaf data', async () => {
       const onLeafMouseClick = vi.fn();
       const tree = buildSimpleTree();
