@@ -117,7 +117,7 @@ const processAttributeTypes = (attributes, validationRules) => {
         .filter((oneOf) => oneOf.required.length > 0)
         .filter((oneOf) => oneOf.required.includes(result.identifier))
         .map((oneOf) => oneOf.properties)
-        .map((properties) =>
+        .flatMap((properties) =>
           Object.keys(properties).map((propertyKey) => {
             const property = properties[propertyKey];
             const values = Object.keys(property)
@@ -126,8 +126,7 @@ const processAttributeTypes = (attributes, validationRules) => {
 
             return { key: propertyKey, values };
           }),
-        )
-        .flat();
+        );
 
       const requiredIf = requiredMap.filter(
         (value, index, self) => index === self.findIndex((item) => item.key === value.key),
