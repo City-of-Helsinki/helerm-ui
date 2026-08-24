@@ -21,6 +21,7 @@ const Popup = ({ content, closePopup, label = 'Ponnahdusikkuna' }) => {
     <div
       className='popup-outer-background'
       data-testid='popup-component'
+      role='none'
       onClick={(event) => {
         if (event.target === event.currentTarget) {
           closePopup();
