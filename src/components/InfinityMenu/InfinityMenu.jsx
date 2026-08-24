@@ -263,10 +263,9 @@ const InfinityMenu = ({
                   onMouseUp={(e) => (onLeafMouseUp ? onLeafMouseUp(e, curr) : null)}
                   onClick={(e) => (onLeafMouseClick ? onLeafMouseClick(e, curr) : null)}
                 >
-                  <span>
-                    {curr.name} <ClassificationLink id={curr.id} />
-                  </span>
+                  <span>{curr.name}</span>
                 </button>
+                <ClassificationLink id={curr.id} />
               </li>,
             );
           }
@@ -301,23 +300,23 @@ const InfinityMenu = ({
             prevs.push(React.createElement(currCustomComponent, nodeProps));
           } else {
             prevs.push(
-              <button
-                type='button'
-                key={key}
-                onClick={(e) => onNodeClick(tree, curr, keyPath, e)}
-                onKeyUp={(e) => {
-                  if (e.key === 'Enter') {
-                    onNodeClick(tree, curr, keyPath, e);
-                  }
-                }}
-                className={classnames('infinity-menu-node-container', {
-                  opened: !!curr.isOpen,
-                })}
-              >
-                <label>
-                  {nodeName} <ClassificationLink id={curr.id} />
-                </label>
-              </button>,
+              <div key={key} className='infinity-menu-node-wrapper'>
+                <button
+                  type='button'
+                  onClick={(e) => onNodeClick(tree, curr, keyPath, e)}
+                  onKeyUp={(e) => {
+                    if (e.key === 'Enter') {
+                      onNodeClick(tree, curr, keyPath, e);
+                    }
+                  }}
+                  className={classnames('infinity-menu-node-container', {
+                    opened: !!curr.isOpen,
+                  })}
+                >
+                  <label>{nodeName}</label>
+                </button>
+                <ClassificationLink id={curr.id} />
+              </div>,
             );
           }
         }
@@ -337,23 +336,23 @@ const InfinityMenu = ({
           openedNode.push(React.createElement(currCustomComponent, nodeProps));
         } else {
           openedNode.push(
-            <button
-              type='button'
-              key={key}
-              onClick={(e) => onNodeClick(tree, curr, keyPath, e)}
-              onKeyUp={(e) => {
-                if (e.key === 'Enter') {
-                  onNodeClick(tree, curr, keyPath, e);
-                }
-              }}
-              className={classnames('infinity-menu-node-container', {
-                opened: !!curr.isOpen,
-              })}
-            >
-              <label>
-                {nodeName} <ClassificationLink id={curr.id} />
-              </label>
-            </button>,
+            <div key={key} className='infinity-menu-node-wrapper'>
+              <button
+                type='button'
+                onClick={(e) => onNodeClick(tree, curr, keyPath, e)}
+                onKeyUp={(e) => {
+                  if (e.key === 'Enter') {
+                    onNodeClick(tree, curr, keyPath, e);
+                  }
+                }}
+                className={classnames('infinity-menu-node-container', {
+                  opened: !!curr.isOpen,
+                })}
+              >
+                <label>{nodeName}</label>
+              </button>
+              <ClassificationLink id={curr.id} />
+            </div>,
           );
         }
 
@@ -467,11 +466,7 @@ const InfinityMenu = ({
                     // eslint-disable-next-line @eslint-react/no-array-index-key
                     key={index}
                   >
-                    <button
-                      type='button'
-                      className='unstyled-button'
-                      onClick={toggleNavigationVisibility}
-                    >
+                    <button type='button' className='unstyled-button' onClick={toggleNavigationVisibility}>
                       {item}
                     </button>
                   </li>
