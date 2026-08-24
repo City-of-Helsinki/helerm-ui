@@ -269,27 +269,29 @@ describe('<InfinityMenu />', () => {
       const { user, container } = renderMenuWithUser({ tree, onLeafMouseClick });
 
       await waitFor(() => {
-        expect(container.querySelector('.infinity-menu-leaf-container')).toBeInTheDocument();
+        expect(container.querySelector('.infinity-menu-leaf-container button')).toBeInTheDocument();
       });
 
-      const leaf = container.querySelector('.infinity-menu-leaf-container');
+      const leaf = container.querySelector('.infinity-menu-leaf-container button');
       await user.click(leaf);
 
       expect(onLeafMouseClick).toHaveBeenCalledOnce();
       expect(onLeafMouseClick.mock.calls[0][1].id).toBe('leaf-1');
     });
 
-    it('leaf item exposes button role and is keyboard-focusable (a11y: non-interactive element with handlers)', async () => {
+    it('leaf item exposes a native, keyboard-focusable button instead of an ARIA role (a11y)', async () => {
       const tree = buildSimpleTree();
       tree[0].isOpen = true;
 
       const { container } = renderMenu({ tree });
 
       await waitFor(() => {
-        const leaf = container.querySelector('.infinity-menu-leaf-container');
-        expect(leaf).toBeInTheDocument();
-        expect(leaf).toHaveAttribute('role', 'button');
-        expect(leaf).toHaveAttribute('tabIndex', '0');
+        const leafContainer = container.querySelector('.infinity-menu-leaf-container');
+        expect(leafContainer).toBeInTheDocument();
+        expect(leafContainer).not.toHaveAttribute('role');
+        const leafButton = leafContainer.querySelector('button');
+        expect(leafButton).toBeInTheDocument();
+        expect(leafButton.tagName).toBe('BUTTON');
       });
     });
   });
@@ -367,15 +369,17 @@ describe('<InfinityMenu />', () => {
       expect(onNodeMouseClick).toHaveBeenCalledOnce();
     });
 
-    it('load-more item exposes button role and is keyboard-focusable (a11y: non-interactive element with handlers)', async () => {
+    it('load-more item exposes a native, keyboard-focusable button instead of an ARIA role (a11y)', async () => {
       const tree = buildSimpleTree();
       tree[0].isOpen = true;
       const { container } = renderMenu({ tree, maxLeaves: 1 });
       await waitFor(() => {
-        const loadMore = container.querySelector('.infinity-menu-load-more-container');
-        expect(loadMore).toBeInTheDocument();
-        expect(loadMore).toHaveAttribute('role', 'button');
-        expect(loadMore).toHaveAttribute('tabIndex', '0');
+        const loadMoreContainer = container.querySelector('.infinity-menu-load-more-container');
+        expect(loadMoreContainer).toBeInTheDocument();
+        expect(loadMoreContainer).not.toHaveAttribute('role');
+        const loadMoreButton = loadMoreContainer.querySelector('button');
+        expect(loadMoreButton).toBeInTheDocument();
+        expect(loadMoreButton.tagName).toBe('BUTTON');
       });
     });
   });
@@ -429,9 +433,9 @@ describe('<InfinityMenu />', () => {
       const path = ['Taso 1'];
       const { user, container } = renderMenuWithUser({ path, toggleNavigationVisibility });
       await waitFor(() => {
-        expect(container.querySelector('.breadcrumb')).toBeInTheDocument();
+        expect(container.querySelector('.breadcrumb button')).toBeInTheDocument();
       });
-      await user.click(container.querySelector('.breadcrumb'));
+      await user.click(container.querySelector('.breadcrumb button'));
       expect(toggleNavigationVisibility).toHaveBeenCalled();
     });
     it('does not render breadcrumb when path is empty', async () => {
@@ -439,14 +443,16 @@ describe('<InfinityMenu />', () => {
       expect(container.querySelector('.breadcrumb')).toBeNull();
     });
 
-    it('breadcrumb exposes button role and is keyboard-focusable (a11y: non-interactive element with handlers)', async () => {
+    it('breadcrumb items expose native, keyboard-focusable buttons instead of an ARIA role (a11y)', async () => {
       const path = ['Taso 1'];
       const { container } = renderMenu({ path });
       await waitFor(() => {
         const breadcrumb = container.querySelector('.breadcrumb');
         expect(breadcrumb).toBeInTheDocument();
-        expect(breadcrumb).toHaveAttribute('role', 'button');
-        expect(breadcrumb).toHaveAttribute('tabIndex', '0');
+        expect(breadcrumb).not.toHaveAttribute('role');
+        const breadcrumbButton = breadcrumb.querySelector('button');
+        expect(breadcrumbButton).toBeInTheDocument();
+        expect(breadcrumbButton.tagName).toBe('BUTTON');
       });
     });
   });

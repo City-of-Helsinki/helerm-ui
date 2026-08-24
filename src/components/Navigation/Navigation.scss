@@ -323,6 +323,15 @@
     cursor: pointer;
   }
 
+  // Fills the leaf / load-more <li> (and breadcrumb <li>) so the native
+  // <button> nested inside for interactivity keeps the same click area and
+  // appearance the ARIA-role element used to have.
+  .infinity-menu-item-button {
+    display: block;
+    width: 100%;
+    text-align: inherit;
+  }
+
   .navigation-menu-items {
     display: flex;
     flex-direction: column;
