@@ -258,6 +258,8 @@ const InfinityMenu = ({
               <li
                 key={itemKey}
                 className={`infinity-menu-leaf-container${!curr.function ? ' new-leaf' : ''}`}
+                role='button'
+                tabIndex={0}
                 onMouseDown={(e) => (onLeafMouseDown ? onLeafMouseDown(e, curr) : null)}
                 onMouseUp={(e) => (onLeafMouseUp ? onLeafMouseUp(e, curr) : null)}
                 onClick={(e) => (onLeafMouseClick ? onLeafMouseClick(e, curr) : null)}
@@ -278,6 +280,8 @@ const InfinityMenu = ({
             <li
               key={itemKey}
               className='infinity-menu-load-more-container'
+              role='button'
+              tabIndex={0}
               onClick={(e) => onLoadMoreClick(tree, curr, keyPath, e)}
               onKeyUp={(e) => {
                 if (e.key === 'Enter') {
@@ -466,6 +470,8 @@ const InfinityMenu = ({
             {!!path?.length && (
               <ol
                 className='breadcrumb'
+                role='button'
+                tabIndex={0}
                 onClick={toggleNavigationVisibility}
                 onKeyUp={(e) => {
                   if (e.key === 'Enter') {

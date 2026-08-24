@@ -278,6 +278,20 @@ describe('<InfinityMenu />', () => {
       expect(onLeafMouseClick).toHaveBeenCalledOnce();
       expect(onLeafMouseClick.mock.calls[0][1].id).toBe('leaf-1');
     });
+
+    it('leaf item exposes button role and is keyboard-focusable (a11y: non-interactive element with handlers)', async () => {
+      const tree = buildSimpleTree();
+      tree[0].isOpen = true;
+
+      const { container } = renderMenu({ tree });
+
+      await waitFor(() => {
+        const leaf = container.querySelector('.infinity-menu-leaf-container');
+        expect(leaf).toBeInTheDocument();
+        expect(leaf).toHaveAttribute('role', 'button');
+        expect(leaf).toHaveAttribute('tabIndex', '0');
+      });
+    });
   });
 
   describe('Search filtering', () => {
@@ -352,6 +366,18 @@ describe('<InfinityMenu />', () => {
       await user.click(getByText(/Näytä lisää/));
       expect(onNodeMouseClick).toHaveBeenCalledOnce();
     });
+
+    it('load-more item exposes button role and is keyboard-focusable (a11y: non-interactive element with handlers)', async () => {
+      const tree = buildSimpleTree();
+      tree[0].isOpen = true;
+      const { container } = renderMenu({ tree, maxLeaves: 1 });
+      await waitFor(() => {
+        const loadMore = container.querySelector('.infinity-menu-load-more-container');
+        expect(loadMore).toBeInTheDocument();
+        expect(loadMore).toHaveAttribute('role', 'button');
+        expect(loadMore).toHaveAttribute('tabIndex', '0');
+      });
+    });
   });
 
   describe('Detail search UI', () => {
@@ -411,6 +437,17 @@ describe('<InfinityMenu />', () => {
     it('does not render breadcrumb when path is empty', async () => {
       const { container } = renderMenu({ path: [] });
       expect(container.querySelector('.breadcrumb')).toBeNull();
+    });
+
+    it('breadcrumb exposes button role and is keyboard-focusable (a11y: non-interactive element with handlers)', async () => {
+      const path = ['Taso 1'];
+      const { container } = renderMenu({ path });
+      await waitFor(() => {
+        const breadcrumb = container.querySelector('.breadcrumb');
+        expect(breadcrumb).toBeInTheDocument();
+        expect(breadcrumb).toHaveAttribute('role', 'button');
+        expect(breadcrumb).toHaveAttribute('tabIndex', '0');
+      });
     });
   });
 
