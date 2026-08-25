@@ -473,6 +473,23 @@ describe('TOS Reducer', () => {
           Description: 'Updated description',
         });
       });
+
+      it('should merge and unwrap a single inline attribute patch instead of replacing all attributes', () => {
+        const state = createMockState({
+          attributes: { TypeSpecifier: 'Test TOS', Description: 'Existing description' },
+        });
+        const attributeUpdate = {
+          InformationSystem: { checked: true, value: 'Some system' },
+        };
+
+        const result = testReducerAction(editMetaData(attributeUpdate), state);
+
+        expect(result.attributes).toEqual({
+          TypeSpecifier: 'Test TOS',
+          Description: 'Existing description',
+          InformationSystem: 'Some system',
+        });
+      });
     });
 
     describe('editValidDates', () => {

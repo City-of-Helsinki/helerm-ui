@@ -155,9 +155,30 @@ const tosSlice = createSlice({
       return { ...initialState, ...action.payload };
     },
     editMetaData: (state, action) => {
-      const attributes = action.payload;
+      const payload = action.payload ?? {};
 
-      state.attributes = attributes;
+      // Inline attribute edits (e.g. clicking a single metadata attribute like InformationSystem)
+      // send a partial patch shaped as { [key]: { checked, value } }. The metadata edit form,
+      // however, sends a full, already-unwrapped attributes map meant to replace the state as-is.
+      // Detect the patch shape and merge + unwrap it instead of overwriting all other attributes.
+      const isPatch = Object.values(payload).some(
+        (entry) => entry && typeof entry === 'object' && 'checked' in entry && 'value' in entry,
+      );
+
+      if (!isPatch) {
+        state.attributes = payload;
+        return;
+      }
+
+      const unwrappedPatch = {};
+
+      Object.keys(payload).forEach((key) => {
+        const entry = payload[key];
+
+        unwrappedPatch[key] = entry && typeof entry === 'object' && 'value' in entry ? entry.value : entry;
+      });
+
+      state.attributes = { ...state.attributes, ...unwrappedPatch };
     },
     editValidDates: (state, action) => {
       if (action.payload.validFrom !== undefined) {
