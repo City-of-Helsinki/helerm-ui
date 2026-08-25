@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.12.3](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.12.2...helerm-ui-v1.12.3) (2026-08-25)
+
+
+### Bug Fixes
+
+* Api del literal as default parameter Refs: TIED-297 ([422d456](https://github.com/City-of-Helsinki/helerm-ui/commit/422d4565f9c16ee7ebe205ae742e87f7779ec2ba))
+* CloneView buttons should be tabbable Refs: TIED-297 ([afa54a0](https://github.com/City-of-Helsinki/helerm-ui/commit/afa54a0de9d7023df1e3590ac52937f48ab214c7))
+* CloneView use native buttons Refs: TIED-297 ([b4a2798](https://github.com/City-of-Helsinki/helerm-ui/commit/b4a279893ea8a14fadac1b1b8dee54daf6a3401e))
+* Delete button color contrast Refs: TIED-300 ([eb16729](https://github.com/City-of-Helsinki/helerm-ui/commit/eb16729802f3dfbdf68e748265fb3fcc1368e160))
+* InfinityMenu native buttons Refs: TIED-297 ([4813bf2](https://github.com/City-of-Helsinki/helerm-ui/commit/4813bf2ae41ed459e2214e56d611fcdfc0015e9c))
+* InfinityMenu no link inside buttons Refs: TIED-297 ([4edefd6](https://github.com/City-of-Helsinki/helerm-ui/commit/4edefd67970c215703288ac67c8e85a20155e036))
+* InfinityMenu non-interactive elements as buttons Refs: TIED-297 ([8d97e23](https://github.com/City-of-Helsinki/helerm-ui/commit/8d97e237ff9e5ce8dbc18d5c1825d01ae085c076))
+* Maintainability refactor bug fixes Refs: TIED-300 ([89451f6](https://github.com/City-of-Helsinki/helerm-ui/commit/89451f6d704e0d5f9ba6655100ca090ea33b4123))
+* No instanceof on buildin objects Refs: TIED-297 ([3856eb6](https://github.com/City-of-Helsinki/helerm-ui/commit/3856eb67bd3e5f505c970f3a5f491042b3cd2422))
+* Non-interactive DOM elements Refs: TIED-297 ([90719a1](https://github.com/City-of-Helsinki/helerm-ui/commit/90719a11c5b5a1e90996b7223adfc8cad0727800))
+* Popup background trigger role Refs: TIED-297 ([8a24ab0](https://github.com/City-of-Helsinki/helerm-ui/commit/8a24ab0fd028d9358bc0b79dfecf24cea6bd3830))
+* Prefer Number.parseFloat over parseFloat Res: TIED-297 ([beaa746](https://github.com/City-of-Helsinki/helerm-ui/commit/beaa7466f875cdbe630ecb9c298464123e9a2a1b))
+* SearchResults duplicate keys ([1330637](https://github.com/City-of-Helsinki/helerm-ui/commit/1330637e2b56fb77ae5839497f2fcaf538222fea))
+* Ui reducer flatten Refs: TIED-300 ([610f679](https://github.com/City-of-Helsinki/helerm-ui/commit/610f679933c720cb977e0b954279a2710aaf2211))
+* Ui reducer use flatMap Refs: TIED-300 ([22375d8](https://github.com/City-of-Helsinki/helerm-ui/commit/22375d8a62a14939b154bbc978d2dbca54b23683))
+* Use new Error() instead of Error() Refs: TIED-297 ([d5dadb0](https://github.com/City-of-Helsinki/helerm-ui/commit/d5dadb0e7da5af39c7ba3366a0dea21c5a14c633))
+* Use replaceAll() instead of replace() Refs: TIED-297 ([a9a9225](https://github.com/City-of-Helsinki/helerm-ui/commit/a9a9225354b2b9275998b735a864f9b4298a9248))
+* ViewTos edit metadata InformationSystem ([398fdf7](https://github.com/City-of-Helsinki/helerm-ui/commit/398fdf72784bbf825883f43d14754c3767b99cad))
+
 ## [1.12.2](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.12.1...helerm-ui-v1.12.2) (2026-08-19)
 
 
