@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.4](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.12.3...helerm-ui-v1.12.4) (2026-09-05)
+
+
+### Bug Fixes
+
+* Dependabot alerts ([9be9b18](https://github.com/City-of-Helsinki/helerm-ui/commit/9be9b183ebbc745d7245179340b958a444cbb2f9))
+
 ## [1.12.3](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.12.2...helerm-ui-v1.12.3) (2026-08-25)
 
 
