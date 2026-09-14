@@ -1,5 +1,12 @@
 # Don't allow dependencies to be used before they have been released for at least 1 week
 minimumReleaseAge: 10080
+minimumReleaseAgeExclude:
+  - baseline-browser-mapping@2.11.22
+  - electron-to-chromium@1.5.427
+  - nanoid@3.3.19
+  - node-releases@2.0.55
+  - obug@2.2.1
+  - update-browserslist-db@1.3.3
 
 # Don't warn about ignored build scripts
 ignoredBuiltDependencies: []
