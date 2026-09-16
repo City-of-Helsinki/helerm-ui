@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.12.5](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.12.4...helerm-ui-v1.12.5) (2026-09-16)
+
+
+### Dependencies
+
+* Bump react-router-dom to v7 Refs: RATY-357 ([0995571](https://github.com/City-of-Helsinki/helerm-ui/commit/0995571cb83d7f79740a4a0f3f60c38724f8edbd))
+* Bump vitest from 4.1.9 to 4.1.11 ([dc80b51](https://github.com/City-of-Helsinki/helerm-ui/commit/dc80b51adc6461785e166fb8a17d80d2dbd278cf))
+* MinimumReleaseAgeExclude packages Refs: RATY-357 ([7e847f2](https://github.com/City-of-Helsinki/helerm-ui/commit/7e847f21f17e2db30d924afba668adba5987fe47))
+
 ## [1.12.4](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.12.3...helerm-ui-v1.12.4) (2026-09-14)
 
 
