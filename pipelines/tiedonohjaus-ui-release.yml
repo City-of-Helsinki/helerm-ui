@@ -20,9 +20,6 @@ trigger:
 # Opt out of pull request validation
 pr: none
 
-# By default, use self-hosted agents for production
-pool: Production
-
 resources:
   repositories:
     # Azure DevOps repository
