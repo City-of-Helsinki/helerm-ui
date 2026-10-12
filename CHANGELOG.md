@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.12.6](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.12.5...helerm-ui-v1.12.6) (2026-10-12)
+
+
+### Dependencies
+
+* Bump dompurify from 3.4.13 to 3.4.16 ([d32d76c](https://github.com/City-of-Helsinki/helerm-ui/commit/d32d76cfb3b9b09373c711f6d79c25fafa0b1fad))
+* Dompurify minimumReleaseAgeExclude Refs: RATY-357 ([64f383e](https://github.com/City-of-Helsinki/helerm-ui/commit/64f383e85e1ca77811e4bd4a1551ca64c7e32de3))
+
 ## [1.12.5](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.12.4...helerm-ui-v1.12.5) (2026-09-16)
 
 
