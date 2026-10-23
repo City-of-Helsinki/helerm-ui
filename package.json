@@ -28,7 +28,7 @@
     "bootstrap-sass": "^3.4.1",
     "classnames": "^2.3.2",
     "date-fns": "^2.29.3",
-    "dompurify": "^3.4.16",
+    "dompurify": "^3.4.17",
     "dotenv": "^17.4.2",
     "eslint": "^10.1.0",
     "eslint-config-prettier": "^10.1.8",
@@ -58,8 +58,8 @@
     "react-sticky-el": "^2.1.1",
     "remark-gfm": "^4.0.1",
     "sass": "^1.79.4",
-    "vite": "^8.0.16",
-    "vitest": "^4.1.11"
+    "vite": "^8.1.6",
+    "vitest": "^4.1.12"
   },
   "scripts": {
     "app:version": "echo \"$npm_package_version\"",
@@ -94,7 +94,7 @@
     "@playwright/test": "^1.60.0",
     "@testing-library/dom": "^10.4.1",
     "@types/node": "^24.12.2",
-    "@vitest/coverage-istanbul": "^4.1.9",
+    "@vitest/coverage-istanbul": "^4.1.12",
     "fake-indexeddb": "^6.2.4",
     "husky": "^8.0.3",
     "jsdom": "^29.0.1",
