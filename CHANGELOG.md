@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.12.7](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.12.6...helerm-ui-v1.12.7) (2026-10-24)
+
+
+### Bug Fixes
+
+* Update nodejs and pnpm version ([2bf5926](https://github.com/City-of-Helsinki/helerm-ui/commit/2bf5926686a46c7539d1e72680484406b5a5f263))
+* Vulnerable dependencies reported by pnpm audit ([e677a28](https://github.com/City-of-Helsinki/helerm-ui/commit/e677a289bc2516e00407335714af56aac3471fdc))
+
 ## [1.12.6](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.12.5...helerm-ui-v1.12.6) (2026-10-12)
 
 
