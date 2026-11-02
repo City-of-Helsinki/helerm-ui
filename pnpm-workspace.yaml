@@ -8,6 +8,9 @@ ignoredBuiltDependencies: []
 shamefullyHoist: true
 
 overrides:
+  # Keeps exceljs' glob@7 / readdir-glob off minimatch 3/5 (GHSA-g3hv-75wg-m249).
+  # The fix is minimatch 11; switch to it once consumers support it.
+  'minimatch': '^10.2.4'
   'exceljs>uuid': '^11.1.1'
   'esrun>esbuild': '^0.25.0'
 
