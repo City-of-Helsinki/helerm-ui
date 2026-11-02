@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.12.7](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.12.6...helerm-ui-v1.12.7) (2026-11-02)
+
+
+### Bug Fixes
+
+* Update nodejs and pnpm version ([2bf5926](https://github.com/City-of-Helsinki/helerm-ui/commit/2bf5926686a46c7539d1e72680484406b5a5f263))
+* Vulnerable dependencies reported by pnpm audit ([e677a28](https://github.com/City-of-Helsinki/helerm-ui/commit/e677a289bc2516e00407335714af56aac3471fdc))
+
+
+### Dependencies
+
+* Fix audit vulnerabilities and remove obsolete overrides ([613ffcb](https://github.com/City-of-Helsinki/helerm-ui/commit/613ffcb5e74e44ab08f10f712ba2916f4f759c0b))
+* Keep minimatch override to avoid adding minimatch 3 ([66817d8](https://github.com/City-of-Helsinki/helerm-ui/commit/66817d8c633c861ba79af85be3087559a30646fa))
+
 ## [1.12.6](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.12.5...helerm-ui-v1.12.6) (2026-10-12)
 
 
