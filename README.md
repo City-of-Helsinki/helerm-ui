@@ -43,7 +43,6 @@ $ pnpm start    # Launch on local environment
 $ pnpm test:e2e:start    # Runs e2e tests using playwright (using dev frontend if not set to local)
 ```
 
-
 Navigate to [http://localhost:3000](http://localhost:3000)
 
 ### Running the app in Docker
@@ -103,3 +102,37 @@ REACT_APP_OIDC_SCOPE="openid profile"
 REACT_APP_OIDC_TOKEN_URL=https://tunnistus.test.hel.ninja/auth/realms/helsinki-tunnistus/protocol/openid-connect/token
 REACT_APP_OIDC_RESPONSE_TYPE="code"
 ```
+
+## License
+
+The source code in this repository is licensed under the MIT License; see
+[LICENSE](./LICENSE). The licenses of the third-party code included in the
+production build are listed in `third-party-licenses.txt`, which is generated
+during the build and served from the root of the deployed application. The
+same information is emitted alongside it as `oss-licenses.json`, for license
+audit tooling.
+
+The MIT License covers this repository's own source code only. The following
+files are **not** covered by it and remain with their respective rights
+holders:
+
+| Files                                                                                                   | Rights holder and terms                                                                                                                                                                                       |
+| ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `public/favicon.ico`, `public/helsinki-vaakuna-*.svg`, `src/components/NotFound/helsinki-vaakuna-*.svg` | City of Helsinki. The coat of arms of Helsinki, included to identify the service as the City's; not offered for reuse under the MIT License.                                                                  |
+| `src/components/Header/Logo.jsx`                                                                        | City of Helsinki. The component draws the Helsinki logo, which is a trademark of the City; the logo is not offered for reuse under the MIT License.                                                           |
+| `src/components/InfinityMenu/InfinityMenu.jsx`                                                          | Social Tables. Extracted and modified from [react-infinity-menu](https://github.com/socialtables/react-infinity-menu), licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).  |
+| `src/styles/vendor/hel-components/`                                                                     | Adapted from [Bootstrap](https://github.com/twbs/bootstrap) 3 (Twitter, Inc.) and the [Bootswatch](https://github.com/thomaspark/bootswatch) Flatly theme (Thomas Park), both licensed under the MIT License. |
+
+Two third-party components are also loaded at runtime from a public CDN. The
+CDN copies are not part of the build output, so they do not appear in either
+generated file:
+
+- [oidc-client-ts](https://github.com/authts/oidc-client-ts) (Apache-2.0),
+  loaded by [silent_renew.html](./public/silent_renew.html) from cdnjs with a
+  subresource integrity hash. The copy bundled into the application through
+  `hds-react` is listed in the generated files as usual.
+- The [Lato](https://fonts.google.com/specimen/Lato) typeface (SIL Open Font
+  License 1.1), loaded from Google Fonts by [index.html](./index.html) and
+  [\_bootswatch-flatly.scss](./src/styles/vendor/hel-components/_bootswatch-flatly.scss).
+
+Neither is redistributed by this repository or by its build output.

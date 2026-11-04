@@ -1,6 +1,9 @@
 import react from '@vitejs/plugin-react';
 import eslintPlugin from "@nabla/vite-plugin-eslint";
+import { thirdPartyLicenses } from '@city-of-helsinki/license-notices';
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
+
+import { thirdPartyLicensesConfig } from './scripts/thirdPartyLicenses.config.mjs';
 
 export default defineConfig(({ mode }) => ({
   base: '/',
@@ -8,6 +11,7 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     ...(mode !== 'test' ? [eslintPlugin()] : []),
+    thirdPartyLicenses(thirdPartyLicensesConfig),
   ],
   build: {
     outDir: './build',
