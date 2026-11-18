@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.13.0](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.12.7...helerm-ui-v1.13.0) (2026-11-18)
+
+
+### Features
+
+* Add third-party license notices Refs: RATY-415 ([#708](https://github.com/City-of-Helsinki/helerm-ui/issues/708)) ([7b29e55](https://github.com/City-of-Helsinki/helerm-ui/commit/7b29e55104f45110c268f8206a3c2644b0d9a1ea))
+
+
+### Bug Fixes
+
+* Update env-config script version to ensure proper loading ([82d399c](https://github.com/City-of-Helsinki/helerm-ui/commit/82d399c216b401fcbdd8250559a2397a52e80b7d))
+
 ## [1.12.7](https://github.com/City-of-Helsinki/helerm-ui/compare/helerm-ui-v1.12.6...helerm-ui-v1.12.7) (2026-11-02)
 
 
